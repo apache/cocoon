@@ -18,8 +18,8 @@ package org.apache.cocoon.portal.transformation;
 import java.util.Stack;
 
 import org.apache.cocoon.portal.LinkService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

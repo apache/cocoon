@@ -16,6 +16,9 @@
 package org.apache.cocoon.portal.coplet;
 
 import org.apache.cocoon.portal.PortalException;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletType;
 
 /**
  * This factory is for creating and managing coplet objects.

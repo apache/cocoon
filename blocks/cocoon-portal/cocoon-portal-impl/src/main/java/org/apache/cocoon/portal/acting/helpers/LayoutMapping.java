@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.acting.helpers;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.layout.LayoutJXPathEvent;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.Layout;
 
 /**
  * Helper class for a layout event.

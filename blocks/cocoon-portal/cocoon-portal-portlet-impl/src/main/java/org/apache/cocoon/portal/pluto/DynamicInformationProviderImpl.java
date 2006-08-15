@@ -23,7 +23,7 @@ import javax.portlet.WindowState;
 
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.adapter.PortletAdapter;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
 import org.apache.pluto.om.window.PortletWindow;

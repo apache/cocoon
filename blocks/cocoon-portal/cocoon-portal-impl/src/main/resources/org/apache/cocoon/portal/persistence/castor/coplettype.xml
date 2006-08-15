@@ -22,13 +22,13 @@
     <map-to xml="coplets" />
 
     <field name="objects"
-           type="org.apache.cocoon.portal.coplet.CopletType"
+           type="org.apache.cocoon.portal.om.CopletType"
            collection="collection">
       <bind-xml matches="coplet-type" />
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.coplet.CopletType" verify-constructable="false">
+  <class name="org.apache.cocoon.portal.om.CopletType" verify-constructable="false">
     <map-to xml="coplet-type" />
 
     <field name="id" type="java.lang.String" set-method="%1" get-method="getId">

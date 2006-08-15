@@ -17,6 +17,10 @@ package org.apache.cocoon.portal.layout;
 
 import java.util.Collection;
 
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutInstance;
+
 /**
  * This factory is for creating and managing layout objects.
  *
@@ -54,6 +58,14 @@ public interface LayoutFactory  {
      */
     Layout newInstance(String type, String id)
     throws LayoutException;
+
+    /**
+     * Create a new layout instance for the layout object.
+     * The instance is also registered at the profile manager.
+     * @param layout
+     * @return
+     */
+    LayoutInstance newInstace(Layout layout);
 
     /**
      * Remove the layout instance.

@@ -16,8 +16,11 @@
 package org.apache.cocoon.portal.layout.renderer.impl;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.LinkLayout;
+import org.apache.cocoon.portal.layout.LayoutException;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.LinkLayout;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -26,7 +29,7 @@ import org.xml.sax.SAXException;
  *
  * <h2>Applicable to:</h2>
  * <ul>
- *  <li>{@link org.apache.cocoon.portal.layout.impl.LinkLayout}</li>
+ *  <li>{@link org.apache.cocoon.portal.om.LinkLayout}</li>
  * </ul>
  *
  * @version $Id$
@@ -34,21 +37,27 @@ import org.xml.sax.SAXException;
 public class DefaultLinkRenderer extends AbstractRenderer {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.impl.AbstractRenderer#process(org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.impl.AbstractRenderer#process(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void process(Layout layout, PortalService service, ContentHandler handler)
     throws SAXException {
-        if (layout instanceof LinkLayout) {
-            String layoutKey = (String)layout.getTemporaryAttribute("link-layout-key");
-			String layoutId = (String)layout.getTemporaryAttribute("link-layout-id");
+        try {
+            LayoutFeatures.checkLayoutClass(layout, LinkLayout.class, true);
+            String layoutKey = null;
+            String layoutId = null;
+            final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
+            if ( instance != null ) {
+                layoutKey = (String)instance.getTemporaryAttribute("link-layout-key");
+                layoutId = (String)instance.getTemporaryAttribute("link-layout-id");                
+            }
             if ( layoutKey == null && layoutId == null){
 				// get default values
 				layoutKey = ((LinkLayout)layout).getLayoutKey();
 				layoutId = ((LinkLayout)layout).getLayoutId();
 			}
             this.processLayout(service.getProfileManager().getPortalLayout(layoutKey, layoutId), service, handler);
-        } else {
-            throw new SAXException("Wrong layout type, LinkLayout expected: " + layout.getClass().getName());
+        } catch (LayoutException le) {
+            throw new SAXException(le);
         }        
     }
 }

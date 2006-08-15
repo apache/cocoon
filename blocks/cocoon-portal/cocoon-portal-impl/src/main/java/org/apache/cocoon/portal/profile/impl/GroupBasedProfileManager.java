@@ -31,17 +31,19 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutAddedEvent;
+import org.apache.cocoon.portal.event.layout.LayoutInstanceAddedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutRemovedEvent;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletType;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileException;
 import org.apache.cocoon.portal.profile.ProfileLS;
@@ -205,7 +207,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances(org.apache.cocoon.portal.coplet.CopletDefinition)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public List getCopletInstances(CopletDefinition data) {
         final Profile profile = this.getUserProfile(null);
@@ -257,6 +259,15 @@ public class GroupBasedProfileManager
      * @see Receiver
      */
     public void inform(LayoutAddedEvent event, PortalService service) {
+        final ProfileImpl profile = this.getUserProfile(null);
+        profile.add(event.getTarget());
+    }
+
+    /**
+     * Receives a layout added event.
+     * @see Receiver
+     */
+    public void inform(LayoutInstanceAddedEvent event, PortalService service) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.add(event.getTarget());
     }
@@ -645,5 +656,17 @@ public class GroupBasedProfileManager
             }            
         }
         return this.copletBaseDatas.objects.values();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getLayoutInstance(org.apache.cocoon.portal.om.Layout)
+     */
+    public LayoutInstance getLayoutInstance(Layout layout) {
+        LayoutInstance result = null;
+        final Profile profile = this.getUserProfile(null);
+        if ( profile != null ) {
+            result = profile.searchLayoutInstance(layout);
+        }
+        return result;
     }
 }

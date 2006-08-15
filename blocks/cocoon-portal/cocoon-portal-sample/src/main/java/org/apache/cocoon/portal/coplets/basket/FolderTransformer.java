@@ -80,23 +80,23 @@ public class FolderTransformer extends AbstractBasketTransformer {
         } else if ( UPLOAD_FORM_ELEMENT.equals(name) ) {
             AttributesImpl ai = new AttributesImpl(attr);
             PortalService service = null;
-            String parameters;
+            String params;
             try {
                 service = (PortalService)this.manager.lookup(PortalService.ROLE);
                 Event e = new UploadItemEvent(this.basketManager.getFolder(), this.uploadElements);
-                parameters = service.getLinkService().getLinkURI(e);
-                int pos = parameters.indexOf('?');
-                ai.addCDATAAttribute("action", parameters.substring(0, pos));
-                parameters = parameters.substring(pos+1);
+                params = service.getLinkService().getLinkURI(e);
+                int pos = params.indexOf('?');
+                ai.addCDATAAttribute("action", params.substring(0, pos));
+                params = params.substring(pos+1);
             } catch (ServiceException se) {
                 throw new SAXException("Unable to lookup portal service.", se);
             } finally {
                 this.manager.release(service);
             }
             this.startElement("", "form", "form", ai);
-            if ( parameters != null && parameters.length() > 0 ) {
+            if ( params != null && params.length() > 0 ) {
                 // create hidden input fields
-                RequestParameters pars = new RequestParameters(parameters);
+                RequestParameters pars = new RequestParameters(params);
                 Enumeration enumPars = pars.getParameterNames();
                 while ( enumPars.hasMoreElements() ) {
                     String pName = (String)enumPars.nextElement();

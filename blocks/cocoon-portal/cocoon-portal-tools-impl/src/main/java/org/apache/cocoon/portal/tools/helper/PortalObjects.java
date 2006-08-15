@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.tools.helper;
 
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**

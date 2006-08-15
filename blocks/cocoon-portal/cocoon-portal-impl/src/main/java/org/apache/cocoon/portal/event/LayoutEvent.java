@@ -15,11 +15,11 @@
  */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.Layout;
 
 /**
  * This interface marks an event as targetted at a
- * {@link org.apache.cocoon.portal.layout.Layout} object.
+ * {@link org.apache.cocoon.portal.om.Layout} object.
  *
  * @version $Id$
  */

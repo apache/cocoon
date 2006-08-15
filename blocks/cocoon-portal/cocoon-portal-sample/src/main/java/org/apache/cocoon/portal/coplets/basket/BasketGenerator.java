@@ -68,8 +68,8 @@ extends ServiceableGenerator {
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        super.service(serviceManager);
         this.basketManager = (BasketManager)this.manager.lookup(BasketManager.ROLE);
     }
 

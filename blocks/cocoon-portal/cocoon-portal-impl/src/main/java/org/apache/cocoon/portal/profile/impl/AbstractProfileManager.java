@@ -26,18 +26,18 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserDidLoginEvent;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.event.user.UserWillLogoutEvent;
 import org.apache.cocoon.portal.impl.AbstractComponent;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutException;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletLayout;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.profile.ProfileManagerAspect;
@@ -109,7 +109,7 @@ public abstract class AbstractProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.layout.Layout)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.om.Layout)
      */
     public void register(Layout layout) {
         // overwrite in subclass
@@ -138,7 +138,7 @@ public abstract class AbstractProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.om.Layout)
      */
     public void unregister(Layout layout) {
         // overwrite in subclass

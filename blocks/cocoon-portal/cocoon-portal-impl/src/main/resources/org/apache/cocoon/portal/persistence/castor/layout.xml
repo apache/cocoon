@@ -18,7 +18,7 @@
 <mapping>
   <description>Portalprofile mapping file</description>
 
-  <class name="org.apache.cocoon.portal.layout.AbstractParameters">
+  <class name="org.apache.cocoon.portal.om.AbstractParameters">
     <field name="parameters"
            type="org.exolab.castor.mapping.MapItem"
            collection="map"
@@ -27,8 +27,8 @@
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.Layout"
-         extends="org.apache.cocoon.portal.layout.AbstractParameters"
+  <class name="org.apache.cocoon.portal.om.Layout"
+         extends="org.apache.cocoon.portal.om.AbstractParameters"
          verify-constructable="false">
 
     <field name="rendererName" type="java.lang.String">
@@ -40,8 +40,8 @@
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.impl.LinkLayout"
-         extends="org.apache.cocoon.portal.layout.Layout"
+  <class name="org.apache.cocoon.portal.om.LinkLayout"
+         extends="org.apache.cocoon.portal.om.Layout"
          verify-constructable="false">
     <map-to xml="link-layout"/>
 
@@ -61,8 +61,8 @@
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
-         extends="org.apache.cocoon.portal.layout.Layout"
+  <class name="org.apache.cocoon.portal.om.CompositeLayout"
+         extends="org.apache.cocoon.portal.om.Layout"
          verify-constructable="false">
     <map-to xml="composite-layout"/>
 
@@ -74,15 +74,15 @@
       <bind-xml name="type" node="attribute"/>
     </field>
 
-    <field name="items" type="org.apache.cocoon.portal.layout.Item"
+    <field name="items" type="org.apache.cocoon.portal.om.Item"
            collection="collection" set-method="addItem" get-method="getItems">
       <bind-xml matches="named-item item"/>
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.impl.CopletLayout"
+  <class name="org.apache.cocoon.portal.om.CopletLayout"
          auto-complete="false"
-         extends="org.apache.cocoon.portal.layout.Layout"
+         extends="org.apache.cocoon.portal.om.Layout"
          verify-constructable="false">
     <map-to xml="coplet-layout"/>
 
@@ -100,8 +100,8 @@
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.impl.FrameLayout"
-         extends="org.apache.cocoon.portal.layout.Layout"
+  <class name="org.apache.cocoon.portal.om.FrameLayout"
+         extends="org.apache.cocoon.portal.om.Layout"
          verify-constructable="false">
     <map-to xml="frame-layout"/>
 
@@ -116,15 +116,15 @@
     <field name="source" type="java.lang.String"/>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.Item"
-         extends="org.apache.cocoon.portal.layout.AbstractParameters">
-    <field name="layout" type="org.apache.cocoon.portal.layout.Layout">
+  <class name="org.apache.cocoon.portal.om.Item"
+         extends="org.apache.cocoon.portal.om.AbstractParameters">
+    <field name="layout" type="org.apache.cocoon.portal.om.Layout">
       <bind-xml matches="frame-layout link-layout composite-layout coplet-layout"/>
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.NamedItem"
-         extends="org.apache.cocoon.portal.layout.Item">
+  <class name="org.apache.cocoon.portal.om.NamedItem"
+         extends="org.apache.cocoon.portal.om.Item">
     <map-to xml="named-item"/>
     <field name="name" type="java.lang.String">
       <bind-xml name="name" node="attribute"/>

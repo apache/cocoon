@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.layout;
+package org.apache.cocoon.portal.om;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl;
+import org.apache.cocoon.portal.layout.LayoutFactory;
 
 /**
  * A composite layout is a layout that contains other layouts.
  *
  * @version $Id$
  */
-public abstract class CompositeLayout 
+public class CompositeLayout 
     extends Layout {
 
     /** The children of this layout object. */
@@ -98,7 +98,7 @@ public abstract class CompositeLayout
      * @see java.lang.Object#clone()
      */
     protected Object clone() throws CloneNotSupportedException {
-        CompositeLayoutImpl clone = (CompositeLayoutImpl)super.clone();
+        CompositeLayout clone = (CompositeLayout)super.clone();
 
         // we are not cloning the items
         clone.items.clear();
@@ -107,7 +107,7 @@ public abstract class CompositeLayout
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.Layout#copy()
+     * @see org.apache.cocoon.portal.om.Layout#copy()
      */
     public Layout copy() {
         CompositeLayout clone = (CompositeLayout)super.copy();

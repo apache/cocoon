@@ -16,11 +16,11 @@
 package org.apache.cocoon.portal.event.coplet;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 
 /**
  * This event is fired for resizing a coplet.

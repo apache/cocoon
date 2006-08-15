@@ -25,10 +25,11 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultRendererContext;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain;
+import org.apache.cocoon.portal.om.Layout;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -63,7 +64,8 @@ public class AspectRenderer
     /**
      * Stream out raw layout 
      */
-    public void toSAX(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
+    public void toSAX(Layout layout, PortalService service, ContentHandler handler)
+    throws SAXException, LayoutException {
         DefaultRendererContext renderContext = new DefaultRendererContext(this.chain);
         renderContext.invokeNext(layout, service, handler);
     }

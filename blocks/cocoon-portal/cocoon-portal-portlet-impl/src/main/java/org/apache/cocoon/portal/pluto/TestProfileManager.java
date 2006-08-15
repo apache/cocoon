@@ -22,16 +22,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.event.user.UserIsAccessingEvent;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.LayoutException;
-import org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletLayout;
+import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager;
 import org.apache.cocoon.portal.scratchpad.Profile;
@@ -79,7 +78,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
             profile.setCopletDefinitions( this.getGlobalDatas( info, profile, layoutKey) );
 
             // create root layout
-            CompositeLayout rootLayout = new CompositeLayoutImpl("root", "row");
+            CompositeLayout rootLayout = new CompositeLayout("root", "row");
 
             // create coplet instances and layouts
             final List instances = new ArrayList();

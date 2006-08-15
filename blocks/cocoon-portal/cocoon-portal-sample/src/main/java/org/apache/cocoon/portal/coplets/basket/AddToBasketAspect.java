@@ -21,13 +21,14 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractAspect;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletLayout;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -49,8 +50,8 @@ extends AbstractAspect {
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        super.service(serviceManager);
         this.basketManager = (BasketManager)this.manager.lookup(BasketManager.ROLE);
     }
 
@@ -66,17 +67,17 @@ extends AbstractAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext context,
+    public void toSAX(RendererAspectContext renderContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler contenthandler)
-    throws SAXException {
+    throws SAXException, LayoutException {
         final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
         final ContentStore store;
         final String elementName;
-        if ( context.getAspectConfiguration().equals(Boolean.TRUE) ) {
+        if ( renderContext.getAspectConfiguration().equals(Boolean.TRUE) ) {
             store = this.basketManager.getBasket();
             elementName = "basket-add-content";
         } else {
@@ -97,7 +98,7 @@ extends AbstractAspect {
             XMLUtils.createElement(contenthandler, elementName, service.getLinkService().getLinkURI(event));            
         }
 
-        context.invokeNext( layout, service, contenthandler );
+        renderContext.invokeNext( layout, service, contenthandler );
     }
 
     /**

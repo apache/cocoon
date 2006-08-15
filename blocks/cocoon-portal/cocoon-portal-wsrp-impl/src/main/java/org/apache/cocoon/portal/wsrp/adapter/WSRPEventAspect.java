@@ -23,10 +23,10 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * This event processes all wsrp related urls and fires {@link org.apache.cocoon.portal.wsrp.adapter.WSRPEvent}s.

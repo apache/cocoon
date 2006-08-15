@@ -22,12 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletType;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletType;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutInstance;
 
 /**
  * The profile for a single user.
@@ -52,6 +53,9 @@ public class ProfileImpl implements Profile {
 
     /** A list of all layouts. */
     protected List layouts;
+
+    /** A list of all layout instances. */
+    protected Map layoutInstances;
 
     /** A map of all layouts having an id. */
     protected Map keyedLayouts;
@@ -145,7 +149,7 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinitionObjects(org.apache.cocoon.portal.coplet.CopletType)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinitionObjects(org.apache.cocoon.portal.om.CopletType)
      */
     public Collection searchCopletDefinitions(CopletType copletType) {
         final List list = new ArrayList();
@@ -178,7 +182,7 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstances(org.apache.cocoon.portal.coplet.CopletDefinition)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public Collection searchCopletInstances(CopletDefinition copletDefinition) {
         final List list = new ArrayList();
@@ -214,6 +218,7 @@ public class ProfileImpl implements Profile {
         this.layouts = new ArrayList();
         this.keyedLayouts = new HashMap();
         this.traverseLayouts(this.rootLayout);
+        this.layoutInstances = new HashMap();
     }
 
     protected void traverseLayouts(Layout layout) {
@@ -254,12 +259,29 @@ public class ProfileImpl implements Profile {
         }
     }
 
+    public void add(LayoutInstance instance) {
+        if ( instance != null) {
+            this.layoutInstances.put(instance.getLayout(), instance);
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchLayoutInstance(org.apache.cocoon.portal.om.Layout)
+     */
+    public LayoutInstance searchLayoutInstance(Layout layout) {
+        if ( layout != null ) {
+            return (LayoutInstance) this.layoutInstances.get(layout);
+        }
+        return null;
+    }
+
     public void remove(Layout layout) {
         if ( layout != null ) {
             if ( layout.getId() != null ) {
                 this.keyedLayouts.remove(layout.getId());
             }
             this.layouts.remove(layout);
+            this.layoutInstances.remove(layout);
         }
     }
 

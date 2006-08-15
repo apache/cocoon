@@ -29,7 +29,7 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.Layout;
 
 /**
  *
@@ -59,7 +59,7 @@ public abstract class AbstractContentEventAspect
      * @param layout  The corresponding layout
      * @param values  The values contained in the request
      */
-    protected abstract void publish(EventManager publisher, Layout layout, String[] values);
+    protected abstract void publish(PortalService service, Layout layout, String[] values);
 
     /**
      * Publish the event.
@@ -67,10 +67,10 @@ public abstract class AbstractContentEventAspect
      * values and invokes {@link #publish(EventManager, Layout, String[])}.
      * @param values The values contained in the request
      */
-    protected void publish( PortalService service, EventManager publisher, String[] values) {
+    protected void publish( PortalService service, String[] values) {
         Layout layout = service.getProfileManager().getPortalLayout(values[0], values[1] );
         if ( layout != null ) {
-            this.publish( publisher, layout, values);
+            this.publish( service, layout, values);
         }
     }
 
@@ -116,7 +116,7 @@ public abstract class AbstractContentEventAspect
                             tokenNumber = tokenNumber + 1;
                         } 
 
-                        this.publish( service, publisher, eventValues );
+                        this.publish( service, eventValues );
 
                     } else {
                         this.getLogger().warn("Data for Event is not set correctly");

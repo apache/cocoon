@@ -16,9 +16,9 @@
 package org.apache.cocoon.portal.acting.helpers;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.coplet.CopletJXPathEvent;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * Helper class for an coplet event.

@@ -105,12 +105,12 @@ public abstract class ContentStore implements Serializable {
     /**
      * Get an item with the id
      */
-    public Object getItem(long id) {
+    public Object getItem(long itemId) {
         Iterator i = this.items.iterator();
         while (i.hasNext()) {
             Object item = i.next();
             if ( item instanceof AbstractItem ) {
-                if (((AbstractItem)item).getId() == id ) {
+                if (((AbstractItem)item).getId() == itemId ) {
                     return item;
                 }
             }

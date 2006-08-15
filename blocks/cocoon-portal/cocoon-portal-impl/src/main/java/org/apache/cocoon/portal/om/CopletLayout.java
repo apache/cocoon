@@ -13,28 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.layout.impl;
+package org.apache.cocoon.portal.om;
 
-import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 
-
 /**
- * A composite layout is a layout that contains other layouts.
+ * A coplet layout holds a coplet.
  *
  * @version $Id$
  */
-public class CompositeLayoutImpl 
-    extends CompositeLayout {
+public final class CopletLayout extends Layout {
+
+    /** The coplet instance id. */
+    protected String copletInstanceId;
 
     /**
-     * Create a new composite layout object.
+     * Create a new coplet layout object.
      * Never create a layout object directly. Use the
      * {@link LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
      * @param name The name of the layout.
      */
-    public CompositeLayoutImpl(String id, String name) {
+    public CopletLayout(String id, String name) {
         super(id, name);
+    }
+
+    public void setCopletInstanceId(String cid) {
+        this.copletInstanceId = cid;
+    }
+
+    public String getCopletInstanceId() {
+        return this.copletInstanceId;
+    }
+
+    /**
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        CopletLayout clone = (CopletLayout)super.clone();
+
+        clone.copletInstanceId = null;
+
+        return clone;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.om.Layout#copy()
+     */
+    public Layout copy() {
+        CopletLayout clone = (CopletLayout)super.copy();
+
+        clone.copletInstanceId = this.copletInstanceId;
+
+        return clone;
     }
 }
