@@ -83,14 +83,11 @@
        The portal manager can be extended with different aspects.
        Currently the JSR-168 aspect is configured/activated.
        If you don't need the JSR-168 support uncomment the aspect.
-       In a similar manner the wsrp support works.       
   -->
   <portal-manager>
     <aspects>
       <!-- JSR-168 support: -->
       <aspect adapter="portlet"/>
-      <!-- wsrp support: -->
-      <aspect adapter="wsrp"/>
     </aspects>
   </portal-manager>
 
@@ -154,142 +151,6 @@
     <!-- Turn on/off hot deployment: -->
     <hot-deployment>true</hot-deployment>
   </portal-deployment-manager>
-
-  <!-- Renderer configuration -->
-    <renderer name="column"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/column.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="column-layout"/>
-        </aspect>
-        <aspect type="composite-content">
-          <parameter name="root-tag" value="false"/>
-        </aspect>
-      </aspects>
-    </renderer>
-    <renderer name="row"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/row.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="row-layout"/>
-        </aspect>
-        <aspect type="composite-content">
-          <parameter name="root-tag" value="false"/>
-        </aspect>
-      </aspects>
-    </renderer>
-    <renderer name="tab"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/tab.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="tab-layout"/>
-        </aspect>
-        <aspect type="tab-content">
-          <parameter name="root-tag" value="false"/>
-          <parameter name="store"    value="session"/>
-        </aspect>
-      </aspects>
-    </renderer>
-    <renderer name="rawtab"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="tab-layout"/>
-        </aspect>
-        <aspect type="tab-content">
-          <parameter name="root-tag" value="false"/>
-          <parameter name="store"    value="session"/>
-        </aspect>
-      </aspects>
-    </renderer>
-    <renderer name="linktab"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/linktab.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="linktab-layout"/>
-        </aspect>
-        <aspect type="tab-content">
-          <parameter name="root-tag" value="false"/>
-          <parameter name="store" value="session"/>
-        </aspect>
-      </aspects>
-    </renderer>
-    <renderer name="window"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="window"/>
-        </aspect>
-        <aspect type="window">
-          <parameter name="root-tag" value="false"/>
-        </aspect>
-        <aspect type="basket"/>
-        <aspect type="coplet-cinclude"/>
-      </aspects>
-    </renderer>
-    <renderer name="borderless-window"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/borderless-window.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="window"/>
-        </aspect>
-        <aspect type="window">
-          <parameter name="root-tag" value="false"/>
-        </aspect>
-        <aspect type="basket"/>
-        <aspect type="coplet-cinclude"/>
-      </aspects>
-    </renderer>
-    <renderer name="frame"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="frame">
-          <parameter name="store" value="request"/>
-        </aspect>
-      </aspects>
-    </renderer>
-    <renderer name="nowindow"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="coplet-cinclude">
-          <parameter name="root-tag" value="false"/>
-        </aspect>
-      </aspects>
-    </renderer>
-    <renderer name="link" 
-              class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer"/>
-    <renderer name="decorated-frame"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/frame.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-           <parameter name="tag-name" value="frame"/>
-        </aspect>
-        <aspect type="frame">
-           <parameter name="store" value="request"/>
-        </aspect>
-      </aspects>
-    </renderer>
  
   <!-- Layout factory configuration -->
   <portal-layout-factory>
