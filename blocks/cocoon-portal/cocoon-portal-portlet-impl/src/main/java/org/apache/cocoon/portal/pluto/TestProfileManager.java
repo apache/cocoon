@@ -21,11 +21,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.event.user.UserIsAccessingEvent;
-import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;

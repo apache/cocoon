@@ -25,8 +25,6 @@ import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.formmodel.Repeater.RepeaterRow;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.CopletFactory;
-import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
@@ -35,6 +33,8 @@ import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.NamedItem;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.CopletFactory;
+import org.apache.cocoon.portal.services.LayoutFactory;
 
 /**
  *

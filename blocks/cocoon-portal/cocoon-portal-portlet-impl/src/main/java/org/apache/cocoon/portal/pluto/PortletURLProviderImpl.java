@@ -25,7 +25,6 @@ import javax.portlet.WindowState;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
@@ -34,6 +33,7 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.adapter.PortletAdapter;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
 import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
+import org.apache.cocoon.portal.services.LinkService;
 import org.apache.pluto.om.window.PortletWindow;
 import org.apache.pluto.services.information.PortletURLProvider;
 

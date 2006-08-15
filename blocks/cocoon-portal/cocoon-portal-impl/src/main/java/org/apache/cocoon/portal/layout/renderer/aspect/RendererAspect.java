@@ -17,9 +17,9 @@ package org.apache.cocoon.portal.layout.renderer.aspect;
 
 import java.util.Properties;
 
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.om.Layout;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
