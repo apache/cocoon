@@ -249,7 +249,7 @@ public class ConfigReader extends AbstractLogEnabled {
             ComponentInfo info;
             if (className == null) {
                 // Get the default class name for this role
-                info = (ComponentInfo)this.configInfo.getRole( role );
+                info = this.configInfo.getRole( role );
                 if (info == null) {
                     if ( this.configInfo.getComponents().get( role) != null ) {
                         throw new ConfigurationException("Duplicate component definition for role " + role + " at " + componentConfig.getLocation());
@@ -516,7 +516,7 @@ public class ConfigReader extends AbstractLogEnabled {
             }
 
             if ( defaultClassName != null ) {
-                ComponentInfo info = (ComponentInfo)this.configInfo.getRole(roleName);
+                ComponentInfo info = this.configInfo.getRole(roleName);
                 if (info == null) {
                     // Create a new info and store it
                     info = new ComponentInfo();
