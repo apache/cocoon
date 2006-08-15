@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplet;
+package org.apache.cocoon.portal.om;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -29,13 +29,13 @@ import org.apache.cocoon.portal.util.PortalUtils;
  *
  * @version $Id$
  */
-public class CopletType implements Serializable { 
+public final class CopletType implements Serializable, Cloneable { 
 
-	private final Map copletConfig = new HashMap();
+	protected final Map copletConfig = new HashMap();
 
-	private final String id;
+    protected final String id;
 
-	private String copletAdapterName;
+    protected String copletAdapterName;
 
     /**
      * Create a new coplet base data object. 

@@ -17,9 +17,9 @@ package org.apache.cocoon.portal.event.layout;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ConvertableEvent;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.om.CopletLayout;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
 
 /**
  * This event can be used to remove a layout object from the profile.

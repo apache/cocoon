@@ -199,7 +199,6 @@
         <aspect type="parameter">
           <parameter name="tag-name" value="tab-layout"/>
         </aspect>
-        <aspect type="history"/>
         <aspect type="tab-content">
           <parameter name="root-tag" value="false"/>
           <parameter name="store"    value="session"/>
@@ -212,7 +211,6 @@
         <aspect type="parameter">
           <parameter name="tag-name" value="tab-layout"/>
         </aspect>
-        <aspect type="history"/>
         <aspect type="tab-content">
           <parameter name="root-tag" value="false"/>
           <parameter name="store"    value="session"/>
@@ -228,7 +226,6 @@
         <aspect type="parameter">
           <parameter name="tag-name" value="linktab-layout"/>
         </aspect>
-        <aspect type="history"/>
         <aspect type="tab-content">
           <parameter name="root-tag" value="false"/>
           <parameter name="store" value="session"/>
@@ -247,7 +244,6 @@
         <aspect type="window">
           <parameter name="root-tag" value="false"/>
         </aspect>
-        <aspect type="history"/>
         <aspect type="basket"/>
         <aspect type="coplet-cinclude"/>
       </aspects>
@@ -264,7 +260,6 @@
         <aspect type="window">
           <parameter name="root-tag" value="false"/>
         </aspect>
-        <aspect type="history"/>
         <aspect type="basket"/>
         <aspect type="coplet-cinclude"/>
       </aspects>
@@ -280,7 +275,6 @@
     <renderer name="nowindow"
               class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
       <aspects>
-        <aspect type="history"/>
         <aspect type="coplet-cinclude">
           <parameter name="root-tag" value="false"/>
         </aspect>
@@ -307,19 +301,19 @@
   <portal-layout-factory>
     <layouts>
       <layout type="column" 
-              class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
         <renderers default="column">
           <renderer name="column"/>
         </renderers>
       </layout>
       <layout type="row" 
-              class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
         <renderers default="row">
           <renderer name="row"/>
         </renderers>
       </layout>
       <layout type="tab" 
-              class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout"
               item-class="org.apache.cocoon.portal.layout.NamedItem"
               default-is-static="true">
         <renderers default="tab">
@@ -327,14 +321,14 @@
         </renderers>
       </layout>
       <layout type="rawtab" 
-              class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout"
               item-class="org.apache.cocoon.portal.layout.NamedItem">
         <renderers default="rawtab">
           <renderer name="rawtab"/>
         </renderers>
       </layout>
       <layout type="linktab"
-              class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout"
               item-class="org.apache.cocoon.portal.layout.NamedItem"
               default-is-static="true">
         <renderers default="linktab">
@@ -365,21 +359,6 @@
       </layout>
     </layouts>
   </portal-layout-factory>
-
-  <!-- This is the basket manager -->
-  <component class="org.apache.cocoon.portal.coplets.basket.BasketManagerImpl" 
-             role="org.apache.cocoon.portal.coplets.basket.BasketManager">
-    <!-- This is only a sample configuration, it doesn't really work -->
-    <parameter name="basket:action:print" value="cocoon://print-basket"/>
-    <parameter name="basket:action:email" value="cocoon://email-basket"/>
-    <parameter name="briefcase:action:print" value="cocoon://print-briefcase"/>
-    <parameter name="briefcase:action:email" value="cocoon://email-briefcase"/>
-    <parameter name="briefcase:action:calc" value="cocoon://calc-briefcase"/>
-  </component>
-
-  <!-- This is the special basket renderer -->
-  <component role="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/basket"
-             class="org.apache.cocoon.portal.coplets.basket.AddToBasketAspect"/>
 
   <wsrp-adapter>
      <!-- This is the WSRP configuration containing the producers etc. -->

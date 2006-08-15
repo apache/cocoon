@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.event.layout;
 
 import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.Layout;
 
 /**
  * This event changes the value of a layout object.

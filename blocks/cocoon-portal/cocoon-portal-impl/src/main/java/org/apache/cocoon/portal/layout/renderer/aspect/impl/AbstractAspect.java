@@ -18,9 +18,9 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * Base class for renderer aspects.

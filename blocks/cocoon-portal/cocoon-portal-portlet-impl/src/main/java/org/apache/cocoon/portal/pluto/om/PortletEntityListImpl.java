@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.pluto.PortletContainerServices;
 import org.apache.pluto.om.common.ObjectID;

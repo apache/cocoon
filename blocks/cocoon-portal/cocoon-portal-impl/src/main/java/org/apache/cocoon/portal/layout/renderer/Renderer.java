@@ -16,7 +16,8 @@
 package org.apache.cocoon.portal.layout.renderer;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
+import org.apache.cocoon.portal.om.Layout;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -33,5 +34,5 @@ public interface Renderer {
      * Stream out raw layout 
      */
     void toSAX(Layout layout, PortalService service, ContentHandler handler)
-    throws SAXException;
+    throws SAXException, LayoutException;
 }

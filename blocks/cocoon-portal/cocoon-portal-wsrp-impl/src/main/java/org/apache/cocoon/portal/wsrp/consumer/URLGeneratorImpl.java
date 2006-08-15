@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPEventAspect;
 import org.apache.wsrp4j.consumer.URLGenerator;

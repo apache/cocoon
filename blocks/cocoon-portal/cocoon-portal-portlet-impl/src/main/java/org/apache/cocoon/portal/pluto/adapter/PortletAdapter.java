@@ -37,13 +37,13 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinitionFeatures;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
+import org.apache.cocoon.portal.om.CopletDefinitionFeatures;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.PortletActionProviderImpl;
 import org.apache.cocoon.portal.pluto.PortletContainerEnvironmentImpl;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
@@ -124,7 +124,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void login(CopletInstance coplet) {
         super.login(coplet);
@@ -173,7 +173,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstance, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
      */
     public void streamContent(CopletInstance coplet,
                               ContentHandler contentHandler)
@@ -216,7 +216,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void logout(CopletInstance coplet) {
         super.logout(coplet);
@@ -508,7 +508,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.om.CopletInstance)
      */
     public String getTitle(CopletInstance copletInstanceData) {
         String title = null;

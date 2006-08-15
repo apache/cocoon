@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.layout;
+package org.apache.cocoon.portal.om;
 
 import java.util.Iterator;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
-import org.apache.cocoon.portal.layout.impl.LinkLayout;
+import org.apache.cocoon.portal.layout.LayoutException;
 
 
 /**
@@ -52,27 +51,43 @@ public class LayoutFeatures {
         }
     }
 
-    public static Layout getFullScreenInfo(Layout layout) {
-        return (Layout) layout.getTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO);
+    public static Layout getFullScreenInfo(PortalService service, Layout layout) {
+        if ( layout.getId() == null ) {
+            return null;
+        }
+        final LayoutInstance layoutInstance = service.getProfileManager().getLayoutInstance(layout);
+        if ( layoutInstance == null ) {
+            return null;
+        }
+        return (Layout) layoutInstance.getTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO);
     }
 
-    public static void setFullScreenInfo(Layout layout, Layout fullScreenLayout) {
+    public static void setFullScreenInfo(PortalService service, Layout layout, Layout fullScreenLayout) {
+        final LayoutInstance layoutInstance = LayoutFeatures.getLayoutInstance(service, layout, true);
         if ( fullScreenLayout == null ) {
-            layout.removeTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO);
+            layoutInstance.removeTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO);
         } else {
-            layout.setTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO, fullScreenLayout);            
+            layoutInstance.setTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO, fullScreenLayout);            
         }
     }
 
-    public static RenderInfo getRenderInfo(Layout layout) {
-        return (RenderInfo) layout.getTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO);
+    public static RenderInfo getRenderInfo(PortalService service, Layout layout) {
+        if ( layout.getId() == null ) {
+            return null;
+        }
+        final LayoutInstance layoutInstance = service.getProfileManager().getLayoutInstance(layout);
+        if ( layoutInstance == null ) {
+            return null;
+        }
+        return (RenderInfo) layoutInstance.getTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO);
     }
 
-    public static void setRenderInfo(Layout layout, RenderInfo info) {
+    public static void setRenderInfo(PortalService service, Layout layout, RenderInfo info) {
+        final LayoutInstance layoutInstance = LayoutFeatures.getLayoutInstance(service, layout, true);
         if ( info == null ) {
-            layout.removeTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO);
+            layoutInstance.removeTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO);
         } else {
-            layout.setTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO, info);            
+            layoutInstance.setTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO, info);            
         }
     }
 
@@ -172,5 +187,39 @@ public class LayoutFeatures {
                return true;
            }
         });
+    }
+
+    /**
+     * Get the selected tab for a tab layout.
+     */
+    public static String getSelectedTab(PortalService service, Layout tabLayout) {
+        final LayoutInstance layoutInstance = service.getProfileManager().getLayoutInstance(tabLayout);
+        if ( layoutInstance == null ) {
+            return null;
+        }
+        return (String)layoutInstance.getTemporaryAttribute(LayoutFeatures.ATTRIBUTE_TAB);
+    }
+
+    /**
+     * Get the corresponding layout instance.
+     * If it is not available it will be created.
+     */
+    public static LayoutInstance getLayoutInstance(PortalService service, Layout layout, boolean create) {
+        LayoutInstance instance = service.getProfileManager().getLayoutInstance(layout);
+        if ( instance == null && create ) {
+            instance = service.getLayoutFactory().newInstace(layout);
+        }
+        return instance;
+    }
+
+    public static boolean checkLayoutClass(Layout layout, Class layoutClass, boolean throwException)
+    throws LayoutException {
+        if ( layoutClass.isInstance(layout) ) {
+            return true;
+        }
+        if ( throwException ) {
+            throw new LayoutException("Layout object is not an instance of required class " + layoutClass.getName() + " : " + layout);
+        }
+        return false;
     }
 }

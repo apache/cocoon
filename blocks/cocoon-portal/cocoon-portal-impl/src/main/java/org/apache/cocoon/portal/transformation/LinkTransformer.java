@@ -26,7 +26,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.Attributes;

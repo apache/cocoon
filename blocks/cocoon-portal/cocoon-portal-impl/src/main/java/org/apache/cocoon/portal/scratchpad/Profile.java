@@ -17,9 +17,10 @@ package org.apache.cocoon.portal.scratchpad;
 
 import java.util.Collection;
 
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutInstance;
 
 /**
  * The profile for a single user.
@@ -36,6 +37,7 @@ public interface Profile {
     Collection getLayoutObjects();
 
     Layout searchLayout(String layoutId);
+    LayoutInstance searchLayoutInstance(Layout layout);
     Layout getRootLayout();
 
     CopletInstance searchCopletInstance(String copletId);

@@ -72,7 +72,7 @@ public class DBSecurityHandler
     /**
      * @see SecurityHandler#logout(Map, org.apache.cocoon.auth.User)
      */
-    public void logout(Map context, org.apache.cocoon.auth.User user) {
+    public void logout(Map logoutContext, org.apache.cocoon.auth.User user) {
         // nothing to do
     }
 }

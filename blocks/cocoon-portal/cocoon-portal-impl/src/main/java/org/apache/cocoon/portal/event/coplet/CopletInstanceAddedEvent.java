@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * This event is fired if a new instance is created.

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletType;
+import org.apache.cocoon.portal.om.CopletType;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 import org.exolab.castor.mapping.MapItem;
 

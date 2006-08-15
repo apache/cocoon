@@ -66,6 +66,10 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      User specific data for a layout is now stored in a separate LayoutInstance. This allows
+      the sharing of layout tree.
+    </action>
+    <action dev="CZ" type="add">
       CopletLayout only holds the coplet instance id instead of the object itself.
     </action>
     <action dev="CZ" type="add">

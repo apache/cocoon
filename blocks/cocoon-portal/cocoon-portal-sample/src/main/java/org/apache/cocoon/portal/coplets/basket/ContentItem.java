@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.coplets.basket;
 
 import java.io.Serializable;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 
 /**

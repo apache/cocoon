@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.pluto.om.common.PreferenceSet;
 
 /**

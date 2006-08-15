@@ -18,13 +18,14 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.Iterator;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
-import org.apache.cocoon.portal.layout.LayoutFeatures.RenderInfo;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutFeatures.RenderInfo;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -35,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * <h2>Applicable to:</h2>
  * <ul>
- *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
+ *  <li>{@link org.apache.cocoon.portal.om.CompositeLayout}</li>
  * </ul>
  *
  * @version $Id$
@@ -44,36 +45,33 @@ public abstract class AbstractCompositeAspect
     extends AbstractAspect {
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext rendererContext,
                 	  Layout                layout,
                 	  PortalService         service,
                 	  ContentHandler        handler)
-	throws SAXException {
-        if ( layout instanceof CompositeLayout) {
-            CompositeLayout compositeLayout = (CompositeLayout)layout;
-        	// check for maximized information
-        	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(layout);
-            if ( maximizedInfo != null ) {
-	        	// loop over all rows
-	            for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
-	                Item item = (Item) iter.next();
-	                if ( item.equals(maximizedInfo.item) ) {
-	                    this.processMaximizedItem(rendererContext, item, maximizedInfo.layout, handler, service);
-	                } else if ( item.getLayout().isStatic() ) {
-	                    this.processItem(rendererContext, item, handler, service);	                	
-	                }
-	            }            	
-            } else {
-	        	// loop over all rows
-	            for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
-	                Item item = (Item) iter.next();
-	                this.processItem(rendererContext, item, handler, service);
-	            }
-            }
+	throws SAXException, LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, CompositeLayout.class, true);
+        CompositeLayout compositeLayout = (CompositeLayout)layout;
+    	// check for maximized information
+    	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(service, layout);
+        if ( maximizedInfo != null ) {
+        	// loop over all rows
+            for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
+                Item item = (Item) iter.next();
+                if ( item.equals(maximizedInfo.item) ) {
+                    this.processMaximizedItem(rendererContext, item, maximizedInfo.layout, handler, service);
+                } else if ( item.getLayout().isStatic() ) {
+                    this.processItem(rendererContext, item, handler, service);	                	
+                }
+            }            	
         } else {
-            throw new SAXException("CompositeLayout expected.");
+        	// loop over all rows
+            for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
+                Item item = (Item) iter.next();
+                this.processItem(rendererContext, item, handler, service);
+            }
         }
 	}
 
@@ -89,7 +87,7 @@ public abstract class AbstractCompositeAspect
                                         Item                  item,
                                         ContentHandler        handler,
                                         PortalService         service)
-        throws SAXException;
+    throws SAXException, LayoutException;
 
     /**
      * Process an item containing a maximized layout.
@@ -101,13 +99,14 @@ public abstract class AbstractCompositeAspect
      * @throws SAXException
      */
     protected abstract void processMaximizedItem(RendererAspectContext rendererContext, Item item, Layout maximizedLayout, ContentHandler handler, PortalService service)
-    throws SAXException;
+    throws SAXException, LayoutException;
 
     /**
      * Default implementation for processing a Layout. Calls the associated
      * renderer for a layout to render it.
      */
-    protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
+    protected void processLayout(Layout layout, PortalService service, ContentHandler handler)
+    throws SAXException, LayoutException {
         if ( layout != null ) {
             final String rendererName = service.getLayoutFactory().getRendererName(layout);
             final Renderer renderer = service.getRenderer(rendererName);

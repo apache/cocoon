@@ -17,9 +17,9 @@ package org.apache.cocoon.portal.persistence.castor;
 
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletType;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletType;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 
 /**

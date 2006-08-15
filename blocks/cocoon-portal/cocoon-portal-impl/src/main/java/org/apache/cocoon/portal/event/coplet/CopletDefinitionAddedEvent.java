@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletDefinition;
 
 /**
  * This event is fired when a new coplet is created.

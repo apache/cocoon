@@ -21,9 +21,10 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -50,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * <h2>Applicable to:</h2>
  * <ul>
- *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
+ *  <li>{@link org.apache.cocoon.portal.om.CompositeLayout}</li>
  * </ul>
  *
  * <h2>Parameters</h2>
@@ -70,13 +71,13 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     protected static final String ITEM_STRING = "item";
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext,
                       Layout                layout,
                       PortalService         service,
                       ContentHandler        handler)
-    throws SAXException {
+    throws SAXException, LayoutException {
         PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         if ( config.rootTag) {
             final AttributesImpl ai = new AttributesImpl();
@@ -95,13 +96,13 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processItem(org.apache.cocoon.portal.layout.Item, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processItem(org.apache.cocoon.portal.om.Item, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
 	 */
 	protected void processItem(RendererAspectContext rendererContext,
                                Item                  item,
 		                       ContentHandler        handler,
 		                       PortalService         service)
-    throws SAXException {
+    throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         Layout layout = item.getLayout();
 
@@ -127,14 +128,14 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 	}
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processMaximizedItem(org.apache.cocoon.portal.layout.Item, org.apache.cocoon.portal.layout.Layout, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processMaximizedItem(org.apache.cocoon.portal.om.Item, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
 	 */
 	protected void processMaximizedItem(RendererAspectContext rendererContext,
                                         Item                  item,
                                         Layout                maximizedLayout,
                                         ContentHandler        handler,
                                         PortalService         service)
-    throws SAXException {
+    throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         Map parameters = item.getParameters();
         if ( config.itemTag ) {

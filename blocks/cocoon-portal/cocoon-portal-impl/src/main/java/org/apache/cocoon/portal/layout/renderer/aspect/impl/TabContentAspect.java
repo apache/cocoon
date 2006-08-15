@@ -24,14 +24,16 @@ import java.util.Properties;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.layout.ChangeTabEvent;
-import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
-import org.apache.cocoon.portal.layout.NamedItem;
-import org.apache.cocoon.portal.layout.LayoutFeatures.RenderInfo;
+import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.NamedItem;
+import org.apache.cocoon.portal.om.LayoutFeatures.RenderInfo;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -85,7 +87,7 @@ import org.xml.sax.SAXException;
  *
  * <h2>Applicable to:</h2>
  * <ul>
- *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
+ *  <li>{@link org.apache.cocoon.portal.om.CompositeLayout}</li>
  * </ul>
  *
  * <h2>Parameters</h2>
@@ -110,95 +112,93 @@ public class TabContentAspect
     extends CompositeContentAspect {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext,
-                      Layout layout,
-                      PortalService service,
-                      ContentHandler handler)
-    throws SAXException {
-        if (layout instanceof CompositeLayout) {
-        	// check for maximized information
-        	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(layout);
+                      Layout                layout,
+                      PortalService         service,
+                      ContentHandler        handler)
+    throws SAXException, LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, CompositeLayout.class, true);
+        final CompositeLayout tabLayout = (CompositeLayout) layout;
+        final LayoutInstance layoutInstance = LayoutFeatures.getLayoutInstance(service, tabLayout, true);
+        // check for maximized information
+    	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(service, layout);
 
-            final TabPreparedConfiguration config = (TabPreparedConfiguration)rendererContext.getAspectConfiguration();
+        final TabPreparedConfiguration config = (TabPreparedConfiguration)rendererContext.getAspectConfiguration();
 
-            if ( config.rootTag ) {
-                XMLUtils.startElement(handler, config.tagName);
+        if ( config.rootTag ) {
+            XMLUtils.startElement(handler, config.tagName);
+        }
+
+        final AttributesImpl attributes = new AttributesImpl();
+
+        // selected tab
+        String selectedTabName = LayoutFeatures.getSelectedTab(service, tabLayout);
+        int selectedTabIndex = 0;
+        if ( selectedTabName != null && !config.useNames) {
+            selectedTabIndex = Integer.valueOf(selectedTabName).intValue();
+        }
+
+        // loop over all tabs
+        for (int j = 0; j < tabLayout.getSize(); j++) {
+            final Item tab = tabLayout.getItem(j);
+
+            // open named-item tag
+            attributes.clear();
+            if ( tab instanceof NamedItem ) {
+                attributes.addCDATAAttribute("name", ((NamedItem)tab).getName());
             }
-
-            final AttributesImpl attributes = new AttributesImpl();
-            final CompositeLayout tabLayout = (CompositeLayout) layout;
-
-            // selected tab
-            String selectedTabName = (String)layout.getTemporaryAttribute(LayoutFeatures.ATTRIBUTE_TAB);
-            int selectedTabIndex = 0;
-            if ( selectedTabName != null && !config.useNames) {
-                selectedTabIndex = Integer.valueOf(selectedTabName).intValue();
-            }
-
-            // loop over all tabs
-            for (int j = 0; j < tabLayout.getSize(); j++) {
-                final Item tab = tabLayout.getItem(j);
-
-                // open named-item tag
-                attributes.clear();
-                if ( tab instanceof NamedItem ) {
-                    attributes.addCDATAAttribute("name", ((NamedItem)tab).getName());
-                }
-                boolean selected = false;
-                if ( config.useNames ) {
-                    if ( selectedTabName == null ) {
-                        selected = (j == 0);
-                    } else {
-                        if ( tab instanceof NamedItem ) {
-                            selected = selectedTabName.equalsIgnoreCase(((NamedItem)tab).getName());
-                        }
-                    }
+            boolean selected = false;
+            if ( config.useNames ) {
+                if ( selectedTabName == null ) {
+                    selected = (j == 0);
                 } else {
-                    selected = (j == selectedTabIndex);
-                }
-                if ( selected ) {
-                    attributes.addCDATAAttribute("selected", "true");
-                }
-                final LayoutChangeParameterEvent event;
-                event = new ChangeTabEvent(tab, config.useNames);
-                attributes.addCDATAAttribute("parameter", service.getLinkService().getLinkURI(event)); 
-
-                // add parameters
-                final Iterator iter = tab.getParameters().entrySet().iterator();
-                while ( iter.hasNext() ) {
-                    final Map.Entry entry = (Map.Entry) iter.next();
-                    attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
-                }
-
-                XMLUtils.startElement(handler, "named-item", attributes);
-                if (selected) {
-                	if ( maximizedInfo != null && maximizedInfo.item.equals(tab) ) {
-                		this.processLayout(maximizedInfo.layout, service, handler);
-                	} else {
-	                    this.processLayout(tab.getLayout(), service, handler);
-                	}
-                    if (config.includeSelected) {
-                        List events = new ArrayList();
-                        events.add(event);
-                        this.processNavigation(tab.getLayout(), service, handler, events, config);
+                    if ( tab instanceof NamedItem ) {
+                        selected = selectedTabName.equalsIgnoreCase(((NamedItem)tab).getName());
                     }
-                } else if (config.showAllNav) {
+                }
+            } else {
+                selected = (j == selectedTabIndex);
+            }
+            if ( selected ) {
+                attributes.addCDATAAttribute("selected", "true");
+            }
+            final LayoutInstanceChangeAttributeEvent event;
+            event = new ChangeTabEvent(layoutInstance, tab, config.useNames);
+            attributes.addCDATAAttribute("parameter", service.getLinkService().getLinkURI(event)); 
+
+            // add parameters
+            final Iterator iter = tab.getParameters().entrySet().iterator();
+            while ( iter.hasNext() ) {
+                final Map.Entry entry = (Map.Entry) iter.next();
+                attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+            }
+
+            XMLUtils.startElement(handler, "named-item", attributes);
+            if (selected) {
+            	if ( maximizedInfo != null && maximizedInfo.item.equals(tab) ) {
+            		this.processLayout(maximizedInfo.layout, service, handler);
+            	} else {
+                    this.processLayout(tab.getLayout(), service, handler);
+            	}
+                if (config.includeSelected) {
                     List events = new ArrayList();
                     events.add(event);
                     this.processNavigation(tab.getLayout(), service, handler, events, config);
                 }
-
-                // close named-item tag
-                XMLUtils.endElement(handler, "named-item");
+            } else if (config.showAllNav) {
+                List events = new ArrayList();
+                events.add(event);
+                this.processNavigation(tab.getLayout(), service, handler, events, config);
             }
 
-            if ( config.rootTag ) {
-                XMLUtils.endElement(handler, config.tagName);
-            }
-        } else {
-            throw new SAXException("Wrong layout type, TabLayout expected: " + layout.getClass().getName());
+            // close named-item tag
+            XMLUtils.endElement(handler, "named-item");
+        }
+
+        if ( config.rootTag ) {
+            XMLUtils.endElement(handler, config.tagName);
         }
     }
 
@@ -215,56 +215,56 @@ public class TabContentAspect
                                    ContentHandler           handler,
                                    List                     parentEvents,
                                    TabPreparedConfiguration config)
-        throws SAXException {
-        if (layout instanceof CompositeLayout) {
-            CompositeLayout tabLayout = (CompositeLayout)layout;
+    throws SAXException, LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, CompositeLayout.class, true);
+        final CompositeLayout tabLayout = (CompositeLayout) layout;
+        final LayoutInstance layoutInstance = LayoutFeatures.getLayoutInstance(service, tabLayout, true);
 
-            if (tabLayout.getSize() == 0) {
-                return;
-            }
-            AttributesImpl attributes = new AttributesImpl();
-            boolean subNav = false;
+        if (tabLayout.getSize() == 0) {
+            return;
+        }
+        AttributesImpl attributes = new AttributesImpl();
+        boolean subNav = false;
 
-            // loop over all tabs
-            for (int j = 0; j < tabLayout.getSize(); j++) {
-                Item tab = tabLayout.getItem(j);
+        // loop over all tabs
+        for (int j = 0; j < tabLayout.getSize(); j++) {
+            Item tab = tabLayout.getItem(j);
 
-                // open named-item tag
-                attributes.clear();
-                if (tab instanceof NamedItem) {
-                    if (!subNav && !config.childTagName.equals("")) {
-                        XMLUtils.startElement(handler, config.childTagName);
-                        subNav = true;
-                    }
-                    attributes.addCDATAAttribute("name", ((NamedItem) tab).getName());
-                    final LayoutChangeParameterEvent event;
-                    event = new ChangeTabEvent(tab, config.useNames);
-                    List events = new ArrayList(parentEvents);
-                    events.add(event);
-
-                    attributes.addCDATAAttribute("parameter",
-                        service.getLinkService().getLinkURI(events));
-
-                    // add parameters
-                    final Iterator iter = tab.getParameters().entrySet().iterator();
-                    while (iter.hasNext()) {
-                        final Map.Entry entry = (Map.Entry) iter.next();
-                        attributes.addCDATAAttribute((String) entry.getKey(),
-                            (String) entry.getValue());
-                    }
-
-                    XMLUtils.startElement(handler, "named-item", attributes);
-
-                    this.processNavigation(tab.getLayout(), service, handler, events, config);
-
-                    // close named-item tag
-                    XMLUtils.endElement(handler, "named-item");
+            // open named-item tag
+            attributes.clear();
+            if (tab instanceof NamedItem) {
+                if (!subNav && !config.childTagName.equals("")) {
+                    XMLUtils.startElement(handler, config.childTagName);
+                    subNav = true;
                 }
+                attributes.addCDATAAttribute("name", ((NamedItem) tab).getName());
+                final LayoutInstanceChangeAttributeEvent event;
+                event = new ChangeTabEvent(layoutInstance, tab, config.useNames);
+                List events = new ArrayList(parentEvents);
+                events.add(event);
+
+                attributes.addCDATAAttribute("parameter",
+                    service.getLinkService().getLinkURI(events));
+
+                // add parameters
+                final Iterator iter = tab.getParameters().entrySet().iterator();
+                while (iter.hasNext()) {
+                    final Map.Entry entry = (Map.Entry) iter.next();
+                    attributes.addCDATAAttribute((String) entry.getKey(),
+                        (String) entry.getValue());
+                }
+
+                XMLUtils.startElement(handler, "named-item", attributes);
+
+                this.processNavigation(tab.getLayout(), service, handler, events, config);
+
+                // close named-item tag
+                XMLUtils.endElement(handler, "named-item");
             }
-            // close sub-nav tag
-            if (subNav) {
-                XMLUtils.endElement(handler, config.childTagName);
-            }
+        }
+        // close sub-nav tag
+        if (subNav) {
+            XMLUtils.endElement(handler, config.childTagName);
         }
     }
 

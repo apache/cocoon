@@ -51,16 +51,16 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.cocoon.portal.wsrp.consumer.ConsumerEnvironmentImpl;
@@ -172,8 +172,8 @@ public class WSRPAdapter
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        super.service(serviceManager);
         this.userContextProvider = (UserContextProvider)this.manager.lookup(UserContextProvider.ROLE);
     }
 
@@ -230,7 +230,7 @@ public class WSRPAdapter
      * and stores its into the copletInstanceData<br/>
      * After that it initiates the <tt>getServiceDescription()</tt>-call<br/>
      * 
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void login(CopletInstance coplet) {
         super.login(coplet);
@@ -320,7 +320,7 @@ public class WSRPAdapter
      * Checks the values of the <tt>portlet-key</tt> and the <tt>user</tt> for current portlet-instance<br/>
      * After that all passed the <tt>getMarkup()</tt>-call will be initiated<br />
      * 
-	 * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstance, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
 	 */
 	public void streamContent(CopletInstance coplet, ContentHandler contentHandler) 
     throws SAXException {
@@ -395,7 +395,7 @@ public class WSRPAdapter
     /**
      * Releases all sessions (<tt>userSession, groupSession, portletSession</tt>)<br/>
      * 
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void logout(CopletInstance coplet) {
     	super.logout(coplet);
@@ -619,7 +619,7 @@ public class WSRPAdapter
                     
                     final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
                     final Layout layout = LayoutFeatures.searchLayout(service, coplet.getId(), rootLayout);
-                    final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(rootLayout);
+                    final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(service, rootLayout);
                     if ( fullScreenLayout != null 
                          && fullScreenLayout.equals( layout )
                          && !windowState.equals(WindowStates._maximized) ) {
@@ -958,7 +958,7 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.om.CopletInstance)
      */
     public String getTitle(CopletInstance copletInstanceData) {
         String title = null;

@@ -16,10 +16,10 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.NamedItem;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.NamedItem;
 import org.apache.cocoon.portal.profile.ProfileManagerAspect;
 import org.apache.cocoon.portal.profile.ProfileManagerAspectContext;
 import org.apache.cocoon.portal.scratchpad.Profile;
@@ -50,7 +50,8 @@ public class PageLabelProfileManagerAspect
             }
             label.append((tab instanceof NamedItem) ? ((NamedItem) tab).getName()
                                                     : Integer.toString(j));
-            layout.setTemporaryAttribute("pageLabel", label.toString());
+            // TODO
+            //layout.setTemporaryAttribute("pageLabel", label.toString());
             final Layout child = tab.getLayout();
             if (child != null && child instanceof CompositeLayout) {
                 this.populate((CompositeLayout) child, label.toString());

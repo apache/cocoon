@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletDefinition;
 
 
 /**

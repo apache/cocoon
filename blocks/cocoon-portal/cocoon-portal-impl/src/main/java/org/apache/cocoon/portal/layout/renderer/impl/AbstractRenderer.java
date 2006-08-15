@@ -25,8 +25,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -71,7 +72,8 @@ public abstract class AbstractRenderer
     /**
      * Stream out raw layout 
      */
-    public void toSAX(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
+    public void toSAX(Layout layout, PortalService service, ContentHandler handler)
+    throws SAXException, LayoutException {
         if (this.useStylesheet()) {
             XSLTProcessor processor = null;
             Source stylesheet = null;
@@ -106,12 +108,14 @@ public abstract class AbstractRenderer
     /**
      * Process a Layout
      */
-    protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
+    protected void processLayout(Layout layout, PortalService service, ContentHandler handler)
+    throws SAXException, LayoutException {
         final String rendererName = service.getLayoutFactory().getRendererName(layout);
         Renderer renderer = null;
         renderer = service.getRenderer(rendererName);
         renderer.toSAX(layout, service, handler);
     }
 
-    protected abstract void process(Layout layout, PortalService service, ContentHandler handler) throws SAXException;
+    protected abstract void process(Layout layout, PortalService service, ContentHandler handler)
+    throws SAXException, LayoutException;
 }

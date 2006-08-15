@@ -27,8 +27,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
@@ -145,7 +146,11 @@ public class LayoutSource
         Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(this.layout));
 
         handler.startDocument();
-        portalLayoutRenderer.toSAX(this.layout, this.portalService, handler);
+        try {
+            portalLayoutRenderer.toSAX(this.layout, this.portalService, handler);
+        } catch (LayoutException e) {
+            throw new SAXException(e);
+        }
         handler.endDocument();
 	}
 

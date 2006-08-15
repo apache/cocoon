@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.coplet.adapter;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 

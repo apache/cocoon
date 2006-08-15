@@ -18,9 +18,10 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.Iterator;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.Layout;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -43,12 +44,12 @@ public final class DefaultRendererContext implements RendererAspectContext {
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#invokeNext(org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#invokeNext(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
 	public void invokeNext(Layout layout,
                            PortalService service,
                            ContentHandler handler)
-	throws SAXException {
+	throws SAXException, LayoutException {
 		if (iterator.hasNext()) {
             this.config = this.configIterator.next();
             final RendererAspect aspect = (RendererAspect) iterator.next();

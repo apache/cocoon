@@ -15,11 +15,13 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.LinkLayout;
+import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.LinkLayout;
 
 /**
  *
@@ -37,21 +39,20 @@ public class LinkEventAspect extends AbstractContentEventAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(EventManager, org.apache.cocoon.portal.layout.Layout, java.lang.String[])
+     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(PortalService, org.apache.cocoon.portal.om.Layout, java.lang.String[])
      */
-    protected void publish(EventManager publisher,
+    protected void publish(PortalService service,
                            Layout layout,
                            String[] values) {
         if (layout instanceof LinkLayout) {
-            LinkLayout linkLayout = (LinkLayout) layout;
-            Event e = new LayoutChangeParameterEvent(linkLayout,
-                                                "link-layout-key",
-                                                values[2], true);
-            publisher.send(e);
-            e = new LayoutChangeParameterEvent(linkLayout,
-                                          "link-layout-id",
-                                          values[3], true);
-            publisher.send(e);
+            LayoutInstance instance;
+            instance = LayoutFeatures.getLayoutInstance(service, layout, false);
+            if ( instance == null ) {
+                Event e = new LayoutInstanceChangeAttributeEvent(instance, "link-layout-key", values[2], true);
+                service.getEventManager().send(e);                    
+                e = new LayoutInstanceChangeAttributeEvent(instance, "llink-layout-id", values[3], true);
+                service.getEventManager().send(e);                    
+            }
         } else {
             this.getLogger().warn(
                 "the configured layout: "

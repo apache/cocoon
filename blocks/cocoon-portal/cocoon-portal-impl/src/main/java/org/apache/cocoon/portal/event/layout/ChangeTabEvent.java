@@ -16,9 +16,10 @@
 package org.apache.cocoon.portal.event.layout;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
-import org.apache.cocoon.portal.layout.NamedItem;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.NamedItem;
 
 /**
  *
@@ -26,9 +27,7 @@ import org.apache.cocoon.portal.layout.NamedItem;
  * @since 2.2
  */
 public class ChangeTabEvent
-    extends LayoutChangeParameterEvent {
-
-    public static final String TAB_TEMPORARY_ATTRIBUTE_NAME = "tab";
+    extends LayoutInstanceChangeAttributeEvent {
 
     protected Item item;
 
@@ -38,9 +37,9 @@ public class ChangeTabEvent
         super(service, eventData);
     }
 
-    public ChangeTabEvent(Item target, boolean useName) {
-        super(target.getParent(), LayoutFeatures.ATTRIBUTE_TAB, (useName ? ((NamedItem)target).getName(): String.valueOf(target.getParent().getItems().indexOf(target))), true);
-        this.item = target;
+    public ChangeTabEvent(LayoutInstance instance, Item item, boolean useName) {
+        super(instance, LayoutFeatures.ATTRIBUTE_TAB, (useName ? ((NamedItem)item).getName(): String.valueOf(item.getParent().getItems().indexOf(item))), true);
+        this.item = item;
         this.useName = useName;
     }
 

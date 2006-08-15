@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
-import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.event.CopletDefinitionEvent;
+import org.apache.cocoon.portal.om.CopletDefinition;
 
 /**
  * This event changes the value of all instances of a coplet data.

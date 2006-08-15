@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal.coplets.basket.events;
 
 import org.apache.cocoon.portal.coplets.basket.ContentStore;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.Layout;
 
 /**
  * Show one item of a content store.

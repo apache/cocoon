@@ -20,9 +20,9 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.layout.ChangeTabEvent;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.NamedItem;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.NamedItem;
 
 /**
  * This page label event converter converts only {@link ChangeTabEvent} events.

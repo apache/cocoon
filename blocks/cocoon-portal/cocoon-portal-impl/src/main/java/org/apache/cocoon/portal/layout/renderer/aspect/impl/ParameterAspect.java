@@ -21,8 +21,9 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
@@ -43,7 +44,7 @@ import org.xml.sax.SAXException;
  *
  * <h2>Applicable to:</h2>
  * <ul>
- *  <li>{@link org.apache.cocoon.portal.layout.Layout}</li>
+ *  <li>{@link org.apache.cocoon.portal.om.Layout}</li>
  * </ul> 
  *
  * <h2>Parameters</h2>
@@ -57,13 +58,13 @@ import org.xml.sax.SAXException;
 public final class ParameterAspect extends AbstractAspect {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler contenthandler)
-    throws SAXException {
+    throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
 
         Map parameter = layout.getParameters();

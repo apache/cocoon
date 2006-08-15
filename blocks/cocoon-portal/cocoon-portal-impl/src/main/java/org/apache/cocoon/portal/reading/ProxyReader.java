@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.transformation.ProxyTransformer;
 import org.apache.cocoon.reading.ServiceableReader;
 import org.apache.cocoon.util.NetUtils;

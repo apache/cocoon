@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.layout.AbstractParameters;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.AbstractParameters;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 import org.exolab.castor.mapping.MapItem;
 

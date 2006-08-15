@@ -39,8 +39,9 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
@@ -64,7 +65,7 @@ import org.xml.sax.ext.LexicalHandler;
  * The parameter values may contain Strings and/or references to input modules which will be resolved each
  * time the aspect is rendered.
  * <h2>Applicable to:</h2>
- * {@link org.apache.cocoon.portal.layout.Layout}
+ * {@link org.apache.cocoon.portal.om.Layout}
  *
  * <h2>Configuration</h2>
  * <h3>cocoon.xconf</h3>
@@ -115,13 +116,13 @@ public class XSLTAspect
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler handler)
-    throws SAXException {
+    throws SAXException, LayoutException {
         PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
 
         XSLTProcessor processor = null;
