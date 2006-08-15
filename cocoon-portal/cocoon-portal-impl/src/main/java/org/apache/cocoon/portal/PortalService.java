@@ -32,12 +32,6 @@ public interface PortalService extends PortalComponentManager {
     /** The role to lookup this component. */
     String ROLE = PortalService.class.getName();
 
-    /** Configuration key for full screen enabled (default is true). */
-    String CONFIGURATION_FULL_SCREEN_ENABLED = "enable-full-screen";
-
-    /** Configuration key for maximized enabled (default is true). */
-    String CONFIGURATION_MAXIMIZED_ENABLED = "enable-maximized";
-
     /**
      * The name of the portal - as defined in the portal configuration.
      */

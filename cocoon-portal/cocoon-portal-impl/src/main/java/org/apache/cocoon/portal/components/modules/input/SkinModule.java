@@ -22,8 +22,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.portal.layout.SkinDescription;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.SkinDescription;
 
 /**
  * This input module provides information about the current selected skin

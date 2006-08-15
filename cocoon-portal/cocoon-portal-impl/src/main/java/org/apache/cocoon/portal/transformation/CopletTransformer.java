@@ -24,6 +24,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
+import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.event.coplet.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.portal.event.layout.LayoutJXPathEvent;
@@ -118,7 +119,7 @@ extends AbstractCopletTransformer {
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         super.configure(configuration);
-        this.useAjax = this.portalService.getConfigurationAsBoolean("use-ajax", false);
+        this.useAjax = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_USE_AJAX, Constants.DEFAULT_CONFIGURATION_USE_AJAX);
     }
 
     /**

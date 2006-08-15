@@ -53,20 +53,11 @@
 
   <portal-service>
     <portal name="portal">
-      <!-- These are the skins the user can choose from: -->
-      <skins>
-        <skin name="modern" base-path="skins/modern">
-          <thumbnail-path>images/thumb.jpg</thumbnail-path>
-        </skin>
-        <skin name="basic" base-path="skins/basic">
-          <thumbnail-path>images/thumb.jpg</thumbnail-path>
-        </skin>
-        <skin name="common" base-path="skins/common">
-          <thumbnail-path>images/thumb.jpg</thumbnail-path>
-        </skin>
-      </skins>
       <!-- Configuration: -->
       <configuration>
+        <!-- The directory where all possible skins are stored. -->
+        <skins-path>skins</skins-path>
+        <!-- Whether the portal should use ajax or not -->
         <use-ajax>true</use-ajax>
       </configuration>
     </portal>
