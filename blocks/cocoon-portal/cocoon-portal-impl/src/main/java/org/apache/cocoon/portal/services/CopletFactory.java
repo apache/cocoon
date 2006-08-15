@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplet;
+package org.apache.cocoon.portal.services;
 
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.om.CopletDefinition;

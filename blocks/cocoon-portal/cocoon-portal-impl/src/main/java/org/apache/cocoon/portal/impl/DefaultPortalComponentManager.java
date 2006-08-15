@@ -21,16 +21,16 @@ import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalRuntimeException;
-import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.CopletFactory;
+import org.apache.cocoon.portal.services.LayoutFactory;
+import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**

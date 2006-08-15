@@ -17,8 +17,8 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
 
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CompositeLayout;

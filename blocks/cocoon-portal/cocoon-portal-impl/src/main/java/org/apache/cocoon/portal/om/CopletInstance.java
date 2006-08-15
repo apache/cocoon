@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletFactory;
+import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
 
 /**

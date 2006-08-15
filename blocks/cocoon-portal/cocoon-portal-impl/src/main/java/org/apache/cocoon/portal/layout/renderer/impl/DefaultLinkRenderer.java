@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.portal.layout.renderer.impl;
 
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;

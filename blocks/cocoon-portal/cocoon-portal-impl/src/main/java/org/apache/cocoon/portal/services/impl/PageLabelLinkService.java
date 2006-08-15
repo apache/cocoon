@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.impl;
+package org.apache.cocoon.portal.services.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
+import org.apache.cocoon.portal.impl.PageLabelManager;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.NamedItem;

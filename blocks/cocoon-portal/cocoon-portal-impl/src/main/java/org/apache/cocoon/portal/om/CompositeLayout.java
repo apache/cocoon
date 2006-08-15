@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.services.LayoutFactory;
 
 /**
  * A composite layout is a layout that contains other layouts.

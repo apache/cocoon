@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.impl;
+package org.apache.cocoon.portal.services.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -35,10 +35,10 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
+import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.util.NetUtils;
 
 /**
@@ -122,28 +122,28 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#isSecure()
+     * @see org.apache.cocoon.portal.services.LinkService#isSecure()
      */
     public boolean isSecure() {
         return ContextHelper.getRequest(this.context).isSecure();
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#encodeURL(String url)
+     * @see org.apache.cocoon.portal.services.LinkService#encodeURL(String url)
      */
     public String encodeURL(String url) {
         return ContextHelper.getResponse(this.context).encodeURL(url);
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event)
+     * @see org.apache.cocoon.portal.services.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event)
      */
     public String getLinkURI(Event event) {
         return this.getLinkURI(event, null);
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event, Boolean)
+     * @see org.apache.cocoon.portal.services.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event, Boolean)
      */
     public String getLinkURI(Event event, Boolean secure) {
         if (event == null) {
@@ -200,14 +200,14 @@ public class DefaultLinkService
     }
     
     /**
-     * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
+     * @see org.apache.cocoon.portal.services.LinkService#getLinkURI(java.util.List)
      */
     public String getLinkURI(List events) {
         return this.getLinkURI(events, null);
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
+     * @see org.apache.cocoon.portal.services.LinkService#getLinkURI(java.util.List)
      */
     public String getLinkURI(List events, Boolean secure) {
         if (events == null || events.size() == 0) {
@@ -267,7 +267,7 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#addEventToLink(org.apache.cocoon.portal.event.Event)
+     * @see org.apache.cocoon.portal.services.LinkService#addEventToLink(org.apache.cocoon.portal.event.Event)
      */
     public void addEventToLink(Event event) {
         if (event == null) {
@@ -293,7 +293,7 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#addParameterToLink(java.lang.String, java.lang.String)
+     * @see org.apache.cocoon.portal.services.LinkService#addParameterToLink(java.lang.String, java.lang.String)
      */
     public void addParameterToLink(String name, String value) {
         final LinkInfo info = this.getInfo();
@@ -301,7 +301,7 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#addUniqueParameterToLink(java.lang.String, java.lang.String)
+     * @see org.apache.cocoon.portal.services.LinkService#addUniqueParameterToLink(java.lang.String, java.lang.String)
      */
     public void addUniqueParameterToLink(String name, String value) {
         final LinkInfo info = this.getInfo();
@@ -310,14 +310,14 @@ public class DefaultLinkService
     }
     
     /**
-     * @see org.apache.cocoon.portal.LinkService#getRefreshLinkURI()
+     * @see org.apache.cocoon.portal.services.LinkService#getRefreshLinkURI()
      */
     public String getRefreshLinkURI() {
         return this.getRefreshLinkURI(null);
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#getRefreshLinkURI(java.lang.Boolean)
+     * @see org.apache.cocoon.portal.services.LinkService#getRefreshLinkURI(java.lang.Boolean)
      */
     public String getRefreshLinkURI(Boolean secure) {
         final LinkInfo info = this.getInfo();
@@ -363,14 +363,14 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#getInternalParameterNames()
+     * @see org.apache.cocoon.portal.services.LinkService#getInternalParameterNames()
      */
     public List getInternalParameterNames() {
         return this.internalParameters;
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#isInternalParameterName(java.lang.String)
+     * @see org.apache.cocoon.portal.services.LinkService#isInternalParameterName(java.lang.String)
      */
     public boolean isInternalParameterName(String name) {
         final Iterator i = this.internalParametersMatchers.iterator();
