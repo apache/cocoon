@@ -39,7 +39,7 @@ import org.codehaus.plexus.archiver.war.WarArchiver;
 public class DeployWarMojo extends AbstractDeployMojo {
 
     /** 
-     * @parameter expression="${blocksDirectory}" default-value="apps"  
+     * @parameter expression="${blocksDirectory}" default-value="blocks"  
      */
     private String blocksdir;       
     
