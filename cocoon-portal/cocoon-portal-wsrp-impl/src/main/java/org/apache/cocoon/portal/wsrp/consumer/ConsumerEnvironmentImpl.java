@@ -21,7 +21,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
 import org.apache.wsrp4j.consumer.PortletDriverRegistry;
 import org.apache.wsrp4j.consumer.PortletRegistry;

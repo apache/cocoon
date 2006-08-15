@@ -35,12 +35,13 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
-import org.apache.cocoon.portal.layout.NamedItem;
+import org.apache.cocoon.portal.event.layout.ChangeTabEvent;
+import org.apache.cocoon.portal.layout.LayoutException;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.NamedItem;
 
 /**
  * Manages the various activities required for page labels.
@@ -228,13 +229,18 @@ public class PageLabelManager
         Map map = new HashMap();
 
         Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-        Layout portalLayout = LayoutFeatures.getFullScreenInfo(rootLayout);
+        Layout portalLayout = LayoutFeatures.getFullScreenInfo(service, rootLayout);
         if (portalLayout == null) {
             portalLayout = rootLayout;
         }
 
         if (portalLayout instanceof CompositeLayout) {
-            populate((CompositeLayout) portalLayout, map, "", new ArrayList());
+            try {
+                populate(service, (CompositeLayout) portalLayout, map, "", new ArrayList());
+            } catch (LayoutException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 
         return map;
@@ -248,12 +254,13 @@ public class PageLabelManager
      * @param name
      * @param parentEvents
      */
-    private List populate(CompositeLayout layout, Map map, String name, List parentEvents) {
+    private List populate(PortalService service, CompositeLayout layout, Map map, String name, List parentEvents)
+    throws LayoutException {
         List lhList = null;
         for (int j = 0; j < layout.getSize(); j++) {
             Item tab = layout.getItem(j);
-            LayoutChangeParameterEvent event =
-                new LayoutChangeParameterEvent(layout, this.aspectName, String.valueOf(j), true);
+            ChangeTabEvent event =
+                new ChangeTabEvent(LayoutFeatures.getLayoutInstance(service, layout, true), tab, false);
             StringBuffer label = new StringBuffer(name);
             if (label.length() > 0) {
                 label.append(".");
@@ -265,7 +272,7 @@ public class PageLabelManager
             Layout child = tab.getLayout();
             List allEvents = null;
             if (child != null && child instanceof CompositeLayout) {
-                allEvents = populate((CompositeLayout) child, map, label.toString(), events);
+                allEvents = populate(service, (CompositeLayout) child, map, label.toString(), events);
             }
             if (this.nonStickyTabs) {
                 // With non-sticky tabs the non-leaf nodes always display

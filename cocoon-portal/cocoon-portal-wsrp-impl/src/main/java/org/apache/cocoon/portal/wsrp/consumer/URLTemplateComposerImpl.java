@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.wsrp.consumer;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
 import org.apache.wsrp4j.consumer.URLGenerator;
 import org.apache.wsrp4j.consumer.URLTemplateComposer;

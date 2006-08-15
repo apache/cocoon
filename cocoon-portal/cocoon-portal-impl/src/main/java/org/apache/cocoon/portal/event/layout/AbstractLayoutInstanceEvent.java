@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event.coplet;
+package org.apache.cocoon.portal.event.layout;
 
-import org.apache.cocoon.portal.event.CopletInstanceEvent;
-import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.event.LayoutInstanceEvent;
+import org.apache.cocoon.portal.om.LayoutInstance;
 
-public class AbstractCopletInstanceEvent
-    implements CopletInstanceEvent {
+public class AbstractLayoutInstanceEvent
+    implements LayoutInstanceEvent {
 
-    protected CopletInstance target;
+    protected LayoutInstance target;
 
-    public AbstractCopletInstanceEvent(CopletInstance target) {
+    public AbstractLayoutInstanceEvent(LayoutInstance target) {
         this.target = target;
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.CopletDefinitionEvent#getTarget()
+     * @see org.apache.cocoon.portal.event.LayoutInstanceEvent#getTarget()
      */
-    public CopletInstance getTarget() {
+    public LayoutInstance getTarget() {
         return this.target;
     }
 }

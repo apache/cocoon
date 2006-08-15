@@ -18,10 +18,11 @@ package org.apache.cocoon.portal.profile;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletType;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletType;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutInstance;
 
 /**
  * The profile manager provides access to the portal profile (or parts
@@ -51,6 +52,13 @@ public interface ProfileManager {
      * @return The coplet instance or null.
      */
     CopletInstance getCopletInstance(String copletID);
+
+    /**
+     * Get the layout instance for the given layout object.
+     * @param layout The layout.
+     * @return The layout instance or null.
+     */
+    LayoutInstance getLayoutInstance(Layout layout);
 
     /**
      * Get all coplet instances of the given coplet for the current user.

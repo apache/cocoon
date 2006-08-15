@@ -18,21 +18,22 @@ package org.apache.cocoon.portal.event.layout;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
-import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.commons.lang.ObjectUtils;
 
 /**
  *
  * @version $Id$
  */
-public class LayoutChangeParameterEvent
-    extends AbstractLayoutEvent
+public class LayoutInstanceChangeAttributeEvent
+    extends AbstractLayoutInstanceEvent
     implements ComparableEvent, ConvertableEvent {
 
-    protected String parameterName;
+    protected String attributeName;
     protected String value;
+    protected boolean temporary;
 
-    public LayoutChangeParameterEvent(PortalService service, String eventData) {
+    public LayoutInstanceChangeAttributeEvent(PortalService service, String eventData) {
         super(null);
         final int pos = eventData.indexOf(':');
         if ( pos == -1 ) {
@@ -42,39 +43,50 @@ public class LayoutChangeParameterEvent
         if ( pos2 == -1 ) {
             throw new IllegalArgumentException("Corrupt event data: " + eventData);
         }
+        if ( eventData.charAt(pos+1) != 'T' && eventData.charAt(pos+1) != 'P') {
+            throw new IllegalArgumentException("Corrupt event data: " + eventData);            
+        }
+        this.temporary = (eventData.charAt(pos+1) == 'T');
         final String layoutId = eventData.substring(0, pos);
-        this.parameterName = eventData.substring(pos+1, pos2);
+        this.attributeName = eventData.substring(pos+2, pos2);
         this.value= eventData.substring(pos2+1);
-        this.target = service.getProfileManager().getPortalLayout(null, layoutId);
+        this.target = service.getProfileManager().getLayoutInstance(service.getProfileManager().getPortalLayout(null, layoutId));
     }
 
     /**
      * @param target
      */
-    public LayoutChangeParameterEvent(Layout target,
-                                      String parameterName,
-                                      String value) {
+    public LayoutInstanceChangeAttributeEvent(LayoutInstance target,
+                                              String         attribute,
+                                              String         newValue,
+                                              boolean        temporary) {
         super(target);
-        this.parameterName = parameterName;
-        this.value = value;
+        this.attributeName = attribute;
+        this.value = newValue;
+        this.temporary = temporary;
     }
 
-    public String getParameterName() {
-        return this.parameterName;
+    public String getAttributeName() {
+        return this.attributeName;
     }
 
     public String getValue() {
         return this.value;
     }
 
+    public boolean isTemporary() {
+        return this.temporary;
+    }
+
     /**
      * @see org.apache.cocoon.portal.event.ComparableEvent#equalsEvent(org.apache.cocoon.portal.event.ComparableEvent)
      */
     public boolean equalsEvent(ComparableEvent event) {
-        if ( event instanceof LayoutChangeParameterEvent ) {
-            LayoutChangeParameterEvent e = (LayoutChangeParameterEvent)event;
-            return ObjectUtils.equals(this.getTarget(), e.getTarget())
-                   && ObjectUtils.equals(this.getParameterName(), e.getParameterName());
+        if ( event instanceof LayoutInstanceChangeAttributeEvent ) {
+            LayoutInstanceChangeAttributeEvent e = (LayoutInstanceChangeAttributeEvent)event;
+            return this.temporary == e.isTemporary()
+                   && ObjectUtils.equals(this.getTarget(), e.getTarget())
+                   && ObjectUtils.equals(this.getAttributeName(), e.getAttributeName());
         }
         return false;
     }
@@ -83,11 +95,11 @@ public class LayoutChangeParameterEvent
      * @see org.apache.cocoon.portal.event.ConvertableEvent#asString()
      */
     public String asString() {
-        final Layout l = this.getTarget();
+        final LayoutInstance l = this.getTarget();
         if ( l.getId() == null ) {
             return null;
         }
-        return l.getId() + ':' + this.parameterName + ':' + this.value;
+        return l.getId() + ':' + (this.temporary ? 'T' : 'P') + this.attributeName + ':' + this.value;
     }
 
 }

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.PortletPreferencesProvider;
 import org.apache.pluto.PortletContainerServices;
 import org.apache.pluto.om.common.Description;

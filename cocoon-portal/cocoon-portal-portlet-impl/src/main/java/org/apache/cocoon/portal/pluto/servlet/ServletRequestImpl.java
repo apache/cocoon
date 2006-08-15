@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
 import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.pluto.om.window.PortletWindow;

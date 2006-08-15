@@ -16,9 +16,12 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.FrameLayout;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.FrameLayout;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutInstance;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -32,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * <h2>Applicable to:</h2>
  * <ul>
- *  <li>{@link org.apache.cocoon.portal.layout.impl.FrameLayout}</li>
+ *  <li>{@link org.apache.cocoon.portal.om.FrameLayout}</li>
  * </ul>
  *
  * @version $Id$
@@ -40,15 +43,16 @@ import org.xml.sax.SAXException;
 public class FrameAspect extends AbstractCIncludeAspect {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext, Layout layout, PortalService service, ContentHandler handler)
-    throws SAXException {
-        if (!(layout instanceof FrameLayout)) {
-            throw new SAXException("Wrong layout type, FrameLayout expected: " + layout.getClass().getName());
+    throws SAXException, LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, FrameLayout.class, true);
+        String source = null;
+        final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
+        if ( instance != null ) {
+            source = (String)instance.getTemporaryAttribute("frame");
         }
-
-        String source = (String)layout.getTemporaryAttribute("frame");
         if (source == null) {
             source = ((FrameLayout) layout).getSource();
         }

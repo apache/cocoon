@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplet;
+package org.apache.cocoon.portal.om;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
 
 /**
@@ -44,32 +45,32 @@ import org.apache.cocoon.portal.util.PortalUtils;
  *
  * @version $Id$
  */
-public final class CopletInstance implements Serializable {
+public final class CopletInstance implements Cloneable, Serializable {
 
     public final static int SIZE_MINIMIZED  = 0;
     public final static int SIZE_NORMAL     = 1;
     public final static int SIZE_MAXIMIZED   = 2;
     public final static int SIZE_FULLSCREEN = 3;
 
-    /** The unique identifier.
-     * @see PortalUtils#testId(String)
-     */
-    protected final String id;
-
     /** The corresponding {@link CopletDefinition}. */
 	protected CopletDefinition copletDefinition;
-
-    /** Persisted attributes. */
-    protected Map attributes = Collections.EMPTY_MAP;
-
-    /** Temporary attributes are not persisted. */
-    transient protected Map temporaryAttributes = Collections.EMPTY_MAP;
 
     /** The title of the coplet instance (if user specific). */
     protected String title;
 
     /** The size of the coplet. */
     protected int size = SIZE_NORMAL;
+
+    /** The unique identifier.
+     * @see PortalUtils#testId(String)
+     */
+    protected final String id;
+
+    /** Persisted attributes. */
+    protected Map attributes = Collections.EMPTY_MAP;
+
+    /** Temporary attributes are not persisted. */
+    protected transient Map temporaryAttributes = Collections.EMPTY_MAP;
 
     /**
 	 * Constructor to create a new coplet instance data object.
@@ -86,14 +87,6 @@ public final class CopletInstance implements Serializable {
         this.id = id;
 	}
 
-    /**
-     * The unique identifier of this instance.
-     * @return The unique identifer.
-     */
-    public String getId() {
-        return this.id;
-    }
-
 	/**
 	 * @return CopletDefinition
 	 */
@@ -108,44 +101,6 @@ public final class CopletInstance implements Serializable {
 	public void setCopletDefinition(CopletDefinition copletDef) {
 		this.copletDefinition = copletDef;
 	}
-
-    public Object getAttribute(String key) {
-        return this.attributes.get(key);
-    }
-
-    public void setAttribute(String key, Object value) {
-        if ( this.attributes.size() == 0 ) {
-            this.attributes = new HashMap();
-        }
-        this.attributes.put(key, value);
-    }
-
-    public Object removeAttribute(String key) {
-        return this.attributes.remove(key);
-    }
-
-    public Map getAttributes() {
-        return this.attributes;
-    }
-
-    public Object getTemporaryAttribute(String key) {
-        return this.temporaryAttributes.get(key);
-    }
-
-    public void setTemporaryAttribute(String key, Object value) {
-        if ( this.temporaryAttributes.size() == 0 ) {
-            this.temporaryAttributes = new HashMap();
-        }
-        this.temporaryAttributes.put(key, value);
-    }
-
-    public Object removeTemporaryAttribute(String key) {
-        return this.temporaryAttributes.remove(key);
-    }
-
-    public Map getTemporaryAttributes() {
-        return this.temporaryAttributes;
-    }
 
     public String getTitle() {
         if (this.title != null) {
@@ -166,15 +121,18 @@ public final class CopletInstance implements Serializable {
      * @see java.lang.Object#clone()
      */
     protected Object clone() throws CloneNotSupportedException {
-        CopletInstance clone = new CopletInstance(this.id);
+        final CopletInstance clone = new CopletInstance(this.id);
 
-        clone.copletDefinition = this.copletDefinition;
         if ( this.attributes.size() > 0 ) {
             clone.attributes = new HashMap(this.attributes);
         }
         if ( this.temporaryAttributes.size() > 0 ) {
             clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
         }
+
+        clone.size = this.size;
+        clone.copletDefinition = this.copletDefinition;
+        clone.title = this.title;
 
         return clone;
     }
@@ -211,5 +169,89 @@ public final class CopletInstance implements Serializable {
     public String toString() {
         return "CopletInstance (" + this.hashCode() +
                "), id=" + this.getId() + ", coplet-definition=" + (this.getCopletDefinition() == null ? "null" : this.getCopletDefinition().getId());
+    }
+
+    /**
+     * The unique identifier of this instance.
+     * @return The unique identifer.
+     */
+    public String getId() {
+        return this.id;
+    }
+
+    /**
+     * Return the value of an attribute.
+     * @param key The name of the attribute.
+     * @return The value of the attribute or null
+     */
+    public Object getAttribute(String key) {
+        return this.attributes.get(key);
+    }
+
+    /**
+     * Set the value of the attribute.
+     * @param key The attribute name.
+     * @param value The new value.
+     */
+    public void setAttribute(String key, Object value) {
+        if ( this.attributes.size() == 0 ) {
+            this.attributes = new HashMap();
+        }
+        this.attributes.put(key, value);
+    }
+
+    /**
+     * Remove an attribute.
+     * @param key The attribute name.
+     * @return If there was a value associated with the attribute, the old value is returned.
+     */
+    public Object removeAttribute(String key) {
+        return this.attributes.remove(key);
+    }
+
+    /**
+     * Return a map with all attributes.
+     * @return A map.
+     */
+    public Map getAttributes() {
+        return this.attributes;
+    }
+
+    /**
+     * Return the value of an attribute.
+     * @param key The name of the attribute.
+     * @return The value of the attribute or null
+     */
+    public Object getTemporaryAttribute(String key) {
+        return this.temporaryAttributes.get(key);
+    }
+
+    /**
+     * Set the value of the attribute.
+     * @param key The attribute name.
+     * @param value The new value.
+     */
+    public void setTemporaryAttribute(String key, Object value) {
+        if ( this.temporaryAttributes.size() == 0 ) {
+            this.temporaryAttributes = new HashMap();
+        }
+        this.temporaryAttributes.put(key, value);
+    }
+
+    /**
+     * Remove a temporary attribute.
+     * @param key The attribute name.
+     * @return If there was a value associated with the attribute, the old value is returned.
+     */
+    public Object removeTemporaryAttribute(String key) {
+        return this.temporaryAttributes.remove(key);
+    }
+
+    /**
+     * Return a map with all temporary attributes.
+     * @return A map.
+     */
+    public Map getTemporaryAttributes() {
+        return this.temporaryAttributes;
     }
 }

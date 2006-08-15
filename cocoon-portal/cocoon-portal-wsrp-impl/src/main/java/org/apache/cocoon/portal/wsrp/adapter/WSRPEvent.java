@@ -17,8 +17,8 @@ package org.apache.cocoon.portal.wsrp.adapter;
 
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * This event is fired for every wsrp action. <br/>

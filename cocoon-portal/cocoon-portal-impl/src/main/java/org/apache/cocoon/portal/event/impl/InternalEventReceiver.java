@@ -19,9 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.event.CopletDefinitionEvent;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
@@ -31,11 +28,16 @@ import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.event.coplet.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
-import org.apache.cocoon.portal.layout.LayoutFeatures.RenderInfo;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstanceFeatures;
+import org.apache.cocoon.portal.om.CopletLayout;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.LayoutFeatures.RenderInfo;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.commons.jxpath.JXPathContext;
 
@@ -90,33 +92,33 @@ public final class InternalEventReceiver
             cid.setSize(event.getSize());
             if ( event.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
                 CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
-                LayoutFeatures.setFullScreenInfo(rootLayout, layout);
+                LayoutFeatures.setFullScreenInfo(service, rootLayout, layout);
             } else if ( event.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
                 CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
                 Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
                 if ( container != null ) {
                     final RenderInfo info = new RenderInfo(layout, container);
-                    LayoutFeatures.setRenderInfo(container.getParent(), info);
+                    LayoutFeatures.setRenderInfo(service, container.getParent(), info);
                 } else {
                 	// TODO - Check if this is correct
-                    LayoutFeatures.setFullScreenInfo(rootLayout, layout);                	
+                    LayoutFeatures.setFullScreenInfo(service, rootLayout, layout);                	
                 }
             }
             if ( oldSize == CopletInstance.SIZE_FULLSCREEN ) {
-                LayoutFeatures.setFullScreenInfo(rootLayout, null);
+                LayoutFeatures.setFullScreenInfo(service, rootLayout, null);
             } else if ( oldSize == CopletInstance.SIZE_MAXIMIZED ) {
                 CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
                 Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
                 if ( container != null ) {
-                	LayoutFeatures.setRenderInfo(container.getParent(), null);
+                	LayoutFeatures.setRenderInfo(service, container.getParent(), null);
                 } else {
                 	// TODO - Check if this is correct
-                	LayoutFeatures.setFullScreenInfo(rootLayout, null);
+                	LayoutFeatures.setFullScreenInfo(service, rootLayout, null);
                 }
             }
         } else {
             if ( event.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
-                LayoutFeatures.setFullScreenInfo(rootLayout, null);
+                LayoutFeatures.setFullScreenInfo(service, rootLayout, null);
             }
         }
     }
@@ -129,13 +131,13 @@ public final class InternalEventReceiver
         // full screen?
         if ( cid.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
             Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-            LayoutFeatures.setFullScreenInfo(rootLayout, null);
+            LayoutFeatures.setFullScreenInfo(service, rootLayout, null);
         } else if ( cid.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
             Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
             CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
             Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
             if ( container != null ) {
-                LayoutFeatures.setRenderInfo(container.getParent(), null);
+                LayoutFeatures.setRenderInfo(service, container.getParent(), null);
             }
         }
     }
@@ -169,10 +171,18 @@ public final class InternalEventReceiver
      */
     public void inform(LayoutChangeParameterEvent e, PortalService service) {
         final Layout l = e.getTarget();
+        l.setParameter(e.getParameterName(), e.getValue());
+    }
+
+    /**
+     * @see Receiver
+     */
+    public void inform(LayoutInstanceChangeAttributeEvent e, PortalService service) {
+        final LayoutInstance l = e.getTarget();
         if ( e.isTemporary() ) {
-            l.setTemporaryAttribute(e.getParameterName(), e.getValue());
+            l.setTemporaryAttribute(e.getAttributeName(), e.getValue());            
         } else {
-            l.setParameter(e.getParameterName(), e.getValue());
+            l.setAttribute(e.getAttributeName(), e.getValue());
         }
     }
 }

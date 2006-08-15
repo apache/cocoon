@@ -43,8 +43,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.coplets.basket.events.CleanBriefcaseEvent;
 import org.apache.cocoon.portal.coplets.basket.events.ContentStoreEvent;
@@ -56,7 +54,9 @@ import org.apache.cocoon.portal.coplets.basket.events.ShowItemEvent;
 import org.apache.cocoon.portal.coplets.basket.events.UploadItemEvent;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.impl.AbstractComponent;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.servlet.multipart.PartOnDisk;
 import org.apache.cocoon.util.ClassUtils;
@@ -125,8 +125,8 @@ public class BasketManagerImpl
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        super.service(serviceManager);
         this.scheduler = (JobScheduler)this.manager.lookup(JobScheduler.ROLE);
         final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
         this.directory = settings.getWorkDirectory();
@@ -247,10 +247,10 @@ public class BasketManagerImpl
                         } catch (ServiceException se) {
                             this.getLogger().warn("Unable to get source resolver.", se);
                         } finally {
-                            if ( source != null ) {
+                            if ( resolver != null ) {
                                 resolver.release(source);
+                                this.manager.release(resolver);
                             }
-                            this.manager.release(resolver);
                         }
                         
                     } else {
@@ -272,7 +272,9 @@ public class BasketManagerImpl
                         }
                     }
                 }
-                layout.setCopletInstanceId(cid.getId());
+                if ( cid != null ) {
+                    layout.setCopletInstanceId(cid.getId());
+                }
             } catch (PortalException pe) {
                 this.getLogger().warn("Unable to create new instance.", pe);
             }
@@ -376,10 +378,10 @@ public class BasketManagerImpl
                 } catch (ServiceException se) {
                     this.getLogger().warn("Unable to get source resolver.", se);
                 } finally {
-                    if ( source != null ) {
+                    if ( resolver != null ) {
                         resolver.release(source);
+                        this.manager.release(resolver);
                     }
-                    this.manager.release(resolver);
                 }
             } else if ( ci.getURL() == null ) {
                 // copy coplet attributes
@@ -528,10 +530,10 @@ public class BasketManagerImpl
      */
     protected List loadBriefcases() {
         if ( this.directory != null ) {
-            File directory = new File(this.directory);
-            if ( directory.exists()) {
+            File dir = new File(this.directory);
+            if ( dir.exists()) {
                 List briefcases = new ArrayList();
-                File[] files = directory.listFiles();
+                File[] files = dir.listFiles();
                 for(int i=0; i<files.length;i++) {
                     String user = files[i].getName();
                     int pos = user.indexOf(".briefcase");

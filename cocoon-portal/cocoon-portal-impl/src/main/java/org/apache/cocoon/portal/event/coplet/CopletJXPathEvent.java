@@ -15,9 +15,9 @@
  */
 package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * This event changes the value of a coplet instance data.

@@ -100,14 +100,6 @@
         +-->
     <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-cinclude"
           default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"/>
-
-    <!--+
-        | This aspect creates a history of all layout aspect datas,
-        | coplet aspect datas and coplet attributes. It can be used by
-        | the bookmark action to browse the history.
-        +-->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/history"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.HistoryAspect"/>
     
     <!--+
         | This aspect can be used to render the content of the coplet.

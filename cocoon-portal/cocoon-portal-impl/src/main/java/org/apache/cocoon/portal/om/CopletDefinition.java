@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplet;
+package org.apache.cocoon.portal.om;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @version $Id$
  */
-public class CopletDefinition implements Serializable {
+public final class CopletDefinition implements Serializable, Cloneable {
 
     /** The unique identifier. */
     protected final String id;

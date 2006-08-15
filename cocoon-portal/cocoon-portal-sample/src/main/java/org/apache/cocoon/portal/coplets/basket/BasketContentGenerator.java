@@ -24,8 +24,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.generation.AbstractCopletGenerator;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.source.Source;
@@ -86,12 +86,12 @@ extends AbstractCopletGenerator {
                 }
             }
             if ( !streamed ) {
-                Source source = null;
+                Source src = null;
                 try {
-                    source = this.resolver.resolveURI(this.source);
-                    parser.parse(SourceUtil.getInputSource(source), this.xmlConsumer);
+                    src = this.resolver.resolveURI(this.source);
+                    parser.parse(SourceUtil.getInputSource(src), this.xmlConsumer);
                 } finally {
-                    this.resolver.release(source);
+                    this.resolver.release(src);
                 }
             }
         } catch (ServiceException se) {

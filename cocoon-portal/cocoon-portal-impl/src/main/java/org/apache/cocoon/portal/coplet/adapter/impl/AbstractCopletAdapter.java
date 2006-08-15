@@ -32,13 +32,13 @@ import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinition;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.impl.AbstractComponent;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -234,7 +234,7 @@ public abstract class AbstractCopletAdapter
      * {@link #streamContent(CopletInstance, ContentHandler)}
      * for creating the content.
      *
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#toSAX(org.apache.cocoon.portal.coplet.CopletInstance, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#toSAX(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
      */
     public void toSAX(CopletInstance coplet, ContentHandler contentHandler)
     throws SAXException {
@@ -368,21 +368,21 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void init(CopletInstance coplet) {
         // nothing to do here, can be overwritten in subclasses
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void destroy(CopletInstance coplet) {
         // nothing to do here, can be overwritten in subclasses
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void login(CopletInstance coplet) {
         // copy temporary attributes from the coplet data
@@ -397,7 +397,7 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void logout(CopletInstance coplet) {
         // nothing to do here, can be overwritten in subclasses

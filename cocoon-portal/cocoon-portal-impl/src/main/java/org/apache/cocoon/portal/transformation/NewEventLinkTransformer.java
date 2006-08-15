@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.portal.transformation;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.Attributes;

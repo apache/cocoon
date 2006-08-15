@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.coplet.adapter;
 
 import java.util.List;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * @version $Id$

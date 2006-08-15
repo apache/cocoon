@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event.layout;
 
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.om.Layout;
 
 /**
  * This event is fired when a new layout has been added.

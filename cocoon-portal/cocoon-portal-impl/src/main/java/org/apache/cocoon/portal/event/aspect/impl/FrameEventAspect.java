@@ -15,11 +15,13 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.FrameLayout;
+import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
+import org.apache.cocoon.portal.om.FrameLayout;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.LayoutInstance;
 
 /**
  *
@@ -37,14 +39,18 @@ public class FrameEventAspect extends AbstractContentEventAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(EventManager, org.apache.cocoon.portal.layout.Layout, java.lang.String[])
+     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(PortalService, org.apache.cocoon.portal.om.Layout, java.lang.String[])
      */
-    protected void publish(EventManager publisher,
-                           Layout layout,
-                           String[] values) {
+    protected void publish(PortalService service,
+                           Layout        layout,
+                           String[]      values) {
         if (layout instanceof FrameLayout) {
-            final Event e = new LayoutChangeParameterEvent(layout, "frame", values[2], true);
-            publisher.send(e);
+            LayoutInstance instance;
+            instance = LayoutFeatures.getLayoutInstance(service, layout, false);
+            if ( instance == null ) {
+                final Event e = new LayoutInstanceChangeAttributeEvent(instance, "frame", values[2], true);
+                service.getEventManager().send(e);                    
+            }
         } else {
             this.getLogger().warn(
                 "The configured layout: "

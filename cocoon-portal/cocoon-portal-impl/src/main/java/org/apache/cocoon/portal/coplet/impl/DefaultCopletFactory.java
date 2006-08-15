@@ -16,15 +16,15 @@
 package org.apache.cocoon.portal.coplet.impl;
 
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.coplet.CopletFactory;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
 import org.apache.cocoon.portal.impl.AbstractComponent;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletType;
 
 /**
  * This factory is for creating and managing coplet objects.
@@ -38,7 +38,7 @@ public class DefaultCopletFactory
     protected static long idCounter = System.currentTimeMillis();
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletDefinition)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public CopletInstance newInstance(CopletDefinition copletData)
     throws PortalException {
@@ -46,7 +46,7 @@ public class DefaultCopletFactory
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletDefinition, String)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.om.CopletDefinition, String)
      */
     public CopletInstance newInstance(CopletDefinition copletData, String key)
     throws PortalException {
@@ -72,7 +72,7 @@ public class DefaultCopletFactory
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#remove(org.apache.cocoon.portal.coplet.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#remove(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void remove(CopletInstance copletInstanceData) {
         if ( copletInstanceData != null ) {
@@ -88,7 +88,7 @@ public class DefaultCopletFactory
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletType, java.lang.String)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.om.CopletType, java.lang.String)
      */
     public CopletDefinition newInstance(CopletType copletType, String key)
     throws PortalException {

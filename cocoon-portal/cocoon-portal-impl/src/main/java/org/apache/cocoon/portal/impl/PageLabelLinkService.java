@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.NamedItem;
+import org.apache.cocoon.portal.om.CompositeLayout;
+import org.apache.cocoon.portal.om.Item;
+import org.apache.cocoon.portal.om.NamedItem;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;

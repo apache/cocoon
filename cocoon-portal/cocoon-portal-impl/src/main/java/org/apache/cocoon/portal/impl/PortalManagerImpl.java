@@ -31,12 +31,13 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.LayoutFeatures;
+import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstanceFeatures;
+import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
@@ -132,7 +133,11 @@ public class PortalManagerImpl
                 XMLUtils.startElement(ch, "coplet", a);
                 final Layout l = LayoutFeatures.searchLayout(service, current.getId(), rootLayout);
                 Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(l));
-                portalLayoutRenderer.toSAX(l, this.portalService, ch);
+                try {
+                    portalLayoutRenderer.toSAX(l, this.portalService, ch);
+                } catch (LayoutException e) {
+                    throw new SAXException(e);
+                }
                 XMLUtils.endElement(ch, "coplet");
             }
             XMLUtils.endElement(ch, "coplets");
@@ -156,7 +161,7 @@ public class PortalManagerImpl
             } else {
                 // first check for a full screen layout
                 Layout rootLayout = profileManager.getPortalLayout(null, layoutId);
-                portalLayout = LayoutFeatures.getFullScreenInfo(rootLayout);
+                portalLayout = LayoutFeatures.getFullScreenInfo(service, rootLayout);
                 if ( portalLayout == null ) {
                     portalLayout = rootLayout;
                 }
@@ -169,7 +174,11 @@ public class PortalManagerImpl
             Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(portalLayout));
 
             ch.startDocument();
-            portalLayoutRenderer.toSAX(portalLayout, this.portalService, ch);
+            try {
+                portalLayoutRenderer.toSAX(portalLayout, this.portalService, ch);
+            } catch (LayoutException e) {
+                throw new SAXException(e);
+            }
             ch.endDocument();            
         }
         // although we should be the last in the queue,

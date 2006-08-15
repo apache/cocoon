@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.layout;
+package org.apache.cocoon.portal.om;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
 import org.apache.commons.collections.map.LinkedMap;
 
@@ -59,9 +57,6 @@ public abstract class Layout extends AbstractParameters {
     /** The unique identifier of this layout object or null. */
     protected final String id;
 
-    /** The temporary attributes. */
-    transient protected Map temporaryAttributes = Collections.EMPTY_MAP;
-
     /** Is this layout object static? */
     protected boolean isStatic;
 
@@ -98,45 +93,6 @@ public abstract class Layout extends AbstractParameters {
      */
     public String getId() {
         return this.id;
-    }
-
-    /**
-     * Get the temporary attributes map.
-     * This method never returns null.
-     * @return A map with key value pairs.
-     */
-    public Map getTemporaryAttributes() {
-        return this.temporaryAttributes;
-    }
-
-    /**
-     * Return the temporary attribute value for the given key.
-     * @param key The name of the attribute.
-     * @return The value of the attribute or null.
-     */
-    public Object getTemporaryAttribute(String key) {
-        return this.temporaryAttributes.get(key);
-    }
-
-    /**
-     * Set the temporary attribute to a value.
-     * @param key The name of the attribute.
-     * @param value The value.
-     */
-    public void setTemporaryAttribute(String key, Object value) {
-        if ( this.temporaryAttributes.size() == 0 ) {
-            this.temporaryAttributes = new HashMap();
-        }
-        this.temporaryAttributes.put(key, value);
-    }
-
-    /**
-     * Remove the attribute.
-     * @param key The name of the attribute.
-     * @return The old value for the attribute or null.
-     */
-    public Object removeTemporaryAttribute(String key) {
-        return this.temporaryAttributes.remove(key);
     }
 
     /** 
@@ -202,8 +158,7 @@ public abstract class Layout extends AbstractParameters {
     /**
      * @see java.lang.Object#clone()
      */
-    protected Object clone() throws CloneNotSupportedException {
-        
+    protected Object clone() throws CloneNotSupportedException {        
         Constructor c;
         try {
             c = this.getClass().getConstructor(new Class[] {String.class, String.class});
@@ -218,9 +173,6 @@ public abstract class Layout extends AbstractParameters {
             clone.parent = null;
             clone.rendererName = this.rendererName;
             clone.isStatic = this.isStatic;
-            if ( this.temporaryAttributes.size() > 0 ) {
-                clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
-            }
 
             return clone;
         } catch (NoSuchMethodException e) {
