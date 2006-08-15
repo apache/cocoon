@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.om;
 
-import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.services.LayoutFactory;
 
 /**
  * A frame layout holds a source URI. The URI can be changed dynamically through

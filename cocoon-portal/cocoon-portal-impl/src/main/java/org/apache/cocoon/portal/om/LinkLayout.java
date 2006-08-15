@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.om;
 
-import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.services.LayoutFactory;
 
 /**
  * A link layout references another layout to be used instead. The reference

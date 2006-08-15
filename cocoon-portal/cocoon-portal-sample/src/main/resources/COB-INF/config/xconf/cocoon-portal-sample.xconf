@@ -48,6 +48,9 @@
   <!-- We use Castor for persisting/mapping the profiles to XML: -->
   <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
 
+  <!-- Include all renderers: -->
+  <include pattern="*.xconf" dir="renderers"/>
+
   <portal-service>
     <portal name="portal">
       <!-- These are the skins the user can choose from: -->
@@ -142,7 +145,7 @@
   <!--+
       | Page Labels.
       | To enable PageLabels add a "class" attribute to the following
-      | definition with the value "org.apache.cocoon.portal.impl.PageLabelLinkService"
+      | definition with the value "org.apache.cocoon.portal.services.impl.PageLabelLinkService"
       +-->
   <portal-link-service>
     <parameter name="defaultPort" value="8888"/>

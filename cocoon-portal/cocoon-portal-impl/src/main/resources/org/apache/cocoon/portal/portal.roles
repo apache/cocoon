@@ -210,24 +210,24 @@
       | Portal Link Service.
       |
       +-->
-    <role name="org.apache.cocoon.portal.LinkService"
-          default-class="org.apache.cocoon.portal.impl.DefaultLinkService"
+    <role name="org.apache.cocoon.portal.services.LinkService"
+          default-class="org.apache.cocoon.portal.services.impl.DefaultLinkService"
           shorthand="portal-link-service"/>
 
   <!--+
       | Layout Factory.
       |
       +-->
-    <role name="org.apache.cocoon.portal.layout.LayoutFactory"
-          default-class="org.apache.cocoon.portal.layout.impl.DefaultLayoutFactory"
+    <role name="org.apache.cocoon.portal.services.LayoutFactory"
+          default-class="org.apache.cocoon.portal.services.impl.DefaultLayoutFactory"
           shorthand="portal-layout-factory"/>
 
   <!--+
       | Coplet Factory.
       |
       +-->
-    <role name="org.apache.cocoon.portal.coplet.CopletFactory"
-          default-class="org.apache.cocoon.portal.coplet.impl.DefaultCopletFactory"
+    <role name="org.apache.cocoon.portal.services.CopletFactory"
+          default-class="org.apache.cocoon.portal.services.impl.DefaultCopletFactory"
           shorthand="portal-coplet-factory"/>
 
   <!--+

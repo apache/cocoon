@@ -17,8 +17,8 @@ package org.apache.cocoon.portal.om;
 
 import java.util.Iterator;
 
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.LayoutException;
 
 
 /**

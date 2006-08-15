@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.om;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
 import org.apache.commons.collections.map.LinkedMap;
 
