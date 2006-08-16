@@ -611,7 +611,7 @@ public class WSRPAdapter
             if (windowState != null) {
                 if ( !windowState.equals(windowSession.getWindowState()) ) {
                     
-                    final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
+                    final Layout rootLayout = service.getProfileManager().getLayout(null);
                     final Layout layout = LayoutFeatures.searchLayout(service, coplet.getId(), rootLayout);
                     final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(service, rootLayout);
                     if ( fullScreenLayout != null 

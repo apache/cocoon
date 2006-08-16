@@ -34,7 +34,7 @@ public class LayoutMapping extends Mapping {
      * @see org.apache.cocoon.portal.acting.helpers.Mapping#getEvent(org.apache.cocoon.portal.PortalService, java.lang.Object)
      */
     public Event getEvent(PortalService service, Object data) {
-        Layout layout = service.getProfileManager().getPortalLayout(null, this.layoutId);
+        Layout layout = service.getProfileManager().getLayout(this.layoutId);
         Event e = new LayoutJXPathEvent(layout, this.path, data);
         return e;
     }

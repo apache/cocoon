@@ -228,7 +228,7 @@ public class PageLabelManager
     private Map initializeLabels(PortalService service) {
         Map map = new HashMap();
 
-        Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
+        Layout rootLayout = service.getProfileManager().getLayout(null);
         Layout portalLayout = LayoutFeatures.getFullScreenInfo(service, rootLayout);
         if (portalLayout == null) {
             portalLayout = rootLayout;

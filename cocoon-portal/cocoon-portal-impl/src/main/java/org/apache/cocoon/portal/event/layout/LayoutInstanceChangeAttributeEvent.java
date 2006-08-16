@@ -50,7 +50,7 @@ public class LayoutInstanceChangeAttributeEvent
         final String layoutId = eventData.substring(0, pos);
         this.attributeName = eventData.substring(pos+2, pos2);
         this.value= eventData.substring(pos2+1);
-        this.target = service.getProfileManager().getLayoutInstance(service.getProfileManager().getPortalLayout(null, layoutId));
+        this.target = service.getProfileManager().getLayoutInstance(service.getProfileManager().getLayout(layoutId));
     }
 
     /**

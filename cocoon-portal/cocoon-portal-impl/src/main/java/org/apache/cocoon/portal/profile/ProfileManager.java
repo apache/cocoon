@@ -36,16 +36,11 @@ public interface ProfileManager {
     String ROLE = ProfileManager.class.getName();
 
     /**
-     * Get the portal layout defined by the layout key. This
-     * usually addresses the layout profile.
-     * With the optional subKey it's possible to retrieve
-     * a specific layout object in the profile defined by
-     * the layout key.
-     * @param profileName A key describing the layout or null for the default
+     * Get the portal layout defined by the layout id.
      * @param layoutID    The id of a layout object or null for the root object
      * @return The layout
      */
-	Layout getPortalLayout(String profileName, String layoutID);
+	Layout getLayout(String layoutID);
 
     /**
      * Get the coplet instance with the given id.

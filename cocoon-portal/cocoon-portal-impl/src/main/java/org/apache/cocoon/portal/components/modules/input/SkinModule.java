@@ -77,7 +77,7 @@ public class SkinModule
             // the skin is stored as a parameter on the root layout
             // if not, the global module is used
             // fallback is: common
-            final Layout rootLayout = this.portalService.getProfileManager().getPortalLayout(null, null);
+            final Layout rootLayout = this.portalService.getProfileManager().getLayout(null);
             if ( rootLayout != null ) {
                 skinName = rootLayout.getParameter("skin");
             }

@@ -59,14 +59,12 @@ public class StaticProfileManager
     protected final PortalUser portalUser = new StaticPortalUser();
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(String, String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getLayout(java.lang.String)
      */
-    public Layout getPortalLayout(String layoutKey, String layoutID) {
+    public Layout getLayout(String layoutID) {
         ProfileLS adapter = null;
         try {
-            if (layoutKey == null) {
-                layoutKey = this.portalService.getDefaultLayoutKey();
-            }
+            final String layoutKey = this.portalService.getDefaultLayoutKey();
 
             String serviceKey = LAYOUTKEY_PREFIX + layoutKey;
             Object[] objects = (Object[]) this.portalService.getAttribute(serviceKey);
