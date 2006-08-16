@@ -132,7 +132,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                     }
                 }
                 if ( portletNames.size() > 0 ) {
-                    final CompositeLayout rootLayout = (CompositeLayout)this.getPortalLayout(null, null);
+                    final CompositeLayout rootLayout = (CompositeLayout)this.getLayout(null);
                     // we only remove items and their layout but not the coplet instances
                     while ( rootLayout.getItems().size() > 0 ) {
                         rootLayout.removeItem(rootLayout.getItem(0));

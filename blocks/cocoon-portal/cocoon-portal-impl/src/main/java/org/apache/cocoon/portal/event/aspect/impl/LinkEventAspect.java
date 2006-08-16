@@ -35,7 +35,7 @@ public class LinkEventAspect extends AbstractContentEventAspect {
     }
 
     protected int getRequiredValueCount() {
-        return 4;
+        return 3;
     }
 
     /**

@@ -35,7 +35,7 @@ public class FrameEventAspect extends AbstractContentEventAspect {
     }
 
     protected int getRequiredValueCount() {
-        return 3;
+        return 2;
     }
 
     /**

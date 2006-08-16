@@ -43,22 +43,15 @@ public class LayoutSourceFactory
         String protocol = null;
 
         // remove the protocol
+        final String layoutKey;
         int position = location.indexOf(':') + 1;
         if (position != 0) {
             protocol = location.substring(0, position);
-            location = location.substring(position+2);
-        }
-        final int pos = location.indexOf(':');
-        final String profileKey;
-        final String layoutKey;
-        if ( pos == -1 ) {
-            profileKey = null;
-            layoutKey = location;
+            layoutKey = location.substring(position+2);
         } else {
-            profileKey = location.substring(0, pos);
-            layoutKey = location.substring(pos+1);
+            layoutKey = location;
         }
-        final Layout layout = this.portalService.getProfileManager().getPortalLayout(profileKey, layoutKey);
+        final Layout layout = this.portalService.getProfileManager().getLayout(layoutKey);
         if ( layout == null ) {
             throw new IOException("Unable to get layout for: " + location);
         }

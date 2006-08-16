@@ -35,7 +35,7 @@ public class PortalObjects {
 		this.portalService = portalService;
 		this.componentManager = portalService;
 		this.profileManager = componentManager.getProfileManager();
-		this.portalLayout = profileManager.getPortalLayout(null, null);
+		this.portalLayout = profileManager.getLayout(null);
 	}
 
 	public PortalComponentManager getComponentManager() {

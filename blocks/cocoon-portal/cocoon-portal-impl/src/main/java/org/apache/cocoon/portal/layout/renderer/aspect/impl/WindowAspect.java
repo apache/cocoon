@@ -236,7 +236,7 @@ public final class WindowAspect extends AbstractAspect {
                 if ( this.enableFullScreen ) {
                     boolean supportsFullScreen = CopletDefinitionFeatures.supportsFullScreenMode(cid.getCopletDefinition());
                     if ( supportsFullScreen ) {
-                        final Layout rootLayout = this.portalService.getProfileManager().getPortalLayout(null, null);
+                        final Layout rootLayout = this.portalService.getProfileManager().getLayout(null);
                         final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService, rootLayout);
                         if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
                             event = new CopletInstanceSizingEvent( cid, CopletInstance.SIZE_NORMAL );

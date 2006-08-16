@@ -160,9 +160,9 @@ public class GroupBasedProfileManager
      */
     protected void login(PortalUser user) {
         super.login(user);
-        // TODO - we should move most of the stuff from getPortalLayout to here
+        // TODO - we should move most of the stuff from getLayout to here
         // for now we use a hack :)
-        this.getPortalLayout(null, null);
+        this.getLayout(null);
     }
 
     /**
@@ -281,13 +281,8 @@ public class GroupBasedProfileManager
         profile.remove(event.getTarget());
     }
 
-    /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(java.lang.String, java.lang.String)
-     */
-    public Layout getPortalLayout(String layoutKey, String layoutId) {
-        if ( null == layoutKey ) {
-            layoutKey = this.portalService.getDefaultLayoutKey();
-        }
+    public Layout getLayout(String layoutId) {
+        final String layoutKey = this.portalService.getDefaultLayoutKey();
 
         Profile profile = this.getUserProfile(layoutKey);
         if ( profile == null ) {

@@ -162,7 +162,7 @@ public class LayoutFeatures {
                 }
             } else if ( rootLayout instanceof LinkLayout && followLinks) {
                 final LinkLayout linkLayout = (LinkLayout)rootLayout;
-                return traverseLayout(service, service.getProfileManager().getPortalLayout(linkLayout.getLayoutKey(), linkLayout.getLayoutId()), traverser);
+                return traverseLayout(service, service.getProfileManager().getLayout(linkLayout.getLayoutId()), traverser);
             }
         }
         return null;
