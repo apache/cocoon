@@ -41,9 +41,9 @@ public class RemoveLayoutEvent
     public RemoveLayoutEvent(PortalService service, String eventData) {
         super(null);
         if ( eventData.charAt(0) == 'L' ) {
-            this.target = service.getProfileManager().getPortalLayout(null, eventData.substring(1));
+            this.target = service.getProfileManager().getLayout(eventData.substring(1));
         } else if ( eventData.charAt(0) == 'C' ) {
-            final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
+            final Layout rootLayout = service.getProfileManager().getLayout(null);
             this.target = LayoutFeatures.searchLayout(service, eventData.substring(1), rootLayout);            
         }
     }

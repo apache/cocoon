@@ -162,10 +162,9 @@ extends AbstractCopletTransformer {
             if ( layoutId == null ) {
                 throw new SAXException("Attribute 'id' must be specified on element " + LAYOUT_ELEM + ".");
             }
-            final String profile = attr.getValue("profile");
-            final Layout l = this.portalService.getProfileManager().getPortalLayout(profile, layoutId);
+            final Layout l = this.portalService.getProfileManager().getLayout(layoutId);
             if ( l == null ) {
-                throw new SAXException("Unable to find layout with id '" + layoutId + "' in profile '" + profile + "'.");
+                throw new SAXException("Unable to find layout with id '" + layoutId + "'.");
             }
             final JXPathContext jxpathContext = JXPathContext.newContext( l );
             final Object object = jxpathContext.getValue(expression);
@@ -203,7 +202,7 @@ extends AbstractCopletTransformer {
                 if ( attr.getValue("layout") != null ) {
                     newAttrs.removeAttribute("layout");
                     final String layoutId = attr.getValue("layout");
-                    Layout layout = this.portalService.getProfileManager().getPortalLayout(null, layoutId);
+                    Layout layout = this.portalService.getProfileManager().getLayout(layoutId);
                     if ( layout != null ) {
                         event = new LayoutJXPathEvent(layout, path, value);
                     }

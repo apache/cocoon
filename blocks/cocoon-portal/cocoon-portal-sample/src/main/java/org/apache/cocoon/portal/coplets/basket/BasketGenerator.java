@@ -277,7 +277,7 @@ extends ServiceableGenerator {
                         XMLUtils.endElement(this.xmlConsumer, "store");
 
                         XMLUtils.createElement(this.xmlConsumer, "id", String.valueOf(ci.getId()));
-                        Event e = new ShowItemEvent(store, item, profileManager.getPortalLayout(null, this.showLayoutId), this.showCopletId);
+                        Event e = new ShowItemEvent(store, item, profileManager.getLayout(this.showLayoutId), this.showCopletId);
                         XMLUtils.createElement(this.xmlConsumer, "show-url", linkService.getLinkURI(e));
                         if (ci.size() != -1 ) {
                             XMLUtils.createElement(this.xmlConsumer, "size", String.valueOf(ci.size()));

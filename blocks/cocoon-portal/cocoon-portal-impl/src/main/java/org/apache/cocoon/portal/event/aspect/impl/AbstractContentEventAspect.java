@@ -55,7 +55,7 @@ public abstract class AbstractContentEventAspect
     /**
      * Custom publishing of an event.
      * The real values for the event are contained in the array
-     * starting with index 2!
+     * starting with index 1!
      * @param layout  The corresponding layout
      * @param values  The values contained in the request
      */
@@ -63,12 +63,12 @@ public abstract class AbstractContentEventAspect
 
     /**
      * Publish the event.
-     * This method gets the layout object from the first two
-     * values and invokes {@link #publish(EventManager, Layout, String[])}.
+     * This method gets the layout object from the first
+     * value and invokes {@link #publish(EventManager, Layout, String[])}.
      * @param values The values contained in the request
      */
     protected void publish( PortalService service, String[] values) {
-        Layout layout = service.getProfileManager().getPortalLayout(values[0], values[1] );
+        Layout layout = service.getProfileManager().getLayout(values[0] );
         if ( layout != null ) {
             this.publish( service, layout, values);
         }

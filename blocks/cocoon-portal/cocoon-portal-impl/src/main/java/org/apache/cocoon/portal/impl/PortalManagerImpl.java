@@ -121,7 +121,7 @@ public class PortalManagerImpl
         // test for ajax request
         final Request req = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
         if ( AjaxHelper.isAjaxRequest(req) ) {
-            Layout rootLayout = profileManager.getPortalLayout(null, null);
+            Layout rootLayout = profileManager.getLayout(null);
             ch.startDocument();
             XMLUtils.startElement(ch, "coplets");
             final List changed = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(service);
@@ -154,13 +154,13 @@ public class PortalManagerImpl
             if ( StringUtils.isNotEmpty(copletId) ) {
                 final CopletInstance cid = profileManager.getCopletInstance(copletId);
                 if ( cid != null ) {
-                    portalLayout = LayoutFeatures.searchLayout(service, cid.getId(), profileManager.getPortalLayout(null, null));
+                    portalLayout = LayoutFeatures.searchLayout(service, cid.getId(), profileManager.getLayout(null));
                 }
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
-                portalLayout = profileManager.getPortalLayout(null, layoutId);
+                portalLayout = profileManager.getLayout(layoutId);
             } else {
                 // first check for a full screen layout
-                Layout rootLayout = profileManager.getPortalLayout(null, layoutId);
+                Layout rootLayout = profileManager.getLayout(layoutId);
                 portalLayout = LayoutFeatures.getFullScreenInfo(service, rootLayout);
                 if ( portalLayout == null ) {
                     portalLayout = rootLayout;

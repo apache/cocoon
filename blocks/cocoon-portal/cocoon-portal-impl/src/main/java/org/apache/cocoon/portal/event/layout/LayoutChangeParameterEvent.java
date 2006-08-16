@@ -45,7 +45,7 @@ public class LayoutChangeParameterEvent
         final String layoutId = eventData.substring(0, pos);
         this.parameterName = eventData.substring(pos+1, pos2);
         this.value= eventData.substring(pos2+1);
-        this.target = service.getProfileManager().getPortalLayout(null, layoutId);
+        this.target = service.getProfileManager().getLayout(layoutId);
     }
 
     /**

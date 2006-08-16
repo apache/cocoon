@@ -24,7 +24,7 @@ import org.apache.commons.jxpath.JXPathContext;
 /**
  * This input module gives access to information stored in a layout object
  * by using JXPathExpressions.
- * The syntax to use is LAYOUT_ID/PATH or LAYOUT_KEY:LAYOUT_ID/PATH
+ * The syntax to use is LAYOUT_ID/PATH.
  *
  * @version $Id$
  */
@@ -47,15 +47,13 @@ public class LayoutModule
         }
         // is the layout key specified?
         pos = key.indexOf(':');
-        String layoutKey = null;
         String layoutId = key;
         if ( pos != -1 ) {
-            layoutKey = key.substring(0, pos);
             layoutId = key.substring(pos + 1);
         }
 
         // get the layout
-        final Object layout = portalService.getProfileManager().getPortalLayout(layoutKey, layoutId);
+        final Object layout = portalService.getProfileManager().getLayout(layoutId);
         Object value = layout;
         if ( layout != null && path != null ) {
             final JXPathContext jxpathContext = JXPathContext.newContext(layout);

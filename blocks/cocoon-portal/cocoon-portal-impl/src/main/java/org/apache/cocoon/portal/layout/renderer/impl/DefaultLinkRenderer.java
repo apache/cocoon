@@ -43,19 +43,16 @@ public class DefaultLinkRenderer extends AbstractRenderer {
     throws SAXException {
         try {
             LayoutFeatures.checkLayoutClass(layout, LinkLayout.class, true);
-            String layoutKey = null;
             String layoutId = null;
             final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
             if ( instance != null ) {
-                layoutKey = (String)instance.getTemporaryAttribute("link-layout-key");
                 layoutId = (String)instance.getTemporaryAttribute("link-layout-id");                
             }
-            if ( layoutKey == null && layoutId == null){
+            if ( layoutId == null){
 				// get default values
-				layoutKey = ((LinkLayout)layout).getLayoutKey();
 				layoutId = ((LinkLayout)layout).getLayoutId();
 			}
-            this.processLayout(service.getProfileManager().getPortalLayout(layoutKey, layoutId), service, handler);
+            this.processLayout(service.getProfileManager().getLayout(layoutId), service, handler);
         } catch (LayoutException le) {
             throw new SAXException(le);
         }        

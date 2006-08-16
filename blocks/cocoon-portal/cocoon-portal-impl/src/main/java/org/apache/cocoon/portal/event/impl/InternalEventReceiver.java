@@ -86,7 +86,7 @@ public final class InternalEventReceiver
      */
     public void inform(CopletInstanceSizingEvent event, PortalService service) {
         final CopletInstance cid = event.getTarget();
-        Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
+        Layout rootLayout = service.getProfileManager().getLayout(null);
         if ( cid != null ) {
             final int oldSize = cid.getSize();
             cid.setSize(event.getSize());
@@ -130,10 +130,10 @@ public final class InternalEventReceiver
         CopletInstance cid = e.getTarget();
         // full screen?
         if ( cid.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
-            Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
+            Layout rootLayout = service.getProfileManager().getLayout(null);
             LayoutFeatures.setFullScreenInfo(service, rootLayout, null);
         } else if ( cid.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
-            Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
+            Layout rootLayout = service.getProfileManager().getLayout(null);
             CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
             Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
             if ( container != null ) {
