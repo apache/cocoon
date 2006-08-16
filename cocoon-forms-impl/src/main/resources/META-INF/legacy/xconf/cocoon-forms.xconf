@@ -118,6 +118,11 @@
           <convertor name="bean" src="org.apache.cocoon.forms.datatype.convertor.BeanConvertorBuilder"/>
         </convertors>
       </datatype>
+      <datatype name="char" src="org.apache.cocoon.forms.datatype.typeimpl.CharTypeBuilder">
+        <convertors default="plain" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.CharConvertorBuilder"/>
+        </convertors>
+      </datatype>
     </datatypes>
     <validation-rules>
       <!-- old-style datatype validators (deprecated) -->
@@ -138,6 +143,7 @@
     <function name="Null" class="org.apache.cocoon.forms.expression.NullFunction"/>
     <function name="IsNull" class="org.apache.cocoon.forms.expression.IsNullFunction"/>
     <function name="String" class="org.apache.cocoon.forms.expression.StringFunction"/>
+    <function name="Sum" class="org.apache.cocoon.forms.expression.SumFunction"/>
   </forms-expression>
 
   <!--+
@@ -169,6 +175,7 @@
       <widget name="captcha" src="org.apache.cocoon.forms.formmodel.CaptchaDefinitionBuilder"/>
       <widget name="tree" src="org.apache.cocoon.forms.formmodel.tree.builder.TreeDefinitionBuilder"/>
       <widget name="imagemap" src="org.apache.cocoon.forms.formmodel.ImageMapDefinitionBuilder"/>
+      <widget name="calculatedfield" src="org.apache.cocoon.forms.formmodel.CalculatedFieldDefinitionBuilder"/>
     </widgets>
   </forms-formmanager>
 
@@ -198,6 +205,17 @@
     <validator name="captcha" class="org.apache.cocoon.forms.validation.impl.CaptchaValidatorBuilder"/>
     <validator name="java" class="org.apache.cocoon.forms.validation.impl.JavaClassValidatorBuilder"/>
   </forms-validators>
+
+  <!--+
+      | Calculated fields algorithms
+      +-->
+  <forms-calculated-algorithms logger="forms.algorithms" default="formula">
+    <algorithm name="formula" class="org.apache.cocoon.forms.formmodel.algorithms.SimpleFormulaBuilder"/>
+    <algorithm name="javascript" class="org.apache.cocoon.forms.formmodel.algorithms.JavaScriptBuilder"/>
+    <algorithm name="java" class="org.apache.cocoon.forms.formmodel.algorithms.JavaAlgorithmBuilder"/>
+    <algorithm name="repeatedformula" class="org.apache.cocoon.forms.formmodel.algorithms.RepeatedFormulaBuilder"/>
+  </forms-calculated-algorithms>
+
 
   <!--+
       | Widget listeners

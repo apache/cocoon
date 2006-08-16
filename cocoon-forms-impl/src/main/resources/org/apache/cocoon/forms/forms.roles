@@ -55,4 +55,9 @@
         shorthand="forms-treemodels"
         default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
+  <role name="org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithmBuilderSelector"
+        shorthand="forms-calculated-algorithms"
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+
 </role-list>
