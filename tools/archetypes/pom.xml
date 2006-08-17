@@ -23,8 +23,6 @@
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/archetypes</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-1/cocoon-archetypes</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-1/cocoon-archetypes</url>
   </scm>
 
 </project>
