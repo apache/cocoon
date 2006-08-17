@@ -96,7 +96,5 @@
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/cocoon-blocks-modules</developerConnection>
-    <url>http://svn.apache.org/viewcvs/cocoon/trunk/cocoon-blocks-modules</url>
   </scm>
 </project>
