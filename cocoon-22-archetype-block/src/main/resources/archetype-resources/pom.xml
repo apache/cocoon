@@ -46,7 +46,8 @@
               <maxIdleTime>30000</maxIdleTime>
             </connector>
           </connectors>
-          <webAppSourceDirectory>target/${artifactId}</webAppSourceDirectory>
+          <!-- TODO escape dollar signs so this doesn't have to be changed with every artifact version -->
+          <webAppSourceDirectory>target/${artifactId}-${version}</webAppSourceDirectory>
           <contextPath>/</contextPath>
         </configuration>
       </plugin>
