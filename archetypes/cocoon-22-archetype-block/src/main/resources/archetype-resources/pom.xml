@@ -26,7 +26,9 @@
   <version>1.0.0-SNAPSHOT</version>
 
   <build>
-    <finalName>${artifactId}</finalName>
+  	<!-- with multimodule project setting finalName like this results in having 2 jars in cocoon/lib:
+  	     my-module.jar and my-module-1.0-SNAPSHOT.jar -->
+    <!-- finalName>${artifactId}</finalName -->
     <plugins>
       <plugin>
         <groupId>org.apache.cocoon</groupId>
