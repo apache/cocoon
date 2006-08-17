@@ -19,13 +19,16 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+  <listener>
+  	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
+  </listener>
 
   <servlet>
     <servlet-name>Cocoon</servlet-name>
     <display-name>Cocoon</display-name>
     <description>Cocoon servlet - ${artifactId}</description>
 
-    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+    <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
     <!-- If you don't want to use the ParanoidClassLoader, that reverses
          the classloading hierarchy and loads the jars and classes of the
          web application _first_, and want to rely on the normal web application
@@ -45,7 +48,7 @@
 
   <servlet-mapping>
     <servlet-name>Cocoon</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
 </web-app>
