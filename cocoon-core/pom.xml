@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2005 The Apache Software Foundation
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+   http://www.apache.org/licenses/LICENSE-2.0
 
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
 -->
 <!--+
-  | @version $Id$
-  |
-  +-->
+    | @version $Id$
+    |
+    +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-
-  <packaging>jar</packaging>  
-
+  <packaging>jar</packaging>
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
     <version>2-SNAPSHOT</version>
   </parent>
-
   <artifactId>cocoon-core</artifactId>
   <version>2.2.0-M2-SNAPSHOT</version>
-
   <name>Cocoon Core</name>
   <build>
     <plugins>
       <plugin>
-       <!-- export our test classes in a separate jar -->
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-jar-plugin</artifactId>
-       <executions>
-         <execution>
-           <goals>
-             <goal>test-jar</goal>
-           </goals>
-         </execution>
-       </executions>
+        <!-- export our test classes in a separate jar -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <!-- uncommeent the cocoon-maven-eclipse-plugin plugin to create the Eclipse project files
            with PDE support. Note that you have to run 'mvn install'
@@ -58,7 +56,7 @@
         <configuration>
           <pde>true</pde>
         </configuration>
-      </plugin-->         
+      </plugin-->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
@@ -95,22 +93,18 @@
       </resource>
     </resources>
   </build>
-
   <dependencies>
-
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-licenses</artifactId>
       <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
-
     <!--  bootstrap -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-bootstrap</artifactId>
       <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
-
     <!--  excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components.pool</groupId>
@@ -192,7 +186,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <!-- commons -->
     <dependency>
       <groupId>commons-io</groupId>
@@ -240,7 +233,7 @@
         <exclusion>
           <artifactId>ant-optional</artifactId>
           <groupId>ant</groupId>
-        </exclusion>        
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -330,33 +323,32 @@
       <artifactId>jakarta-bcel</artifactId>
       <version>20040329</version>
     </dependency>
-    <!-- We have to include all relevant spring modules as the poms for 2.0rc2 are not available --> 
+    <!-- We have to include all relevant spring modules as the poms for 2.0rc2 are not available -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
       <version>2.0-rc2</version>
-    </dependency>           
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
       <version>2.0-rc2</version>
-    </dependency>           
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
       <version>2.0-rc2</version>
-    </dependency>           
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <version>2.0-rc2</version>
-    </dependency>           
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <version>2.0-rc2</version>
     </dependency>
-
     <!-- OSGi -->
     <dependency>
       <groupId>org.osgi</groupId>
@@ -369,8 +361,7 @@
       <artifactId>osgi_R4_compendium</artifactId>
       <version>1.0</version>
       <scope>provided</scope>
-    </dependency>        
-
+    </dependency>
     <!--  test dependencies  -->
     <dependency>
       <groupId>xmlunit</groupId>
