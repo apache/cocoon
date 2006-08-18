@@ -80,9 +80,6 @@ public class GroupBasedProfileManager
     public static final String CATEGORY_GROUP  = "group";
     public static final String CATEGORY_USER   = "user";
 
-    protected static final Map MAP_FOR_BASE_DATA = Collections.singletonMap(ProfileLS.PARAMETER_PROFILETYPE,
-                                                                            ProfileLS.PROFILETYPE_COPLETTYPE);
-
     protected static final String KEY_PREFIX = GroupBasedProfileManager.class.getName() + ':';
 
     protected static final class ProfileInfo {
@@ -90,8 +87,8 @@ public class GroupBasedProfileManager
         public SourceValidity validity;
     }
 
-    final protected ProfileInfo copletBaseDatas = new ProfileInfo();
-    final protected ProfileInfo copletDatas = new ProfileInfo();
+    final protected ProfileInfo copletTypes = new ProfileInfo();
+    final protected ProfileInfo copletDefinitions = new ProfileInfo();
 
     /** All deployed coplet datas. */
     final protected Map deployedCopletDefinitions = new HashMap();
@@ -240,8 +237,8 @@ public class GroupBasedProfileManager
      */
     public void inform(CopletDefinitionAddedEvent event, PortalService service) {
         this.deployedCopletDefinitions.put(event.getTarget().getId(), event.getTarget());
-        if ( this.copletDatas.objects != null ) {
-            this.copletDatas.objects.put(event.getTarget().getId(), event.getTarget());
+        if ( this.copletDefinitions.objects != null ) {
+            this.copletDefinitions.objects.put(event.getTarget().getId(), event.getTarget());
         }
     }
 
@@ -361,8 +358,8 @@ public class GroupBasedProfileManager
     throws Exception {
         // if we already have loaded the profile and don't check
         // for changes, just return the profile
-        if ( this.copletBaseDatas.objects != null && !this.checkForChanges ) {
-            return this.copletBaseDatas.objects;
+        if ( this.copletTypes.objects != null && !this.checkForChanges ) {
+            return this.copletTypes.objects;
         }
 
         final Map key = this.buildKey(CATEGORY_GLOBAL,
@@ -373,16 +370,16 @@ public class GroupBasedProfileManager
 
         SourceValidity newValidity = null;
         // if we have a profile, check for reloading
-        if ( this.copletBaseDatas.validity != null ) {
+        if ( this.copletTypes.validity != null ) {
             // if it's still valid just return the profile
-            final int validity = this.copletBaseDatas.validity.isValid();
+            final int validity = this.copletTypes.validity.isValid();
             if ( validity == SourceValidity.VALID) {
-                return this.copletBaseDatas.objects;
+                return this.copletTypes.objects;
             } else if ( validity == SourceValidity.UNKNOWN ) {
-                newValidity = loader.getValidity(key, MAP_FOR_BASE_DATA);
+                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETTYPE);
                 if ( newValidity != null
-                     && this.copletBaseDatas.validity.isValid(newValidity) == SourceValidity.VALID) {
-                    return this.copletBaseDatas.objects;
+                     && this.copletTypes.validity.isValid(newValidity) == SourceValidity.VALID) {
+                    return this.copletTypes.objects;
                 }
             }
         }
@@ -390,20 +387,20 @@ public class GroupBasedProfileManager
         // we have to load/reload
         synchronized ( this ) {
             final Map objects = new HashMap();
-            final Iterator i = ((Collection)loader.loadProfile(key, MAP_FOR_BASE_DATA)).iterator();
+            final Iterator i = ((Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETTYPE, null)).iterator();
             while ( i.hasNext() ) {
                 final CopletType current = (CopletType)i.next();
                 objects.put(current.getId(), current);
             }
-            this.copletBaseDatas.objects = objects;
+            this.copletTypes.objects = objects;
             if ( newValidity == null ) {
-                newValidity = loader.getValidity(key, MAP_FOR_BASE_DATA);
+                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETTYPE);
             }
-            this.copletBaseDatas.validity = newValidity;
-            this.copletDatas.objects = null;
-            this.copletDatas.validity = null;
-            this.prepareObject(this.copletBaseDatas.objects);
-            return this.copletBaseDatas.objects;
+            this.copletTypes.validity = newValidity;
+            this.copletDefinitions.objects = null;
+            this.copletDefinitions.validity = null;
+            this.prepareObject(this.copletTypes.objects);
+            return this.copletTypes.objects;
         }
     }
 
@@ -413,8 +410,8 @@ public class GroupBasedProfileManager
     throws Exception {
         // if we already have loaded the profile and don't check
         // for changes, just return the profile
-        if ( this.copletDatas.objects != null && !this.checkForChanges ) {
-            return this.copletDatas.objects;
+        if ( this.copletDefinitions.objects != null && !this.checkForChanges ) {
+            return this.copletDefinitions.objects;
         }
 
         final Map key = this.buildKey(CATEGORY_GLOBAL,
@@ -422,31 +419,25 @@ public class GroupBasedProfileManager
                 info,
                 true,
                 layoutKey);
-        final Map profileLSParams = new HashMap();
-        profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE,
-                       ProfileLS.PROFILETYPE_COPLETDEFINITION);
-        profileLSParams.put(ProfileLS.PARAMETER_OBJECTMAP,
-                       profile.getCopletTypesMap());
-
         SourceValidity newValidity = null;
         // if we have a profile, check for reloading
-        if ( this.copletDatas.validity != null ) {
+        if ( this.copletDefinitions.validity != null ) {
             // if it's still valid just return the profile
-            final int validity = this.copletDatas.validity.isValid();
+            final int validity = this.copletDefinitions.validity.isValid();
             if ( validity == SourceValidity.VALID) {
-                return this.copletDatas.objects;
+                return this.copletDefinitions.objects;
             } else if ( validity == SourceValidity.UNKNOWN ) {
-                newValidity = loader.getValidity(key,profileLSParams);
+                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETDEFINITION);
                 if ( newValidity != null
-                     && this.copletDatas.validity.isValid(newValidity) == SourceValidity.VALID) {
-                    return this.copletDatas.objects;
+                     && this.copletDefinitions.validity.isValid(newValidity) == SourceValidity.VALID) {
+                    return this.copletDefinitions.objects;
                 }
             }
         }
 
         synchronized ( this ) {
             final Map objects = new HashMap();
-            final Iterator i = ((Collection)loader.loadProfile(key, profileLSParams)).iterator();
+            final Iterator i = ((Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETDEFINITION, profile.getCopletTypesMap())).iterator();
             while ( i.hasNext() ) {
                 final CopletDefinition current = (CopletDefinition)i.next();
                 // only add coplet data if coplet base data has been found
@@ -456,15 +447,15 @@ public class GroupBasedProfileManager
                     this.getLogger().error("CopletType not found for CopletDefinition: " + current);
                 }
             }
-            this.copletDatas.objects = objects;
+            this.copletDefinitions.objects = objects;
             // now add deployed coplets
-            this.copletDatas.objects.putAll(this.deployedCopletDefinitions);
+            this.copletDefinitions.objects.putAll(this.deployedCopletDefinitions);
             if ( newValidity == null ) {
-                newValidity = loader.getValidity(key, profileLSParams);
+                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETDEFINITION);
             }
-            this.copletDatas.validity = newValidity;
-            this.prepareObject(this.copletDatas.objects);
-            return this.copletDatas.objects;
+            this.copletDefinitions.validity = newValidity;
+            this.prepareObject(this.copletDefinitions.objects);
+            return this.copletDefinitions.objects;
         }
     }
 
@@ -488,14 +479,8 @@ public class GroupBasedProfileManager
                                 info,
                                 true,
                                 layoutKey);
-        Map profileLSParams = new HashMap();
-        profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE,
-                       ProfileLS.PROFILETYPE_COPLETINSTANCE);
-        profileLSParams.put(ProfileLS.PARAMETER_OBJECTMAP,
-                       profile.getCopletDefinitionsMap());
-
         try {
-            Collection cidm = (Collection)loader.loadProfile(key, profileLSParams);
+            Collection cidm = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETINSTANCE, profile.getCopletDefinitionsMap());
             profile.setCopletInstances(cidm);
             this.prepareObject(profile.getCopletInstancesMap());
 
@@ -518,13 +503,8 @@ public class GroupBasedProfileManager
                                       info,
                                       true,
                                       layoutKey);
-        final Map profileLSParams = new HashMap();
-        profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE,
-                       ProfileLS.PROFILETYPE_LAYOUT);
-        profileLSParams.put(ProfileLS.PARAMETER_OBJECTMAP,
-                       profile.getCopletInstancesMap());
         try {
-            Layout l = (Layout)loader.loadProfile(key, profileLSParams);
+            Layout l = (Layout)loader.loadProfile(key, ProfileLS.PROFILETYPE_LAYOUT, profile.getCopletInstancesMap());
             this.prepareObject(l);
             profile.setRootLayout(l);
 
@@ -585,17 +565,12 @@ public class GroupBasedProfileManager
                 layoutKey = this.portalService.getDefaultLayoutKey();
             }
             final ProfileImpl profile = this.getUserProfile(layoutKey);
-
-            final Map profileLSParams = new HashMap();
-            profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE, 
-                           ProfileLS.PROFILETYPE_COPLETINSTANCE);        
-
             final Map key = this.buildKey(CATEGORY_USER,
                                           ProfileLS.PROFILETYPE_COPLETINSTANCE,
                                           this.getUser(),
                                           false,
                                           layoutKey);
-            this.loader.saveProfile(key, profileLSParams, profile.getCopletInstances());
+            this.loader.saveProfile(key, ProfileLS.PROFILETYPE_COPLETINSTANCE, profile.getCopletInstances());
         } catch (Exception e) {
             // TODO
             throw new ProfileException("Exception during save profile", e);
@@ -611,17 +586,12 @@ public class GroupBasedProfileManager
                 layoutKey = this.portalService.getDefaultLayoutKey();
             }
             final Profile profile = this.getUserProfile(layoutKey);
-
-            final Map profileLSParams = new HashMap();
-            profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE, 
-                           ProfileLS.PROFILETYPE_LAYOUT);        
-
             final Map key = this.buildKey(CATEGORY_USER,
                                           ProfileLS.PROFILETYPE_LAYOUT, 
                                           this.getUser(), 
                                           false,
                                           layoutKey);
-            this.loader.saveProfile(key, profileLSParams, profile.getRootLayout());
+            this.loader.saveProfile(key, ProfileLS.PROFILETYPE_LAYOUT, profile.getRootLayout());
         } catch (Exception e) {
             // TODO
             throw new ProfileException("Exception during save profile", e);
@@ -632,17 +602,17 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
      */
     public CopletType getCopletType(String id) {
-        if ( this.copletBaseDatas.objects == null ) {
+        if ( this.copletTypes.objects == null ) {
             this.getCopletTypes();
         }
-        return (CopletType)this.copletBaseDatas.objects.get(id);
+        return (CopletType)this.copletTypes.objects.get(id);
     }
 
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
      */
     public Collection getCopletTypes() {
-        if ( this.copletBaseDatas.objects == null ) {
+        if ( this.copletTypes.objects == null ) {
             try {
                 // first "load" the global data
                 this.getGlobalBaseDatas(this.portalService.getDefaultLayoutKey());
@@ -650,7 +620,7 @@ public class GroupBasedProfileManager
                 throw new ProfileException("Unable to load global base datas.", e);
             }            
         }
-        return this.copletBaseDatas.objects.values();
+        return this.copletTypes.objects.values();
     }
 
     /**

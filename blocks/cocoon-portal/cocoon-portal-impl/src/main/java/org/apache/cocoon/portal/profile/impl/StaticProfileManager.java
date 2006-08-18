@@ -89,18 +89,14 @@ public class StaticProfileManager
                 CopletInstance current = (CopletInstance)i.next();
                 objectMap.put(current.getId(), current);
             }
-            Map parameters = new HashMap();
-            parameters.put("profiletype", "layout");
-            parameters.put("objectmap", objectMap);
-
-            Map map = new LinkedMap();
+            final Map map = new LinkedMap();
             map.put("base", this.profilesPath);
             map.put("portalname", this.portalService.getPortalName());
             map.put("profile", "layout");
             map.put("groupKey", layoutKey);
 
             adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
-            SourceValidity newValidity = adapter.getValidity(map, parameters);
+            SourceValidity newValidity = adapter.getValidity(map, ProfileLS.PROFILETYPE_LAYOUT);
             if (valid == SourceValidity.UNKNOWN) {
                 if (sourceValidity.isValid(newValidity) == SourceValidity.VALID) {
                     return (Layout) ((Map) objects[0]).get(layoutID);
@@ -108,7 +104,7 @@ public class StaticProfileManager
             }
 
             // get Layout specified in the map
-            Layout layout = (Layout) adapter.loadProfile(map, parameters);
+            Layout layout = (Layout) adapter.loadProfile(map, ProfileLS.PROFILETYPE_LAYOUT, objectMap);
             Map layouts = new HashMap();
 
             layouts.put(null, layout); //save root with null as key
@@ -171,16 +167,12 @@ public class StaticProfileManager
         try {
             adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
 
-            Map parameters = new HashMap();
-            parameters.put("profiletype", "copletbasedata");
-            parameters.put("objectmap", null);
-
-            Map map = new LinkedMap();
+            final Map map = new LinkedMap();
             map.put("base", this.profilesPath);
             map.put("portalname", this.portalService.getPortalName());
             map.put("profile", "coplet");
             map.put("name", "basedata");
-            Collection cBase = (Collection) adapter.loadProfile(map, parameters);
+            Collection cBase = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETTYPE, null);
             final Map copletBaseDataManager = new HashMap();
             Iterator i = cBase.iterator();
             while ( i.hasNext() ) {
@@ -190,16 +182,13 @@ public class StaticProfileManager
             this.copletBaseDataManagers.put(portalName, copletBaseDataManager);
 
             //CopletDefinition
-            parameters.clear();
-            parameters.put("profiletype", "copletdata");
-            parameters.put("objectmap", copletBaseDataManager);
 
             map.clear();
             map.put("base", this.profilesPath);
             map.put("portalname", this.portalService.getPortalName());
             map.put("profile", "coplet");
             map.put("name", "data");
-            Collection c = (Collection) adapter.loadProfile(map, parameters);
+            Collection c = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, copletBaseDataManager);
             final Map copletDataManager = new HashMap();
             i = c.iterator();
             while ( i.hasNext() ) {
@@ -207,16 +196,12 @@ public class StaticProfileManager
                 copletDataManager.put(current.getId(), current);
             }
             //CopletInstanceData
-            parameters.clear();
-            parameters.put("profiletype", "copletinstancedata");
-            parameters.put("objectmap", copletDataManager);
-
             map.clear();
             map.put("base", this.profilesPath);
             map.put("portalname", this.portalService.getPortalName());
             map.put("profile", "coplet");
             map.put("name", "instancedata");
-            copletInstanceDataManager = (Collection) adapter.loadProfile(map, parameters);
+            copletInstanceDataManager = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETINSTANCE, copletDataManager);
 
             // store managers
             this.copletInstanceDataManagers.put(portalName, copletInstanceDataManager);

@@ -128,9 +128,9 @@ public class MapProfileLS
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileLS#loadProfile(java.lang.Object, java.util.Map)
+     * @see org.apache.cocoon.portal.profile.ProfileLS#loadProfile(java.lang.Object, java.lang.String, java.util.Map)
      */
-    public Object loadProfile(Object key, Map parameters) 
+    public Object loadProfile(Object key, String profileType, Map objectMap)
     throws Exception {
 		final Map keyMap = (Map) key;
 
@@ -141,8 +141,8 @@ public class MapProfileLS
 			source = this.resolver.resolveURI(uri);
 
 			return this.converter.getObject(source.getInputStream(),
-                                       (String)parameters.get(PARAMETER_PROFILETYPE),
-                                       (Map)parameters.get(PARAMETER_OBJECTMAP),
+                                       profileType,
+                                       objectMap,
                                        null);
 		} finally {
             this.resolver.release(source);
@@ -150,9 +150,10 @@ public class MapProfileLS
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileLS#saveProfile(java.lang.Object, java.util.Map, java.lang.Object)
+     * @see org.apache.cocoon.portal.profile.ProfileLS#saveProfile(java.lang.Object, java.lang.String, java.lang.Object)
      */
-    public void saveProfile(Object key, Map parameters, Object profile) throws Exception {
+    public void saveProfile(Object key, String profileType, Object profile)
+    throws Exception {
         final Map keyMap = (Map) key;
 
         final String uri = this.getURI( keyMap );
@@ -163,9 +164,9 @@ public class MapProfileLS
             source = this.resolver.resolveURI(uri);
             if ( source instanceof ModifiableSource ) {
                 this.converter.storeObject( ((ModifiableSource)source).getOutputStream(),
-                                        (String)parameters.get(PARAMETER_PROFILETYPE),
+                                        profileType,
                                         profile,
-                                        parameters);
+                                        null);
                 return;
             }
         } finally {
@@ -178,9 +179,9 @@ public class MapProfileLS
 		try {
             ByteArrayOutputStream writer = new ByteArrayOutputStream();
             this.converter.storeObject(writer,
-                                  (String)parameters.get(PARAMETER_PROFILETYPE),
+                                  profileType,
                                   profile,
-                                  parameters);
+                                  null);
 
             buffer.append("&content=");
             try {
@@ -204,9 +205,9 @@ public class MapProfileLS
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileLS#getValidity(java.lang.Object, java.util.Map)
+     * @see org.apache.cocoon.portal.profile.ProfileLS#getValidity(java.lang.Object, java.lang.String)
      */
-    public SourceValidity getValidity(Object key, Map parameters) {
+    public SourceValidity getValidity(Object key, String profileType) {
 		Source source = null;
 		try {
             final Map keyMap = (Map) key;
