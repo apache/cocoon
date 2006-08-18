@@ -63,10 +63,8 @@ extends ServiceableGenerator {
         	Object layout = myMap.get("layout");
         	converter = (Converter) this.manager.lookup(Converter.ROLE);
         	ByteArrayOutputStream os = new java.io.ByteArrayOutputStream();
-        	HashMap para = new HashMap();
-        	para.put("profiletype", "layout");
         	converter.storeObject(os, 
-                                  (String)para.get(ProfileLS.PARAMETER_PROFILETYPE),
+                                  ProfileLS.PROFILETYPE_LAYOUT,
                                   layout,
                                   null);
         	String xml = new String();

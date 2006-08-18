@@ -28,25 +28,36 @@ public interface ProfileLS {
     /** Component role */
     String ROLE = ProfileLS.class.getName();
 
-    /** This parameter is used during loading to resolve references */
-    String PARAMETER_OBJECTMAP = "objectmap";
-    /** This parameter is used to define the profiletype */
-    String PARAMETER_PROFILETYPE = "profiletype";
-
     String PROFILETYPE_LAYOUT = "layout";
+    String PROFILETYPE_LAYOUTINSTANCE = "layoutinstance";
     String PROFILETYPE_COPLETTYPE = "coplettype";
     String PROFILETYPE_COPLETDEFINITION = "copletdefinition";
     String PROFILETYPE_COPLETINSTANCE = "copletinstance";
 
     /**
-     * Load a profile
+     * Load a profile.
+     * @param key The key to identifier the profile. This key contains information
+     *            like user etc.
+     * @param profileType The type of the profile (instances, types, layouts etc. )
+     * @param objectMap Map with object which might be references by the profile.
      */
-    Object loadProfile(Object key, Map parameters) throws Exception;  
+    Object loadProfile(Object key, String profileType, Map objectMap)
+    throws Exception;  
 
     /**
-     * Save a profile
+     * Save a profile.
+     * @param key The key to identifier the profile. This key contains information
+     *            like user etc.
+     * @param profileType The type of the profile (instances, types, layouts etc. )
+     * @param profile The profile itself.
      */
-    void saveProfile(Object key, Map parameters, Object profile) throws Exception;  
+    void saveProfile(Object key, String profileType, Object profile) throws Exception;  
 
-    SourceValidity getValidity(Object key, Map parameters);
+    /**
+     * Get the validity of a profile.
+     * @param key The key to identifier the profile. This key contains information
+     *            like user etc.
+     * @param profileType The type of the profile (instances, types, layouts etc. )
+     */
+    SourceValidity getValidity(Object key, String profileType);
 }
