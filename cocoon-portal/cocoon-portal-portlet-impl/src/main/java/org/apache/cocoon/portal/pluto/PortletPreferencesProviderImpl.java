@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.pluto;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.ParameterException;
@@ -107,10 +106,8 @@ public class PortletPreferencesProviderImpl
      * @see org.apache.cocoon.portal.pluto.PortletPreferencesProvider#getPreferenceSet(org.apache.cocoon.portal.om.CopletInstance)
      */
     public PreferenceSet getPreferenceSet(CopletInstance cid) {
-        final Map parameters = new HashMap();
-        parameters.put(ProfileLS.PARAMETER_PROFILETYPE, PROFILETYPE_PREFERENCES);
         try {
-            return (PreferenceSet)this.loader.loadProfile(this.buildKey(true, cid.getId()), parameters);
+            return (PreferenceSet)this.loader.loadProfile(this.buildKey(true, cid.getId()), PROFILETYPE_PREFERENCES, null);
         } catch (Exception ignore) {
             // we ignore all exceptions for now (TODO)
         }
@@ -121,10 +118,8 @@ public class PortletPreferencesProviderImpl
      * @see org.apache.cocoon.portal.pluto.PortletPreferencesProvider#storePreferenceSet(org.apache.cocoon.portal.om.CopletInstance, org.apache.pluto.om.common.PreferenceSet)
      */
     public void storePreferenceSet(CopletInstance cid, PreferenceSet prefs) {
-        final Map parameters = new HashMap();
-        parameters.put(ProfileLS.PARAMETER_PROFILETYPE, PROFILETYPE_PREFERENCES);
         try {
-             this.loader.saveProfile(this.buildKey(false, cid.getId()), parameters, prefs);
+             this.loader.saveProfile(this.buildKey(false, cid.getId()), PROFILETYPE_PREFERENCES, prefs);
         } catch (Exception ignore) {
              // we ignore all exceptions for now (TODO)
         }
