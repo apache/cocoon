@@ -418,8 +418,8 @@ public class SitemapLanguage
         }
         // check for sitemap local properties
         Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(Settings.ROLE);
-        if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
-            final String propertyDir = componentConfig.getAttribute("property-dir");
+        if ( componentConfig != null ) {
+            final String propertyDir = componentConfig.getAttribute("property-dir", null);
             settings = this.createSettings(settings, propertyDir, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext), globalSitemapVariables);
         } else if ( globalSitemapVariables != null ) {
             MutableSettings s = new MutableSettings(settings);
@@ -1173,10 +1173,12 @@ public class SitemapLanguage
             this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s, properties);    
         }
 
-        // now read all properties from the properties directory
-        this.readProperties(directory, s, properties);
-        // read all properties from the mode dependent directory
-        this.readProperties(directory + '/' + mode, s, properties);
+        if ( directory != null ) {
+            // now read all properties from the properties directory
+            this.readProperties(directory, s, properties);
+            // read all properties from the mode dependent directory
+            this.readProperties(directory + '/' + mode, s, properties);
+        }
 
         // Next look for a custom property provider in the parent bean factory
         if (parentBeanFactory != null && parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
