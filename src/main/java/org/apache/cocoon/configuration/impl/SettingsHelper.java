@@ -165,7 +165,7 @@ public class SettingsHelper {
     /**
      * Read all property files from the given directory and apply them to the settings.
      */
-    protected static void readProperties(String          directoryName,
+    public static void readProperties(String          directoryName,
                                          Settings        s,
                                          Properties      properties,
                                          SourceResolver  resolver,
