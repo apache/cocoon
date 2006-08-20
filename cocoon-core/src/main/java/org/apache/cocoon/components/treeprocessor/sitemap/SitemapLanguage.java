@@ -1168,16 +1168,18 @@ public class SitemapLanguage
 
         // read properties from default includes
         if ( useDefaultIncludes ) {
-            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES, s, properties);
+        	SourceResolver resolver = this.processor.getSourceResolver();
+            SettingsHelper.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES, s, properties, resolver, getLogger());
             // read all properties from the mode dependent directory
-            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s, properties);    
+            SettingsHelper.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s, properties, resolver, getLogger());    
         }
 
         if ( directory != null ) {
+        	SourceResolver resolver = this.processor.getSourceResolver();
             // now read all properties from the properties directory
-            this.readProperties(directory, s, properties);
+            SettingsHelper.readProperties(directory, s, properties, resolver, getLogger());
             // read all properties from the mode dependent directory
-            this.readProperties(directory + '/' + mode, s, properties);
+            SettingsHelper.readProperties(directory + '/' + mode, s, properties, resolver, getLogger());
         }
 
         // Next look for a custom property provider in the parent bean factory
@@ -1206,45 +1208,4 @@ public class SitemapLanguage
 
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
-
-    /**
-     * Read all property files from the given directory and apply them to the settings.
-     */
-    protected void readProperties(String     directoryName,
-                                  Settings   s,
-                                  Properties properties) {
-        final SourceResolver resolver = this.processor.getSourceResolver();
-        Source directory = null;
-        try {
-            directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
-            if (directory.exists() && directory instanceof TraversableSource) {
-                final List propertyUris = new ArrayList();
-                final Iterator c = ((TraversableSource) directory).getChildren().iterator();
-                while (c.hasNext()) {
-                    final Source src = (Source) c.next();
-                    if ( src.getURI().endsWith(".properties") ) {
-                        propertyUris.add(src);
-                    }
-                }
-                // sort
-                Collections.sort(propertyUris, SettingsHelper.getSourceComparator());
-                // now process
-                final Iterator i = propertyUris.iterator();
-                while ( i.hasNext() ) {
-                    final Source src = (Source)i.next();
-                    final InputStream propsIS = src.getInputStream();
-                    if ( this.getLogger().isDebugEnabled() ) {
-                        this.getLogger().debug("Reading settings from '" + src.getURI() + "'.");
-                    }
-                    properties.load(propsIS);
-                    propsIS.close();
-                }
-            }
-        } catch (IOException ignore) {
-            this.getLogger().warn("Unable to read from directory " + directoryName, ignore);
-            this.getLogger().warn("Continuing initialization.");            
-        } finally {
-            resolver.release(directory);
-        }
-    }
 }
