@@ -189,7 +189,8 @@
       CForms: debug logging left in AggregateFieldDefinitionBuilder.java.
     </action>
     <action dev="MPO" type="fix" fixes-bug="COCOON-1687" >
-      CForms: Reverting inapropriate fix.
+      CForms: Reverting incompatible change introduced in version 2.1.9.  When binding a widget with value null, XML
+      elements are no more deleted.  The behaviour is now the same as in version 2.1.8.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1889" due-to="Jeroen Goubert" due-to-email="jgou@schaubroeck.be">
       CForms: Tiny typo in JavaScriptJXPathBinding.
