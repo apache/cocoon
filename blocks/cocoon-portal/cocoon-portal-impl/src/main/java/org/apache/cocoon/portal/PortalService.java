@@ -15,19 +15,31 @@
  */
 package org.apache.cocoon.portal;
 
-import java.util.Iterator;
 import java.util.List;
 
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.event.EventManager;
+import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.CopletFactory;
+import org.apache.cocoon.portal.services.LayoutFactory;
+import org.apache.cocoon.portal.services.LinkService;
+import org.apache.cocoon.portal.services.UserService;
+import org.apache.cocoon.processing.ProcessInfoProvider;
+
 /**
- * This is the central component in the portal. It holds the configuration
- * of the portal, the current name etc.
- * The main use of this component is to get other components of the portal,
- * like the link service or the event manager.
- * This component is a singleton.
+ * This is the central component of the portal. It holds the global configuration,
+ * the current name of the portal and other important information.
+ * Apart from configuration, the main purpose if this component is to provide a unique
+ * and simple access to other portal components and services like the link
+ * service or the event manager. A portal component should never lookup these services by
+ * itself. It must only lookup the portal service and get the components/services
+ * from there.
+ * The portal service is a singleton.
  *
  * @version $Id$
  */
-public interface PortalService extends PortalComponentManager {
+public interface PortalService {
 
     /** The role to lookup this component. */
     String ROLE = PortalService.class.getName();
@@ -36,66 +48,6 @@ public interface PortalService extends PortalComponentManager {
      * The name of the portal - as defined in the portal configuration.
      */
     String getPortalName();
-
-    /**
-     * Return the value of an attribute.
-     * @param key The key of the attribute
-     * @return The value of the attribute or null.
-     */
-    Object getAttribute(String key);
-
-    /**
-     * Set an attribute.
-     * @param key    The key of the attribute
-     * @param value  The new value
-     */
-    void setAttribute(String key, Object value);
-
-    /**
-     * Remove an attribute.
-     * @param key The key of the attribute
-     */
-    Object removeAttribute(String key);
-
-    /**
-     * Return the names of all attributes.
-     */
-    Iterator getAttributeNames();
-
-    /**
-     * Return the value of a temporary attribute.
-     * @param key The key of the attribute
-     * @return The value of the attribute or null.
-     */
-    Object getTemporaryAttribute(String key);
-
-    /**
-     * Set a temporary attribute.
-     * @param key    The key of the attribute
-     * @param value  The new value
-     */
-    void setTemporaryAttribute(String key, Object value);
-
-    /**
-     * Remove a temporary attribute.
-     * @param key The key of the attribute
-     */
-    Object removeTemporaryAttribute(String key);
-
-    /**
-     * Return the names of all temporary attributes.
-     */
-    Iterator getTemporaryAttributeNames();
-
-    /**
-     * Change the default layout key for most functions
-     */
-    void setDefaultLayoutKey(String layoutKey);
-
-    /**
-     * Get the default layout key
-     */
-    String getDefaultLayoutKey();
 
     /**
      * Return all skins
@@ -127,4 +79,63 @@ public interface PortalService extends PortalComponentManager {
      * @since 2.2
      */
     boolean getConfigurationAsBoolean(String key, boolean defaultValue);
+
+    /**
+     * Get the link service.
+     */
+    LinkService getLinkService();
+
+    /**
+     * Get the current profile manager.
+     */
+    ProfileManager getProfileManager();
+
+    /**
+     * Get the renderer.
+     */
+    Renderer getRenderer(String name);
+
+    /**
+     * Get the coplet adapter.
+     */
+    CopletAdapter getCopletAdapter(String name);
+
+    /**
+     * Get the coplet factory.
+     */
+    CopletFactory getCopletFactory();
+
+    /**
+     * Get the layout factory
+     */
+    LayoutFactory getLayoutFactory();
+
+    /**
+     * Get the event manager
+     */
+    EventManager getEventManager();
+
+    /**
+     * Get the portal manager
+     * @since 2.1.8
+     */
+    PortalManager getPortalManager();
+
+    /**
+     * Register a renderer.
+     * @since 2.2
+     */
+    void register(String name, Renderer renderer);
+
+    /**
+     * Get the process info provider for accessing request
+     * information.
+     * @since 2.2
+     */
+    ProcessInfoProvider getProcessInfoProvider();
+
+    /**
+     * Get the user service.
+     */
+    UserService getUserService();
 }

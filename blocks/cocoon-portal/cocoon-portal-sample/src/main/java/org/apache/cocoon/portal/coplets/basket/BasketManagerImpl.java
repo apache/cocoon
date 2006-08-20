@@ -621,7 +621,7 @@ public class BasketManagerImpl
      * Get the current user
      */
     protected String getUser() {
-        return this.portalService.getProfileManager().getUser().getUserName();        
+        return this.portalService.getUserService().getUser().getUserName();        
     }
 
     /**

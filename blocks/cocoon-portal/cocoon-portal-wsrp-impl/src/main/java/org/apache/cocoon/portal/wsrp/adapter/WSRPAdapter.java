@@ -246,7 +246,7 @@ public class WSRPAdapter
         }
 
         // get the wsrp user and store it as an attribute on the instance
-        final String currentUserID = this.portalService.getProfileManager().getUser().getUserName();       
+        final String currentUserID = this.portalService.getUserService().getUser().getUserName();       
         User user = this.consumerEnvironment.getUserRegistry().getUser(currentUserID);
         if ( user == null ) {
             // create a new user

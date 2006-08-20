@@ -67,7 +67,7 @@ public class ActionRequestFactoryImpl
     public ActionRequest getActionRequest(PortletWindow       portletWindow,
                                           HttpServletRequest  servletRequest,
                                           HttpServletResponse servletResponse) {
-        ActionRequest actionRequest = new ActionRequestImpl(portletWindow, servletRequest, this.portalService.getProfileManager().getUser());
+        ActionRequest actionRequest = new ActionRequestImpl(portletWindow, servletRequest, this.portalService.getUserService().getUser());
         return actionRequest;
     }
 }

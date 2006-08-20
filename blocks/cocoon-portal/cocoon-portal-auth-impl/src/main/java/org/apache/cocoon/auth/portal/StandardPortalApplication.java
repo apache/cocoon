@@ -17,6 +17,8 @@
 package org.apache.cocoon.auth.portal;
 
 import java.security.Principal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,7 +29,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.user.UserEventUtil;
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.impl.AbstractPortalUser;
 import org.apache.cocoon.auth.StandardApplication;
 import org.apache.cocoon.auth.User;
@@ -146,21 +148,25 @@ public class StandardPortalApplication
         }
 
         /**
-         * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
+         * @see org.apache.cocoon.portal.om.PortalUser#isUserInRole(java.lang.String)
          */
         public boolean isUserInRole(final String role) {
             return user.isUserInRole(role);
         }
 
         /**
-         * @see org.apache.cocoon.portal.profile.PortalUser#getGroup()
+         * @see org.apache.cocoon.portal.om.PortalUser#getGroups()
          */
-        public String getGroup() {
-            return (String)this.user.getAttribute("group");
+        public Collection getGroups() {
+            final Collection c = (Collection) this.user.getAttribute("groups");
+            if ( c == null ) {
+                return Collections.EMPTY_LIST;
+            }
+            return c;
         }
 
         /**
-         * @see org.apache.cocoon.portal.profile.PortalUser#getUserName()
+         * @see org.apache.cocoon.portal.om.PortalUser#getUserName()
          */
         public String getUserName() {
             return this.user.getId();

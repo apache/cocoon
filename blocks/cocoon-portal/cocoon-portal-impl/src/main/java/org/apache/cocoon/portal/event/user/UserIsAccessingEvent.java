@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event.user;
 
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 
 /**
  * This event is send when a user is accessing(using) the portal.

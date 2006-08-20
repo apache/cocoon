@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,10 +38,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalManager;
+import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
@@ -51,6 +49,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.services.LinkService;
+import org.apache.cocoon.portal.services.UserService;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -80,32 +79,52 @@ public class PortalServiceImpl
     /** The service locator. */
     protected ServiceManager manager;
 
-    /** The manager for some core portal components. */
-    protected DefaultPortalComponentManager portalComponentManager;
-
     /** The list of skins. */
     protected List skinList = new ArrayList();
 
     /** The name of the portal. */
     protected String portalName;
 
-    /** The default layout key. */
-    protected String defaultLayoutKey;
-
-    /** The attribute prefix used to prefix attributes in the session and request. */
-    protected String attributePrefix;
-
-    final protected static String KEY = PortalServiceImpl.class.getName();
-
     /** The portal configuration. */
     protected Configuration configuration;
+
+    /** The profile manager. */
+    protected ProfileManager profileManager;
+
+    /** The link service. */
+    protected LinkService linkService;
+
+    /** The used renderers. */
+    protected Map renderers = new HashMap();
+
+    /** The used coplet adapters. */
+    protected Map copletAdapters = new HashMap();
+
+    /** The coplet factory. */
+    protected CopletFactory copletFactory;
+
+    /** The layout factory. */
+    protected LayoutFactory layoutFactory;
+
+    /** The event manager. */
+    protected EventManager eventManager;
+
+    /** The portal manager. */
+    protected PortalManager portalManager;
+
+    /** The process info provider. */
+    protected ProcessInfoProvider processInfoProvider;
+
+    /** The user service. */
+    protected UserService userService;
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
-        this.portalComponentManager = new DefaultPortalComponentManager(this.manager);
+        this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
+        this.userService = (UserService)this.manager.lookup(UserService.class.getName());
     }
 
     /**
@@ -113,109 +132,6 @@ public class PortalServiceImpl
      */
     public String getPortalName() {
         return this.portalName;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#getAttribute(java.lang.String)
-     */
-    public Object getAttribute(String key) {
-        final Session session = ContextHelper.getRequest(this.context).getSession(false);
-        if (session == null) {
-            return null;
-        }
-        return session.getAttribute( this.attributePrefix + key);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#setAttribute(java.lang.String, java.lang.Object)
-     */
-    public void setAttribute(String key, Object value) {
-        final Session session = ContextHelper.getRequest(this.context).getSession();
-        session.setAttribute( this.attributePrefix + key, value);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#removeAttribute(java.lang.String)
-     */
-    public Object removeAttribute(String key) {
-        final Session session = ContextHelper.getRequest(this.context).getSession(false);
-        if ( session != null ) {
-            Object value = session.getAttribute(this.attributePrefix + key);
-            if ( value != null ) {
-                session.removeAttribute( this.attributePrefix + key );
-            }
-            return value;
-        }
-        return null;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#getAttributeNames()
-     */
-    public Iterator getAttributeNames() {
-        final Session session = ContextHelper.getRequest(this.context).getSession(false);
-        if ( session != null ) {
-            List names = new ArrayList();
-            Enumeration e = session.getAttributeNames();
-            final int pos = this.attributePrefix.length() + 1;
-            if ( e != null ) {
-                while ( e.hasMoreElements() ) {
-                    final String name = (String)e.nextElement();
-                    if ( name.startsWith( this.attributePrefix )) {
-                        names.add( name.substring( pos ) );
-                    }
-                }
-            }
-            return names.iterator();
-        }
-        return Collections.EMPTY_MAP.keySet().iterator();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#getTemporaryAttribute(java.lang.String)
-     */
-    public Object getTemporaryAttribute(String key) {
-        final Request request = ContextHelper.getRequest(this.context);
-        return request.getAttribute(this.attributePrefix + key);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#setTemporaryAttribute(java.lang.String, java.lang.Object)
-     */
-    public void setTemporaryAttribute(String key, Object value) {
-        final Request request = ContextHelper.getRequest(this.context);
-        request.setAttribute( this.attributePrefix + key, value );
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#removeTemporaryAttribute(java.lang.String)
-     */
-    public Object removeTemporaryAttribute(String key) {
-        final Request request = ContextHelper.getRequest(this.context);
-        final Object oldValue = request.getAttribute(this.attributePrefix + key);
-        if ( oldValue != null ) {
-            request.removeAttribute( this.attributePrefix + key );
-        }
-        return oldValue;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#getTemporaryAttributeNames()
-     */
-    public Iterator getTemporaryAttributeNames() {
-        final Request request = ContextHelper.getRequest(this.context);
-        List names = new ArrayList();
-        Enumeration e = request.getAttributeNames();
-        final int pos = this.attributePrefix.length() + 1;
-        if ( e != null ) {
-            while ( e.hasMoreElements() ) {
-                final String name = (String)e.nextElement();
-                if ( name.startsWith( this.attributePrefix )) {
-                    names.add( name.substring( pos ) );
-                }
-            }
-        }
-        return names.iterator();
     }
 
     /**
@@ -239,9 +155,6 @@ public class PortalServiceImpl
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.portalComponentManager != null ) {
-            this.portalComponentManager.dispose();
-        }
         // remove the portal service from the servlet context - if available
         if ( this.context != null ) {
             try {
@@ -250,6 +163,31 @@ public class PortalServiceImpl
             } catch (ContextException ignore) {
                 // we ignore the context exception
             }
+        }
+        if ( this.manager != null ) {
+            this.renderers.clear();
+            Iterator i = this.copletAdapters.values().iterator();
+            while (i.hasNext()) {
+                this.manager.release(i.next());
+            }
+            this.copletAdapters.clear();
+            this.manager.release(this.profileManager);
+            this.profileManager = null;
+            this.manager.release(this.linkService);
+            this.linkService = null;
+            this.manager.release(this.copletFactory);
+            this.copletFactory = null;
+            this.manager.release(this.layoutFactory);
+            this.layoutFactory = null;
+            this.manager.release(this.eventManager);
+            this.eventManager = null;
+            this.manager.release(this.portalManager);
+            this.portalManager = null;
+            this.manager.release(this.processInfoProvider);
+            this.processInfoProvider = null;
+            this.manager.release(this.userService);
+            this.userService = null;
+            this.manager = null;
         }
     }
 
@@ -262,8 +200,6 @@ public class PortalServiceImpl
             throw new ConfigurationException("No portal configured.", config);
         }
         this.portalName = portal.getAttribute("name");
-        this.defaultLayoutKey = portal.getAttribute("default-layout-key", "portal");
-        this.attributePrefix = this.getClass().getName() + '/' + this.portalName + '/';
         this.configuration = portal.getChild("configuration");
         this.configureSkins(this.getConfiguration(org.apache.cocoon.portal.Constants.CONFIGURATION_SKINS_PATH,
                                                   org.apache.cocoon.portal.Constants.DEFAULT_CONFIGURATION_SKINS_PATH));
@@ -316,29 +252,6 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalService#setDefaultLayoutKey(java.lang.String)
-     */
-    public void setDefaultLayoutKey(String layoutKey) {
-        if ( layoutKey == null ) {
-            this.removeAttribute("default-layout-key");
-        } else {
-            this.setAttribute("default-layout-key", layoutKey);
-        }
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#getDefaultLayoutKey()
-     */
-    public String getDefaultLayoutKey() {
-        String key = (String)this.getAttribute("default-layout-key");
-        if ( key == null ) {
-            key = this.defaultLayoutKey;
-            this.setDefaultLayoutKey(key);
-        }
-        return key;
-    }
-
-    /**
      * @see org.apache.cocoon.portal.PortalService#getSkinDescriptions()
      */
     public List getSkinDescriptions() {
@@ -367,72 +280,134 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getCopletAdapter(java.lang.String)
-     */
-    public CopletAdapter getCopletAdapter(String name) {
-        return this.portalComponentManager.getCopletAdapter(name);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getCopletFactory()
-     */
-    public CopletFactory getCopletFactory() {
-        return this.portalComponentManager.getCopletFactory();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getEventManager()
-     */
-    public EventManager getEventManager() {
-        return this.portalComponentManager.getEventManager();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getLayoutFactory()
-     */
-    public LayoutFactory getLayoutFactory() {
-        return this.portalComponentManager.getLayoutFactory();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getLinkService()
+     * @see org.apache.cocoon.portal.PortalService#getLinkService()
      */
     public LinkService getLinkService() {
-        return this.portalComponentManager.getLinkService();
+        if ( null == this.linkService ) {
+            try {
+                this.linkService = (LinkService)this.manager.lookup( LinkService.class.getName() );
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup link service.", e);
+            }
+        }
+        return this.linkService;
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getPortalManager()
-     */
-    public PortalManager getPortalManager() {
-        return this.portalComponentManager.getPortalManager();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getProfileManager()
+     * @see org.apache.cocoon.portal.PortalService#getProfileManager()
      */
     public ProfileManager getProfileManager() {
-        return this.portalComponentManager.getProfileManager();
+        if ( null == this.profileManager ) {
+            try {
+                this.profileManager = (ProfileManager)this.manager.lookup( ProfileManager.class.getName() );
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup profile manager.", e);
+            }
+        }
+        return this.profileManager;
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getRenderer(java.lang.String)
+     * @see org.apache.cocoon.portal.PortalService#getEventManager()
+     */
+    public EventManager getEventManager() {
+        if ( null == this.eventManager ) {
+            try {
+                this.eventManager = (EventManager)this.manager.lookup( EventManager.ROLE );
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup event manager.", e);
+            }
+        }
+        return this.eventManager;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#getRenderer(java.lang.String)
      */
     public Renderer getRenderer(String name) {
-        return this.portalComponentManager.getRenderer(name);
+        final Renderer o = (Renderer) this.renderers.get( name );
+        if ( o == null ) {
+            throw new PortalRuntimeException("Unable to lookup renderer with name " + name);
+        }
+        return o;
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#register(java.lang.String, org.apache.cocoon.portal.layout.renderer.Renderer)
+     * @see org.apache.cocoon.portal.PortalService#getCopletAdapter(java.lang.String)
+     */
+    public CopletAdapter getCopletAdapter(String name) {
+        CopletAdapter o = (CopletAdapter) this.copletAdapters.get( name );
+        if ( o == null ) {
+            try {
+                o = (CopletAdapter) this.manager.lookup( CopletAdapter.ROLE + '/' + name );
+                this.copletAdapters.put( name, o );
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup coplet adapter with name " + name, e);
+            }
+        }
+        return o;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#getCopletFactory()
+     */
+    public CopletFactory getCopletFactory() {
+        if ( null == this.copletFactory ) {
+            try {
+                this.copletFactory = (CopletFactory)this.manager.lookup( CopletFactory.class.getName() );
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup coplet factory.", e);
+            }
+        }
+        return this.copletFactory;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#getLayoutFactory()
+     */
+    public LayoutFactory getLayoutFactory() {
+        if ( null == this.layoutFactory ) {
+            try {
+                this.layoutFactory = (LayoutFactory)this.manager.lookup( LayoutFactory.class.getName() );
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup layout factory.", e);
+            }
+        }
+        return this.layoutFactory;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#getPortalManager()
+     */
+    public PortalManager getPortalManager() {
+        if ( null == this.portalManager ) {
+            try {
+                this.portalManager = (PortalManager)this.manager.lookup( PortalManager.class.getName() );
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup portal manager.", e);
+            }
+        }
+        return this.portalManager;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#register(String, org.apache.cocoon.portal.layout.renderer.Renderer)
      */
     public void register(String name, Renderer renderer) {
-        this.portalComponentManager.register(name, renderer);
+        this.renderers.put(name, renderer);
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getProcessInfoProvider()
+     * @see org.apache.cocoon.portal.PortalService#getProcessInfoProvider()
      */
     public ProcessInfoProvider getProcessInfoProvider() {
-        return this.portalComponentManager.getProcessInfoProvider();
+        return this.processInfoProvider;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#getUserService()
+     */
+    public UserService getUserService() {
+        return this.userService;
     }
 }

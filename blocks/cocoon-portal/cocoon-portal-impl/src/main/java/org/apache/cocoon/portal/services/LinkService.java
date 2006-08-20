@@ -27,8 +27,6 @@ import org.apache.cocoon.portal.event.Event;
  */
 public interface LinkService {
 
-    String ROLE = LinkService.class.getName();
-
     String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
 
     static class ParameterDescription {

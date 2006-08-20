@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  * Invoke the request processing using the {@link #process()} method,
  * this starts the event handling for the current request (evaluating
  * request parameters etc.)
- * The section method {@link #showPortal(ContentHandler, Parameters)}
+ * The section method {@link #showPortal(ContentHandler, Properties)}
  * starts rendering the portal.
  *
  * @version $Id$
@@ -44,9 +44,6 @@ public interface PortalManager {
      * case only the coplet with the surrounding layout is rendered.
      */
     String PROPERTY_RENDER_COPLET = "render-coplet";
-
-    /** The bean name of this component. */
-    String ROLE = PortalManager.class.getName();
 
     /**
      * Start the first phase of the request handling.
