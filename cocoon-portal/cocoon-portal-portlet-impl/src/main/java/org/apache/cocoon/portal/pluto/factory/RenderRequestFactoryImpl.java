@@ -69,7 +69,7 @@ public class RenderRequestFactoryImpl
                                           HttpServletResponse servletResponse) {
         RenderRequest renderRequest = new RenderRequestImpl( portletWindow,
                                                              servletRequest,
-                                                             this.portalService.getProfileManager().getUser());
+                                                             this.portalService.getUserService().getUser());
         return renderRequest;
     }
 }

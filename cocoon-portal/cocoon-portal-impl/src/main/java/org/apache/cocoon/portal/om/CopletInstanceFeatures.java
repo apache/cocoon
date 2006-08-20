@@ -66,7 +66,7 @@ public final class CopletInstanceFeatures {
     }
 
     public static List getChangedCopletInstanceDataObjects(PortalService service) {
-        List list = (List)service.getTemporaryAttribute(CHANGED_COPLETS_ATTRIBUTE_NAME);
+        List list = (List)service.getUserService().getTemporaryAttribute(CHANGED_COPLETS_ATTRIBUTE_NAME);
         if ( list == null ) {
             return Collections.EMPTY_LIST;
         }
@@ -75,14 +75,14 @@ public final class CopletInstanceFeatures {
 
     public static void addChangedCopletInstanceData(PortalService service,
                                                     CopletInstance cid) {
-        List list = (List)service.getTemporaryAttribute(CHANGED_COPLETS_ATTRIBUTE_NAME);
+        List list = (List)service.getUserService().getTemporaryAttribute(CHANGED_COPLETS_ATTRIBUTE_NAME);
         if ( list == null ) {
             list = new ArrayList();
         }
         if ( !list.contains(cid) ) {
             list.add(cid);
         }
-        service.setTemporaryAttribute(CHANGED_COPLETS_ATTRIBUTE_NAME, list);
+        service.getUserService().setTemporaryAttribute(CHANGED_COPLETS_ATTRIBUTE_NAME, list);
     }
 
     public static String sizeToString(int value) {

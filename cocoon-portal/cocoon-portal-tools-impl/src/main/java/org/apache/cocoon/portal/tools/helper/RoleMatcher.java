@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.tools.helper;
 
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 
 /**
  * Defines the interface for role matchers.

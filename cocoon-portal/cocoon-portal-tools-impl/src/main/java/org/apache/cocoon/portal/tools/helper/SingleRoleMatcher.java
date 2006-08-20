@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.tools.helper;
 
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 
 /**
  * A role matcher matching against a single role.

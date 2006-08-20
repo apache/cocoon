@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.profile;
+package org.apache.cocoon.portal.om;
 
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -32,9 +33,9 @@ public interface PortalUser {
     boolean isAnonymous();
 
     /**
-     * @return Returns the group.
+     * @return Return all groups.
      */
-    String getGroup();
+    Collection getGroups();
 
     /**
      * @return Returns the userName.
@@ -75,4 +76,10 @@ public interface PortalUser {
      * @return A string specifying the mechanism or null.
      */
     String getAuthType();
+
+    /**
+     * Return the default layout key for this user.
+     * @return The default layout key or null if the portal wide default should be used.
+     */
+    String getDefaultLayoutKey();
 }

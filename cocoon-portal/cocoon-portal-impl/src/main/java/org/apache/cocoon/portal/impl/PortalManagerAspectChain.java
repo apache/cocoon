@@ -52,7 +52,7 @@ public final class PortalManagerAspectChain {
                 PortalManagerAspect pAspect;
                 if ( role != null ) {
                     try {
-                        pAspect = (PortalManagerAspect) manager.lookup(PortalManagerAspect.ROLE + '/' + role);                        
+                        pAspect = (PortalManagerAspect) manager.lookup(PortalManagerAspect.class.getName() + '/' + role);                        
                     } catch (ServiceException se) {
                         throw new ConfigurationException("Unable to lookup aspect " + role, current, se);
                     }

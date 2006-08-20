@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.tools.helper;
 
-import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
@@ -27,19 +26,13 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 public class PortalObjects {
 
 	private PortalService portalService;
-	private PortalComponentManager componentManager;
 	private ProfileManager profileManager;
 	private Layout portalLayout;
 
 	public PortalObjects(PortalService portalService) {
 		this.portalService = portalService;
-		this.componentManager = portalService;
-		this.profileManager = componentManager.getProfileManager();
+		this.profileManager = this.portalService.getProfileManager();
 		this.portalLayout = profileManager.getLayout(null);
-	}
-
-	public PortalComponentManager getComponentManager() {
-		return componentManager;
 	}
 
 	public Layout getPortalLayout() {

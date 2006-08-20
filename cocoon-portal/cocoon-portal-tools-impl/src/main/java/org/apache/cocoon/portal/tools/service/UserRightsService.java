@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.tools.helper.MultipleRoleMatcher;
 import org.apache.cocoon.portal.tools.helper.RoleMatcher;
 import org.apache.cocoon.portal.tools.helper.SingleRoleMatcher;

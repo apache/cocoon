@@ -27,8 +27,6 @@ import org.apache.cocoon.portal.om.CopletType;
  */
 public interface CopletFactory  {
 
-    String ROLE = CopletFactory.class.getName();
-
     /** 
      * Create a new coplet instance.
      * This is also registered at the profile manager.

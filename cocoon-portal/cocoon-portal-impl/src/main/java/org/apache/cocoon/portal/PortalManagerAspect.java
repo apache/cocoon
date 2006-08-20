@@ -28,9 +28,6 @@ import org.xml.sax.SAXException;
  */
 public interface PortalManagerAspect {
 
-    /** The role to lookup an aspect. */
-    String ROLE = PortalManagerAspect.class.getName();
-
     void prepare(PortalManagerAspectPrepareContext context,
                  PortalService service)
     throws ProcessingException;

@@ -39,7 +39,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
-import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.deployment.DeploymentEvent;
 import org.apache.cocoon.portal.deployment.DeploymentException;
@@ -492,7 +491,6 @@ public class PortletDefinitionRegistryImpl
 
         // fill portletsKeyObjectId and
         // register new coplet data for each portlet
-        final PortalComponentManager pcm = this.portalService;
         final Iterator portlets = portletApp.getPortletDefinitionList().iterator();
         while (portlets.hasNext()) {
             final PortletDefinition portlet = (PortletDefinition) portlets.next();
@@ -510,10 +508,10 @@ public class PortletDefinitionRegistryImpl
             }
             if ( this.createCoplets ) {
                 // TODO - parse coplet.xml if available
-                final CopletType cbd = pcm.getProfileManager().getCopletType(this.copletBaseDataName);
+                final CopletType cbd = this.portalService.getProfileManager().getCopletType(this.copletBaseDataName);
                 // TODO - check portletId for invalid characters!
                 final String defId = StringUtils.replaceChars(portlet.getId().toString(), '.', '_');
-                final CopletDefinition cd = pcm.getCopletFactory().newInstance(cbd, defId);
+                final CopletDefinition cd = this.portalService.getCopletFactory().newInstance(cbd, defId);
                 cd.setAttribute("portlet", portlet.getId().toString());
                 cd.setAttribute("buffer", Boolean.TRUE);
                 if ( this.getLogger().isInfoEnabled() ) {

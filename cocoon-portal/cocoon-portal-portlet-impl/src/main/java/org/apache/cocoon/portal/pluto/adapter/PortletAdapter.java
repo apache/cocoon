@@ -315,9 +315,9 @@ public class PortletAdapter
         final Map objectModel = ContextHelper.getObjectModel(this.context);
         final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), event);
         final HttpServletResponse res = new ServletResponseImpl((HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT));
-        if ( !service.getProfileManager().getUser().isAnonymous() ) {
+        if ( !service.getUserService().getUser().isAnonymous() ) {
             req.setAttribute(PortletRequest.USER_INFO,
-                             service.getProfileManager().getUser().getUserInfos());
+                             service.getUserService().getUser().getUserInfos());
         }
         objectModel.put("portlet-response",  res);
         objectModel.put("portlet-request", req);
@@ -391,9 +391,9 @@ public class PortletAdapter
             objectModel.put("portlet-response",  new ServletResponseImpl(res));
             final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
             objectModel.put("portlet-request",  req);
-            if ( !service.getProfileManager().getUser().isAnonymous() ) {
+            if ( !service.getUserService().getUser().isAnonymous() ) {
                 req.setAttribute(PortletRequest.USER_INFO,
-                                 service.getProfileManager().getUser().getUserInfos());
+                                 service.getUserService().getUser().getUserInfos());
             }
         }
     }
