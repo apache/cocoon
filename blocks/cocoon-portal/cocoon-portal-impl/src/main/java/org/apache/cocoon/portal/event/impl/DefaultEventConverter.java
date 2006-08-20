@@ -164,7 +164,7 @@ public class DefaultEventConverter
             }
             return o.toString() + ':' + data;
         }
-        List list = (List)this.portalService.getAttribute(EVENT_LIST);
+        List list = (List)this.portalService.getUserService().getAttribute(EVENT_LIST);
         if ( null == list ) {
             list = new ArrayList();
         }
@@ -172,7 +172,7 @@ public class DefaultEventConverter
         if ( index == -1 ) {
             list.add(event);
             index = list.size() - 1;
-            this.portalService.setAttribute(EVENT_LIST, list);
+            this.portalService.getUserService().setAttribute(EVENT_LIST, list);
         }
         return String.valueOf(index);
     }
@@ -213,7 +213,7 @@ public class DefaultEventConverter
                     return converter.decode(data);
                 }
             }
-            List list = (List)this.portalService.getAttribute(EVENT_LIST);
+            List list = (List)this.portalService.getUserService().getAttribute(EVENT_LIST);
             if ( null != list ) {
                 int index = new Integer(value).intValue();
                 if (index < list.size()) {

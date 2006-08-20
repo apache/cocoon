@@ -183,6 +183,14 @@
           shorthand="portal-manager"/>
 
   <!--+
+      | User Service.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.services.UserService"
+          default-class="org.apache.cocoon.portal.services.impl.DefaultUserService"
+          shorthand="user-service"/>
+
+  <!--+
       | Event Manager.
       |
       +-->

@@ -182,8 +182,8 @@ public class PortalToolManager
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager avalonManager) throws ServiceException {
+        super.service(avalonManager);
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
@@ -233,7 +233,7 @@ public class PortalToolManager
     		key = "/" + key;
         }
         key = this.getClass().getName() + key;
-        return (String)this.portalService.getAttribute(key);
+        return (String)this.portalService.getUserService().getAttribute(key);
     }
 
     /**
@@ -245,7 +245,7 @@ public class PortalToolManager
         if (!key.startsWith("/")) {
             key = "/" + key;
         }
-        this.portalService.setAttribute(key, value);
+        this.portalService.getUserService().setAttribute(key, value);
     }
 
     /**

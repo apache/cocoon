@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal.event.user;
 
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 
 /**
  * This interface marks an event as a user related event.

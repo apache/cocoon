@@ -17,10 +17,11 @@ package org.apache.cocoon.portal.profile.impl;
 
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 
 /**
  * Information about the current user.
@@ -35,7 +36,7 @@ public abstract class AbstractPortalUser
     /** The unique name of the user. */
     protected String userName;
 
-    protected String group;
+    protected Collection groups = Collections.EMPTY_LIST;
 
     protected Map userInfo = Collections.EMPTY_MAP;
 
@@ -47,7 +48,7 @@ public abstract class AbstractPortalUser
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.PortalUser#isAnonymous()
+     * @see org.apache.cocoon.portal.om.PortalUser#isAnonymous()
      */
     public boolean isAnonymous() {
         return this.anonymous;
@@ -58,17 +59,17 @@ public abstract class AbstractPortalUser
     }
 
     /**
-     * @return Returns the group.
+     * @see org.apache.cocoon.portal.om.PortalUser#getGroups()
      */
-    public String getGroup() {
-        return group;
+    public Collection getGroups() {
+        return groups;
     }
 
     /**
      * @param group The group to set.
      */
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroups(Collection groups) {
+        this.groups = groups;
     }
 
     /**
@@ -86,21 +87,21 @@ public abstract class AbstractPortalUser
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.PortalUser#getUserInfo(java.lang.String)
+     * @see org.apache.cocoon.portal.om.PortalUser#getUserInfo(java.lang.String)
      */
     public Object getUserInfo(String key) {
         return this.userInfo.get(key);
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.PortalUser#getUserInfos()
+     * @see org.apache.cocoon.portal.om.PortalUser#getUserInfos()
      */
     public Map getUserInfos() {
         return this.userInfo;
     }
 
     public void setUserInfos(Map infos) {
-        if ( infos == null ) {
+        if ( infos == null || infos.size() == 0) {
             this.userInfo = Collections.EMPTY_MAP;
         } else {
             this.userInfo = Collections.unmodifiableMap(infos);
@@ -108,16 +109,23 @@ public abstract class AbstractPortalUser
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.PortalUser#getUserPrincipal()
+     * @see org.apache.cocoon.portal.om.PortalUser#getUserPrincipal()
      */
     public Principal getUserPrincipal() {
         return null;
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.PortalUser#getAuthType()
+     * @see org.apache.cocoon.portal.om.PortalUser#getAuthType()
      */
     public String getAuthType() {
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.om.PortalUser#getDefaultLayoutKey()
+     */
+    public String getDefaultLayoutKey() {
         return null;
     }
 }

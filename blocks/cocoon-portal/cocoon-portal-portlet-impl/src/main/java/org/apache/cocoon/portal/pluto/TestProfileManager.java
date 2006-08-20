@@ -31,7 +31,7 @@ import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Item;
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager;
 import org.apache.cocoon.portal.scratchpad.Profile;
 import org.apache.cocoon.portal.scratchpad.ProfileImpl;
@@ -58,7 +58,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
 
     protected Profile loadProfile(final String layoutKey) 
     throws Exception {
-        final PortalUser info = (PortalUser)this.portalService.getTemporaryAttribute(USER_ATTRIBUTE);
+        final PortalUser info = this.portalService.getUserService().getUser();
         if ( info.getUserName().equals("test") ) {
             // if the request parameter 'portletName' is available we only
             // display the portlets specified with the parameter. Otherwise

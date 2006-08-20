@@ -97,7 +97,7 @@ public class PortletPreferencesProviderImpl
         key.put("portal", this.portalService.getPortalName());
         key.put("type", "user");
         key.put("instance", "copletId");
-        key.put("user", this.portalService.getProfileManager().getUser().getUserName());
+        key.put("user", this.portalService.getUserService().getUser().getUserName());
 
         return key;
     }

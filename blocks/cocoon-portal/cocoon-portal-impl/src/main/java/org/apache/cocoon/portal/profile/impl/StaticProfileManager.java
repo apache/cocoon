@@ -31,7 +31,6 @@ import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
-import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.portal.profile.ProfileException;
 import org.apache.cocoon.portal.PortalRuntimeException;
@@ -56,18 +55,16 @@ public class StaticProfileManager
 
     protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
-    protected final PortalUser portalUser = new StaticPortalUser();
-
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getLayout(java.lang.String)
      */
     public Layout getLayout(String layoutID) {
         ProfileLS adapter = null;
         try {
-            final String layoutKey = this.portalService.getDefaultLayoutKey();
+            final String layoutKey = this.portalService.getUserService().getDefaultLayoutKey();
 
             String serviceKey = LAYOUTKEY_PREFIX + layoutKey;
-            Object[] objects = (Object[]) this.portalService.getAttribute(serviceKey);
+            Object[] objects = (Object[]) this.portalService.getUserService().getAttribute(serviceKey);
 
             // check if the layout is already cached and still valid
             int valid = SourceValidity.INVALID;
@@ -113,7 +110,7 @@ public class StaticProfileManager
             // store the new values in the service
             if (newValidity != null) {
                 objects = new Object[] { layouts, newValidity };
-                this.portalService.setAttribute(serviceKey, objects);
+                this.portalService.getUserService().setAttribute(serviceKey, objects);
             }
 
             return (Layout) layouts.get(layoutID);
@@ -303,28 +300,6 @@ public class StaticProfileManager
             return this.getCopletInstanceDataManager();
         } catch (Exception e) {
             throw new ProfileException("Error in getCopletInstanceDatas.", e);
-        }
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getUser()
-     */
-    public PortalUser getUser() {
-        return this.portalUser;
-    }
-
-    protected static final class StaticPortalUser extends AbstractPortalUser {
-
-        public StaticPortalUser() {
-            this.setUserName("static");
-            this.setAnonymous(true);
-        }
-
-        /**
-         * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
-         */
-        public boolean isUserInRole(String role) {
-            return false;
         }
     }
 

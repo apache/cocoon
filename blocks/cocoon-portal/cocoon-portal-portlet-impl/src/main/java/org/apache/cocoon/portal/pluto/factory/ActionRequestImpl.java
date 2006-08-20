@@ -19,7 +19,7 @@ import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.pluto.om.window.PortletWindow;
 
 /**

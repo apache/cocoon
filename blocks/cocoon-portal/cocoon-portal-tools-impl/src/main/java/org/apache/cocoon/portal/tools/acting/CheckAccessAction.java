@@ -49,7 +49,7 @@ implements ThreadSafe {
         try {
             UserRightsService userRightsService = ptm.getUserRightsService();
             // FIXME: replace the throw with something else
-            if (!userRightsService.userIsAllowed(url, ptm.getPortalObjects().getPortalService().getProfileManager().getUser())) {
+            if (!userRightsService.userIsAllowed(url, ptm.getPortalObjects().getPortalService().getUserService().getUser())) {
                 throw new ProcessingException(
                     "You are not allowed to request this page.");
             }

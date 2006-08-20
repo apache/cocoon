@@ -35,7 +35,7 @@ public class ContextGrabber {
 	 */
 	public UserBean grab(PortalService service) {
 		UserBean ub = new UserBean ();
-        final Map infos = service.getProfileManager().getUser().getUserInfos();
+        final Map infos = service.getUserService().getUser().getUserInfos();
         final Iterator i = infos.entrySet().iterator();
         while ( i.hasNext() ) {
             final Map.Entry current = (Map.Entry)i.next();

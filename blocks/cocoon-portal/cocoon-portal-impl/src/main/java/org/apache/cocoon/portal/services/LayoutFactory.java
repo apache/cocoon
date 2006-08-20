@@ -29,8 +29,6 @@ import org.apache.cocoon.portal.om.LayoutInstance;
  */
 public interface LayoutFactory  {
 
-    String ROLE = LayoutFactory.class.getName();
-
     /**
      * Return all available types.
      */

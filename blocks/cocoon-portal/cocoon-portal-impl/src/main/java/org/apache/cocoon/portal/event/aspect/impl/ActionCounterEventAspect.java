@@ -57,14 +57,14 @@ public class ActionCounterEventAspect
 
         int actionCount;
 
-        Integer actionValue = (Integer) service.getAttribute(ATTRIBUTE_NAME);
+        Integer actionValue = (Integer) service.getUserService().getAttribute(ATTRIBUTE_NAME);
         if (null == actionValue) {
             actionValue = new Integer(0);
-            service.setAttribute(ATTRIBUTE_NAME, actionValue);
+            service.getUserService().setAttribute(ATTRIBUTE_NAME, actionValue);
             actionCount = 0;
         } else {
             actionCount = actionValue.intValue() + 1;
-            service.setAttribute(ATTRIBUTE_NAME, new Integer(actionCount));
+            service.getUserService().setAttribute(ATTRIBUTE_NAME, new Integer(actionCount));
         }
 
         final Request request = ObjectModelHelper.getRequest( service.getProcessInfoProvider().getObjectModel() );

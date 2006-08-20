@@ -33,8 +33,6 @@ import org.apache.cocoon.portal.om.LayoutInstance;
  */
 public interface ProfileManager {
 
-    String ROLE = ProfileManager.class.getName();
-
     /**
      * Get the portal layout defined by the layout id.
      * @param layoutID    The id of a layout object or null for the root object
@@ -92,9 +90,4 @@ public interface ProfileManager {
      * Get a specific coplet type for the current user.
      */
     CopletType getCopletType(String id);
-
-    /**
-     * Get current user information.
-     */
-    PortalUser getUser();
 }

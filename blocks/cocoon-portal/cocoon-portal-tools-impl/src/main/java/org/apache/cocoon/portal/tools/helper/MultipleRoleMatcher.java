@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.tools.helper;
 
 import java.util.StringTokenizer;
 
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 
 /**
  * A role matcher matching against several role.

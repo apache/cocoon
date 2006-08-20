@@ -38,7 +38,7 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
-import org.apache.cocoon.portal.profile.PortalUser;
+import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.profile.ProfileManagerAspect;
 import org.apache.cocoon.portal.scratchpad.Profile;
@@ -51,9 +51,6 @@ import org.apache.cocoon.portal.scratchpad.Profile;
 public abstract class AbstractProfileManager 
     extends AbstractComponent 
     implements ProfileManager, Receiver, Configurable {
-
-    /** Attribute to store the current user. */
-    public static final String USER_ATTRIBUTE = AbstractProfileManager.class.getName() + "/User";
 
     /** The configuration. */
     protected Configuration configuration;
@@ -100,7 +97,6 @@ public abstract class AbstractProfileManager
      * @see Receiver
      */
     public void inform(UserEvent event, PortalService service) {
-        this.portalService.setTemporaryAttribute(USER_ATTRIBUTE, event.getPortalUser());
         if ( event instanceof UserDidLoginEvent ) {
             this.login(event.getPortalUser());
         } else if ( event instanceof UserWillLogoutEvent ) {
