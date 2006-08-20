@@ -22,11 +22,11 @@ import java.util.Map;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
-import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.services.LinkService;
 import org.apache.pluto.PortletWindow;
 import org.apache.pluto.spi.PortletURLProvider;
 
