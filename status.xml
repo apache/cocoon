@@ -183,6 +183,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JJ" type="fix">
+      ImageOp block: Send info/debug messages to the log rather than System.out.println
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1815" due-to="Frédéric Glorieux" due-to-email="frederic.glorieux@ajlsm.com">
       Core: CopySourceAction generate NPE.
     </action>
