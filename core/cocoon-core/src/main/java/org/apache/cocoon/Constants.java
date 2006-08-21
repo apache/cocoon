@@ -48,16 +48,18 @@ public final class Constants {
 
     }
 
-    /** The name of this project. 
-     * @deprecated This will be removed soon. 
+    /**
+     * The name of this project.
+     * @deprecated This will be removed soon.
      */
     public static final String NAME = "Cocoon";
 
     /** The version of this build. */
     public static final String VERSION = properties.getProperty("version");
 
-    /** The full name of this project.
-     * @deprecated This will be removed soon. 
+    /**
+     * The full name of this project.
+     * @deprecated This will be removed soon.
      */
     public static final String COMPLETE_NAME = "Apache Cocoon " + VERSION;
 
@@ -180,18 +182,21 @@ public final class Constants {
     /** Application <code>Context</code> Key for the environmental Context (= ServletContext) */
     public static final String CONTEXT_ENVIRONMENT_CONTEXT = "environment-context";
 
-    /** Application <code>Context</code> Key for the work directory path.
-     * @deprecated Use{@link org.apache.cocoon.configuration.Settings#getWorkDirectory() instead.}
+    /**
+     * Application <code>Context</code> Key for the work directory path.
+     * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getWorkDirectory()} instead.
      */
     public static final String CONTEXT_WORK_DIR = "work-directory";
 
-    /** Application <code>Context</code> Key for the upload directory path.
-     * @deprecated Use{@link org.apache.cocoon.configuration.Settings#getUploadDirectory() instead.}
+    /**
+     * Application <code>Context</code> Key for the upload directory path.
+     * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getUploadDirectory()} instead.
      */
     public static final String CONTEXT_UPLOAD_DIR = "upload-directory";
 
-    /** Application <code>Context</code> Key for the cache directory path.
-     * @deprecated Use{@link org.apache.cocoon.configuration.Settings#getCacheDirectory() instead.}
+    /**
+     * Application <code>Context</code> Key for the cache directory path.
+     * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getCacheDirectory()} instead.
      */
     public static final String CONTEXT_CACHE_DIR = "cache-directory";
 
@@ -202,10 +207,10 @@ public final class Constants {
     public static final String CONTEXT_VPC_PREFIX = "vpc-";
 
     /** Path to the wiring.xml relative to the context root directory */
-    public static final String WIRING = "wiring.xml";    
-    
+    public static final String WIRING = "wiring.xml";
+
     public static final String BLOCK_META_DIR = "COB-INF";
-    
+
     /**
      * Application <code>Context</code> Key for the URL to the configuration file
      * (usually named cocoon.xconf)
@@ -213,7 +218,9 @@ public final class Constants {
      */
     public static final String CONTEXT_CONFIG_URL = "config-url";
 
-    /** Application <code>Context</code> Key for the default encoding.
-     * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getFormEncoding()}. */
+    /**
+     * Application <code>Context</code> Key for the default encoding.
+     * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getFormEncoding()}.
+     */
     public static final String CONTEXT_DEFAULT_ENCODING = "default-encoding";
 }
