@@ -96,7 +96,9 @@ final public class ImageOpReader extends ResourceReader
     {
         super.setup(resolver, objectModel, src, par);
         m_Format = par.getParameter("output-format", FORMAT_DEFAULT);
-        getLogger().info( src + " --> " + m_Format );
+        if(getLogger().isInfoEnabled()) {
+            getLogger().info( src + " --> " + m_Format );
+        }
         setupEffectsStack( par );
     }
 
@@ -190,19 +192,25 @@ final public class ImageOpReader extends ResourceReader
         {
             ImageOperation op = (ImageOperation) list.next();
             WritableRaster r = op.apply( src );
-            System.out.println( "In Bounds: " + r.getBounds() );
+            if(getLogger().isDebugEnabled()) {
+                getLogger().debug( "In Bounds: " + r.getBounds() );
+            }
             src = r.createWritableTranslatedChild( 0, 0 );
         }
         ColorModel cm = image.getColorModel();
-        System.out.println( "Out Bounds: " + src.getBounds() );
+        if(getLogger().isDebugEnabled()) {
+            getLogger().debug( "Out Bounds: " + src.getBounds() );
+        }
         BufferedImage newImage = new BufferedImage( cm, src, true, new Hashtable() );
         // Not sure what this should really be --------------^^^^^
         
         int minX = newImage.getMinX();
         int minY = newImage.getMinY();
         int width = newImage.getWidth();
-        int height = newImage.getHeight();
-        System.out.println( "Image: " + minX + ", " + minY + ", " + width + ", " + height );
+        int height = newImage.getHeight();        
+        if(getLogger().isInfoEnabled()) {
+            getLogger().info( "Image: " + minX + ", " + minY + ", " + width + ", " + height );
+        }
         
         return newImage;
     }
@@ -222,7 +230,9 @@ final public class ImageOpReader extends ResourceReader
 
         ImageWriterSpi spi = writer.getOriginatingProvider();
         String[] mimetypes = spi.getMIMETypes();
-        getLogger().info( "Setting content-type: " + mimetypes[0] );
+        if(getLogger().isInfoEnabled()) {
+            getLogger().info( "Setting content-type: " + mimetypes[0] );
+        }
         response.setHeader("Content-Type", mimetypes[0] );
         ImageOutputStream output = ImageIO.createImageOutputStream( out );
         try
@@ -255,11 +265,10 @@ final public class ImageOpReader extends ResourceReader
                     value = value << 16;
                 value = value + v;
             }
-            System.out.print( Long.toHexString( value ) );
-            System.out.print( " " );
+            if(getLogger().isDebugEnabled()) {
+                getLogger().debug( Long.toHexString( value ) );
+            }
         }
-        System.out.println();
-        System.out.println();
     }
 */
 }
