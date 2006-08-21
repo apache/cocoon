@@ -1015,7 +1015,7 @@ public class IncludeTransformer extends AbstractTransformer
 
                     try {
                         buffer.wait();
-                    } catch (InterruptedException ignored) { }
+                    } catch (InterruptedException e) { /* ignored */ }
                     // Don't continue waiting if interrupted.
                 }
             }
@@ -1059,7 +1059,6 @@ public class IncludeTransformer extends AbstractTransformer
              */
             public void run() {
                 try {
-                    Source source = null;
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Thread #" + thread + " loading <" + element.source + ">");
                     }
@@ -1073,9 +1072,6 @@ public class IncludeTransformer extends AbstractTransformer
                         this.e = e;
 
                     } finally {
-                        if (source != null) {
-                            resolver.release(source);
-                        }
                         CocoonComponentManager.leaveEnvironment();
                     }
                 } catch (RuntimeException e) {
@@ -1111,7 +1107,7 @@ public class IncludeTransformer extends AbstractTransformer
                     if (!this.finished) {
                         try {
                             wait();
-                        } catch (InterruptedException ignored) { }
+                        } catch (InterruptedException e) { /* ignored */ }
                         // Don't continue waiting if interrupted.
                     }
                 }
