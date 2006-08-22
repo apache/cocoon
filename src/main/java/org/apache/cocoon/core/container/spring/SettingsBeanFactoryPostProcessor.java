@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
+import org.apache.cocoon.core.CoreInitializationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -76,10 +78,61 @@ public class SettingsBeanFactoryPostProcessor
         this.servletContext = sContext;
     }
 
-    public void init() {
+    public void init()
+    throws Exception {
         final MutableSettings s = this.createSettings();
         this.initSettingsFiles(s);
+        // update configuration
+        final URL u = this.getConfigFile(s.getConfiguration());
+        s.setConfiguration(u.toExternalForm());
+
+        // settings can't be changed anymore
+        s.makeReadOnly();
         this.settings = s;
+    }
+
+    /**
+     * Get the URL of the main Cocoon configuration file.
+     */
+    protected URL getConfigFile(final String configFileName)
+    throws Exception {
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Using configuration file: " + configFileName);
+        }
+
+        URL result;
+        try {
+            // test if this is a qualified url
+            if (configFileName.indexOf(':') == -1) {
+                result = this.servletContext.getResource(configFileName);
+            } else {
+                result = new URL(configFileName);
+            }
+        } catch (Exception mue) {
+            String msg = "Setting for 'configuration' is invalid : " + configFileName;
+            this.logger.error(msg, mue);
+            throw new CoreInitializationException(msg, mue);
+        }
+
+        if (result == null) {
+            File resultFile = new File(configFileName);
+            if (resultFile.isFile()) {
+                try {
+                    result = resultFile.getCanonicalFile().toURL();
+                } catch (Exception e) {
+                    String msg = "Setting for 'configuration' is invalid : " + configFileName;
+                    this.logger.error(msg, e);
+                    throw new CoreInitializationException(msg, e);
+                }
+            }
+        }
+
+        if (result == null) {
+            String msg = "Setting for 'configuration' doesn't name an existing resource : " + configFileName;
+            this.logger.error(msg);
+            throw new CoreInitializationException(msg);
+        }
+        return result;
     }
 
     /**
