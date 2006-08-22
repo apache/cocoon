@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ * Copyright 1999-2006 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,30 +26,31 @@ import java.io.Serializable;
  * @version $Id$
  * @since 2.1.1
  */
-public class IdentifierCacheKey
-    implements Serializable {
+public class IdentifierCacheKey implements Serializable {
 
-    /** The key */
-    final protected String key;
+    /** The key. Must not be null. */
+    protected final String key;
 
-    /** Is this an external pipeline call? */
-    final protected boolean external;
+    /** True if this is an external pipeline call. */
+    protected final boolean external;
 
-    /** cache key */
-    final protected String cacheKey;
-    
-    /** cache toString() */
-    protected String toString;
-    
+    /** Caches toString() value. */
+    protected transient String toString;
+
     /**
-     * Constructor
+     * @param key Not null key value
+     * @param external True if key represents external pipeline call
      */
     public IdentifierCacheKey(String key, boolean external) {
         this.key = key;
         this.external = external;
-        final StringBuffer buf = new StringBuffer();
-        buf.append(this.external).append(':').append(this.key);
-        this.cacheKey = buf.toString();
+    }
+
+    /**
+     * The cache key
+     */
+    public String getKey() {
+        return this.key;
     }
 
     /**
@@ -57,8 +58,11 @@ public class IdentifierCacheKey
      */
     public boolean equals(Object object) {
         if (object instanceof IdentifierCacheKey) {
-            IdentifierCacheKey pck = (IdentifierCacheKey)object;
-            return this.cacheKey.equals( pck.cacheKey );
+            IdentifierCacheKey pck = (IdentifierCacheKey) object;
+            if (external != pck.external) {
+                return false;
+            }
+            return this.key.equals(pck.key);
         }
         return false;
     }
@@ -67,7 +71,7 @@ public class IdentifierCacheKey
      * Generate a hash code
      */
     public int hashCode() {
-        return this.cacheKey.hashCode();
+        return key.hashCode() + (external ? Boolean.TRUE : Boolean.FALSE).hashCode();
     }
 
     /**
@@ -76,18 +80,8 @@ public class IdentifierCacheKey
      */
     public String toString() {
         if (this.toString == null) {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("IK:");
-            buffer.append(this.cacheKey);
-            this.toString = buffer.toString();
+            this.toString = "IK:" + external + ':' + key;
         }
         return toString;
-    }
-    
-    /**
-     * The cache key
-     */
-    public String getKey() {
-        return this.key;
     }
 }
