@@ -62,8 +62,8 @@ The new RunnableManager task manager from the core is used for scheduling.
 
 Configuration in cocoon.xconf:
 
-<component class="org.apache.cocoon.components.source.impl.SourceRefresherImpl"
-            role="org.apache.cocoon.components.source.impl.SourceRefresher">
+<component class="org.apache.cocoon.components.source.DelayRefresher"
+            role="org.apache.cocoon.components.source.helpers.SourceRefresher">
   <parameter name="write-interval" value="3600"/>
   <parameter name="write-source" value="context://targets.xml"/>
 </component>

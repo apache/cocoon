@@ -41,9 +41,9 @@
         default-class="org.apache.cocoon.caching.impl.CacheImpl"
   />
 
-  <role name="org.apache.cocoon.components.source.impl.SourceRefresher"
+  <role name="org.apache.cocoon.components.source.helpers.SourceRefresher"
         shorthand="delay-refresher"
-        default-class="org.apache.cocoon.components.source.impl.DelaySourceRefresher"
+        default-class="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
   />
 
   <role name="org.apache.cocoon.components.cron.JobScheduler"

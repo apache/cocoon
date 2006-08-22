@@ -42,6 +42,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
 
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.components.source.InspectableSource;
+import org.apache.cocoon.components.source.helpers.SourceRefresher;
 
 /**
  * This class implements a proxy like source caches the contents of the source
@@ -90,7 +91,7 @@ import org.apache.cocoon.components.source.InspectableSource;
  *  <td>Role of component used for refreshing sources.</td>
  *  <td>opt</td>
  *  <td>String</td>
- *  <td><code>{@link org.apache.cocoon.components.source.impl.SourceRefresher#ROLE}</code></td>
+ *  <td><code>{@link org.apache.cocoon.components.source.helpers.SourceRefresher#ROLE}</code></td>
  * </tr>
  * <tr>
  *  <th>async (boolean)</th>
@@ -339,7 +340,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
     throws SourceException {
 
         CachingSource source;
-        
+
         if (wrappedSource instanceof TraversableSource) {
             if (wrappedSource instanceof InspectableSource) {
                 source = new InspectableTraversableCachingSource(this,
