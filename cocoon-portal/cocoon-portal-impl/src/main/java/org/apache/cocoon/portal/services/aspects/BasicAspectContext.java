@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.profile;
+package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.Properties;
+
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
- * The context for a {@link  ProfileManagerAspect}
+ * The base interface for all aspect contexts.
  *
  * @since 2.2
  * @version $Id$
  */
-public interface ProfileManagerAspectContext {
-
-    /**
-     * Invoke next aspect .
-     */
-    void invokeNext(Profile profile);
+public interface BasicAspectContext {
 
     /** 
-     * Get the {@link Parameters} of the aspect.
+     * Get the {@link Properties} of the aspect.
      */
-    Parameters getAspectParameters();
+    Properties getAspectProperties();
 
     /**
      * Get the portal service.

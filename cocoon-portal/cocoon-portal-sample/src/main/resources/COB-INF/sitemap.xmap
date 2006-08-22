@@ -75,6 +75,21 @@
   <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
+    <map:pipeline>
+      <!-- Do an auto login as anonymous -->
+      <map:act type="cauth-is-logged-in">
+        <map:parameter name="application" value="portal"/>
+        <map:parameter name="negate-result" value="true"/>
+
+        <map:act type="cauth-login">
+          <map:parameter name="application" value="portal"/>
+
+          <map:parameter name="name" value="anonymous"/>
+          <map:parameter name="password" value="anonymous"/>
+        </map:act>
+      </map:act>
+    </map:pipeline>
+
     <!-- The internal pipelines for loading and saving -->
     <map:pipeline internal-only="true">
       <map:match pattern="sunrise-authuser">
@@ -175,19 +190,6 @@
       <map:match pattern="portlets/**">
         <map:mount src="portlets/" uri-prefix="portlets"/>
       </map:match>
-
-      <!-- Do an auto login as anonymous -->
-      <map:act type="cauth-is-logged-in">
-        <map:parameter name="application" value="portal"/>
-        <map:parameter name="negate-result" value="true"/>
-
-        <map:act type="cauth-login">
-          <map:parameter name="application" value="portal"/>
-
-          <map:parameter name="name" value="anonymous"/>
-          <map:parameter name="password" value="anonymous"/>
-        </map:act>
-      </map:act>
 
       <!-- Test pipeline for portal engine -->
       <map:match pattern="portal">

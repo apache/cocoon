@@ -25,8 +25,6 @@ package org.apache.cocoon.portal.event;
  */
 public interface EventConverter {
 
-    String ROLE = EventConverter.class.getName();
-
     /**
      * Encode an event.
      * This is used to "activate" events using a link

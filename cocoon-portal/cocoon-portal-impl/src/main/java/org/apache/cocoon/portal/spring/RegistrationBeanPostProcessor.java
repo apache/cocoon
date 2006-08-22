@@ -16,7 +16,9 @@
 package org.apache.cocoon.portal.spring;
 
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -52,6 +54,9 @@ public class RegistrationBeanPostProcessor
                 name = name.substring(RENDERER_ROLE_PREFIX.length());
             }
             ((PortalService)this.beanFactory.getBean(PortalService.ROLE)).register(name, (Renderer)bean);
+        }
+        if ( bean instanceof CopletAdapter && bean instanceof PortalManagerAspect ) {
+            ((PortalService)this.beanFactory.getBean(PortalService.ROLE)).getPortalManager().register((PortalManagerAspect)bean);
         }
         return bean;
     }

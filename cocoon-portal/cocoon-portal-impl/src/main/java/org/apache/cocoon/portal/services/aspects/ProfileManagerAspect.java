@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ * Copyright 2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event.aspect;
+package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.portal.services.aspects.BasicAspectContext;
+import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
+ * The behaviour of the used profile manager can be extended by assigning one
+ * or more profile manager aspects to the profile manager.
  *
+ * @since 2.2
  * @version $Id$
  */
-public interface EventAspectContext
-    extends BasicAspectContext {
+public interface ProfileManagerAspect {
 
-    /**
-     * Invoke next aspect 
-     */
-    void invokeNext();
+    void prepare(ProfileManagerAspectContext context,
+                 Profile profile);
 }

@@ -81,18 +81,14 @@
 
   <!-- This is the portal manager.
        The portal manager can be extended with different aspects.
-       Currently the JSR-168 aspect is configured/activated.
-       If you don't need the JSR-168 support uncomment the aspect.
   -->
   <portal-manager>
     <aspects>
-      <!-- JSR-168 support: -->
-      <aspect adapter="portlet"/>
     </aspects>
   </portal-manager>
 
   <portal-event-manager>
-    <event-aspects>
+    <aspects>
         <!--  The client should not cache the page. -->
         <aspect type="no-client-caching"/>
         <!-- Use the action counter with great care. We recommend turning it off. -->
@@ -106,7 +102,7 @@
         <!-- Comment the following out if you don't need WSRP: --> 
         <aspect type="wsrp"/>
         <aspect type="request-parameter"/>
-    </event-aspects>
+    </aspects>
   </portal-event-manager>
 
   <!--+

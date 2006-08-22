@@ -42,6 +42,7 @@ import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.SkinDescription;
@@ -124,7 +125,6 @@ public class PortalServiceImpl
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
         this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
-        this.userService = (UserService)this.manager.lookup(UserService.class.getName());
     }
 
     /**
@@ -408,6 +408,24 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getUserService()
      */
     public UserService getUserService() {
+        if ( this.userService == null ) {
+            try {
+                this.userService = (UserService)this.manager.lookup(UserService.class.getName());
+            } catch (ServiceException e) {
+                throw new PortalRuntimeException("Unable to lookup user service.", e);
+            }
+        }
         return this.userService;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#getEventConverter()
+     */
+    public EventConverter getEventConverter() {
+        try {
+            return (EventConverter)this.manager.lookup(EventConverter.class.getName());
+        } catch (ServiceException e) {
+            throw new PortalRuntimeException("Unable to lookup event converter.", e);
+        }
     }
 }

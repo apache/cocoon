@@ -21,23 +21,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.EventConverter;
+import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.util.NetUtils;
 
@@ -46,22 +37,9 @@ import org.apache.cocoon.util.NetUtils;
  * @version $Id$
  */
 public class DefaultLinkService 
-    extends AbstractLogEnabled
+    extends AbstractComponent
     implements LinkService,
-               ThreadSafe,
-               Serviceable,
-               Disposable,
-               Contextualizable,
                Parameterizable {
-
-    /** The converter used to convert an event into a request parameter. */
-    protected EventConverter converter;
-
-    /** The service manager. */
-    protected ServiceManager manager;
-
-    /** The cocoon context- */
-    protected Context context;
 
     /** Default port used for http. */
     protected int defaultPort = 80;
@@ -74,14 +52,6 @@ public class DefaultLinkService
 
     /** List of matchers for internal parameters. */
     protected List internalParametersMatchers = new ArrayList();
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-        this.converter = (EventConverter)this.manager.lookup(EventConverter.ROLE);
-    }
 
     /**
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
@@ -190,7 +160,7 @@ public class DefaultLinkService
         } else {
             buffer.append('?');
         }
-        final String value = this.converter.encode(event);
+        final String value = this.portalService.getEventConverter().encode(event);
         try {
             buffer.append(DEFAULT_REQUEST_EVENT_PARAMETER_NAME).append('=').append(NetUtils.encode(value, "utf-8"));
         } catch (UnsupportedEncodingException uee) {
@@ -273,7 +243,7 @@ public class DefaultLinkService
         if (event == null) {
             return;
         }
-        final String value = this.converter.encode(event);
+        final String value = this.portalService.getEventConverter().encode(event);
         final LinkInfo info = this.getInfo();
         if (event instanceof ComparableEvent) {
             // search if we already have an event for this!
@@ -344,24 +314,6 @@ public class DefaultLinkService
         return buffer.toString();
     }
     
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (this.manager != null) {
-            this.manager.release( this.converter );
-            this.converter = null;
-            this.manager = null;
-        }
-    }
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
-    }
-
     /**
      * @see org.apache.cocoon.portal.services.LinkService#getInternalParameterNames()
      */

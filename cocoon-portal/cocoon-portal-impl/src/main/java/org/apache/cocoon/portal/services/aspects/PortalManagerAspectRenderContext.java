@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal;
+package org.apache.cocoon.portal.services.aspects;
 
 import java.util.Properties;
 
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -26,15 +24,13 @@ import org.xml.sax.SAXException;
  * @since 2.1.8
  * @version $Id$
  */
-public interface PortalManagerAspect {
+public interface PortalManagerAspectRenderContext
+    extends BasicAspectContext {
 
-    void prepare(PortalManagerAspectPrepareContext context,
-                 PortalService service)
-    throws ProcessingException;
-
-    void render(PortalManagerAspectRenderContext context,
-                PortalService                  service,
-                ContentHandler                 ch,
-                Properties                     properties)
+    /**
+     * Invoke next aspect 
+     */
+    void invokeNext(ContentHandler ch,
+                    Properties     parameters)
     throws SAXException;
 }
