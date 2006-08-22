@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.source.impl;
+package org.apache.cocoon.components.source.helpers;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,6 +51,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.helpers.SourceRefresher;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;

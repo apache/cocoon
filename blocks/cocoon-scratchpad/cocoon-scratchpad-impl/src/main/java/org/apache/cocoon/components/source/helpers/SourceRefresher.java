@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.source.impl;
+package org.apache.cocoon.components.source.helpers;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -35,7 +35,7 @@ public interface SourceRefresher extends Component {
 
     /**
      * Refresh interval for the Source.
-     * Parameter is used by {@link DelaySourceRefresher}.
+     * Parameter is used by {@link org.apache.cocoon.components.source.helpers.DelaySourceRefresher}.
      */
     String PARAM_CACHE_INTERVAL = "interval";
 
