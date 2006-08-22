@@ -46,11 +46,6 @@
         default-class="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
   />
 
-  <role name="org.apache.cocoon.components.cron.JobScheduler"
-        shorthand="job-scheduler"
-        default-class="org.apache.cocoon.components.cron.QuartzJobScheduler"
-  />
-
   <role name="org.apache.excalibur.xml.sax.SAXParser"
         shorthand="xml-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"
@@ -89,7 +84,6 @@
 
   <delay-refresher logger="core.refresher">
     <parameter name="write-interval" value="10"/>
-    <parameter name="scheduler-target" value="org.apache.cocoon.components.cron.CronJob/update"/>
   </delay-refresher>
 
   <xmlizer logger="core.xmlizer">

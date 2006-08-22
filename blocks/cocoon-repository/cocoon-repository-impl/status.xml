@@ -65,6 +65,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="add">
+      Added CachingSource source implementation (from the scratchpad block).
+    </action>
   </release>
  </changes>
 
