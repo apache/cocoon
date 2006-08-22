@@ -51,7 +51,6 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.source.helpers.SourceRefresher;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
