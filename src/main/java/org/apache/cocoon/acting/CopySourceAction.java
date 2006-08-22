@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.acting;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -90,10 +88,10 @@ public class CopySourceAction
 
         // And transfer all content.
         try {
-            SourceUtil.copy(is, os);
+            SourceUtil.copy(src, dest);
         } finally {
-            os.close();
-            is.close();
+            resolver.release(src);
+            resolver.release(dest);
         }
         // Success !
         return EMPTY_MAP;
