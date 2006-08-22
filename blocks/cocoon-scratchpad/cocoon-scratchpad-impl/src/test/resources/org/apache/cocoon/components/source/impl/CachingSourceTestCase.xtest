@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <!--
  Copyright 1999-2004 The Apache Software Foundation.
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
       http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,37 +30,32 @@
        shorthand="store"
        default-class="org.apache.excalibur.store.impl.MRUMemoryStore"
   />
-  
+
   <role name="org.apache.excalibur.store.StoreJanitor"
        shorthand="store-janitor"
        default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"
   />
-  
+
   <role name="org.apache.cocoon.caching.Cache"
         shorthand="cache"
         default-class="org.apache.cocoon.caching.impl.CacheImpl"
   />
-  
-  <role name="org.apache.cocoon.components.source.impl.Refresher"
+
+  <role name="org.apache.cocoon.components.source.impl.SourceRefresher"
         shorthand="delay-refresher"
-        default-class="org.apache.cocoon.components.source.impl.DelayRefresher"
+        default-class="org.apache.cocoon.components.source.impl.DelaySourceRefresher"
   />
-  
+
   <role name="org.apache.cocoon.components.cron.JobScheduler"
         shorthand="job-scheduler"
         default-class="org.apache.cocoon.components.cron.QuartzJobScheduler"
   />
 
-  <role name="org.apache.cocoon.components.cron.CronJob/UpdateTarget"
-        shorthand="update-target"
-        default-class="org.apache.cocoon.components.source.impl.UpdateTarget"
-  />
-  
   <role name="org.apache.excalibur.xml.sax.SAXParser"
         shorthand="xml-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"
   />
-  
+
   <role name="org.apache.excalibur.xmlizer.XMLizer"
         shorthand="xmlizer"
         default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"
@@ -73,7 +68,7 @@
  </roles>
 
  <components>
-  
+
   <source-factories>
    <component-instance class="org.apache.cocoon.components.source.impl.CachingSourceFactory" name="caching" logger="core.cachingsource"/>
    <component-instance class="org.apache.cocoon.components.source.impl.CachingSourceFactory" name="async-caching" logger="core.asynchcachingsource">
@@ -85,23 +80,21 @@
    <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource" logger="core.resourcesource"/>
    <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
-  
+
   <store logger="core.persistentstore">
     <parameter name="directory" value="cachingsourcetest"/>
   </store>
-  
+
   <cache logger="core.cache"/>
-  
+
   <delay-refresher logger="core.refresher">
     <parameter name="write-interval" value="10"/>
     <parameter name="scheduler-target" value="org.apache.cocoon.components.cron.CronJob/update"/>
   </delay-refresher>
-  
-  <update-target logger="core.updatetarget"/>
-  
+
   <xmlizer logger="core.xmlizer">
       <parser mime-type="text/xml" role="org.apache.excalibur.xml.sax.SAXParser"/>
   </xmlizer>
-  
+
  </components>
 </testcase>
