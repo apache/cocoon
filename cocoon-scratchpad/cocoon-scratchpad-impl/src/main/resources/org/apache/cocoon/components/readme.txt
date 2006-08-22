@@ -58,22 +58,15 @@ is always streamed using the cached version.
 Configuration
 =============
 
-The new cron scheduler from the cron block is used for scheduling.
+The new RunnableManager task manager from the core is used for scheduling.
 
 Configuration in cocoon.xconf:
 
-<!-- This is a sample target, that is called as configured in the sample above -->
-<component role="org.apache.avalon.cornerstone.services.scheduler.Target/update" 
-           class="org.apache.cocoon.components.source.impl.UpdateTarget"/>
-
-<component class="org.apache.cocoon.components.source.impl.RefresherImpl" role="org.apache.cocoon.components.source.impl.Refresher">
-  <parameter name="scheduler-target" value="org.apache.avalon.cornerstone.services.scheduler.Target/update"/>
+<component class="org.apache.cocoon.components.source.impl.SourceRefresherImpl"
+            role="org.apache.cocoon.components.source.impl.SourceRefresher">
   <parameter name="write-interval" value="3600"/>
-  <parameter name="write-target" value="org.apache.cocoon.components.source.impl.Refresher"/>
   <parameter name="write-source" value="context://targets.xml"/>
 </component>
 
-The last component, the Refresher, persists the configuration of the scheduler
-to an xml file. This file is read on startup and the registered sources are
-fetched in the background.
-
+The Refresher component persists its configuration into an xml file. This file
+is read on startup and the registered sources are fetched in the background.
