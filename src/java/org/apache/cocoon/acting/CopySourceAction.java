@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.acting;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -46,28 +44,27 @@ import org.apache.excalibur.source.TraversableSource;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class CopySourceAction extends ServiceableAction implements ThreadSafe
-{
-    
+public class CopySourceAction extends ServiceableAction implements ThreadSafe {
+
     private SourceResolver resolver;
 
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
     }
-    
+
     public Map act(Redirector redirector, org.apache.cocoon.environment.SourceResolver oldResolver, Map objectModel, String source, Parameters par)
         throws Exception {
-        
+
         // Get source and destination Sources
         Source src = resolver.resolveURI(source);
         Source dest = resolver.resolveURI(par.getParameter("dest"));
-        
+
         // Check that dest is writeable
         if (! (dest instanceof ModifiableSource)) {
             throw new IllegalArgumentException("Non-writeable URI : " + dest.getURI());
         }
-        
+
         if (dest instanceof TraversableSource) {
             TraversableSource trDest = (TraversableSource) dest;
             if (trDest.isCollection()) {
@@ -81,19 +78,12 @@ public class CopySourceAction extends ServiceableAction implements ThreadSafe
                 }
             }
         }
-        
-        ModifiableSource wdest = (ModifiableSource)dest;
-        
-        // Get streams
-        InputStream is = src.getInputStream();
-        OutputStream os = wdest.getOutputStream();
-        
         // And transfer all content.
         try {
-            SourceUtil.copy(is, os);
+            SourceUtil.copy(src, dest);
         } finally {
-            os.close();
-            is.close();
+            resolver.release(src);
+            resolver.release(dest);
         }
         // Success !
         return EMPTY_MAP;
