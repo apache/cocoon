@@ -19,8 +19,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad.xconf"/>
 
   <source-factories>
 
