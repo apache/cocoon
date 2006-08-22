@@ -16,6 +16,8 @@
 package org.apache.cocoon.acting;
 
 import java.util.Map;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
