@@ -27,7 +27,8 @@ import java.util.Set;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
@@ -56,40 +57,40 @@ public class ConfigReader {
     /** The configuration info. */
     protected final ConfigurationInfo configInfo;
 
-    /** Avalon environment. */
-    protected final AvalonEnvironment environment;
+    /** Settings. */
+    protected final Settings settings;
 
     /** All component configurations. */
     protected final List componentConfigs = new ArrayList();
 
-    public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
+    public static ConfigurationInfo readConfiguration(String source, Settings settings)
     throws Exception {
-        final ConfigReader converter = new ConfigReader(env, null, null);
+        final ConfigReader converter = new ConfigReader(settings, null, null);
         converter.convert(source);
         return converter.configInfo;
     }
 
     public static ConfigurationInfo readConfiguration(Configuration     config,
                                                       ConfigurationInfo parentInfo,
-                                                      AvalonEnvironment env,
+                                                      Settings          settings,
                                                       ResourceLoader    resourceLoader)
     throws Exception {
-        return readConfiguration(config, null, parentInfo, env, resourceLoader);
+        return readConfiguration(config, null, parentInfo, settings, resourceLoader);
     }
 //         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new ServletContextResourceLoader(this.servletContext));
 
     public static ConfigurationInfo readConfiguration(Configuration     rolesConfig,
                                                       Configuration     componentConfig,
                                                       ConfigurationInfo parentInfo,
-                                                      AvalonEnvironment env,
+                                                      Settings          settings,
                                                       ResourceLoader    resourceLoader)
     throws Exception {
-        final ConfigReader converter = new ConfigReader(env, parentInfo, resourceLoader);
+        final ConfigReader converter = new ConfigReader(settings, parentInfo, resourceLoader);
         converter.convert(rolesConfig, componentConfig, null);
         return converter.configInfo;        
     }
 
-    private ConfigReader(AvalonEnvironment env,
+    private ConfigReader(Settings          settings,
                          ConfigurationInfo parentInfo,
                          ResourceLoader    resourceLoader)
     throws Exception {
@@ -98,7 +99,7 @@ public class ConfigReader {
         } else {
             this.resolver = new PathMatchingResourcePatternResolver();
         }
-        this.environment = env;
+        this.settings = settings;
 
         // now add selectors from parent
         if ( parentInfo != null ) {
@@ -156,10 +157,23 @@ public class ConfigReader {
             this.logger.info("Reading Avalon configuration from " + relativePath);
         }
         Resource root = this.resolver.getResource(this.convertUrl(relativePath));
-        final ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
+        final ConfigurationBuilder b = new ConfigurationBuilder(this.settings);
         
         final Configuration config = b.build(this.getInputSource(root));
-            
+        // validate cocoon.xconf
+        if (!"cocoon".equals(config.getName())) {
+            throw new ConfigurationException("Invalid configuration file\n"
+                    + config.toString());
+        }
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Configuration version: "
+                    + config.getAttribute("version"));
+        }
+        if (!Constants.CONF_VERSION.equals(config.getAttribute("version"))) {
+            throw new ConfigurationException(
+                    "Invalid configuration schema version. Must be '"
+                            + Constants.CONF_VERSION + "'.");
+        }            
         this.convert(config, null, root.getURL().toExternalForm());
     }
 
@@ -189,7 +203,7 @@ public class ConfigReader {
                     this.logger.info("Reading additional user roles: " + userRoles);
                 }
                 final Resource userRolesSource = this.resolver.getResource(this.getUrl(userRoles, rootUri));
-                final ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
+                final ConfigurationBuilder b = new ConfigurationBuilder(this.settings);
                 final Configuration userRolesConfig = b.build(this.getInputSource(userRolesSource));
                 this.parseConfiguration(userRolesConfig, userRolesSource.getURL().toExternalForm(), loadedConfigs);
             }
@@ -392,7 +406,7 @@ public class ConfigReader {
             // load it and store it in the read set
             Configuration includeConfig = null;
             try {
-                ConfigurationBuilder builder = new ConfigurationBuilder(this.environment.settings);
+                ConfigurationBuilder builder = new ConfigurationBuilder(this.settings);
                 includeConfig = builder.build(src.getInputStream(), uri);
             } catch (Exception e) {
                 throw new ConfigurationException("Cannot load '" + uri + "' at " + includeStatement.getLocation(), e);

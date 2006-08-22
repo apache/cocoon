@@ -33,8 +33,6 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
@@ -44,17 +42,13 @@ import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ComponentContext;
-import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
-import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.impl.URLSource;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.xml.sax.InputSource;
 
 /**
  * This is an utility class to create a new Cocoon instance.
@@ -349,25 +343,6 @@ public class CoreUtil {
     throws Exception {
         if (log.isInfoEnabled()) {
             log.info("Reading root configuration: " + settings.getConfiguration());
-        }
-
-        URLSource urlSource = new URLSource();
-        urlSource.init(new URL(settings.getConfiguration()), null);
-        final Source configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                settings.getReloadDelay("config"));
-        final InputSource is = SourceUtil.getInputSource(configurationFile);
-
-        final ConfigurationBuilder builder = new ConfigurationBuilder(settings);
-        final Configuration rootConfig = builder.build(is);
-
-        if (!"cocoon".equals(rootConfig.getName())) {
-            throw new ConfigurationException("Invalid configuration file\n" + rootConfig.toString());
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Configuration version: " + rootConfig.getAttribute("version"));
-        }
-        if (!Constants.CONF_VERSION.equals(rootConfig.getAttribute("version"))) {
-            throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
         }
 
         if (log.isInfoEnabled()) {
