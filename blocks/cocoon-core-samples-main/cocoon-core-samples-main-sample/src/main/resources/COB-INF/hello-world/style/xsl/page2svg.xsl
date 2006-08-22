@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2006 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,34 +15,32 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
+<!--
+  - $Id$
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:svg="http://www.w3.org/2000/svg">
 
-<xsl:stylesheet 
-  version="1.0" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:svg="http://www.w3.org/2000/svg"
->
+  <xsl:template match="page">
+    <svg:svg xmlns="http://www.w3.org/2000/svg" width="500" height="160">
+      <svg:defs>
+        <svg:filter id="blur1"><svg:feGaussianBlur stdDeviation="3"/></svg:filter>
+        <svg:filter id="blur2"><svg:feGaussianBlur stdDeviation="1"/></svg:filter>
+      </svg:defs>
 
- <xsl:template match="page">
-  <svg xmlns="http://www.w3.org/2000/svg" width="500" height="160">
-   <defs>
-    <filter id="blur1"><feGaussianBlur stdDeviation="3"/></filter>
-    <filter id="blur2"><feGaussianBlur stdDeviation="1"/></filter>
-   </defs>
-   
-   <g title="this is a tooltip">
-    <rect 
-      style="fill:#0086B3;stroke:#000000;stroke-width:4;filter:url(#blur1);"
-      x="30" y="30" rx="20" ry="20" width="450" height="80"/>
-    <xsl:apply-templates/>
-   </g>
-  </svg>
- </xsl:template>
- 
- <xsl:template match="para">
-  <svg:text style="fill:#FFFFFF;font-size:24;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="65" y="80">
-   <xsl:apply-templates/>
-  </svg:text>
- </xsl:template>
+      <svg:g title="this is a tooltip">
+        <svg:rect style="fill:#0086B3;stroke:#000000;stroke-width:4;filter:url(#blur1);"
+                  x="30" y="30" rx="20" ry="20" width="450" height="80"/>
+        <xsl:apply-templates/>
+      </svg:g>
+    </svg:svg>
+  </xsl:template>
+
+  <xsl:template match="para">
+    <svg:text style="fill:#FFFFFF;font-size:24;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="65" y="80">
+      <xsl:apply-templates/>
+    </svg:text>
+  </xsl:template>
 
 </xsl:stylesheet>
