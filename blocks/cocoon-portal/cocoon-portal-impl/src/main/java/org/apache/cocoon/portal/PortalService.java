@@ -18,6 +18,7 @@ package org.apache.cocoon.portal;
 import java.util.List;
 
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
@@ -114,6 +115,9 @@ public interface PortalService {
      * Get the event manager
      */
     EventManager getEventManager();
+
+    /** Get the event converter. */
+    EventConverter getEventConverter();
 
     /**
      * Get the portal manager

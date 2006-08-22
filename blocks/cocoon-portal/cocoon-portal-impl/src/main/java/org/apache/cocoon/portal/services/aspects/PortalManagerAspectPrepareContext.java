@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.profile;
+package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.portal.scratchpad.Profile;
+import org.apache.cocoon.ProcessingException;
 
 /**
- * The behaviour of the used profile manager can be extended by assigning one
- * or more profile manager aspects to the profile manager.
- *
- * @since 2.2
+ * @since 2.1.8
  * @version $Id$
  */
-public interface ProfileManagerAspect {
+public interface PortalManagerAspectPrepareContext
+    extends BasicAspectContext {
 
-    /** The role to lookup an aspect. */
-    String ROLE = ProfileManagerAspect.class.getName();
-
-    void prepare(ProfileManagerAspectContext context,
-                 Profile profile);
+    /**
+     * Invoke next aspect 
+     */
+    void invokeNext()
+    throws ProcessingException;
 }

@@ -34,9 +34,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.Constants;
-import org.apache.cocoon.portal.PortalManagerAspect;
-import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
-import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
@@ -55,6 +52,9 @@ import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
 import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.pluto.PortletContainer;
@@ -364,17 +364,16 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#prepare(org.apache.cocoon.portal.PortalManagerAspectPrepareContext, org.apache.cocoon.portal.PortalService)
+     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
      */
-    public void prepare(PortalManagerAspectPrepareContext aspectContext,
-                        PortalService service)
+    public void prepare(PortalManagerAspectPrepareContext aspectContext)
     throws ProcessingException {
         // process the events
         aspectContext.invokeNext();
 
         // do we already have an environment?
         // if not, create one
-        final Map objectModel = service.getProcessInfoProvider().getObjectModel();
+        final Map objectModel = aspectContext.getPortalService().getProcessInfoProvider().getObjectModel();
 
         PortletURLProviderImpl event = (PortletURLProviderImpl) objectModel.get("portlet-event");
         if ( event != null ) {
@@ -391,22 +390,21 @@ public class PortletAdapter
             objectModel.put("portlet-response",  new ServletResponseImpl(res));
             final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
             objectModel.put("portlet-request",  req);
-            if ( !service.getUserService().getUser().isAnonymous() ) {
+            if ( !aspectContext.getPortalService().getUserService().getUser().isAnonymous() ) {
                 req.setAttribute(PortletRequest.USER_INFO,
-                                 service.getUserService().getUser().getUserInfos());
+                        aspectContext.getPortalService().getUserService().getUser().getUserInfos());
             }
         }
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, java.util.Properties)
+     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#render(org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext, org.xml.sax.ContentHandler, java.util.Properties)
      */
     public void render(PortalManagerAspectRenderContext aspectContext,
-                       PortalService service,
                        ContentHandler ch,
                        Properties properties)
     throws SAXException {
-        final Map objectModel = service.getProcessInfoProvider().getObjectModel();
+        final Map objectModel = aspectContext.getPortalService().getProcessInfoProvider().getObjectModel();
 
         // don't generate a response, if we issued a redirect
         if (objectModel.remove("portlet-event") == null) {

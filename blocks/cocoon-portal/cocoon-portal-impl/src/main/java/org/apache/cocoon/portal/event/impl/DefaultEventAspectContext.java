@@ -15,62 +15,32 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
-import java.util.Iterator;
-import java.util.Properties;
-
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
 
 /**
  *
  * @version $Id$
  */
-public final class DefaultEventAspectContext 
+public final class DefaultEventAspectContext
+    extends BasicAspectContextImpl
     implements EventAspectContext {
 
-    private Iterator iterator;
-    private Iterator configIterator;
-    private Properties config;
-
-    private EventConverter converter;
-
-    public DefaultEventAspectContext(EventAspectChain chain) {
-        this.iterator = chain.getIterator();
-        this.configIterator = chain.getConfigIterator();
+    public DefaultEventAspectContext(PortalService service, AspectChain chain) {
+        super(service, chain);
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspectContext#invokeNext(org.apache.cocoon.portal.PortalService)
+	 * @see org.apache.cocoon.portal.event.aspect.EventAspectContext#invokeNext()
 	 */
-	public void invokeNext(PortalService service) {
-		if (iterator.hasNext()) {
-            this.config = (Properties) this.configIterator.next();
-            final EventAspect aspect = (EventAspect) iterator.next();
-            aspect.process( this, service );
+	public void invokeNext() {
+        final EventAspect aspect = (EventAspect) this.getNext();
+		if (aspect != null ) {
+            aspect.process(this);
 		}
 
-	}
-
-	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspectContext#getAspectProperties()
-	 */
-	public Properties getAspectProperties() {
-		return this.config;
-	}
-
-    /**
-     * Get the encoder
-     */
-    public EventConverter getEventConverter(){
-        return this.converter;
-    }
-
-	/**
-	 * @param converter
-	 */
-	public void setEventConverter(EventConverter converter) {
-		this.converter = converter;
 	}
 }

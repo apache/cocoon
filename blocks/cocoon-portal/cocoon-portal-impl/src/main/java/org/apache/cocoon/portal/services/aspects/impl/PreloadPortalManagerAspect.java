@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.impl;
+package org.apache.cocoon.portal.services.aspects.impl;
 
 import java.util.Iterator;
 import java.util.List;
@@ -21,13 +21,12 @@ import java.util.Properties;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.portal.PortalManagerAspect;
-import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
-import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -47,31 +46,29 @@ public class PreloadPortalManagerAspect
     protected static final ContentHandler nullHandler = new DefaultHandler();
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#prepare(org.apache.cocoon.portal.PortalManagerAspectPrepareContext, org.apache.cocoon.portal.PortalService)
+     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
      */
-    public void prepare(PortalManagerAspectPrepareContext context,
-                        PortalService                     service)
+    public void prepare(PortalManagerAspectPrepareContext context)
     throws ProcessingException {
         // let's just invoke the next
         context.invokeNext();
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, java.util.Properties)
+     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#render(org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext, org.xml.sax.ContentHandler, java.util.Properties)
      */
     public void render(PortalManagerAspectRenderContext context,
-                       PortalService                    service,
                        ContentHandler                   ch,
                        Properties                       properties)
     throws SAXException {
         // we should be the first aspect for rendering
         // preload all changed coplets
-        final List changedCoplets = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(service);
+        final List changedCoplets = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(context.getPortalService());
         final Iterator i = changedCoplets.iterator();
         while (i.hasNext()) {
             final CopletInstance cid = (CopletInstance)i.next();
             final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
-            final CopletAdapter adapter = service.getCopletAdapter(adapterName);
+            final CopletAdapter adapter = context.getPortalService().getCopletAdapter(adapterName);
             adapter.toSAX(cid, nullHandler );
         }
         // start "real" rendering

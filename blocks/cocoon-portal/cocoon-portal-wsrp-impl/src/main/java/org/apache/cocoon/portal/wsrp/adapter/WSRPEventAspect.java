@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
@@ -38,10 +37,10 @@ public class WSRPEventAspect implements EventAspect, ThreadSafe {
     public static final String REQUEST_PARAMETER_NAME = "cocoon-wsrpevent";
 
     /**
-     * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
+     * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
      */
-    public void process(EventAspectContext context, PortalService service) {
-        final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
+    public void process(EventAspectContext context) {
+        final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
         final String[] values = request.getParameterValues("cocoon-wsrpevent");
         if ( values != null && values.length == 1 ) {
             // create a wsrp event, first build map of parameters
@@ -55,11 +54,11 @@ public class WSRPEventAspect implements EventAspect, ThreadSafe {
                 }
             }
             final String copletid = values[0];
-            final CopletInstance cid = service.getProfileManager().getCopletInstance(copletid);
+            final CopletInstance cid = context.getPortalService().getProfileManager().getCopletInstance(copletid);
 
             final Event e = new WSRPEvent(cid, parameters);
-            service.getEventManager().send(e);
+            context.getPortalService().getEventManager().send(e);
         }
-        context.invokeNext(service);
+        context.invokeNext();
     }
 }

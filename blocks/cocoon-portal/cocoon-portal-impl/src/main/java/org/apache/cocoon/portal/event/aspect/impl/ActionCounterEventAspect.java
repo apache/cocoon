@@ -23,7 +23,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 
@@ -50,24 +49,24 @@ public class ActionCounterEventAspect
     protected String parameterName;
 
 	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
+	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
 	 */
-	public void process(EventAspectContext context, PortalService service) {
+	public void process(EventAspectContext context) {
         final String requestParameterName = context.getAspectProperties().getProperty("parameter-name", this.parameterName);
 
         int actionCount;
 
-        Integer actionValue = (Integer) service.getUserService().getAttribute(ATTRIBUTE_NAME);
+        Integer actionValue = (Integer) context.getPortalService().getUserService().getAttribute(ATTRIBUTE_NAME);
         if (null == actionValue) {
             actionValue = new Integer(0);
-            service.getUserService().setAttribute(ATTRIBUTE_NAME, actionValue);
+            context.getPortalService().getUserService().setAttribute(ATTRIBUTE_NAME, actionValue);
             actionCount = 0;
         } else {
             actionCount = actionValue.intValue() + 1;
-            service.getUserService().setAttribute(ATTRIBUTE_NAME, new Integer(actionCount));
+            context.getPortalService().getUserService().setAttribute(ATTRIBUTE_NAME, new Integer(actionCount));
         }
 
-        final Request request = ObjectModelHelper.getRequest( service.getProcessInfoProvider().getObjectModel() );
+        final Request request = ObjectModelHelper.getRequest( context.getPortalService().getProcessInfoProvider().getObjectModel() );
         String value = request.getParameter( requestParameterName );
         if ( value != null && actionCount > 0) {
             // get number
@@ -80,12 +79,12 @@ public class ActionCounterEventAspect
 
             if ( number == actionCount - 1) {
                 // and invoke next one
-                context.invokeNext( service );
+                context.invokeNext();
             }
         }
-        service.getLinkService().addUniqueParameterToLink( requestParameterName, String.valueOf(actionCount));
+        context.getPortalService().getLinkService().addUniqueParameterToLink( requestParameterName, String.valueOf(actionCount));
 
-        final Response response = ObjectModelHelper.getResponse( service.getProcessInfoProvider().getObjectModel() );
+        final Response response = ObjectModelHelper.getResponse( context.getPortalService().getProcessInfoProvider().getObjectModel() );
         response.setHeader("Cache-Control", "no-cache");
         response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");

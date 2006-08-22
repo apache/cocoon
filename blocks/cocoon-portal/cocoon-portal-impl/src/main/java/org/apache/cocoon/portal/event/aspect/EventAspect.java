@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.event.aspect;
 
-import org.apache.cocoon.portal.PortalService;
-
 /**
  *
  * @version $Id$
@@ -25,6 +23,5 @@ public interface EventAspect {
 
     String ROLE = EventAspect.class.getName();
 
-    void process(EventAspectContext context,
-                 PortalService  service);
+    void process(EventAspectContext context);
 }

@@ -62,8 +62,8 @@
     <role name="org.apache.cocoon.portal.PortalManagerAspectSelector"
           default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
-    <role name="org.apache.cocoon.portal.PortalManagerAspect/preload"
-          default-class="org.apache.cocoon.portal.impl.PreloadPortalManagerAspect"/>
+    <role name="org.apache.cocoon.portal.services.aspects.PortalManagerAspect/preload"
+          default-class="org.apache.cocoon.portal.services.aspects.impl.PreloadPortalManagerAspect"/>
 
   <!--+
       | Renderer
