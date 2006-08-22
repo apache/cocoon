@@ -24,7 +24,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -40,8 +39,10 @@ import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
-import org.apache.cocoon.portal.profile.ProfileManagerAspect;
 import org.apache.cocoon.portal.scratchpad.Profile;
+import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
+import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
+import org.apache.cocoon.portal.services.aspects.support.AspectChain;
 
 /**
  * Base class for all profile managers.
@@ -56,17 +57,13 @@ public abstract class AbstractProfileManager
     protected Configuration configuration;
 
     /** The chain for the configured profile manager aspects. */
-    protected ProfileManagerAspectChain chain;
-
-    /** The service selector for the profile manager aspects. */
-    protected ServiceSelector aspectSelector;
+    protected AspectChain chain;
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
         super.service(aManager);
-        this.aspectSelector = (ServiceSelector) this.manager.lookup( ProfileManagerAspect.ROLE+"Selector");
     }
 
     /**
@@ -75,10 +72,8 @@ public abstract class AbstractProfileManager
     public void dispose() {
         if (this.manager != null) {
             if ( this.chain != null) {
-                this.chain.dispose( this.aspectSelector );
+                this.chain.dispose( this.manager );
             }
-            this.manager.release( this.aspectSelector );
-            this.aspectSelector = null;
         }
         super.dispose();
     }
@@ -88,8 +83,8 @@ public abstract class AbstractProfileManager
      */
     public void configure(Configuration config) throws ConfigurationException {
         this.configuration = config;
-        this.chain = new ProfileManagerAspectChain();
-        this.chain.configure(this.aspectSelector, config.getChild("aspects"));
+        this.chain = new AspectChain();
+        this.chain.configure(this.manager, ProfileManagerAspect.class, config);
     }
 
     /**
@@ -225,9 +220,8 @@ public abstract class AbstractProfileManager
     protected Profile processProfile(Profile profile) {
         // FIXME we should add the calls to prepareObject here as well
         if ( this.chain.hasAspects() ) {
-            DefaultProfileManagerAspectContext aspectContext = new DefaultProfileManagerAspectContext(this.chain, this.portalService);
+            ProfileManagerAspectContextImpl aspectContext = new ProfileManagerAspectContextImpl(this.portalService, this.chain);
             aspectContext.invokeNext(profile);
-            return aspectContext.getProfile();
         }
         return profile;
     }

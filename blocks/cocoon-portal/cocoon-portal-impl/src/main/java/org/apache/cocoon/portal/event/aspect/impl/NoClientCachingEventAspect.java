@@ -19,7 +19,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 
@@ -35,17 +34,16 @@ public class NoClientCachingEventAspect
 	implements EventAspect,
                ThreadSafe {
 
-    /**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
+	/**
+	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
 	 */
-	public void process(EventAspectContext context, PortalService service) {
-
-        final Response response = ObjectModelHelper.getResponse( service.getProcessInfoProvider().getObjectModel() );
+	public void process(EventAspectContext context) {
+        final Response response = ObjectModelHelper.getResponse( context.getPortalService().getProcessInfoProvider().getObjectModel() );
         response.setHeader("Cache-Control", "no-cache");
         response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "Thu, 01 Jan 2000 00:00:00 GMT");
 
-        context.invokeNext(service);
+        context.invokeNext();
 	}
 }

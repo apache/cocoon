@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal;
+package org.apache.cocoon.portal.services.aspects;
 
-import java.util.Properties;
-
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
- * @since 2.1.8
+ * The context for a {@link  ProfileManagerAspect}.
+ *
+ * @since 2.2
  * @version $Id$
  */
-public interface PortalManagerAspectPrepareContext {
+public interface ProfileManagerAspectContext extends BasicAspectContext {
 
     /**
-     * Invoke next aspect 
+     * Invoke next aspect .
      */
-    void invokeNext()
-    throws ProcessingException;
-
-    /** 
-     * Get the {@link Properties} of the aspect.
-     */
-    Properties getAspectProperties();
+    void invokeNext(Profile profile);
 }

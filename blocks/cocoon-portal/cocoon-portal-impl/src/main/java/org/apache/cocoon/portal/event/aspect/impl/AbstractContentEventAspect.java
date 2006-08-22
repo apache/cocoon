@@ -75,19 +75,19 @@ public abstract class AbstractContentEventAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
+     * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
      */
-    public void process(EventAspectContext context, PortalService service) {
-        final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
+    public void process(EventAspectContext context) {
+        final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
         String[] values = request.getParameterValues(this.getRequestParameterName());
         if (values != null) {
-            final EventManager publisher = service.getEventManager();
+            final EventManager publisher = context.getPortalService().getEventManager();
             for (int i = 0; i < values.length; i++) {
                 // first try to make an event out of the value of the parameter
                 final String value = values[i];
                 Event e = null;
                 try {
-                    e = context.getEventConverter().decode(value);
+                    e = context.getPortalService().getEventConverter().decode(value);
                     if (null != e) {
                         publisher.send(e);
                     }
@@ -116,7 +116,7 @@ public abstract class AbstractContentEventAspect
                             tokenNumber = tokenNumber + 1;
                         } 
 
-                        this.publish( service, eventValues );
+                        this.publish( context.getPortalService(), eventValues );
 
                     } else {
                         this.getLogger().warn("Data for Event is not set correctly");
@@ -125,6 +125,6 @@ public abstract class AbstractContentEventAspect
             }
         }
         // and invoke next one
-        context.invokeNext(service);
+        context.invokeNext();
     }
 }

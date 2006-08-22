@@ -22,7 +22,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
@@ -38,15 +37,14 @@ public class RequestParameterEventAspect
 	implements EventAspect, ThreadSafe {
 
     protected void process(EventAspectContext context,
-                           PortalService      service,
                            Request            request, 
                            String             parameterName) {
         String[] values = request.getParameterValues( parameterName );
-        final EventManager publisher = service.getEventManager();
+        final EventManager publisher = context.getPortalService().getEventManager();
         if ( values != null ) {
             for(int i=0; i<values.length; i++) {
                 final String current = values[i];
-                final Event e = context.getEventConverter().decode(current);
+                final Event e = context.getPortalService().getEventConverter().decode(current);
                 if ( null != e) {
                     publisher.send(e);
                 }
@@ -63,24 +61,24 @@ public class RequestParameterEventAspect
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
+	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
 	 */
-	public void process(EventAspectContext context, PortalService service) {
-        final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
+	public void process(EventAspectContext context) {
+        final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
         final String requestParameterNames = context.getAspectProperties().getProperty("parameter-name", LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME);
         boolean processedDefault = false;
 
         StringTokenizer tokenizer = new StringTokenizer(requestParameterNames, ", ");
         while ( tokenizer.hasMoreTokens() ) {
             final String currentName = tokenizer.nextToken();
-            this.process(context, service, request, currentName);
+            this.process(context, request, currentName);
             if ( LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME.equals(currentName) ) {
                 processedDefault = true;
             }
         }
         if ( !processedDefault ) {
-            this.process( context, service, request, LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME );
+            this.process( context, request, LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME );
         }
-        context.invokeNext( service );        
+        context.invokeNext();        
 	}
 }

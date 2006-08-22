@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.profile.impl;
+package org.apache.cocoon.portal.services.aspects.impl;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.NamedItem;
-import org.apache.cocoon.portal.profile.ProfileManagerAspect;
-import org.apache.cocoon.portal.profile.ProfileManagerAspectContext;
 import org.apache.cocoon.portal.scratchpad.Profile;
+import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
+import org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext;
 
 /**
  * $Id$
@@ -31,7 +31,7 @@ public class PageLabelProfileManagerAspect
     implements ProfileManagerAspect, ThreadSafe {
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManagerAspect#prepare(org.apache.cocoon.portal.profile.ProfileManagerAspectContext, org.apache.cocoon.portal.scratchpad.Profile)
+     * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext, org.apache.cocoon.portal.scratchpad.Profile)
      */
     public void prepare(ProfileManagerAspectContext context, Profile profile) {
         final Layout rootLayout = profile.getRootLayout();

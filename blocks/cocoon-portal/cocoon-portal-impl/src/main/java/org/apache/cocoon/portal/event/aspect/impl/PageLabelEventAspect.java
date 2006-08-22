@@ -25,7 +25,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.impl.PageLabelManager;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -69,12 +68,12 @@ public class PageLabelEventAspect
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
+	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
 	 */
-	public void process(EventAspectContext context, PortalService service) {
+	public void process(EventAspectContext context) {
         if (this.labelManager != null) {
-            final EventManager publisher = service.getEventManager();
-            final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
+            final EventManager publisher = context.getPortalService().getEventManager();
+            final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
             final String parameterName = this.labelManager.getRequestParameterName();
 
             String label = request.getParameter(parameterName);
@@ -95,6 +94,6 @@ public class PageLabelEventAspect
             }
         }
 
-        context.invokeNext( service );
+        context.invokeNext();
 	}
 }
