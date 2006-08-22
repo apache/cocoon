@@ -13,8 +13,8 @@ cache-role: the role of the cache
 cache-key : the key of the cache entry
 
 
-Caching Source Implementation
------------------------------
+Caching Source Implementation  ---> Moved to repository block.
+--------------------------------------------------------------
 
 Configuration in the cocoon.xconf:
 

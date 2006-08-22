@@ -65,6 +65,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="remove">
+      CachingSource: Moved into the Repository block.
+    </action>
     <action dev="VG" type="update">
       CachingSource: Refactored to remove Cron block dependency, and more.
     </action>
