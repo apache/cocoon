@@ -247,7 +247,7 @@ public class CoreUtil {
      * @param servletContext the Cocoon context
      * @param contextUrl URL for the context
      */
-    private static void addSourceResolverContext(DefaultContext appContext,
+    public static void addSourceResolverContext(DefaultContext appContext,
                                                  ServletContext servletContext,
                                                  String         contextUrl) {
         try {
@@ -267,7 +267,7 @@ public class CoreUtil {
      * @param classloader 
      * @throws MalformedURLException
      */
-    private static void addSettingsContext(DefaultContext appContext, Settings settings)
+    public static void addSettingsContext(DefaultContext appContext, Settings settings)
     throws MalformedURLException {
         appContext.put(Constants.CONTEXT_WORK_DIR, new File(settings.getWorkDirectory()));
         appContext.put(Constants.CONTEXT_UPLOAD_DIR, new File(settings.getUploadDirectory()));
