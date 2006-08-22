@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
@@ -133,7 +134,16 @@ public class ConfigReader extends AbstractLogEnabled {
         try {
             final ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
             final Configuration config = b.build(SourceUtil.getInputSource(root));
-            
+            // validate cocoon.xconf
+            if (!"cocoon".equals(config.getName())) {
+                throw new ConfigurationException("Invalid configuration file\n" + config.toString());
+            }
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Configuration version: " + config.getAttribute("version"));
+            }
+            if (!Constants.CONF_VERSION.equals(config.getAttribute("version"))) {
+                throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
+            }
             this.convert(config, null, root.getURI());
 
         } finally {
