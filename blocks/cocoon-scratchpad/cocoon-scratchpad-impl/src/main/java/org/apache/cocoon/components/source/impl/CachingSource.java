@@ -76,6 +76,8 @@ public class CachingSource extends AbstractLogEnabled
                            implements Serviceable, Initializable, XMLizable,
                                       Source {
 
+    // TODO: Decouple from eventcache block.
+    
     // ---------------------------------------------------- Constants
 
     public static final String CACHE_EXPIRES_PARAM = "cache-expires";
@@ -198,6 +200,7 @@ public class CachingSource extends AbstractLogEnabled
      * Cleanup.
      */
     public void dispose() {
+        this.response = null;
         this.source = null;
         this.manager = null;
         this.cache = null;
@@ -347,8 +350,8 @@ public class CachingSource extends AbstractLogEnabled
     public InputStream getInputStream() throws IOException, SourceException {
         try {
             return new ByteArrayInputStream(getBinaryResponse());
-        } catch (IOException se) {
-            throw new SourceException("Failure getting input stream", se);
+        } catch (IOException e) {
+            throw new SourceException("Failure getting input stream", e);
         }
     }
 
