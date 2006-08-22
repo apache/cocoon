@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -35,7 +36,7 @@ import java.io.InputStream;
  * a file is uploaded.
  *
  * @author <a href="mailto:paul.crabtree@dna.co.uk">Paul Crabtree</a>
- * @version CVS $Id: PartSource.java,v 1.5 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PartSource implements Source
 {

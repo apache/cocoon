@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -39,7 +40,7 @@ import org.apache.slide.common.NamespaceAccessToken;
 /**
  * A factory for sources from a Jakarta Slide repository.
  *
- * @version CVS $Id: SlideSourceFactory.java,v 1.16 2004/05/06 08:24:13 cziegeler Exp $ 
+ * @version CVS $Id$ 
  */
 public class SlideSourceFactory extends AbstractLogEnabled 
 implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
