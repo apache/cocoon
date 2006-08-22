@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -39,7 +40,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  * no overrides will be a no-op ElementProcessor.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: BaseElementProcessor.java,v 1.4 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class BaseElementProcessor extends AbstractLogEnabled
      implements POIFSElementProcessor

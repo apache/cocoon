@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -21,7 +22,7 @@ import org.apache.excalibur.xml.sax.XMLizable;
  * @deprecated Validations error are now a general feature of widgets, not limited
  *             widgets having a datatype.
  * @see org.apache.cocoon.woody.validation.ValidationError
- * @version $Id: ValidationError.java,v 1.10 2004/03/09 13:54:04 reinhard Exp $
+ * @version $Id$
  */
 public class ValidationError extends org.apache.cocoon.woody.validation.ValidationError {
     

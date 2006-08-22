@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -29,7 +30,7 @@ import org.xml.sax.SAXException;
  * with the desired case id.
  *
  * @author Timothy Larson
- * @version $Id: Union.java,v 1.7 2004/04/14 09:26:40 sylvain Exp $
+ * @version $Id$
  */
 public class Union extends AbstractContainerWidget {
     private static final String ELEMENT = "field";

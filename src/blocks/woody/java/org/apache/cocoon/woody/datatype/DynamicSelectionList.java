@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -41,7 +42,7 @@ import java.util.Locale;
  * <p>Note: the class {@link SelectionListBuilder} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version $Id: DynamicSelectionList.java,v 1.10 2004/03/09 13:54:04 reinhard Exp $
+ * @version $Id$
  */
 public class DynamicSelectionList implements SelectionList {
     private String src;

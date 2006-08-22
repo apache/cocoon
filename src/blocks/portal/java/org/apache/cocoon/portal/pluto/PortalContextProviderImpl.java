@@ -1,9 +1,10 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -33,7 +34,7 @@ import org.apache.pluto.services.information.PortalContextProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortalContextProviderImpl.java,v 1.5 2004/03/10 12:57:48 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class PortalContextProviderImpl 
 implements PortalContextProvider {

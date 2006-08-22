@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -29,7 +30,7 @@ import org.apache.commons.jxpath.Pointer;
  * Simple binding for multi fields: on save, first deletes the target data
  * before recreating it from scratch.
  *
- * @version CVS $Id: MultiValueJXPathBinding.java,v 1.5 2004/03/09 13:54:08 reinhard Exp $
+ * @version CVS $Id$
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 

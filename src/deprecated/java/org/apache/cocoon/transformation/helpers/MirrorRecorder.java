@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -34,7 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @deprecated The only user of this class (I18nTransformer) now uses ParamSaxBuffer
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
- * @version CVS $Id: MirrorRecorder.java,v 1.2 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MirrorRecorder
     extends NOPRecorder

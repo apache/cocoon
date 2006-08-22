@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -24,7 +25,7 @@ import org.apache.excalibur.source.SourceException;
  * A source, which owns meta informations in form of properties
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: InspectableSource.java,v 1.2 2004/03/05 13:02:21 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface InspectableSource extends Source {
 

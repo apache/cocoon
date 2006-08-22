@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -30,7 +31,7 @@ import org.xml.sax.SAXException;
  * <p>This generates an autonomous SAX-blurb, i.e. all necessary namespace
  * declarations will be made, and no start/endDocument events will be generated.
  *
- * @version CVS $Id: I18nMessage.java,v 1.7 2004/03/09 13:54:24 reinhard Exp $
+ * @version CVS $Id$
  */
 public class I18nMessage implements XMLizable {
     private String key;

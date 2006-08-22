@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -33,7 +34,7 @@ import java.util.Iterator;
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
  * 
- * @version $Id: Messages.java,v 1.6 2004/03/09 13:53:56 reinhard Exp $
+ * @version $Id$
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();

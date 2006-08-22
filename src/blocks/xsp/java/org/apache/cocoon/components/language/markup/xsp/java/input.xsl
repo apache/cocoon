@@ -1,10 +1,11 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
 
       http://www.apache.org/licenses/LICENSE-2.0
 
@@ -19,7 +20,7 @@
  * InputModule Logicsheet, access methods of InputModule.
  *
  * @author <a href="mailto:haul@apache.org>Christian Haul</a>
- * @version CVS $Id: input.xsl,v 1.2 2004/03/17 11:28:22 crossley Exp $
+ * @version CVS $Id$
 -->
 
 <xsl:stylesheet version="1.0"
