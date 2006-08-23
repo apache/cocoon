@@ -1,5 +1,5 @@
 // flowscripts util for paging navigation
-// $Id: pager.js,v 1.4 2004/07/05 14:40:31 savs Exp $
+// $Id$
 
 
 

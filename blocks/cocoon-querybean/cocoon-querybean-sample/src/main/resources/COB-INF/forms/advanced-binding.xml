@@ -16,7 +16,7 @@
 -->
 
 <!-- The CForms Binding for editing an advanced query -->
-<!-- $Id: advanced-binding.xml 30942 2004-07-29 20:16:54Z vgritsenko $ -->
+<!-- $Id$ -->
 <fb:context 
 	xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
 	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
