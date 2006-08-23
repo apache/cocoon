@@ -16,7 +16,7 @@
 -->
 
 <!-- The CForms Model for editing a simple query -->
-<!-- $Id: simple-model.xml 30942 2004-07-29 20:16:54Z vgritsenko $ -->
+<!-- $Id$ -->
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
   <fd:widgets>

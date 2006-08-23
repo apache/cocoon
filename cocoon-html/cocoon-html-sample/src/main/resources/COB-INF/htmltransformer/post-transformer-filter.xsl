@@ -18,7 +18,7 @@
 <!--
   Filter the output of the HTMLTransformer
   
-  CVS $Id: samples.xml 158439 2005-03-21 10:17:23Z cziegeler $
+  CVS $Id$
 -->
 
 <xsl:transform
