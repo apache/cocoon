@@ -247,11 +247,11 @@ public class TemplateObjectModelHelper {
         }
 
         public boolean containsValue(Object arg0) {
-            return this.map.containsValue(arg0);
+            return this.getMap().containsValue(arg0);
         }
 
         public Set entrySet() {
-            return this.map.entrySet();
+            return this.getMap().entrySet();
         }
 
         public Object get(Object arg0) {
