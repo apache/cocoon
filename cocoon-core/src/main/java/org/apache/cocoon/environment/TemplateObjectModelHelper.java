@@ -127,6 +127,12 @@ public class TemplateObjectModelHelper {
             cocoon.put("parameters", new ParametersMap(parameters));
         }
 
+        Processor processor = EnvironmentHelper.getCurrentProcessor();
+        if (processor != null) {
+            final Settings settings = (Settings) processor.getBeanFactory().getBean(Settings.ROLE);
+            cocoon.put("settings", settings);
+        }
+
         final Map map = new HashMap();
         map.put("cocoon", cocoon);
 
