@@ -70,7 +70,6 @@
      <parameter name="async" value="true"/>
    </component-instance>
    <component-instance class="org.apache.cocoon.components.source.impl.XMLizableSourceFactory" name="xml" logger="core.xmlsource"/>
-   <!--component-instance class="org.apache.cocoon.components.source.impl.WebDAVSourceFactory" name="webdav" logger="core.webdavsource"/-->
    <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file" logger="core.filesource"/>
    <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource" logger="core.resourcesource"/>
    <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
@@ -87,7 +86,7 @@
   </delay-refresher>
 
   <xmlizer logger="core.xmlizer">
-      <parser mime-type="text/xml" role="org.apache.excalibur.xml.sax.SAXParser"/>
+    <parser mime-type="text/xml" role="org.apache.excalibur.xml.sax.SAXParser"/>
   </xmlizer>
 
  </components>
