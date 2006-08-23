@@ -15,6 +15,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xconf xpath="/cocoon" unless="source-repository">
-  <source-repository logger="core.source-repository" />
-</xconf>
+
+<!--
+  - SVN $Id$
+  -->
+<xroles xpath="/role-list" unless="role[@shorthand='source-repository']">
+  
+  <role name="org.apache.cocoon.components.repository.SourceRepository" 
+    shorthand="source-repository" 
+    default-class="org.apache.cocoon.components.repository.SourceRepositoryImpl" 
+  />
+  
+</xroles>

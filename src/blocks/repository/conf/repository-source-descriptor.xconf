@@ -15,7 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceDescriptor']">
+
+<!--
+  - SVN $Id$
+  -->
+<xconf xpath="/cocoon"
+       unless="component[@role='org.apache.cocoon.components.source.SourceDescriptor']">
 
   <component role="org.apache.cocoon.components.source.SourceDescriptor" 
              class="org.apache.cocoon.components.source.impl.SourceDescriptorManager" 
