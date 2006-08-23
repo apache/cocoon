@@ -223,12 +223,16 @@ public class SettingsBeanFactoryPostProcessor
     public MutableSettings createSettings() {
         // get the running mode
         final String mode = getSystemProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
+        
+        /*
         if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
             final String msg =
                 "Invalid running mode: " + mode + " - Use one of: " + Arrays.asList(SettingsDefaults.RUNNING_MODES);
             servletContext.log(msg);
             throw new IllegalArgumentException(msg);
         }
+        */
+        
         servletContext.log("Running in mode: " + mode);
 
         // create an empty settings objects
