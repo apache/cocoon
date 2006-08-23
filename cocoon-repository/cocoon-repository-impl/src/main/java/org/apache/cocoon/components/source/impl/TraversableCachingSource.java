@@ -77,6 +77,10 @@ public class TraversableCachingSource extends CachingSource implements Traversab
     }
 
     public Source getChild(String name) throws SourceException {
+        if (!isCollection()) {
+            throw new SourceException("Source is not a collection");
+        }
+
         Source child;
         try {
             getResponseMeta();
@@ -87,11 +91,12 @@ public class TraversableCachingSource extends CachingSource implements Traversab
             throw new SourceException("Failure getting child", e);
         }
 
-        if (!isCollection()) {
-            throw new SourceException("Source is not a collection");
+        boolean isCollection = false;
+        if (child instanceof TraversableSource) {
+            isCollection = ((TraversableSource) child).isCollection();
         }
 
-        return createSource(getChildURI(super.uri, name), getChildURI(super.sourceUri, name), child);
+        return createSource(getChildURI(super.uri, isCollection, name), getChildURI(super.sourceUri, isCollection, name), child);
     }
 
     public Collection getChildren() throws SourceException {
@@ -117,7 +122,13 @@ public class TraversableCachingSource extends CachingSource implements Traversab
             } catch (IOException e) {
                 throw new SourceException("Failure getting child", e);
             }
-            result.add(createSource(getChildURI(super.uri, children[i]), getChildURI(super.sourceUri, children[i]), child));
+
+            boolean isCollection = false;
+            if (child instanceof TraversableSource) {
+                isCollection = ((TraversableSource) child).isCollection();
+            }
+
+            result.add(createSource(getChildURI(super.uri, isCollection, children[i]), getChildURI(super.sourceUri, isCollection, children[i]), child));
         }
 
         return result;
@@ -153,7 +164,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
      * Calculate the cached child URI based on a parent URI
      * and a child name.
      */
-    private static String getChildURI(String parentURI, String childName) {
+    private static String getChildURI(String parentURI, boolean isCollection, String childName) {
         // separate query string from rest of parentURI
         String rest, qs;
         int index = parentURI.indexOf('?');
@@ -165,15 +176,17 @@ public class TraversableCachingSource extends CachingSource implements Traversab
             qs = "";
         }
 
-        // calculate qs-less child uri
-        String childURI;
-        if (rest.charAt(rest.length()-1) == '/') {
-            childURI = rest + childName;
-        } else {
-            childURI = rest + "/" + childName;
+        // calculate child uri
+        StringBuffer childURI = new StringBuffer(rest);
+        if (rest.charAt(rest.length()-1) != '/') {
+            childURI.append('/');
         }
-
-        return childURI + qs;
+        childURI.append(childName);
+        if (isCollection) {
+            childURI.append('/');
+        }
+        childURI.append(qs);
+        return childURI.toString();
     }
 
     /**
@@ -186,19 +199,17 @@ public class TraversableCachingSource extends CachingSource implements Traversab
         if (index != -1) {
             rest = childURI.substring(0, index);
             qs = childURI.substring(index);
-        }
-        else {
+        } else {
             rest = childURI;
             qs = "";
         }
 
         // calculate qs-less parent uri
         String parentUri;
-        index = rest.lastIndexOf('/',rest.length()-2);
+        index = rest.lastIndexOf('/', rest.length() - 2);
         if (index != -1) {
-            parentUri = rest.substring(0,index);
-        }
-        else {
+            parentUri = rest.substring(0, index + 1);
+        } else {
             parentUri = rest;
         }
 

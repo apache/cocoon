@@ -121,9 +121,6 @@
             <include>**/*TestCase.class</include>
             <include>**/*Test.class</include>
           </includes>
-          <excludes>
-            <exclude>**/CachingSourceTestCase.class</exclude>
-          </excludes>
         </configuration>
       </plugin>
     </plugins>
