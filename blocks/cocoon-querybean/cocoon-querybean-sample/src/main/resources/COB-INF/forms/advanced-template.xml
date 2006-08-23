@@ -16,7 +16,7 @@
 -->
 
 <!-- The CForms Template for editing Query Beans -->
-<!-- $Id: advanced-template.xml 30942 2004-07-29 20:16:54Z vgritsenko $ -->
+<!-- $Id$ -->
 <page 
 	xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
 	xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 

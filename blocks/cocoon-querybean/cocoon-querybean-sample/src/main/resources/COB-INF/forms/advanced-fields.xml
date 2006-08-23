@@ -19,7 +19,7 @@
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
 >
 <!-- The field selectionlist for the CForms Model for editing an advanced query -->
-<!-- $Id: advanced-fields.xml 30942 2004-07-29 20:16:54Z vgritsenko $ -->
+<!-- $Id$ -->
 
 <!-- 
 	Edit this list to suit the way your content is indexed.

@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: results.xml 30942 2004-07-29 20:16:54Z vgritsenko $ -->
+<!-- $Id$ -->
 <lucene:index
 	xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
   xmlns:cinclude="http://apache.org/cocoon/include/1.0"

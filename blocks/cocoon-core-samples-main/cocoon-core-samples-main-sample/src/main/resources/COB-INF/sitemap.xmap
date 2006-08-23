@@ -21,7 +21,7 @@
 	
 	Less important samples to go the core-samples-misc block.
 	
-	CVS $Id: sitemap.xmap 164239 2005-04-22 13:54:29Z reinhard $ 
+	CVS $Id$ 
 -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">

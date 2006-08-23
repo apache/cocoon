@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: lucene.xsamples,v 1.5 2004/07/11 19:47:56 antonio Exp $ -->
+<!-- CVS $Id$ -->
 <xsamples xpath="/samples" unless="group[@name='QueryBean']">
 
   <group name="QueryBean">

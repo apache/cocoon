@@ -15,7 +15,7 @@
 */
 
 // flowscripts for using the Query Bean
-// $Id: query.js,v 1.3 2004/10/22 12:14:23 jeremy Exp $
+// $Id$
 
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 cocoon.load("flow/QuerySearcher.js");
