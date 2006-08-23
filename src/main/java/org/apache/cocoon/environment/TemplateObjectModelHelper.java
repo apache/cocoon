@@ -25,7 +25,10 @@ import java.util.Set;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
@@ -115,12 +118,12 @@ public class TemplateObjectModelHelper {
 
         // cocoon.continuation
         final Object cont = FlowHelper.getWebContinuation(objectModel);
-        if ( cont != null ) {
+        if (cont != null) {
             cocoon.put("continuation", cont);
         }
             
         // cocoon.parameters
-        if ( parameters != null ) {
+        if (parameters != null) {
             cocoon.put("parameters", new ParametersMap(parameters));
         }
 
@@ -137,7 +140,7 @@ public class TemplateObjectModelHelper {
         
         return map;
     }
-
+    
     protected static final class ParametersMap extends Parameters implements Map {
 
         protected final Parameters wrappedParameters;
@@ -246,11 +249,11 @@ public class TemplateObjectModelHelper {
         }
 
         public boolean containsValue(Object arg0) {
-            return this.map.containsValue(arg0);
+            return this.getMap().containsValue(arg0);
         }
 
         public Set entrySet() {
-            return this.map.entrySet();
+            return this.getMap().entrySet();
         }
 
         public Object get(Object arg0) {
