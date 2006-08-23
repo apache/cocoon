@@ -16,16 +16,18 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.repository.RepositoryManager']">
+<!--
+  - SVN $Id$
+  -->
+<xconf xpath="/cocoon"
+       unless="component[@role='org.apache.cocoon.components.repository.RepositoryManager']">
 
   <component role="org.apache.cocoon.components.repository.RepositoryManager" 
              class="org.apache.cocoon.components.repository.RepositoryManager"
              logger="core.repository">
-
     <!-- put your repository implementations here like
     <repository name="webdav" class="org.apache.cocoon.components.repository.impl.WebDAVRepository"/>
     -->
-
   </component>
 
 </xconf>
