@@ -30,7 +30,7 @@ public abstract class SettingsDefaults {
     public static final String DEFAULT_RUNNING_MODE = "prod";
 
     /** This is the list of predefined running modes. */
-    public static final String[] RUNNING_MODES = {"prod", "dev", "test"};
+    // public static final String[] RUNNING_MODES = {"prod", "dev", "test"};
 
     /** The default configuration location. */
     public static final String DEFAULT_CONFIGURATION = "/WEB-INF/cocoon/cocoon.xconf";
