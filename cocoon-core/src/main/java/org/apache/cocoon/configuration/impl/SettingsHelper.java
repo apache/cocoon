@@ -79,12 +79,16 @@ public class SettingsHelper {
                                                  final PropertyProvider externalPropertyProvider) {
         // get the running mode
         final String mode = SettingsHelper.getSystemProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
+
+        /*
         if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
             final String msg =
                 "Invalid running mode: " + mode + " - Use one of: " + Arrays.asList(SettingsDefaults.RUNNING_MODES);
             logger.info(msg);
             throw new IllegalArgumentException(msg);
         }
+        */
+        
         logger.info("Running in mode: " + mode);
 
         // create an empty settings objects
