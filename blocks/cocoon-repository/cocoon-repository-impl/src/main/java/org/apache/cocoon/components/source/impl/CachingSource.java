@@ -77,7 +77,7 @@ public class CachingSource extends AbstractLogEnabled
                                       Source {
 
     // TODO: Decouple from eventcache block.
-    
+
     // ---------------------------------------------------- Constants
 
     public static final String CACHE_EXPIRES_PARAM = "cache-expires";
