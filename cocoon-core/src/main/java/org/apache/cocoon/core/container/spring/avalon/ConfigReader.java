@@ -149,7 +149,7 @@ public class ConfigReader {
             this.logger.info("Reading Avalon configuration from " + relativePath);
         }
         Resource root = this.resolver.getResource(this.convertUrl(relativePath));
-        final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder();
+        final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
         
         final Configuration config = b.build(this.getInputSource(root));
         // validate cocoon.xconf
@@ -195,7 +195,7 @@ public class ConfigReader {
                     this.logger.info("Reading additional user roles: " + userRoles);
                 }
                 final Resource userRolesSource = this.resolver.getResource(this.getUrl(userRoles, rootUri));
-                final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder();
+                final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
                 final Configuration userRolesConfig = b.build(this.getInputSource(userRolesSource));
                 this.parseConfiguration(userRolesConfig, userRolesSource.getURL().toExternalForm(), loadedConfigs);
             }
@@ -398,7 +398,7 @@ public class ConfigReader {
             // load it and store it in the read set
             Configuration includeConfig = null;
             try {
-                DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder(null);
+                DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder(true);
                 includeConfig = builder.build(src.getInputStream(), uri);
             } catch (Exception e) {
                 throw new ConfigurationException("Cannot load '" + uri + "' at " + includeStatement.getLocation(), e);
