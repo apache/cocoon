@@ -347,6 +347,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-idea-plugin</artifactId>
+        <version>2.0</version>
         <configuration>
           <!-- Cocoon 2.2 requires JDK 1.4 -->
           <jdkName>1.4</jdkName>
