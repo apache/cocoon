@@ -227,10 +227,6 @@
           <groupId>xerces</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>junit</artifactId>
-          <groupId>junit</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>ant-optional</artifactId>
           <groupId>ant</groupId>
         </exclusion>
