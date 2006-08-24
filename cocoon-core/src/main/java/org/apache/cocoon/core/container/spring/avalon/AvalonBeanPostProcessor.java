@@ -20,6 +20,8 @@ import org.springframework.beans.factory.config.DestructionAwareBeanPostProcesso
 
 /**
  * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle interfaces.
+ * @version $Id$
+ * @since 2.2
  */
 public class AvalonBeanPostProcessor
     implements DestructionAwareBeanPostProcessor, BeanFactoryAware {
