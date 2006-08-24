@@ -95,11 +95,11 @@ repositories are temporarily unaccessible and cause the build to fail.
 
 Go to core/cocoon-webapp:
   $ mvn cocoon:deploy
-  $ mvn jetty6:run
+  $ mvn jetty:run
 
 Point your browser to http://localhost:8888/
 
-(Don't use jetty6:run-exploded as in this case the jetty6 plugin will
+(Don't use jetty:run-exploded as in this case the jetty6 plugin will
  alter the webapp build by the Cocoon deployer again!)
 
 See also MAVEN REPOSITORY MIRRORS above.
