@@ -15,49 +15,25 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
-import javax.servlet.ServletContext;
-
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.web.context.ServletContextAware;
-import org.springframework.web.context.support.ServletContextResourceLoader;
 
 /**
+ * This spring factory bean adds the configuration info to the bean factory.
  *
  * @since 2.2
  * @version $Id$
  */
-public class AvalonConfigurator
-    implements FactoryBean, ServletContextAware {
+public class ConfigurationInfoFactoryBean
+    implements FactoryBean {
 
-    /** The servlet context. */
-    protected ServletContext servletContext;
-
-    /** The configuration. */
-    protected ConfigurationInfo ConfigurationInfo;
-
-    /** The avalon configuration location. */
-    protected String location = "/WEB-INF/cocoon/cocoon.xconf";
-
-    /**
-     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
-     */
-    public void setServletContext(ServletContext sContext) {
-        this.servletContext = sContext;
-    }
-
-    protected void init()
-    throws Exception {
-        System.out.println("Reading config");
-        this.ConfigurationInfo = ConfigReader.readConfiguration(getLocation(), new ServletContextResourceLoader(this.servletContext));
-        System.out.println("Read config");
-    }
+    protected ConfigurationInfo info;
 
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
     public Object getObject() throws Exception {
-        return this.ConfigurationInfo;
+        return this.info;
     }
 
     /**
@@ -74,11 +50,11 @@ public class AvalonConfigurator
         return true;
     }
 
-    public String getLocation() {
-        return location;
+    public ConfigurationInfo getInfo() {
+        return info;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setInfo(ConfigurationInfo info) {
+        this.info = info;
     }
 }

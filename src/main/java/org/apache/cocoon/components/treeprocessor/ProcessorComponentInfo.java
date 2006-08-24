@@ -184,4 +184,12 @@ public class ProcessorComponentInfo {
         }
         return false;
     }
+
+    public Map getData() {
+        return this.data;
+    }
+
+    public void setData(Map map) {
+        this.data = map;
+    }
 }

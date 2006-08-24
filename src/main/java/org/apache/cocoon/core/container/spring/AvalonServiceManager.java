@@ -27,7 +27,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * @since 2.2
  * @version $Id$
  */
-final class AvalonServiceManager
+final public class AvalonServiceManager
     implements ServiceManager, BeanFactoryAware {
 
 

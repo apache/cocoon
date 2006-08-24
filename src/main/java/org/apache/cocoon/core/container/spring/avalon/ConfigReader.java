@@ -27,10 +27,10 @@ import java.util.Set;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
-import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
@@ -140,7 +140,7 @@ public class ConfigReader {
     }
 
     protected String getUrl(String url, String base) {
-        return url;
+        return this.convertUrl(url);
     }
 
     protected void convert(String relativePath)
@@ -149,7 +149,7 @@ public class ConfigReader {
             this.logger.info("Reading Avalon configuration from " + relativePath);
         }
         Resource root = this.resolver.getResource(this.convertUrl(relativePath));
-        final ConfigurationBuilder b = new ConfigurationBuilder(null);
+        final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder();
         
         final Configuration config = b.build(this.getInputSource(root));
         // validate cocoon.xconf
@@ -195,7 +195,7 @@ public class ConfigReader {
                     this.logger.info("Reading additional user roles: " + userRoles);
                 }
                 final Resource userRolesSource = this.resolver.getResource(this.getUrl(userRoles, rootUri));
-                final ConfigurationBuilder b = new ConfigurationBuilder(null);
+                final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder();
                 final Configuration userRolesConfig = b.build(this.getInputSource(userRolesSource));
                 this.parseConfiguration(userRolesConfig, userRolesSource.getURL().toExternalForm(), loadedConfigs);
             }
@@ -398,7 +398,7 @@ public class ConfigReader {
             // load it and store it in the read set
             Configuration includeConfig = null;
             try {
-                ConfigurationBuilder builder = new ConfigurationBuilder(null);
+                DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder(null);
                 includeConfig = builder.build(src.getInputStream(), uri);
             } catch (Exception e) {
                 throw new ConfigurationException("Cannot load '" + uri + "' at " + includeStatement.getLocation(), e);
