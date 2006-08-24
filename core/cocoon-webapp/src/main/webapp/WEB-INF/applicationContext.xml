@@ -18,27 +18,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xmlns:cocoon="http://org.apache.cocoon/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://org.apache.cocoon/core http://org.apache.cocoon/core.xsd">
 
+  <!-- Load all the properties for Cocoon -->
+  <cocoon:settings/>
+
+  <cocoon:avalon location="/WEB-INF/cocoon/cocoon.xconf"/>
   <!-- The following bean definitions will be replaced later on with
        the use of the new namespace handling in spring:
        <cocoon:settings/>
        <cocoon:avalon-logger/>
        <cocoon:avalon-support config="/WEB-INF/cocoon/cocoon.xconf"/>
         -->
-  <bean id="org.apache.cocoon.configuration.Settings"
-        class="org.apache.cocoon.core.container.spring.SettingsBeanFactoryPostProcessor"
-        singleton="true" init-method="init"/>
-
-  <bean id="org.apache.avalon.framework.logger.Logger"
-        class="org.apache.cocoon.core.container.spring.avalon.AvalonLoggerFactoryBean"
-        singleton="true" init-method="init">
-      <property name="settings"><ref bean="org.apache.cocoon.configuration.Settings"/></property>
-  </bean>
-
-  <bean id="org.apache.avalon.framework.context.Context"
-        class="org.apache.cocoon.core.container.spring.avalon.AvalonContextFactoryBean"
-        singleton="true" init-method="init">
-      <property name="settings"><ref bean="org.apache.cocoon.configuration.Settings"/></property>
-  </bean>
 </beans>
