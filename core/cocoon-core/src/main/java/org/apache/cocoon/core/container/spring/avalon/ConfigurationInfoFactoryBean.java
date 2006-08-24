@@ -50,11 +50,11 @@ public class ConfigurationInfoFactoryBean
         return true;
     }
 
-    public ConfigurationInfo getInfo() {
+    public ConfigurationInfo getConfigurationInfo() {
         return info;
     }
 
-    public void setInfo(ConfigurationInfo info) {
+    public void setConfigurationInfo(ConfigurationInfo info) {
         this.info = info;
     }
 }
