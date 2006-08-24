@@ -61,7 +61,7 @@ public class AvalonLoggerFactoryBean
      * @param logLevelString
      * @return the logger
      */
-    protected Logger createBootstrapLogger(ServletContext servletContext, String logLevelString) {
+    protected Logger createBootstrapLogger(String logLevelString) {
         // create a bootstrap logger
         int logLevel;
         if ( "DEBUG".equalsIgnoreCase(logLevelString) ) {
@@ -73,14 +73,14 @@ public class AvalonLoggerFactoryBean
         } else {
             logLevel = ServletLogger.LEVEL_INFO;
         }
-        return new ServletLogger(servletContext, "Cocoon", logLevel);
+        return new ServletLogger(this.servletContext, "Cocoon", logLevel);
     }
 
     protected void init()
     throws Exception {
         // create a bootstrap logger
         final String logLevelString = settings.getBootstrapLogLevel();
-        final Logger bootstrapLogger = this.createBootstrapLogger(servletContext, logLevelString);
+        final Logger bootstrapLogger = this.createBootstrapLogger(logLevelString);
 
         // create an own context for the logger manager
         final DefaultContext subcontext = new SettingsContext(settings);
