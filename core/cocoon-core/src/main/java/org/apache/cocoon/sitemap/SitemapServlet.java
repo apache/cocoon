@@ -16,7 +16,6 @@
 package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -28,11 +27,11 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
@@ -60,7 +59,6 @@ public class SitemapServlet extends HttpServlet {
     protected Context cocoonContext;
 	private Processor processor;	
 	private Settings settings;
-    private String contextUrl;
 
 	/**
 	 * Initialize the servlet. The main purpose of this method is creating a configured @link {@link TreeProcessor}.
@@ -79,22 +77,16 @@ public class SitemapServlet extends HttpServlet {
             this.sitemapPath = DEFAULT_SITEMAP_PATH;
         
     	// get components from the beanFactory
-    	this.logger = (Logger) this.beanFactory.getBean("org.apache.avalon.framework.logger.Logger");
+    	this.logger = (Logger) this.beanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
     	this.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
         ServiceManager serviceManager = (ServiceManager) 
-    		this.beanFactory.getBean("org.apache.avalon.framework.service.ServiceManager");    	
+    		this.beanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);    	
     	
     	// create the Cocoon context out of the Servlet context
         this.cocoonContext = new HttpContext(config.getServletContext());
         
-        // create the Avalon context
-        this.contextUrl = CoreUtil.getContextUrl(this.cocoonContext, MANIFEST_FILE);
-        org.apache.avalon.framework.context.Context avalonContext;
-        try {
-            avalonContext = CoreUtil.createContext(this.settings, this.cocoonContext, this.contextUrl);
-        } catch (MalformedURLException e) {
-            throw new ServletException(e);
-        }
+        // get the Avalon context
+        org.apache.avalon.framework.context.Context avalonContext = (org.apache.avalon.framework.context.Context) this.beanFactory.getBean(ProcessingUtil.CONTEXT_ROLE);
         
         // create the tree processor
         try {

@@ -32,12 +32,6 @@ public abstract class SettingsDefaults {
     /** This is the list of predefined running modes. */
     // public static final String[] RUNNING_MODES = {"prod", "dev", "test"};
 
-    /** The default configuration location. */
-    public static final String DEFAULT_CONFIGURATION = "/WEB-INF/cocoon/cocoon.xconf";
-
-    /** The default logging configuration location. */
-    public static final String DEFAULT_LOGGING_CONFIGURATION = "/WEB-INF/cocoon/log4j.xconf";
-
     /**
      * Default value for {@link Settings#isReloadingEnabled(String)} parameter (false).
      */

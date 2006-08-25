@@ -21,7 +21,7 @@ import java.util.LinkedList;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * The PoolableComponentHandler to make sure that poolable components are initialized

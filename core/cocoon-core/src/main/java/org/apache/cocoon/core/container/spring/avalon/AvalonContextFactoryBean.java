@@ -15,13 +15,20 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.container.util.ComponentContext;
+import org.apache.cocoon.environment.http.HttpContext;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.web.context.ServletContextAware;
 
@@ -48,16 +55,32 @@ public class AvalonContextFactoryBean
         this.servletContext = sContext;
     }
 
+    /**
+     * Create the Avalon context object.
+     * @throws Exception
+     */
     protected void init()
     throws Exception {
+        // create new Avalon context
         final DefaultContext appContext = new ComponentContext();
 
         // add root url
-        String contextUrl = CoreUtil.getContextUrl(this.servletContext, "/WEB-INF/web.xml");
-        CoreUtil.addSourceResolverContext(appContext, servletContext, contextUrl);
+        final String contextUrl = CoreUtil.getContextUrl(this.servletContext, "/WEB-INF/web.xml");
+        try {
+            appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextUrl));
+        } catch (MalformedURLException ignore) {
+            // we simply ignore this
+        }
+    
+        // add environment context and config
+        appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
 
         // add the Avalon context attributes that are contained in the settings
-        CoreUtil.addSettingsContext(appContext, settings);
+        appContext.put(Constants.CONTEXT_WORK_DIR, new File(this.settings.getWorkDirectory()));
+        appContext.put(Constants.CONTEXT_UPLOAD_DIR, new File(this.settings.getUploadDirectory()));
+        appContext.put(Constants.CONTEXT_CACHE_DIR, new File(this.settings.getCacheDirectory()));
+        appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.settings.getFormEncoding());
+
         this.context = appContext;
     }
 

@@ -21,7 +21,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * Factory for Avalon based components.

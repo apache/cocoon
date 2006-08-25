@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.core.container.spring.avalon;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -52,7 +52,8 @@ public class AvalonServiceSelector
     /**
      * @see org.apache.avalon.framework.service.ServiceSelector#select(java.lang.Object)
      */
-    public Object select(Object key) throws ServiceException {
+    public Object select(Object hint) throws ServiceException {
+        Object key = hint;
         if ( key == null || key.toString().length() == 0 ) {
             key = this.defaultKey;
         }
