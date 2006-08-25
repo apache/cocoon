@@ -57,6 +57,11 @@
         <map:serialize/>
       </map:match>
 
+      <map:match pattern="java/*.zip">
+        <map:generate src="java/{1}.xsp" type="serverpages" label="content"/>
+        <map:serialize type="zip"/>
+      </map:match>
+
       <map:match pattern="java/*">
         <map:generate src="java/{1}.xsp" type="serverpages"/>
         <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">

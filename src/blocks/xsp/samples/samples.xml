@@ -74,6 +74,9 @@
    <sample name="Escaping" href="java/escaping" xlink:role="dynamic">
     Escaping of non-ASCII characters.
    </sample>
+   <sample name="Zipping" href="java/zipping.zip" xlink:role="dynamic">
+    On-the-fly zipping of filtered files.
+   </sample>
   </group>
 
   <group name="eXtensible Server Pages in Javascript">
