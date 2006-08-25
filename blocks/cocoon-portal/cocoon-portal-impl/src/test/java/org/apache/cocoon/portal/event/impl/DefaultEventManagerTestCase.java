@@ -16,8 +16,8 @@
 package org.apache.cocoon.portal.event.impl;
 
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
-import org.apache.cocoon.core.container.spring.ConfigurationInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.portal.AbstractPortalTestCase;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
@@ -40,7 +40,7 @@ public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
     }
 
     /**
-     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.ConfigurationInfo)
+     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo)
      */
     protected void addComponents(ConfigurationInfo info) throws Exception {
         super.addComponents(info);

@@ -18,8 +18,8 @@ package org.apache.cocoon;
 
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.core.container.ContainerTestCase;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
-import org.apache.cocoon.core.container.spring.ConfigurationInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSourceFactory;

@@ -48,6 +48,9 @@ public class AvalonLoggerFactoryBean
 
     protected Logger logger;
 
+    /** The logging configuration. */
+    protected String loggingConfiguration;
+
     /**
      * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
      */
@@ -95,7 +98,7 @@ public class AvalonLoggerFactoryBean
         loggerManager.contextualize(subcontext);
 
         // Configure the log4j manager
-        String loggerConfig = settings.getLoggingConfiguration();
+        String loggerConfig = this.loggingConfiguration;
         if ( loggerConfig != null && !loggerConfig.startsWith("/") ) {
             loggerConfig = '/' + loggerConfig;
         }
@@ -161,5 +164,13 @@ public class AvalonLoggerFactoryBean
 
     public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    public String getLoggingConfiguration() {
+        return loggingConfiguration;
+    }
+
+    public void setLoggingConfiguration(String loggingConfiguration) {
+        this.loggingConfiguration = loggingConfiguration;
     }
 }

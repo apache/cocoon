@@ -16,10 +16,12 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -28,19 +30,25 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
+ * Add a bean definition for the settings object to the bean factory.
+ * @see CocoonNamespaceHandler
+ * @see SettingsBeanFactoryPostProcessor
  * @version $Id$
  * @since 2.2
  */
 public class SettingsElementParser implements BeanDefinitionParser {
 
+    /** Logger (we use the same logging mechanism as Spring!) */
+    protected final Log logger = LogFactory.getLog(getClass());
+
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
+        this.logger.info("Initializing Apache Cocoon " + Constants.VERSION);
         this.addComponent(SettingsBeanFactoryPostProcessor.class,
                           Settings.ROLE,
                           "init",
-                          false,
                           parserContext.getRegistry());
         return null;
     }
@@ -48,16 +56,12 @@ public class SettingsElementParser implements BeanDefinitionParser {
     protected void addComponent(Class  componentClass,
                                 String role,
                                 String initMethod,
-                                boolean requiresSettings,
                                 BeanDefinitionRegistry registry) {
         RootBeanDefinition beanDef = new RootBeanDefinition();
         beanDef.setBeanClass(componentClass);      
         beanDef.setSingleton(true);
         if ( initMethod != null ) {
             beanDef.setInitMethodName(initMethod);
-        }
-        if ( requiresSettings ) {
-            beanDef.getPropertyValues().addPropertyValue("settings", new RuntimeBeanReference(Settings.ROLE));
         }
         
         BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, role);

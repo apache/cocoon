@@ -35,18 +35,6 @@ public interface Settings {
     String PROPERTY_RUNNING_MODE = "org.apache.cocoon.mode";
 
     /**
-     * This parameter points to the main configuration file for Cocoon.
-     * Note that the path is specified in absolute notation but it will be
-     * resolved relative to the application context path.
-     */
-    String KEY_CONFIGURATION = "org.apache.cocoon.configuration";
-
-    /**
-     * This parameter indicates the configuration file of the LogKit management
-     */
-    String KEY_LOGGING_CONFIGURATION = "org.apache.cocoon.logging.configuration";
-
-    /**
      * This parameter indicates the log level to use throughout startup of the
      * system. As soon as the logging system is setup the setting of the log4j.xconf
      * configuration is used instead! Only for startup this log level is of importance.
@@ -212,22 +200,10 @@ public interface Settings {
     List getPropertyNames();
 
     /**
-     * @return Returns the configuration.
-     * @see #KEY_CONFIGURATION
-     */
-    String getConfiguration();
-
-    /**
      * @return Returns the loadClasses.
      * @see #KEY_LOAD_CLASSES
      */
     List getLoadClasses();
-
-    /**
-     * @return Returns the loggingConfiguration.
-     * @see #KEY_LOGGING_CONFIGURATION
-     */
-    String getLoggingConfiguration();
 
     /**
      * @return Returns the logLevel.

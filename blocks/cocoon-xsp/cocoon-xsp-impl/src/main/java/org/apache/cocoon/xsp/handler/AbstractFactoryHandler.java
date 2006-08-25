@@ -17,7 +17,7 @@
 package org.apache.cocoon.xsp.handler;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * This class acts like a Factory to instantiate the correct version

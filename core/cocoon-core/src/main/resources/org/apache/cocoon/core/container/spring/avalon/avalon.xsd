@@ -15,10 +15,14 @@
   limitations under the License.
 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://org.apache.cocoon/core"
-        xmlns:tns="http://org.apache.cocoon/core">
+        targetNamespace="http://org.apache.cocoon/avalon"
+        xmlns:tns="http://org.apache.cocoon/avalon">
 
-    <xsd:element name="settings" type="tns:settingsType"/>
+    <xsd:element name="avalon" type="tns:avalonType"/>
 
-    <xsd:complexType name="settingsType"/>
+    <xsd:complexType name="avalonType">
+    	<xsd:attribute name="location" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="log4jConfiguration" type="xsd:string" use="optional"></xsd:attribute>
+    </xsd:complexType>
+
 </xsd:schema>

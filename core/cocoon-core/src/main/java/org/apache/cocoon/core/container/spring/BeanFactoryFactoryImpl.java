@@ -24,6 +24,8 @@ import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderFactory;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.avalon.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ClassLoaderUtils;
 import org.apache.cocoon.environment.Request;
 import org.apache.excalibur.source.SourceResolver;
