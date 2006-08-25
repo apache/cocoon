@@ -66,6 +66,9 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="AN" type="fix">
+      XSP block: Suppress xmlns:xsp namespace declaration on XSP generated root element.
+    </action>
+    <action dev="AN" type="fix">
       XSP block: Fix regression introduced in 2.1.8 that under specific circumstances logicsheets
       were not applied, leading to compilation errors.  This manifested itself only if
       a) two XSPs referred to the same custom logicsheet by a relative location path,
