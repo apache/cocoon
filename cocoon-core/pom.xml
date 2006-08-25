@@ -158,7 +158,7 @@
           <artifactId>excalibur-testcase</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>servlet-api</groupId>
+          <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>
         </exclusion>
         <exclusion>
