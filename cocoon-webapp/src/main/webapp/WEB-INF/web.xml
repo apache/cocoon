@@ -86,21 +86,13 @@
   <!-- Servlet Context Listener ======================================= -->
   
   <!--+
-      | Declare Spring context listener (for testing)
+      | Declare Spring context listener which sets up the Spring Application Context
+      | containing all Cocoon components (and user defined as well).
       +-->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
-  <!--+
-      | Declare a context listener that sets up the Cocoon Spring bean factory
-      | and makes it available as a context parameter.
-      +-->
-  
-  <listener>
-  	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
-  </listener>
-  
   <!-- Servlet Configuration ========================================== -->
 
   <servlet>

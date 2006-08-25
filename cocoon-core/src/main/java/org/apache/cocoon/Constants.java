@@ -212,13 +212,6 @@ public final class Constants {
     public static final String BLOCK_META_DIR = "COB-INF";
 
     /**
-     * Application <code>Context</code> Key for the URL to the configuration file
-     * (usually named cocoon.xconf)
-     * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getConfiguration()}.
-     */
-    public static final String CONTEXT_CONFIG_URL = "config-url";
-
-    /**
      * Application <code>Context</code> Key for the default encoding.
      * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getFormEncoding()}.
      */

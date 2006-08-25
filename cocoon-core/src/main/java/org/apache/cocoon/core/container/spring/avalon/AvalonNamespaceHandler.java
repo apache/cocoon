@@ -14,26 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.core.container.spring.avalon;
 
+import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * Spring namespace handler for the cocoon core namespace.
+ * Spring namespace handler for the cocoon avalon namespace.
  * Currently this namespace defines the following elements
- * (in the namespace "http://org.apache.cocoon/core"):
- * "settings" : This sets up the Cocoon Settings object (by reading the property
- *              files located under /WEB-INF/cocoon/properties.
+ * (in the namespace "http://org.apache.cocoon/avalon"):
+ * "avalon" : This adds all Avalon configured components to the bean factory.
+ *            (Attribute location is required)
  *
  * @version $Id$
  * @since 2.2
  */
-public class CocoonNamespaceHandler extends NamespaceHandlerSupport {
+public class AvalonNamespaceHandler extends NamespaceHandlerSupport {
 
     /**
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
     public void init() {
-        registerBeanDefinitionParser("settings", new SettingsElementParser());
+        registerBeanDefinitionParser("avalon", new AvalonElementParser());
     }
 }

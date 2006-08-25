@@ -29,7 +29,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.configuration.PropertyProvider;
-import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.TestPropertyProvider;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -40,6 +39,11 @@ import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
+/**
+ * TODO - We need to find a way to setup the bean factory!
+ * @version $Id$
+ *
+ */
 public class SitemapTestCase extends TestCase {
 
     private MockRequest request = new MockRequest();
@@ -71,10 +75,9 @@ public class SitemapTestCase extends TestCase {
         objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, environmentContext);
 
         this.classDir = this.getClassDirURL().toExternalForm();
-        PropertyProvider env = 
-            new TestPropertyProvider(this.getConfiguration());
+        PropertyProvider env = new TestPropertyProvider();
 
-        this.container = CoreUtil.createRootContainer(new MockContext(), env);
+        this.container = null; //CoreUtil.createRootContainer(new MockContext(), env);
         this.serviceManager = (ServiceManager)this.container.getBean(ServiceManager.class.getName());
         this.rootProcessor = (Processor)this.container.getBean(Processor.ROLE);
     }

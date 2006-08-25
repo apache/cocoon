@@ -29,11 +29,6 @@ import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.AvalonServiceManager;
-import org.apache.cocoon.core.container.spring.AvalonServiceSelector;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
-import org.apache.cocoon.core.container.spring.ConfigurationInfo;
-import org.apache.cocoon.core.container.spring.PoolableFactoryBean;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
@@ -68,13 +63,12 @@ public class AvalonElementParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        // TODO: we should first check if there is already a logger configured in spring
-        // add logger
-        this.addComponent(AvalonLoggerFactoryBean.class,
-                          ProcessingUtil.LOGGER_ROLE,
-                          "init",
-                          true,
-                          parserContext.getRegistry());
+        final String log4jConfiguration = element.getAttribute("log4jConfiguration");
+        // we only add the logger if the configuration is present
+        if ( log4jConfiguration != null ) {
+            this.addLogger(log4jConfiguration, parserContext.getRegistry());
+        }
+
         // add context
         this.addComponent(AvalonContextFactoryBean.class,
                 ProcessingUtil.CONTEXT_ROLE,
@@ -109,10 +103,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
             this.registerComponentInfo(info, parserContext.getRegistry());
 
             // and finally add avalon bean post processor
-            final RootBeanDefinition beanDef = new RootBeanDefinition();
-            beanDef.setBeanClass(AvalonBeanPostProcessor.class);      
-            beanDef.setSingleton(true);
-            beanDef.setLazyInit(false);
+            final RootBeanDefinition beanDef = this.getBeanDefinition(AvalonBeanPostProcessor.class, null, true);
             beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(ProcessingUtil.LOGGER_ROLE));
             beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
             beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
@@ -127,11 +118,17 @@ public class AvalonElementParser implements BeanDefinitionParser {
         return null;
     }
 
-    protected void addComponent(Class  componentClass,
-                                String role,
-                                String initMethod,
-                                boolean requiresSettings,
-                                BeanDefinitionRegistry registry) {
+    protected void addLogger(String configuration,
+                             BeanDefinitionRegistry registry) {
+        final RootBeanDefinition beanDef = this.getBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
+        final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, ProcessingUtil.LOGGER_ROLE);
+        beanDef.getPropertyValues().addPropertyValue("loggingConfiguration", configuration);
+        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+    }
+
+    protected RootBeanDefinition getBeanDefinition(Class   componentClass,
+                                                   String  initMethod,
+                                                   boolean requiresSettings) {
         final RootBeanDefinition beanDef = new RootBeanDefinition();
         beanDef.setBeanClass(componentClass);      
         beanDef.setSingleton(true);
@@ -142,6 +139,15 @@ public class AvalonElementParser implements BeanDefinitionParser {
         if ( requiresSettings ) {
             beanDef.getPropertyValues().addPropertyValue("settings", new RuntimeBeanReference(Settings.ROLE));
         }
+        return beanDef;
+    }
+
+    protected void addComponent(Class  componentClass,
+                                String role,
+                                String initMethod,
+                                boolean requiresSettings,
+                                BeanDefinitionRegistry registry) {
+        final RootBeanDefinition beanDef = this.getBeanDefinition(componentClass, initMethod, requiresSettings);
         
         final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, role);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
@@ -235,9 +241,11 @@ public class AvalonElementParser implements BeanDefinitionParser {
                 poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(this.xml(role) + "Pooled", "java.lang.String");
                 poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(className, "java.lang.String");
                 if ( current.getConfiguration() != null ) {
-                    final int poolMax = current.getConfiguration().getAttributeAsInteger("pool-max", -1);
-                    if ( poolMax != -1 ) {
-                        poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(new Integer(poolMax));
+                    // we treat poolMax as a string to allow property replacements
+                    final String poolMax = current.getConfiguration().getAttribute("pool-max", null);
+                    if ( poolMax != null ) {
+                        poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(poolMax);
+                        poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference(Settings.ROLE));
                     }
                 }
                 if ( current.getPoolInMethodName() != null ) {

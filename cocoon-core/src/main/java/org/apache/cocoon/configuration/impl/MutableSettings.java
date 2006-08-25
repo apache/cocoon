@@ -44,18 +44,6 @@ public class MutableSettings implements Settings {
     protected final Properties properties = new Properties();
 
     /**
-     * This parameter points to the main configuration file for Cocoon.
-     * Note that the path is specified in absolute notation but it will be
-     * resolved relative to the application context path.
-     */
-    protected String configuration;
-
-    /**
-     * This parameter indicates the configuration file of the LogKit management
-     */
-    protected String loggingConfiguration;
-
-    /**
      * This parameter indicates the category id of the logger from the LogKit
      * configuration used by the environment.
      */
@@ -208,8 +196,6 @@ public class MutableSettings implements Settings {
         this.manageExceptions = SettingsDefaults.MANAGE_EXCEPTIONS;
         this.configurationReloadDelay = SettingsDefaults.DEFAULT_CONFIGURATION_RELOAD_DELAY;
         this.containerEncoding = SettingsDefaults.DEFAULT_CONTAINER_ENCODING;
-        this.loggingConfiguration = SettingsDefaults.DEFAULT_LOGGING_CONFIGURATION;
-        this.configuration = SettingsDefaults.DEFAULT_CONFIGURATION;
         this.runningMode = mode;
     }
 
@@ -231,12 +217,8 @@ public class MutableSettings implements Settings {
                 if ( key.startsWith(KEYPREFIX) ) {
                     final String value = current.getValue().toString();
 
-                    if ( key.equals(KEY_CONFIGURATION) ) {
-                        this.setConfiguration(value);
-                    } else if ( key.equals(KEY_RELOAD_DELAY) ) {
+                    if ( key.equals(KEY_RELOAD_DELAY) ) {
                         this.setConfigurationReloadDelay(Long.valueOf(value).longValue());
-                    } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
-                        this.setLoggingConfiguration(value);
                     } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
                         this.setEnvironmentLogger(value);
                     } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
@@ -343,16 +325,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getConfiguration()
-     */
-    public String getConfiguration() {
-        if ( this.parent != null ) {
-            return this.parent.getConfiguration();
-        }
-        return this.configuration;
-    }
-
-    /**
      * @see org.apache.cocoon.core.DynamicSettings#isEnableUploads()
      */
     public boolean isEnableUploads() {
@@ -398,16 +370,6 @@ public class MutableSettings implements Settings {
         // we don't ask the parent here as the classes of the parent
         // have already been loaded
         return this.loadClasses;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.BaseSettings#getLoggingConfiguration()
-     */
-    public String getLoggingConfiguration() {
-        if ( this.parent != null ) {
-            return this.parent.getLoggingConfiguration();
-        }
-        return this.loggingConfiguration;
     }
 
     /**
@@ -576,12 +538,8 @@ public class MutableSettings implements Settings {
         }
         String value = null;
         if ( key.startsWith(KEYPREFIX) ) {
-            if ( key.equals(KEY_CONFIGURATION) ) {
-                value = this.getConfiguration();
-            } else if ( key.equals(KEY_RELOAD_DELAY) ) {
+            if ( key.equals(KEY_RELOAD_DELAY) ) {
                 value = String.valueOf(this.getReloadDelay(null));
-            } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
-                value = this.getLoggingConfiguration();
             } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
                 value = this.getEnvironmentLogger();
             } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
@@ -639,11 +597,9 @@ public class MutableSettings implements Settings {
     public String toString() {
         return "Settings:\n" +
           "Running mode : " + this.getRunningMode()+ '\n' +
-          KEY_CONFIGURATION + " : " + this.getConfiguration() + '\n' +
           KEY_RELOAD_DELAY + " : " + this.getReloadDelay(null) + '\n' +
           KEY_RELOADING + " : " + this.isReloadingEnabled(null) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.getLoadClasses()) + '\n' +
-          KEY_LOGGING_CONFIGURATION + " : " + this.getLoggingConfiguration() + '\n' +
           KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.getEnvironmentLogger() + '\n' +
           KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.getBootstrapLogLevel() + '\n' +
           KEY_LOGGING_COCOON_LOGGER + " : " + this.getCocoonLogger() + '\n' +
@@ -727,15 +683,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @param configuration The configuration to set.
-     */
-    public void setConfiguration(String configuration) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.configuration = configuration;
-    }
-
-    /**
      * @param enableUploads The enableUploads to set.
      */
     public void setEnableUploads(boolean enableUploads) {
@@ -759,15 +706,6 @@ public class MutableSettings implements Settings {
     public void addToLoadClasses(String className) {
         this.checkWriteable();
         this.loadClasses.add(className);
-    }
-
-    /**
-     * @param loggingConfiguration The loggingConfiguration to set.
-     */
-    public void setLoggingConfiguration(String loggingConfiguration) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.loggingConfiguration = loggingConfiguration;
     }
 
     /**

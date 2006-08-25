@@ -23,10 +23,8 @@ import org.apache.cocoon.configuration.Settings;
 public class TestPropertyProvider
     implements PropertyProvider {
     
-    private final String configuration;
-
-    public TestPropertyProvider(String configuration) {
-        this.configuration = configuration;
+    public TestPropertyProvider() {
+        // ignore
     }
 
     /**
@@ -34,7 +32,6 @@ public class TestPropertyProvider
      */
     public Properties getProperties(Settings settings, String runningMode, String path) {
         final Properties p = new Properties();
-        p.setProperty(Settings.KEY_CONFIGURATION, this.configuration);
         p.setProperty(Settings.KEY_WORK_DIRECTORY, "work");
         return p;
     }

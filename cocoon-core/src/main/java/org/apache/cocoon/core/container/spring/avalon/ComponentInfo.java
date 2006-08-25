@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.core.container.spring.avalon;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -74,6 +74,9 @@ public final class ComponentInfo {
 
     /** The configuration of the component. */
     private Configuration configuration;
+
+    /** Processed configuration. */
+    private Configuration processedConfiguration;
 
     /** The configuration of the component as parameters. */
     private Parameters parameters;
@@ -329,5 +332,13 @@ public final class ComponentInfo {
 
     public void setLazyInit(boolean lazyInit) {
         this.lazyInit = lazyInit;
+    }
+
+    public Configuration getProcessedConfiguration() {
+        return processedConfiguration;
+    }
+
+    public void setProcessedConfiguration(Configuration processedConfiguration) {
+        this.processedConfiguration = processedConfiguration;
     }
 }

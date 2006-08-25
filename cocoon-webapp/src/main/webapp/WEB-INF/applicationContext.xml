@@ -19,19 +19,21 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:cocoon="http://org.apache.cocoon/core"
+       xmlns:avalon="http://org.apache.cocoon/avalon"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-                           http://org.apache.cocoon/core http://org.apache.cocoon/core.xsd">
+                           http://org.apache.cocoon/core http://org.apache.cocoon/core.xsd
+                           http://org.apache.cocoon/avalon http://org.apache.cocoon/avalon.xsd">
 
   <!-- Load all the properties for Cocoon -->
   <cocoon:settings/>
-<!-- 
-  <cocoon:avalon location="/WEB-INF/cocoon/cocoon.xconf"/>
- -->
-  <!-- The following bean definitions will be replaced later on with
-       the use of the new namespace handling in spring:
-       <cocoon:settings/>
-       <cocoon:avalon-logger/>
-       <cocoon:avalon-support config="/WEB-INF/cocoon/cocoon.xconf"/>
-        -->
+
+  <!-- Load Avalon configurations
+       If you want to use a different logger than the default log4j logger,
+       add a bean conforming to the Avalon Logger interface to this definition
+       and leave out the log4jConfiguration attribute.
+   -->
+  <avalon:avalon location="/WEB-INF/cocoon/cocoon.xconf"
+                 log4jConfiguration="/WEB-INF/cocoon/log4j.xconf"/>
+
 </beans>
