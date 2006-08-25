@@ -65,6 +65,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="add">
+      XSP block: Add example for on-the-fly generation of ZIP file.
+    </action>
     <action dev="AN" type="fix">
       XSP block: Suppress xmlns:xsp namespace declaration on XSP generated root element.
     </action>
