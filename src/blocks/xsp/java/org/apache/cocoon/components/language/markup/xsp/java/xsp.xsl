@@ -186,8 +186,9 @@
       <xsl:variable name="ns-prefix" select="local-name(.)"/>
       <xsl:variable name="ns-uri" select="string(.)"/>
         <!-- Declare namespaces that also exist on the parent (i.e. not locally declared),
-             and filter out "xmlns:xmlns" namespace produced by Xerces+Saxon -->
-        <xsl:if test="($ns-prefix != 'xmlns') and $parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri]">
+             and filter out "xmlns:xmlns" namespace produced by Xerces+Saxon
+             and suppress xmlns:xsp which no longer occurs in output. -->
+        <xsl:if test="($ns-prefix != 'xmlns') and ($ns-uri != $xsp-uri) and $parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri]">
           this.contentHandler.startPrefixMapping(
             "<xsl:value-of select="$ns-prefix"/>",
             "<xsl:value-of select="$ns-uri"/>"
@@ -202,7 +203,7 @@
     <xsl:for-each select="$content/namespace::*">
       <xsl:variable name="ns-prefix" select="local-name(.)"/>
       <xsl:variable name="ns-uri" select="string(.)"/>
-      <xsl:if test="($ns-prefix != 'xmlns') and $parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri]">
+      <xsl:if test="($ns-prefix != 'xmlns') and ($ns-uri != $xsp-uri)  and $parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri]">
       this.contentHandler.endPrefixMapping(
         "<xsl:value-of select="local-name(.)"/>"
       );
