@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AN" type="add">
+      XSP block: Add example for on-the-fly generation of ZIP file.
+    </action>
     <action dev="AN" type="fix">
       XSP block: Suppress xmlns:xsp namespace declaration on XSP generated root element.
     </action>
