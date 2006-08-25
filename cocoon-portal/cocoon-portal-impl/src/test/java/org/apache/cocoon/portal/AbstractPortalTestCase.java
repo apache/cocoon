@@ -24,8 +24,8 @@ import javax.servlet.ServletContext;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.CocoonTestCase;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
-import org.apache.cocoon.core.container.spring.ConfigurationInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.portal.impl.PortalServiceImpl;
 
@@ -70,7 +70,7 @@ public abstract class AbstractPortalTestCase extends CocoonTestCase {
     }
 
     /**
-     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.ConfigurationInfo)
+     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo)
      */
     protected void addComponents(ConfigurationInfo info) throws Exception {
         super.addComponents(info);

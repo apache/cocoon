@@ -22,7 +22,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
 import org.apache.cocoon.xsp.handler.ComponentHandler;
 

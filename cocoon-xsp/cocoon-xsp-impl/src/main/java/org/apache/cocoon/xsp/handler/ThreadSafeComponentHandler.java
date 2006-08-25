@@ -17,7 +17,7 @@
 package org.apache.cocoon.xsp.handler;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * The ThreadSafeComponentHandler to make sure components are initialized
