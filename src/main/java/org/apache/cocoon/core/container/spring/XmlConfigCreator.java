@@ -25,6 +25,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.core.container.spring.avalon.AvalonServiceManager;
+import org.apache.cocoon.core.container.spring.avalon.AvalonServiceSelector;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
+import org.apache.cocoon.core.container.spring.avalon.PoolableFactoryBean;
 import org.springframework.util.StringUtils;
 
 /**

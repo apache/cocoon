@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.core.container.spring.avalon;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -27,6 +27,8 @@ import java.util.Set;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -42,7 +44,7 @@ public class PoolableFactoryBean
     implements FactoryBean, BeanFactoryAware {
 
     /** The default max size of the pool. */
-    public static final int DEFAULT_MAX_POOL_SIZE = 64;
+    public static final String DEFAULT_MAX_POOL_SIZE = "64";
 
     /** All the interfaces for the proxy. */
     protected final Class[] interfaces;
@@ -103,7 +105,7 @@ public class PoolableFactoryBean
      */
     public PoolableFactoryBean( String name, String className )
     throws Exception {
-        this(name, className, DEFAULT_MAX_POOL_SIZE);
+        this(name, className, DEFAULT_MAX_POOL_SIZE, null);
     }
 
     /**
@@ -112,8 +114,13 @@ public class PoolableFactoryBean
      *
      * @param name The name of the bean which should be pooled.
      */
-    public PoolableFactoryBean( String name, String className, int poolMax )
+    public PoolableFactoryBean( String name, String className, String poolMaxString, Settings settings )
     throws Exception {
+        String value = poolMaxString;
+        if ( settings != null ) {
+            value = PropertyHelper.replace(poolMaxString, settings);
+        }
+        int poolMax = Integer.valueOf(value).intValue();
         this.name = name;
         this.max = ( poolMax <= 0 ? Integer.MAX_VALUE : poolMax );
         this.beanClass = Class.forName(className);

@@ -20,21 +20,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
-import org.apache.cocoon.core.CoreInitializationException;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -68,7 +69,7 @@ public class SettingsBeanFactoryPostProcessor
 
     protected ServletContext servletContext;
 
-    protected Settings settings;
+    protected MutableSettings settings;
 
     /**
      * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
@@ -79,59 +80,15 @@ public class SettingsBeanFactoryPostProcessor
 
     public void init()
     throws Exception {
-        final MutableSettings s = this.createSettings();
-        this.initSettingsFiles(s);
-        // update configuration
-        final URL u = this.getConfigFile(s.getConfiguration());
-        s.setConfiguration(u.toExternalForm());
+        this.settings = this.createSettings();
+        this.initSettingsFiles();
 
         // settings can't be changed anymore
-        s.makeReadOnly();
-        this.settings = s;
-    }
+        this.settings.makeReadOnly();
 
-    /**
-     * Get the URL of the main Cocoon configuration file.
-     */
-    protected URL getConfigFile(final String configFileName)
-    throws Exception {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Using configuration file: " + configFileName);
-        }
-
-        URL result;
-        try {
-            // test if this is a qualified url
-            if (configFileName.indexOf(':') == -1) {
-                result = this.servletContext.getResource(configFileName);
-            } else {
-                result = new URL(configFileName);
-            }
-        } catch (Exception mue) {
-            String msg = "Setting for 'configuration' is invalid : " + configFileName;
-            this.logger.error(msg, mue);
-            throw new CoreInitializationException(msg, mue);
-        }
-
-        if (result == null) {
-            File resultFile = new File(configFileName);
-            if (resultFile.isFile()) {
-                try {
-                    result = resultFile.getCanonicalFile().toURL();
-                } catch (Exception e) {
-                    String msg = "Setting for 'configuration' is invalid : " + configFileName;
-                    this.logger.error(msg, e);
-                    throw new CoreInitializationException(msg, e);
-                }
-            }
-        }
-
-        if (result == null) {
-            String msg = "Setting for 'configuration' doesn't name an existing resource : " + configFileName;
-            this.logger.error(msg);
-            throw new CoreInitializationException(msg);
-        }
-        return result;
+        this.dumpSystemProperties();
+        this.forceLoad();
+        this.logger.info("Apache Cocoon " + Constants.VERSION + " is up and ready.");
     }
 
     /**
@@ -139,7 +96,7 @@ public class SettingsBeanFactoryPostProcessor
      * @param settings 
      * @param log 
      */
-    protected void initSettingsFiles(MutableSettings settings) {
+    protected void initSettingsFiles() {
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
         final String workDirParam = settings.getWorkDirectory();
@@ -318,9 +275,8 @@ public class SettingsBeanFactoryPostProcessor
             // now process
             final Iterator i = propertyUris.iterator();
             while ( i.hasNext() ) {
-                Resource src = null;
+                Resource src = (Resource)i.next();
                 try {
-                    src = (Resource)i.next();
                     final InputStream propsIS = src.getInputStream();
                     this.servletContext.log("Reading settings from '" + src.getURL() + "'.");
                     properties.load(propsIS);
@@ -397,6 +353,54 @@ public class SettingsBeanFactoryPostProcessor
 
         protected String resolveStringValue(String strVal) {
             return parseStringValue(strVal, this.props, null);
+        }
+    }
+    /**
+     * Dump System Properties.
+     */
+    protected void dumpSystemProperties() {
+        if (this.logger.isDebugEnabled()) {
+            try {
+                Enumeration e = System.getProperties().propertyNames();
+                this.logger.debug("===== System Properties Start =====");
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    this.logger.debug(key + "=" + System.getProperty(key));
+                }
+                this.logger.debug("===== System Properties End =====");
+            } catch (SecurityException se) {
+                // Ignore Exceptions.
+            }
+        }
+    }
+
+    /**
+     * Handle the <code>load-class</code> settings. This overcomes
+     * limits in many classpath issues. One of the more notorious
+     * ones is a bug in WebSphere that does not load the URL handler
+     * for the <code>classloader://</code> protocol. In order to
+     * overcome that bug, set <code>org.apache.cocoon.classloader.load.classes.XY</code> property to
+     * the <code>com.ibm.servlet.classloader.Handler</code> value.
+     *
+     * <p>If you need to load more than one class, then add several
+     * properties, all starting with <cod>org.apache.cocoon.classloader.load.classes.</code>
+     * followed by a self defined identifier.</p>
+     */
+    protected void forceLoad() {
+        final Iterator i = this.settings.getLoadClasses().iterator();
+        while (i.hasNext()) {
+            final String fqcn = (String)i.next();
+            try {
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Loading class: " + fqcn);
+                }
+                ClassUtils.loadClass(fqcn).newInstance();
+            } catch (Exception e) {
+                if (this.logger.isWarnEnabled()) {
+                    this.logger.warn("Could not load class: " + fqcn + ". Continuing initialization.", e);
+                }
+                // Do not throw an exception, because it is not a fatal error.
+            }
         }
     }
 

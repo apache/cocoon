@@ -23,8 +23,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * This is an utility class for processing Cocoon requests.
@@ -34,7 +34,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 public class ProcessingUtil {
 
     /** Servlet context attribute name for getting the root container. */
-    public static final String CONTAINER_CONTEXT_ATTR_NAME = "org.apache.cocoon.Cocoon";
+    public static final String CONTAINER_CONTEXT_ATTR_NAME = WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE;
 
     /** Bean name for the Avalon context. */
     public static final String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
@@ -44,9 +44,6 @@ public class ProcessingUtil {
 
     /** Bean name for the service manager. */
     public static final String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";
-
-    /** Bean name for local source resolver. (TODO) */
-    public static final String LOCAL_SOURCE_RESOLVER_ROLE = SourceResolver.ROLE + "/local";
 
     /**
      * Avoid construction.

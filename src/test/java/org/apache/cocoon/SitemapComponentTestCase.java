@@ -39,8 +39,8 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
-import org.apache.cocoon.core.container.spring.ConfigurationInfo;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -126,7 +126,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
     }
 
     /**
-     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.ConfigurationInfo)
+     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo)
      */
     protected void addComponents(ConfigurationInfo info) 
     throws Exception {

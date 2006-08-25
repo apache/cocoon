@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
-import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
