@@ -42,6 +42,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.commons.lang.time.StopWatch;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -85,7 +86,7 @@ public class RequestProcessor {
 
     public RequestProcessor(ServletContext servletContext) {
         this.servletContext = servletContext;
-        this.cocoonBeanFactory = (BeanFactory) servletContext.getAttribute(ProcessingUtil.CONTAINER_CONTEXT_ATTR_NAME);
+        this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
         final String encoding = this.settings.getContainerEncoding();
         if ( encoding == null ) {

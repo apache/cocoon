@@ -44,9 +44,6 @@ public final class ContextHelper {
     /** Application <code>Context</code> Key for the current sitemap service manager */
     public static final String CONTEXT_SITEMAP_SERVICE_MANAGER = "sitemap-service-manager";
     
-    /** Application root directory (as a URL object) @since 2.2 */
-    public static final String CONTEXT_ROOT_URL = "context-root";
-    
     private ContextHelper() {
         // Forbid instantiation
     }

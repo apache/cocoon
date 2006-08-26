@@ -24,17 +24,16 @@ import java.util.Map;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * This is an utility class for processing Cocoon requests.
  *
+ * TODO Remove the avalon specific stuff and move it into an avalon specific package
+ *
  * $Id$
+ * @since 2.2
  */
 public class ProcessingUtil {
-
-    /** Servlet context attribute name for getting the root container. */
-    public static final String CONTAINER_CONTEXT_ATTR_NAME = WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE;
 
     /** Bean name for the Avalon context. */
     public static final String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
