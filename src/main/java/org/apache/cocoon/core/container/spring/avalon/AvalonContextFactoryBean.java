@@ -16,17 +16,13 @@
 package org.apache.cocoon.core.container.spring.avalon;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.container.util.ComponentContext;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.springframework.beans.factory.FactoryBean;
@@ -64,14 +60,6 @@ public class AvalonContextFactoryBean
         // create new Avalon context
         final DefaultContext appContext = new ComponentContext();
 
-        // add root url
-        final String contextUrl = CoreUtil.getContextUrl(this.servletContext, "/WEB-INF/web.xml");
-        try {
-            appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextUrl));
-        } catch (MalformedURLException ignore) {
-            // we simply ignore this
-        }
-    
         // add environment context and config
         appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
 

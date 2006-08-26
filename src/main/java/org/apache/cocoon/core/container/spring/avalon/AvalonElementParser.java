@@ -63,10 +63,10 @@ public class AvalonElementParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        final String log4jConfiguration = element.getAttribute("log4jConfiguration");
+        final String loggingConfiguration = element.getAttribute("loggingConfiguration");
         // we only add the logger if the configuration is present
-        if ( log4jConfiguration != null ) {
-            this.addLogger(log4jConfiguration, parserContext.getRegistry());
+        if ( loggingConfiguration != null ) {
+            this.addLogger(loggingConfiguration, parserContext.getRegistry());
         }
 
         // add context
@@ -88,7 +88,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
         final String location = element.getAttribute("location");
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         try {
-            final ConfigurationInfo info = ConfigReader.readConfiguration(location, resourceLoader);
+            final ConfigurationInfo info = ConfigurationReader.readConfiguration(location, resourceLoader);
             // first handle includes
             final Iterator includeIter = info.getImports().iterator();
             while ( includeIter.hasNext() ) {

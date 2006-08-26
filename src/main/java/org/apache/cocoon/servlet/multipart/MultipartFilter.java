@@ -37,6 +37,7 @@ import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Servlet filter for handling multi part MIME uploads
@@ -66,7 +67,7 @@ public class MultipartFilter implements Filter{
     public void init(FilterConfig config) throws ServletException {
         String containerEncoding;
         ServletContext servletContext = config.getServletContext();
-        this.cocoonBeanFactory = (BeanFactory) servletContext.getAttribute(ProcessingUtil.CONTAINER_CONTEXT_ATTR_NAME);
+        this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
         final String encoding = settings.getContainerEncoding();
         if ( encoding == null ) {

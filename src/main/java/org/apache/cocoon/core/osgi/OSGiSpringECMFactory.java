@@ -31,8 +31,8 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
-import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.avalon.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.Context;
 import org.osgi.framework.Bundle;
@@ -50,6 +50,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.beans.factory.config.Scope;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * The @link {@link OSGiSpringECMFactory} gives access to all Spring beans via the 
@@ -122,7 +123,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 			throw new ECMConfigurationFileNotSetException("You have to provide a ECM configurationf file!");
 		}
 		if (this.parentBeanfactory == null) {
-		    this.parentBeanfactory = BeanFactoryUtil.getWebApplicationContext(osgiServletContext);
+            this.parentBeanfactory =  WebApplicationContextUtils.getWebApplicationContext(osgiServletContext);
         }
 		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
 		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
