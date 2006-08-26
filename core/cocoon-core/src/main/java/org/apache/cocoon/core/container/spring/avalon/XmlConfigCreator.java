@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.core.container.spring.avalon;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,11 +25,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingUtil;
-import org.apache.cocoon.core.container.spring.avalon.AvalonServiceManager;
-import org.apache.cocoon.core.container.spring.avalon.AvalonServiceSelector;
-import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
-import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
-import org.apache.cocoon.core.container.spring.avalon.PoolableFactoryBean;
+import org.apache.cocoon.configuration.Settings;
 import org.springframework.util.StringUtils;
 
 /**
@@ -167,6 +163,9 @@ public class XmlConfigCreator {
                         buffer.append("  <constructor-arg><value>");
                         buffer.append(poolMax);
                         buffer.append("</value></constructor-arg>\n");
+                        buffer.append("  <constructor-arg ref=\"");
+                        buffer.append(Settings.ROLE);
+                        buffer.append("\"/>\n");
                     }
                 }
                 if ( current.getPoolInMethodName() != null ) {

@@ -17,8 +17,6 @@ package org.apache.cocoon.core.container.spring;
 
 import java.util.Iterator;
 
-import javax.servlet.ServletContext;
-
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.acting.Action;
@@ -28,6 +26,7 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.avalon.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
+import org.apache.cocoon.core.container.spring.avalon.XmlConfigCreator;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
@@ -37,11 +36,8 @@ import org.apache.cocoon.transformation.Transformer;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * This utility class helps in creating new Spring {@link ConfigurableListableBeanFactory} objects
@@ -159,18 +155,6 @@ public class BeanFactoryUtil {
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
-    }
-
-    /**
-     * Get a possible root context.
-     */
-    public static ApplicationContext getWebApplicationContext(ServletContext servletContext) {
-        ApplicationContext parent = null;
-        if( servletContext != null) {
-            parent = WebApplicationContextUtils.getWebApplicationContext(servletContext);            
-            parent = (ApplicationContext)servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-        }
-        return parent;
     }
 
     protected static void prepareBeanFactory(CocoonBeanFactory factory,

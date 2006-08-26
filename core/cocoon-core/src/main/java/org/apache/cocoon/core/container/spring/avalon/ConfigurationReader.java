@@ -43,7 +43,7 @@ import org.xml.sax.InputSource;
  * @since 2.2
  * @version $Id$
  */
-public class ConfigReader {
+public class ConfigurationReader {
 
     /** Logger (we use the same logging mechanism as Spring!) */
     protected final Log logger = LogFactory.getLog(getClass());
@@ -60,7 +60,7 @@ public class ConfigReader {
     public static ConfigurationInfo readConfiguration(String         source,
                                                       ResourceLoader resourceLoader)
     throws Exception {
-        final ConfigReader converter = new ConfigReader(null, resourceLoader);
+        final ConfigurationReader converter = new ConfigurationReader(null, resourceLoader);
         converter.convert(source);
         return converter.configInfo;
     }
@@ -77,12 +77,12 @@ public class ConfigReader {
                                                       ConfigurationInfo parentInfo,
                                                       ResourceLoader    resourceLoader)
     throws Exception {
-        final ConfigReader converter = new ConfigReader(parentInfo, resourceLoader);
+        final ConfigurationReader converter = new ConfigurationReader(parentInfo, resourceLoader);
         converter.convert(rolesConfig, componentConfig, null);
         return converter.configInfo;        
     }
 
-    private ConfigReader(ConfigurationInfo parentInfo,
+    private ConfigurationReader(ConfigurationInfo parentInfo,
                          ResourceLoader    resourceLoader)
     throws Exception {
         if ( resourceLoader != null ) {
@@ -138,6 +138,13 @@ public class ConfigReader {
     }
 
     protected String getUrl(String url, String base) {
+        if ( url == null ) {
+            return url;
+        }
+        if ( base != null && url.indexOf(":/") < 2) {
+            // TODO - we have to check if url is relative or absolute
+            System.out.println("URL: " + url + " (" + base + ")");            
+        }
         return this.convertUrl(url);
     }
 
