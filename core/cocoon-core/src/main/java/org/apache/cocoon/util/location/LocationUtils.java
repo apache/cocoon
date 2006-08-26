@@ -245,6 +245,17 @@ public class LocationUtils {
             }
         }
 
+        if (obj instanceof Exception) {
+            // Many exceptions in Cocoon have a message like "blah blah at file://foo/bar.xml:12:1"
+            String msg = ((Exception)obj).getMessage();
+            if (msg == null) return null;
+            
+            int pos = msg.lastIndexOf(" at ");
+            if (pos != -1) {
+                return LocationUtils.parse(msg.substring(pos + 4));
+            }
+        }
+
         List currentFinders = finders; // Keep the current list
         int size = currentFinders.size();
         for (int i = 0; i < size; i++) {

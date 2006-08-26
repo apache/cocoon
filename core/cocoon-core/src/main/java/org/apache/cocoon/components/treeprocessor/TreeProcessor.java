@@ -18,6 +18,8 @@ package org.apache.cocoon.components.treeprocessor;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -35,7 +37,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -43,6 +44,7 @@ import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.servlet.RequestUtil;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
 import org.apache.excalibur.source.Source;
@@ -51,6 +53,7 @@ import org.apache.regexp.RE;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.web.context.ServletContextAware;
 import org.xml.sax.SAXException;
 
 /**
@@ -61,7 +64,7 @@ import org.xml.sax.SAXException;
 public class TreeProcessor extends AbstractLogEnabled
                            implements ThreadSafe, Processor, Serviceable,
                                       Configurable, Contextualizable,
-                                      Disposable, Initializable, BeanFactoryAware {
+                                      Disposable, Initializable, BeanFactoryAware, ServletContextAware {
 
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;
@@ -108,6 +111,9 @@ public class TreeProcessor extends AbstractLogEnabled
     /** Our bean factory. */
     protected BeanFactory beanFactory;
 
+    /** The servlet context. */
+    protected ServletContext servletContext;
+
     /**
      * Create a TreeProcessor.
      */
@@ -144,6 +150,7 @@ public class TreeProcessor extends AbstractLogEnabled
         this.environmentHelper.changeContext(sitemapSource, prefix);
         this.sitemapExecutor = parent.sitemapExecutor;
         this.beanFactory = parent.beanFactory;
+        this.servletContext = parent.servletContext;
     }
 
     /**
@@ -182,8 +189,9 @@ public class TreeProcessor extends AbstractLogEnabled
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null) {
+            final String contextUrl = RequestUtil.getContextUrl(this.servletContext);
             this.environmentHelper = new EnvironmentHelper(
-                    (URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
+                    new URL(contextUrl));
         }
         ContainerUtil.enableLogging(this.environmentHelper, getLogger());
         ContainerUtil.service(this.environmentHelper, this.manager);
@@ -514,5 +522,12 @@ public class TreeProcessor extends AbstractLogEnabled
      */
     public Processor getParent() {
         return this.parent;
+    }
+
+    /**
+     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
+     */
+    public void setServletContext(ServletContext sContext) {
+        this.servletContext = sContext;
     }
 }

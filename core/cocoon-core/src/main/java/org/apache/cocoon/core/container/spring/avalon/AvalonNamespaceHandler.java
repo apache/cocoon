@@ -16,7 +16,12 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
+import org.apache.cocoon.util.location.LocationUtils;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -31,6 +36,41 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  */
 public class AvalonNamespaceHandler extends NamespaceHandlerSupport {
 
+    // Register the location finder for Avalon configuration objects and exceptions
+    // and keep a strong reference to it.
+    // TODO - we should move the avalon specific part to the spring.avalon package!
+    private static final LocationUtils.LocationFinder confLocFinder = new LocationUtils.LocationFinder() {
+        public Location getLocation(Object obj, String description) {
+            if (obj instanceof Configuration) {
+                Configuration config = (Configuration)obj;
+                String locString = config.getLocation();
+                Location result = LocationUtils.parse(locString);
+                if (LocationUtils.isKnown(result)) {
+                    // Add description
+                    StringBuffer desc = new StringBuffer().append('<');
+                    // Unfortunately Configuration.getPrefix() is not public
+                    try {
+                        if (config.getNamespace().startsWith("http://apache.org/cocoon/sitemap/")) {
+                            desc.append("map:");
+                        }
+                    } catch (ConfigurationException e) {
+                        // no namespace: ignore
+                    }
+                    desc.append(config.getName()).append('>');
+                    return new LocationImpl(desc.toString(), result);
+                } else {
+                    return result;
+                }
+            }
+            // Try next finders.
+            return null;
+        }
+    };
+    
+    static {
+        LocationUtils.addFinder(confLocFinder);
+    }
+    
     /**
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */

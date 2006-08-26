@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.configuration.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,17 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.ServletContext;
-
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.SettingsDefaults;
-import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * Helper class creating a settings object
@@ -52,127 +44,13 @@ public class SettingsHelper {
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
     /**
-     * Get the settings for Cocoon.
-     * This method reads several property files and merges the result. If there
-     * is more than one definition for a property, the last one wins.
-     * The property files are read in the following order:
-     * 1) context://WEB-INF/cocoon/properties/*.properties
-     *    Default values for the core and each block - the order in which the files are read is not guaranteed.
-     * 2) context://WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
-     *    Default values for the running mode - the order in which the files are read is not guaranteed.
-     * 3) Property providers (ToBeDocumented)
-     * 4) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
-     * 5) Optional property file which is stored under ".cocoon/settings.properties" in the user
-     *    directory.
-     * 6) Additional property file specified by the "org.apache.cocoon.settings" property.
-     * 7) System properties
-     *
-     * This means that system properties (provided on startup of the web application) override all
-     * others etc.
-     *
-     * @return A new Settings object
-     */
-    public static MutableSettings createSettings(final ServletContext   servletContext,
-                                                 final SourceResolver   resolver,
-                                                 final Logger           logger,
-                                                 final PropertyProvider externalPropertyProvider) {
-        // get the running mode
-        final String mode = SettingsHelper.getSystemProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
-
-        /*
-        if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
-            final String msg =
-                "Invalid running mode: " + mode + " - Use one of: " + Arrays.asList(SettingsDefaults.RUNNING_MODES);
-            logger.info(msg);
-            throw new IllegalArgumentException(msg);
-        }
-        */
-        
-        logger.info("Running in mode: " + mode);
-
-        // create an empty settings objects
-        final MutableSettings s = new MutableSettings(mode);
-        // create an empty properties object
-        final Properties properties = new Properties();
-
-        // now read all properties from the properties directory
-        readProperties("context://WEB-INF/cocoon/properties", s, properties, resolver, logger);
-        // read all properties from the mode dependent directory
-        readProperties("context://WEB-INF/cocoon/properties/" + mode, s, properties, resolver, logger);
-
-        // Next look for a custom property provider in the spring root context
-        BeanFactory rootContext = BeanFactoryUtil.getWebApplicationContext(servletContext);
-        if (rootContext != null && rootContext.containsBean(PropertyProvider.ROLE) ) {
-            try {
-                final PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
-                final Properties providedProperties = provider.getProperties(s, mode, null);
-                if ( providedProperties != null ) {
-                    properties.putAll(providedProperties);
-                }
-            } catch (Exception ignore) {
-                logger.info("Unable to get properties from configured property provider - continuing with initialization.");
-                logger.debug("Unable to get properties from provider.", ignore);
-            }
-        }
-        // fill from the environment configuration, like web.xml etc.
-        if ( externalPropertyProvider != null ) {
-            final Properties providedProperties = externalPropertyProvider.getProperties(s, mode, null);
-            if ( providedProperties != null ) {
-                properties.putAll(providedProperties);
-            }
-        }
-
-        // read additional properties file
-        // first try in home directory
-        final String homeDir = SettingsHelper.getSystemProperty("user.home");
-        if ( homeDir != null ) {
-            final String fileName = homeDir + File.separator + ".cocoon" + File.separator + "settings.properties";
-            final File testFile = new File(fileName);
-            if ( testFile.exists() ) {
-                logger.info("Reading user settings from '" + fileName + "'");
-                try {
-                    final FileInputStream fis = new FileInputStream(fileName);
-                    properties.load(fis);
-                } catch (IOException ignore) {
-                    logger.info("Unable to read '" + fileName + "' - continuing with initialization.");
-                    logger.debug("Unable to read '" + fileName + "'.", ignore);
-                }
-            }
-        }
-        // check for additionally specified custom file        
-        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
-                                                      SettingsHelper.getSystemProperty(Settings.PROPERTY_USER_SETTINGS));
-        if ( additionalPropertyFile != null ) {
-            logger.info("Reading user settings from '" + additionalPropertyFile + "'");
-            try {
-                final FileInputStream fis = new FileInputStream(additionalPropertyFile);
-                properties.load(fis);
-                fis.close();
-            } catch (IOException ignore) {
-                logger.info("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.");
-                logger.debug("Unable to read '" + additionalPropertyFile + "'.", ignore);
-            }
-        }
-        // now overwrite with system properties
-        try {
-            properties.putAll(System.getProperties());
-        } catch (SecurityException se) {
-            // we ignore this
-        }
-        PropertyHelper.replaceAll(properties, null);
-        s.configure(properties);
-
-        return s;
-    }
-
-    /**
      * Read all property files from the given directory and apply them to the settings.
      */
     public static void readProperties(String          directoryName,
-                                         Settings        s,
-                                         Properties      properties,
-                                         SourceResolver  resolver,
-                                         Logger  logger) {
+                                      Settings        s,
+                                      Properties      properties,
+                                      SourceResolver  resolver,
+                                      Logger          logger) {
         Source directory = null;
         try {
             directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
@@ -210,19 +88,6 @@ public class SettingsHelper {
      */
     public static Comparator getSourceComparator() {
         return new SourceComparator();
-    }
-
-    protected static String getSystemProperty(String key) {
-        return SettingsHelper.getSystemProperty(key, null);
-    }
-
-    protected static String getSystemProperty(String key, String defaultValue) {
-        try {
-            return System.getProperty(key, defaultValue);
-        } catch (SecurityException se) {
-            // we ignore this
-            return defaultValue;
-        }
     }
 
     protected final static class SourceComparator implements Comparator {
