@@ -289,7 +289,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             getLogger().debug("done saving rows " + toString());
         }
     }
-    
+
     /**
      * Tests if an identity is already contained in a Set of identities.
      * @param identitySet the Set of identities.
@@ -306,7 +306,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
         return false;
     }
-    
+
     /**
      * Tests if any of the elements in a List is not null.
      * @param list
@@ -320,7 +320,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
         return false;
     }
-    
+
     /**
      * Get the identity of the given row context. That's infact a list of all
      * the values of the fields in the bean or XML that constitute the identity. 
@@ -333,7 +333,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
 
         List identity = new ArrayList();
-        
+
         JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
         if (childBindings != null) {
             int size = childBindings.length;
@@ -360,7 +360,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
         return identity;
     }
-    
+
     /**
      * Get the identity of the given row. That's infact a list of all the values
      * of the fields in the form model that constitute the identity. 
@@ -374,7 +374,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
         
         List identity = new ArrayList();
-        
+
         JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
         if (childBindings != null) {
             int size = childBindings.length;
@@ -387,12 +387,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
         return identity;
     }
-    
+
     public String toString() {
         return "RepeaterJXPathBinding [widget=" + this.repeaterId +
         ", xpath=" + this.repeaterPath + "]";
     }
-    
+
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         if (this.deleteRowBinding != null) {
@@ -406,19 +406,18 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             this.identityBinding.enableLogging(logger);
         }
     }
-    
-    
+
     public class PageStorage {
-        
+
         private Repeater repeater;
         private JXPathContext storageContext;
         private Map updatedRows;
         private int maxPage;
-        
+
         public PageStorage(Repeater repeater, JXPathContext storageContext) {
             this.repeater = repeater;
             this.storageContext = storageContext;
-            
+
             this.repeater.setStorage(this);
             this.updatedRows = new HashMap();
             
@@ -435,19 +434,17 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     collectionSize = ((Double) storageContext.getValue("count("+rowPath+")")).intValue();
                 }
             }
-            
             this.maxPage = collectionSize / this.repeater.getPageSize() - 1;
-            
         }
 
         public void doPageLoad() throws BindingException {
             repeater.clear();
-            
+
             Pointer ptr = storageContext.getPointer(".");
             if (ptr.getNode() != null) {
                 int initialSize = repeater.getSize();
                 JXPathContext repeaterContext = storageContext;
-                
+
                 Iterator rowPointers = repeaterContext.iteratePointers(rowPath + getPaginationClause());
                 while (rowPointers.hasNext()) {
                     Repeater.RepeaterRow thisRow;
@@ -471,12 +468,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 }
             }
             if (getLogger().isDebugEnabled())
-                getLogger().debug("done loading page rows " + toString());
+                getLogger().debug("done loading page rows " + this.toString());
         }
-        
+
         public void doPageSave() throws BindingException {
             JXPathContext repeaterContext = this.storageContext;
-            
+
             // iterate rows in the form model...
             int formRowCount = repeater.getSize();
             for (int i = 0; i < formRowCount; i++) {
