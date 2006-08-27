@@ -20,5 +20,7 @@
 
     <xsd:element name="settings" type="tns:settingsType"/>
 
-    <xsd:complexType name="settingsType"/>
+    <xsd:complexType name="settingsType">
+    	<xsd:attribute name="processorClassName" type="xsd:string" use="optional"></xsd:attribute>
+    </xsd:complexType>
 </xsd:schema>
