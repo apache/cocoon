@@ -78,17 +78,32 @@ public class SettingsBeanFactoryPostProcessor
         this.servletContext = sContext;
     }
 
+    /**
+     * Initialize this processor.
+     * Setup the settings object.
+     * @throws Exception
+     */
     public void init()
     throws Exception {
         this.settings = this.createSettings();
-        this.initSettingsFiles();
 
+        this.doInit();
+
+        this.initSettingsFiles();
         // settings can't be changed anymore
         this.settings.makeReadOnly();
 
         this.dumpSystemProperties();
+        this.dumpSettings();
         this.forceLoad();
         this.logger.info("Apache Cocoon " + Constants.VERSION + " is up and ready.");
+    }
+
+    /**
+     * This method can be overwritten by subclasses to further initialize the settings
+     */
+    protected void doInit() {
+        // nothing to do here
     }
 
     /**
@@ -165,18 +180,18 @@ public class SettingsBeanFactoryPostProcessor
      *    Default values for the core and each block - the order in which the files are read is not guaranteed.
      * 2) context://WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
      *    Default values for the running mode - the order in which the files are read is not guaranteed.
-     * 4) Working directory from servlet context (if not already set)
-     * 5) Optional property file which is stored under ".cocoon/settings.properties" in the user
+     * 3) Working directory from servlet context (if not already set)
+     * 4) Optional property file which is stored under ".cocoon/settings.properties" in the user
      *    directory.
-     * 6) Additional property file specified by the "org.apache.cocoon.settings" property.
-     * 7) System properties
+     * 5) Additional property file specified by the "org.apache.cocoon.settings" property.
+     * 6) System properties
      *
      * This means that system properties (provided on startup of the web application) override all
      * others etc.
      *
      * @return A new Settings object
      */
-    public MutableSettings createSettings() {
+    protected MutableSettings createSettings() {
         // get the running mode
         final String mode = getSystemProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
         
@@ -189,7 +204,7 @@ public class SettingsBeanFactoryPostProcessor
         }
         */
         
-        servletContext.log("Running in mode: " + mode);
+        this.servletContext.log("Running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(mode);
@@ -253,9 +268,9 @@ public class SettingsBeanFactoryPostProcessor
     /**
      * Read all property files from the given directory and apply them to the settings.
      */
-    public void readProperties(String          directoryName,
-                               Settings        s,
-                               Properties      properties) {
+    protected void readProperties(String          directoryName,
+                                  Settings        s,
+                                  Properties      properties) {
         final String pattern = directoryName + "/*.properties";
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new ServletContextResourceLoader(this.servletContext));
         Resource[] resources = null;
@@ -271,7 +286,7 @@ public class SettingsBeanFactoryPostProcessor
                 propertyUris.add(resources[i]);
             }
             // sort
-            Collections.sort(propertyUris, getResourceComparator());
+            Collections.sort(propertyUris, this.getResourceComparator());
             // now process
             final Iterator i = propertyUris.iterator();
             while ( i.hasNext() ) {
@@ -292,7 +307,7 @@ public class SettingsBeanFactoryPostProcessor
     /**
      * Return a resource comparator
      */
-    public static Comparator getResourceComparator() {
+    protected Comparator getResourceComparator() {
         return new ResourceComparator();
     }
 
@@ -371,6 +386,17 @@ public class SettingsBeanFactoryPostProcessor
             } catch (SecurityException se) {
                 // Ignore Exceptions.
             }
+        }
+    }
+
+    /**
+     * Dump the settings object
+     */
+    protected void dumpSettings() {
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("===== Settings Start =====");
+            this.logger.debug(this.settings.toString());
+            this.logger.debug("===== Settings End =====");
         }
     }
 
