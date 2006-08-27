@@ -53,11 +53,7 @@ public class HandleFormSubmitAction extends AbstractFormsAction {
         String formAttribute = parameters.getParameter("attribute-name");
         String formHandlerClassName = parameters.getParameter("formhandler", null);
 
-        Locale locale = Locale.getDefault();
-        String localeStr = parameters.getParameter("locale", null);
-        if (localeStr != null) {
-            locale = I18nUtils.parseLocale(localeStr, locale);
-        }
+        Locale locale = I18nUtils.parseLocale(parameters.getParameter("locale", null), Locale.getDefault());
 
         Source source = resolver.resolveURI(formSource);
         try {
