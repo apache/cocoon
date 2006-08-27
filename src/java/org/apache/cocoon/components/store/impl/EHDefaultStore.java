@@ -29,6 +29,7 @@ import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
@@ -86,6 +87,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
 
     private File workDir;
     private File cacheDir;
+    private String diskStorePath;  // The directory to be used a disk store path. Uses java.io.tmpdir if the argument is null.
 
     // ---------------------------------------------------- Lifecycle
 
@@ -113,7 +115,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     /**
      * Configure the store. The following options can be used:
      * <ul>
-     *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
+     *  <li><code>maxobjects</code> (10000) - The maximum number of objects in memory.</li>
      *  <li><code>overflow-to-disk</code> (true) - Whether to spool elements to disk after
      *   maxobjects has been exceeded.</li>
      * <li><code>eternal</code> (true) - whether or not entries expire. When set to
@@ -220,27 +222,28 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      */
     private void setDirectory(final File directory) throws IOException  {
         
-        /* Save directory path prefix */
+        // Save directory path prefix
         String directoryPath = getFullFilename(directory);
         directoryPath += File.separator;
 
-        /* If directory doesn't exist, create it anew */
+        // If directory doesn't exist, create it anew
         if (!directory.exists()) {
             if (!directory.mkdir()) {
                 throw new IOException("Error creating store directory '" + directoryPath + "': ");
             }
         }
 
-        /* Is given file actually a directory? */
+        // Is given file actually a directory?
         if (!directory.isDirectory()) {
             throw new IOException("'" + directoryPath + "' is not a directory");
         }
 
-        /* Is directory readable and writable? */
+        // Is directory readable and writable?
         if (!(directory.canRead() && directory.canWrite())) {
             throw new IOException("Directory '" + directoryPath + "' is not readable/writable");
         }
-        System.setProperty("java.io.tmpdir", directoryPath);
+        this.diskStorePath = directoryPath;
+        //System.setProperty("java.io.tmpdir", directoryPath);
     }
 
     /**
@@ -267,8 +270,10 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     public void initialize() throws Exception {
         URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(CONFIG_FILE);
         this.cacheManager = CacheManager.create(configFileURL);
-        this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
-                this.timeToLiveSeconds, this.timeToIdleSeconds, this.diskPersistent, 120);
+        this.cache = new Cache(this.cacheName, this.maxObjects, MemoryStoreEvictionPolicy.LRU,
+                this.overflowToDisk, this.diskStorePath, this.eternal, this.timeToLiveSeconds,
+                this.timeToIdleSeconds, this.diskPersistent, Cache.DEFAULT_EXPIRY_THREAD_INTERVAL_SECONDS,
+                null, null);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
         getLogger().info("EHCache cache \"" + this.cacheName + "\" initialized");
@@ -402,7 +407,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         }
         try {
             this.cache.removeAll();
-        } catch (IOException e) {
+        } catch (IllegalStateException e) {
             getLogger().error("Failure to clearing store", e);
         }
     }
