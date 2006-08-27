@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -31,6 +30,7 @@ import org.w3c.dom.Element;
 
 /**
  * Add a bean definition for the settings object to the bean factory.
+ *
  * @see CocoonNamespaceHandler
  * @see SettingsBeanFactoryPostProcessor
  * @version $Id$
@@ -41,30 +41,27 @@ public class SettingsElementParser implements BeanDefinitionParser {
     /** Logger (we use the same logging mechanism as Spring!) */
     protected final Log logger = LogFactory.getLog(getClass());
 
+    /** The name of the configuration attribute to use a different processor class. */
+    public static final String PROCESSOR_CLASS_NAME_ATTR = "processorClassName";
+
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         this.logger.info("Initializing Apache Cocoon " + Constants.VERSION);
-        this.addComponent(SettingsBeanFactoryPostProcessor.class,
-                          Settings.ROLE,
-                          "init",
-                          parserContext.getRegistry());
-        return null;
-    }
-
-    protected void addComponent(Class  componentClass,
-                                String role,
-                                String initMethod,
-                                BeanDefinitionRegistry registry) {
-        RootBeanDefinition beanDef = new RootBeanDefinition();
-        beanDef.setBeanClass(componentClass);      
-        beanDef.setSingleton(true);
-        if ( initMethod != null ) {
-            beanDef.setInitMethodName(initMethod);
+        String componentClassName = SettingsBeanFactoryPostProcessor.class.getName();
+        if ( element.getAttribute(PROCESSOR_CLASS_NAME_ATTR) != null ) {
+            componentClassName = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
         }
+        final RootBeanDefinition beanDef = new RootBeanDefinition();
+        beanDef.setBeanClassName(componentClassName);      
+        beanDef.setSingleton(true);
+        beanDef.setLazyInit(false);
+        beanDef.setInitMethodName("init");
         
-        BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, role);
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+        final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, Settings.ROLE);
+        BeanDefinitionReaderUtils.registerBeanDefinition(holder, parserContext.getRegistry());
+
+        return null;
     }
 }

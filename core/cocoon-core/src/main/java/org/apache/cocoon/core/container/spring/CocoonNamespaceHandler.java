@@ -24,6 +24,8 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * (in the namespace "http://org.apache.cocoon/core"):
  * "settings" : This sets up the Cocoon Settings object (by reading the property
  *              files located under /WEB-INF/cocoon/properties.
+ *              By specifying the attribute "processorClassName" an own implementation
+ *              can be used (this should be a subclass of the {@link SettingsBeanFactoryPostProcessor}).
  *
  * @version $Id$
  * @since 2.2
