@@ -30,6 +30,7 @@ import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * An utility class to manage list of widgets.
@@ -111,14 +112,9 @@ public class WidgetFinder {
             recurseRepeaters(context, path, true);
         }        
     }
-    
+
     private String toAsterisk(String path) {
-        StringBuffer pathsb = new StringBuffer(path);
-        int pos;
-        while ((pos = pathsb.indexOf("/./")) != -1) {
-            pathsb.setCharAt(pos + 1, '*');
-        }
-        return pathsb.toString();
+        return StringUtils.replace(path, "/./", "/*/");
     }
 
     /**
