@@ -19,16 +19,9 @@ package org.apache.cocoon.core.container.spring;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
-
-import javax.servlet.ServletContext;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.PropertyProvider;
@@ -37,21 +30,6 @@ import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionVisitor;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.web.context.ServletContextAware;
-import org.springframework.web.context.support.ServletContextResourceLoader;
 
 /**
  * This is a bean factory post processor which handles all the settings stuff
@@ -63,32 +41,7 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
  * @version $Id$
  */
 public class SettingsBeanFactoryPostProcessor
-    extends PropertyPlaceholderConfigurer
-    implements ServletContextAware, BeanFactoryPostProcessor, FactoryBean {
-
-    /** Logger (we use the same logging mechanism as Spring!) */
-    protected final Log logger = LogFactory.getLog(getClass());
-
-    protected ServletContext servletContext;
-
-    protected MutableSettings settings;
-
-    protected BeanFactory beanFactory;
-
-    /**
-     * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
-    public void setBeanFactory(BeanFactory factory) {
-        super.setBeanFactory(factory);
-        this.beanFactory = factory;
-    }
-
-    /**
-     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
-     */
-    public void setServletContext(ServletContext sContext) {
-        this.servletContext = sContext;
-    }
+    extends AbstractSettingsBeanFactoryPostProcessor {
 
     /**
      * Initialize this processor.
@@ -109,13 +62,6 @@ public class SettingsBeanFactoryPostProcessor
         this.dumpSettings();
         this.forceLoad();
         this.logger.info("Apache Cocoon " + Constants.VERSION + " is up and ready.");
-    }
-
-    /**
-     * This method can be overwritten by subclasses to further initialize the settings
-     */
-    protected void doInit() {
-        // nothing to do here
     }
 
     /**
@@ -225,9 +171,9 @@ public class SettingsBeanFactoryPostProcessor
         final Properties properties = new Properties();
 
         // now read all properties from the properties directory
-        readProperties("/WEB-INF/cocoon/properties", s, properties);
+        readProperties("/WEB-INF/cocoon/properties", properties);
         // read all properties from the mode dependent directory
-        readProperties("/WEB-INF/cocoon/properties/" + mode, s, properties);
+        readProperties("/WEB-INF/cocoon/properties/" + mode, properties);
 
         // fill from the servlet context
         if ( s.getWorkDirectory() == null ) {
@@ -293,111 +239,6 @@ public class SettingsBeanFactoryPostProcessor
     }
 
     /**
-     * Read all property files from the given directory and apply them to the settings.
-     */
-    protected void readProperties(String          directoryName,
-                                  Settings        s,
-                                  Properties      properties) {
-        final String pattern = directoryName + "/*.properties";
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new ServletContextResourceLoader(this.servletContext));
-        Resource[] resources = null;
-        try {
-            resources = resolver.getResources(pattern);
-        } catch (IOException ignore) {
-            this.servletContext.log("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.");
-            this.logger.debug("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
-        }
-        if ( resources != null ) {
-            final List propertyUris = new ArrayList();
-            for(int i=0; i<resources.length; i++ ) {
-                propertyUris.add(resources[i]);
-            }
-            // sort
-            Collections.sort(propertyUris, this.getResourceComparator());
-            // now process
-            final Iterator i = propertyUris.iterator();
-            while ( i.hasNext() ) {
-                Resource src = (Resource)i.next();
-                try {
-                    final InputStream propsIS = src.getInputStream();
-                    this.servletContext.log("Reading settings from '" + src.getURL() + "'.");
-                    properties.load(propsIS);
-                    propsIS.close();
-                } catch (IOException ignore) {
-                    this.servletContext.log("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.");
-                    this.logger.debug("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
-                }
-            }
-        }
-    }
-
-    /**
-     * Return a resource comparator
-     */
-    protected Comparator getResourceComparator() {
-        return new ResourceComparator();
-    }
-
-    protected static String getSystemProperty(String key) {
-        return getSystemProperty(key, null);
-    }
-
-    protected static String getSystemProperty(String key, String defaultValue) {
-        try {
-            return System.getProperty(key, defaultValue);
-        } catch (SecurityException se) {
-            // we ignore this
-            return defaultValue;
-        }
-    }
-
-    protected final static class ResourceComparator implements Comparator {
-
-        /**
-         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-         */
-        public int compare(Object o1, Object o2) {
-            if ( !(o1 instanceof Resource) || !(o2 instanceof Resource)) {
-                return 0;
-            }
-            return ((Resource)o1).getFilename().compareTo(((Resource)o2).getFilename());
-        }
-    }
-
-    /**
-     * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#processProperties(org.springframework.beans.factory.config.ConfigurableListableBeanFactory, java.util.Properties)
-     */
-    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess,
-                                     Properties props)
-    throws BeansException {
-        final BeanDefinitionVisitor visitor = new CocoonSettingsResolvingBeanDefinitionVisitor(this.settings);
-        String[] beanNames = beanFactoryToProcess.getBeanDefinitionNames();
-        for (int i = 0; i < beanNames.length; i++) {
-            BeanDefinition bd = beanFactoryToProcess.getBeanDefinition(beanNames[i]);
-            try {
-                visitor.visitBeanDefinition(bd);
-            } catch (BeanDefinitionStoreException ex) {
-                throw new BeanDefinitionStoreException(bd
-                        .getResourceDescription(), beanNames[i], ex
-                        .getMessage());
-            }
-        }
-    }
-
-    protected class CocoonSettingsResolvingBeanDefinitionVisitor
-        extends BeanDefinitionVisitor {
-
-        protected final Properties props;
-
-        public CocoonSettingsResolvingBeanDefinitionVisitor(Settings settings) {
-            this.props = new SettingsProperties(settings);
-        }
-
-        protected String resolveStringValue(String strVal) {
-            return parseStringValue(strVal, this.props, null);
-        }
-    }
-    /**
      * Dump System Properties.
      */
     protected void dumpSystemProperties() {
@@ -413,17 +254,6 @@ public class SettingsBeanFactoryPostProcessor
             } catch (SecurityException se) {
                 // Ignore Exceptions.
             }
-        }
-    }
-
-    /**
-     * Dump the settings object
-     */
-    protected void dumpSettings() {
-        if ( this.logger.isDebugEnabled() ) {
-            this.logger.debug("===== Settings Start =====");
-            this.logger.debug(this.settings.toString());
-            this.logger.debug("===== Settings End =====");
         }
     }
 
@@ -455,50 +285,5 @@ public class SettingsBeanFactoryPostProcessor
                 // Do not throw an exception, because it is not a fatal error.
             }
         }
-    }
-
-    protected static class SettingsProperties extends Properties {
-
-        protected final Settings settings;
-
-        public SettingsProperties(Settings s) {
-            this.settings = s;
-        }
-
-        /**
-         * @see java.util.Properties#getProperty(java.lang.String, java.lang.String)
-         */
-        public String getProperty(String key, String defaultValue) {
-            return this.settings.getProperty(key, defaultValue);
-        }
-
-        /**
-         * @see java.util.Properties#getProperty(java.lang.String)
-         */
-        public String getProperty(String key) {
-            return this.settings.getProperty(key);
-        }
-        
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
-     */
-    public Object getObject() throws Exception {
-        return this.settings;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
-    public Class getObjectType() {
-        return Settings.class;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-     */
-    public boolean isSingleton() {
-        return true;
     }
 }
