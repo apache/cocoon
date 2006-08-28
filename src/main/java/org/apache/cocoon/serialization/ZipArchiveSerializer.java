@@ -263,18 +263,21 @@ public class ZipArchiveSerializer extends AbstractSerializer
 
         Source source = null;
         try {
-            // Create a new Zip entry
-            ZipEntry entry = new ZipEntry(name);
-            this.zipOutput.putNextEntry(entry);
-
             if (src != null) {
                 // Get the source and its data
                 source = resolver.resolveURI(src);
                 InputStream sourceInput = source.getInputStream();
+
+                // Create a new Zip entry with file modification time.
+                ZipEntry entry = new ZipEntry(name);
+                long lastModified = source.getLastModified();
+                if (lastModified != 0)
+                	entry.setTime(lastModified);
+                this.zipOutput.putNextEntry(entry);
                 
                 // Buffer lazily allocated
                 if (this.buffer == null)
-                    this.buffer = new byte[1024];
+                    this.buffer = new byte[8192];
 
                 // Copy the source to the zip
                 int len;
@@ -287,6 +290,10 @@ public class ZipArchiveSerializer extends AbstractSerializer
                 // close input stream (to avoid "too many open files" problem)
                 sourceInput.close();
             } else {
+                // Create a new Zip entry with current time.
+                ZipEntry entry = new ZipEntry(name);
+                this.zipOutput.putNextEntry(entry);
+
                 // Serialize content
                 if (this.selector == null) {
                     this.selector =
