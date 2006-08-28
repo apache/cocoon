@@ -18,19 +18,11 @@ package org.apache.cocoon.core.container.spring;
 
 import java.util.Properties;
 
-import javax.servlet.ServletContext;
-
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.web.context.ServletContextAware;
 
 /**
  * This is a bean factory post processor which sets up a child settings object.
@@ -39,32 +31,13 @@ import org.springframework.web.context.ServletContextAware;
  * @version $Id$
  */
 public class SubSettingsBeanFactoryPostProcessor
-    extends PropertyPlaceholderConfigurer
-    implements ServletContextAware, BeanFactoryPostProcessor, FactoryBean {
+    extends AbstractSettingsBeanFactoryPostProcessor {
 
-    /** Logger (we use the same logging mechanism as Spring!) */
-    protected final Log logger = LogFactory.getLog(getClass());
+    private static final String DEFAULT_CONFIG_PROPERTIES = "config/properties";
 
-    protected ServletContext servletContext;
+    private static final String DEFAULT_CONFIG_XCONF  = "config/xconf";
 
-    protected MutableSettings settings;
-
-    protected BeanFactory beanFactory;
-
-    /**
-     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
-     */
-    public void setServletContext(ServletContext sContext) {
-        this.servletContext = sContext;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
-    public void setBeanFactory(BeanFactory factory) {
-        super.setBeanFactory(factory);
-        this.beanFactory = factory;
-    }
+    private static final String DEFAULT_CONFIG_SPRING = "config/spring";
 
     /**
      * Initialize this processor.
@@ -133,16 +106,16 @@ public class SubSettingsBeanFactoryPostProcessor
 
         // read properties from default includes
         if ( useDefaultIncludes ) {
-//            SettingsHelper.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES, s, properties);
+            this.readProperties(DEFAULT_CONFIG_PROPERTIES, properties);
             // read all properties from the mode dependent directory
-//            SettingsHelper.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s, properties);    
+            this.readProperties(DEFAULT_CONFIG_PROPERTIES + '/' + mode, properties);    
         }
 
         if ( directory != null ) {
             // now read all properties from the properties directory
- //           SettingsHelper.readProperties(directory, s, properties);
+            this.readProperties(directory, properties);
             // read all properties from the mode dependent directory
- //           SettingsHelper.readProperties(directory + '/' + mode, s, properties);
+            this.readProperties(directory + '/' + mode, properties);
         }
 
         if ( globalSitemapVariables != null ) {
@@ -152,33 +125,5 @@ public class SubSettingsBeanFactoryPostProcessor
         s.configure(properties);
 
         return s;
-    }
-
-    /**
-     * This method can be overwritten by subclasses to further initialize the settings
-     */
-    protected void doInit() {
-        // nothing to do here
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
-     */
-    public Object getObject() throws Exception {
-        return this.settings;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
-    public Class getObjectType() {
-        return Settings.class;
-    }
-
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-     */
-    public boolean isSingleton() {
-        return true;
     }
 }
