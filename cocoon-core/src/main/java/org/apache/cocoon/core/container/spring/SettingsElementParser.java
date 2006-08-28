@@ -50,7 +50,8 @@ public class SettingsElementParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         this.logger.info("Initializing Apache Cocoon " + Constants.VERSION);
         String componentClassName = SettingsBeanFactoryPostProcessor.class.getName();
-        if ( element.getAttribute(PROCESSOR_CLASS_NAME_ATTR) != null ) {
+        String value = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
+        if ( value != null && value.trim().length() > 0 ) {
             componentClassName = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
         }
         final RootBeanDefinition beanDef = new RootBeanDefinition();
