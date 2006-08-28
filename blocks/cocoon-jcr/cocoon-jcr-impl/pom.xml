@@ -38,14 +38,10 @@
       <artifactId>cocoon-core</artifactId>
       <version>2.2.0-M2-SNAPSHOT</version>
     </dependency>
-    <!-- This dependency need to be installed by:
-            mvn install:install-file -Dfile=../../lib/optional/jcr-1.0.jar -DgroupId=javax.jcr -DartifactId=jcr -Dversion=1.0 -Dpackaging=jar
-         for now (and as long as it is still in the cocoon/lib/optional directory
-    -->
     <dependency>
-      <groupId>jsr170</groupId>
+      <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
-      <version>1.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>slide</groupId>
