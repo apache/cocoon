@@ -31,6 +31,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.configuration.impl.MutableSettings;
@@ -40,6 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionVisitor;
@@ -70,6 +72,16 @@ public class SettingsBeanFactoryPostProcessor
     protected ServletContext servletContext;
 
     protected MutableSettings settings;
+
+    protected BeanFactory beanFactory;
+
+    /**
+     * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
+    public void setBeanFactory(BeanFactory factory) {
+        super.setBeanFactory(factory);
+        this.beanFactory = factory;
+    }
 
     /**
      * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
@@ -184,7 +196,8 @@ public class SettingsBeanFactoryPostProcessor
      * 4) Optional property file which is stored under ".cocoon/settings.properties" in the user
      *    directory.
      * 5) Additional property file specified by the "org.apache.cocoon.settings" property.
-     * 6) System properties
+     * 6) Property provider (if configured in the bean factory)
+     * 7) System properties
      *
      * This means that system properties (provided on startup of the web application) override all
      * others etc.
@@ -253,6 +266,20 @@ public class SettingsBeanFactoryPostProcessor
                 this.logger.debug("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.", ignore);
             }
         }
+        // check for property providers
+        if (this.beanFactory != null && this.beanFactory.containsBean(PropertyProvider.ROLE) ) {
+            try {
+                final PropertyProvider provider = (PropertyProvider)this.beanFactory.getBean(PropertyProvider.ROLE);
+                final Properties providedProperties = provider.getProperties(s, mode, null);
+                if ( providedProperties != null ) {
+                    properties.putAll(providedProperties);
+                }
+            } catch (Exception ignore) {
+                this.logger.warn("Unable to get properties from provider.", ignore);
+                this.logger.warn("Continuing initialization.");            
+            }
+        }
+        
         // now overwrite with system properties
         try {
             properties.putAll(System.getProperties());

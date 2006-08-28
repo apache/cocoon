@@ -65,7 +65,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final String loggingConfiguration = element.getAttribute("loggingConfiguration");
         // we only add the logger if the configuration is present
-        if ( loggingConfiguration != null ) {
+        if ( loggingConfiguration != null && loggingConfiguration.trim().length() > 0 ) {
             this.addLogger(loggingConfiguration, parserContext.getRegistry());
         }
 
