@@ -158,10 +158,6 @@
           <artifactId>excalibur-testcase</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>org.apache.excalibur.components.pool</groupId>
           <artifactId>excalibur-pool-instrumented</artifactId>
         </exclusion>
