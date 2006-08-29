@@ -20,7 +20,7 @@
 
 <web-app>
   <listener>
-  	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
   <servlet>
