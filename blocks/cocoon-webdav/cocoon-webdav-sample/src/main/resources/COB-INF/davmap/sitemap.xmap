@@ -18,8 +18,9 @@
 
 <!-- =========================== Components ================================ -->
 
-  <map:components property-dir="properties">
-  
+  <map:components>
+    <map:include-properties dir="properties"/>
+
     <map:generators default="file">
       <map:generator 
         name="traverse" 

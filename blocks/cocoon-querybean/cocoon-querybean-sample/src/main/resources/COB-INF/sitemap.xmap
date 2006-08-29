@@ -19,7 +19,8 @@
 
 <!-- =========================== Components =================================== -->
 
-	<map:components property-dir="properties">
+	<map:components>
+	    <map:include-properties dir="properties"/>
 		<map:transformers default="xslt">
 			<map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
 				<catalogues default="forms">

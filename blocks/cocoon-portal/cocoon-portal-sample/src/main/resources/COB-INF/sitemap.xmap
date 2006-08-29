@@ -19,7 +19,7 @@
 
   <!-- ========================= Components ================================ -->
 
-  <map:components logger="portal" property-dir="conf/properties">
+  <map:components logger="portal">
     <map:generators default="file">
       <map:generator name="portal" src="org.apache.cocoon.portal.generation.PortalGenerator"/>
     </map:generators>
