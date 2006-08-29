@@ -96,14 +96,16 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
      */
     protected void readProperties(String          directoryName,
                                   Properties      properties) {
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Reading settings from directory: " + directoryName);
+        }
         final String pattern = directoryName + "/*.properties";
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new ServletContextResourceLoader(this.servletContext));
         Resource[] resources = null;
         try {
             resources = resolver.getResources(pattern);
         } catch (IOException ignore) {
-            this.servletContext.log("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.");
-            this.logger.debug("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
+            this.logger.info("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
         }
         if ( resources != null ) {
             final List propertyUris = new ArrayList();
@@ -117,13 +119,14 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
             while ( i.hasNext() ) {
                 Resource src = (Resource)i.next();
                 try {
+                    if ( this.logger.isDebugEnabled() ) {
+                        this.logger.debug("Reading settings from '" + src.getURL() + "'.");
+                    }
                     final InputStream propsIS = src.getInputStream();
-                    this.servletContext.log("Reading settings from '" + src.getURL() + "'.");
                     properties.load(propsIS);
                     propsIS.close();
                 } catch (IOException ignore) {
-                    this.servletContext.log("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.");
-                    this.logger.debug("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
+                    this.logger.info("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
                 }
             }
         }

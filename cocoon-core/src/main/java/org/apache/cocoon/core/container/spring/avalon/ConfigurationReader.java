@@ -150,8 +150,8 @@ public class ConfigurationReader {
 
     protected void convert(String relativePath)
     throws Exception {
-        if ( this.logger.isInfoEnabled() ) {
-            this.logger.info("Reading Avalon configuration from " + relativePath);
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Reading Avalon configuration from " + relativePath);
         }
         Resource root = this.resolver.getResource(this.convertUrl(relativePath));
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
@@ -163,8 +163,7 @@ public class ConfigurationReader {
                     + config.toString());
         }
         if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Configuration version: "
-                    + config.getAttribute("version"));
+            this.logger.debug("Configuration version: " + config.getAttribute("version"));
         }
         if (!Constants.CONF_VERSION.equals(config.getAttribute("version"))) {
             throw new ConfigurationException(
@@ -176,8 +175,8 @@ public class ConfigurationReader {
 
     protected void convert(Configuration config, Configuration additionalConfig, String rootUri)
     throws Exception {
-        if ( this.logger.isInfoEnabled() ) {
-            this.logger.info("Converting Avalon configuration from configuration object: " + config);
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Converting Avalon configuration from configuration object: " + config);
         }
         // It's possible to define a logger on a per sitemap/service manager base.
         // This is the default logger for all components defined with this sitemap/manager.
@@ -196,8 +195,8 @@ public class ConfigurationReader {
         if ( rootUri != null ) {
             final String userRoles = config.getAttribute("user-roles", null);
             if (userRoles != null) {
-                if ( this.logger.isInfoEnabled() ) {
-                    this.logger.info("Reading additional user roles: " + userRoles);
+                if ( this.logger.isDebugEnabled() ) {
+                    this.logger.debug("Reading additional user roles: " + userRoles);
                 }
                 final Resource userRolesSource = this.resolver.getResource(this.getUrl(userRoles, rootUri));
                 final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
@@ -293,6 +292,9 @@ public class ConfigurationReader {
                 }
             } else {                    
                 info = new ComponentInfo();
+                if ( !className.endsWith("Selector") ) {
+                    this.configInfo.removeRole(role);
+                }
             }
             // check for name attribute
             // Note: this has to be done *after* finding the className above as we change the role
@@ -397,8 +399,8 @@ public class ConfigurationReader {
         final String uri = src.getURL().toExternalForm();
 
         if (!loadedURIs.contains(uri)) {
-            if ( this.logger.isInfoEnabled() ) {
-                this.logger.info("Loading configuration: " + uri);
+            if ( this.logger.isDebugEnabled() ) {
+                this.logger.debug("Loading configuration: " + uri);
             }
             // load it and store it in the read set
             Configuration includeConfig = null;

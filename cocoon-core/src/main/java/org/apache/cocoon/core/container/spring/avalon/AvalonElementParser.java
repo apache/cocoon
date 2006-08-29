@@ -60,6 +60,40 @@ public class AvalonElementParser implements BeanDefinitionParser {
     protected final Log logger = LogFactory.getLog(getClass());
 
     /**
+     * Register a bean definition
+     * @param holder
+     * @param registry
+     */
+    protected void register(BeanDefinition beanDef,
+                            String         beanName,
+                            BeanDefinitionRegistry registry) {
+        this.register(beanDef, beanName, null, registry);
+    }
+
+    /**
+     * Register a bean definition
+     * @param holder
+     * @param registry
+     */
+    protected void register(BeanDefinition beanDef,
+                            String         beanName,
+                            String         alias,
+                            BeanDefinitionRegistry registry) {
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Registering bean with name " + beanName +
+                              (alias != null ? " (alias=" + alias + ") " : " ") +
+                              beanDef);
+        }
+        final BeanDefinitionHolder holder;
+        if ( alias != null ) {
+            holder = new BeanDefinitionHolder(beanDef, beanName, new String[] {alias});
+        } else {
+            holder = new BeanDefinitionHolder(beanDef, beanName);
+        }
+        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+    }
+
+    /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -108,8 +142,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
             beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
             beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
 
-            final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, AvalonBeanPostProcessor.class.getName());
-            BeanDefinitionReaderUtils.registerBeanDefinition(holder, parserContext.getRegistry());
+            this.register(beanDef, AvalonBeanPostProcessor.class.getName(), parserContext.getRegistry());
 
         } catch (Exception e) {
             throw new BeanDefinitionStoreException("Unable to read Avalon configuration from '" + location + "'.",e);
@@ -121,9 +154,8 @@ public class AvalonElementParser implements BeanDefinitionParser {
     protected void addLogger(String configuration,
                              BeanDefinitionRegistry registry) {
         final RootBeanDefinition beanDef = this.getBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
-        final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, ProcessingUtil.LOGGER_ROLE);
         beanDef.getPropertyValues().addPropertyValue("loggingConfiguration", configuration);
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+        this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
     }
 
     protected RootBeanDefinition getBeanDefinition(Class   componentClass,
@@ -149,8 +181,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
                                 BeanDefinitionRegistry registry) {
         final RootBeanDefinition beanDef = this.getBeanDefinition(componentClass, initMethod, requiresSettings);
         
-        final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, role);
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+        this.register(beanDef, role, registry);
     }
 
     public void createConfig(ConfigurationInfo info,
@@ -222,13 +253,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
                     beanDef.getPropertyValues().addPropertyValue("default", current.getDefaultValue());
                 }
             }
-            final BeanDefinitionHolder holder;
-            if ( current.getAlias() == null ) {
-                holder = new BeanDefinitionHolder(beanDef, beanName);
-            } else {
-                holder = new BeanDefinitionHolder(beanDef, beanName, new String[] {current.getAlias()});                
-            }
-            BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+            this.register(beanDef, beanName, current.getAlias(), registry);
 
             if ( poolable ) {
                 // add the factory for poolables
@@ -254,8 +279,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
                 if ( current.getPoolOutMethodName() != null ) {
                     poolableBeanDef.getPropertyValues().addPropertyValue("poolOutMethodName", current.getPoolOutMethodName());
                 }
-                BeanDefinitionHolder poolableHolder = new BeanDefinitionHolder(poolableBeanDef, this.xml(role));
-                BeanDefinitionReaderUtils.registerBeanDefinition(poolableHolder, registry);
+                this.register(poolableBeanDef, this.xml(role), registry);
                 pooledRoles.add(role);
             }
         }
@@ -310,16 +334,14 @@ public class AvalonElementParser implements BeanDefinitionParser {
         beanDef.setLazyInit(false);
         beanDef.getPropertyValues().addPropertyValue("data", info.getData());
         beanDef.setInitMethodName("init");
-        final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, ProcessorComponentInfo.ROLE);
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+        this.register(beanDef, ProcessorComponentInfo.ROLE, registry);
 
         final RootBeanDefinition ciBeanDef = new RootBeanDefinition();
         ciBeanDef.setBeanClass(ConfigurationInfoFactoryBean.class);
         ciBeanDef.setSingleton(true);
         ciBeanDef.setLazyInit(false);
         ciBeanDef.getPropertyValues().addPropertyValue("configurationInfo", configInfo);
-        final BeanDefinitionHolder ciHolder = new BeanDefinitionHolder(ciBeanDef, ConfigurationInfo.class.getName());
-        BeanDefinitionReaderUtils.registerBeanDefinition(ciHolder, registry);
+        this.register(ciBeanDef, ConfigurationInfo.class.getName(), registry);
     }
 
     protected static void prepareSelector(ProcessorComponentInfo info,
