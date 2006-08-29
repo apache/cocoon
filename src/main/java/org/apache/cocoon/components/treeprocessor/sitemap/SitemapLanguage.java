@@ -365,6 +365,34 @@ public class SitemapLanguage
     }
 
     /**
+     * compatibility with 2.1.x - check for global variables in sitemap
+     * TODO - This will be removed in later versions!
+     */
+    protected Properties getGlobalSitemapVariables(Configuration tree)
+    throws ConfigurationException {
+        // compatibility with 2.1.x - check for global variables in sitemap
+        // TODO - This will be removed in later versions!
+        Properties globalSitemapVariables = null;
+        if ( tree.getChild("pipelines").getChild("component-configurations", false) != null ) {
+            Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
+            globalSitemapVariables = new Properties();
+            // now check for global variables - if any other element occurs: throw exception
+            Configuration[] children = tree.getChild("pipelines").getChild("component-configurations").getChildren();
+            for(int i=0; i<children.length; i++) {
+                if ( "global-variables".equals(children[i].getName()) ) {
+                    Configuration[] variables = children[i].getChildren();
+                    for(int v=0; v<variables.length; v++) {
+                        globalSitemapVariables.setProperty(variables[v].getName(), variables[v].getValue());
+                    }
+               } else {
+                    throw new ConfigurationException("Component configurations in the sitemap are not allowed for component: " + children[i].getName());
+                }
+            }
+        }
+        return globalSitemapVariables;
+    }
+
+    /**
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree) throws Exception {
@@ -397,28 +425,20 @@ public class SitemapLanguage
 
         // compatibility with 2.1.x - check for global variables in sitemap
         // TODO - This will be removed in later versions!
-        Properties globalSitemapVariables = null;
-        if ( tree.getChild("pipelines").getChild("component-configurations", false) != null ) {
-            Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
-            globalSitemapVariables = new Properties();
-            // now check for global variables - if any other element occurs: throw exception
-            Configuration[] children = tree.getChild("pipelines").getChild("component-configurations").getChildren();
-            for(int i=0; i<children.length; i++) {
-                if ( "global-variables".equals(children[i].getName()) ) {
-                    Configuration[] variables = children[i].getChildren();
-                    for(int v=0; v<variables.length; v++) {
-                        globalSitemapVariables.setProperty(variables[v].getName(), variables[v].getValue());
-                    }
-               } else {
-                    throw new ConfigurationException("Component configurations in the sitemap are not allowed for component: " + children[i].getName());
-                }
-            }
-        }
+        final Properties globalSitemapVariables = this.getGlobalSitemapVariables(tree);
+
         // check for sitemap local properties
         Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(Settings.ROLE);
         if ( componentConfig != null ) {
-            final String propertyDir = componentConfig.getAttribute("property-dir", null);
-            settings = this.createSettings(settings, propertyDir, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext), globalSitemapVariables);
+            List propertyDirs = null;
+            Configuration[] propertyDirConfigs = componentConfig.getChildren("include-properties");
+            if ( propertyDirConfigs.length > 0 ) {
+                propertyDirs = new ArrayList();
+                for(int i=0; i < propertyDirConfigs.length; i++) {
+                    propertyDirs.add(propertyDirConfigs[i].getAttribute("dir"));
+                }
+            }
+            settings = this.createSettings(settings, propertyDirs, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext), globalSitemapVariables);
         } else if ( globalSitemapVariables != null ) {
             MutableSettings s = new MutableSettings(settings);
             PropertyHelper.replaceAll(globalSitemapVariables, settings);
@@ -1152,7 +1172,7 @@ public class SitemapLanguage
      * @return A new Settings object
      */
     protected MutableSettings createSettings(Settings    parent,
-                                             String      directory,
+                                             List        directories,
                                              boolean     useDefaultIncludes,
                                              BeanFactory parentBeanFactory,
                                              Properties  globalSitemapVariables) {
@@ -1172,12 +1192,16 @@ public class SitemapLanguage
             SettingsHelper.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s, properties, resolver, getLogger());    
         }
 
-        if ( directory != null ) {
+        if ( directories != null ) {
         	SourceResolver resolver = this.processor.getSourceResolver();
-            // now read all properties from the properties directory
-            SettingsHelper.readProperties(directory, s, properties, resolver, getLogger());
-            // read all properties from the mode dependent directory
-            SettingsHelper.readProperties(directory + '/' + mode, s, properties, resolver, getLogger());
+            final Iterator i = directories.iterator();
+            while ( i.hasNext() ) {
+                final String directory = (String)i.next();
+                // now read all properties from the properties directory
+                SettingsHelper.readProperties(directory, s, properties, resolver, getLogger());
+                // read all properties from the mode dependent directory
+                SettingsHelper.readProperties(directory + '/' + mode, s, properties, resolver, getLogger());
+            }
         }
 
         // Next look for a custom property provider in the parent bean factory

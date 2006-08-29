@@ -16,8 +16,16 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import org.springframework.context.ApplicationContext;
+import java.util.Stack;
+
+import javax.servlet.ServletContext;
+
 import org.springframework.core.io.Resource;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.scope.RequestAttributes;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
@@ -29,18 +37,83 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  */
 public class CocoonWebApplicationContext extends XmlWebApplicationContext {
 
-    protected String baseUrl;
+    private static final String BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE = CocoonWebApplicationContext.class.getName() + "/Stack";
 
-    public CocoonWebApplicationContext(ApplicationContext parent, String url) {
+    /** The base url (already postfixed with a '/'). */
+    protected final String baseUrl;
+
+    /** The class loader for this context (or null). */
+    protected final ClassLoader classLoader;
+
+    public CocoonWebApplicationContext(ClassLoader           classloader,
+                                       WebApplicationContext parent,
+                                       String                url) {
         this.setParent(parent);
-        this.baseUrl = url;
+        if ( url.endsWith("/") ) {
+            this.baseUrl = url;
+        } else {
+            this.baseUrl = url + '/';
+        }
+        this.classLoader = (classloader != null ? classloader : ClassUtils.getDefaultClassLoader());
     }
 
     /**
      * @see org.springframework.web.context.support.AbstractRefreshableWebApplicationContext#getResourceByPath(java.lang.String)
      */
     protected Resource getResourceByPath(String path) {
-        // TODO
+        // only if the path does not start with a "/" and is not a url
+        // we assume it is relative
+        if ( path != null && !path.startsWith("/") && !ResourceUtils.isUrl(path) ) {
+            return super.getResourceByPath(this.baseUrl + path);
+        }
         return super.getResourceByPath(path);
     }
+
+    /**
+     * A child application context has no default configuration.
+     * @see org.springframework.web.context.support.XmlWebApplicationContext#getDefaultConfigLocations()
+     */
+    protected String[] getDefaultConfigLocations() {
+        return null;
+    }
+
+    public Object enteringContext(RequestAttributes attributes) {
+        final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        final Object oldContext = attributes.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        if ( oldContext != null ) {
+            Stack stack = (Stack)attributes.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+            if ( stack == null ) {
+                stack = new Stack();
+                attributes.setAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, stack, RequestAttributes.SCOPE_REQUEST);
+            }
+            stack.push(oldContext);
+        }
+        attributes.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, this, RequestAttributes.SCOPE_REQUEST);
+        Thread.currentThread().setContextClassLoader(this.classLoader);
+        return oldClassLoader;
+    }
+
+    public void leavingContext(RequestAttributes attributes, Object handle) {
+        Thread.currentThread().setContextClassLoader((ClassLoader)handle);
+        final Stack stack = (Stack)attributes.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        if ( stack == null ) {
+            attributes.removeAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        } else {
+            final Object oldContext = stack.pop();
+            attributes.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, oldContext, RequestAttributes.SCOPE_REQUEST);
+            if ( stack.size() == 0 ) {
+                attributes.removeAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+            }
+        }
+    }
+
+    public static WebApplicationContext getCurrentContext(ServletContext servletContext, RequestAttributes attributes) {
+        WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+        if (attributes.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
+            parentContext = (CocoonWebApplicationContext) attributes
+                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        }
+        return parentContext;
+    }
+
 }
