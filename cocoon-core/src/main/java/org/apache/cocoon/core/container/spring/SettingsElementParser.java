@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +47,6 @@ public class SettingsElementParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        this.logger.info("Initializing Apache Cocoon " + Constants.VERSION);
         String componentClassName = SettingsBeanFactoryPostProcessor.class.getName();
         String value = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
         if ( value != null && value.trim().length() > 0 ) {

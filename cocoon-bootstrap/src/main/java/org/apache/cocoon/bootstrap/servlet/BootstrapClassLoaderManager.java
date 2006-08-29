@@ -81,9 +81,6 @@ public class BootstrapClassLoaderManager {
             }
 
             final String classLoaderFactoryName = servletContext.getInitParameter("bootstrap-classloader-factory");
-            if (classLoaderFactoryName != null) {
-                servletContext.log("Using classloader factory " + classLoaderFactoryName);
-            }
             bootstrapClassLoader = createClassLoader(classLoaderFactoryName, servletContext, config);
         }
         return bootstrapClassLoader;
