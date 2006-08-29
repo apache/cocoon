@@ -38,13 +38,13 @@
     <param-value>/some/path/to/your/webapp</param-value>
     <description>An override of the session cookie path</description>
    </context-param-->
-   
+
   <!-- Servlet Filters ================================================ -->
-  
+
   <!--+
       | Declare a filter for multipart MIME handling
       +-->
-      
+
   <filter>
   	<filter-name>CocoonMultipartFilter</filter-name>
   	<display-name>Cocoon multipart filter</display-name>
@@ -55,7 +55,7 @@
   <!--+
       | Declare a filter for debugging incomming request
       +-->
-      
+
   <filter>
   	<filter-name></filter-name>
   	<display-name>Cocoon debug filter</display-name>
@@ -64,11 +64,11 @@
   </filter>
 
   <!-- Filter mappings ================================================ -->
-  
+
   <!--+
       | Use the Cocoon multipart filter together with the Cocoon demo webapp
       +-->
-      
+
   <filter-mapping>
   	<filter-name>CocoonMultipartFilter</filter-name>
   	<servlet-name>Cocoon</servlet-name>
@@ -76,7 +76,7 @@
 
   <!--+
       | Use the Cocoon debug filter together with the Cocoon demo webapp
-      
+
   <filter-mapping>
   	<filter-name>CocoonDebugFilter</filter-name>
   	<servlet-name>Cocoon</servlet-name>
@@ -84,16 +84,15 @@
       +-->
 
   <!-- Servlet Context Listener ======================================= -->
-  
+
   <!--+
       | Declare a context listener that sets up the Cocoon Spring bean factory
       | and makes it available as a context parameter.
       +-->
-  
   <listener>
-  	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-  
+
   <!-- Servlet Configuration ========================================== -->
 
   <servlet>
@@ -109,7 +108,7 @@
     -->
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
+
   <!-- URL space mappings ============================================= -->
 
   <!--

@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,60 +33,61 @@ import org.apache.maven.plugin.logging.Log;
 /**
  * Deploy blocks to a monolithic Cocoon web application. The files contained by a block are copied to the right places.
  * based on rules.
- * 
+ *
  * @version $Id$
  */
 public class MonolithicCocoonDeployer {
-	
+
 	private Log logger;
-	
+
 	public MonolithicCocoonDeployer(Log logger) {
 		this.logger = logger;
 	}
 
-	public void deploy(final Map libraries, final File basedir, final String blocksdir, 
-		final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties) 
+	public void deploy(final Map libraries, final File basedir, final String blocksdir,
+		final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
 		throws DeploymentException {
-		
+
 		// iterate over all blocks that need to be installed into a J2EE web application
         for(Iterator it = libraries.entrySet().iterator(); it.hasNext();) {
             final Map.Entry entry = (Map.Entry)it.next();
         	final Object id = entry.getKey();
-        	File lib = (File) entry.getValue();  	
+        	File lib = (File) entry.getValue();
         	try {
                 this.logger.info("Deploying " + id);
         		MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
-                zipExtractor.addRule("META-INF/legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));        		
+                zipExtractor.addRule("META-INF/legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));
                 zipExtractor.addRule("META-INF/legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
-                zipExtractor.addRule("META-INF/legacy/sitemap-additions/**", new SingleFileDeployer("WEB-INF/cocoon/sitemap-additions"));  
+                zipExtractor.addRule("META-INF/legacy/sitemap-additions/**", new SingleFileDeployer("WEB-INF/cocoon/sitemap-additions"));
                 zipExtractor.addRule("META-INF/spring/**", new SingleFileDeployer("WEB-INF/cocoon/spring"));
                 zipExtractor.addRule("META-INF/properties/**", new SingleFileDeployer("WEB-INF/cocoon/properties"));
                 zipExtractor.addRule("WEB-INF/classes/**", new SingleFileDeployer("WEB-INF/classes"));
                 zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
-                zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
+                zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));
         		// extract all configurations files
 				zipExtractor.extract(lib);
 			} catch (IOException e) {
 				throw new DeploymentException("Can't deploy '" + lib.getAbsolutePath() + "'.", e);
 			}
         }
-        
-        // deploy all blocks that are under development by adding their src/main/java (--> <map:classpath>), 
+
+        // deploy all blocks that are under development by adding their src/main/java (--> <map:classpath>),
         // src/main/resources/COB-INF (--> <map:mount>), and src/main/resources/META-INF/*
-        // (--> <map:include>) to the root sitemap.      
-        if(developmentBlocks != null && developmentBlocks.length > 0) {      	
+        // (--> <map:include>) to the root sitemap.
+        if(developmentBlocks != null && developmentBlocks.length > 0) {
 	        Map templateObjects = new HashMap();
 	        templateObjects.put("devblocks", developmentBlocks);
             templateObjects.put("curblock", developmentBlocks[developmentBlocks.length - 1]);
 	        writeStringTemplateToFile(basedir, "sitemap.xmap", templateObjects);
 	        writeStringTemplateToFile(basedir, "WEB-INF/cocoon/cocoon.xconf", templateObjects);
-	        
+
             copyFile(basedir, "blocks/sitemap.xmap");
 			copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
-	        copyFile(basedir, "WEB-INF/web.xml");	        
+	        copyFile(basedir, "WEB-INF/web.xml");
+	        copyFile(basedir, "WEB-INF/applicationContext.xml");
 	        copyFile(basedir, "WEB-INF/cocoon/properties/core.properties");
         }
-        
+
         // write properties
         if(developmentProperties != null && developmentProperties.length > 0) {
         	Properties properties = new Properties();
@@ -96,7 +97,7 @@ public class MonolithicCocoonDeployer {
         	writeProperties(basedir, "WEB-INF/cocoon/properties/dev/core.properties", properties);
         }
 	}
-	
+
 	private void writeProperties(final File basedir, final String propertiesFile, final Properties properties) {
     	try {
     		File outFile = new File(basedir, propertiesFile);
@@ -149,5 +150,5 @@ public class MonolithicCocoonDeployer {
 		return MonolithicCocoonDeployer.class.getClassLoader().
 			getResourceAsStream("org/apache/cocoon/maven/deployer/monolithic/" + fileName);
 	}
-	
+
 }
