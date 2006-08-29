@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<map:components property-dir="properties">
+<map:components>
+  <map:include-properties dir="properties"/>
   <map:generators default="file">
     <map:generator name="traverse" src="org.apache.cocoon.generation.TraversableGenerator"/>
     <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>

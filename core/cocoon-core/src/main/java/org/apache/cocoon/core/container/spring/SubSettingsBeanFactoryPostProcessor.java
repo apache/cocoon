@@ -16,8 +16,11 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
@@ -35,9 +38,13 @@ public class SubSettingsBeanFactoryPostProcessor
 
     private static final String DEFAULT_CONFIG_PROPERTIES = "config/properties";
 
-    private static final String DEFAULT_CONFIG_XCONF  = "config/xconf";
+    protected String sitemapUri;
 
-    private static final String DEFAULT_CONFIG_SPRING = "config/spring";
+    protected List directories;
+
+    protected boolean useDefaultIncludes;
+
+    protected Properties globalSitemapVariables;    
 
     /**
      * Initialize this processor.
@@ -52,30 +59,6 @@ public class SubSettingsBeanFactoryPostProcessor
 
         // settings can't be changed anymore
         this.settings.makeReadOnly();
-
-    }
-
-    protected MutableSettings createSettings() {
-        MutableSettings s;
-        Settings parentSettings = null;
-        final Properties globalSitemapVariables = null;
-        if ( this.beanFactory != null && this.beanFactory instanceof HierarchicalBeanFactory
-             && ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory() != null ) {
-            parentSettings = (Settings)((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory().getBean(Settings.ROLE);
-        }
-//        if ( componentConfig != null ) {
-//            final String propertyDir = componentConfig.getAttribute("property-dir", null);
-//            s = this.createSettings(parentSettings, propertyDir, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext), globalSitemapVariables);
-//        } else if ( globalSitemapVariables != null ) {
-            s = new MutableSettings(parentSettings);
-            PropertyHelper.replaceAll(globalSitemapVariables, parentSettings);
-            s.configure(globalSitemapVariables);
-//        }
-        // if no config we just add an empty settings
-        if ( s == null ) {
-            s = new MutableSettings(parentSettings);
-        }
-        return s;
     }
 
     /**
@@ -91,11 +74,9 @@ public class SubSettingsBeanFactoryPostProcessor
      *
      * @return A new Settings object
      */
-    protected MutableSettings createSettings(Settings    parent,
-                                             String      directory,
-                                             boolean     useDefaultIncludes,
-                                             BeanFactory parentBeanFactory,
-                                             Properties  globalSitemapVariables) {
+    protected MutableSettings createSettings() {
+        final BeanFactory parentBeanFactory = ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory();
+        final Settings parent = (Settings)parentBeanFactory.getBean(Settings.ROLE);
         // get the running mode
         final String mode = parent.getRunningMode();
         // get properties
@@ -111,14 +92,33 @@ public class SubSettingsBeanFactoryPostProcessor
             this.readProperties(DEFAULT_CONFIG_PROPERTIES + '/' + mode, properties);    
         }
 
-        if ( directory != null ) {
-            // now read all properties from the properties directory
-            this.readProperties(directory, properties);
-            // read all properties from the mode dependent directory
-            this.readProperties(directory + '/' + mode, properties);
+        if ( directories != null ) {
+            final Iterator i = directories.iterator();
+            while ( i.hasNext() ) {
+                final String directory = (String)i.next();
+                // now read all properties from the properties directory
+                this.readProperties(directory, properties);
+                // read all properties from the mode dependent directory
+                this.readProperties(directory + '/' + mode, properties);
+            }
+        }
+
+        // Next look for a custom property provider in the parent bean factory
+        if (parentBeanFactory != null && parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
+            try {
+                final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
+                final Properties providedProperties = provider.getProperties(s, mode, this.sitemapUri);
+                if ( providedProperties != null ) {
+                    properties.putAll(providedProperties);
+                }
+            } catch (Exception ignore) {
+                this.logger.warn("Unable to get properties from provider.", ignore);
+                this.logger.warn("Continuing initialization.");            
+            }
         }
 
         if ( globalSitemapVariables != null ) {
+            PropertyHelper.replaceAll(globalSitemapVariables, s);
             properties.putAll(globalSitemapVariables);
         }
         PropertyHelper.replaceAll(properties, parent);

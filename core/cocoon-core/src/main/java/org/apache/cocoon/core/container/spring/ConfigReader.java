@@ -65,6 +65,9 @@ public class ConfigReader extends AbstractLogEnabled {
     /** All component configurations. */
     protected final List componentConfigs = new ArrayList();
 
+    /** Is this the root context? */
+    protected final boolean isRootContext;
+
     public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
     throws Exception {
         final ConfigReader converter = new ConfigReader(env, null, null);
@@ -95,6 +98,7 @@ public class ConfigReader extends AbstractLogEnabled {
                          ConfigurationInfo parentInfo,
                          SourceResolver    resolver)
     throws Exception {
+        this.isRootContext = parentInfo == null;
         if ( resolver != null ) {
             this.resolver = resolver;
         } else {
@@ -225,7 +229,8 @@ public class ConfigReader extends AbstractLogEnabled {
                 this.handleInclude(contextURI, loadedURIs, componentConfig);
             } else if ( "include-beans".equals(componentName) ) {
                 this.handleBeanInclude(contextURI, componentConfig);
-            } else {
+                // we ignore include-properties if this is a child context
+            } else if ( this.isRootContext || !"include-properties".equals(componentName) ) {
                 // Component declaration, add it to list
                 this.componentConfigs.add(componentConfig);
             }

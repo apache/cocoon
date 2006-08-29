@@ -57,6 +57,9 @@ public class ConfigurationReader {
     /** All component configurations. */
     protected final List componentConfigs = new ArrayList();
 
+    /** Is this the root context? */
+    protected final boolean isRootContext;
+
     public static ConfigurationInfo readConfiguration(String         source,
                                                       ResourceLoader resourceLoader)
     throws Exception {
@@ -83,8 +86,9 @@ public class ConfigurationReader {
     }
 
     private ConfigurationReader(ConfigurationInfo parentInfo,
-                         ResourceLoader    resourceLoader)
+                                ResourceLoader    resourceLoader)
     throws Exception {
+        this.isRootContext = parentInfo == null;
         if ( resourceLoader != null ) {
             this.resolver = new PathMatchingResourcePatternResolver(resourceLoader);
         } else {
@@ -240,7 +244,8 @@ public class ConfigurationReader {
                 this.handleInclude(contextURI, loadedURIs, componentConfig);
             } else if ( "include-beans".equals(componentName) ) {
                 this.handleBeanInclude(contextURI, componentConfig);
-            } else {
+                // we ignore include-properties if this is a child context
+            } else if ( this.isRootContext || !"include-properties".equals(componentName) ) {
                 // Component declaration, add it to list
                 this.componentConfigs.add(componentConfig);
             }
