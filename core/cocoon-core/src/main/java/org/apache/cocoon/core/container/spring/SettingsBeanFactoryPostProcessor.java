@@ -61,7 +61,6 @@ public class SettingsBeanFactoryPostProcessor
         this.dumpSystemProperties();
         this.dumpSettings();
         this.forceLoad();
-        this.logger.info("Apache Cocoon " + Constants.VERSION + " is up and ready.");
     }
 
     /**
@@ -162,8 +161,7 @@ public class SettingsBeanFactoryPostProcessor
             throw new IllegalArgumentException(msg);
         }
         */
-        
-        this.servletContext.log("Running in mode: " + mode);
+        this.logger.info("Apache Cocoon " + Constants.VERSION + " is running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(mode);
