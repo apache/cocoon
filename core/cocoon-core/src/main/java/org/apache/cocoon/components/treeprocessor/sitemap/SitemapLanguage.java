@@ -66,6 +66,7 @@ import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.apache.cocoon.configuration.impl.SettingsHelper;
 import org.apache.cocoon.core.container.spring.BeanFactoryFactoryImpl;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
@@ -447,7 +448,7 @@ public class SitemapLanguage
         }
         // replace properties?
         if ( componentConfig == null || componentConfig.getAttributeAsBoolean("replace-properties", true) ) {
-            tree = this.replaceProperties(tree, settings);
+            tree = AvalonUtils.replaceProperties(tree, settings);
         }
 
         // if we want to add the default includes and have no component section
@@ -582,32 +583,6 @@ public class SitemapLanguage
         return result;
     }
 
-    /**
-     * Replace all properties
-     */
-    protected Configuration replaceProperties(Configuration tree, Settings settings)
-    throws ConfigurationException {
-        final DefaultConfiguration root = new DefaultConfiguration(tree, true);
-        this.convert(root, settings);
-        return tree;
-    }
-
-    protected void convert(DefaultConfiguration config, Settings settings)
-    throws ConfigurationException {
-        final String[] names = config.getAttributeNames();
-        for(int i=0; i<names.length; i++) {
-            final String value = config.getAttribute(names[i]);
-            config.setAttribute(names[i], PropertyHelper.replace(value, settings));
-        }
-        final String value = config.getValue(null);
-        if ( value != null ) {
-            config.setValue(PropertyHelper.replace(value, settings));
-        }
-        final Configuration[] children = config.getChildren();
-        for(int m=0; m<children.length; m++) {
-            convert((DefaultConfiguration)children[m], settings);
-        }
-    }
     /**
      * Return the list of <code>ProcessingNodes</code> part of this tree that
      * are <code>Disposable</code>. Care should be taken to properly dispose
