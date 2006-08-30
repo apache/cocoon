@@ -1,11 +1,8 @@
 package org.apache.cocoon.core.container.spring.avalon;
 
-import java.io.ByteArrayInputStream;
-
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationSerializer;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
@@ -13,7 +10,6 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
@@ -113,10 +109,7 @@ public class AvalonBeanPostProcessor
                 if ( config == null ) {
                     config = EMPTY_CONFIG;
                 }
-                ConfigurationBuilder builder = new ConfigurationBuilder(this.settings);
-                // this is a little bit hacky but should do the trick
-                DefaultConfigurationSerializer serializer = new DefaultConfigurationSerializer();
-                config = builder.build(new ByteArrayInputStream(serializer.serialize(config).getBytes("utf-8")));
+                config = AvalonUtils.replaceProperties(config, this.settings);
                 info.setProcessedConfiguration(config);
             }
             if ( bean instanceof Configurable ) {
