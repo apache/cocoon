@@ -27,7 +27,7 @@
   <name>${artifactId}</name>
   <groupId>${groupId}</groupId>
   <artifactId>${artifactId}</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>${version}</version>
   <build>
     <!-- with multimodule project setting finalName like this results in having 2 jars in cocoon/lib:
   	     my-module.jar and my-module-1.0-SNAPSHOT.jar -->
