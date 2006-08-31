@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.maven.deployer.monolithic;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,30 +76,22 @@ public class MonolithicServer22 {
                         continue;
                     }
                     OutputStream out = null;
-	                    try {               	
-	                    	FileDeployer fileDeployer = findFileDeployer(document.getName());
-	                    	if(fileDeployer == null) {
-	                    		continue;
-	                    	}
-	                    	
-	                    	out = fileDeployer.writeResource(document.getName());
-		                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		                    // loop over ZIP entry stream
-		                    byte[] buffer = new byte[8192];
-		                    int length = -1;
-		                    while (zipStream.available() > 0) {
-		                        length = zipStream.read(buffer, 0, 8192);
-		                        if (length > 0) {
-		                            baos.write(buffer, 0, length);
-		                        }
-		                    }
-		                    // write it to the output stream provided by the file resource manager
-		                    out.write(baos.toByteArray());
-	                    } finally {
-	                    	if(out != null) {
-	                    		out.close();
-	                    	}
-	                    }
+                    try {
+                        FileDeployer fileDeployer = findFileDeployer(document.getName());
+                        if (fileDeployer == null) {
+                            continue;
+                        }
+
+                        out = new BufferedOutputStream(fileDeployer.writeResource(document.getName()));
+                        byte[] buffer = new byte[8192];
+                        int length;
+                        while ((length = zipStream.read(buffer)) > 0)
+                            out.write(buffer, 0, length);
+                    } finally {
+                        if (out != null) {
+                            out.close();
+                        }
+                    }
                     // go to next entry
                     zipStream.closeEntry();
                 }
