@@ -95,7 +95,7 @@ public abstract class AbstractXMLByteStreamInterpreter implements XMLProducer, X
         int lastEvent = -1;
         while ( ( event = readEvent() ) != -1 ) {
             lastEvent = event;
-            switch (this.readEvent()) {
+            switch (event) {
                 case START_DOCUMENT:
                     contentHandler.startDocument();
                     break;
@@ -304,12 +304,18 @@ public abstract class AbstractXMLByteStreamInterpreter implements XMLProducer, X
 
     private void checkProlog() throws SAXException {
         int valid = 0;
-        if (this.read() == 'C') valid++;
-        if (this.read() == 'X') valid++;
-        if (this.read() == 'M') valid++;
-        if (this.read() == 'L') valid++;
-        if (this.read() == 1) valid++;
-        if (this.read() == 0) valid++;
-        if (valid != 6) throw new SAXException("Unrecognized file format.");
+        int ch = 0;
+        if ((ch = this.read()) == 'C') valid++;
+        else throw new SAXException("Unrecognized file format (." + valid + "," + ch + ")");
+        if ((ch = this.read()) == 'X') valid++;
+        else throw new SAXException("Unrecognized file format (." + valid + "," + ch + ")");
+        if ((ch = this.read()) == 'M') valid++;
+        else throw new SAXException("Unrecognized file format (." + valid + "," + ch + ")");
+        if ((ch = this.read()) == 'L') valid++;
+        else throw new SAXException("Unrecognized file format (." + valid + "," + ch + ")");
+        if ((ch = this.read()) == 1) valid++;
+        else throw new SAXException("Unrecognized file format (." + valid + "," + ch + ")");
+        if ((ch = this.read()) == 0) valid++;
+        else throw new SAXException("Unrecognized file format (." + valid + "," + ch + ")");
     }
 }
