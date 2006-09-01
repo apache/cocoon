@@ -19,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
@@ -83,7 +82,7 @@ public class ApplicationCopletAdapter extends URICopletAdapter {
                 
                 // append parameters - if any
                 LinkService linkService = this.portalService.getLinkService();
-                final Map objectModel = ContextHelper.getObjectModel(this.context);
+                final Map objectModel = service.getProcessInfoProvider().getObjectModel();
                 final Request r = ObjectModelHelper.getRequest(objectModel);
                 final Enumeration params = r.getParameterNames();
                 while (params.hasMoreElements()) {

@@ -22,15 +22,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.LayoutException;
@@ -55,15 +47,11 @@ import org.apache.cocoon.portal.om.NamedItem;
  * @version $Id$
  */
 public class PageLabelManager
-    extends AbstractLogEnabled
-    implements ThreadSafe, Serviceable, Configurable, Contextualizable {
+    extends AbstractComponent
+    implements Configurable {
 
     public static final String ROLE = PageLabelManager.class.getName();
 
-    /** The service manager */
-    protected ServiceManager manager;
-    /** The cocoon context */
-    protected Context context;
     protected String aspectName;
     private String requestParameterName;
     private boolean nonStickyTabs;
@@ -74,13 +62,6 @@ public class PageLabelManager
     private static final String DEFAULT_REQUEST_PARAMETER_NAME = "pageLabel";
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-    }
-
-    /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) {
@@ -89,13 +70,6 @@ public class PageLabelManager
         this.aspectName = config.getChild("aspectName").getValue("tab");
         this.nonStickyTabs =
             Boolean.valueOf(config.getChild("nonStickyTabs").getValue("false")).booleanValue();
-    }
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
     }
 
     /**
@@ -124,7 +98,7 @@ public class PageLabelManager
      */
     public String  setCurrentLabel() {
         final Request request =
-            ObjectModelHelper.getRequest(ContextHelper.getObjectModel(this.context));
+            ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
         String value = request.getParameter(this.requestParameterName);
         String[] labels = getLabels();
 

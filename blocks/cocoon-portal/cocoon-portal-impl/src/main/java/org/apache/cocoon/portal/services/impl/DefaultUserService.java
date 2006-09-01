@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalService;
@@ -65,7 +65,8 @@ public class DefaultUserService
     }
 
     protected Map getSessionMap() {
-        final Session session = ContextHelper.getRequest(this.context).getSession(false);
+        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
+        final Session session = ObjectModelHelper.getRequest(objectModel).getSession(false);
         if ( session == null ) {
             return null;
         }
@@ -74,18 +75,21 @@ public class DefaultUserService
     }
 
     protected Map getRequestMap() {
-        final Request request = ContextHelper.getRequest(this.context);
+        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
+        final Request request = ObjectModelHelper.getRequest(objectModel);
         final Map map = (Map) request.getAttribute(this.attributeName);
         return map;
     }
 
     protected void setSessionMap(Map map) {
-        final Session session = ContextHelper.getRequest(this.context).getSession(true);
+        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
+        final Session session = ObjectModelHelper.getRequest(objectModel).getSession(true);
         session.setAttribute(this.attributeName, map);
     }
 
     protected void setRequestMap(Map map) {
-        final Request request = ContextHelper.getRequest(this.context);
+        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
+        final Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(this.attributeName, map);
     }
 

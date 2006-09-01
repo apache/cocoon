@@ -34,7 +34,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.LayoutException;
@@ -173,12 +172,13 @@ public class XSLTAspect
 
     protected String getStylesheetURI(PreparedConfiguration config, Layout layout) 
     throws SAXException {
+        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
         String stylesheet = layout.getParameter("stylesheet");
         if ( stylesheet != null ) {
             VariableResolver variableResolver = null;
             try {
                 variableResolver = VariableResolverFactory.getResolver(stylesheet, this.manager);
-                stylesheet = variableResolver.resolve(ContextHelper.getObjectModel(this.context));
+                stylesheet = variableResolver.resolve(objectModel);
             } catch (PatternException pe) {
                 throw new SAXException("Unknown pattern for stylesheet " + stylesheet, pe);
             } finally {
@@ -186,7 +186,7 @@ public class XSLTAspect
             }            
         } else {
             try {
-                stylesheet = config.stylesheet.resolve(ContextHelper.getObjectModel(this.context));
+                stylesheet = config.stylesheet.resolve(objectModel);
             } catch (PatternException pe) {
                 throw new SAXException("Pattern exception during variable resolving.", pe);            
             }
@@ -195,8 +195,9 @@ public class XSLTAspect
     }
 
     protected String getParameterValue(Map.Entry entry) throws SAXException {
+        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
         try {
-            return ((VariableResolver)entry.getValue()).resolve(ContextHelper.getObjectModel(this.context));
+            return ((VariableResolver)entry.getValue()).resolve(objectModel);
         } catch (PatternException pe) {
             throw new SAXException("Unable to get value for parameter " + entry.getKey(), pe);
         }

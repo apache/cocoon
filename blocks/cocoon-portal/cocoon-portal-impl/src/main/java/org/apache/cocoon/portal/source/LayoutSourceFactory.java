@@ -59,8 +59,7 @@ public class LayoutSourceFactory
                                                protocol,
                                                layout,
                                                this.portalService,
-                                               this.manager,
-                                               this.context);
+                                               this.manager);
         return source;
 	}
 

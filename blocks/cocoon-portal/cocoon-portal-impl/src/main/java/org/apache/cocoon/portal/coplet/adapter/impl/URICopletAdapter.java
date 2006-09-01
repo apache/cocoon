@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -152,7 +151,7 @@ public class URICopletAdapter
                     this.manager.release(notifyingBuilder);
                 }
 
-                final Map objectModel = ContextHelper.getObjectModel(this.context);
+                final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
                 // Add it to the object model
                 if ( currentNotifying != null ) {
                     objectModel.put(org.apache.cocoon.Constants.NOTIFYING_OBJECT, currentNotifying);                    
