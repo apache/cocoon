@@ -40,7 +40,7 @@ public final class XMLByteStreamInterpreter extends AbstractXMLByteStreamInterpr
         }
         this.input = (byte[])saxFragment;
         this.currentPos = 0;
-        this.parse();
+        super.parse();
     }
 
     protected int read() throws SAXException {
