@@ -42,6 +42,7 @@ public final class XMLByteStreamCompiler extends AbstractXMLByteStreamCompiler {
 
     private void initOutput() {
         this.buf = new byte[bufCountAverage];
+        this.bufCount = 0;
     }
 
     public void recycle() {
