@@ -33,26 +33,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @version $Id$
  */
-public final class XMLByteStreamInterpreter implements XMLProducer {
-
-    private static final int START_DOCUMENT         = 0;
-    private static final int END_DOCUMENT           = 1;
-    private static final int START_PREFIX_MAPPING   = 2;
-    private static final int END_PREFIX_MAPPING     = 3;
-    private static final int START_ELEMENT          = 4;
-    private static final int END_ELEMENT            = 5;
-    private static final int CHARACTERS             = 6;
-    private static final int IGNORABLE_WHITESPACE   = 7;
-    private static final int PROCESSING_INSTRUCTION = 8;
-    private static final int COMMENT                = 9;
-    private static final int LOCATOR                = 10;
-    private static final int START_DTD              = 11;
-    private static final int END_DTD                = 12;
-    private static final int START_CDATA            = 13;
-    private static final int END_CDATA              = 14;
-    private static final int SKIPPED_ENTITY         = 15;
-    private static final int START_ENTITY           = 16;
-    private static final int END_ENTITY             = 17;
+public final class XMLByteStreamInterpreter implements XMLProducer, XMLByteStreamConstants {
 
     private ArrayList list = new ArrayList();
     private byte[] input;
