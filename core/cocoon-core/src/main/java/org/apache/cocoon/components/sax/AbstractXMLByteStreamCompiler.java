@@ -102,6 +102,8 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
     }
 
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+        if(!hasProlog)
+            writeProlog();
         this.writeEvent(IGNORABLE_WHITESPACE);
         this.writeChars(ch, start, length);
     }
@@ -114,6 +116,8 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
 
     public void setDocumentLocator(Locator locator) {
         try {
+            if(!hasProlog)
+                writeProlog();
             this.writeEvent(LOCATOR);
             String publicId = locator.getPublicId();
             String systemId = locator.getSystemId();
@@ -191,7 +195,7 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
         }
     }
 
-    public final void writeEvent( final int event) {
+    public final void writeEvent( final int event) throws SAXException {
         this.write(event);
     }
 
@@ -218,7 +222,7 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
         }
     }
 
-    public final void writeChars( final char[] ch, final int start, final int length) {
+    public final void writeChars( final char[] ch, final int start, final int length) throws SAXException {
         int utflen = 0;
         int c;
 
@@ -323,9 +327,9 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
     }
 */
 
-    abstract protected void write( final int b );
+    abstract protected void write( final int b ) throws SAXException;
 
-    private void writeProlog()
+    private void writeProlog() throws SAXException
     {
         write((byte)'C');
         write((byte)'X');
