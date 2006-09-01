@@ -31,7 +31,6 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
@@ -150,7 +149,7 @@ public class PortletAdapter
             coplet.setTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME, portletWindow);
 
             // load the portlet
-            final Map objectModel = ContextHelper.getObjectModel(this.context);
+            final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
             ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
             if ( req == null ) {
                 final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
@@ -186,7 +185,7 @@ public class PortletAdapter
             if ( window == null ) {
                 throw new SAXException("Portlet couldn't be loaded: " + coplet.getId() + "(" + portletEntityId + ")");
             }
-            final Map objectModel = ContextHelper.getObjectModel(this.context);
+            final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
             final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
 
@@ -312,7 +311,7 @@ public class PortletAdapter
      * @see Receiver
      */
     public void inform(PortletURLProviderImpl event, PortalService service) {
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
+        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
         final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), event);
         final HttpServletResponse res = new ServletResponseImpl((HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT));
         if ( !service.getUserService().getUser().isAnonymous() ) {
@@ -424,7 +423,7 @@ public class PortletAdapter
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
             InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
-            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) ContextHelper.getObjectModel(this.context).get("portlet-request"));
+            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) this.portalService.getProcessInfoProvider().getObjectModel().get("portlet-request"));
 
             // portlet modes
             final String pmString = (String)copletInstanceData.getTemporaryAttribute(PORTLET_MODE_ATTRIBUTE_NAME);
@@ -465,7 +464,7 @@ public class PortletAdapter
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
             InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
-            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) ContextHelper.getObjectModel(this.context).get("portlet-request"));
+            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest)this.portalService.getProcessInfoProvider().getObjectModel().get("portlet-request"));
 
             // Sizing
             final String wsString = (String)copletInstanceData.getTemporaryAttribute(WINDOW_STATE_ATTRIBUTE_NAME);

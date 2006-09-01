@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.pluto;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry;
 import org.apache.pluto.services.PortletContainerEnvironment;
@@ -86,7 +85,7 @@ public class InformationProviderServiceImpl
      */
     protected PortalContextProviderImpl getPortalContextProvider() {
         if ( this.provider == null ) {
-            this.provider = new PortalContextProviderImpl(ContextHelper.getObjectModel(context));
+            this.provider = new PortalContextProviderImpl(this.portalService.getProcessInfoProvider().getObjectModel());
         }
         return this.provider;        
     }

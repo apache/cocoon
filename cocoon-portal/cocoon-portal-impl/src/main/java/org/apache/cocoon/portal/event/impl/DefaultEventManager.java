@@ -27,7 +27,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -71,7 +70,7 @@ public class DefaultEventManager
      * Helper method to get the current object model 
      */
     protected Map getObjectModel() {
-        return ContextHelper.getObjectModel( this.context );
+        return this.portalService.getProcessInfoProvider().getObjectModel();
     }
 
     /**
