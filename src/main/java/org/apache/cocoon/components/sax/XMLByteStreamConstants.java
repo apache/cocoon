@@ -16,9 +16,8 @@
 package org.apache.cocoon.components.sax;
 
 /**
- * The $interfaceType$ interface ...
+ * The common constants for SAX byte streaming
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version CVS $Id$
   */
 public interface XMLByteStreamConstants {
