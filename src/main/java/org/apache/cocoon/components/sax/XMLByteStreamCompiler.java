@@ -40,26 +40,19 @@ public final class XMLByteStreamCompiler extends AbstractXMLByteStreamCompiler {
         this.initOutput();
     }
 
-    protected void initOutput() {
-        super.initOutput();
+    private void initOutput() {
         this.buf = new byte[bufCountAverage];
-        this.buf[0] = (byte)'C';
-        this.buf[1] = (byte)'X';
-        this.buf[2] = (byte)'M';
-        this.buf[3] = (byte)'L';
-        this.buf[4] = (byte)1;
-        this.buf[5] = (byte)0;
-        this.bufCount = 6;
     }
 
     public void recycle() {
         bufCountAverage = (bufCountAverage + bufCount) / 2;
+        initOutput();
         super.recycle();
     }
 
 
     public Object getSAXFragment() {
-        if (this.bufCount == 6) { // no event arrived yet
+        if (this.bufCount == 0) { // no event arrived yet
             return null;
         }
         byte newbuf[] = new byte[this.bufCount];
