@@ -187,17 +187,6 @@ public abstract class AbstractXMLByteStreamInterpreter implements XMLProducer, X
         }
     }
 
-    private void checkProlog() throws SAXException {
-        int valid = 0;
-        if (this.read() == 'C') valid++;
-        if (this.read() == 'X') valid++;
-        if (this.read() == 'M') valid++;
-        if (this.read() == 'L') valid++;
-        if (this.read() == 1) valid++;
-        if (this.read() == 0) valid++;
-        if (valid != 6) throw new SAXException("Unrecognized file format.");
-    }
-
     protected int readEvent() throws SAXException {
         return this.read();
     }
@@ -311,5 +300,16 @@ public abstract class AbstractXMLByteStreamInterpreter implements XMLProducer, X
         int ch3 = this.read();
         int ch4 = this.read();
         return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    }
+
+    private void checkProlog() throws SAXException {
+        int valid = 0;
+        if (this.read() == 'C') valid++;
+        if (this.read() == 'X') valid++;
+        if (this.read() == 'M') valid++;
+        if (this.read() == 'L') valid++;
+        if (this.read() == 1) valid++;
+        if (this.read() == 0) valid++;
+        if (valid != 6) throw new SAXException("Unrecognized file format.");
     }
 }
