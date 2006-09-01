@@ -20,12 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
@@ -48,8 +45,6 @@ public class LayoutSource
 
     protected final ServiceManager manager;
 
-    protected final Context context;
-
     protected final String uri;
     protected final Layout layout;
     protected final PortalService portalService;
@@ -61,38 +56,31 @@ public class LayoutSource
                         String protocol,
                         Layout layout,
                         PortalService service,
-                        ServiceManager manager,
-                        Context context) {
+                        ServiceManager manager) {
         this.uri = uri;
         this.scheme = protocol;
         this.layout = layout;
         this.portalService = service;
         this.manager = manager;
-        this.context = context;
     }
 
 	/**
 	 * @see org.apache.excalibur.source.Source#getInputStream()
 	 */
 	public InputStream getInputStream() throws IOException, SourceNotFoundException {
+        Serializer serializer = null;
         try {
-            ServiceManager sitemapManager = (ServiceManager) this.context.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-            Serializer serializer = null;
-            try {
-                serializer = (Serializer) sitemapManager.lookup(Serializer.ROLE+ "/xml");
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                serializer.setOutputStream(os);
-                this.toSAX(serializer);
-                return new ByteArrayInputStream(os.toByteArray());
-            } catch (SAXException se) {
-                throw new CascadingIOException("Unable to stream content.", se);
-            } catch (ServiceException ce) {
-                throw new CascadingIOException("Unable to get components for serializing.", ce);
-            } finally {
-                sitemapManager.release(serializer);
-            }
-        } catch (ContextException ce) {
-            throw new CascadingIOException("Unable to get sitemap service manager.", ce);
+            serializer = (Serializer) this.manager.lookup(Serializer.ROLE+ "/xml");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            serializer.setOutputStream(os);
+            this.toSAX(serializer);
+            return new ByteArrayInputStream(os.toByteArray());
+        } catch (SAXException se) {
+            throw new CascadingIOException("Unable to stream content.", se);
+        } catch (ServiceException ce) {
+            throw new CascadingIOException("Unable to get components for serializing.", ce);
+        } finally {
+            this.manager.release(serializer);
         }
 	}
 

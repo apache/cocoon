@@ -24,8 +24,9 @@ import java.util.StringTokenizer;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.impl.AbstractComponent;
@@ -77,7 +78,7 @@ public class DefaultLinkService
      * @return A LinkInfo object.
      */
     protected LinkInfo getInfo() {
-        final Request request = ContextHelper.getRequest( this.context );
+        final Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
         LinkInfo info = (LinkInfo)request.getAttribute(DefaultLinkService.class.getName());
         if ( info == null ) {
             synchronized ( this ) {
@@ -95,14 +96,16 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.services.LinkService#isSecure()
      */
     public boolean isSecure() {
-        return ContextHelper.getRequest(this.context).isSecure();
+        final Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
+        return request.isSecure();
     }
 
     /**
      * @see org.apache.cocoon.portal.services.LinkService#encodeURL(String url)
      */
     public String encodeURL(String url) {
-        return ContextHelper.getResponse(this.context).encodeURL(url);
+        final Response response = ObjectModelHelper.getResponse(this.portalService.getProcessInfoProvider().getObjectModel());
+        return response.encodeURL(url);
     }
 
     /**
