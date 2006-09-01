@@ -33,15 +33,17 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
 
     private HashMap map;
     private int mapCount;
+    private boolean hasProlog = false;
 
     protected AbstractXMLByteStreamCompiler() {
         this.map = new HashMap();
         this.initOutput();
     }
 
-    protected void initOutput() {
+    private void initOutput() {
         this.mapCount = 0;
         this.map.clear();
+        this.hasProlog = false;
     }
 
     public void recycle() {
@@ -49,6 +51,8 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
     }
 
     public void startDocument() throws SAXException {
+        if(!hasProlog)
+            writeProlog();
         this.writeEvent(START_DOCUMENT);
     }
 
@@ -57,6 +61,8 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
     }
 
     public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
+        if(!hasProlog)
+            writeProlog();
         this.writeEvent(START_PREFIX_MAPPING);
         this.writeString(prefix);
         this.writeString(uri);
@@ -318,5 +324,16 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
 */
 
     abstract protected void write( final int b );
+
+    private void writeProlog()
+    {
+        write((byte)'C');
+        write((byte)'X');
+        write((byte)'M');
+        write((byte)'L');
+        write((byte)1);
+        write((byte)0);
+        hasProlog = true;
+    }
 }
 
