@@ -15,14 +15,7 @@
  */
 package org.apache.cocoon.maven.deployer.monolithic;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -39,6 +32,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
 import org.apache.cocoon.maven.deployer.utils.XMLUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -63,6 +57,19 @@ public class XPatchDeployer extends SingleFileDeployer {
         return out;
     }
 
+    public void addPatch(File file) throws IOException {
+        getLogger().debug("catching patch: " + file.getAbsolutePath());
+        PatchCachingOutputStream pcis = new PatchCachingOutputStream();
+        OutputStream os = new BufferedOutputStream(pcis);
+        try {
+            // TODO close input stream
+            IOUtils.copy(new BufferedInputStream(new FileInputStream(file)), os);
+        } finally {
+            os.close();
+        }
+        patches.add(pcis);
+    }
+
     public void applyPatches(final File basedir, final String fileName) {
         if (patches.size() == 0) {
             // TODO should just copy the file without any transform
@@ -70,17 +77,7 @@ public class XPatchDeployer extends SingleFileDeployer {
         try {
             getLogger().info("Applying patches to: " + fileName);
             File outFile = FileUtils.createDirectory(new File(basedir, fileName));
-
-            // TODO code duplication
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(false);
-            factory.setExpandEntityReferences(false);
-            factory.setNamespaceAware(false);
-            factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd", Boolean.FALSE);
-
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            InputStream is = readResourceFromClassloader(fileName);
-            Document original = builder.parse(is);
+            Document original = XMLUtils.parseXml(readResourceFromClassloader(fileName));
 
             Iterator it = patches.iterator();
             while (it.hasNext()) {
@@ -218,12 +215,6 @@ public class XPatchDeployer extends SingleFileDeployer {
 
     private class PatchCachingOutputStream extends ByteArrayOutputStream {
         public Document getPatch() throws SAXException, IOException, ParserConfigurationException {
-//            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//            factory.setValidating(false);
-//            factory.setExpandEntityReferences(false);
-//            factory.setNamespaceAware(false);
-//            factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd", Boolean.FALSE);
-//            DocumentBuilder builder = factory.newDocumentBuilder();
             return XMLUtils.parseXml(new ByteArrayInputStream(this.buf, 0, this.count));
         }
     }
