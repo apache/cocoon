@@ -369,7 +369,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             Artifact artifact = (Artifact) iter.next();
             // Include runtime and compile time libraries
             if (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())
-                    && !Artifact.SCOPE_TEST.equals(artifact.getScope()) && "jar".equals(artifact.getType())) {
+                    && !Artifact.SCOPE_TEST.equals(artifact.getScope())
+                    && !Artifact.SCOPE_SYSTEM.equals(artifact.getScope()) && "jar".equals(artifact.getType())) {
                 try {
                     FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/lib"));
                     this.getLog().info("Deploying artifact to WEB-INF/lib/" + artifact.getFile().getName());
