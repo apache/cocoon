@@ -207,8 +207,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
         // add current block to the development blocks
         // it is important that the current block is put at the end of the array
-        // - the
-        // MonotlithicCocoonDeployer expects this
+        // - the MonotlithicCocoonDeployer expects this
         DevelopmentBlock curBlock = new DevelopmentBlock();
         curBlock.artifactId = this.getProject().getArtifactId();
         curBlock.groupId = this.getProject().getGroupId();
@@ -225,8 +224,6 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
         deployer.deploy(getBlockArtifactsAsMap(blocks), webappDirectory_, blocksdir, extBlocks, properties);
 
-        // deploy all libraries to WEB-INF/cocoon/lib and cocoon-bootstrap to
-        // WEB-INF/lib
         copyLibs();
 
         if (useShieldingClassloader)
@@ -342,7 +339,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             final Document webAppDoc = XMLUtils.parseXml(new FileInputStream(new File(webXmlLocation)));
             WebApplicationRewriter.rewrite(webAppDoc);
             this.getLog().debug("Writing web.xml: " + targetWebXmlLocation);
-            
+
             // TODO buffered stream + close stream?
             XMLUtils.write(webAppDoc, new FileOutputStream(targetWebXmlLocation));
         } catch (Exception e) {

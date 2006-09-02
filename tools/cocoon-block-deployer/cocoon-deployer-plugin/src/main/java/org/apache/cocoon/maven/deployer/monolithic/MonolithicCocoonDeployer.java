@@ -16,10 +16,13 @@
 package org.apache.cocoon.maven.deployer.monolithic;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -92,6 +95,40 @@ public class MonolithicCocoonDeployer {
             copyFile(basedir, "blocks/sitemap.xmap");
             copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
             // copyFile(basedir, "WEB-INF/web.xml");
+
+            for (int i = 0; i < developmentBlocks.length; ++i) {
+                DevelopmentBlock currentBlock = developmentBlocks[i];
+                if (currentBlock.xPatchPath != null) {
+                    URI uri = null;
+                    try {
+                        uri = new URI(currentBlock.xPatchPath);
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException( "should not happen", e );
+                    }
+                    
+                    File xPatchDir = new File(uri);
+                    File[] xPatchFiles = xPatchDir.listFiles(new FileFilter() {
+                        public boolean accept(File pathname) {
+                            if (pathname.isDirectory())
+                                return false;
+                            if (pathname.getName().endsWith(".xweb"))
+                                return true;
+                            return false;
+                        }
+                    });
+
+                    for (int j = 0; j < xPatchFiles.length; ++j) {
+                        File currentFile = xPatchFiles[j];
+                        try {
+                            xpatchDeployer.addPatch(currentFile);
+                        } catch (IOException e) {
+                            throw new DeploymentException("Can't process patch file '" + currentFile.getAbsolutePath()
+                                    + "'.", e);
+                        }
+                    }
+                }
+            }
+
             xpatchDeployer.applyPatches(basedir, "WEB-INF/web.xml");
             copyFile(basedir, "WEB-INF/applicationContext.xml");
             copyFile(basedir, "WEB-INF/cocoon/properties/core.properties");
