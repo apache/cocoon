@@ -35,7 +35,6 @@ import org.apache.cocoon.core.container.spring.avalon.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
-import org.apache.cocoon.core.container.util.SimpleSourceResolver;
 import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -68,13 +67,6 @@ public class ConfigReader extends AbstractLogEnabled {
     /** Is this the root context? */
     protected final boolean isRootContext;
 
-    public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
-    throws Exception {
-        final ConfigReader converter = new ConfigReader(env, null, null);
-        converter.convert(source);
-        return converter.configInfo;
-    }
-
     public static ConfigurationInfo readConfiguration(Configuration     config,
                                                       ConfigurationInfo parentInfo,
                                                       AvalonEnvironment env,
@@ -99,13 +91,7 @@ public class ConfigReader extends AbstractLogEnabled {
                          SourceResolver    resolver)
     throws Exception {
         this.isRootContext = parentInfo == null;
-        if ( resolver != null ) {
-            this.resolver = resolver;
-        } else {
-            this.resolver = new SimpleSourceResolver();
-            ((SimpleSourceResolver)this.resolver).enableLogging(env.logger);
-            ((SimpleSourceResolver)this.resolver).contextualize(env.context);
-        }
+        this.resolver = resolver;
         this.enableLogging(env.logger);
         this.environment = env;
 
