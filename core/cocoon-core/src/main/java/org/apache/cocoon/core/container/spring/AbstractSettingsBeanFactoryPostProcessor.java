@@ -40,8 +40,11 @@ import org.springframework.beans.factory.config.BeanDefinitionVisitor;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResourceLoader;
 
@@ -58,7 +61,7 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
  */
 public abstract class AbstractSettingsBeanFactoryPostProcessor
     extends PropertyPlaceholderConfigurer
-    implements ServletContextAware, BeanFactoryPostProcessor, FactoryBean {
+    implements ServletContextAware, BeanFactoryPostProcessor, ResourceLoaderAware, FactoryBean {
 
     /** Logger (we use the same logging mechanism as Spring!) */
     protected final Log logger = LogFactory.getLog(getClass());
@@ -68,6 +71,8 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     protected MutableSettings settings;
 
     protected BeanFactory beanFactory;
+
+    protected ResourceLoader resourceLoader;
 
     /**
      * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#setBeanFactory(org.springframework.beans.factory.BeanFactory)
@@ -85,10 +90,28 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     }
 
     /**
+     * @see org.springframework.context.ResourceLoaderAware#setResourceLoader(org.springframework.core.io.ResourceLoader)
+     */
+    public void setResourceLoader(ResourceLoader loader) {
+        this.resourceLoader = loader;
+    }
+
+    /**
      * This method can be overwritten by subclasses to further initialize the settings
      */
     protected void doInit() {
         // nothing to do here
+    }
+
+    protected ResourceLoader getResourceLoader() {
+        if ( this.resourceLoader != null ) {
+            return this.resourceLoader;
+        }
+        return new ServletContextResourceLoader(this.servletContext);
+    }
+
+    protected ResourcePatternResolver getResourceResolver() {
+        return new PathMatchingResourcePatternResolver(this.getResourceLoader());
     }
 
     /**
@@ -99,36 +122,45 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug("Reading settings from directory: " + directoryName);
         }
-        final String pattern = directoryName + "/*.properties";
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(new ServletContextResourceLoader(this.servletContext));
-        Resource[] resources = null;
-        try {
-            resources = resolver.getResources(pattern);
-        } catch (IOException ignore) {
-            this.logger.info("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
-        }
-        if ( resources != null ) {
-            final List propertyUris = new ArrayList();
-            for(int i=0; i<resources.length; i++ ) {
-                propertyUris.add(resources[i]);
+        // check if directory exists
+        Resource directoryResource = this.getResourceLoader().getResource(directoryName);
+        if ( directoryResource.exists() ) {
+            final String pattern = directoryName + "/*.properties";
+
+            final ResourcePatternResolver resolver = this.getResourceResolver();
+            Resource[] resources = null;
+            try {
+                resources = resolver.getResources(pattern);
+            } catch (IOException ignore) {
+                this.logger.debug("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
             }
-            // sort
-            Collections.sort(propertyUris, this.getResourceComparator());
-            // now process
-            final Iterator i = propertyUris.iterator();
-            while ( i.hasNext() ) {
-                Resource src = (Resource)i.next();
-                try {
-                    if ( this.logger.isDebugEnabled() ) {
-                        this.logger.debug("Reading settings from '" + src.getURL() + "'.");
+            if ( resources != null ) {
+                // we process the resources in alphabetical order, so we put
+                // them first into a list, sort them and then read the properties.
+                final List propertyUris = new ArrayList();
+                for(int i=0; i<resources.length; i++ ) {
+                    propertyUris.add(resources[i]);
+                }
+                // sort
+                Collections.sort(propertyUris, this.getResourceComparator());
+                // now process
+                final Iterator i = propertyUris.iterator();
+                while ( i.hasNext() ) {
+                    final Resource src = (Resource)i.next();
+                    try {
+                        if ( this.logger.isDebugEnabled() ) {
+                            this.logger.debug("Reading settings from '" + src.getURL() + "'.");
+                        }
+                        final InputStream propsIS = src.getInputStream();
+                        properties.load(propsIS);
+                        propsIS.close();
+                    } catch (IOException ignore) {
+                        this.logger.info("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
                     }
-                    final InputStream propsIS = src.getInputStream();
-                    properties.load(propsIS);
-                    propsIS.close();
-                } catch (IOException ignore) {
-                    this.logger.info("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
                 }
             }
+        } else {
+            this.logger.debug("Directory '" + directoryName + "' does not exist - Continuing initialization.");            
         }
     }
 
@@ -206,6 +238,12 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug("===== Settings Start =====");
             this.logger.debug(this.settings.toString());
+            final List names = this.settings.getPropertyNames();
+            final Iterator i = names.iterator();
+            while ( i.hasNext() ) {
+                final String name = (String)i.next();
+                this.logger.debug("Property: " + name + "=" + this.settings.getProperty(name));
+            }
             this.logger.debug("===== Settings End =====");
         }
     }
