@@ -189,6 +189,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             throw new MojoExecutionException("A problem occurred while copying webapp resources.", e);
         }
 
+        // TODO XPatch web.xml here!
+        
         // take care of paranoid classloading
         if (this.useShieldingClassloader) {
             shieldCocoonWebapp();

@@ -41,6 +41,7 @@ import org.apache.maven.plugin.logging.Log;
  *          lgawron $
  */
 public class MonolithicCocoonDeployer {
+    XPatchDeployer xwebPatcher = new XPatchDeployer("WEB-INF");
 
     private Log logger;
 
@@ -51,8 +52,6 @@ public class MonolithicCocoonDeployer {
     public void deploy(final Map libraries, final File basedir, final String blocksdir,
             final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
             throws DeploymentException {
-
-        XPatchDeployer xpatchDeployer = new XPatchDeployer("WEB-INF");
 
         // iterate over all blocks that need to be installed into a J2EE web
         // application
@@ -72,7 +71,7 @@ public class MonolithicCocoonDeployer {
                 zipExtractor.addRule("WEB-INF/classes/**", new SingleFileDeployer("WEB-INF/classes"));
                 zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));
-                zipExtractor.addRule("META-INF/xpatch/*.xweb", xpatchDeployer);
+                zipExtractor.addRule("META-INF/xpatch/*.xweb", xwebPatcher);
                 // extract all configurations files
                 zipExtractor.extract(lib);
             } catch (IOException e) {
@@ -103,9 +102,9 @@ public class MonolithicCocoonDeployer {
                     try {
                         uri = new URI(currentBlock.xPatchPath);
                     } catch (URISyntaxException e) {
-                        throw new RuntimeException( "should not happen", e );
+                        throw new RuntimeException("should not happen", e);
                     }
-                    
+
                     File xPatchDir = new File(uri);
                     File[] xPatchFiles = xPatchDir.listFiles(new FileFilter() {
                         public boolean accept(File pathname) {
@@ -120,7 +119,7 @@ public class MonolithicCocoonDeployer {
                     for (int j = 0; j < xPatchFiles.length; ++j) {
                         File currentFile = xPatchFiles[j];
                         try {
-                            xpatchDeployer.addPatch(currentFile);
+                            xwebPatcher.addPatch(currentFile);
                         } catch (IOException e) {
                             throw new DeploymentException("Can't process patch file '" + currentFile.getAbsolutePath()
                                     + "'.", e);
@@ -129,7 +128,7 @@ public class MonolithicCocoonDeployer {
                 }
             }
 
-            xpatchDeployer.applyPatches(basedir, "WEB-INF/web.xml");
+            xwebPatcher.applyPatches(readResourceFromClassloader("WEB-INF/web.xml"), "WEB-INF/web.xml");
             copyFile(basedir, "WEB-INF/applicationContext.xml");
             copyFile(basedir, "WEB-INF/cocoon/properties/core.properties");
         }
