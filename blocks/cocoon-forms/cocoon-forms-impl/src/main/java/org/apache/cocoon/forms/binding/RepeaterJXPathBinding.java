@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ import org.apache.commons.jxpath.Pointer;
  * @version $Id$
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
-    
+
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
@@ -52,7 +52,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     private final JXPathBindingBase insertRowBinding;
     private final JXPathBindingBase deleteRowBinding;
     private final ComposedJXPathBindingBase identityBinding;
-    
+
     /**
      * Constructs RepeaterJXPathBinding
      */
@@ -67,17 +67,17 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.rowPathForInsert = rowPathForInsert;
-        
+
         this.rowBinding = new ComposedJXPathBindingBase(
                 JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
                 childBindings);
         this.rowBinding.setParent(this);
-        
+
         this.insertRowBinding = insertBinding;
         if (this.insertRowBinding != null) {
             this.insertRowBinding.setParent(this);
         }
-        
+
         if (deleteBindings != null) {
             this.deleteRowBinding = new ComposedJXPathBindingBase(
                     JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
@@ -86,10 +86,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         } else {
             this.deleteRowBinding = null;
         }
-        
-        
+
+
         if (identityBindings != null) {
-            
+
             this.identityBinding = new ComposedJXPathBindingBase(
                     JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
                     identityBindings);
@@ -98,7 +98,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         else
             this.identityBinding = null;
     }
-    
+
     public String getId() { return repeaterId; }
     public String getRepeaterPath() { return repeaterPath; }
     public String getRowPath() { return rowPath; }
@@ -107,7 +107,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     public ComposedJXPathBindingBase getDeleteRowBinding() { return (ComposedJXPathBindingBase)deleteRowBinding; }
     public ComposedJXPathBindingBase getIdentityBinding() { return identityBinding; }
     public JXPathBindingBase getInsertRowBinding() { return insertRowBinding; }
-    
+
     /**
      * Binds the unique-id of the repeated rows, and narrows the context on
      * objectModelContext and Repeater to the repeated rows before handing
@@ -121,15 +121,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             throw new BindingException("The repeater with the ID [" + this.repeaterId
                     + "] referenced in the binding does not exist in the form definition.");
         }
-        
+
         if (repeater.isPageable()) {
             PageStorage pageStorage = new PageStorage(repeater,jxpc);
             pageStorage.doPageLoad();
             return;
         }
-        
+
         repeater.clear();
-        
+
         Pointer ptr = jxpc.getPointer(this.repeaterPath);
         if (ptr.getNode() != null) {
             // There are some nodes to load from
@@ -161,7 +161,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         if (getLogger().isDebugEnabled())
             getLogger().debug("done loading rows " + toString());
     }
-    
+
     /**
      * Uses the mapped identity of each row to detect if rows have been
      * updated, inserted or removed.  Depending on what happened the appropriate
@@ -171,29 +171,29 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     throws BindingException {
         // Find the repeater
         Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
-        
+
         if (repeater.isPageable()) {
-            jxpc = repeater.getStorage().doSave();
+            repeater.getStorage().doSave();
             return;
         }
-        
+
         // and his context, creating the path if needed
         JXPathContext repeaterContext =
             jxpc.getRelativeContext(jxpc.createPath(this.repeaterPath));
-        
+
         // create set of updatedRowIds
         Set updatedRows = new HashSet();
         //create list of rows to insert at end
         List rowsToInsert = new ArrayList();
-        
+
         // iterate rows in the form model...
         int formRowCount = repeater.getSize();
         for (int i = 0; i < formRowCount; i++) {
             Repeater.RepeaterRow thisRow = repeater.getRow(i);
-            
+
             // Get the identity
             List identity = getIdentity(thisRow);
-            
+
             if (hasNonNullElements(identity)) {
                 // iterate nodes to find match
                 Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
@@ -323,7 +323,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
     /**
      * Get the identity of the given row context. That's infact a list of all
-     * the values of the fields in the bean or XML that constitute the identity. 
+     * the values of the fields in the bean or XML that constitute the identity.
      * @param rowContext
      * @return List the identity of the row context
      */
@@ -356,14 +356,14 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     }
                 }
                 identity.add(value);
-            }   
+            }
         }
         return identity;
     }
 
     /**
-     * Get the identity of the given row. That's infact a list of all the values
-     * of the fields in the form model that constitute the identity. 
+     * Get the identity of the given row. That's in fact a list of all the values
+     * of the fields in the form model that constitute the identity.
      * @param row
      * @return List the identity of the row
      */
@@ -372,15 +372,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         if (this.identityBinding == null) {
             return Collections.EMPTY_LIST;
         }
-        
+
         List identity = new ArrayList();
 
         JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
         if (childBindings != null) {
             int size = childBindings.length;
             for (int i = 0; i < size; i++) {
-                String fieldId = ((ValueJXPathBinding)childBindings[i]).getFieldId();
-                Widget widget = row.getChild(fieldId);
+                String fieldId = ((ValueJXPathBinding) childBindings[i]).getFieldId();
+                Widget widget = row.lookupWidget(fieldId);
                 Object value = widget.getValue();
                 identity.add(value);
             }
@@ -390,7 +390,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
     public String toString() {
         return "RepeaterJXPathBinding [widget=" + this.repeaterId +
-        ", xpath=" + this.repeaterPath + "]";
+                ", xpath=" + this.repeaterPath + "]";
     }
 
     public void enableLogging(Logger logger) {
@@ -420,11 +420,11 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
             this.repeater.setStorage(this);
             this.updatedRows = new HashMap();
-            
+
             /*
              * workaround for jxpath doesn't simply calls size() on count(..) using collections
              */
-            
+
             int collectionSize = 0;
             Object value = storageContext.getValue(rowPath);
             if (value != null) {
@@ -463,7 +463,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     }
                     if (identityBinding != null) {
                         identityBinding.loadFormFromModel(thisRow, rowContext);
-                    } 
+                    }
                     rowBinding.loadFormFromModel(thisRow, rowContext);
                 }
             }
@@ -481,7 +481,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
                 // Get the identity
                 List identity = getIdentity(thisRow);
-                
+
                 if (hasNonNullElements(identity)) {
                     // iterate nodes to find match
                     Iterator rowPointers = repeaterContext.iteratePointers(rowPath + getPaginationClause());
@@ -496,9 +496,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 }
             }
         }
-        
+
         public JXPathContext doSave() throws BindingException {
-            
+
             // iterate context and saveToModel
             Iterator rowPointers = this.storageContext.iteratePointers(rowPath);
             while (rowPointers.hasNext()) {
@@ -514,32 +514,31 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             }
             return this.storageContext;
         }
-        
+
         private String getPaginationClause() {
-            String paginationClause = "";
+            String paginationClause;
             int start = repeater.getCurrentPage() * repeater.getPageSize();
             int end = start + repeater.getPageSize() + 1;
             paginationClause = "[position() > " + start + " and position() < " + end + "]";
             return paginationClause;
         }
-        
+
         private boolean isIdentityInUpdatedRows(List identity) {
             return this.updatedRows.containsKey(identity);
         }
-        
+
         public int getMaxPage() {
             return this.maxPage;
         }
-        
+
         private class RowStore {
             private HashMap values;
-            private boolean deleted;
-            
+
             public RowStore(RepeaterRow repeaterRow) {
                 this.values = new HashMap();
                 this.storeRow(repeaterRow);
             }
-            
+
             private void recallRow(RepeaterRow repeaterRow) {
                 Iterator iterator = values.keySet().iterator();
                 while (iterator.hasNext()) {
@@ -547,7 +546,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     repeaterRow.lookupWidget(key).setValue(values.get(key));
                 }
             }
-            
+
             private void storeRow(RepeaterRow repeaterRow) {
                Iterator iterator = repeaterRow.getChildren();
                while (iterator.hasNext()) {
@@ -555,9 +554,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                    values.put(widget.getName(),widget.getValue());
                }
             }
-            
+
         }
 
     }
-    
+
 }
