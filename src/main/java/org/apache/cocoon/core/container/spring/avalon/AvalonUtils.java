@@ -36,7 +36,7 @@ public class AvalonUtils {
     throws ConfigurationException {
         final DefaultConfiguration root = new DefaultConfiguration(tree, true);
         convert(root, settings);
-        return tree;
+        return root;
     }
 
     protected static void convert(DefaultConfiguration config, Settings settings)

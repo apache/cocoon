@@ -125,11 +125,11 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 		if (this.parentBeanfactory == null) {
             this.parentBeanfactory =  WebApplicationContextUtils.getWebApplicationContext(osgiServletContext);
         }
-		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
-		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
-				null, this.parentBeanfactory, false);
-        this.beanFactory.addBeanPostProcessor(new ServiceRegistrationPostProcessor());
-        this.beanFactory.preInstantiateSingletons();
+		//ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
+		//this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
+		//		null, this.parentBeanfactory, false);
+        //this.beanFactory.addBeanPostProcessor(new ServiceRegistrationPostProcessor());
+        //this.beanFactory.preInstantiateSingletons();
         // What is this for?
 		//Store store = (Store) beanFactory.getBean(Store.ROLE);
 		//this.logger.debug("Store: " + store);

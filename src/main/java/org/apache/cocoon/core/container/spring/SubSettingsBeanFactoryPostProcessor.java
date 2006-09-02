@@ -104,7 +104,7 @@ public class SubSettingsBeanFactoryPostProcessor
         }
 
         // Next look for a custom property provider in the parent bean factory
-        if (parentBeanFactory != null && parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
+        if (parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
             try {
                 final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
                 final Properties providedProperties = provider.getProperties(s, mode, this.sitemapUri);

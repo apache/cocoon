@@ -157,7 +157,6 @@ public class SettingsBeanFactoryPostProcessor
         if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
             final String msg =
                 "Invalid running mode: " + mode + " - Use one of: " + Arrays.asList(SettingsDefaults.RUNNING_MODES);
-            servletContext.log(msg);
             throw new IllegalArgumentException(msg);
         }
         */
@@ -186,13 +185,14 @@ public class SettingsBeanFactoryPostProcessor
             final String fileName = homeDir + File.separator + ".cocoon" + File.separator + "settings.properties";
             final File testFile = new File(fileName);
             if ( testFile.exists() ) {
-                servletContext.log("Reading user settings from '" + fileName + "'");
+                if ( this.logger.isDebugEnabled() ) {
+                    this.logger.debug("Reading user settings from '" + fileName + "'");
+                }
                 try {
                     final FileInputStream fis = new FileInputStream(fileName);
                     properties.load(fis);
                 } catch (IOException ignore) {
-                    servletContext.log("Unable to read '" + fileName + "' - continuing with initialization.");
-                    this.logger.debug("Unable to read '" + fileName + "' - continuing with initialization.", ignore);
+                    this.logger.info("Unable to read '" + fileName + "' - continuing with initialization.", ignore);
                 }
             }
         }
@@ -200,14 +200,15 @@ public class SettingsBeanFactoryPostProcessor
         String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
                                                       getSystemProperty(Settings.PROPERTY_USER_SETTINGS));
         if ( additionalPropertyFile != null ) {
-            servletContext.log("Reading user settings from '" + additionalPropertyFile + "'");
+            if ( this.logger.isDebugEnabled() ) {
+                this.logger.debug("Reading user settings from '" + additionalPropertyFile + "'");
+            }
             try {
                 final FileInputStream fis = new FileInputStream(additionalPropertyFile);
                 properties.load(fis);
                 fis.close();
             } catch (IOException ignore) {
-                servletContext.log("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.");
-                this.logger.debug("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.", ignore);
+                this.logger.info("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.", ignore);
             }
         }
         // check for property providers
