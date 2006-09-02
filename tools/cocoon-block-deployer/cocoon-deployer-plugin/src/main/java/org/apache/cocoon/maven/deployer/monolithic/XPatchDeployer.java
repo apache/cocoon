@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -43,6 +41,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 // TODO should this extend SingleFileDeployer at all?
+// TODO decouple patch collecting from logic that applies patches
 public class XPatchDeployer extends SingleFileDeployer {
     final List patches = new Vector();
 
@@ -52,14 +51,14 @@ public class XPatchDeployer extends SingleFileDeployer {
 
     public OutputStream writeResource(String documentName) throws IOException {
         getLogger().debug("catching patch: " + documentName);
-        PatchCachingOutputStream out = new PatchCachingOutputStream();
+        PatchCachingOutputStream out = new PatchCachingOutputStream(documentName);
         patches.add(out);
         return out;
     }
 
     public void addPatch(File file) throws IOException {
         getLogger().debug("catching patch: " + file.getAbsolutePath());
-        PatchCachingOutputStream pcis = new PatchCachingOutputStream();
+        PatchCachingOutputStream pcis = new PatchCachingOutputStream(file.getCanonicalPath());
         OutputStream os = new BufferedOutputStream(pcis);
         try {
             // TODO close input stream
@@ -70,122 +69,124 @@ public class XPatchDeployer extends SingleFileDeployer {
         patches.add(pcis);
     }
 
-    public void applyPatches(final File basedir, final String fileName) {
+    public void applyPatches(InputStream source, final String fileName) {
         if (patches.size() == 0) {
             // TODO should just copy the file without any transform
         }
         try {
             getLogger().info("Applying patches to: " + fileName);
-            File outFile = FileUtils.createDirectory(new File(basedir, fileName));
-            Document original = XMLUtils.parseXml(readResourceFromClassloader(fileName));
+            File outFile = FileUtils.createDirectory(new File(getBasedir(), fileName));
+            Document original = XMLUtils.parseXml(source);
 
             Iterator it = patches.iterator();
             while (it.hasNext()) {
-                Document component = ((PatchCachingOutputStream) it.next()).getPatch();
+                PatchCachingOutputStream pcis = (PatchCachingOutputStream) it.next();
+                Document component = (pcis).getPatch();
 
                 Element elem = component.getDocumentElement();
-                if (elem.getTagName().equals("xweb")) {
-                    String replacePropertiesStr = elem.getAttribute("replace-properties");
+                if (!elem.getTagName().equals("xweb")) {
+                    throw new DeploymentException("not a valid xweb patch file: " + pcis.getDocumentName());
+                }
 
-                    boolean replaceProperties = !("no".equalsIgnoreCase(replacePropertiesStr) || "false"
-                            .equalsIgnoreCase(replacePropertiesStr));
+                String replacePropertiesStr = elem.getAttribute("replace-properties");
 
-                    String xpath = elem.getAttribute("xpath");
-                    if (xpath != null) {
+                boolean replaceProperties = !("no".equalsIgnoreCase(replacePropertiesStr) || "false"
+                        .equalsIgnoreCase(replacePropertiesStr));
 
-                        NodeList nodes = XPathAPI.selectNodeList(original, xpath);
+                String xpath = elem.getAttribute("xpath");
+                if (xpath == null) {
+                    throw new DeploymentException("no xpath parameter in patch file: " + pcis.getDocumentName());
+                }
 
-                        if (nodes.getLength() == 1) {
-                            Node root = nodes.item(0);
-                            // Test that 'root' node satisfies 'component'
-                            // insertion criteria
-                            String testPath = elem.getAttribute("unless-path");
-                            if (testPath == null || testPath.length() == 0) {
-                                // only look for old "unless" attr if
-                                // unless-path is not present
-                                testPath = elem.getAttribute("unless");
+                NodeList nodes = XPathAPI.selectNodeList(original, xpath);
+
+                if (nodes.getLength() == 0) {
+                    throw new DeploymentException("no matches for xpath: [" + xpath + "] in patch file: "
+                            + pcis.getDocumentName());
+                }
+                if (nodes.getLength() > 1) {
+                    throw new DeploymentException("multiple matches for xpath: [" + xpath + "] in patch file: "
+                            + pcis.getDocumentName());
+                }
+
+                Node root = nodes.item(0);
+                // Test that 'root' node satisfies 'component'
+                // insertion criteria
+                String testPath = elem.getAttribute("unless-path");
+                if (testPath == null || testPath.length() == 0) {
+                    // only look for old "unless" attr if
+                    // unless-path is not present
+                    testPath = elem.getAttribute("unless");
+                }
+
+                if (testPath != null && testPath.length() > 0 && XPathAPI.eval(root, testPath).bool()) {
+                    // no test path or 'unless' condition is satisfied
+                    getLogger().debug( "skipping application of patch file: " + pcis.getDocumentName() );
+                } else {
+                    // Test if component wants us to remove
+                    // a list of nodes first
+                    xpath = elem.getAttribute("remove");
+                    if (xpath != null && xpath.length() > 0) {
+                        nodes = XPathAPI.selectNodeList(original, xpath);
+                        for (int i = 0, length = nodes.getLength(); i < length; i++) {
+                            Node node = nodes.item(i);
+                            Node parent = node.getParentNode();
+                            parent.removeChild(node);
+                        }
+                    }
+                    // Test for an attribute that needs to be
+                    // added to an element
+                    String name = elem.getAttribute("add-attribute");
+                    String value = elem.getAttribute("value");
+
+                    if (name != null && name.length() > 0 && value != null && root instanceof Element) {
+                        ((Element) root).setAttribute(name, value);
+                    }
+
+                    // Allow multiple attributes to be added or
+                    // modified
+                    if (root instanceof Element) {
+                        NamedNodeMap attrMap = elem.getAttributes();
+                        for (int i = 0; i < attrMap.getLength(); ++i) {
+                            Attr attr = (Attr) attrMap.item(i);
+                            final String addAttr = "add-attribute-";
+                            if (attr.getName().startsWith(addAttr)) {
+                                String key = attr.getName().substring(addAttr.length());
+                                ((Element) root).setAttribute(key, attr.getValue());
                             }
+                        }
+                    }
 
-                            if (!(testPath != null && testPath.length() > 0 && XPathAPI.eval(root, testPath).bool())) {
-                                // Test if component wants us to remove
-                                // a list of nodes first
-                                xpath = elem.getAttribute("remove");
-                                if (xpath != null && xpath.length() > 0) {
-                                    nodes = XPathAPI.selectNodeList(original, xpath);
-                                    for (int i = 0, length = nodes.getLength(); i < length; i++) {
-                                        Node node = nodes.item(i);
-                                        Node parent = node.getParentNode();
-                                        parent.removeChild(node);
-                                    }
-                                }
-                                // Test for an attribute that needs to be
-                                // added to an element
-                                String name = elem.getAttribute("add-attribute");
-                                String value = elem.getAttribute("value");
+                    // Test if 'component' provides desired
+                    // insertion point
+                    xpath = elem.getAttribute("insert-before");
+                    Node before = null;
 
-                                if (name != null && name.length() > 0 && value != null && root instanceof Element) {
-                                    ((Element) root).setAttribute(name, value);
-                                }
-
-                                // Allow multiple attributes to be added or
-                                // modified
-                                if (root instanceof Element) {
-                                    NamedNodeMap attrMap = elem.getAttributes();
-                                    for (int i = 0; i < attrMap.getLength(); ++i) {
-                                        Attr attr = (Attr) attrMap.item(i);
-                                        final String addAttr = "add-attribute-";
-                                        if (attr.getName().startsWith(addAttr)) {
-                                            String key = attr.getName().substring(addAttr.length());
-                                            ((Element) root).setAttribute(key, attr.getValue());
-                                        }
-                                    }
-                                }
-
-                                // Test if 'component' provides desired
-                                // insertion point
-                                xpath = elem.getAttribute("insert-before");
-                                Node before = null;
-
-                                if (xpath != null && xpath.length() > 0) {
-                                    nodes = XPathAPI.selectNodeList(root, xpath);
-                                    if (nodes.getLength() != 0) {
-                                        before = nodes.item(0);
-                                    }
-                                } else {
-                                    xpath = elem.getAttribute("insert-after");
-                                    if (xpath != null && xpath.length() > 0) {
-                                        nodes = XPathAPI.selectNodeList(root, xpath);
-                                        if (nodes.getLength() != 0) {
-                                            before = nodes.item(nodes.getLength() - 1).getNextSibling();
-                                        }
-                                    }
-                                }
-
-                                NodeList componentNodes = component.getDocumentElement().getChildNodes();
-
-                                for (int i = 0; i < componentNodes.getLength(); i++) {
-                                    Node node = original.importNode(componentNodes.item(i), true);
-
-                                    if (before == null) {
-                                        root.appendChild(node);
-                                    } else {
-                                        root.insertBefore(node, before);
-                                    }
-                                }
-                            } else {
-                                // no test path or 'unless' condition is
-                                // satisfied
-                            }
-                        } else {
-                            // no matches or too many matches
+                    if (xpath != null && xpath.length() > 0) {
+                        nodes = XPathAPI.selectNodeList(root, xpath);
+                        if (nodes.getLength() != 0) {
+                            before = nodes.item(0);
                         }
                     } else {
-                        // no xpath parameter
-                        // TODO raise exception
+                        xpath = elem.getAttribute("insert-after");
+                        if (xpath != null && xpath.length() > 0) {
+                            nodes = XPathAPI.selectNodeList(root, xpath);
+                            if (nodes.getLength() != 0) {
+                                before = nodes.item(nodes.getLength() - 1).getNextSibling();
+                            }
+                        }
                     }
-                } else {
-                    // not a valid xpatch file
-                    // TODO raise exception
+
+                    NodeList componentNodes = component.getDocumentElement().getChildNodes();
+                    for (int i = 0; i < componentNodes.getLength(); i++) {
+                        Node node = original.importNode(componentNodes.item(i), true);
+
+                        if (before == null) {
+                            root.appendChild(node);
+                        } else {
+                            root.insertBefore(node, before);
+                        }
+                    }
                 }
             }
 
@@ -208,12 +209,17 @@ public class XPatchDeployer extends SingleFileDeployer {
         }
     }
 
-    private InputStream readResourceFromClassloader(String fileName) {
-        return XPatchDeployer.class.getClassLoader().getResourceAsStream(
-                "org/apache/cocoon/maven/deployer/monolithic/" + fileName);
-    }
-
     private class PatchCachingOutputStream extends ByteArrayOutputStream {
+        private String documentName;
+
+        public String getDocumentName() {
+            return documentName;
+        }
+
+        public PatchCachingOutputStream(String documentName) {
+            this.documentName = documentName;
+        }
+
         public Document getPatch() throws SAXException, IOException, ParserConfigurationException {
             return XMLUtils.parseXml(new ByteArrayInputStream(this.buf, 0, this.count));
         }
