@@ -19,42 +19,44 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * A container for configuration parameters. Depending on the localPath parameter,
- * all other 'path' parameters are set.
+ * A container for configuration parameters. Depending on the localPath
+ * parameter, all other 'path' parameters are set.
  * 
  * @version $Id$
  */
 public class DevelopmentBlock {
-
+    // TODO this won't work if user chooses a different resources directory in
+    // pom.xml. There should be a way to get this path using Maven API.
     private static final String RESOURCES_DIR = "src/main/resources/";
-    
-	public String artifactId;
+    public String artifactId;
     public String groupId;
-    
+
     public String springConfPath;
-    public String xconfConfPath; 
+    public String xconfConfPath;
     public String sitemapAdditionsConfPath;
     public String targetClassesPath;
     public String cobInfPath;
-    
+    public String xPatchPath;
+
     public void setLocalPath(String localPath) throws FileNotFoundException {
-    	File localPathDir = new File(localPath);
-    	if(!localPathDir.exists()) {
-    		throw new FileNotFoundException("Directory '" + localPath + "' does not exist!");
-    	}
-    	
-    	springConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/spring"));    	
-    	xconfConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/legacy/xconf"));    	
-    	sitemapAdditionsConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/legacy/sitemap-additions"));    	
-    	targetClassesPath = checkDir(new File(localPath, "target/classes"));    	
-    	cobInfPath = checkDir(new File(localPath, RESOURCES_DIR + "COB-INF"));    	    	
+        File localPathDir = new File(localPath);
+        if (!localPathDir.exists()) {
+            throw new FileNotFoundException("Directory '" + localPath + "' does not exist!");
+        }
+
+        springConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/spring"));
+        xconfConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/legacy/xconf"));
+        sitemapAdditionsConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/legacy/sitemap-additions"));
+        xPatchPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/xpatch"));
+        targetClassesPath = checkDir(new File(localPath, "target/classes"));
+        cobInfPath = checkDir(new File(localPath, RESOURCES_DIR + "COB-INF"));
     }
 
-	private String checkDir(File dir) {
-		if(dir.exists()) {
-    		return dir.toURI().toString();
-    	}
-		return null;
-	}
-	
+    private String checkDir(File dir) {
+        if (dir.exists()) {
+            return dir.toURI().toString();
+        }
+        return null;
+    }
+
 }
