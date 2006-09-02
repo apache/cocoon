@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.util;
+package org.apache.cocoon.core.container.spring.avalon;
 
 import java.util.Map;
 
@@ -37,25 +37,6 @@ public class ComponentContext
     extends DefaultContext {
 
     protected static final String OBJECT_MODEL_KEY_PREFIX = ContextHelper.CONTEXT_OBJECT_MODEL + '.';
-
-    /**
-     * Create a Context with specified data and parent.
-     *
-     * @param contextData the context data
-     * @param parent the parent Context (may be null)
-     */
-    public ComponentContext(final Map contextData, final Context parent) {
-        super( contextData, parent );
-    }
-
-    /**
-     * Create a Context with specified data.
-     *
-     * @param contextData the context data
-     */
-    public ComponentContext(final Map contextData) {
-        super( contextData );
-    }
 
     /**
      * Create a Context with specified parent.

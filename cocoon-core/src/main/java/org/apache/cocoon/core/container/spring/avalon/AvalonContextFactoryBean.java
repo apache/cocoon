@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,12 +23,13 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.util.ComponentContext;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.web.context.ServletContextAware;
 
 /**
+ * This factory bean sets up the Avalon Context object.
+ * It is part of the Spring bridge for Avalon integration.
  *
  * @since 2.2
  * @version $Id$
@@ -42,6 +43,7 @@ public class AvalonContextFactoryBean
     /** The settings. */
     protected Settings settings;
 
+    /** The Avalon context. */
     protected Context context;
 
     /**
@@ -57,6 +59,9 @@ public class AvalonContextFactoryBean
      */
     protected void init()
     throws Exception {
+        if ( this.settings == null ) {
+            throw new IllegalArgumentException("Settings object is missing.");
+        }
         // create new Avalon context
         final DefaultContext appContext = new ComponentContext();
 
@@ -93,10 +98,10 @@ public class AvalonContextFactoryBean
         return true;
     }
 
-    public Settings getSettings() {
-        return settings;
-    }
-
+    /**
+     * Inject the settings object.
+     * @param settings The settings.
+     */
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
