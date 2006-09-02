@@ -184,8 +184,17 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="fix">
+      CForms: Repeater identity binding was failing on save if widget path was
+      given.
+    </action>
+    <action dev="VG" type="fix">
+      CForms: Inherit fb:on-delete-row, fb:on-insert-row, fb:identity repeater
+      bindings from the parent. Fix detection of 'simple' mode.
+    </action>
     <action dev="AN" type="add">
-      ZipArchiveSerializer: Set time stamp of ZIP entries to last modification time of source file.
+      ZipArchiveSerializer: Set time stamp of ZIP entries to last modification
+      time of source file.
     </action>
     <action dev="AG" type="update">
       Updated ehcache to 1.2.2.
@@ -206,7 +215,7 @@
       Core: CopySourceAction generate NPE.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1849" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
-      CForms: debug logging left in AggregateFieldDefinitionBuilder.java.
+      CForms: Removed debug logging left in AggregateFieldDefinitionBuilder.java.
     </action>
     <action dev="MPO" type="fix" fixes-bug="COCOON-1687" >
       CForms: Reverting incompatible change introduced in version 2.1.9.  When binding a widget with value null, XML
