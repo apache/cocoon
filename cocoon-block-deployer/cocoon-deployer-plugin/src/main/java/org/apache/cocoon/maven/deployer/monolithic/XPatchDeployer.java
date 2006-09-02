@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.maven.deployer.monolithic;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,6 +38,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
+import org.apache.cocoon.maven.deployer.utils.XMLUtils;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -211,5 +214,17 @@ public class XPatchDeployer extends SingleFileDeployer {
     private InputStream readResourceFromClassloader(String fileName) {
         return XPatchDeployer.class.getClassLoader().getResourceAsStream(
                 "org/apache/cocoon/maven/deployer/monolithic/" + fileName);
+    }
+
+    private class PatchCachingOutputStream extends ByteArrayOutputStream {
+        public Document getPatch() throws SAXException, IOException, ParserConfigurationException {
+//            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//            factory.setValidating(false);
+//            factory.setExpandEntityReferences(false);
+//            factory.setNamespaceAware(false);
+//            factory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd", Boolean.FALSE);
+//            DocumentBuilder builder = factory.newDocumentBuilder();
+            return XMLUtils.parseXml(new ByteArrayInputStream(this.buf, 0, this.count));
+        }
     }
 }
