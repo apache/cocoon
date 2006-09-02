@@ -228,6 +228,9 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         // deploy all libraries to WEB-INF/cocoon/lib and cocoon-bootstrap to
         // WEB-INF/lib
         copyLibs();
+
+        if (useShieldingClassloader)
+            shieldCocoonWebapp();
     }
 
     /**
@@ -305,32 +308,43 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      */
     private void shieldCocoonWebapp() throws MojoExecutionException {
         File webappDirectory_ = getWebappDirectory();
+
+        String webInfSlashWebXml = "WEB-INF" + File.separatorChar + "web.xml";
+
         String webXmlLocation = this.getWebXml();
+        // TODO sprawdzic czy byc moze w targecie jest juz taki web.xml
         if (webXmlLocation == null) {
-            webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF"
-                    + File.separatorChar + "web.xml";
+            webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + webInfSlashWebXml;
         }
+
+        String targetWebXmlLocation = getWebappDirectory().getAbsolutePath() + File.separatorChar + webInfSlashWebXml;
         if (!new File(webXmlLocation).exists()) {
-            this.getLog().info("No web.xml supplied. Will install default web.xml");
-            final String webXml = "WEB-INF" + File.separatorChar + "web.xml";
-            File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createDirectory(new File(webappDirectory_,
-                    webXml));
-            try {
-                IOUtils.copy(readResourceFromClassloader(webXml), new FileOutputStream(outFile));
-            } catch (IOException ioex) {
-                throw new MojoExecutionException("cannot read resource " + webXml, ioex);
+            getLog().debug("no web.xml in source location. checking for generated web.xml in target location.");
+            if (!new File(targetWebXmlLocation).exists()) {
+                this.getLog().info("No web.xml supplied. Will install default web.xml");
+                File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createDirectory(new File(
+                        webappDirectory_, webInfSlashWebXml));
+                try {
+                    // TODO buffered stream + close stream?
+                    IOUtils.copy(readResourceFromClassloader("WEB-INF/web.xml"), new FileOutputStream(outFile));
+                } catch (IOException ioex) {
+                    throw new MojoExecutionException("cannot read resource " + webXml, ioex);
+                }
             }
-            webXmlLocation = webappDirectory_.getAbsolutePath() + File.separatorChar + webXml;
+            webXmlLocation = targetWebXmlLocation;
+        } else {
+            this.getLog().info("web.xml present");
         }
         this.getLog().info("Adding shielded classloader configuration to webapp configuration.");
         this.getLog().debug("Reading web.xml: " + webXmlLocation);
         try {
+            // TODO buffered stream + close stream?
             final Document webAppDoc = XMLUtils.parseXml(new FileInputStream(new File(webXmlLocation)));
             WebApplicationRewriter.rewrite(webAppDoc);
-            final String dest = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF"
-                    + File.separatorChar + "web.xml";
-            this.getLog().debug("Writing web.xml: " + dest);
-            XMLUtils.write(webAppDoc, new FileOutputStream(dest));
+            this.getLog().debug("Writing web.xml: " + targetWebXmlLocation);
+            
+            // TODO buffered stream + close stream?
+            XMLUtils.write(webAppDoc, new FileOutputStream(targetWebXmlLocation));
         } catch (Exception e) {
             throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
         }
@@ -360,15 +374,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             if (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())
                     && !Artifact.SCOPE_TEST.equals(artifact.getScope()) && "jar".equals(artifact.getType())) {
                 try {
-                    if (artifact.getArtifactId().equals("cocoon-bootstrap")) {
-                        FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/lib"));
-                        this.getLog().info("Deploying artifact to WEB-INF/lib/" + artifact.getFile().getName());
-                    } else {
-                        FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/"
-                                + COCOON_LIB));
-                        this.getLog().info(
-                                "Deploying artifact to WEB-INF/" + COCOON_LIB + "/" + artifact.getFile().getName());
-                    }
+                    FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/lib"));
+                    this.getLog().info("Deploying artifact to WEB-INF/lib/" + artifact.getFile().getName());
                 } catch (IOException e) {
                     throw new MojoExecutionException("Can't copy artifact '" + artifact.getArtifactId()
                             + "' to WEB-INF/" + COCOON_LIB);
