@@ -15,12 +15,14 @@
  */
 package org.apache.cocoon.maven.deployer.monolithic;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -134,8 +136,12 @@ public class MonolithicCocoonDeployer {
                 }
             }
 
-            // TODO close streams
-            xwebPatcher.applyPatches(readResourceFromClassloader("WEB-INF/web.xml"), "WEB-INF/web.xml");
+            InputStream sourceWebXmlFile = readResourceFromClassloader("WEB-INF/web.xml");
+            try {
+                xwebPatcher.applyPatches(sourceWebXmlFile, "WEB-INF/web.xml");
+            } finally { 
+                IOUtils.closeQuietly(sourceWebXmlFile);
+            }
             copyFile(basedir, "WEB-INF/applicationContext.xml");
             copyFile(basedir, "WEB-INF/cocoon/properties/core.properties");
         }
@@ -151,21 +157,24 @@ public class MonolithicCocoonDeployer {
     }
 
     private void writeProperties(final File basedir, final String propertiesFile, final Properties properties) {
+        File outFile = new File(basedir, propertiesFile);
+        OutputStream os = null;
         try {
-            File outFile = new File(basedir, propertiesFile);
-            //TODO close stream!
-            properties.store(new FileOutputStream(FileUtils.createPath(outFile)), null);
+            os = new FileOutputStream(FileUtils.createPath(outFile));
             this.logger.info("Deploying dev properties to " + propertiesFile);
+            properties.store(os, null);
         } catch (IOException e) {
             throw new DeploymentException("Can't save properties to " + propertiesFile, e);
+        } finally {
+            IOUtils.closeQuietly(os);
         }
     }
 
     private void copyFile(final File basedir, final String fileName) {
         try {
             File outFile = FileUtils.createPath(new File(basedir, fileName));
-            CopyUtils.copy(readResourceFromClassloader(fileName), new FileOutputStream(outFile));
             this.logger.info("Deploying resource file to " + fileName);
+            CopyUtils.copy(readResourceFromClassloader(fileName), new FileOutputStream(outFile));
         } catch (FileNotFoundException e) {
             throw new DeploymentException("Can't copy to " + fileName, e);
         } catch (IOException e) {
@@ -174,19 +183,18 @@ public class MonolithicCocoonDeployer {
     }
 
     private void writeStringTemplateToFile(final File basedir, final String fileName, final Map templateObjects) {
-        FileOutputStream fos = null;
+        OutputStream fos = null;
         try {
             File outFile = FileUtils.createPath(new File(basedir, fileName));
-            // TODO buffered stream!
-            fos = new FileOutputStream(outFile);
+            fos = new BufferedOutputStream(new FileOutputStream(outFile));
             InputStream fileIs = readResourceFromClassloader(fileName);
             StringTemplate stringTemplate = new StringTemplate(IOUtils.toString(fileIs));
             for (Iterator templateObjectsIt = templateObjects.keySet().iterator(); templateObjectsIt.hasNext();) {
                 Object key = templateObjectsIt.next();
                 stringTemplate.setAttribute((String) key, templateObjects.get(key));
             }
-            IOUtils.write(stringTemplate.toString(), fos);
             this.logger.info("Deploying string-template to " + fileName);
+            IOUtils.write(stringTemplate.toString(), fos);
         } catch (FileNotFoundException e) {
             throw new DeploymentException(fileName + " not found.", e);
         } catch (IOException e) {
