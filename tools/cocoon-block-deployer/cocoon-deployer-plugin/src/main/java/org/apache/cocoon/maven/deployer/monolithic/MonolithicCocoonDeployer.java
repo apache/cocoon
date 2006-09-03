@@ -50,6 +50,11 @@ public class MonolithicCocoonDeployer {
         this.logger = logger;
     }
 
+    public void deploy(final Map libraries, final File basedir, final String blocksdir)
+            throws DeploymentException {
+        deploy(libraries, basedir, blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0]);
+    }
+    
     public void deploy(final Map libraries, final File basedir, final String blocksdir,
             final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
             throws DeploymentException {
@@ -148,7 +153,8 @@ public class MonolithicCocoonDeployer {
     private void writeProperties(final File basedir, final String propertiesFile, final Properties properties) {
         try {
             File outFile = new File(basedir, propertiesFile);
-            properties.store(new FileOutputStream(FileUtils.createDirectory(outFile)), null);
+            //TODO close stream!
+            properties.store(new FileOutputStream(FileUtils.createPath(outFile)), null);
             this.logger.info("Deploying dev properties to " + propertiesFile);
         } catch (IOException e) {
             throw new DeploymentException("Can't save properties to " + propertiesFile, e);
@@ -157,7 +163,7 @@ public class MonolithicCocoonDeployer {
 
     private void copyFile(final File basedir, final String fileName) {
         try {
-            File outFile = FileUtils.createDirectory(new File(basedir, fileName));
+            File outFile = FileUtils.createPath(new File(basedir, fileName));
             CopyUtils.copy(readResourceFromClassloader(fileName), new FileOutputStream(outFile));
             this.logger.info("Deploying resource file to " + fileName);
         } catch (FileNotFoundException e) {
@@ -170,7 +176,8 @@ public class MonolithicCocoonDeployer {
     private void writeStringTemplateToFile(final File basedir, final String fileName, final Map templateObjects) {
         FileOutputStream fos = null;
         try {
-            File outFile = FileUtils.createDirectory(new File(basedir, fileName));
+            File outFile = FileUtils.createPath(new File(basedir, fileName));
+            // TODO buffered stream!
             fos = new FileOutputStream(outFile);
             InputStream fileIs = readResourceFromClassloader(fileName);
             StringTemplate stringTemplate = new StringTemplate(IOUtils.toString(fileIs));

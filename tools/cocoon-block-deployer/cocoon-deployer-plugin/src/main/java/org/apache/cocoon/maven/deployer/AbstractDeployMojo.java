@@ -175,18 +175,14 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * features that the blocks-fw offers.
      */
     protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir) throws MojoExecutionException {
-        File webappDirectory_ = getWebappDirectory();
-
-        // build the web application
-        this.buildExplodedWebapp(webappDirectory_);
+        this.buildExplodedWebapp(getWebappDirectory());
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
-        deployer.deploy(getBlockArtifactsAsMap(null), webappDirectory_, blocksdir, new DevelopmentBlock[0],
-                new DevelopmentProperty[0]);
+        deployer.deploy(getBlockArtifactsAsMap(null), getWebappDirectory(), blocksdir);
 
         // make sure that all configuration files available in the webapp
         // override block configuration files
         try {
-            copyResources(getWarSourceDirectory(), webappDirectory_, getWebXml());
+            copyResources(getWarSourceDirectory(), getWebappDirectory(), getWebXml());
         } catch (IOException e) {
             throw new MojoExecutionException("A problem occurred while copying webapp resources.", e);
         }
@@ -204,10 +200,14 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      */
     protected void blockDeploymentMonolithicCocoon(final String blocksdir, final DevelopmentBlock[] blocks,
             final DevelopmentProperty[] properties) throws MojoExecutionException {
-        File webappDirectory_ = getWebappDirectory();
-
-        File webinfDir = new File(webappDirectory_, WEB_INF);
-        webinfDir.mkdirs();
+        this.buildExplodedWebapp(getWebappDirectory());
+        // remove WEB-INF/classes as they are loaded by ReloadingClassloader
+        // from a dirrerent location
+        try {
+            FileUtils.deleteDirectory(new File(webappDirectory, "WEB-INF/classes"));
+        } catch (IOException e) {
+            throw new MojoExecutionException("unable to delete WEB-INF/classes directory", e);
+        }
 
         // add current block to the development blocks
         // it is important that the current block is put at the end of the array
@@ -226,9 +226,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
         // deploy all blocks
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
-        deployer.deploy(getBlockArtifactsAsMap(blocks), webappDirectory_, blocksdir, extBlocks, properties);
-
-        copyLibs();
+        deployer.deploy(getBlockArtifactsAsMap(blocks), getWebappDirectory(), blocksdir, extBlocks, properties);
 
         if (useShieldingClassloader)
             shieldCocoonWebapp();
@@ -323,8 +321,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             getLog().debug("no web.xml in source location. checking for generated web.xml in target location.");
             if (!new File(targetWebXmlLocation).exists()) {
                 this.getLog().info("No web.xml supplied. Will install default web.xml");
-                File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createDirectory(new File(
-                        webappDirectory_, webInfSlashWebXml));
+                File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createPath(new File(webappDirectory_,
+                        webInfSlashWebXml));
 
                 try {
                     CopyUtils.copy(readResourceFromClassloader("WEB-INF/web.xml"), new FileOutputStream(outFile));
@@ -352,18 +350,22 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
         WebApplicationRewriter.rewrite(webAppDoc);
         this.getLog().debug("Writing web.xml: " + targetWebXmlLocation);
-        
+
         try {
             XMLUtils.write(webAppDoc, new FileOutputStream(targetWebXmlLocation));
         } catch (Exception e) {
             throw new MojoExecutionException("Unable to write web.xml to " + targetWebXmlLocation, e);
         }
-        
+
         if (this.useShieldingRepository) {
             this.getLog().info("Moving classes and libs to shielded location.");
             final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
-            this.move(webInfDir, "lib", COCOON_LIB);
-            this.move(webInfDir, "classes", COCOON_CLASSES);
+            try {
+                this.move(webInfDir, "lib", COCOON_LIB);
+                this.move(webInfDir, "classes", COCOON_CLASSES);
+            } catch (IOException e) {
+                throw new MojoExecutionException("unable to shield classes/libs", e);
+            }
         }
     }
 
@@ -372,42 +374,14 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
                 "org/apache/cocoon/maven/deployer/monolithic/" + fileName);
     }
 
-    /**
-     * Copy all libs that don't have the scope provided or system to
-     * WEB-INF/cocoon/lib, except cocoon-bootstrap, which is copied to
-     * WEB-INF/lib
-     */
-    private void copyLibs() throws MojoExecutionException {
-        File webappDirectory_ = this.getWebappDirectory();
-        for (Iterator iter = this.getProject().getArtifacts().iterator(); iter.hasNext();) {
-            Artifact artifact = (Artifact) iter.next();
-            // Include runtime and compile time libraries
-            if (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())
-                    && !Artifact.SCOPE_TEST.equals(artifact.getScope())
-                    && !Artifact.SCOPE_SYSTEM.equals(artifact.getScope()) && "jar".equals(artifact.getType())) {
-                try {
-                    FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/lib"));
-                    this.getLog().info("Deploying artifact to WEB-INF/lib/" + artifact.getFile().getName());
-                } catch (IOException e) {
-                    throw new MojoExecutionException("Can't copy artifact '" + artifact.getArtifactId()
-                            + "' to WEB-INF/" + COCOON_LIB);
-                }
-            }
-        }
-    }
-
-    /**
-     * Move all libs from one directory (WEB-INF/lib) to another
-     * (WEB-INF/cocoon/lib).
-     */
-    private void move(String parentDir, String srcDir, String destDir) {
+    private void move(String parentDir, String srcDir, String destDir) throws IOException {
         final File srcDirectory = new File(parentDir, srcDir);
         if (srcDirectory.exists() && srcDirectory.isDirectory()) {
             File destDirectory = new File(parentDir, destDir);
             if (this.getLog().isDebugEnabled()) {
                 this.getLog().debug("Deleting directory " + destDirectory);
             }
-            org.apache.cocoon.maven.deployer.utils.FileUtils.deleteDirRecursivly(destDirectory);
+            FileUtils.deleteDirectory(destDirectory);
             destDirectory = new File(parentDir, destDir);
             if (this.getLog().isDebugEnabled()) {
                 this.getLog().debug("Recreating directory " + destDirectory);
