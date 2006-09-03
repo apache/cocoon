@@ -38,88 +38,77 @@ import org.codehaus.plexus.archiver.war.WarArchiver;
  */
 public class DeployWarMojo extends AbstractDeployMojo {
 
-    /** 
-     * @parameter expression="${blocksDirectory}" default-value="blocks"  
+    /**
+     * @parameter expression="${blocksDirectory}" default-value="blocks"
      */
-    private String blocksdir;       
-    
-	/**
-	 * The directory for the generated WAR.
-	 * 
-	 * @parameter expression="${project.build.directory}"
-	 * @required
-	 */
-	private String outputDirectory;
+    private String blocksdir;
 
-	/**
-	 * The name of the generated war.
-	 * 
-	 * @parameter expression="${project.build.finalName}"
-	 * @required
-	 */
-	private String warName;
+    /**
+     * The directory for the generated WAR.
+     * 
+     * @parameter expression="${project.build.directory}"
+     * @required
+     */
+    private String outputDirectory;
 
-	/**
-	 * The Jar archiver.
-	 * 
-	 * @parameter expression="${component.org.codehaus.plexus.archiver.Archiver#war}"
-	 * @required
-	 */
-	private WarArchiver warArchiver;
+    /**
+     * The name of the generated war.
+     * 
+     * @parameter expression="${project.build.finalName}"
+     * @required
+     */
+    private String warName;
 
-	/**
-	 * The maven archive configuration to use.
-	 * 
-	 * @parameter
-	 */
-	private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
+    /**
+     * The Jar archiver.
+     * 
+     * @parameter expression="${component.org.codehaus.plexus.archiver.Archiver#war}"
+     * @required
+     */
+    private WarArchiver warArchiver;
 
-	public void execute() throws MojoExecutionException {
+    /**
+     * The maven archive configuration to use.
+     * 
+     * @parameter
+     */
+    private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
 
-		File warFile = new File(outputDirectory, warName + ".war");
-		
+    public void execute() throws MojoExecutionException {
+        File warFile = new File(outputDirectory, warName + ".war");
         this.deployMonolithicCocoonAppAsWebapp(this.blocksdir);
-        
-		try {
-			performPackaging(warFile);
-		} catch (Exception e) {
-			// TODO: improve error handling
-			throw new MojoExecutionException("Error assembling WAR", e);
-		}
 
-	}
+        try {
+            performPackaging(warFile);
+        } catch (Exception e) {
+            // TODO: improve error handling
+            throw new MojoExecutionException("Error assembling WAR", e);
+        }
+    }
 
-	/**
-	 * Generates the webapp according to the <tt>mode</tt> attribute.
-	 * 
-	 * @param warFile
-	 *            the target war file
-	 * @throws IOException
-	 * @throws ArchiverException
-	 * @throws ManifestException
-	 * @throws DependencyResolutionRequiredException
-	 */
-	private void performPackaging(File warFile) throws IOException,
-			ArchiverException, ManifestException,
-			DependencyResolutionRequiredException, MojoExecutionException {
-		getLog().info("Generating war " + warFile.getAbsolutePath());
+    /**
+     * Generates the webapp according to the <tt>mode</tt> attribute.
+     * 
+     * @param warFile
+     *            the target war file
+     * @throws IOException
+     * @throws ArchiverException
+     * @throws ManifestException
+     * @throws DependencyResolutionRequiredException
+     */
+    private void performPackaging(File warFile) throws IOException, ArchiverException, ManifestException,
+            DependencyResolutionRequiredException, MojoExecutionException {
+        getLog().info("Generating war " + warFile.getAbsolutePath());
 
-		MavenArchiver archiver = new MavenArchiver();
+        MavenArchiver archiver = new MavenArchiver();
+        archiver.setArchiver(warArchiver);
+        archiver.setOutputFile(warFile);
+        warArchiver.addDirectory(getWebappDirectory(), getIncludes(), getExcludes());
+        warArchiver.setWebxml(new File(getWebappDirectory(), "WEB-INF/web.xml"));
 
-		archiver.setArchiver(warArchiver);
-
-		archiver.setOutputFile(warFile);
-
-		warArchiver.addDirectory(getWebappDirectory(), getIncludes(),
-				getExcludes());
-
-		warArchiver
-				.setWebxml(new File(getWebappDirectory(), "WEB-INF/web.xml"));
-
-		// create archive
-		archiver.createArchive(getProject(), archive);
-
-		getProject().getArtifact().setFile(warFile);
-	}
+        // create archive
+        archiver.createArchive(getProject(), archive);
+        getProject().getArtifact().setFile(warFile);
+    }
 
 }

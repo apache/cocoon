@@ -30,6 +30,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.cocoon.maven.deployer.utils.WildcardHelper;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.maven.plugin.logging.Log;
 
@@ -41,7 +42,6 @@ import org.apache.maven.plugin.logging.Log;
  * @version $Id$
  */
 public class MonolithicServer22 {
-
 	private Log logger;
 	private File basedir;
 	private List rules = new ArrayList();
@@ -82,10 +82,7 @@ public class MonolithicServer22 {
                         }
 
                         out = new BufferedOutputStream(fileDeployer.writeResource(document.getName()));
-                        byte[] buffer = new byte[8192];
-                        int length;
-                        while ((length = zipStream.read(buffer)) > 0)
-                            out.write(buffer, 0, length);
+                        IOUtils.copy(zipStream, out);
                     } finally {
                         if (out != null) {
                             out.close();
