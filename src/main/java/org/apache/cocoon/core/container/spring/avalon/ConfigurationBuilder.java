@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.util;
+package org.apache.cocoon.core.container.spring.avalon;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,7 +95,7 @@ public class ConfigurationBuilder
     private Locator locator;
     private final NamespaceSupport namespaceSupport = new NamespaceSupport();
     private final Settings settings;
-    
+
     /**
      * Create a Configuration Builder
      */

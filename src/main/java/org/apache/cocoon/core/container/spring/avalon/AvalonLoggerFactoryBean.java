@@ -21,24 +21,28 @@ import java.net.URL;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
-import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.util.ConfigurationBuilder;
-import org.apache.cocoon.core.container.util.SettingsContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.web.context.ServletContextAware;
 
 /**
+ * Spring factory bean to setup the Avalon logger.
  *
  * @since 2.2
  * @version $Id$
  */
 public class AvalonLoggerFactoryBean
     implements FactoryBean, ServletContextAware {
+
+    /** Logger (we use the same logging mechanism as Spring!) */
+    protected final Log log = LogFactory.getLog(getClass());
 
     /** The servlet context. */
     protected ServletContext servletContext;
@@ -58,43 +62,20 @@ public class AvalonLoggerFactoryBean
         this.servletContext = sContext;
     }
 
-    /**
-     * Create a bootstrap logger that uses the servlet context
-     * @param servletContext
-     * @param logLevelString
-     * @return the logger
-     */
-    protected Logger createBootstrapLogger(String logLevelString) {
-        // create a bootstrap logger
-        int logLevel;
-        if ( "DEBUG".equalsIgnoreCase(logLevelString) ) {
-            logLevel = ServletLogger.LEVEL_DEBUG;
-        } else if ( "WARN".equalsIgnoreCase(logLevelString) ) {
-            logLevel = ServletLogger.LEVEL_WARN;
-        } else if ( "ERROR".equalsIgnoreCase(logLevelString) ) {
-            logLevel = ServletLogger.LEVEL_ERROR;
-        } else {
-            logLevel = ServletLogger.LEVEL_INFO;
-        }
-        return new ServletLogger(this.servletContext, "Cocoon", logLevel);
-    }
-
     protected void init()
     throws Exception {
-        // create a bootstrap logger
-        final String logLevelString = settings.getBootstrapLogLevel();
-        final Logger bootstrapLogger = this.createBootstrapLogger(logLevelString);
+        // create log directory
+        final File logSCDir = new File(settings.getWorkDirectory(), "cocoon-logs");
+        logSCDir.mkdirs();
 
         // create an own context for the logger manager
         final DefaultContext subcontext = new SettingsContext(settings);
         subcontext.put("context-work", new File(settings.getWorkDirectory()));
-        final File logSCDir = new File(settings.getWorkDirectory(), "cocoon-logs");
-        logSCDir.mkdirs();
         subcontext.put("log-dir", logSCDir.toString());
         subcontext.put("servlet-context", servletContext);
 
         final Log4JConfLoggerManager loggerManager = new Log4JConfLoggerManager();
-        loggerManager.enableLogging(bootstrapLogger);
+        loggerManager.enableLogging(new LoggerWrapper(this.log));
         loggerManager.contextualize(subcontext);
 
         // Configure the log4j manager
@@ -105,36 +86,18 @@ public class AvalonLoggerFactoryBean
         if ( loggerConfig != null ) {
             final URL url = servletContext.getResource(loggerConfig);
             if ( url != null ) {
-                final ConfigurationBuilder builder = new ConfigurationBuilder(settings);
+                final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder(true);
                 final Configuration conf = builder.build(servletContext.getResourceAsStream(loggerConfig));
-                // override log level?
-                if (settings.getOverrideLogLevel() != null) {
-                    changeLogLevel(conf.getChildren(), settings.getOverrideLogLevel());
-                }
                 loggerManager.configure(conf);
             } else {
-                bootstrapLogger.warn("The logging configuration '" + loggerConfig + "' is not available.");
+                this.log.warn("The logging configuration '" + loggerConfig + "' is not available.");
                 loggerManager.configure(new DefaultConfiguration("empty"));
             }
         } else {
             loggerManager.configure(new DefaultConfiguration("empty"));
         }
 
-        String accesslogger = settings.getEnvironmentLogger();
-        if (accesslogger == null) {
-            accesslogger = "cocoon";
-        }
-        this.logger = loggerManager.getLoggerForCategory(accesslogger);
-    }
-
-    protected static void changeLogLevel(Configuration[] configs, String level) {
-        for(int i=0; i<configs.length; i++) {
-            if ( configs[i].getName().equals("priority") ) {
-                // we now that this is a DefaultConfiguration
-                ((DefaultConfiguration)configs[i]).setAttribute("value", level);
-            }
-            changeLogLevel(configs[i].getChildren(), level);
-        }
+        this.logger = loggerManager.getLoggerForCategory("cocoon");
     }
 
     /**
@@ -158,19 +121,132 @@ public class AvalonLoggerFactoryBean
         return true;
     }
 
-    public Settings getSettings() {
-        return settings;
-    }
-
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
 
-    public String getLoggingConfiguration() {
-        return loggingConfiguration;
-    }
-
     public void setLoggingConfiguration(String loggingConfiguration) {
         this.loggingConfiguration = loggingConfiguration;
+    }
+
+    protected static final class LoggerWrapper implements Logger {
+
+        protected final Log log;
+
+        public LoggerWrapper(Log l) {
+            this.log = l;
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#debug(java.lang.String, java.lang.Throwable)
+         */
+        public void debug(String arg0, Throwable arg1) {
+            log.debug(arg0, arg1);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#debug(java.lang.String)
+         */
+        public void debug(String arg0) {
+            log.debug(arg0);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#error(java.lang.String, java.lang.Throwable)
+         */
+        public void error(String arg0, Throwable arg1) {
+            log.error(arg0, arg1);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#error(java.lang.String)
+         */
+        public void error(String arg0) {
+            log.error(arg0);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#fatalError(java.lang.String, java.lang.Throwable)
+         */
+        public void fatalError(String arg0, Throwable arg1) {
+            log.fatal(arg0, arg1);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#fatalError(java.lang.String)
+         */
+        public void fatalError(String arg0) {
+            log.fatal(arg0);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#info(java.lang.String, java.lang.Throwable)
+         */
+        public void info(String arg0, Throwable arg1) {
+            log.info(arg0, arg1);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#info(java.lang.String)
+         */
+        public void info(String arg0) {
+            log.info(arg0);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isDebugEnabled()
+         */
+        public boolean isDebugEnabled() {
+            return log.isDebugEnabled();
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isErrorEnabled()
+         */
+        public boolean isErrorEnabled() {
+            return log.isErrorEnabled();
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isInfoEnabled()
+         */
+        public boolean isInfoEnabled() {
+            return log.isInfoEnabled();
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isWarnEnabled()
+         */
+        public boolean isWarnEnabled() {
+            return log.isWarnEnabled();
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#warn(java.lang.String, java.lang.Throwable)
+         */
+        public void warn(String arg0, Throwable arg1) {
+            log.warn(arg0, arg1);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#warn(java.lang.String)
+         */
+        public void warn(String arg0) {
+            log.warn(arg0);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#getChildLogger(java.lang.String)
+         */
+        public Logger getChildLogger(String arg0) {
+            return this;
+        }
+
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isFatalErrorEnabled()
+         */
+        public boolean isFatalErrorEnabled() {
+            return this.log.isFatalEnabled();
+        }
     }
 }

@@ -35,34 +35,12 @@ public interface Settings {
     String PROPERTY_RUNNING_MODE = "org.apache.cocoon.mode";
 
     /**
-     * This parameter indicates the log level to use throughout startup of the
-     * system. As soon as the logging system is setup the setting of the log4j.xconf
-     * configuration is used instead! Only for startup this log level is of importance.
-     */
-    String KEY_LOGGING_BOOTSTRAP_LOGLEVEL = "org.apache.cocoon.logging.bootstrap.loglevel";
-
-    /**
      * This parameter is used to list classes that should be loaded at
      * initialization time of the servlet. For example, JDBC Drivers used need to
      * be named here. Additional entries may be inserted here during build
      * depending on your build properties.
      */
     String KEY_LOAD_CLASSES = "org.apache.cocoon.classloader.load.classes";
-
-    /**
-     * This parameter indicates the category id of the logger from the LogKit
-     * configuration used by the environment.
-     */
-    String KEY_LOGGING_ENVIRONMENT_LOGGER = "org.apache.cocoon.logging.category.environment";
-
-    /**
-     * This parameter indicates the category id of the logger from the LogKit
-     * management configuration for the Cocoon engine.
-     * This logger is used for all components described in the cocoon.xconf
-     * and sitemap.xmap file not having specified a logger with the
-     * logger="..." attribute in the component configuration file.
-     */
-    String KEY_LOGGING_COCOON_LOGGER = "org.apache.cocoon.logging.category.cocoon";
 
     /**
      * This parameter allows to specify where Cocoon should put uploaded files.
@@ -108,13 +86,6 @@ public interface Settings {
      * you have a buggy servlet container.
      */
     String KEY_CONTAINER_ENCODING = "org.apache.cocoon.containerencoding";
-
-    /**
-     * If this value is specified, it will be interpreted as a log level and
-     * all logging categories will be set to this level regardless of their
-     * definition in the logging configuration.
-     */
-    String KEY_LOGGING_OVERRIDE_LOGLEVEL = "org.apache.cocoon.override.loglevel";
 
     /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
@@ -206,12 +177,6 @@ public interface Settings {
     List getLoadClasses();
 
     /**
-     * @return Returns the logLevel.
-     * @see #KEY_LOGGING_BOOTSTRAP_LOGLEVEL
-     */
-    String getBootstrapLogLevel();
-
-    /**
      * @return Returns the uploadDirectory.
      * @see #KEY_UPLOADS_DIRECTORY
      */
@@ -222,18 +187,6 @@ public interface Settings {
      * @see #KEY_WORK_DIRECTORY
      */
     String getWorkDirectory();
-
-    /**
-     * @return Returns the logger for the environment.
-     * @see #KEY_LOGGING_ENVIRONMENT_LOGGER
-     */
-    String getEnvironmentLogger();
-
-    /**
-     * @return Returns the overrideLogLevel.
-     * @see #KEY_LOGGING_OVERRIDE_LOGLEVEL
-     */
-    String getOverrideLogLevel();
 
     /**
      * @return Returns the formEncoding.
@@ -258,12 +211,6 @@ public interface Settings {
      * @see #KEY_CACHE_DIRECTORY
      */
     String getCacheDirectory();
-
-    /**
-     * @return Returns the cocoonLogger.
-     * @see #KEY_LOGGING_COCOON_LOGGER
-     */
-    String getCocoonLogger();
 
     /**
      * The creation time of the current Cocoon instance.
