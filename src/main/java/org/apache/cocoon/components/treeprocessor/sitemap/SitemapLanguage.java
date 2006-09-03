@@ -199,15 +199,15 @@ public class SitemapLanguage
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void contextualize(Context avalonContext) throws ContextException {
+        this.context = avalonContext;
     }
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.manager = serviceManager;
     }
 
     /**
@@ -418,7 +418,7 @@ public class SitemapLanguage
         }
 
         // Context and manager and classloader for the sitemap we build        
-        final Context itsContext = createContext(tree);
+        final Context itsContext = this.createContext();
 
         // TODO Get factory from spring
         final BeanFactoryFactoryImpl factory = new BeanFactoryFactoryImpl();
@@ -785,9 +785,9 @@ public class SitemapLanguage
     }
 
     /**
-     * @see org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder#createContext(org.apache.avalon.framework.configuration.Configuration)
+     * Create the context for this sitemap.
      */
-    protected Context createContext(Configuration tree) throws Exception {
+    protected Context createContext() {
         // Create sub-context for this sitemap
         DefaultContext newContext = new DefaultContext(this.context);
         Environment env = EnvironmentHelper.getCurrentEnvironment();
