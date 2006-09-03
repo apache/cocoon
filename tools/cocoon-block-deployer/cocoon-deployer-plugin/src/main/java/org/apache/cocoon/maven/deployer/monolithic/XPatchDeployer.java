@@ -15,15 +15,7 @@
  */
 package org.apache.cocoon.maven.deployer.monolithic;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -39,6 +31,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.cocoon.maven.deployer.utils.CopyUtils;
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
 import org.apache.cocoon.maven.deployer.utils.XMLUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -195,8 +188,13 @@ public class XPatchDeployer extends SingleFileDeployer {
 
             TransformerFactory tFactory = TransformerFactory.newInstance();
             Transformer transformer = tFactory.newTransformer();
-            transformer.transform(new DOMSource(original), new StreamResult(new FileOutputStream(outFile)));
-            getLogger().debug("Deploying resource file to " + fileName);
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(outFile));
+            try {
+                getLogger().debug("Deploying resource file to " + fileName);
+                transformer.transform(new DOMSource(original), new StreamResult(os));
+            } finally {
+                IOUtils.closeQuietly(os);
+            }
         } catch (FileNotFoundException e) {
             throw new DeploymentException("Can't write to nonexistant file " + fileName, e);
         } catch (IOException e) {
