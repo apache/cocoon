@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.cocoon.maven.deployer.utils.CopyUtils;
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
 import org.apache.cocoon.maven.deployer.utils.XMLUtils;
 import org.apache.commons.io.IOUtils;
@@ -59,13 +60,7 @@ public class XPatchDeployer extends SingleFileDeployer {
     public void addPatch(File file) throws IOException {
         getLogger().debug("catching patch: " + file.getAbsolutePath());
         PatchCachingOutputStream pcis = new PatchCachingOutputStream(file.getCanonicalPath());
-        OutputStream os = new BufferedOutputStream(pcis);
-        try {
-            // TODO close input stream
-            IOUtils.copy(new BufferedInputStream(new FileInputStream(file)), os);
-        } finally {
-            os.close();
-        }
+        CopyUtils.copy(new FileInputStream(file), pcis);
         patches.add(pcis);
     }
 
@@ -122,7 +117,7 @@ public class XPatchDeployer extends SingleFileDeployer {
 
                 if (testPath != null && testPath.length() > 0 && XPathAPI.eval(root, testPath).bool()) {
                     // no test path or 'unless' condition is satisfied
-                    getLogger().debug( "skipping application of patch file: " + pcis.getDocumentName() );
+                    getLogger().debug("skipping application of patch file: " + pcis.getDocumentName());
                 } else {
                     // Test if component wants us to remove
                     // a list of nodes first

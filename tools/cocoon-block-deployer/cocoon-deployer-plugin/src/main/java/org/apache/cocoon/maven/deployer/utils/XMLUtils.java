@@ -27,7 +27,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -54,7 +57,7 @@ public class XMLUtils {
             // allows to deploy the application offline
             docBuilder.setEntityResolver(new EntityResolver() {
                 public InputSource resolveEntity(String publicId, String systemId) throws SAXException,
-                                java.io.IOException {
+                        java.io.IOException {
                     if (systemId.equals("http://java.sun.com/dtd/web-app_2_3.dtd")) {
                         return new InputSource(getClass().getResourceAsStream("web-app_2_3.dtd"));
                     }
@@ -68,18 +71,16 @@ public class XMLUtils {
         }
     }
 
-    public static void write(Document     node,
-                             OutputStream out)
-    throws Exception {
+    public static void write(Document node, OutputStream out) throws TransformerFactoryConfigurationError, TransformerException {
         final Properties format = new Properties();
         format.put(OutputKeys.METHOD, "xml");
         format.put(OutputKeys.OMIT_XML_DECLARATION, "no");
         format.put(OutputKeys.INDENT, "yes");
-        if ( node.getDoctype() != null ) {
-            if ( node.getDoctype().getPublicId() != null ) {
+        if (node.getDoctype() != null) {
+            if (node.getDoctype().getPublicId() != null) {
                 format.put(OutputKeys.DOCTYPE_PUBLIC, node.getDoctype().getPublicId());
             }
-            if ( node.getDoctype().getSystemId() != null ) {
+            if (node.getDoctype().getSystemId() != null) {
                 format.put(OutputKeys.DOCTYPE_SYSTEM, node.getDoctype().getSystemId());
             }
         }
@@ -91,11 +92,11 @@ public class XMLUtils {
 
     public static List getChildNodes(Element parent, String nodeName) {
         final List nodes = new ArrayList();
-        if ( parent != null && nodeName != null ) {
+        if (parent != null && nodeName != null) {
             final NodeList children = parent.getChildNodes();
-            if ( children != null ) {
-                for(int i=0; i<children.getLength(); i++) {
-                    if ( nodeName.equals(children.item(i).getLocalName()) ) {
+            if (children != null) {
+                for (int i = 0; i < children.getLength(); i++) {
+                    if (nodeName.equals(children.item(i).getLocalName())) {
                         nodes.add(children.item(i));
                     }
                 }
@@ -103,13 +104,13 @@ public class XMLUtils {
         }
         return nodes;
     }
- 
+
     public static Element getChildNode(Element parent, String nodeName) {
         final List children = getChildNodes(parent, nodeName);
-        if ( children.size() > 0 ) {
-            return (Element)children.get(0);
+        if (children.size() > 0) {
+            return (Element) children.get(0);
         }
-     
+
         return null;
     }
 
@@ -135,9 +136,9 @@ public class XMLUtils {
     }
 
     public static void setValue(Element node, String value) {
-        if ( node != null ) {
+        if (node != null) {
             // remove all children
-            while ( node.hasChildNodes() ) {
+            while (node.hasChildNodes()) {
                 node.removeChild(node.getFirstChild());
             }
             node.appendChild(node.getOwnerDocument().createTextNode(value));

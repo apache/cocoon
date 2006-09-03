@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.maven.deployer;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +30,7 @@ import java.util.Map;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentBlock;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.cocoon.maven.deployer.monolithic.MonolithicCocoonDeployer;
+import org.apache.cocoon.maven.deployer.utils.CopyUtils;
 import org.apache.cocoon.maven.deployer.utils.WebApplicationRewriter;
 import org.apache.cocoon.maven.deployer.utils.XMLUtils;
 import org.apache.commons.io.IOUtils;
@@ -190,7 +192,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         }
 
         // TODO XPatch web.xml here!
-        
+
         // take care of paranoid classloading
         if (this.useShieldingClassloader) {
             shieldCocoonWebapp();
@@ -323,11 +325,11 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
                 this.getLog().info("No web.xml supplied. Will install default web.xml");
                 File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createDirectory(new File(
                         webappDirectory_, webInfSlashWebXml));
+
                 try {
-                    // TODO buffered stream + close stream?
-                    IOUtils.copy(readResourceFromClassloader("WEB-INF/web.xml"), new FileOutputStream(outFile));
+                    CopyUtils.copy(readResourceFromClassloader("WEB-INF/web.xml"), new FileOutputStream(outFile));
                 } catch (IOException ioex) {
-                    throw new MojoExecutionException("cannot read resource " + webXml, ioex);
+                    throw new MojoExecutionException("cannot copy resource " + webXml, ioex);
                 }
             }
             webXmlLocation = targetWebXmlLocation;
@@ -336,17 +338,27 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         }
         this.getLog().info("Adding shielded classloader configuration to webapp configuration.");
         this.getLog().debug("Reading web.xml: " + webXmlLocation);
-        try {
-            // TODO buffered stream + close stream?
-            final Document webAppDoc = XMLUtils.parseXml(new FileInputStream(new File(webXmlLocation)));
-            WebApplicationRewriter.rewrite(webAppDoc);
-            this.getLog().debug("Writing web.xml: " + targetWebXmlLocation);
 
-            // TODO buffered stream + close stream?
-            XMLUtils.write(webAppDoc, new FileOutputStream(targetWebXmlLocation));
+        InputStream is = null;
+        final Document webAppDoc;
+        try {
+            is = new BufferedInputStream(new FileInputStream(new File(webXmlLocation)));
+            webAppDoc = XMLUtils.parseXml(is);
         } catch (Exception e) {
             throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
+        } finally {
+            IOUtils.closeQuietly(is);
         }
+
+        WebApplicationRewriter.rewrite(webAppDoc);
+        this.getLog().debug("Writing web.xml: " + targetWebXmlLocation);
+        
+        try {
+            XMLUtils.write(webAppDoc, new FileOutputStream(targetWebXmlLocation));
+        } catch (Exception e) {
+            throw new MojoExecutionException("Unable to write web.xml to " + targetWebXmlLocation, e);
+        }
+        
         if (this.useShieldingRepository) {
             this.getLog().info("Moving classes and libs to shielded location.");
             final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
@@ -404,7 +416,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             final File[] files = srcDirectory.listFiles();
             if (files != null && files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
-                    // TODO - replace this hard-coded exlclude with something configurable
+                    // TODO - replace this hard-coded exlclude with something
+                    // configurable
                     boolean exclude = false;
                     if ("lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap")) {
                         exclude = true;
