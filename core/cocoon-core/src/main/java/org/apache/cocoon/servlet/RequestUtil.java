@@ -15,15 +15,10 @@
  */
 package org.apache.cocoon.servlet;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.cocoon.core.CoreInitializationException;
 
 /**
  * Some utility methods for request handling etc.
@@ -32,44 +27,6 @@ import org.apache.cocoon.core.CoreInitializationException;
  * @since 2.2
  */
 public class RequestUtil {
-
-    /**
-     * Get the location of the webapp context as a url.
-     * @param servletContext The servlet context 
-     */
-    public static String getContextUrl(ServletContext servletContext) {
-        final String knownFile = "/WEB-INF/web.xml";
-        String servletContextURL;
-        String servletContextPath = servletContext.getRealPath("/");
-        String path = servletContextPath;
-
-        if (path == null) {
-            // Try to figure out the path of the root from that of a known file in the context
-            try {
-                path = servletContext.getResource(knownFile).toString();
-            } catch (MalformedURLException me) {
-                throw new CoreInitializationException("Unable to get resource '" + knownFile + "'.", me);
-            }
-            path = path.substring(0, path.length() - (knownFile.length() - 1));
-        }
-        try {
-            if (path.indexOf(':') > 1) {
-                servletContextURL = path;
-            } else {
-                servletContextURL = new File(path).toURL().toExternalForm();
-            }
-        } catch (MalformedURLException me) {
-            // VG: Novell has absolute file names starting with the
-            // volume name which is easily more then one letter.
-            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
-            try {
-                servletContextURL = new File(path).toURL().toExternalForm();
-            } catch (MalformedURLException ignored) {
-                throw new CoreInitializationException("Unable to determine servlet context URL.", me);
-            }
-        }
-        return servletContextURL;
-    }
 
     public static String getCompleteUri(HttpServletRequest request,
                                         HttpServletResponse response)

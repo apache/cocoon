@@ -86,11 +86,25 @@ public class BootstrapClassLoaderManager {
         return bootstrapClassLoader;
     }
 
+    /**
+     * Log a debug message to the log of the servlet context.
+     * This method first checks if the init parameter "bootstrap-classloader-debug" has the value
+     * true before it logs.
+     * @param servletContext The servlet context.
+     * @param message        The message to log.
+     */
+    public static void logDebug(ServletContext servletContext, String message) {
+        if ( servletContext.getInitParameter("bootstrap-classloader-debug") != null
+             && servletContext.getInitParameter("bootstrap-classloader-debug").equalsIgnoreCase("true") ) { 
+            servletContext.log(message);
+        }
+    }
+
     protected static void getClassPath(final String                   externalClasspath, 
                                        final ServletContext           servletContext,
                                        final ClassLoaderConfiguration config)
     throws ServletException {
-        servletContext.log("Adding classpath from " + externalClasspath);
+        BootstrapClassLoaderManager.logDebug(servletContext, "Adding classpath from " + externalClasspath);
 
         InputStream is = servletContext.getResourceAsStream(externalClasspath);
         if ( is == null ) {
@@ -129,10 +143,11 @@ public class BootstrapClassLoaderManager {
         }
     }
 
-    protected static ClassLoader createClassLoader(String                   factoryClassName,
+    protected static ClassLoader createClassLoader(String                   className,
                                                    ServletContext           servletContext,
                                                    ClassLoaderConfiguration config)
     throws ServletException {
+        String factoryClassName = className;
         if ( factoryClassName == null ) {
             factoryClassName = DefaultClassLoaderFactory.class.getName();
         }
