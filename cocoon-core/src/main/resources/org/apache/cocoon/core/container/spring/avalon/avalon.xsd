@@ -19,10 +19,14 @@
         xmlns:tns="http://org.apache.cocoon/avalon">
 
     <xsd:element name="avalon" type="tns:avalonType"/>
+    <xsd:element name="sitemap" type="tns:sitemapType"/>
 
     <xsd:complexType name="avalonType">
     	<xsd:attribute name="location" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="loggingConfiguration" type="xsd:string" use="optional"></xsd:attribute>
     </xsd:complexType>
 
+    <xsd:complexType name="sitemapType">
+    	<xsd:attribute name="uriPrefix" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
 </xsd:schema>
