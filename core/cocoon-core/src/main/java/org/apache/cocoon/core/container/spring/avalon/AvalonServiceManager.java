@@ -23,6 +23,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * This bean acts like a Avalon {@link ServiceManager}.
+ * It just delegates to the underlying bean factory.
  *
  * @since 2.2
  * @version $Id$
@@ -30,9 +31,12 @@ import org.springframework.beans.factory.BeanFactoryAware;
 final public class AvalonServiceManager
     implements ServiceManager, BeanFactoryAware {
 
-
+    /** The bean factory this service manager is defined in. */
     protected BeanFactory beanFactory;
 
+    /**
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
