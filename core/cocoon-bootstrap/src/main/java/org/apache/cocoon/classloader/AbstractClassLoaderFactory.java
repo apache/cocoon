@@ -163,13 +163,13 @@ public abstract class AbstractClassLoaderFactory
 
     protected abstract ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent);
 
-    private final static class JarFileFilter implements FilenameFilter {
+    protected final static class JarFileFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
             return name.endsWith(".zip") || name.endsWith(".jar");
         }
     }
 
-    private final static class UrlComparator implements Comparator {
+    protected final static class UrlComparator implements Comparator {
 
         public int compare(Object o1, Object o2) {
             if ( o1 instanceof URL && o2 instanceof URL ) {

@@ -160,7 +160,7 @@ public class SettingsBeanFactoryPostProcessor
             throw new IllegalArgumentException(msg);
         }
         */
-        this.logger.info("Apache Cocoon " + Constants.VERSION + " is running in mode: " + mode);
+        this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(mode);

@@ -67,7 +67,8 @@ public class ShieldingServlet extends HttpServlet {
         if (servletName == null) {
             throw new ServletException("ShieldingServlet: Init-Parameter 'servlet-class' is missing.");
         }
-        config.getServletContext().log("ShieldingServlet: Loading servlet class " + servletName);
+        BootstrapClassLoaderManager.logDebug(config.getServletContext(),
+                                             "ShieldingServlet: Loading servlet class " + servletName);
 
         // Create the servlet
         try {

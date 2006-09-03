@@ -44,7 +44,6 @@ import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.servlet.RequestUtil;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
 import org.apache.excalibur.source.Source;
@@ -158,27 +157,27 @@ public class TreeProcessor extends AbstractLogEnabled
      *
      * @return a new child processor.
      */
-    public TreeProcessor createChildProcessor(String src,
-                                              boolean checkReload,
+    public TreeProcessor createChildProcessor(String  src,
+                                              boolean configuredCheckReload,
                                               String  prefix)
     throws Exception {
         DelayedRefreshSourceWrapper delayedSource = new DelayedRefreshSourceWrapper(
                 this.resolver.resolveURI(src), this.lastModifiedDelay);
-        return new TreeProcessor(this, delayedSource, checkReload, prefix);
+        return new TreeProcessor(this, delayedSource, configuredCheckReload, prefix);
     }
 
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void contextualize(Context avalonContext) throws ContextException {
+        this.context = avalonContext;
     }
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.manager = serviceManager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.settings = (Settings) this.manager.lookup(Settings.ROLE);
     }
@@ -189,9 +188,10 @@ public class TreeProcessor extends AbstractLogEnabled
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null) {
-            final String contextUrl = RequestUtil.getContextUrl(this.servletContext);
-            this.environmentHelper = new EnvironmentHelper(
-                    new URL(contextUrl));
+            // We already have resolved our sitemap, so our context is the directory
+            // of this sitemap.
+            int pos = this.source.getURI().lastIndexOf('/');
+            this.environmentHelper = new EnvironmentHelper(new URL(this.source.getURI().substring(0, pos+1)));
         }
         ContainerUtil.enableLogging(this.environmentHelper, getLogger());
         ContainerUtil.service(this.environmentHelper, this.manager);
@@ -347,10 +347,11 @@ public class TreeProcessor extends AbstractLogEnabled
         }
     }
     
-    private Configuration createSitemapProgram(Source source) throws ProcessingException, SAXException, IOException {
+    private Configuration createSitemapProgram(Source sitemapSource)
+    throws ProcessingException, SAXException, IOException {
         NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
         AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
-        SourceUtil.toSAX(this.manager, source, null, annotationsFilter);
+        SourceUtil.toSAX(this.manager, sitemapSource, null, annotationsFilter);
         return handler.getConfiguration();        
     }
     
