@@ -16,9 +16,6 @@
 package org.apache.cocoon.maven.deployer.utils;
 
 import java.io.File;
-import java.io.IOException;
-
-import org.apache.cocoon.maven.deployer.monolithic.DeploymentException;
 
 /**
  * Utitily class to handle ZIP archives.
@@ -26,47 +23,13 @@ import org.apache.cocoon.maven.deployer.monolithic.DeploymentException;
  * @version $Id$
  */
 public class FileUtils {
-
 	/**
-	 * Delete a directory recursivly
-	 * @param directory
-	 * @return true if deletation went okay
+	 * Prepare directory structure for non-existing file
 	 */
-    public static boolean deleteDirRecursivly(File directory) {
-        if (directory.isDirectory()) {
-            String[] children = directory.list();
-            for (int i=0; i < children.length; i++) {
-                boolean success = deleteDirRecursivly(new File(directory, children[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        return directory.delete();
-    }	
-
-	/**
-	 * Create the directories of a non-exisiting file.
-	 */
-	public static File createDirectory(File file) {
-		if(file.isDirectory() || file.exists()) {
-			return file;
-		}
-		String absolutePath;
-        try {
-            absolutePath = file.getCanonicalPath();
-        } catch (IOException e) {
-            throw new DeploymentException("A problem occured while reading the canonical path of '" + file.getAbsolutePath() + "'");
-        }
-		String absolutePathDir = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
-		File absolutePathDirFile = new File(absolutePathDir);
-		if(absolutePathDirFile.exists()) {
-			return file;
-		}
-		if(!new File(absolutePathDir).mkdirs()) {
-			throw new DeploymentException("Can't create directory '" + absolutePathDir + "'");
-		}
-		return file;
+	public static File createPath(File file) {
+        if ( file.getParentFile() != null && !file.getParentFile().exists())
+            file.getParentFile().mkdirs();
+        return file;
 	}
 
 

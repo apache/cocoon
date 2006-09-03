@@ -94,17 +94,15 @@ public class SingleFileDeployer implements FileDeployer {
             outputDocumentName = this.getFileName(documentName);
         }
 
-        File targetFile = FileUtils.createDirectory(new File(outDir, outputDocumentName));
-
+        File targetFile = FileUtils.createPath(new File(outDir, outputDocumentName));
         if (this.alreadyDeployedFilesSet.contains(targetFile.getCanonicalFile())) {
             throw new FileAlreadyDeployedException("File '" + targetFile + "' already exists!");
         }
 
         this.alreadyDeployedFilesSet.add(targetFile.getCanonicalFile());
-
         this.logger.debug("Deploying block resource to " + getOutputDir() + "/" + outputDocumentName);
 
-        return new FileOutputStream(FileUtils.createDirectory(targetFile));
+        return new FileOutputStream(FileUtils.createPath(targetFile));
     }
 
     protected String removeRootDirectory(final String documentName) {
