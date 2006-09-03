@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.antlr.stringtemplate.StringTemplate;
+import org.apache.cocoon.maven.deployer.utils.CopyUtils;
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
@@ -128,6 +129,7 @@ public class MonolithicCocoonDeployer {
                 }
             }
 
+            // TODO close streams
             xwebPatcher.applyPatches(readResourceFromClassloader("WEB-INF/web.xml"), "WEB-INF/web.xml");
             copyFile(basedir, "WEB-INF/applicationContext.xml");
             copyFile(basedir, "WEB-INF/cocoon/properties/core.properties");
@@ -156,7 +158,7 @@ public class MonolithicCocoonDeployer {
     private void copyFile(final File basedir, final String fileName) {
         try {
             File outFile = FileUtils.createDirectory(new File(basedir, fileName));
-            IOUtils.copy(readResourceFromClassloader(fileName), new FileOutputStream(outFile));
+            CopyUtils.copy(readResourceFromClassloader(fileName), new FileOutputStream(outFile));
             this.logger.info("Deploying resource file to " + fileName);
         } catch (FileNotFoundException e) {
             throw new DeploymentException("Can't copy to " + fileName, e);
