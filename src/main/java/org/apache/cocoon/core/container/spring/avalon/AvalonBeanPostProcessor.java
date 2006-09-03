@@ -19,6 +19,7 @@ import org.springframework.beans.factory.config.DestructionAwareBeanPostProcesso
 
 /**
  * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle interfaces.
+ *
  * @version $Id$
  * @since 2.2
  */
@@ -33,10 +34,6 @@ public class AvalonBeanPostProcessor
     protected ConfigurationInfo configurationInfo;
     protected Settings settings;
 
-    public Settings getSettings() {
-        return settings;
-    }
-
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
@@ -48,24 +45,12 @@ public class AvalonBeanPostProcessor
         this.beanFactory = factory;
     }
 
-    public ConfigurationInfo getConfigurationInfo() {
-        return configurationInfo;
-    }
-
     public void setConfigurationInfo(ConfigurationInfo configurationInfo) {
         this.configurationInfo = configurationInfo;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
     public void setContext(Context context) {
         this.context = context;
-    }
-
-    public Logger getLogger() {
-        return logger;
     }
 
     public void setLogger(Logger logger) {

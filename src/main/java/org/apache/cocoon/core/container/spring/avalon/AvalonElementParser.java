@@ -67,11 +67,7 @@ public class AvalonElementParser extends AbstractElementParser {
         }
 
         // add context
-        this.addComponent(AvalonContextFactoryBean.class,
-                ProcessingUtil.CONTEXT_ROLE,
-                "init",
-                true,
-                parserContext.getRegistry());
+        this.addContext(element, parserContext.getRegistry());
 
         // add service manager
         this.addComponent(AvalonServiceManager.class,
@@ -85,7 +81,7 @@ public class AvalonElementParser extends AbstractElementParser {
         final String location = element.getAttribute("location");
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         try {
-            final ConfigurationInfo info = ConfigurationReader.readConfiguration(location, resourceLoader);
+            final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
             // first handle includes
             final Iterator includeIter = info.getImports().iterator();
             while ( includeIter.hasNext() ) {
@@ -112,6 +108,19 @@ public class AvalonElementParser extends AbstractElementParser {
         }
 
         return null;
+    }
+
+    protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
+    throws Exception {
+        return ConfigurationReader.readConfiguration(location, resourceLoader);
+    }
+
+    protected void addContext(Element element, BeanDefinitionRegistry registry) {
+        this.addComponent(AvalonContextFactoryBean.class,
+                ProcessingUtil.CONTEXT_ROLE,
+                "init",
+                true,
+                registry);        
     }
 
     /**
