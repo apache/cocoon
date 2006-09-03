@@ -44,26 +44,6 @@ public class MutableSettings implements Settings {
     protected final Properties properties = new Properties();
 
     /**
-     * This parameter indicates the category id of the logger from the LogKit
-     * configuration used by the environment.
-     */
-    protected String environmentLogger;
-
-    /**
-     * This parameter indicates the category id of the logger from the LogKit
-     * management configuration for the Cocoon engine.
-     * This logger is used for all components described in the cocoon.xconf
-     * and sitemap.xmap file not having specified a logger with the
-     * logger="..." attribute in the component configuration file.
-     */
-    protected String cocoonLogger;
-
-    /**
-     * @see #setBootstrapLogLevel(String)
-     */
-    protected String bootstrapLogLevel;
-
-    /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
      * set to "yes" or "true", a new cocoon instance can be created using
      * the request parameter "cocoon-reload". It also enables that Cocoon is
@@ -156,13 +136,6 @@ public class MutableSettings implements Settings {
     protected String formEncoding;
 
     /**
-     * If this value is specified, it will be interpreted as a log level and
-     * all logging categories will be set to this level regardless of their
-     * definition in the logging configuration.
-     */
-    protected String overrideLogLevel;
-
-    /**
      * Delay between reload checks for the configuration.
      */
     protected long configurationReloadDelay;
@@ -219,12 +192,6 @@ public class MutableSettings implements Settings {
 
                     if ( key.equals(KEY_RELOAD_DELAY) ) {
                         this.setConfigurationReloadDelay(Long.valueOf(value).longValue());
-                    } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
-                        this.setEnvironmentLogger(value);
-                    } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
-                        this.setCocoonLogger(value);
-                    } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
-                        this.setBootstrapLogLevel(value);
                     } else if ( key.equals(KEY_RELOADING) ) {
                         this.setReloadingEnabled(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
@@ -251,8 +218,6 @@ public class MutableSettings implements Settings {
                         this.setManageExceptions(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_FORM_ENCODING) ) {
                         this.setFormEncoding(value);
-                    } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
-                        this.setOverrideLogLevel(value);
                     } else if ( key.startsWith(KEY_LOAD_CLASSES) ) {
                         this.addToLoadClasses(value);
                     } else if ( key.startsWith(KEY_CONTAINER_ENCODING ) ) {
@@ -315,16 +280,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getCocoonLogger()
-     */
-    public String getCocoonLogger() {
-        if ( this.parent != null ) {
-            return this.parent.getCocoonLogger();
-        }
-        return this.cocoonLogger;
-    }
-
-    /**
      * @see org.apache.cocoon.core.DynamicSettings#isEnableUploads()
      */
     public boolean isEnableUploads() {
@@ -370,16 +325,6 @@ public class MutableSettings implements Settings {
         // we don't ask the parent here as the classes of the parent
         // have already been loaded
         return this.loadClasses;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.BaseSettings#getBootstrapLogLevel()
-     */
-    public String getBootstrapLogLevel() {
-        if ( this.parent != null ) {
-            return this.parent.getBootstrapLogLevel();
-        }
-        return this.bootstrapLogLevel;
     }
 
     /**
@@ -453,26 +398,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getEnvironmentLogger()
-     */
-    public String getEnvironmentLogger() {
-        if ( this.parent != null ) {
-            return this.parent.getEnvironmentLogger();
-        }
-        return this.environmentLogger;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.BaseSettings#getOverrideLogLevel()
-     */
-    public String getOverrideLogLevel() {
-        if ( this.parent != null ) {
-            return this.parent.getOverrideLogLevel();
-        }
-        return this.overrideLogLevel;
-    }
-
-    /**
      * @see org.apache.cocoon.core.DynamicSettings#isAllowOverwrite()
      */
     public boolean isAllowOverwrite() {
@@ -540,12 +465,6 @@ public class MutableSettings implements Settings {
         if ( key.startsWith(KEYPREFIX) ) {
             if ( key.equals(KEY_RELOAD_DELAY) ) {
                 value = String.valueOf(this.getReloadDelay(null));
-            } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
-                value = this.getEnvironmentLogger();
-            } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
-                value = this.getCocoonLogger();
-            } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
-                value = this.getBootstrapLogLevel();
             } else if ( key.equals(KEY_RELOADING) ) {
                 value = String.valueOf(this.isReloadingEnabled(null));
             } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
@@ -570,8 +489,6 @@ public class MutableSettings implements Settings {
                 value = String.valueOf(this.isManageExceptions());
             } else if ( key.equals(KEY_FORM_ENCODING) ) {
                 value = this.getFormEncoding();
-            } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
-                value = this.getOverrideLogLevel();
             } else if ( key.equals(KEY_LOAD_CLASSES) ) {
                 value = this.toString(this.getLoadClasses());
             } else if ( key.equals(KEY_CONTAINER_ENCODING) ) {
@@ -600,10 +517,6 @@ public class MutableSettings implements Settings {
           KEY_RELOAD_DELAY + " : " + this.getReloadDelay(null) + '\n' +
           KEY_RELOADING + " : " + this.isReloadingEnabled(null) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.getLoadClasses()) + '\n' +
-          KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.getEnvironmentLogger() + '\n' +
-          KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.getBootstrapLogLevel() + '\n' +
-          KEY_LOGGING_COCOON_LOGGER + " : " + this.getCocoonLogger() + '\n' +
-          KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.getOverrideLogLevel() + '\n' +
           KEY_MANAGE_EXCEPTIONS + " : " + this.isManageExceptions() + '\n' +
           KEY_UPLOADS_DIRECTORY + " : " + this.getUploadDirectory() + '\n' +
           KEY_UPLOADS_AUTOSAVE + " : " + this.isAutosaveUploads() + '\n' +
@@ -674,15 +587,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @param cocoonLogger The cocoonLogger to set.
-     */
-    public void setCocoonLogger(String cocoonLogger) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.cocoonLogger = cocoonLogger;
-    }
-
-    /**
      * @param enableUploads The enableUploads to set.
      */
     public void setEnableUploads(boolean enableUploads) {
@@ -706,15 +610,6 @@ public class MutableSettings implements Settings {
     public void addToLoadClasses(String className) {
         this.checkWriteable();
         this.loadClasses.add(className);
-    }
-
-    /**
-     * @param logLevel The logLevel to set.
-     */
-    public void setBootstrapLogLevel(String logLevel) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.bootstrapLogLevel = logLevel;
     }
 
     /**
@@ -778,24 +673,6 @@ public class MutableSettings implements Settings {
         this.checkWriteable();
         this.checkSubSetting();
         this.workDirectory = workDirectory;
-    }
-
-    /**
-     * @param logger The logger for the environment.
-     */
-    public void setEnvironmentLogger(String logger) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.environmentLogger = logger;
-    }
-
-    /**
-     * @param overrideLogLevel The overrideLogLevel to set.
-     */
-    public void setOverrideLogLevel(String overrideLogLevel) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.overrideLogLevel = overrideLogLevel;
     }
 
     /**

@@ -156,10 +156,16 @@ public class StatusGenerator extends ServiceableGenerator
     private Source libDirectory;
 
 
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context avalonContext) throws ContextException {
+        this.context = avalonContext;
     }
 
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
         this.showContinuations = configuration.getChild("show-continuations").getValueAsBoolean(true);
         this.showLibrary = configuration.getChild("show-libraries").getValueAsBoolean(true);
@@ -170,8 +176,8 @@ public class StatusGenerator extends ServiceableGenerator
      * <code>Serviceable</code>.
      * Need to get statistics about cache hits
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        super.service(serviceManager);
         this.settings = (Settings) this.manager.lookup(Settings.ROLE);
 
         if (this.manager.hasService(StoreJanitor.ROLE)) {
@@ -454,10 +460,6 @@ public class StatusGenerator extends ServiceableGenerator
 
         this.addValue("Running mode", s.getRunningMode());
         this.addMultilineValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
-        this.addValue(Settings.KEY_LOGGING_BOOTSTRAP_LOGLEVEL, s.getBootstrapLogLevel());
-        this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
-        this.addValue(Settings.KEY_LOGGING_ENVIRONMENT_LOGGER, s.getEnvironmentLogger());
-        this.addValue(Settings.KEY_LOGGING_OVERRIDE_LOGLEVEL, s.getOverrideLogLevel());
         this.addValue(Settings.KEY_MANAGE_EXCEPTIONS, s.isManageExceptions());
         this.addValue(Settings.KEY_UPLOADS_DIRECTORY, s.getUploadDirectory());
         this.addValue(Settings.KEY_CACHE_DIRECTORY, s.getCacheDirectory());
