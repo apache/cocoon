@@ -16,7 +16,6 @@
 package org.apache.cocoon.maven.deployer.monolithic;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

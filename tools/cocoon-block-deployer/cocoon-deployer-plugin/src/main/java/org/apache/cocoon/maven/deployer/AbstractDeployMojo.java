@@ -404,8 +404,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             final File[] files = srcDirectory.listFiles();
             if (files != null && files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
-                    // TODO - replace this hard-coded exlclude with something
-                    // configurable
+                    // TODO - replace this hard-coded exlclude with something configurable
                     boolean exclude = false;
                     if ("lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap")) {
                         exclude = true;
