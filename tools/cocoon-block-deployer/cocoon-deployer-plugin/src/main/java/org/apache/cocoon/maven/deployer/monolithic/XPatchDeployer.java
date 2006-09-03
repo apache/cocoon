@@ -90,6 +90,7 @@ public class XPatchDeployer extends SingleFileDeployer {
 
                 String replacePropertiesStr = elem.getAttribute("replace-properties");
 
+                // TODO what is this used for?
                 boolean replaceProperties = !("no".equalsIgnoreCase(replacePropertiesStr) || "false"
                         .equalsIgnoreCase(replacePropertiesStr));
 
