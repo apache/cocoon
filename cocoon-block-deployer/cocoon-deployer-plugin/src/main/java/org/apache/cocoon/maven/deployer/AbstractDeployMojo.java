@@ -311,7 +311,6 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         String webInfSlashWebXml = "WEB-INF" + File.separatorChar + "web.xml";
 
         String webXmlLocation = this.getWebXml();
-        // TODO sprawdzic czy byc moze w targecie jest juz taki web.xml
         if (webXmlLocation == null) {
             webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + webInfSlashWebXml;
         }
