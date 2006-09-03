@@ -47,10 +47,14 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**
+ * This is the main implementation of the Avalon-Spring-bridge.
+ * It creates the environment for Avalon components: a logger bean and a context
+ * bean, reads the Avalon style configurations and registers the components
+ * as beans in the Spring bean definition registry.
+ *
  * @version $Id$
  * @since 2.2
  */
@@ -60,9 +64,10 @@ public class AvalonElementParser implements BeanDefinitionParser {
     protected final Log logger = LogFactory.getLog(getClass());
 
     /**
-     * Register a bean definition
-     * @param holder
-     * @param registry
+     * Register a bean definition.
+     * @param beanDef  The bean definition.
+     * @param beanName The name of the bean.
+     * @param registry The registry.
      */
     protected void register(BeanDefinition beanDef,
                             String         beanName,
@@ -71,9 +76,11 @@ public class AvalonElementParser implements BeanDefinitionParser {
     }
 
     /**
-     * Register a bean definition
-     * @param holder
-     * @param registry
+     * Register a bean definition.
+     * @param beanDef  The bean definition.
+     * @param beanName The name of the bean.
+     * @param alias    Optional alias.
+     * @param registry The registry.
      */
     protected void register(BeanDefinition beanDef,
                             String         beanName,
@@ -137,7 +144,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
             this.registerComponentInfo(info, parserContext.getRegistry());
 
             // and finally add avalon bean post processor
-            final RootBeanDefinition beanDef = this.getBeanDefinition(AvalonBeanPostProcessor.class, null, true);
+            final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonBeanPostProcessor.class, null, true);
             beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(ProcessingUtil.LOGGER_ROLE));
             beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
             beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
@@ -151,16 +158,28 @@ public class AvalonElementParser implements BeanDefinitionParser {
         return null;
     }
 
+    /**
+     * Add the logger bean.
+     * @param configuration The location of the logging configuration.
+     * @param registry      The bean registry.
+     */
     protected void addLogger(String configuration,
                              BeanDefinitionRegistry registry) {
-        final RootBeanDefinition beanDef = this.getBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
+        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
         beanDef.getPropertyValues().addPropertyValue("loggingConfiguration", configuration);
         this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
     }
 
-    protected RootBeanDefinition getBeanDefinition(Class   componentClass,
-                                                   String  initMethod,
-                                                   boolean requiresSettings) {
+    /**
+     * Helper method to create a new bean definition.
+     * @param componentClass    The class of the implementation.
+     * @param initMethod        Optional initialization method.
+     * @param requiresSettings  If set to true, this bean has a property "settings" for the settings object.
+     * @return A new root bean definition.
+     */
+    protected RootBeanDefinition createBeanDefinition(Class   componentClass,
+                                                      String  initMethod,
+                                                      boolean requiresSettings) {
         final RootBeanDefinition beanDef = new RootBeanDefinition();
         beanDef.setBeanClass(componentClass);      
         beanDef.setSingleton(true);
@@ -174,17 +193,25 @@ public class AvalonElementParser implements BeanDefinitionParser {
         return beanDef;
     }
 
-    protected void addComponent(Class  componentClass,
-                                String role,
-                                String initMethod,
-                                boolean requiresSettings,
+    /**
+     * Add a new bean definition to the registry.
+     * @param componentClass    The class of the implementation.
+     * @param beanName          The name of the bean.
+     * @param initMethod        Optional initialization method.
+     * @param requiresSettings  If set to true, this bean has a property "settings" for the settings object.
+     * @param registry          The bean registry.
+     */
+    protected void addComponent(Class                  componentClass,
+                                String                 beanName,
+                                String                 initMethod,
+                                boolean                requiresSettings,
                                 BeanDefinitionRegistry registry) {
-        final RootBeanDefinition beanDef = this.getBeanDefinition(componentClass, initMethod, requiresSettings);
-        
-        this.register(beanDef, role, registry);
+        final RootBeanDefinition beanDef = this.createBeanDefinition(componentClass, initMethod, requiresSettings);
+
+        this.register(beanDef, beanName, registry);
     }
 
-    public void createConfig(ConfigurationInfo info,
+    public void createConfig(ConfigurationInfo      info,
                              BeanDefinitionRegistry registry) 
     throws Exception {
         final Map components = info.getComponents();
@@ -233,9 +260,9 @@ public class AvalonElementParser implements BeanDefinitionParser {
             }
             final String beanName;
             if ( !poolable ) {
-                beanName = this.xml(role);
+                beanName = role;
             } else {
-                beanName = this.xml(role + "Pooled");                
+                beanName = role + "Pooled";                
             }
             final RootBeanDefinition beanDef = new RootBeanDefinition();
             beanDef.setBeanClassName(className);      
@@ -263,14 +290,14 @@ public class AvalonElementParser implements BeanDefinitionParser {
                 poolableBeanDef.setLazyInit(false);
                 poolableBeanDef.setInitMethodName("initialize");
                 poolableBeanDef.setDestroyMethodName("dispose");
-                poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(this.xml(role) + "Pooled", "java.lang.String");
-                poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(className, "java.lang.String");
+                poolableBeanDef.getConstructorArgumentValues().addIndexedArgumentValue(0, beanName, "java.lang.String");
+                poolableBeanDef.getConstructorArgumentValues().addIndexedArgumentValue(1, className, "java.lang.String");
                 if ( current.getConfiguration() != null ) {
                     // we treat poolMax as a string to allow property replacements
                     final String poolMax = current.getConfiguration().getAttribute("pool-max", null);
                     if ( poolMax != null ) {
-                        poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(poolMax);
-                        poolableBeanDef.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference(Settings.ROLE));
+                        poolableBeanDef.getConstructorArgumentValues().addIndexedArgumentValue(2, poolMax);
+                        poolableBeanDef.getConstructorArgumentValues().addIndexedArgumentValue(3, new RuntimeBeanReference(Settings.ROLE));
                     }
                 }
                 if ( current.getPoolInMethodName() != null ) {
@@ -279,7 +306,7 @@ public class AvalonElementParser implements BeanDefinitionParser {
                 if ( current.getPoolOutMethodName() != null ) {
                     poolableBeanDef.getPropertyValues().addPropertyValue("poolOutMethodName", current.getPoolOutMethodName());
                 }
-                this.register(poolableBeanDef, this.xml(role), registry);
+                this.register(poolableBeanDef, role, registry);
                 pooledRoles.add(role);
             }
         }
@@ -290,24 +317,6 @@ public class AvalonElementParser implements BeanDefinitionParser {
             final String role = (String)prI.next();
             final Object pooledInfo = components.remove(role);
             components.put(role + "Pooled", pooledInfo);
-        }
-    }
-
-    protected String xml(String value) {
-        String result;
-        result = StringUtils.replace(value, "&", "&amp;");
-        result = StringUtils.replace(result, "<", "&lt;");
-        result = StringUtils.replace(result, ">", "&gt;");
-        return result;
-    }
-
-    protected void appendAttribute(StringBuffer buffer, String attr, String value) {
-        if ( value != null ) {
-            buffer.append(' ');
-            buffer.append(attr);
-            buffer.append("=\"");
-            buffer.append(value);
-            buffer.append("\"");
         }
     }
 
