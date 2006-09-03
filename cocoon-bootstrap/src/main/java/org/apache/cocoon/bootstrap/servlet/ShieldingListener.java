@@ -107,7 +107,7 @@ public class ShieldingListener
                 while ( st.hasMoreTokens() ) {
                     final String className = st.nextToken();
                     try {
-                        context.log("ShieldingListener: Loading listener class " + className);
+                        BootstrapClassLoaderManager.logDebug(context, "ShieldingListener: Loading listener class " + className);
                         Class listenerClass = this.classloader.loadClass(className);
                         final Object listener = listenerClass.newInstance();
                         if ( listener instanceof HttpSessionListener ) {

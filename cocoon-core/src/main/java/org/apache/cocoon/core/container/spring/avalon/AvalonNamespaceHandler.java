@@ -38,7 +38,6 @@ public class AvalonNamespaceHandler extends NamespaceHandlerSupport {
 
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.
-    // TODO - we should move the avalon specific part to the spring.avalon package!
     private static final LocationUtils.LocationFinder confLocFinder = new LocationUtils.LocationFinder() {
         public Location getLocation(Object obj, String description) {
             if (obj instanceof Configuration) {
