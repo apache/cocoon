@@ -17,31 +17,35 @@
 package org.apache.cocoon.core.container.spring.avalon;
 
 import org.apache.cocoon.ProcessingUtil;
-import org.apache.cocoon.core.container.spring.AbstractElementParser;
-import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.io.ResourceLoader;
 import org.w3c.dom.Element;
 
 /**
  * @version $Id$
  * @since 2.2
  */
-public class SitemapElementParser extends AbstractElementParser {
+public class SitemapElementParser extends AvalonElementParser {
 
     /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#addContext(org.w3c.dom.Element, org.springframework.beans.factory.support.BeanDefinitionRegistry)
      */
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
-        // register per sitemap context
+    protected void addContext(Element element, BeanDefinitionRegistry registry) {
         // we get the uriPrefix from the configuration
         final String uriPrefix = element.getAttribute("uriPrefix");
         RootBeanDefinition beanDefinition = this.createBeanDefinition(AvalonSitemapContextFactoryBean.class,
                                                                       "init",
                                                                       false);
         beanDefinition.getPropertyValues().addPropertyValue("uriPrefix", uriPrefix);
-        this.register(beanDefinition, ProcessingUtil.CONTEXT_ROLE, parserContext.getRegistry());
-
-        return null;
+        this.register(beanDefinition, ProcessingUtil.CONTEXT_ROLE, registry);
     }
+
+    /**
+     * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#readConfiguration(java.lang.String, org.springframework.core.io.ResourceLoader)
+     */
+    protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader) throws Exception {
+        return super.readConfiguration(location, resourceLoader);
+    }
+
 }

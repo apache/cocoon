@@ -60,11 +60,34 @@ public class ConfigurationReader {
     /** Is this the root context? */
     protected final boolean isRootContext;
 
+    /**
+     * This method reads in an Avalon style configuration.
+     * @param source         The location of the configuration.
+     * @param resourceLoader The resource loader to load included configs.
+     * @return               A configuration containing all defined objects.
+     * @throws Exception
+     */
     public static ConfigurationInfo readConfiguration(String         source,
                                                       ResourceLoader resourceLoader)
     throws Exception {
         final ConfigurationReader converter = new ConfigurationReader(null, resourceLoader);
         converter.convert(source);
+        return converter.configInfo;
+    }
+
+    /**
+     * This method reads in an Avalon style sitemap.
+     * @param source         The location of the sitemap.
+     * @param resourceLoader The resource loader to load included configs.
+     * @return               A configuration containing all defined objects.
+     * @throws Exception
+     */
+    public static ConfigurationInfo readSitemap(ConfigurationInfo parentInfo,
+                                                String            source,
+                                                ResourceLoader    resourceLoader)
+    throws Exception {
+        final ConfigurationReader converter = new ConfigurationReader(parentInfo, resourceLoader);
+        converter.convertSitemap(source);
         return converter.configInfo;
     }
 
@@ -175,6 +198,26 @@ public class ConfigurationReader {
                             + Constants.CONF_VERSION + "'.");
         }            
         this.convert(config, null, root.getURL().toExternalForm());
+    }
+
+    protected void convertSitemap(String sitemapLocation)
+    throws Exception {
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Reading sitemap from " + sitemapLocation);
+        }
+        Resource root = this.resolver.getResource(this.convertUrl(sitemapLocation));
+        final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
+        
+        final Configuration config = b.build(this.getInputSource(root));
+        // validate cocoon.xconf
+        if (!"sitemap".equals(config.getName())) {
+            throw new ConfigurationException("Invalid sitemap\n"
+                    + config.toString());
+        }
+        final Configuration completeConfig = SitemapHelper.createSitemapConfiguration(config);
+        if ( completeConfig != null ) {
+            this.convert(config, null, root.getURL().toExternalForm());
+        }
     }
 
     protected void convert(Configuration config, Configuration additionalConfig, String rootUri)
@@ -382,16 +425,24 @@ public class ConfigurationReader {
             }
             
         } else {
-            final String pattern = includeStatement.getAttribute("pattern", null);
-            try {
-                Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
-                if ( resources != null ) {
-                    for(int i=0; i < resources.length; i++) {
-                       this.loadURI(resources[i], loadedURIs, includeStatement);
+            // test if directory exists
+            Resource dirResource = this.resolver.getResource(this.convertUrl(directoryURI));
+            if ( dirResource.exists() ) {
+                final String pattern = includeStatement.getAttribute("pattern", null);
+                try {
+                    Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
+                    if ( resources != null ) {
+                        for(int i=0; i < resources.length; i++) {
+                           this.loadURI(resources[i], loadedURIs, includeStatement);
+                        }
                     }
+                } catch (Exception e) {
+                    throw new ConfigurationException("Cannot load from directory '" + directoryURI + "' at " + includeStatement.getLocation(), e);
                 }
-            } catch (Exception e) {
-                throw new ConfigurationException("Cannot load from directory '" + directoryURI + "' at " + includeStatement.getLocation(), e);
+            } else {
+                if ( !includeStatement.getAttributeAsBoolean("optional", false) ) {
+                    throw new ConfigurationException("Directory '" + directoryURI + "' does not exist (" + includeStatement.getLocation() + ").");
+                }
             }
         }
     }
@@ -459,17 +510,25 @@ public class ConfigurationReader {
             }
 
         } else {
-            final String pattern = includeStatement.getAttribute("pattern", null);
-            try {
-                Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
-                if ( resources != null ) {
-                    for(int i=0; i < resources.length; i++) {
-                       this.configInfo.addImport(resources[i].getURL().toExternalForm());
+            // test if directory exists
+            Resource dirResource = this.resolver.getResource(this.convertUrl(directoryURI));
+            if ( dirResource.exists() ) {
+                final String pattern = includeStatement.getAttribute("pattern", null);
+                try {
+                    Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
+                    if ( resources != null ) {
+                        for(int i=0; i < resources.length; i++) {
+                           this.configInfo.addImport(resources[i].getURL().toExternalForm());
+                        }
                     }
+                } catch (IOException ioe) {
+                    throw new ConfigurationException("Unable to read configurations from "
+                            + directoryURI);
                 }
-            } catch (IOException ioe) {
-                throw new ConfigurationException("Unable to read configurations from "
-                        + directoryURI);
+            } else {
+                if ( !includeStatement.getAttributeAsBoolean("optional", false) ) {
+                    throw new ConfigurationException("Directory '" + directoryURI + "' does not exist (" + includeStatement.getLocation() + ").");
+                }
             }
         }
     }
