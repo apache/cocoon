@@ -29,22 +29,18 @@ import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.AbstractElementParser;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.transformation.Transformer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.ResourceLoader;
 import org.w3c.dom.Element;
@@ -58,47 +54,7 @@ import org.w3c.dom.Element;
  * @version $Id$
  * @since 2.2
  */
-public class AvalonElementParser implements BeanDefinitionParser {
-
-    /** Logger (we use the same logging mechanism as Spring!) */
-    protected final Log logger = LogFactory.getLog(getClass());
-
-    /**
-     * Register a bean definition.
-     * @param beanDef  The bean definition.
-     * @param beanName The name of the bean.
-     * @param registry The registry.
-     */
-    protected void register(BeanDefinition beanDef,
-                            String         beanName,
-                            BeanDefinitionRegistry registry) {
-        this.register(beanDef, beanName, null, registry);
-    }
-
-    /**
-     * Register a bean definition.
-     * @param beanDef  The bean definition.
-     * @param beanName The name of the bean.
-     * @param alias    Optional alias.
-     * @param registry The registry.
-     */
-    protected void register(BeanDefinition beanDef,
-                            String         beanName,
-                            String         alias,
-                            BeanDefinitionRegistry registry) {
-        if ( this.logger.isDebugEnabled() ) {
-            this.logger.debug("Registering bean with name " + beanName +
-                              (alias != null ? " (alias=" + alias + ") " : " ") +
-                              beanDef);
-        }
-        final BeanDefinitionHolder holder;
-        if ( alias != null ) {
-            holder = new BeanDefinitionHolder(beanDef, beanName, new String[] {alias});
-        } else {
-            holder = new BeanDefinitionHolder(beanDef, beanName);
-        }
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
-    }
+public class AvalonElementParser extends AbstractElementParser {
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
@@ -168,47 +124,6 @@ public class AvalonElementParser implements BeanDefinitionParser {
         final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
         beanDef.getPropertyValues().addPropertyValue("loggingConfiguration", configuration);
         this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
-    }
-
-    /**
-     * Helper method to create a new bean definition.
-     * @param componentClass    The class of the implementation.
-     * @param initMethod        Optional initialization method.
-     * @param requiresSettings  If set to true, this bean has a property "settings" for the settings object.
-     * @return A new root bean definition.
-     */
-    protected RootBeanDefinition createBeanDefinition(Class   componentClass,
-                                                      String  initMethod,
-                                                      boolean requiresSettings) {
-        final RootBeanDefinition beanDef = new RootBeanDefinition();
-        beanDef.setBeanClass(componentClass);      
-        beanDef.setSingleton(true);
-        beanDef.setLazyInit(false);
-        if ( initMethod != null ) {
-            beanDef.setInitMethodName(initMethod);
-        }
-        if ( requiresSettings ) {
-            beanDef.getPropertyValues().addPropertyValue("settings", new RuntimeBeanReference(Settings.ROLE));
-        }
-        return beanDef;
-    }
-
-    /**
-     * Add a new bean definition to the registry.
-     * @param componentClass    The class of the implementation.
-     * @param beanName          The name of the bean.
-     * @param initMethod        Optional initialization method.
-     * @param requiresSettings  If set to true, this bean has a property "settings" for the settings object.
-     * @param registry          The bean registry.
-     */
-    protected void addComponent(Class                  componentClass,
-                                String                 beanName,
-                                String                 initMethod,
-                                boolean                requiresSettings,
-                                BeanDefinitionRegistry registry) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(componentClass, initMethod, requiresSettings);
-
-        this.register(beanDef, beanName, registry);
     }
 
     public void createConfig(ConfigurationInfo      info,

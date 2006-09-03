@@ -75,5 +75,6 @@ public class AvalonNamespaceHandler extends NamespaceHandlerSupport {
      */
     public void init() {
         registerBeanDefinitionParser("avalon", new AvalonElementParser());
+        registerBeanDefinitionParser("sitemap", new SitemapElementParser());
     }
 }

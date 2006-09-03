@@ -14,36 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.core.container.spring.avalon;
 
-import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.core.container.spring.AbstractElementParser;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * Add a bean definition for the settings object to the bean factory.
- *
- * @see CocoonNamespaceHandler
- * @see SettingsBeanFactoryPostProcessor
  * @version $Id$
  * @since 2.2
  */
-public class SettingsElementParser extends AbstractElementParser {
-
-    /** The name of the configuration attribute to use a different processor class. */
-    public static final String PROCESSOR_CLASS_NAME_ATTR = "processorClassName";
+public class SitemapElementParser extends AbstractElementParser {
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String componentClassName = SettingsBeanFactoryPostProcessor.class.getName();
-        String value = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
-        if ( value != null && value.trim().length() > 0 ) {
-            componentClassName = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
-        }
-        this.addComponent(componentClassName, Settings.ROLE, "init", false, parserContext.getRegistry());
+        // register per sitemap context
+        // we get the uriPrefix from the configuration
+        final String uriPrefix = element.getAttribute("uriPrefix");
+        RootBeanDefinition beanDefinition = this.createBeanDefinition(AvalonSitemapContextFactoryBean.class,
+                                                                      "init",
+                                                                      false);
+        beanDefinition.getPropertyValues().addPropertyValue("uriPrefix", uriPrefix);
+        this.register(beanDefinition, ProcessingUtil.CONTEXT_ROLE, parserContext.getRegistry());
 
         return null;
     }
