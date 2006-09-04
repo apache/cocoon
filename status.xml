@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AN" type="fix">
+      XSP block: Using document('') in logicsheet caused NPE.
+    </action>
     <action dev="VG" type="fix">
       CForms: Repeater identity binding was failing on save if widget path was
       given.
