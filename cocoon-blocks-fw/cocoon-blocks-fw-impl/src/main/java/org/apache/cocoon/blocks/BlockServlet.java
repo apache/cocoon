@@ -17,6 +17,7 @@ package org.apache.cocoon.blocks;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -27,14 +28,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
-import org.osgi.service.component.ComponentContext;
 
 /**
  * @version $Id$
  */
 public class BlockServlet extends HttpServlet {
-    private ComponentContext componentContext;
     private BlockContext blockContext;
+    private String blockServletClass;
     private Servlet blockServlet;
 
     /* (non-Javadoc)
@@ -57,7 +57,21 @@ public class BlockServlet extends HttpServlet {
                 }
             
         };
+        try {
+            this.blockServlet =
+                (Servlet) this.getClass().getClassLoader().loadClass(this.blockServletClass).newInstance();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         this.blockServlet.init(blockServletConfig);
+        this.blockContext.setServlet(this.blockServlet);
     }
 
     /* (non-Javadoc)
@@ -90,22 +104,23 @@ public class BlockServlet extends HttpServlet {
         return this.blockContext;
     }
     
-    protected void activate(ComponentContext componentContext)
-    throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        this.componentContext = componentContext;
+    public BlockServlet() {
         this.blockContext = new BlockContext();
-        
-        this.blockContext.setProperties(this.componentContext.getProperties());
-        this.blockContext.setMountPath((String) this.componentContext.getProperties().get("path"));
-        String blockServletClass = (String) this.componentContext.getProperties().get("servletClass");
-        if (blockServletClass != null) {
-            this.blockServlet =
-                (Servlet) this.componentContext.getBundleContext().getBundle().loadClass(blockServletClass).newInstance();
-        } else {
-            this.blockServlet =
-                (Servlet) this.componentContext.locateService("blockServlet");
-        }
-        this.blockContext.setServlet(this.blockServlet);
-        this.blockContext.activate(this.componentContext);
+    }
+
+    public void setProperties(Map properties) {
+        this.blockContext.setProperties(properties);
+    }
+    
+    public void setConnections(Map connections) {
+        this.blockContext.setConnections(connections);
+    }
+    
+    public void setMountPath(String mountPath) {
+        this.blockContext.setMountPath(mountPath);        
+    }
+    
+    public void setBlockServletClass(String blockServletClass) {
+        this.blockServletClass = blockServletClass;
     }
 }
