@@ -213,9 +213,6 @@ public class StandardApplicationManager
                 // set the application in the object model
                 objectModel.put(ApplicationManager.APPLICATION, app);
 
-                // notify the application
-                app.userDidLogin(user, loginContext);
-
                 // set the application data in the session
                 Object data = ObjectUtils.NULL;
                 if ( app.getApplicationStore() != null ) {
@@ -223,7 +220,11 @@ public class StandardApplicationManager
                 }
                 session.setAttribute(APPLICATION_KEY_PREFIX + appName, data);
                 objectModel.put(ApplicationManager.APPLICATION_DATA, data);
-                // notify application
+
+                // notify the application about successful login
+                app.userDidLogin(user, loginContext);
+
+                // notify the application about accessing
                 app.userIsAccessing(user);
             }
         }
