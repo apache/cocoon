@@ -97,6 +97,11 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
         return null;
     }
 
+    /**
+     * Notify about entering this context.
+     * @param attributes The request attributes.
+     * @return A handle which should be passed to {@link #leavingContext(RequestAttributes, Object)}.
+     */
     public Object enteringContext(RequestAttributes attributes) {
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         final Object oldContext = attributes.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
@@ -113,6 +118,11 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
         return oldClassLoader;
     }
 
+    /**
+     * Notify about leaving this context.
+     * @param attributes The request attributes.
+     * @param handle     The returned handle from {@link #enteringContext(RequestAttributes)}.
+     */
     public void leavingContext(RequestAttributes attributes, Object handle) {
         Thread.currentThread().setContextClassLoader((ClassLoader)handle);
         final Stack stack = (Stack)attributes.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
@@ -127,7 +137,14 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
         }
     }
 
-    public static WebApplicationContext getCurrentContext(ServletContext servletContext, RequestAttributes attributes) {
+    /**
+     * Return the current web application context.
+     * @param servletContext The servlet context.
+     * @param attributes     The request attributes.
+     * @return The web application context.
+     */
+    public static WebApplicationContext getCurrentContext(ServletContext servletContext,
+                                                          RequestAttributes attributes) {
         WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         if (attributes.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
             parentContext = (CocoonWebApplicationContext) attributes
@@ -135,5 +152,4 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
         }
         return parentContext;
     }
-
 }
