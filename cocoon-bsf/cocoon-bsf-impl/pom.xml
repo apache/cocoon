@@ -32,7 +32,7 @@
   <artifactId>cocoon-bsf-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>bsf Block Implementation</name>
+  <name>Bsf Block Implementation</name>
   <description/>
   <dependencies>
     <dependency>

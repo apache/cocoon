@@ -32,7 +32,7 @@
   <artifactId>cocoon-core-samples-additional</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>core-samples-additional Block</name>
+  <name>Core-samples-additional Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-core-samples-additional-impl</module>

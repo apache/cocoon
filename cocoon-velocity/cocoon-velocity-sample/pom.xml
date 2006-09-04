@@ -32,7 +32,7 @@
   <artifactId>cocoon-velocity-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>velocity Block Samples</name>
+  <name>Velocity Block Samples</name>
   <description/>
   <dependencies>
     <dependency>

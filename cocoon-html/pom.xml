@@ -32,7 +32,7 @@
   <artifactId>cocoon-html</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>html Block</name>
+  <name>Html Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-html-impl</module>

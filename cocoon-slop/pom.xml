@@ -32,7 +32,7 @@
   <artifactId>cocoon-slop</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>slop Block</name>
+  <name>Slop Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-slop-impl</module>

@@ -32,7 +32,7 @@
   <artifactId>cocoon-bsf-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>bsf Block Samples</name>
+  <name>Bsf Block Samples</name>
   <description/>
   <dependencies>
     <dependency>

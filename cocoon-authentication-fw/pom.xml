@@ -31,7 +31,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-authentication-fw</artifactId>
   <packaging>pom</packaging>
-  <name>Authentication Framework</name>
+  <name>Authentication Framework [modules]</name>
   <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-authentication-fw-impl</module>

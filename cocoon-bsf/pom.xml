@@ -32,7 +32,7 @@
   <artifactId>cocoon-bsf</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>bsf Block</name>
+  <name>Bsf Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-bsf-impl</module>

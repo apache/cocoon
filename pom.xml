@@ -56,7 +56,7 @@
     <module>cocoon-html</module>
     <module>cocoon-itext</module>
     <module>cocoon-javaflow</module>
-    <!-- module>cocoon-jcr</module -->
+<!-- module>cocoon-jcr</module -->
     <module>cocoon-jfor</module>
     <module>cocoon-jms</module>
     <module>cocoon-jsp</module>

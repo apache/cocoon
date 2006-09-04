@@ -31,7 +31,7 @@
   <artifactId>cocoon-apples-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>apples Block Samples</name>
+  <name>Apples Block Samples</name>
   <description/>
   <build>
     <finalName>cocoon-apples-sample</finalName>

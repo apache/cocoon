@@ -32,7 +32,7 @@
   <artifactId>cocoon-slide</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>slide Block</name>
+  <name>Slide Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-slide-impl</module>

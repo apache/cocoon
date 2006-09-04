@@ -31,7 +31,7 @@
   <artifactId>cocoon-javaflow</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>javaflow Block</name>
+  <name>Javaflow Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-javaflow-impl</module>

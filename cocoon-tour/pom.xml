@@ -32,7 +32,7 @@
   <artifactId>cocoon-tour</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>tour Block</name>
+  <name>Tour Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-tour-impl</module>

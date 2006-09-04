@@ -32,7 +32,7 @@
   <artifactId>cocoon-tour-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>tour Block Implementation</name>
+  <name>Tour Block Implementation</name>
   <description/>
   <dependencies>
     <dependency>

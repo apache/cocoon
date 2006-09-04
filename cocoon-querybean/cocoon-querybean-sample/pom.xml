@@ -32,7 +32,7 @@
   <artifactId>cocoon-querybean-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>querybean Block Samples</name>
+  <name>Querybean Block Samples</name>
   <description/>
   <dependencies>
     <dependency>

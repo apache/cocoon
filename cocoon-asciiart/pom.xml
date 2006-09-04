@@ -32,7 +32,7 @@
   <artifactId>cocoon-asciiart</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>asciiart Block</name>
+  <name>Asciiart Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-asciiart-impl</module>

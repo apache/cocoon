@@ -32,7 +32,7 @@
   <artifactId>cocoon-jms</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Jms Block</name>
+  <name>Jms Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-jms-impl</module>

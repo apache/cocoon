@@ -32,7 +32,7 @@
   <artifactId>cocoon-querybean</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>querybean Block</name>
+  <name>Querybean Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-querybean-impl</module>

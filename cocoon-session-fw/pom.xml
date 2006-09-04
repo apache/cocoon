@@ -31,7 +31,7 @@
   <artifactId>cocoon-session-fw</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Session Framework</name>
+  <name>Session Framework [modules]</name>
   <modules>
     <module>cocoon-session-fw-impl</module>
     <module>cocoon-session-fw-sample</module>
