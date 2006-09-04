@@ -25,5 +25,9 @@ import org.apache.cocoon.portal.om.Layout;
  */
 public interface LayoutEvent extends Event {
 
+    /**
+     * Return the targetted layout object.
+     * @return The layout object.
+     */
     Layout getTarget();
 }

@@ -25,5 +25,9 @@ import org.apache.cocoon.portal.om.CopletInstance;
  */
 public interface CopletInstanceEvent extends Event {
 
+    /**
+     * Return the coplet instance object this event is send for.
+     * @return The coplet instance.
+     */
     CopletInstance getTarget();
 }

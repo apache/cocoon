@@ -39,7 +39,7 @@ public interface CopletFactory  {
      * This is also registered at the profile manager.
      */
     CopletInstance newInstance(CopletDefinition copletDef,
-                                   String           id)
+                               String           id)
     throws PortalException;
 
     /**
@@ -47,6 +47,12 @@ public interface CopletFactory  {
      * This is also unregistered at the profile manager.
      */
     void remove(CopletInstance copletInstanceData);
+
+    /**
+     * Remove the coplet definition.
+     * This is also unregistered at the profile manager.
+     */
+    void remove(CopletDefinition copletDefinition);
 
     /**
      * Create a new coplet data instance.

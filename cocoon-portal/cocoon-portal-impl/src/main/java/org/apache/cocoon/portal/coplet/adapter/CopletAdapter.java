@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.coplet.adapter;
 
+import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -49,6 +50,7 @@ import org.xml.sax.SAXException;
  * Each implementation should extend the {@link org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter}
  * to be prepared for possible extensions to this interface in future versions.
  *
+ * TODO - init and destroy are not invoked when profile is loaded.
  * @version $Id$
  */
 public interface CopletAdapter {
@@ -56,20 +58,20 @@ public interface CopletAdapter {
     String ROLE = CopletAdapter.class.getName();
 
     /**
-     * Initialize the coplet.
+     * Initialize the coplet definition.
      * This method is called immediately after a new instance is created.
      * For each coplet, this method is only invoked once.
-     * @param coplet The coplet
+     * @param coplet The coplet definition.
      */
-    void init(CopletInstance coplet);
+    void init(CopletDefinition coplet);
 
     /**
-     * Destroy the coplet.
+     * Destroy the coplet definition.
      * This method is invoked when a coplet instance will be destroyed
      * For each coplet, this method is only invoked once.
-     * @param coplet
+     * @param coplet The coplet definition.
      */
-    void destroy(CopletInstance coplet);
+    void destroy(CopletDefinition coplet);
 
     /**
      * Stream the content of the coplet.
