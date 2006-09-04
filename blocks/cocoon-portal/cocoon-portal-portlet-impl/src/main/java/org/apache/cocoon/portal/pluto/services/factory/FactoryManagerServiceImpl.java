@@ -37,13 +37,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.portal.impl.AbstractComponent;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.pluto.factory.ActionRequestFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.ControllerFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.ObjectIDFactoryImpl;
@@ -89,15 +87,6 @@ public class FactoryManagerServiceImpl
 
     /** The configuration. */
     protected Parameters parameters;
-
-    /**<
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context aContext) throws ContextException {
-        super.contextualize(aContext);
-        final ServletContext servletContext = (ServletContext)aContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-        this.servletConfig = new PortalServletConfig(servletContext);
-    }
 
     protected static final class PortalServletConfig implements ServletConfig {
 
@@ -149,6 +138,8 @@ public class FactoryManagerServiceImpl
     public void initialize()
     throws Exception {
         super.initialize();
+        final ServletContext servletContext = this.portalService.getProcessInfoProvider().getServletContext();
+        this.servletConfig = new PortalServletConfig(servletContext);
         final Map factories = new HashMap();
 
         factories.put(ActionRequest.class.getName(), 
@@ -189,8 +180,9 @@ public class FactoryManagerServiceImpl
             // try to get hold of the factory
             Factory factory = (Factory) ClassUtils.newInstance((String)me.getValue());
 
-            ContainerUtil.enableLogging(factory, this.getLogger());
-            ContainerUtil.contextualize(factory, this.context);
+            if ( factory instanceof AbstractLogEnabled ) {
+                ((AbstractLogEnabled)factory).setLogger(this.getLogger());
+            }
             ContainerUtil.parameterize(factory, this.parameters);
             ContainerUtil.service(factory, this.manager);
             ContainerUtil.initialize(factory);

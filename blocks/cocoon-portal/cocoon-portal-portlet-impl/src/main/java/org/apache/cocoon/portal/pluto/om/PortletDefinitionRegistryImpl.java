@@ -36,7 +36,6 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.portal.PortalService;
@@ -182,7 +181,7 @@ public class PortletDefinitionRegistryImpl
         }
         super.initialize();
 
-        this.servletContext = (ServletContext)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        this.servletContext = this.portalService.getProcessInfoProvider().getServletContext();
 
         // get our context path
         String baseWMDir = this.servletContext.getRealPath("");

@@ -29,15 +29,10 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
@@ -55,6 +50,7 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
+import org.springframework.web.context.ServletContextAware;
 
 /**
  * Default implementation of a portal service using a session to store
@@ -67,15 +63,15 @@ public class PortalServiceImpl
     implements Serviceable,
                 ThreadSafe, 
                 PortalService, 
-                Contextualizable,
+                ServletContextAware,
                 Disposable,
                 Configurable {
 
     /** Parameter map for the context protocol. */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
-    /** The component context. */
-    protected Context context;
+    /** The servlet context. */
+    protected ServletContext servletContext;
 
     /** The service locator. */
     protected ServiceManager manager;
@@ -135,20 +131,12 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
      */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
-        // add the portal service to the servlet context - if available
-        try {
-            final ServletContext servletContext = (ServletContext)aContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-            servletContext.setAttribute(PortalService.ROLE, this);
-        } catch (ContextException ignore) {
-            // we ignore the context exception
-            // this avoids startup errors if the portal is configured for the CLI
-            // environment
-            this.getLogger().warn("The portal service is not stored in the servlet config.", ignore);
-        }
+    public void setServletContext(ServletContext context) {
+        this.servletContext = context;
+        // add the portal service to the servlet context
+        this.servletContext.setAttribute(PortalService.ROLE, this);
     }
 
     /**
@@ -156,13 +144,8 @@ public class PortalServiceImpl
      */
     public void dispose() {
         // remove the portal service from the servlet context - if available
-        if ( this.context != null ) {
-            try {
-                final ServletContext servletContext = (ServletContext)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-                servletContext.removeAttribute(PortalService.ROLE);
-            } catch (ContextException ignore) {
-                // we ignore the context exception
-            }
+        if ( this.servletContext != null ) {
+            this.servletContext.removeAttribute(PortalService.ROLE);
         }
         if ( this.manager != null ) {
             this.renderers.clear();

@@ -52,6 +52,7 @@ import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.Layout;
@@ -792,7 +793,9 @@ public class WSRPAdapter
     public Object createObject(String className)
     throws Exception {
         final Object component = ClassUtils.newInstance(className);
-        ContainerUtil.enableLogging(component, this.getLogger());
+        if ( component instanceof AbstractLogEnabled ) {
+            ((AbstractLogEnabled)component).setLogger(this.getLogger());
+        }
         if (component instanceof RequiresConsumerEnvironment) {
             ((RequiresConsumerEnvironment)component).setConsumerEnvironment(this.consumerEnvironment);
         }
