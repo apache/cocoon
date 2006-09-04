@@ -19,12 +19,16 @@ import org.apache.cocoon.portal.om.CopletDefinition;
 
 
 /**
- * This interface marks an event as an event for a coplet data (or
- * for all coplet instance datas).
+ * This interface marks an event as an event for a coplet definition (or
+ * for all coplet instances).
  *
  * @version $Id$
  */
 public interface CopletDefinitionEvent extends Event {
 
+    /**
+     * Return the coplet definition this event is for.
+     * @return The coplet definition.
+     */
     CopletDefinition getTarget();
 }

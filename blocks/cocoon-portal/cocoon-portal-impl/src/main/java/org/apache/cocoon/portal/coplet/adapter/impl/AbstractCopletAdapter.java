@@ -368,16 +368,16 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.om.CopletDefinition)
      */
-    public void init(CopletInstance coplet) {
+    public void init(CopletDefinition coplet) {
         // nothing to do here, can be overwritten in subclasses
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.om.CopletDefinition)
      */
-    public void destroy(CopletInstance coplet) {
+    public void destroy(CopletDefinition coplet) {
         // nothing to do here, can be overwritten in subclasses
     }
 
@@ -522,7 +522,7 @@ final class LoaderThread implements Runnable {
 
     private final AbstractCopletAdapter adapter;
     private final ContentHandler        handler;
-    private final CopletInstance    coplet;
+    private final CopletInstance        coplet;
     private final CountDown             finished;
     Exception exception;
 

@@ -147,7 +147,7 @@ public class WSRPAdapter
     protected ConsumerEnvironmentImpl consumerEnvironment;
     
     /** Stores the current coplet instance data per thread. */
-    protected final ThreadLocal copletInstanceData = new ThreadLocal();
+    protected final ThreadLocal copletInstance = new ThreadLocal();
 
     /** The user context provider. */
     protected UserContextProvider userContextProvider;
@@ -359,10 +359,11 @@ public class WSRPAdapter
                 usesGet = false;
             }
             if ( usePipeline.booleanValue() ) {
+                ContentHandler handler = contentHandler;
                 if ( usesGet ) {
-                    contentHandler = new FormRewritingHandler(contentHandler);
+                    handler = new FormRewritingHandler(contentHandler);
                 }
-                HtmlSaxParser.parseString(content, HtmlSaxParser.getContentFilter(contentHandler));
+                HtmlSaxParser.parseString(content, HtmlSaxParser.getContentFilter(handler));
             } else {
                 // stream out the include for the serializer
                 IncludingHTMLSerializer.addPortlet(portletInstanceKey, content);
@@ -677,7 +678,7 @@ public class WSRPAdapter
      * @param coplet The coplet instance data or null to clear the information.
      */
     public void setCurrentCopletInstanceData(CopletInstance coplet) {
-        this.copletInstanceData.set(coplet);
+        this.copletInstance.set(coplet);
     }
 
     /**
@@ -686,7 +687,7 @@ public class WSRPAdapter
      * @return Returns the instance or null.
      */
     public CopletInstance getCurrentCopletInstanceData() {
-        return (CopletInstance)this.copletInstanceData.get();
+        return (CopletInstance)this.copletInstance.get();
     }
 
     /**
@@ -709,15 +710,14 @@ public class WSRPAdapter
         public void startElement(String uri, String loc, String raw, Attributes a) throws SAXException {
             if ( loc.equalsIgnoreCase("form") && a.getValue("method").equalsIgnoreCase("get") ) {
                 final String action = a.getValue("action");
-                int pos = action.indexOf('?');
+                final int pos = action.indexOf('?');
                 if ( pos != -1 ) {
-                    AttributesImpl ai = new AttributesImpl(a);
-                    a = ai;
+                    final AttributesImpl ai = new AttributesImpl(a);
                     final String queryString = action.substring(pos+1);
                     ai.removeAttribute("action");
                     ai.addCDATAAttribute("action", action.substring(0, pos));
-                    super.startElement(uri, loc, raw, a);
-                    RequestParameters rp = new RequestParameters(queryString);
+                    super.startElement(uri, loc, raw, ai);
+                    final RequestParameters rp = new RequestParameters(queryString);
 
                     final Enumeration e = rp.getParameterNames();
                     while ( e.hasMoreElements() ) {

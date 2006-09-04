@@ -23,13 +23,16 @@ package org.apache.cocoon.portal.event;
  * every event but only in some specific event types. These types are represented
  * by an own subclass/interface.
  * When a receiver subscribes itself at the event manager, the manager checks (using
- * reflection) for occurances of the method "inform" on the receiver. The signature
- * of the method consists of two parameters, where the first one is the event subclass
- * and the second one the {@link org.apache.cocoon.portal.PortalService}.
+ * reflection) for occurances of the method "inform" on the receiver. The signature of
+ * the inform method can have one of two formats: the simple version just gets
+ * the event as the only parameter. The other version consists of two parameters,
+ * where the first one is the event subclass and the second one the {@link org.apache.cocoon.portal.PortalService}.
  * If for example a receiver is interested in all {@link org.apache.cocoon.portal.event.CopletInstanceEvent}s
  * then it subscribes using the event manager and should provide an inform method
  * with the following signature:
- * public void inform(org.apache.cocoon.portal.event.CopletInstanceEvent event, org.apache.cocoon.portal.PortalService).
+ * public void inform(org.apache.cocoon.portal.event.CopletInstanceEvent event, org.apache.cocoon.portal.PortalService)
+ * or just
+ * public void inform(org.apache.cocoon.portal.event.CopletInstanceEvent event).
  *
  * If a receiver is interested in more than one event type, it can implement
  * several inform methods each with the corresponding event class as the first
