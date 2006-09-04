@@ -42,10 +42,27 @@ public class SitemapElementParser extends AvalonElementParser {
     }
 
     /**
+     * Add the logger bean.
+     * @param configuration  The location of the logging configuration.
+     * @param registry       The bean registry.
+     * @param loggerCategory The optional category for the logger.
+     */
+    protected void addLogger(String                 configuration,
+                             BeanDefinitionRegistry registry,
+                             String                 loggerCategory) {
+        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonChildLoggerFactoryBean.class, "init", false);
+        if ( loggerCategory != null ) {
+            beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
+        }
+        this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
+    }
+
+    /**
      * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#readConfiguration(java.lang.String, org.springframework.core.io.ResourceLoader)
      */
-    protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader) throws Exception {
-        return super.readConfiguration(location, resourceLoader);
+    protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
+    throws Exception {
+        return ConfigurationReader.readSitemap(null, location, resourceLoader);
     }
 
 }

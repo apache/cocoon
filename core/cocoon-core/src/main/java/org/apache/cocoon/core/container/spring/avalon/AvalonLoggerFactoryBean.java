@@ -53,7 +53,10 @@ public class AvalonLoggerFactoryBean
     protected Logger logger;
 
     /** The logging configuration. */
-    protected String loggingConfiguration;
+    protected String configuration;
+
+    /** The logging category. */
+    protected String category;
 
     /**
      * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
@@ -79,7 +82,7 @@ public class AvalonLoggerFactoryBean
         loggerManager.contextualize(subcontext);
 
         // Configure the log4j manager
-        String loggerConfig = this.loggingConfiguration;
+        String loggerConfig = this.configuration;
         if ( loggerConfig != null && !loggerConfig.startsWith("/") ) {
             loggerConfig = '/' + loggerConfig;
         }
@@ -97,7 +100,11 @@ public class AvalonLoggerFactoryBean
             loggerManager.configure(new DefaultConfiguration("empty"));
         }
 
-        this.logger = loggerManager.getLoggerForCategory("cocoon");
+        String loggingCategory = this.category;
+        if ( loggingCategory == null ) {
+            loggingCategory = "cocoon";
+        }
+        this.logger = loggerManager.getLoggerForCategory(loggingCategory);
     }
 
     /**
@@ -125,8 +132,8 @@ public class AvalonLoggerFactoryBean
         this.settings = settings;
     }
 
-    public void setLoggingConfiguration(String loggingConfiguration) {
-        this.loggingConfiguration = loggingConfiguration;
+    public void setConfiguration(String loggingConfiguration) {
+        this.configuration = loggingConfiguration;
     }
 
     protected static final class LoggerWrapper implements Logger {
@@ -248,5 +255,9 @@ public class AvalonLoggerFactoryBean
         public boolean isFatalErrorEnabled() {
             return this.log.isFatalEnabled();
         }
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

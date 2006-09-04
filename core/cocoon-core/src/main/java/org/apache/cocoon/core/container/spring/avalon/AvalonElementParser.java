@@ -60,12 +60,6 @@ public class AvalonElementParser extends AbstractElementParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        final String loggingConfiguration = element.getAttribute("loggingConfiguration");
-        // we only add the logger if the configuration is present
-        if ( loggingConfiguration != null && loggingConfiguration.trim().length() > 0 ) {
-            this.addLogger(loggingConfiguration, parserContext.getRegistry());
-        }
-
         // add context
         this.addContext(element, parserContext.getRegistry());
 
@@ -82,7 +76,11 @@ public class AvalonElementParser extends AbstractElementParser {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         try {
             final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
-            // first handle includes
+            // add logger
+            final String loggingConfiguration = element.getAttribute("loggingConfiguration");
+            this.addLogger(loggingConfiguration, parserContext.getRegistry(), info.getRootLogger());
+
+            // handle includes of spring configurations
             final Iterator includeIter = info.getImports().iterator();
             while ( includeIter.hasNext() ) {
                 final String uri = (String)includeIter.next();
@@ -125,14 +123,22 @@ public class AvalonElementParser extends AbstractElementParser {
 
     /**
      * Add the logger bean.
-     * @param configuration The location of the logging configuration.
-     * @param registry      The bean registry.
+     * @param configuration  The location of the logging configuration.
+     * @param registry       The bean registry.
+     * @param loggerCategory The optional category for the logger.
      */
-    protected void addLogger(String configuration,
-                             BeanDefinitionRegistry registry) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
-        beanDef.getPropertyValues().addPropertyValue("loggingConfiguration", configuration);
-        this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
+    protected void addLogger(String                 configuration,
+                             BeanDefinitionRegistry registry,
+                             String                 loggerCategory) {
+        // we only add the logger if the configuration is present
+        if ( configuration != null && configuration.trim().length() > 0 ) {
+            final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
+            beanDef.getPropertyValues().addPropertyValue("configuration", configuration);
+            if ( loggerCategory != null ) {
+                beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
+            }
+            this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
+        }
     }
 
     public void createConfig(ConfigurationInfo      info,
