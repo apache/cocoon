@@ -21,9 +21,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
@@ -35,7 +35,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.blocks.util.ServletContextWrapper;
-import org.osgi.service.component.ComponentContext;
 
 /**
  * @version $Id$
@@ -47,22 +46,23 @@ public class BlockContext extends ServletContextWrapper {
     private Hashtable attributes = new Hashtable();
     private Servlet servlet;
     private String mountPath;
-    private Dictionary properties;
-    protected ComponentContext componentContext;
+    private URL contextURL;
+    private Map properties;
+    private Map connections;
+
 
     /*
      * (non-Javadoc)
      * 
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
      */
+    /*
+     *  TODO It would probably be usefull to inherit context attribute from the 
+     *  surounding servlet context and also to be able to inject context
+     *  attributes in the container  
+     */
     public Object getAttribute(String name) {
         Object value = this.attributes.get(name);
-        // Make service references available as servlet context attributes
-        // FIXME: The other attribute methods should reflect that service references
-        // are available as attributes 
-        if (value == null) {
-            value = this.componentContext.locateService(name);
-        }
         return value;
     }
 
@@ -102,7 +102,8 @@ public class BlockContext extends ServletContextWrapper {
     public URL getResource(String path) throws MalformedURLException {
         if (path.length() == 0 || path.charAt(0) != '/')
             throw new MalformedURLException("The path must start with '/' " + path);
-        return this.componentContext.getBundleContext().getBundle().getResource(path);
+        path = path.substring(1);
+        return new URL(this.contextURL, path);
     }
 
     /*
@@ -279,9 +280,10 @@ public class BlockContext extends ServletContextWrapper {
     /**
      * Get the context of a block with a given name.
      */
+    // FIXME implement NPE handling
     public ServletContext getNamedContext(String name) {
         BlockServlet blockServlet =
-            (BlockServlet) this.componentContext.locateService(name);
+            (BlockServlet) this.connections.get(name);
         return blockServlet.getBlockContext();
     }
         
@@ -298,16 +300,26 @@ public class BlockContext extends ServletContextWrapper {
     public String getMountPath() {
         return this.mountPath;
     }
+    
+    /**
+     * @param contextURL The contextURL to set.
+     */
+    public void setContextURL(URL contextURL) {
+        this.contextURL = contextURL;
+    }
 
     /**
      * @param properties The properties to set.
      */
-    public void setProperties(Dictionary properties) {
+    public void setProperties(Map properties) {
         this.properties = properties;
     }
 
-    protected void activate(ComponentContext componentContext) {
-        this.componentContext = componentContext;
+    /**
+     * @param connections the connections to set
+     */
+    public void setConnections(Map connections) {
+        this.connections = connections;
     }
 
     protected class NamedDispatcher implements RequestDispatcher {
