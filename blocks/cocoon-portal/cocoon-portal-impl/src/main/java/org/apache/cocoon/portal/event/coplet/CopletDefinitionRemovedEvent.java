@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event;
+package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.CopletDefinition;
 
 /**
- * This interface marks an event as targetted at a
- * {@link org.apache.cocoon.portal.om.LayoutInstance} object.
+ * This event is fired when a coplet definition is removed.
  *
  * @version $Id$
  */
-public interface LayoutInstanceEvent extends Event {
+public class CopletDefinitionRemovedEvent
+    extends AbstractCopletDefinitionEvent {
 
-    /**
-     * Return the targetted layout instance.
-     * @return The layout instance.
-     */
-    LayoutInstance getTarget();
+    public CopletDefinitionRemovedEvent(CopletDefinition target) {
+        super(target);
+    }    
 }

@@ -61,7 +61,7 @@ public class URICopletAdapter
     throws SAXException {
         final String uri = (String)coplet.getCopletDefinition().getAttribute("uri");
         if ( uri == null ) {
-            throw new SAXException("No URI for coplet data "+coplet.getCopletDefinition().getId()+" found.");
+            throw new SAXException("No URI for coplet definition "+coplet.getCopletDefinition().getId()+" found.");
         }
         this.streamContent( coplet, uri, contentHandler);
     }

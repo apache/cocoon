@@ -155,7 +155,11 @@ public class DefaultEventManager
                 getLogger().info("Informing receiver "+receiverInfo.receiver+" of event "+event.getClass());
             }
             try {
-                receiverInfo.method.invoke(receiverInfo.receiver, new Object[] {event, this.portalService});
+                if ( receiverInfo.simpleVersion ) {
+                    receiverInfo.method.invoke(receiverInfo.receiver, new Object[] {event});
+                } else {
+                    receiverInfo.method.invoke(receiverInfo.receiver, new Object[] {event, this.portalService});
+                }
             } catch (Exception ignore) {
                 this.getLogger().warn("Exception during event dispatching on receiver " + receiverInfo.receiver
                                      +" and event " + event, ignore);
@@ -167,6 +171,7 @@ public class DefaultEventManager
     protected static final class MethodInfo {
         public Class eventClass;
         public Method method;
+        public boolean simpleVersion;
     }
 
     protected synchronized List introspect(Class receiverClass) {
@@ -178,12 +183,14 @@ public class DefaultEventManager
                 final Method current = methods[i];
                 if ( current.getName().equals("inform") ) {
                     final Class[] params = current.getParameterTypes();
-                    if ( params.length == 2 
-                         && params[1].getName().equals(PortalService.class.getName())) {
+                    if ( (params.length == 1)
+                         || (params.length == 2 
+                             && params[1].getName().equals(PortalService.class.getName()))) {
                         if ( Event.class.isAssignableFrom( params[0] ) ) {
-                            MethodInfo info = new MethodInfo();
+                            final MethodInfo info = new MethodInfo();
                             info.eventClass = params[0];
                             info.method = current;
+                            info.simpleVersion = params.length == 1;
                             result.add(info);
                             // create the hierarchy info for the event class
                             this.getHierarchyInfo(info.eventClass);
@@ -214,7 +221,7 @@ public class DefaultEventManager
         while ( i.hasNext() ) {
             final MethodInfo info = (MethodInfo)i.next();
             final HierarchyInfo hierarchy = this.getHierarchyInfo(info.eventClass);
-            hierarchy.addToReceivers(new ReceiverInfo(receiver, info.method));
+            hierarchy.addToReceivers(new ReceiverInfo(receiver, info.method, info.simpleVersion));
             if ( getLogger().isDebugEnabled() ) {
                 getLogger().debug( "Receiver " + receiver + " subscribed for event: " + info.eventClass.getName() );
             }
@@ -356,10 +363,12 @@ public class DefaultEventManager
     protected static final class ReceiverInfo {
         final public Receiver receiver;
         final public Method   method;
+        final public boolean  simpleVersion;
 
-        public ReceiverInfo(Receiver r, Method m) {
+        public ReceiverInfo(Receiver r, Method m, boolean simple) {
             this.receiver = r;
             this.method = m;
+            this.simpleVersion = simple;
         }
 
         /**
@@ -368,7 +377,8 @@ public class DefaultEventManager
         public boolean equals(Object obj) {
             if ( obj instanceof ReceiverInfo ) {
                 return  ((ReceiverInfo)obj).receiver.equals(this.receiver)
-                     && ((ReceiverInfo)obj).method.equals(this.method);
+                     && ((ReceiverInfo)obj).method.equals(this.method)
+                     && ((ReceiverInfo)obj).simpleVersion == this.simpleVersion;
             }
             return false;
         }
