@@ -31,8 +31,14 @@
   <xsl:template match="xsp-interpolation:greeting">
     <!-- Using attribute and text interpolation. -->
     <center style="color:{#color}">Hello logicsheet {#world}!</center>
+    <!-- Testcase for document('') in logicsheet. -->
+    <center style="color:{#color}">
+      <xsl:copy-of select="document('')/*/xsp-interpolation:hello"/> {#world}!
+    </center>
   </xsl:template>
- 
+
+  <xsp-interpolation:hello>Hello document </xsp-interpolation:hello>
+  
   <xsl:template match="@*|*|text()|processing-instruction()">
     <xsl:copy>
       <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>

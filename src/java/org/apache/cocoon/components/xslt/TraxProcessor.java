@@ -19,6 +19,7 @@ package org.apache.cocoon.components.xslt;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -247,6 +248,14 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
                     throw new XSLTProcessorException("Unable to create templates for stylesheet: " + stylesheet.getURI());
                 }
 
+                // Must set base for Xalan stylesheet.
+                // Otherwise document('') in logicsheet causes NPE.
+                Class clazz = template.getClass();
+                if (clazz.getName().equals("org.apache.xalan.templates.StylesheetRoot")) {
+               	    Method method = clazz.getMethod("setHref", new Class[]{String.class});
+               	    method.invoke(template, new Object[]{id});
+                }
+                
                 putTemplates(template, stylesheet, id);
 
                 // Create transformer handler
