@@ -51,6 +51,7 @@ public class SitemapHelper {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
         // Settings
+        buffer.append("<cocoon:properties/>");
         // Avalon
         buffer.append("<avalon:sitemap uriPrefix=\"");
         buffer.append(uriPrefix);
