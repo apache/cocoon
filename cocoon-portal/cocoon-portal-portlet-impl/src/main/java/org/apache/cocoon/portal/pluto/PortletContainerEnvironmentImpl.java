@@ -22,15 +22,13 @@ import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistryImpl;
 import org.apache.cocoon.portal.pluto.service.log.LogServiceImpl;
@@ -51,12 +49,11 @@ import org.apache.pluto.services.title.DynamicTitleService;
  * @version $Id$
  */
 public class PortletContainerEnvironmentImpl 
-extends AbstractLogEnabled
+    extends AbstractLogEnabled
     implements PortletContainerEnvironment,
                Serviceable,
                Disposable,
                Initializable,
-               Contextualizable,
                Parameterizable {
 
     /** The service manager. */
@@ -67,9 +64,6 @@ extends AbstractLogEnabled
     
     /** Static services. */
     protected Map staticServices = new HashMap();
-    
-    /** Context. */
-    protected Context context;
     
     /** Configuration. */
     protected Parameters parameters;
@@ -87,13 +81,6 @@ extends AbstractLogEnabled
      */
     public void service(ServiceManager serviceManager) {
         this.manager = serviceManager;
-    }
-    
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context avalonContext) {
-        this.context = avalonContext;        
     }
     
     /**
@@ -121,8 +108,9 @@ extends AbstractLogEnabled
      */
     protected Object init(Object o) 
     throws Exception {
-        ContainerUtil.enableLogging(o, this.getLogger());
-        ContainerUtil.contextualize(o, this.context);
+        if ( o instanceof AbstractLogEnabled ) {
+            ((AbstractLogEnabled)o).setLogger(this.getLogger());
+        }
         ContainerUtil.parameterize(o, this.parameters);
         ContainerUtil.service(o, this.manager);
         if ( o instanceof PortletContainerEnabled ) {

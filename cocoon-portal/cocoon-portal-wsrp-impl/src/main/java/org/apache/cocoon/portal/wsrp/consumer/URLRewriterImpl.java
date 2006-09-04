@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.wsrp.consumer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.wsrp4j.consumer.URLGenerator;
 import org.apache.wsrp4j.consumer.URLRewriter;
 import org.apache.wsrp4j.util.Constants;

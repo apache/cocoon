@@ -51,8 +51,8 @@ import oasis.names.tc.wsrp.v1.types.PerformBlockingInteraction;
 import oasis.names.tc.wsrp.v1.types.ReleaseSessions;
 import oasis.names.tc.wsrp.v1.types.SetPortletProperties;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.wsrp.logging.WSRPLogger;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.wsrp4j.consumer.ConsumerEnvironment;
@@ -91,19 +91,10 @@ public class PortletDriverImpl
     protected CookieProtocol initCookie = CookieProtocol.none;
     protected PortletDescription desc;
 
-    /** Our logger. */
     protected Logger logger;
 
     /** The portal service. */
     protected PortalService service;
-
-    /**
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging(org.apache.avalon.framework.logger.Logger arg0) {
-        super.enableLogging(arg0);
-        this.logger = new WSRPLogger(arg0);
-    }
 
     /**
      * @see org.apache.cocoon.portal.wsrp.consumer.RequiresConsumerEnvironment#setConsumerEnvironment(org.apache.wsrp4j.consumer.ConsumerEnvironment)
@@ -447,11 +438,18 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
 
         }
 
         return response;
+    }
+
+    protected Logger getWsrp4jLogger() {
+        if ( this.logger == null ) {
+            this.logger = new WSRPLogger(this.getLogger());
+        }
+        return this.logger;
     }
 
     /**
@@ -497,7 +495,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;
@@ -530,7 +528,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;
@@ -558,7 +556,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;
@@ -589,7 +587,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;
@@ -610,7 +608,7 @@ public class PortletDriverImpl
             markupPort.initCookie(request);
 
         } catch (java.rmi.RemoteException wsrpFault) {
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
     }
 
@@ -648,7 +646,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;
@@ -685,7 +683,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;
@@ -722,7 +720,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;
@@ -757,7 +755,7 @@ public class PortletDriverImpl
 
         } catch (java.rmi.RemoteException wsrpFault) {
 
-            WSRPXHelper.handleWSRPFault(logger, wsrpFault);
+            WSRPXHelper.handleWSRPFault(this.getWsrp4jLogger(), wsrpFault);
         }
 
         return response;

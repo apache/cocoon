@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.event.aspect.impl;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.Serviceable;
@@ -25,6 +24,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.impl.PageLabelManager;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;

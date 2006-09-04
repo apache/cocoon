@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -25,6 +24,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 
 /**
  * This aspect "disables" the back button of the browser and tries to avoid

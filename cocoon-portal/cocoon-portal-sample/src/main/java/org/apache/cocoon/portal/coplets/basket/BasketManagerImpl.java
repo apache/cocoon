@@ -34,11 +34,11 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.cron.CronJob;
 import org.apache.cocoon.components.cron.JobScheduler;
 import org.apache.cocoon.components.cron.ServiceableCronJob;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalException;
@@ -149,7 +149,7 @@ public class BasketManagerImpl
      */
     public void inform(ContentStoreEvent event, PortalService service) {
         // dispatch
-        final Session session = ContextHelper.getRequest(this.context).getSession();
+        final Session session = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel()).getSession();
         if ( event instanceof AddItemEvent ) {
 
             this.processAddItemEvent((AddItemEvent)event);
@@ -192,7 +192,7 @@ public class BasketManagerImpl
      */
     protected void processUploadItemEvent(UploadItemEvent event) {
         final ContentStore store = event.getContentStore();
-        final Request req = ContextHelper.getRequest(this.context);
+        final Request req = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
         final List paramNames = event.getItemNames();
         final Iterator i = paramNames.iterator();
         while ( i.hasNext() ) {
@@ -558,7 +558,7 @@ public class BasketManagerImpl
      * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBasket()
      */
     public Basket getBasket() {
-        Session session = ContextHelper.getRequest(this.context).getSession();
+        Session session = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel()).getSession();
         Basket basket = (Basket) session.getAttribute(BASKET_KEY);
         if ( basket == null ) {
             final String user = this.getUser();
@@ -579,7 +579,7 @@ public class BasketManagerImpl
      * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBriefcase()
      */
     public Briefcase getBriefcase() {
-        Session session = ContextHelper.getRequest(this.context).getSession();
+        Session session = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel()).getSession();
         Briefcase briefcase = (Briefcase) session.getAttribute(BRIEFCASE_KEY);
         if ( briefcase == null ) {
             briefcase = (Briefcase)this.loadContentStore(BRIEFCASE_KEY);
@@ -592,7 +592,7 @@ public class BasketManagerImpl
      * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getFolder()
      */
     public Folder getFolder() {
-        Session session = ContextHelper.getRequest(this.context).getSession();
+        Session session = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel()).getSession();
         Folder folder = (Folder) session.getAttribute(FOLDER_KEY);
         if ( folder == null ) {
             folder = (Folder)this.loadContentStore(FOLDER_KEY);
@@ -605,7 +605,7 @@ public class BasketManagerImpl
      * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBriefcaseDescriptions()
      */
     public List getBriefcaseDescriptions() {
-        Session session = ContextHelper.getRequest(this.context).getSession();
+        Session session = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel()).getSession();
         List briefcases = (List)session.getAttribute(ALL_BRIEFCASES_KEY);
         if ( briefcases == null ) {
             briefcases = this.loadBriefcases();

@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.wsrp.consumer;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
 import org.apache.wsrp4j.consumer.PortletWindowSession;
 import org.apache.wsrp4j.consumer.driver.GenericPortletSessionImpl;
 import org.apache.wsrp4j.util.Modes;
@@ -31,7 +31,7 @@ import org.apache.wsrp4j.util.WindowStates;
 public class PortletSessionImpl extends GenericPortletSessionImpl {
 
     /** The logger. */
-    protected final Logger logger;
+    protected final Log logger;
 
     /**
      * constructor
@@ -39,7 +39,7 @@ public class PortletSessionImpl extends GenericPortletSessionImpl {
      * @param handle
      * @param logger
      */
-    public PortletSessionImpl(String handle, Logger logger) {
+    public PortletSessionImpl(String handle, Log logger) {
     	super(handle);
         this.logger = logger;
     }

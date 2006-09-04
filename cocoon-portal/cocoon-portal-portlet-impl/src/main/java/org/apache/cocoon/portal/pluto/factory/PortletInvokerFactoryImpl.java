@@ -22,13 +22,11 @@ import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionImpl;
 import org.apache.pluto.factory.PortletInvokerFactory;
 import org.apache.pluto.invoker.PortletInvoker;
@@ -41,23 +39,13 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  */
 public class PortletInvokerFactoryImpl 
 extends AbstractFactory
-implements PortletInvokerFactory, Serviceable, Contextualizable, ThreadSafe, Disposable {
-
-    /** The avalon context */
-    protected Context context;
+implements PortletInvokerFactory, Serviceable, ThreadSafe, Disposable {
 
     /** The service manager */
     protected ServiceManager manager;
 
     /** All local portlets */
     protected List localPortlets = Collections.synchronizedList(new ArrayList());
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context avalonContext) throws ContextException {
-        this.context = avalonContext;
-    }
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -77,7 +65,6 @@ implements PortletInvokerFactory, Serviceable, Contextualizable, ThreadSafe, Dis
         }
         this.localPortlets.clear();
         this.manager = null;
-        this.context = null;
     }
 
     /**
@@ -97,8 +84,9 @@ implements PortletInvokerFactory, Serviceable, Contextualizable, ThreadSafe, Dis
                 this.localPortlets.add(invoker);
                 ((PortletDefinitionImpl)portletDefinition).setLocalPortletInvoker(invoker);
                 try {
-                    ContainerUtil.enableLogging(invoker, this.getLogger());
-                    ContainerUtil.contextualize(invoker, this.context);
+                    if ( invoker instanceof AbstractLogEnabled ) {
+                        ((AbstractLogEnabled)invoker).setLogger(this.getLogger());
+                    }
                     ContainerUtil.service(invoker, this.manager);
                     ContainerUtil.initialize(invoker);
                 } catch (Exception ignore) {

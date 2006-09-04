@@ -283,8 +283,7 @@ public class PortletAdapter
             final String uniqueContainerName = "cocoon-portal";
 
             this.portletContainerEnvironment = new PortletContainerEnvironmentImpl();
-            ContainerUtil.enableLogging(this.portletContainerEnvironment, this.getLogger());
-            ContainerUtil.contextualize(this.portletContainerEnvironment, this.context);
+            this.portletContainerEnvironment.setLogger(this.getLogger());
             ContainerUtil.parameterize(this.portletContainerEnvironment, this.parameters);
             ContainerUtil.service(this.portletContainerEnvironment, this.manager);
             ContainerUtil.initialize(this.portletContainerEnvironment);

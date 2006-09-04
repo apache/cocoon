@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto.service.log;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
 
 /**
  * Our own log service logging to an avalon logger.
@@ -26,10 +26,10 @@ public class LoggerImpl
 implements org.apache.pluto.services.log.Logger {
 
     /** The logger to use */
-    protected Logger logger;
+    protected Log logger;
 
     /** Constructor */
-    public LoggerImpl(Logger logger) {
+    public LoggerImpl(Log logger) {
         this.logger = logger;
     }
 

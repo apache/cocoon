@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.event.aspect.impl;
 
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -29,6 +28,7 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.om.Layout;
 
 /**
