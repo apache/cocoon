@@ -802,7 +802,6 @@ public class WSRPAdapter
         if (component instanceof RequiresPortalService) {
             ((RequiresPortalService)component).setPortalService(this.portalService);
         }
-        ContainerUtil.contextualize(component, context);
         ContainerUtil.service(component, manager);
         ContainerUtil.initialize(component);
 
