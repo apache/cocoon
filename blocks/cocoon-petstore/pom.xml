@@ -32,7 +32,7 @@
   <artifactId>cocoon-petstore</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>petstore Block</name>
+  <name>Petstore Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-petstore-impl</module>

@@ -46,7 +46,7 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-    <!--  
+<!--  
           Test dependencies
           TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
      -->
@@ -86,7 +86,7 @@
       <resource>
         <directory>src/main/resources</directory>
       </resource>
-      <!-- Note: the file template-instructions.xml is not in the default resources directory as
+<!-- Note: the file template-instructions.xml is not in the default resources directory as
                  the sources of the template block are shared with Cocoon 2.1. Once this is no
                  longer the case, this file can be moved into the resources dir again and this
                  special configuration can be removed. -->

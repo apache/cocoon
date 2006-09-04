@@ -32,7 +32,7 @@
   <artifactId>cocoon-proxy</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>proxy Block</name>
+  <name>Proxy Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-proxy-impl</module>

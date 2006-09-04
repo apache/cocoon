@@ -32,7 +32,7 @@
   <artifactId>cocoon-faces-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>faces Block Implementation</name>
+  <name>Faces Block Implementation</name>
   <description/>
   <dependencies>
     <dependency>

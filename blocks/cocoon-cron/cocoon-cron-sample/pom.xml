@@ -32,7 +32,7 @@
   <artifactId>cocoon-cron-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>cron Block Samples</name>
+  <name>Cron Block Samples</name>
   <description/>
   <dependencies>
     <dependency>

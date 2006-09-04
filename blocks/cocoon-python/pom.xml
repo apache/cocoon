@@ -32,7 +32,7 @@
   <artifactId>cocoon-python</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>python Block</name>
+  <name>Python Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-python-impl</module>

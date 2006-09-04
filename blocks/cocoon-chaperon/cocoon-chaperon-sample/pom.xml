@@ -32,7 +32,7 @@
   <artifactId>cocoon-chaperon-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>chaperon Block Samples</name>
+  <name>Chaperon Block Samples</name>
   <description/>
   <dependencies>
     <dependency>

@@ -32,7 +32,7 @@
   <artifactId>cocoon-faces</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>faces Block</name>
+  <name>Faces Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-faces-impl</module>

@@ -32,7 +32,7 @@
   <artifactId>cocoon-axis</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>axis Block</name>
+  <name>Axis Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-axis-impl</module>

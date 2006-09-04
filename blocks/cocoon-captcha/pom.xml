@@ -31,7 +31,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-captcha</artifactId>
   <packaging>pom</packaging>
-  <name>Captcha Block</name>
+  <name>Captcha Block [modules]</name>
   <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-captcha-impl</module>

@@ -32,7 +32,7 @@
   <artifactId>cocoon-mail</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>mail Block</name>
+  <name>Mail Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-mail-impl</module>
