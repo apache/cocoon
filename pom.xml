@@ -31,7 +31,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-template</artifactId>
   <packaging>pom</packaging>
-  <name>Template framework</name>
+  <name>Template framework [modules]</name>
   <version>2-SNAPSHOT</version>
   <modules>
     <module>cocoon-template-impl</module>
