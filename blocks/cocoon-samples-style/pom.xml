@@ -32,7 +32,7 @@
   <artifactId>cocoon-samples-style</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Cocoon samples styles</name>
+  <name>Cocoon samples styles [modules]</name>
   <description/>
   <modules>
     <module>cocoon-samples-style-default</module>

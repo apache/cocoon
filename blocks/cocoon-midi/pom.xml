@@ -32,7 +32,7 @@
   <artifactId>cocoon-midi</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>midi Block</name>
+  <name>Midi Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-midi-impl</module>

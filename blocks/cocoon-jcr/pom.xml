@@ -31,7 +31,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-jcr</artifactId>
   <packaging>pom</packaging>
-  <name>JCR Block</name>
+  <name>JCR Block [modules]</name>
   <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-jcr-impl</module>

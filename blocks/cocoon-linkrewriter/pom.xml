@@ -32,7 +32,7 @@
   <artifactId>cocoon-linkrewriter</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>linkrewriter Block</name>
+  <name>Linkrewriter Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-linkrewriter-impl</module>

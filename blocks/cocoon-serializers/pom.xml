@@ -32,7 +32,7 @@
   <artifactId>cocoon-serializers</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>serializers Block</name>
+  <name>Serializers Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-serializers-impl</module>

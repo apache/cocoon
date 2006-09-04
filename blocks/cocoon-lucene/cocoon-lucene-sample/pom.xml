@@ -32,7 +32,7 @@
   <artifactId>cocoon-lucene-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>lucene Block Samples</name>
+  <name>Lucene Block Samples</name>
   <description/>
   <dependencies>
     <dependency>

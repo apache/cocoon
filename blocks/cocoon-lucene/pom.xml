@@ -32,7 +32,7 @@
   <artifactId>cocoon-lucene</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>lucene Block</name>
+  <name>Lucene Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-lucene-impl</module>

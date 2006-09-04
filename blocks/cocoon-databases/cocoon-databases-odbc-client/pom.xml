@@ -32,7 +32,7 @@
   <artifactId>cocoon-databases-odbc-client</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>odbc client Implementation</name>
+  <name>Odbc client Implementation</name>
   <description/>
   <dependencies>
     <dependency>

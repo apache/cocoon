@@ -32,7 +32,7 @@
   <artifactId>cocoon-itext</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>itext Block</name>
+  <name>Itext Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-itext-impl</module>

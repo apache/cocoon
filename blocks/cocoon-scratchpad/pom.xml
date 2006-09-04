@@ -31,7 +31,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-scratchpad</artifactId>
   <packaging>pom</packaging>
-  <name>Scratchpad Block</name>
+  <name>Scratchpad Block [modules]</name>
   <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-scratchpad-impl</module>

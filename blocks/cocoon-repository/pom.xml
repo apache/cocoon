@@ -32,7 +32,7 @@
   <artifactId>cocoon-repository</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>repository Block</name>
+  <name>Repository Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-repository-impl</module>

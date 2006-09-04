@@ -32,7 +32,7 @@
   <artifactId>cocoon-qdox</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>qdox Block</name>
+  <name>Qdox Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-qdox-impl</module>

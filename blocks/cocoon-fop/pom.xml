@@ -32,7 +32,7 @@
   <artifactId>cocoon-fop</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>FOP Block</name>
+  <name>FOP Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-fop-sample</module>

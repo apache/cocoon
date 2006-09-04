@@ -31,7 +31,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-cron</artifactId>
   <packaging>pom</packaging>
-  <name>Cron Block</name>
+  <name>Cron Block [modules]</name>
   <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-cron-impl</module>

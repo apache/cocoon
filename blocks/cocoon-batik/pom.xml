@@ -32,7 +32,7 @@
   <artifactId>cocoon-batik</artifactId>
   <version>2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Batik Block</name>
+  <name>Batik Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-batik-impl</module>

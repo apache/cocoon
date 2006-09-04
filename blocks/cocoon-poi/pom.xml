@@ -32,7 +32,7 @@
   <artifactId>cocoon-poi</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>poi Block</name>
+  <name>Poi Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-poi-impl</module>

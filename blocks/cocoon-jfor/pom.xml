@@ -32,7 +32,7 @@
   <artifactId>cocoon-jfor</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>jfor Block</name>
+  <name>Jfor Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-jfor-impl</module>

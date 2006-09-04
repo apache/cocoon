@@ -31,7 +31,7 @@
   <artifactId>cocoon-eventcache</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>eventcache Block</name>
+  <name>Eventcache Block [modules]</name>
   <description/>
   <modules>
     <module>cocoon-eventcache-impl</module>

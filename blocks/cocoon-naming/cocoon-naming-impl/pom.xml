@@ -32,7 +32,7 @@
   <artifactId>cocoon-naming-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>naming Block Implementation</name>
+  <name>Naming Block Implementation</name>
   <description/>
   <dependencies>
     <dependency>
