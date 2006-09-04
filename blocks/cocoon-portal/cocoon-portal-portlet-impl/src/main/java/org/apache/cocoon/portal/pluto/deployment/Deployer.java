@@ -29,12 +29,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.deployment.DeploymentException;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.logging.Log;
 import org.apache.excalibur.source.Source;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
@@ -48,10 +48,10 @@ import org.xml.sax.SAXException;
  */
 public class Deployer {
 
-    public static boolean deploy(Source inputSource,
-                                 String outputName,
+    public static boolean deploy(Source  inputSource,
+                                 String  outputName,
                                  boolean stripLoggers,
-                                 Logger logger,
+                                 Log     logger,
                                  ServiceManager manager)
     throws DeploymentException, IOException, SAXException, ProcessingException {
         // first test, if the portlet is already deployed

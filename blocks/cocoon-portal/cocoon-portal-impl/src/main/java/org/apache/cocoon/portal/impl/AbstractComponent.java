@@ -17,10 +17,6 @@ package org.apache.cocoon.portal.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -37,23 +33,13 @@ import org.apache.cocoon.portal.PortalService;
  */
 public class AbstractComponent
     extends AbstractLogEnabled
-    implements Contextualizable, Serviceable, Disposable, ThreadSafe, Initializable {
+    implements Serviceable, Disposable, ThreadSafe, Initializable {
     
     /** The service manager. */
     protected ServiceManager manager;
 
     /** The portal service. */
     protected PortalService portalService;
-
-    /** The application context */
-    protected Context context;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
-    }
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)

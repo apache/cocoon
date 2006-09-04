@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.wsrp.consumer;
 
 import java.util.Hashtable;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
 import org.apache.wsrp4j.consumer.GroupSessionMgr;
 import org.apache.wsrp4j.consumer.driver.GenericUserSessionImpl;
 import org.apache.wsrp4j.exception.WSRPException;
@@ -33,7 +33,7 @@ import org.apache.wsrp4j.exception.WSRPException;
 public class UserSessionImpl extends GenericUserSessionImpl {
 
     /** The logger */
-    protected final Logger logger;
+    protected final Log logger;
 
     /**
      * Constructor <br/
@@ -47,7 +47,7 @@ public class UserSessionImpl extends GenericUserSessionImpl {
     public UserSessionImpl(String producerID, 
                            String userID, 
                            String markupURL,
-                           Logger logger)
+                           Log    logger)
     throws WSRPException {
         super(producerID, userID, markupURL);
         this.logger = logger;

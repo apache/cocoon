@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.wsrp.consumer;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
 import org.apache.wsrp4j.consumer.PortletSession;
 import org.apache.wsrp4j.consumer.driver.GenericGroupSessionImpl;
 import org.apache.wsrp4j.exception.WSRPException;
@@ -28,7 +28,7 @@ import org.apache.wsrp4j.exception.WSRPException;
 public class GroupSessionImpl extends GenericGroupSessionImpl {
 
     /** The logger. */
-    protected Logger logger;
+    protected Log logger;
 
 	/**
 	 * Constructs a new <code>GroupSessionImpl</code> object with the given groupID.
@@ -42,7 +42,7 @@ public class GroupSessionImpl extends GenericGroupSessionImpl {
      * @param logger
      * @throws WSRPException
      */
-    public GroupSessionImpl(String groupID, String markupInterfaceURL, Logger logger)
+    public GroupSessionImpl(String groupID, String markupInterfaceURL, Log logger)
     throws WSRPException {
         super(groupID, markupInterfaceURL);
         this.logger = logger;

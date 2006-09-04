@@ -30,13 +30,10 @@ import javax.servlet.ServletConfig;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.pluto.factory.PortletObjectAccess;
 import org.apache.pluto.invoker.PortletInvoker;
@@ -49,7 +46,7 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  */
 public class LocalPortletInvokerImpl
 extends AbstractLogEnabled
-implements PortletInvoker, Contextualizable, Serviceable, Initializable {
+implements PortletInvoker, Serviceable, Initializable {
 
     /** servlet configuration. */
     protected final ServletConfig servletConfig;
@@ -60,18 +57,8 @@ implements PortletInvoker, Contextualizable, Serviceable, Initializable {
     /** The portlet. */
     protected Portlet portlet;
 
-    /** The avalon context. */
-    protected Context context;
-
     /** The service manager. */
     protected ServiceManager manager;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context avalonContext) throws ContextException {
-        this.context = avalonContext;
-    }
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -86,8 +73,9 @@ implements PortletInvoker, Contextualizable, Serviceable, Initializable {
     public void initialize() throws Exception {
         if (this.portlet != null) {
             try {
-                ContainerUtil.enableLogging(this.portlet, this.getLogger());
-                ContainerUtil.contextualize(this.portlet, this.context);
+                if ( this.portlet instanceof AbstractLogEnabled ) {
+                    ((AbstractLogEnabled)this.portlet).setLogger(this.getLogger());
+                }
                 ContainerUtil.service(this.portlet, this.manager);
                 ContainerUtil.initialize(this.portlet);
             } catch (Exception ignore) {

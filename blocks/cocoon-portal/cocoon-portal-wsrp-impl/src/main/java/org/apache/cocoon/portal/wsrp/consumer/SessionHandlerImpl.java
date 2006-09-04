@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.wsrp.consumer;
 
 import java.util.Hashtable;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.wsrp4j.consumer.ConsumerEnvironment;
 import org.apache.wsrp4j.consumer.SessionHandler;
 import org.apache.wsrp4j.consumer.UserSession;

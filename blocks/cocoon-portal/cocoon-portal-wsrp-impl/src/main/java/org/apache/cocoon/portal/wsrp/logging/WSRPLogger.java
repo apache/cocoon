@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.wsrp.logging;
 
+import org.apache.commons.logging.Log;
 import org.apache.wsrp4j.log.Logger;
 
 /**
@@ -24,15 +25,15 @@ import org.apache.wsrp4j.log.Logger;
  */
 public class WSRPLogger implements Logger {
 
-    /** The avalon logger */
-    protected final org.apache.avalon.framework.logger.Logger logger;
+    /** The default logger */
+    protected final Log logger;
 
     /**
      * constructor<br/>
      * 
      * @param logger
      */
-    public WSRPLogger(org.apache.avalon.framework.logger.Logger logger) {
+    public WSRPLogger(Log logger) {
         this.logger = logger;
     }
 
