@@ -31,7 +31,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-forms</artifactId>
   <packaging>pom</packaging>
-  <name>Forms Block</name>
+  <name>Forms Block [modules]</name>
   <version>2-SNAPSHOT</version>
   <modules>
     <module>cocoon-forms-impl</module>

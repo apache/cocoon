@@ -41,7 +41,7 @@
             <include>**/*TestCase.class</include>
             <include>**/*Test.class</include>
           </includes>
-          <!-- + 
+<!-- + 
                | These test cases doesn't work currently as the Avalon context
                | in the ContainerTestCase doesn't contain the environmen-context key.
                + -->
