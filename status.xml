@@ -185,6 +185,9 @@
 -->
   <release version="2.1.10" date="TBD">
     <action dev="AN" type="fix">
+      Core: '**' in complex WildcardMatcher pattern did not match an empty pathstep.
+    </action>
+    <action dev="AN" type="fix">
       XSP block: Using document('') in logicsheet caused NPE.
     </action>
     <action dev="VG" type="fix">
