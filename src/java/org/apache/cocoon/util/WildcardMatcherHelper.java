@@ -240,7 +240,7 @@ public class WildcardMatcherHelper {
                 // beause the '**' wildcard need to be greedy we scan from the end of the string for a match
                 while(istr < eistr && ! strncmp(apat, sipat, astr, eistr, l)) eistr--;
 
-                if(istr >= eistr) return false;
+                if(istr > eistr) return false;
 
                 add(new String(astr, istr, eistr - istr));
                 istr = eistr + l;
