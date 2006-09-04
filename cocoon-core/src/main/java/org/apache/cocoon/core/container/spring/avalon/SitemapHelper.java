@@ -19,9 +19,20 @@ package org.apache.cocoon.core.container.spring.avalon;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.cocoon.classloader.ClassLoaderConfiguration;
+import org.apache.cocoon.classloader.ClassLoaderFactory;
+import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
+import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
+import org.apache.cocoon.environment.Request;
+import org.apache.excalibur.source.SourceResolver;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.scope.RequestAttributes;
 
 
 /**
@@ -134,4 +145,55 @@ public class SitemapHelper {
     protected static void addFooter(StringBuffer buffer) {
         buffer.append("</beans>");
     }
+
+    public static CocoonWebApplicationContext createApplicationContext(String         contextUrl,
+                                                                       String         uriPrefix,
+                                                                       Configuration  config,
+                                                                       ServletContext servletContext,
+                                                                       SourceResolver sitemapResolver,
+                                                                       Request        request)
+    throws Exception {
+        final RequestAttributes attr = new CocoonRequestAttributes(request);
+        final WebApplicationContext parentContext = CocoonWebApplicationContext.getCurrentContext(servletContext, attr);
+
+        // get classloader
+        final ClassLoader classloader = createClassLoader(parentContext, config, servletContext, sitemapResolver);
+        // create root bean definition
+        final String definition = createDefinition(uriPrefix);
+        final CocoonWebApplicationContext context = new CocoonWebApplicationContext(classloader,
+                                                                                    parentContext,
+                                                                                    contextUrl,
+                                                                                    definition);
+        return context;
+    }
+
+    /**
+     * Build a processing tree from a <code>Configuration</code>.
+     */
+    public static ClassLoader createClassLoader(BeanFactory    parentFactory,
+                                                Configuration  config,
+                                                ServletContext servletContext,
+                                                SourceResolver sitemapResolver)
+    throws Exception {
+        final Configuration componentConfig = config.getChild("components", false);
+        Configuration classPathConfig = null;
+
+        if ( componentConfig != null ) {
+            classPathConfig = componentConfig.getChild(CLASSLOADER_CONFIG_NAME, false);
+        }
+        // Create class loader
+        // we don't create a new class loader if there is no new configuration
+        if ( classPathConfig == null ) {
+            return Thread.currentThread().getContextClassLoader();            
+        }
+        final String factoryRole = config.getAttribute("factory-role", ClassLoaderFactory.ROLE);
+
+        // Create a new classloader
+        ClassLoaderConfiguration configBean = ClassLoaderUtils.createConfiguration(sitemapResolver, config);
+        ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
+        return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
+                                           configBean,
+                                           servletContext);
+    }
+
 }

@@ -16,10 +16,15 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Stack;
 
 import javax.servlet.ServletContext;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
@@ -45,9 +50,13 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
     /** The class loader for this context (or null). */
     protected final ClassLoader classLoader;
 
+    /** The bean definition for this context. */
+    protected final String beanDefinition;
+
     public CocoonWebApplicationContext(ClassLoader           classloader,
                                        WebApplicationContext parent,
-                                       String                url) {
+                                       String                url,
+                                       String                rootDefinition) {
         this.setParent(parent);
         if ( url.endsWith("/") ) {
             this.baseUrl = url;
@@ -55,6 +64,17 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
             this.baseUrl = url + '/';
         }
         this.classLoader = (classloader != null ? classloader : ClassUtils.getDefaultClassLoader());
+        this.beanDefinition = rootDefinition;
+    }
+
+    /**
+     * @see org.springframework.web.context.support.XmlWebApplicationContext#loadBeanDefinitions(org.springframework.beans.factory.xml.XmlBeanDefinitionReader)
+     */
+    protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
+        if ( this.beanDefinition != null ) {
+            reader.loadBeanDefinitions(new InputStreamResource(new ByteArrayInputStream(this.beanDefinition.getBytes("utf-8"))));
+        }
+        super.loadBeanDefinitions(reader);
     }
 
     /**
