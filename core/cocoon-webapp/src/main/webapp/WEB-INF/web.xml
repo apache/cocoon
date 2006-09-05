@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2005 The Apache Software Foundation
+  Copyright 1999-2006 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -38,53 +38,53 @@
     <param-value>/some/path/to/your/webapp</param-value>
     <description>An override of the session cookie path</description>
    </context-param-->
-   
+
   <!-- Servlet Filters ================================================ -->
-  
+
   <!--+
       | Declare a filter for multipart MIME handling
       +-->
-      
+
   <filter>
-  	<filter-name>CocoonMultipartFilter</filter-name>
-  	<display-name>Cocoon multipart filter</display-name>
-  	<description>Multipart MIME handling filter for Cocoon</description>
-  	<filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
+    <filter-name>CocoonMultipartFilter</filter-name>
+    <display-name>Cocoon multipart filter</display-name>
+    <description>Multipart MIME handling filter for Cocoon</description>
+    <filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
   </filter>
 
   <!--+
       | Declare a filter for debugging incomming request
       +-->
-      
+
   <filter>
-  	<filter-name>CocoonDebugFilter</filter-name>
-  	<display-name>Cocoon debug filter</display-name>
-  	<description>Log debug information about each request</description>
-  	<filter-class>org.apache.cocoon.servlet.DebugFilter</filter-class>
+    <filter-name>CocoonDebugFilter</filter-name>
+    <display-name>Cocoon debug filter</display-name>
+    <description>Log debug information about each request</description>
+    <filter-class>org.apache.cocoon.servlet.DebugFilter</filter-class>
   </filter>
 
   <!-- Filter mappings ================================================ -->
-  
+
   <!--+
       | Use the Cocoon multipart filter together with the Cocoon demo webapp
       +-->
-      
+
   <filter-mapping>
-  	<filter-name>CocoonMultipartFilter</filter-name>
-  	<servlet-name>Cocoon</servlet-name>
+    <filter-name>CocoonMultipartFilter</filter-name>
+    <servlet-name>Cocoon</servlet-name>
   </filter-mapping>
 
   <!--+
       | Use the Cocoon debug filter together with the Cocoon demo webapp
-      
+
   <filter-mapping>
-  	<filter-name>CocoonDebugFilter</filter-name>
-  	<servlet-name>Cocoon</servlet-name>
+    <filter-name>CocoonDebugFilter</filter-name>
+    <servlet-name>Cocoon</servlet-name>
   </filter-mapping>
       +-->
 
   <!-- Servlet Context Listener ======================================= -->
-  
+
   <!--+
       | Declare Spring context listener which sets up the Spring Application Context
       | containing all Cocoon components (and user defined as well).
@@ -108,7 +108,7 @@
     -->
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
+
   <!-- URL space mappings ============================================= -->
 
   <!--
