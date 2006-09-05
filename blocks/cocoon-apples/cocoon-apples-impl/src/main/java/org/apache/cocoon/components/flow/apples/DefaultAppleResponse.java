@@ -20,9 +20,10 @@ import org.apache.cocoon.environment.Response;
 /**
  * DefaultAppleResponse provides a default implementation for the
  * {@link AppleResponse}.
+ * 
+ * @version $Id$
  */
 public class DefaultAppleResponse implements AppleResponse {
-
     private String uri;
     private Object data;
     private boolean redirect = false;
