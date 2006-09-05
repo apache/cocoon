@@ -29,8 +29,8 @@
       |    in the cache will be thrown out.
       +-->
   <store logger="core.store">
-    <parameter name="maxobjects" value="1000"/>
-    <parameter name="use-cache-directory" value="true"/>
+    <parameter name="maxobjects" value="${org.apache.cocoon.store.maxobjects}"/>
+    <parameter name="use-cache-directory" value="${org.apache.cocoon.store.use-cache-directory}"/>
   </store>
 
 </components>
