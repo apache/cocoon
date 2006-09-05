@@ -24,7 +24,7 @@ import org.apache.cocoon.portal.om.Layout;
  * @since 2.2
  */
 public class LayoutRemovedEvent
-    extends AbstractLayoutEvent {
+    extends LayoutEvent {
 
     public LayoutRemovedEvent(Layout target) {
         super(target);

@@ -28,6 +28,7 @@ import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.services.UserService;
+import org.springframework.core.Ordered;
 
 
 /**
@@ -35,7 +36,7 @@ import org.apache.cocoon.portal.services.UserService;
  */
 public class DefaultUserService
     extends AbstractComponent
-    implements UserService, Receiver {
+    implements UserService, Receiver, Ordered {
 
     /** Attribute to store the current user. */
     protected static final String USER_ATTRIBUTE = DefaultUserService.class.getName() + "/User";
@@ -214,5 +215,14 @@ public class DefaultUserService
             return this.defaultLayoutKey;
         }
         return key;
+    }
+
+    /**
+     * This component should have a high priority (low order) as
+     * other components might access it during event processing.
+     * @see org.springframework.core.Ordered#getOrder()
+     */
+    public int getOrder() {
+        return -5;
     }
 }

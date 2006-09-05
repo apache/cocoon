@@ -24,7 +24,7 @@ import org.apache.cocoon.portal.om.Layout;
  * @since 2.2
  */
 public class LayoutAddedEvent
-    extends AbstractLayoutEvent {
+    extends LayoutEvent {
 
     public LayoutAddedEvent(Layout target) {
         super(target);
