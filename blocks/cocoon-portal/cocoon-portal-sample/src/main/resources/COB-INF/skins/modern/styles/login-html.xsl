@@ -50,7 +50,7 @@
   </xsl:template>
 
   <xsl:template match="form">
-    <form method="post" target="_top">
+    <form method="post">
       <xsl:choose>
         <xsl:when test="$resource=''">
           <xsl:attribute name="action"><xsl:value-of select="normalize-space(url)"/>?resource=portal</xsl:attribute>

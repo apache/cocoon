@@ -128,4 +128,11 @@ public abstract class AbstractPortalUser
     public String getDefaultLayoutKey() {
         return null;
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "PortalUser (" + super.toString() + "): name = " + this.getUserName();
+    }
 }

@@ -22,38 +22,20 @@ import org.apache.cocoon.portal.event.Event;
  *
  * @version $Id$
  */
-public abstract class JXPathEvent implements Event {
-
-    protected String path;
-
-    protected Object value;
-
-    protected Object target;
+public interface JXPathEvent extends Event {
 
     /**
      * @return Returns the path.
      */
-    public String getPath() {
-        return path;
-    }
+    String getPath();
 
     /**
      * @return Returns the value.
      */
-    public Object getValue() {
-        return value;
-    }
+    Object getValue();
 
     /**
      * @return Returns the target.
      */
-    public Object getObject() {
-        return this.target;
-    }
-
-    public JXPathEvent(Object target, String path, Object value) {
-        this.target = target;
-        this.path = path;
-        this.value = value;
-    }
+    Object getObject();
 }

@@ -28,4 +28,11 @@ public class UserIsAccessingEvent extends UserEvent {
     public UserIsAccessingEvent(PortalUser pu) {
         super(pu);
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "UserIsAccessingEvent: user=" + this.portalUser;
+    }
 }

@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.om.LayoutFeatures;
  * @version $Id$
  */
 public class RemoveLayoutEvent
-    extends AbstractLayoutEvent
+    extends LayoutEvent
     implements ConvertableEvent {
 
     /**

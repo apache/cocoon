@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.event.layout;
 
-import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.portal.om.Layout;
 
@@ -25,17 +24,36 @@ import org.apache.cocoon.portal.om.Layout;
  * @version $Id$
  */
 public class LayoutJXPathEvent
-    extends JXPathEvent
-    implements LayoutEvent {
+    extends LayoutEvent
+    implements JXPathEvent {
+
+    protected final String path;
+    protected final Object value;
 
     public LayoutJXPathEvent(Layout target, String path, Object value) {
-        super( target, path, value );
+        super( target );
+        this.path = path;
+        this.value = value;
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.LayoutEvent#getTarget()
+     * @see org.apache.cocoon.portal.event.impl.JXPathEvent#getPath()
      */
-    public Layout getTarget() {
-        return (Layout)this.target;
+    public String getPath() {
+        return this.path;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.impl.JXPathEvent#getValue()
+     */
+    public Object getValue() {
+        return this.value;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.impl.JXPathEvent#getObject()
+     */
+    public Object getObject() {
+        return this.getTarget();
     }
 }

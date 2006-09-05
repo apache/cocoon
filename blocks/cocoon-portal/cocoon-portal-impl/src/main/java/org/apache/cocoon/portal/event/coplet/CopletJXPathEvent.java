@@ -25,18 +25,43 @@ import org.apache.cocoon.portal.om.CopletInstance;
  * @version $Id$
  */
 public class CopletJXPathEvent
-    extends JXPathEvent
-    implements CopletInstanceEvent {
+    implements CopletInstanceEvent, JXPathEvent {
+
+    protected final CopletInstance target;
+    protected final String path;
+    protected final Object value;
 
     public CopletJXPathEvent(CopletInstance target, String path, Object value) {
-        super( target, path, value );
+        this.target = target;
+        this.path = path;
+        this.value = value;
     }
 
     /**
      * @see org.apache.cocoon.portal.event.CopletInstanceEvent#getTarget()
      */
     public CopletInstance getTarget() {
-        return (CopletInstance)this.target;
+        return this.target;
     }
 
+    /**
+     * @see org.apache.cocoon.portal.event.impl.JXPathEvent#getObject()
+     */
+    public Object getObject() {
+        return this.getTarget();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.impl.JXPathEvent#getPath()
+     */
+    public String getPath() {
+        return this.path;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.impl.JXPathEvent#getValue()
+     */
+    public Object getValue() {
+        return this.value;
+    }
 }

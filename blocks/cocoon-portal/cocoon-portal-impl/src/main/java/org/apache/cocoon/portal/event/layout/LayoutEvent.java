@@ -1,3 +1,9 @@
+/**
+ * This interface marks an event as targetted at a
+ * {@link org.apache.cocoon.portal.om.Layout} object.
+ *
+ * @version $Id$
+ */
 /*
  * Copyright 2006 The Apache Software Foundation.
  *
@@ -15,15 +21,20 @@
  */
 package org.apache.cocoon.portal.event.layout;
 
-import org.apache.cocoon.portal.event.LayoutEvent;
+import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.om.Layout;
 
-public class AbstractLayoutEvent
-    implements LayoutEvent {
+/**
+ * This interface marks an event as targetted at a
+ * {@link org.apache.cocoon.portal.om.Layout} object.
+ *
+ * @version $Id$
+ */
+public abstract class LayoutEvent implements Event {
 
     protected Layout target;
 
-    public AbstractLayoutEvent(Layout target) {
+    public LayoutEvent(Layout target) {
         this.target = target;
     }
 
