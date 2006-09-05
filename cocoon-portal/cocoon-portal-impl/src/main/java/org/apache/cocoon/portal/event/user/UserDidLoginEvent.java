@@ -28,4 +28,11 @@ public class UserDidLoginEvent extends UserEvent {
     public UserDidLoginEvent(PortalUser pu) {
         super(pu);
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "UserDidLoginEvent: user=" + this.portalUser;
+    }
 }

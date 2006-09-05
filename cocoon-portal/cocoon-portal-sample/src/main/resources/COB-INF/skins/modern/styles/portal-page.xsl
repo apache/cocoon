@@ -39,7 +39,7 @@
               <a href="logout"><img src="{$rsrcprefix}skin/{$skin}/images/logout-door.gif" alt="logo" width="18" height="22" border="0"/></a>
               <a href="logout">Logout</a>
               &#160;
-              <a href="tools/">Tools</a>
+              <!-- a href="tools/">Tools</a -->
             </div>
           </xsl:if>
           <div id="cocoon-portal-header-logo" >

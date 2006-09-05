@@ -26,7 +26,7 @@ import org.apache.commons.lang.ObjectUtils;
  * @version $Id$
  */
 public class LayoutChangeParameterEvent
-    extends AbstractLayoutEvent
+    extends LayoutEvent
     implements ComparableEvent, ConvertableEvent {
 
     protected String parameterName;

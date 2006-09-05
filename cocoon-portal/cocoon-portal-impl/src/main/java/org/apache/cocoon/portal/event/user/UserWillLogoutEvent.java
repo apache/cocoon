@@ -30,4 +30,11 @@ public class UserWillLogoutEvent extends UserEvent {
     public UserWillLogoutEvent(PortalUser pu) {
         super(pu);
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "UserWillLogoutEvent: user=" + this.portalUser;
+    }
 }

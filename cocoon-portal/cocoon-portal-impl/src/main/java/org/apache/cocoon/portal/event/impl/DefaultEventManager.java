@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.event.impl;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,8 @@ import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.springframework.core.OrderComparator;
+import org.springframework.core.Ordered;
 
 /**
  * This is the default implementation of the event manager.
@@ -47,6 +50,10 @@ import org.apache.cocoon.portal.services.aspects.support.AspectChain;
  * all parents and notify the receivers of the all the parents.
  * The simplicity in subscribing and sending of events comes with the drawback that
  * unsubscribing is more costly.
+ *
+ * Receivers can implement the {@link Ordered} interface to specify their priority when it
+ * comes to event processing. For example some components need to receive the event first,
+ * as they might be used by other components during event processing.
  *
  * @version $Id$
  */
@@ -316,6 +323,7 @@ public class DefaultEventManager
             }
             if ( !this.receivers.contains(r)) {
                 this.receivers.add(r);
+                Collections.sort(this.receivers, ReceiverInfoComparator.instance);
             }
         }
 
@@ -388,6 +396,19 @@ public class DefaultEventManager
          */
         public int hashCode() {
             return this.receiver.hashCode() + this.method.hashCode();
+        }
+    }
+
+    protected static final class ReceiverInfoComparator implements Comparator {
+
+        protected static ReceiverInfoComparator instance = new ReceiverInfoComparator();
+        protected OrderComparator orderComparator = new OrderComparator();
+
+        public int compare(Object o1, Object o2) {
+            if ( o1 instanceof ReceiverInfo && o2 instanceof ReceiverInfo ) {
+                return this.orderComparator.compare(((ReceiverInfo)o1).receiver, ((ReceiverInfo)o2).receiver);
+            }
+            return 0;
         }
     }
 }

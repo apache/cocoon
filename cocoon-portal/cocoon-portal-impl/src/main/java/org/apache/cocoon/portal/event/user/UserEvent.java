@@ -36,4 +36,11 @@ public abstract class UserEvent
     public PortalUser getPortalUser() {
         return this.portalUser;
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "UserEvent: user=" + this.portalUser;
+    }
 }

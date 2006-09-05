@@ -42,6 +42,7 @@ import org.apache.cocoon.portal.scratchpad.Profile;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.springframework.core.Ordered;
 
 /**
  * Base class for all profile managers.
@@ -50,7 +51,7 @@ import org.apache.cocoon.portal.services.aspects.support.AspectChain;
  */
 public abstract class AbstractProfileManager 
     extends AbstractComponent 
-    implements ProfileManager, Receiver, Configurable {
+    implements ProfileManager, Receiver, Configurable, Ordered {
 
     /** The configuration. */
     protected Configuration configuration;
@@ -224,4 +225,15 @@ public abstract class AbstractProfileManager
         }
         return profile;
     }
+
+    /**
+     * This component should have a high priority (low order) as
+     * other components might access it during event processing.
+     * But the priority must be lower than the priority of the user service!
+     * @see org.springframework.core.Ordered#getOrder()
+     */
+    public int getOrder() {
+        return -1;
+    }
+
 }
