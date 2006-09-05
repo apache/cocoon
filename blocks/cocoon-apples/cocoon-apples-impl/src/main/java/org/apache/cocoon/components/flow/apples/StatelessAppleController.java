@@ -17,9 +17,8 @@
 package org.apache.cocoon.components.flow.apples;
 
 /**
- * This interface can be impemented by Apples that do not wish
- * to be stored, and thus don't have a continuation ID assosociated
- * with them.
+ * This interface can be impemented by Apples that do not wish to be stored, and
+ * thus don't have a continuation ID assosociated with them.
  */
 public interface StatelessAppleController extends AppleController {
 }

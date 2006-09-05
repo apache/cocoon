@@ -17,9 +17,8 @@ package org.apache.cocoon.components.flow.apples;
 
 import org.apache.cocoon.environment.Response;
 
-
 /**
- * DefaultAppleResponse provides a default implementation for the 
+ * DefaultAppleResponse provides a default implementation for the
  * {@link AppleResponse}.
  */
 public class DefaultAppleResponse implements AppleResponse {
