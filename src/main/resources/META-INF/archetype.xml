@@ -6,8 +6,6 @@
     <resource>src/main/webapp/WEB-INF/web.xml</resource>
     <resource>src/main/webapp/WEB-INF/applicationContext.xml</resource>
     <resource>src/main/webapp/WEB-INF/cocoon/log4j.xconf</resource>
-    <resource>src/main/webapp/WEB-INF/cocoon/properties/core.properties</resource>
-    <resource>src/main/webapp/WEB-INF/cocoon/properties/dev/core.properties</resource>
     <resource>src/main/webapp/WEB-INF/cocoon/sitemap-additions/cocoon-core-sitemap.xmap</resource>
   </resources>
 </archetype>
