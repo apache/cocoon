@@ -25,5 +25,9 @@
       class="org.apache.cocoon.components.flow.apples.ApplesProcessor" 
       name="apples" logger="apples">
     </component-instance>
+  	<component-instance 
+  		class="org.apache.cocoon.components.flow.apples.ServiceApplesProcessor" 
+  		name="service-apples" logger="service-apples">
+  	</component-instance>
   </flow-interpreters>
 </components>
