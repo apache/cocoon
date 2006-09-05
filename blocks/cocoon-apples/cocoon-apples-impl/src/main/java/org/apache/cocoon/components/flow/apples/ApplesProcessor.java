@@ -33,25 +33,18 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 
 /**
- * ApplesProcessor is the core Cocoon component that provides the 'Apples' 
- * flow implementation. 
+ * ApplesProcessor is the core Cocoon component that provides the 'Apples' flow
+ * implementation.
  */
-public class ApplesProcessor
-    extends AbstractInterpreter
-    implements ContinuationsDisposer {
+public class ApplesProcessor extends AbstractInterpreter implements ContinuationsDisposer {
 
-    public void callFunction(
-        String className,
-        List params,
-        Redirector redirector)
-        throws Exception {
+    public void callFunction(String className, List params, Redirector redirector) throws Exception {
 
         AppleController app = instantiateController(className);
 
         WebContinuation wk = null;
         if (!(app instanceof StatelessAppleController)) {
-            wk = this.continuationsMgr.createWebContinuation(app, null, 0,
-                    getInterpreterID(), this);
+            wk = this.continuationsMgr.createWebContinuation(app, null, 0, getInterpreterID(), this);
             if (getLogger().isDebugEnabled())
                 getLogger().debug("Instantiated a stateful apple, continuationid = " + wk.getId());
         }
@@ -61,63 +54,47 @@ public class ApplesProcessor
             appleContext.put("continuation-id", wk.getId());
         }
 
-//      Use the current sitemap's service manager for components
+        // Use the current sitemap's service manager for components
         ServiceManager sitemapManager;
         try {
-            sitemapManager = (ServiceManager)avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
+            sitemapManager = (ServiceManager) avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
         } catch (ContextException e) {
             throw new CascadingRuntimeException("Cannot get sitemap service manager", e);
         }
 
-        LifecycleHelper.setupComponent( app, getLogger(), appleContext, sitemapManager, null, true);
-        
+        LifecycleHelper.setupComponent(app, getLogger(), appleContext, sitemapManager, null, true);
+
         processApple(params, redirector, app, wk);
     }
 
+    public void handleContinuation(String continuationId, List params, Redirector redirector) throws Exception {
 
-
-    public void handleContinuation(
-        String continuationId,
-        List params,
-        Redirector redirector)
-        throws Exception {
-
-        WebContinuation wk =
-            this.continuationsMgr.lookupWebContinuation(continuationId, getInterpreterID());
+        WebContinuation wk = this.continuationsMgr.lookupWebContinuation(continuationId, getInterpreterID());
         if (wk == null) {
             // Throw an InvalidContinuationException to be handled inside the
             // <map:handle-errors> sitemap element.
-            throw new InvalidContinuationException(
-                "The continuation ID " + continuationId + " is invalid.");
+            throw new InvalidContinuationException("The continuation ID " + continuationId + " is invalid.");
         }
 
-        AppleController app =
-            (AppleController) wk.getContinuation();
+        AppleController app = (AppleController) wk.getContinuation();
 
         getLogger().debug("found apple from continuation: " + app);
 
-        // TODO access control checks? exception to be thrown for illegal access?
+        // TODO access control checks? exception to be thrown for illegal
+        // access?
         processApple(params, redirector, app, wk);
 
     }
 
+    protected AppleController instantiateController(String className) throws Exception {
 
-    protected AppleController instantiateController(String className)
-        throws Exception {
-        
         Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
         Object o = clazz.newInstance();
         return (AppleController) o;
     }
 
-
-
-    private void processApple(
-        List params,
-        Redirector redirector,
-        AppleController app,
-        WebContinuation wk)
-        throws Exception {
+    private void processApple(List params, Redirector redirector, AppleController app, WebContinuation wk)
+            throws Exception {
 
         Request cocoonRequest = ContextHelper.getRequest(this.avalonContext);
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
@@ -131,7 +108,7 @@ public class ApplesProcessor
                 // dispose stateless apple immediatelly
                 if (app instanceof Disposable) {
                     try {
-                        ((Disposable)app).dispose();
+                        ((Disposable) app).dispose();
                     } catch (Exception e) {
                         getLogger().error("Error disposing Apple instance.", e);
                     }
@@ -144,23 +121,23 @@ public class ApplesProcessor
         } else {
             String uri = res.getURI();
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData() + (wk != null ? " and continuationid= " + wk.getId() : " without continuationid"));
+                getLogger().debug(
+                        "Apple forwards to " + uri + " with bizdata= " + res.getData()
+                                + (wk != null ? " and continuationid= " + wk.getId() : " without continuationid"));
             }
 
             // Note: it is ok for wk to be null
             this.forwardTo(uri, res.getData(), wk, redirector);
         }
 
-        //TODO allow for AppleResponse to set some boolean saying the use case
+        // TODO allow for AppleResponse to set some boolean saying the use case
         // is completed and the continuation can be invalidated ?
     }
 
-
     public void disposeContinuation(WebContinuation webContinuation) {
-        AppleController app =
-            (AppleController) webContinuation.getContinuation();
+        AppleController app = (AppleController) webContinuation.getContinuation();
         if (app instanceof Disposable) {
-            ((Disposable)app).dispose();            
+            ((Disposable) app).dispose();
         }
 
     }

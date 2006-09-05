@@ -20,37 +20,40 @@ import java.util.Set;
 import org.apache.cocoon.environment.Request;
 
 /**
- * AppleRequest defines the services an AppleController can collect
- * from the current request.
+ * AppleRequest defines the services an AppleController can collect from the
+ * current request.
  */
 public interface AppleRequest {
-
     /**
      * @return the wrapped cocoon environment Request
      */
     public Request getCocoonRequest();
-    
-    
+
     /**
      * @return Set of String's listing all available sitemap-parameters passed.
      */
     public Set getSitemapParameterNames();
-    
+
     /**
      * Finds a named parameter in the request.
-     * @param key of parameter to lookup
+     * 
+     * @param key
+     *            of parameter to lookup
      * @return the parameter-value
      */
     public String getSitemapParameter(String key);
 
     /**
      * Finds a named parameter in the request using the overloaded method
-     * {@link #getSitemapParameter(String)} but lets the returned value
-     * default to the second argument in case the delegation resulted into
+     * {@link #getSitemapParameter(String)} but lets the returned value default
+     * to the second argument in case the delegation resulted into
      * <code>null</code>
-     * @param key of parameter to lookup
-     * @param defaultValue return-value in case the lookup returned <code>null</code>
-     * @return the parameter-value or if that was null: the defaultValue passed. 
-     */    
-    public String getSitemapParameter(String key, String defaultValue);    
+     * 
+     * @param key
+     *            of parameter to lookup
+     * @param defaultValue
+     *            return-value in case the lookup returned <code>null</code>
+     * @return the parameter-value or if that was null: the defaultValue passed.
+     */
+    public String getSitemapParameter(String key, String defaultValue);
 }

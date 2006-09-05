@@ -15,24 +15,20 @@
  */
 package org.apache.cocoon.components.flow.apples;
 
-
 /**
- * AppleController declares the main processing interfaces for the stateful 
+ * AppleController declares the main processing interfaces for the stateful
  * controller objects.
  * <p>
  * Implementations are advised to implement Avalon lifecycle interfaces.
  */
 public interface AppleController {
-
     /**
-     * Allows the AppleController implementation to make some business decissions 
-     * in a given web application flow. 
+     * Allows the AppleController implementation to make some business
+     * decissions in a given web application flow.
      * <p>
-     * Typically those decissions will be based upon what it can find inside the 
-     * passed {@link AppleRequest} and result into setting specific aspects of the
-     * {@link AppleResponse}
+     * Typically those decissions will be based upon what it can find inside the
+     * passed {@link AppleRequest} and result into setting specific aspects of
+     * the {@link AppleResponse}
      */
     void process(AppleRequest req, AppleResponse res) throws Exception;
-    
-
 }

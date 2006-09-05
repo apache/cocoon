@@ -27,7 +27,6 @@ import org.apache.cocoon.components.flow.Interpreter.Argument;
  * implementation.
  */
 public class AppleHelper {
-
     /** 
      * Translates a List of Interpreter.Argument objects into a classic 
      * {@link java.util.Map}
