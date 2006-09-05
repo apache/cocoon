@@ -33,7 +33,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.pluto.factory.PortletObjectAccess;
 import org.apache.pluto.invoker.PortletInvoker;

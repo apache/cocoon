@@ -30,7 +30,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
@@ -226,7 +225,7 @@ public class GroupBasedProfileManager
      * Receives a coplet instance data added event.
      * @see Receiver
      */
-    public void inform(CopletInstanceAddedEvent event, PortalService service) {
+    public void inform(CopletInstanceAddedEvent event) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.add(event.getTarget());
     }
@@ -235,7 +234,7 @@ public class GroupBasedProfileManager
      * Receives a coplet data added event.
      * @see Receiver
      */
-    public void inform(CopletDefinitionAddedEvent event, PortalService service) {
+    public void inform(CopletDefinitionAddedEvent event) {
         this.deployedCopletDefinitions.put(event.getTarget().getId(), event.getTarget());
         if ( this.copletDefinitions.objects != null ) {
             this.copletDefinitions.objects.put(event.getTarget().getId(), event.getTarget());
@@ -246,7 +245,7 @@ public class GroupBasedProfileManager
      * Receives a coplet instance data added event.
      * @see Receiver
      */
-    public void inform(CopletInstanceRemovedEvent event, PortalService service) {
+    public void inform(CopletInstanceRemovedEvent event) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.remove(event.getTarget());
     }
@@ -255,7 +254,7 @@ public class GroupBasedProfileManager
      * Receives a layout added event.
      * @see Receiver
      */
-    public void inform(LayoutAddedEvent event, PortalService service) {
+    public void inform(LayoutAddedEvent event) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.add(event.getTarget());
     }
@@ -264,7 +263,7 @@ public class GroupBasedProfileManager
      * Receives a layout added event.
      * @see Receiver
      */
-    public void inform(LayoutInstanceAddedEvent event, PortalService service) {
+    public void inform(LayoutInstanceAddedEvent event) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.add(event.getTarget());
     }
@@ -273,7 +272,7 @@ public class GroupBasedProfileManager
      * Receives a layout removed event.
      * @see Receiver
      */
-    public void inform(LayoutRemovedEvent event, PortalService service) {
+    public void inform(LayoutRemovedEvent event) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.remove(event.getTarget());
     }

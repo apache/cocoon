@@ -537,7 +537,7 @@ public class PortletDefinitionRegistryImpl
     /**
      * @see Receiver
      */
-    public void inform(DeploymentEvent event, PortalService service) {
+    public void inform(DeploymentEvent event) {
         String fileName = event.getDeploymentObject().getName();
         if (fileName.endsWith(".war")) {
             try {

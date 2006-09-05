@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.apache.cocoon.portal.om.CopletInstance;
@@ -65,8 +64,8 @@ public class ApplicationCopletAdapter extends URICopletAdapter {
      * There is a special CopletLinkEvent with the uri "createNewCopletInstance", which is the
      * trigger to create a new instance of the one that is the target of the event.
      */
-    public void inform(CopletInstanceEvent e, PortalService service) {
-        super.inform(e, service);
+    public void inform(CopletInstanceEvent e) {
+        super.inform(e);
 
         if ( e instanceof CopletLinkEvent ) {
             CopletLinkEvent event = (CopletLinkEvent) e;
@@ -82,7 +81,7 @@ public class ApplicationCopletAdapter extends URICopletAdapter {
                 
                 // append parameters - if any
                 LinkService linkService = this.portalService.getLinkService();
-                final Map objectModel = service.getProcessInfoProvider().getObjectModel();
+                final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
                 final Request r = ObjectModelHelper.getRequest(objectModel);
                 final Enumeration params = r.getParameterNames();
                 while (params.hasMoreElements()) {

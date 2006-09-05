@@ -22,6 +22,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This class can be used as a base class for all portal related components.

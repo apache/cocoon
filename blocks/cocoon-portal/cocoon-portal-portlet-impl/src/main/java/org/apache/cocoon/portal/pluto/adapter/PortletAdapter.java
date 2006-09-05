@@ -33,7 +33,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.Constants;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
@@ -309,13 +308,13 @@ public class PortletAdapter
      * something in the portlet).
      * @see Receiver
      */
-    public void inform(PortletURLProviderImpl event, PortalService service) {
+    public void inform(PortletURLProviderImpl event) {
         final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
         final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), event);
         final HttpServletResponse res = new ServletResponseImpl((HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT));
-        if ( !service.getUserService().getUser().isAnonymous() ) {
+        if ( !this.portalService.getUserService().getUser().isAnonymous() ) {
             req.setAttribute(PortletRequest.USER_INFO,
-                             service.getUserService().getUser().getUserInfos());
+                    this.portalService.getUserService().getUser().getUserInfos());
         }
         objectModel.put("portlet-response",  res);
         objectModel.put("portlet-request", req);
@@ -344,7 +343,7 @@ public class PortletAdapter
      * This method is invoked each time a coplet instance is resized.
      * @see Receiver
      */
-    public void inform(CopletInstanceSizingEvent event, PortalService service) {
+    public void inform(CopletInstanceSizingEvent event) {
         WindowState ws = WindowState.NORMAL;
         if ( event.getSize() == CopletInstance.SIZE_NORMAL ) {
             ws = WindowState.NORMAL;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.impl;
+package org.apache.cocoon.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +21,9 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Support for logging.
+ * By default this class uses the commons-logging logger configured
+ * for the current class. However it is possible to change the logger
+ * by calling {@link #setLogger(Log)}.
  *
  * @version $Id$
  */
