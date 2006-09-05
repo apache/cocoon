@@ -25,10 +25,12 @@ import org.apache.cocoon.components.flow.Interpreter.Argument;
 /**
  * AppleHelper holds some static utility classes used in the Apples flow
  * implementation.
+ * 
+ * @version $Id$
  */
 public class AppleHelper {
-    /** 
-     * Translates a List of Interpreter.Argument objects into a classic 
+    /**
+     * Translates a List of Interpreter.Argument objects into a classic
      * {@link java.util.Map}
      */
     public static Map makeMapFromArguments(List params) {

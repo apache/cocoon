@@ -28,6 +28,11 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.ContinuationsDisposer;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.apples.AppleController;
+import org.apache.cocoon.components.flow.apples.AppleRequest;
+import org.apache.cocoon.components.flow.apples.DefaultAppleRequest;
+import org.apache.cocoon.components.flow.apples.DefaultAppleResponse;
+import org.apache.cocoon.components.flow.apples.StatelessAppleController;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
@@ -35,11 +40,11 @@ import org.apache.cocoon.environment.Response;
 /**
  * ApplesProcessor is the core Cocoon component that provides the 'Apples' flow
  * implementation.
+ * 
+ * @version $Id$
  */
 public class ApplesProcessor extends AbstractInterpreter implements ContinuationsDisposer {
-
     public void callFunction(String className, List params, Redirector redirector) throws Exception {
-
         AppleController app = instantiateController(className);
 
         WebContinuation wk = null;
@@ -63,7 +68,6 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
         }
 
         LifecycleHelper.setupComponent(app, getLogger(), appleContext, sitemapManager, null, true);
-
         processApple(params, redirector, app, wk);
     }
 
@@ -87,7 +91,6 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
     }
 
     protected AppleController instantiateController(String className) throws Exception {
-
         Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
         Object o = clazz.newInstance();
         return (AppleController) o;
@@ -95,7 +98,6 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
 
     private void processApple(List params, Redirector redirector, AppleController app, WebContinuation wk)
             throws Exception {
-
         Request cocoonRequest = ContextHelper.getRequest(this.avalonContext);
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
         Response cocoonResponse = ContextHelper.getResponse(this.avalonContext);
