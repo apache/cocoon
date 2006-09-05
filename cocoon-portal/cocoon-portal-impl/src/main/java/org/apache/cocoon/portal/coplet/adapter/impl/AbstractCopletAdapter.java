@@ -31,7 +31,6 @@ import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.CocoonRunnable;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Receiver;
@@ -421,7 +420,7 @@ public abstract class AbstractCopletAdapter
      * This adapter listens for CopletInstanceEvents. Each event sets the cache invalid.
      * @see org.apache.cocoon.portal.event.Receiver
      */
-    public void inform(CopletInstanceEvent event, PortalService service) {
+    public void inform(CopletInstanceEvent event) {
         final CopletInstance coplet = event.getTarget();
 
         // do we ignore SizingEvents

@@ -52,8 +52,8 @@ import oasis.names.tc.wsrp.v1.types.ReleaseSessions;
 import oasis.names.tc.wsrp.v1.types.SetPortletProperties;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.wsrp.logging.WSRPLogger;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.wsrp4j.consumer.ConsumerEnvironment;
 import org.apache.wsrp4j.consumer.GroupSessionMgr;

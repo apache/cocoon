@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.impl.AbstractComponent;
@@ -60,7 +59,7 @@ public class DefaultUserService
      * Receives any user related event and invokes login, logout etc.
      * @see Receiver
      */
-    public void inform(UserEvent event, PortalService service) {
+    public void inform(UserEvent event) {
         this.setTemporaryAttribute(USER_ATTRIBUTE, event.getPortalUser());
     }
 

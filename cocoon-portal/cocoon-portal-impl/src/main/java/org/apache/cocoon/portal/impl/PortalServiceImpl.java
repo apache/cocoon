@@ -47,6 +47,7 @@ import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.services.UserService;
 import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;

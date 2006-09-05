@@ -25,7 +25,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.LayoutException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserDidLoginEvent;
@@ -91,7 +90,7 @@ public abstract class AbstractProfileManager
      * Receives any user related event and invokes login, logout etc.
      * @see Receiver
      */
-    public void inform(UserEvent event, PortalService service) {
+    public void inform(UserEvent event) {
         if ( event instanceof UserDidLoginEvent ) {
             this.login(event.getPortalUser());
         } else if ( event instanceof UserWillLogoutEvent ) {

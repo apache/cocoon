@@ -26,7 +26,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalRuntimeException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.layout.LayoutAddedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceAddedEvent;
@@ -218,7 +217,7 @@ public class DefaultLayoutFactory
     /**
      * @see Receiver
      */
-    public void inform(RemoveLayoutEvent event, PortalService service) {
+    public void inform(RemoveLayoutEvent event) {
         this.remove( event.getTarget() );
     }
 

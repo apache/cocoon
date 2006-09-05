@@ -45,14 +45,12 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.Layout;
@@ -72,6 +70,7 @@ import org.apache.cocoon.portal.wsrp.consumer.UserContextProvider;
 import org.apache.cocoon.portal.wsrp.consumer.WSRPRequestImpl;
 import org.apache.cocoon.portal.wsrp.logging.WSRPLogManager;
 import org.apache.cocoon.portal.wsrp.logging.WSRPLogger;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -587,7 +586,7 @@ public class WSRPAdapter
      * 
      * @see Receiver
      */
-    public void inform(WSRPEvent event, PortalService service) {
+    public void inform(WSRPEvent event) {
         final CopletInstance coplet = event.getTarget();
         this.setCurrentCopletInstanceData(coplet);
         
@@ -597,7 +596,7 @@ public class WSRPAdapter
             WSRPPortlet wsrpPortlet = consumerEnvironment.getPortletRegistry().getPortlet(portletKey);
             User user = (User) coplet.getTemporaryAttribute(ATTRIBUTE_NAME_USER);
             
-            final HttpServletRequest requestObject = service.getProcessInfoProvider().getRequest();
+            final HttpServletRequest requestObject = this.portalService.getProcessInfoProvider().getRequest();
 
             Request request = new RequestImpl();
             String portletMode = requestObject.getParameter(Constants.PORTLET_MODE);
@@ -613,26 +612,26 @@ public class WSRPAdapter
             if (windowState != null) {
                 if ( !windowState.equals(windowSession.getWindowState()) ) {
                     
-                    final Layout rootLayout = service.getProfileManager().getLayout(null);
-                    final Layout layout = LayoutFeatures.searchLayout(service, coplet.getId(), rootLayout);
-                    final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(service, rootLayout);
+                    final Layout rootLayout = this.portalService.getProfileManager().getLayout(null);
+                    final Layout layout = LayoutFeatures.searchLayout(this.portalService, coplet.getId(), rootLayout);
+                    final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService, rootLayout);
                     if ( fullScreenLayout != null 
                          && fullScreenLayout.equals( layout )
                          && !windowState.equals(WindowStates._maximized) ) {
                         Event e = new CopletInstanceSizingEvent( coplet, CopletInstance.SIZE_FULLSCREEN );
-                        service.getEventManager().send(e);
+                        this.portalService.getEventManager().send(e);
                     }
                     if ( windowState.equals(WindowStates._minimized) ) {
                         Event e = new CopletInstanceSizingEvent(coplet, CopletInstance.SIZE_MINIMIZED);
-                        service.getEventManager().send(e);
+                        this.portalService.getEventManager().send(e);
                     }
                     if ( windowState.equals(WindowStates._normal) ) {
                         Event e = new CopletInstanceSizingEvent(coplet, CopletInstance.SIZE_NORMAL);
-                        service.getEventManager().send(e);
+                        this.portalService.getEventManager().send(e);
                     }
                     if ( windowState.equals(WindowStates._maximized) ) {
                         Event e = new CopletInstanceSizingEvent( coplet, CopletInstance.SIZE_FULLSCREEN );
-                        service.getEventManager().send(e);
+                        this.portalService.getEventManager().send(e);
                     }
                     windowSession.setWindowState(windowState);
                 }
