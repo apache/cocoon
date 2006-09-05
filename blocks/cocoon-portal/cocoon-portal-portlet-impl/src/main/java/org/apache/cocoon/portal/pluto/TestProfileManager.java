@@ -22,7 +22,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.portal.LayoutException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.event.user.UserIsAccessingEvent;
@@ -119,8 +118,8 @@ public class TestProfileManager extends GroupBasedProfileManager {
      * Receives any user related event and invokes login, logout etc.
      * @see Receiver
      */
-    public void inform(UserEvent event, PortalService service) {
-        super.inform(event, service);
+    public void inform(UserEvent event) {
+        super.inform(event);
         if ( event instanceof UserIsAccessingEvent ) {
             if ( "test".equals(event.getPortalUser().getUserName()) ) {
                 final List portletNames = new ArrayList();

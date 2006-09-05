@@ -42,7 +42,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.coplets.basket.events.CleanBriefcaseEvent;
 import org.apache.cocoon.portal.coplets.basket.events.ContentStoreEvent;
@@ -147,9 +146,9 @@ public class BasketManagerImpl
     /**
      * @see Receiver
      */
-    public void inform(ContentStoreEvent event, PortalService service) {
+    public void inform(ContentStoreEvent event) {
         // dispatch
-        final Session session = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel()).getSession();
+        final Session session = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel()).getSession();
         if ( event instanceof AddItemEvent ) {
 
             this.processAddItemEvent((AddItemEvent)event);

@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.pluto.factory;
 import java.util.Map;
 import javax.servlet.ServletConfig;
 
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.pluto.factory.Factory;
 
 /**

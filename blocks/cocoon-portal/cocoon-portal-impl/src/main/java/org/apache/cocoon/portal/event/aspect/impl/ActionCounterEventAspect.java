@@ -24,7 +24,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This aspect "disables" the back button of the browser and tries to avoid

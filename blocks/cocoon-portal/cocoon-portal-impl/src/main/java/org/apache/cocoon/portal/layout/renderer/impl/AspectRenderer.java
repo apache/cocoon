@@ -25,11 +25,11 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultRendererContext;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 

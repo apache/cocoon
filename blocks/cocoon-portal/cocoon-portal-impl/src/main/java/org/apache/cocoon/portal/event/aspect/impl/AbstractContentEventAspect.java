@@ -28,8 +28,8 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  *

@@ -23,10 +23,10 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.impl.AbstractLogEnabled;
 import org.apache.cocoon.portal.impl.PageLabelManager;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Convert events from and into strings.
