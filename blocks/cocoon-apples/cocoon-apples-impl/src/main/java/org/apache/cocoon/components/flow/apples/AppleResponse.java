@@ -19,6 +19,8 @@ import org.apache.cocoon.environment.Response;
 
 /**
  * AppleResponse defines the parts of the 'response' an AppleController can set.
+ * 
+ * @version $Id$
  */
 public interface AppleResponse {
     public void sendPage(String uri, Object bizData);

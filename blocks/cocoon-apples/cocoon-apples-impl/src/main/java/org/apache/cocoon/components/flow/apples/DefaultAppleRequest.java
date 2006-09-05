@@ -25,6 +25,8 @@ import org.apache.cocoon.environment.Request;
  * DefaultAppleRequest wraps the nested &lt;map:paramater&gt; 's and the active
  * Cocoon Environment Request to implement the service of the
  * {@link AppleRequest} interface.
+ * 
+ * @version $Id$
  */
 public class DefaultAppleRequest implements AppleRequest {
     private final Map params;

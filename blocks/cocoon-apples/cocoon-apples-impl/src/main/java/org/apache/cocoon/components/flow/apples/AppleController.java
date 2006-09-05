@@ -15,11 +15,16 @@
  */
 package org.apache.cocoon.components.flow.apples;
 
+import org.apache.cocoon.components.flow.apples.AppleRequest;
+import org.apache.cocoon.components.flow.apples.AppleResponse;
+
 /**
  * AppleController declares the main processing interfaces for the stateful
  * controller objects.
  * <p>
  * Implementations are advised to implement Avalon lifecycle interfaces.
+ * 
+ * @version $Id$
  */
 public interface AppleController {
     /**
