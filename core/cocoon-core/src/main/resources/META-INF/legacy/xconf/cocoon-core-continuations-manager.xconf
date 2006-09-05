@@ -35,12 +35,12 @@
       | Enable this feature for web applications by setting
       | 'session-bound-continuations' to true.
       +-->
-  <continuations-manager logger="flow.manager" 
-                         time-to-live="3600000"
-                         session-bound-continuations="false">
-    <expirations-check type="periodic">
-      <offset>180000</offset>
-      <period>180000</period>
+  <continuations-manager logger="flow.manager"
+                         time-to-live="${org.apache.cocoon.continuations.time-to-live}"
+                         session-bound-continuations="${org.apache.cocoon.continuations.session-bound}">
+    <expirations-check>
+      <offset>${org.apache.cocoon.continuations.expirations-check.offset}</offset>
+      <period>${org.apache.cocoon.continuations.expirations-check.period}</period>
     </expirations-check>
   </continuations-manager>
 
