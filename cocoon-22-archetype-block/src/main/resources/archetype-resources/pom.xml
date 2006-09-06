@@ -67,6 +67,11 @@
       <artifactId>cocoon-forms-impl</artifactId>
       <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-template-impl</artifactId>
+      <version>1.0.0-M2-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <repositories>
     <repository>
