@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -317,7 +318,6 @@ public class ConfigurationReader {
                         "' at " + componentConfig.getLocation());
                 }
             }
-    
             // Find the className
             String className = componentConfig.getAttribute("class", null);
             // If it has a "name" attribute, add it to the role (similar to the
@@ -361,7 +361,16 @@ public class ConfigurationReader {
                 info.setAlias(alias);
             }
             info.setConfiguration(componentConfig);
-
+            final boolean isSelector = className.endsWith("Selector");
+            if ( !isSelector && this.configInfo.getComponents().get(role) != null ) {
+                // we now have a duplicate definition which we explictly allow to make
+                // overriding of pre defined components possible
+                if ( this.logger.isDebugEnabled() ) {
+                    this.logger.debug("Duplicate component definition for role " + role +
+                                      " at " + componentConfig.getLocation()+ ". Component " +
+                                      "has already been defined at " + ((ComponentInfo)this.configInfo.getComponents().get(role)).getConfiguration().getLocation());
+                }
+            }
             this.configInfo.addComponent(info);
             // now if this is a selector, then we have to register the single components
             if ( info.getConfiguration() != null && className.endsWith("Selector") ) {
@@ -462,10 +471,18 @@ public class ConfigurationReader {
                            final Configuration includeStatement) 
     throws ConfigurationException, IOException {
         // If already loaded: do nothing
-        final String uri = src.getURL().toExternalForm();
-
+        String uri = src.getURL().toExternalForm();
+        // if it is a file we have to recreate the url,
+        // otherwise we get problems under windows with some file
+        // references starting with "/DRIVELETTER" and some
+        // just with "DRIVELETTER"
+        if ( uri.startsWith("file:") ) {
+            final File f = new File(uri.substring(5));
+            uri = "file://" + f.getAbsolutePath();
+        }
         if (!loadedURIs.contains(uri)) {
             if ( this.logger.isDebugEnabled() ) {
+                System.out.println("Loading " + uri);
                 this.logger.debug("Loading configuration: " + uri);
             }
             // load it and store it in the read set
