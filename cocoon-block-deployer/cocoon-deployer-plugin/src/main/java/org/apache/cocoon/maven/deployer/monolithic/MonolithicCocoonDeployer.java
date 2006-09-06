@@ -69,7 +69,7 @@ public class MonolithicCocoonDeployer {
             File lib = (File) entry.getValue();
             try {
                 this.logger.info("Deploying " + id);
-                MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
+                RuleBasedZipExtractor zipExtractor = new RuleBasedZipExtractor(basedir, logger);
                 zipExtractor.addRule("META-INF/legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));
                 zipExtractor.addRule("META-INF/legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
                 zipExtractor.addRule("META-INF/legacy/sitemap-additions/**", new SingleFileDeployer(
