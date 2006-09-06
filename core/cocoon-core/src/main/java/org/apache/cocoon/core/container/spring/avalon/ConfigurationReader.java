@@ -18,6 +18,7 @@ package org.apache.cocoon.core.container.spring.avalon;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.core.container.spring.AbstractSettingsBeanFactoryPostProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
@@ -399,6 +401,13 @@ public class ConfigurationReader {
         }        
     }
 
+    /**
+     * Handle includes of avalon configurations.
+     * @param contextURI
+     * @param loadedURIs
+     * @param includeStatement
+     * @throws ConfigurationException
+     */
     protected void handleInclude(final String        contextURI,
                                  final Set           loadedURIs,
                                  final Configuration includeStatement)
@@ -432,6 +441,7 @@ public class ConfigurationReader {
                 try {
                     Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
                     if ( resources != null ) {
+                        Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
                            this.loadURI(resources[i], loadedURIs, includeStatement);
                         }
@@ -483,6 +493,12 @@ public class ConfigurationReader {
         }
     }
 
+    /**
+     * Handle include for spring bean configurations.
+     * @param contextURI
+     * @param includeStatement
+     * @throws ConfigurationException
+     */
     protected void handleBeanInclude(final String contextURI,
                                      final Configuration includeStatement)
     throws ConfigurationException {
@@ -517,6 +533,7 @@ public class ConfigurationReader {
                 try {
                     Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
                     if ( resources != null ) {
+                        Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
                            this.configInfo.addImport(resources[i].getURL().toExternalForm());
                         }
