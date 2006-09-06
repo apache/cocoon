@@ -52,11 +52,10 @@ public class MonolithicCocoonDeployer {
         this.logger = logger;
     }
 
-    public void deploy(final Map libraries, final File basedir, final String blocksdir)
-            throws DeploymentException {
+    public void deploy(final Map libraries, final File basedir, final String blocksdir) throws DeploymentException {
         deploy(libraries, basedir, blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0]);
     }
-    
+
     public void deploy(final Map libraries, final File basedir, final String blocksdir,
             final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
             throws DeploymentException {
@@ -75,7 +74,12 @@ public class MonolithicCocoonDeployer {
                 zipExtractor.addRule("META-INF/legacy/sitemap-additions/**", new SingleFileDeployer(
                         "WEB-INF/cocoon/sitemap-additions"));
                 zipExtractor.addRule("META-INF/spring/**", new SingleFileDeployer("WEB-INF/cocoon/spring"));
-                zipExtractor.addRule("META-INF/properties/**", new SingleFileDeployer("WEB-INF/cocoon/properties"));
+
+                // TODO clearly a hack, there should be a parameter what part of
+                // source path should be removed, the rest should stay
+                // preserving directory structure (currently only filename
+                // stays)
+                zipExtractor.addRule("META-INF/properties/**", new SingleFileDeployer("WEB-INF/cocoon/", true));
                 zipExtractor.addRule("WEB-INF/classes/**", new SingleFileDeployer("WEB-INF/classes"));
                 zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));
@@ -139,7 +143,7 @@ public class MonolithicCocoonDeployer {
             InputStream sourceWebXmlFile = readResourceFromClassloader("WEB-INF/web.xml");
             try {
                 xwebPatcher.applyPatches(sourceWebXmlFile, "WEB-INF/web.xml");
-            } finally { 
+            } finally {
                 IOUtils.closeQuietly(sourceWebXmlFile);
             }
             copyFile(basedir, "WEB-INF/applicationContext.xml");
