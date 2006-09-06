@@ -142,7 +142,7 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
                     propertyUris.add(resources[i]);
                 }
                 // sort
-                Collections.sort(propertyUris, this.getResourceComparator());
+                Collections.sort(propertyUris, getResourceComparator());
                 // now process
                 final Iterator i = propertyUris.iterator();
                 while ( i.hasNext() ) {
@@ -167,7 +167,7 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     /**
      * Return a resource comparator
      */
-    protected Comparator getResourceComparator() {
+    public static Comparator getResourceComparator() {
         return new ResourceComparator();
     }
 
