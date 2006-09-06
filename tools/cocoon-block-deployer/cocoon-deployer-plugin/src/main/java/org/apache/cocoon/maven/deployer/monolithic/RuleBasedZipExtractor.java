@@ -35,35 +35,35 @@ import org.apache.commons.lang.Validate;
 import org.apache.maven.plugin.logging.Log;
 
 /**
- * This class performs the actual deployment based on rules. A rule is mapped to a 
- * <code>FileDeployer</code> and when the rule is executed and returns true, the
- * file deployer is executed.
+ * This class performs the actual deployment based on rules. A rule is mapped to
+ * a <code>FileDeployer</code> and when the rule is executed and returns true,
+ * the file deployer is executed.
  * 
  * @version $Id$
  */
-public class MonolithicServer22 {
-	private Log logger;
-	private File basedir;
-	private List rules = new ArrayList();
-	private Set alreadyDeployedFilesSet =  new HashSet();
-	
-	public MonolithicServer22(File basedir, Log logger) {
-		Validate.notNull(basedir, "The basedir of the server mustn't be null.");
-		Validate.notNull(logger, "A logger must be set.");
-		this.basedir = basedir;
-		this.logger = logger;
-		this.logger.debug("Basedir: " + basedir.getAbsolutePath());
-	}
+public class RuleBasedZipExtractor {
+    private Log logger;
+    private File basedir;
+    private List rules = new ArrayList();
+    private Set alreadyDeployedFilesSet = new HashSet();
 
-	public void addRule(String pattern, FileDeployer fileDeployer) {
-		fileDeployer.setBasedir(this.basedir);
-		fileDeployer.setLogger(this.logger);
-		fileDeployer.setAlreadyDeployedFilesSet(alreadyDeployedFilesSet);
-		rules.add(new Rule(pattern, fileDeployer));
-	}
-	
-	public void extract(File zipFile) throws IOException {
-		ZipInputStream zipStream = new ZipInputStream(new FileInputStream(zipFile));
+    public RuleBasedZipExtractor(File basedir, Log logger) {
+        Validate.notNull(basedir, "The basedir of the server mustn't be null.");
+        Validate.notNull(logger, "A logger must be set.");
+        this.basedir = basedir;
+        this.logger = logger;
+        this.logger.debug("Basedir: " + basedir.getAbsolutePath());
+    }
+
+    public void addRule(String pattern, FileDeployer fileDeployer) {
+        fileDeployer.setBasedir(this.basedir);
+        fileDeployer.setLogger(this.logger);
+        fileDeployer.setAlreadyDeployedFilesSet(alreadyDeployedFilesSet);
+        rules.add(new Rule(pattern, fileDeployer));
+    }
+
+    public void extract(File zipFile) throws IOException {
+        ZipInputStream zipStream = new ZipInputStream(new FileInputStream(zipFile));
         ZipEntry document = null;
         try {
             do {
@@ -71,7 +71,7 @@ public class MonolithicServer22 {
                 if (document != null) {
                     // skip directories (only files have to be written)
                     if (document.isDirectory()) {
-                    	zipStream.closeEntry();
+                        zipStream.closeEntry();
                         continue;
                     }
                     OutputStream out = null;
@@ -93,35 +93,37 @@ public class MonolithicServer22 {
                 }
             } while (document != null);
         } finally {
-        	zipStream.close();
+            zipStream.close();
         }
-	}
-	
-	/**
-	 * Loop over all rules and if one matches, the corresponding @link FileDeployer is returned.
-	 */
-	protected FileDeployer findFileDeployer(String name) {
-		for(Iterator it = this.rules.iterator(); it.hasNext();) {
-			Rule rule = (Rule) it.next();
-			HashMap resultMap = new HashMap();
-			if(WildcardHelper.match(resultMap, name, rule.compiledPattern)) {
-				logger.debug("findFileDeployer: " + name + " matched with pattern '" + rule.patternString);
-				return rule.fileDeployer;
-			}
-		}
-		return null;
-	}
+    }
 
-	private static class Rule {
-		String patternString;
-		int[] compiledPattern;
-		FileDeployer fileDeployer;
-		
-		public Rule(String pattern, FileDeployer fileDeployer) {
-			this.patternString = pattern;
-			this.compiledPattern = WildcardHelper.compilePattern(pattern);
-			this.fileDeployer = fileDeployer;
-		}
-	}
+    /**
+     * Loop over all rules and if one matches, the corresponding
+     * 
+     * @link FileDeployer is returned.
+     */
+    protected FileDeployer findFileDeployer(String name) {
+        for (Iterator it = this.rules.iterator(); it.hasNext();) {
+            Rule rule = (Rule) it.next();
+            HashMap resultMap = new HashMap();
+            if (WildcardHelper.match(resultMap, name, rule.compiledPattern)) {
+                logger.debug("findFileDeployer: " + name + " matched with pattern '" + rule.patternString);
+                return rule.fileDeployer;
+            }
+        }
+        return null;
+    }
+
+    private static class Rule {
+        String patternString;
+        int[] compiledPattern;
+        FileDeployer fileDeployer;
+
+        public Rule(String pattern, FileDeployer fileDeployer) {
+            this.patternString = pattern;
+            this.compiledPattern = WildcardHelper.compilePattern(pattern);
+            this.fileDeployer = fileDeployer;
+        }
+    }
 
 }

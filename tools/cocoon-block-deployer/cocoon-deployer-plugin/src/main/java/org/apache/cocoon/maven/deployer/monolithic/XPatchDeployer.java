@@ -70,8 +70,8 @@ public class XPatchDeployer extends SingleFileDeployer {
         }
         try {
             getLogger().info("Applying patches to: " + fileName);
-            File outFile = FileUtils.createPath(new File(getBasedir(), fileName));
             Document original = XMLUtils.parseXml(source);
+            File outFile = FileUtils.createPath(new File(getBasedir(), fileName));
 
             Iterator it = patches.iterator();
             while (it.hasNext()) {
