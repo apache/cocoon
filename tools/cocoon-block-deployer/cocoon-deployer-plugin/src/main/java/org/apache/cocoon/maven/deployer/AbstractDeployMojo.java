@@ -306,8 +306,6 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * except cocoon-bootstrap which remains in WEB-INF/lib.
      */
     private void shieldCocoonWebapp() throws MojoExecutionException {
-        File webappDirectory_ = getWebappDirectory();
-
         String webInfSlashWebXml = "WEB-INF" + File.separatorChar + "web.xml";
 
         String webXmlLocation = this.getWebXml();
@@ -320,8 +318,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             getLog().debug("no web.xml in source location. checking for generated web.xml in target location.");
             if (!new File(targetWebXmlLocation).exists()) {
                 this.getLog().info("No web.xml supplied. Will install default web.xml");
-                File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createPath(new File(webappDirectory_,
-                        webInfSlashWebXml));
+                File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createPath(new File(
+                        getWebappDirectory(), webInfSlashWebXml));
 
                 try {
                     CopyUtils.copy(readResourceFromClassloader("WEB-INF/web.xml"), new FileOutputStream(outFile));
@@ -358,7 +356,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
         if (this.useShieldingRepository) {
             this.getLog().info("Moving classes and libs to shielded location.");
-            final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
+            final String webInfDir = getWebappDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF";
             try {
                 this.move(webInfDir, "lib", COCOON_LIB);
                 this.move(webInfDir, "classes", COCOON_CLASSES);
