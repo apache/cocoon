@@ -29,6 +29,7 @@ import org.apache.cocoon.classloader.ClassLoaderFactory;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
 import org.apache.cocoon.environment.Request;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.WebApplicationContext;
@@ -41,6 +42,8 @@ import org.springframework.web.context.scope.RequestAttributes;
  */
 public class SitemapHelper {
 
+    public static final ThreadLocal PARENT_CONTEXT = new ThreadLocal();
+
     private static final String CLASSLOADER_CONFIG_NAME = "classloader";
 
     private static final String DEFAULT_CONFIG_XCONF  = "config/xconf";
@@ -51,9 +54,10 @@ public class SitemapHelper {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
         // Settings
+        // TODO: use default includes, global variables and directories
         buffer.append("<cocoon:properties/>");
         // Avalon
-        buffer.append("<avalon:sitemap uriPrefix=\"");
+        buffer.append("<avalon:sitemap location=\"sitemap.xmap\" uriPrefix=\"");
         buffer.append(uriPrefix);
         buffer.append("\"/>");
         addFooter(buffer);
@@ -147,13 +151,18 @@ public class SitemapHelper {
         buffer.append("</beans>");
     }
 
-    public static CocoonWebApplicationContext createApplicationContext(String         contextUrl,
-                                                                       String         uriPrefix,
+    public static CocoonWebApplicationContext createApplicationContext(String         uriPrefix,
                                                                        Configuration  config,
                                                                        ServletContext servletContext,
                                                                        SourceResolver sitemapResolver,
                                                                        Request        request)
     throws Exception {
+        // let's determine our context url
+        Source s = sitemapResolver.resolveURI("a");
+        String contextUrl = s.getURI();
+        sitemapResolver.release(s);
+        contextUrl = contextUrl.substring(0, contextUrl.length() - 1);
+
         final RequestAttributes attr = new CocoonRequestAttributes(request);
         final WebApplicationContext parentContext = CocoonWebApplicationContext.getCurrentContext(servletContext, attr);
 
@@ -161,20 +170,25 @@ public class SitemapHelper {
         final ClassLoader classloader = createClassLoader(parentContext, config, servletContext, sitemapResolver);
         // create root bean definition
         final String definition = createDefinition(uriPrefix);
-        final CocoonWebApplicationContext context = new CocoonWebApplicationContext(classloader,
-                                                                                    parentContext,
-                                                                                    contextUrl,
-                                                                                    definition);
-        return context;
+        PARENT_CONTEXT.set(parentContext);
+        try {
+            final CocoonWebApplicationContext context = new CocoonWebApplicationContext(classloader,
+                                                                                        parentContext,
+                                                                                        contextUrl,
+                                                                                        definition);
+            return context;
+        } finally {
+            PARENT_CONTEXT.set(null);
+        }
     }
 
     /**
      * Build a processing tree from a <code>Configuration</code>.
      */
-    public static ClassLoader createClassLoader(BeanFactory    parentFactory,
-                                                Configuration  config,
-                                                ServletContext servletContext,
-                                                SourceResolver sitemapResolver)
+    protected static ClassLoader createClassLoader(BeanFactory    parentFactory,
+                                                   Configuration  config,
+                                                   ServletContext servletContext,
+                                                   SourceResolver sitemapResolver)
     throws Exception {
         final Configuration componentConfig = config.getChild("components", false);
         Configuration classPathConfig = null;
