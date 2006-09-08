@@ -20,6 +20,7 @@ import org.apache.cocoon.ProcessingUtil;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.web.context.WebApplicationContext;
 import org.w3c.dom.Element;
 
 /**
@@ -62,7 +63,8 @@ public class SitemapElementParser extends AvalonElementParser {
      */
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
     throws Exception {
-        return ConfigurationReader.readSitemap(null, location, resourceLoader);
+        WebApplicationContext parentContext = (WebApplicationContext)SitemapHelper.PARENT_CONTEXT.get();
+        return ConfigurationReader.readSitemap((ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName()), location, resourceLoader);
     }
 
 }
