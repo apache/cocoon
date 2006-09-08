@@ -21,6 +21,8 @@ import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.scope.RequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -115,5 +117,13 @@ public class Container {
 
     public BeanFactory getBeanFactory() {
         return this.beanFactory;
+    }
+
+    public void shutdown() {
+        if ( this.beanFactory instanceof ConfigurableApplicationContext ) {
+            ((ConfigurableApplicationContext)this.beanFactory).close();
+        } else if ( this.beanFactory instanceof ConfigurableBeanFactory ) {
+            ((ConfigurableBeanFactory)this.beanFactory).destroySingletons();
+        }
     }
 }

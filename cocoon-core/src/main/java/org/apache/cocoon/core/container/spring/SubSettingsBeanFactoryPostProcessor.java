@@ -26,6 +26,7 @@ import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
+import org.springframework.core.io.Resource;
 
 /**
  * This is a bean factory post processor which sets up a child settings object.
@@ -42,7 +43,7 @@ public class SubSettingsBeanFactoryPostProcessor
 
     protected List directories;
 
-    protected boolean useDefaultIncludes;
+    protected boolean useDefaultIncludes = true;
 
     protected Properties globalSitemapVariables;    
 
@@ -59,6 +60,22 @@ public class SubSettingsBeanFactoryPostProcessor
 
         // settings can't be changed anymore
         this.settings.makeReadOnly();
+    }
+
+    public void setDirectories(List directories) {
+        this.directories = directories;
+    }
+
+    public void setGlobalSitemapVariables(Properties globalSitemapVariables) {
+        this.globalSitemapVariables = globalSitemapVariables;
+    }
+
+    public void setSitemapUri(String sitemapUri) {
+        this.sitemapUri = sitemapUri;
+    }
+
+    public void setUseDefaultIncludes(boolean useDefaultIncludes) {
+        this.useDefaultIncludes = useDefaultIncludes;
     }
 
     /**
@@ -106,8 +123,9 @@ public class SubSettingsBeanFactoryPostProcessor
         // Next look for a custom property provider in the parent bean factory
         if (parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
             try {
+                final Resource r = this.resourceLoader.getResource(this.sitemapUri);
                 final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
-                final Properties providedProperties = provider.getProperties(s, mode, this.sitemapUri);
+                final Properties providedProperties = provider.getProperties(s, mode, r.getURL().toExternalForm());
                 if ( providedProperties != null ) {
                     properties.putAll(providedProperties);
                 }
