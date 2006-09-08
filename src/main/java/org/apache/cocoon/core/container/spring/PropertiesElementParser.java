@@ -18,6 +18,7 @@ package org.apache.cocoon.core.container.spring;
 
 import org.apache.cocoon.configuration.Settings;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
@@ -35,12 +36,12 @@ public class PropertiesElementParser extends AbstractElementParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        this.addComponent(SubSettingsBeanFactoryPostProcessor.class.getName(),
-                          Settings.ROLE,
-                          "init",
-                          false,
-                          parserContext.getRegistry());
-
-        return null;
+        RootBeanDefinition def =  this.createBeanDefinition(SubSettingsBeanFactoryPostProcessor.class.getName(),
+                "init",
+                false);
+        def.getPropertyValues().addPropertyValue("sitemapUri", element.getAttribute("sitemapUri"));
+        def.getPropertyValues().addPropertyValue("useDefaultIncludes", element.getAttribute("useDefaultIncludes"));
+        this.register(def, Settings.ROLE, parserContext.getRegistry());
+        return def;
     }
 }

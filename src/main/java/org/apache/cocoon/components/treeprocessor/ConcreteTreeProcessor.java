@@ -47,8 +47,6 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -88,8 +86,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Processor attributes */
     protected Map processorAttributes = new HashMap();
 
-    /** Bean Factory for this sitemap. */
-    protected Container beanFactory;
+    /** Container for this sitemap. */
+    protected Container container;
 
     /** Classloader for this sitemap. */
     protected ClassLoader classLoader;
@@ -116,8 +114,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
         this.classLoader = container.getClassLoader();
-        this.beanFactory = container;
-        this.manager = (ServiceManager)this.beanFactory.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+        this.container = container;
+        this.manager = (ServiceManager)this.container.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
@@ -209,7 +207,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         Thread.currentThread().setContextClassLoader(this.classLoader);
         Object handle = null;
         try {
-            handle = this.beanFactory.enteringContext(new CocoonRequestAttributes(ObjectModelHelper.getRequest(environment.getObjectModel())));
+            handle = this.container.enteringContext(new CocoonRequestAttributes(ObjectModelHelper.getRequest(environment.getObjectModel())));
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
@@ -244,7 +242,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         } finally {
             this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
-            this.beanFactory.leavingContext(new CocoonRequestAttributes(ObjectModelHelper.getRequest(environment.getObjectModel())), handle);
+            this.container.leavingContext(new CocoonRequestAttributes(ObjectModelHelper.getRequest(environment.getObjectModel())), handle);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
@@ -269,8 +267,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
     }
 
-    protected boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context)
+    protected boolean handleCocoonRedirect(String uri, Environment env, InvokeContext context)
     throws Exception {
+        Environment environment = env;
         // Build an environment wrapper
         // If the current env is a facade, change the delegate and continue processing the facade, since
         // we may have other redirects that will in turn also change the facade delegate
@@ -339,9 +338,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // clear listeners
         this.enterSitemapEventListeners.clear();
         this.leaveSitemapEventListeners.clear();
-        if ( this.beanFactory != null && this.beanFactory instanceof ConfigurableBeanFactory) {
-        	((ConfigurableBeanFactory) this.beanFactory).destroySingletons();
-            this.beanFactory = null;
+        if ( this.container != null ) {
+        	this.container.shutdown();
+            this.container = null;
         }
     }
 
@@ -419,13 +418,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
      */
     public String getType() {
         return "sitemap";
-    }
-
-    /**
-     * @see org.apache.cocoon.Processor#getBeanFactory()
-     */
-    public BeanFactory getBeanFactory() {
-        return this.beanFactory.getBeanFactory();
     }
 
     /**
