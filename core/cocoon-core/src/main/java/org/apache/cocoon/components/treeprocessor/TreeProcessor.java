@@ -25,9 +25,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -56,14 +53,11 @@ import org.xml.sax.SAXException;
  */
 public class TreeProcessor extends AbstractLogEnabled
                            implements ThreadSafe, Processor, Serviceable,
-                                      Configurable, Contextualizable,
+                                      Configurable,
                                       Disposable, Initializable {
 
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;
-
-    /** The context */
-    protected Context context;
 
     /**
      * The component manager given by the upper level
@@ -121,7 +115,6 @@ public class TreeProcessor extends AbstractLogEnabled
         enableLogging(parent.getLogger());
 
         // Copy all that can be copied from the parent
-        this.context = parent.context;
         this.source = sitemapSource;
         this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
@@ -150,13 +143,6 @@ public class TreeProcessor extends AbstractLogEnabled
         DelayedRefreshSourceWrapper delayedSource = new DelayedRefreshSourceWrapper(
                 this.resolver.resolveURI(src), this.lastModifiedDelay);
         return new TreeProcessor(this, delayedSource, configuredCheckReload, prefix);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context avalonContext) throws ContextException {
-        this.context = avalonContext;
     }
 
     /**
