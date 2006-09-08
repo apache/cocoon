@@ -46,9 +46,9 @@ public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessin
         this.selectorRole = selectorRole;
     }
 
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.selector = (ServiceSelector)manager.lookup(selectorRole);
+    public void service(ServiceManager avalonManager) throws ServiceException {
+        this.manager = avalonManager;
+        this.selector = (ServiceSelector)this.manager.lookup(selectorRole);
         
         // Pre-lookup the associated component, and cache it if it's threadsafe
         Object component = this.selector.select(this.getType());
