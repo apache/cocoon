@@ -42,6 +42,7 @@ import org.springframework.web.context.scope.RequestAttributes;
 
 
 /**
+ * FIXME - This class can only handle the case if the sitemap is named "sitemap.xmap"!!!
  * @version $Id$
  * @since 2.2
  */
@@ -58,12 +59,15 @@ public class SitemapHelper {
     protected static String createDefinition(String     uriPrefix,
                                              boolean    useDefaultIncludes,
                                              List       includes,
-                                             Properties globalVariables) {
+                                             Properties globalVariables,
+                                             String     sitemapUri) {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
         // Settings
         buffer.append("  <cocoon:properties useDefaultIncludes=\"");
         buffer.append(useDefaultIncludes);
+        buffer.append("\" sitemapUri=\"");
+        buffer.append(sitemapUri);
         buffer.append("\">\n");
         if ( includes != null && includes.size() > 0 ) {
             buffer.append("    <property name=\"directories\">\n      <list>\n");
@@ -246,7 +250,8 @@ public class SitemapHelper {
         final String definition = createDefinition(request.getSitemapURIPrefix(),
                                                    useDefaultIncludes,
                                                    propIncludes,
-                                                   getGlobalSitemapVariables(config));
+                                                   getGlobalSitemapVariables(config),
+                                                   "sitemap.xmap");
         PARENT_CONTEXT.set(parentContext);
         try {
             final CocoonWebApplicationContext context = new CocoonWebApplicationContext(classloader,

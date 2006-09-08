@@ -65,8 +65,8 @@ public class NodeBuilderSelector
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize( final Context context ) {
-        this.context = context;
+    public void contextualize( final Context avalonContext ) {
+        this.context = avalonContext;
     }
 
     /**
