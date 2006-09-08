@@ -37,5 +37,6 @@ public class CocoonNamespaceHandler extends NamespaceHandlerSupport {
      */
     public void init() {
         registerBeanDefinitionParser("settings", new SettingsElementParser());
+        registerBeanDefinitionParser("properties", new PropertiesElementParser());
     }
 }

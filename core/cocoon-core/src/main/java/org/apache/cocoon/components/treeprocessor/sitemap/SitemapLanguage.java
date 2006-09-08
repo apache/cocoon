@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -45,6 +47,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
@@ -67,7 +70,9 @@ import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.apache.cocoon.configuration.impl.SettingsHelper;
 import org.apache.cocoon.core.container.spring.BeanFactoryFactoryImpl;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.cocoon.core.container.spring.avalon.SitemapHelper;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
@@ -397,6 +402,16 @@ public class SitemapLanguage
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree) throws Exception {
+        /*
+        // get the request
+        final Request request = ContextHelper.getRequest(this.context);
+        final String prefix = request.getSitemapURIPrefix();
+        SitemapHelper.createApplicationContext(prefix,
+                                               tree, 
+                                               (ServletContext)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT), 
+                                               this.processor.getSourceResolver(), 
+                                               request);
+        */
         // The namespace used in the whole sitemap is the one of the root
         // element
         this.itsNamespace = tree.getNamespace();
