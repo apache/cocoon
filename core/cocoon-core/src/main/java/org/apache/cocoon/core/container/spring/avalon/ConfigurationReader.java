@@ -89,6 +89,9 @@ public class ConfigurationReader {
                                                 String            source,
                                                 ResourceLoader    resourceLoader)
     throws Exception {
+        if ( source == null || source.trim().length() == 0 ) {
+            source = "sitemap.xmap";
+        }
         final ConfigurationReader converter = new ConfigurationReader(parentInfo, resourceLoader);
         converter.convertSitemap(source);
         return converter.configInfo;
@@ -208,7 +211,7 @@ public class ConfigurationReader {
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug("Reading sitemap from " + sitemapLocation);
         }
-        Resource root = this.resolver.getResource(this.convertUrl(sitemapLocation));
+        final Resource root = this.resolver.getResource(this.convertUrl(sitemapLocation));
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
         
         final Configuration config = b.build(this.getInputSource(root));
@@ -219,7 +222,7 @@ public class ConfigurationReader {
         }
         final Configuration completeConfig = SitemapHelper.createSitemapConfiguration(config);
         if ( completeConfig != null ) {
-            this.convert(config, null, root.getURL().toExternalForm());
+            this.convert(completeConfig, null, root.getURL().toExternalForm());
         }
     }
 

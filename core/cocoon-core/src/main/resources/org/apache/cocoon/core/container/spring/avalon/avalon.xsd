@@ -27,6 +27,7 @@
     </xsd:complexType>
 
     <xsd:complexType name="sitemapType">
+        <xsd:attribute name="location" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="uriPrefix" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 </xsd:schema>

@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Stack;
 
@@ -24,7 +23,7 @@ import javax.servlet.ServletContext;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
@@ -58,6 +57,8 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
                                        String                url,
                                        String                rootDefinition) {
         this.setParent(parent);
+        this.setClassLoader(classloader);
+        this.setServletContext(parent.getServletContext());
         if ( url.endsWith("/") ) {
             this.baseUrl = url;
         } else {
@@ -65,6 +66,7 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
         }
         this.classLoader = (classloader != null ? classloader : ClassUtils.getDefaultClassLoader());
         this.beanDefinition = rootDefinition;
+        this.refresh();
     }
 
     /**
@@ -72,7 +74,7 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
      */
     protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
         if ( this.beanDefinition != null ) {
-            reader.loadBeanDefinitions(new InputStreamResource(new ByteArrayInputStream(this.beanDefinition.getBytes("utf-8"))));
+            reader.loadBeanDefinitions(new ByteArrayResource(this.beanDefinition.getBytes("utf-8")));
         }
         super.loadBeanDefinitions(reader);
     }
@@ -94,7 +96,7 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
      * @see org.springframework.web.context.support.XmlWebApplicationContext#getDefaultConfigLocations()
      */
     protected String[] getDefaultConfigLocations() {
-        return null;
+        return new String[0];
     }
 
     /**

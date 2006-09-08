@@ -23,4 +23,9 @@
     <xsd:complexType name="settingsType">
     	<xsd:attribute name="processorClassName" type="xsd:string" use="optional"></xsd:attribute>
     </xsd:complexType>
+
+    <xsd:element name="properties" type="tns:propertiesType"/>
+    <xsd:complexType name="propertiesType">
+      <xsd:attribute name="useDefaultIncludes" type="xsd:string" use="optional"></xsd:attribute>
+    </xsd:complexType>
 </xsd:schema>
