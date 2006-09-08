@@ -18,12 +18,20 @@ package org.apache.cocoon.components.modules.input;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
+import org.apache.cocoon.core.container.spring.Container;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.commons.collections.IteratorUtils;
 
 /**
@@ -33,21 +41,39 @@ import org.apache.commons.collections.IteratorUtils;
  */
 public final class SettingsInputModule
     extends AbstractLogEnabled
-    implements InputModule, ThreadSafe {
+    implements InputModule, ThreadSafe, Serviceable, Disposable {
+
+    protected ServiceManager manager;
+    protected ProcessInfoProvider infoProvider; 
+    
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
+        this.infoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
+    }
 
     /**
-     * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.infoProvider);
+            this.infoProvider = null;
+            this.manager = null;
+        }
+    }
+
     /**
      * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
      */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        final Settings settings = (Settings)EnvironmentHelper.getCurrentProcessor().getBeanFactory().getBean(Settings.ROLE);
-        if ( settings != null ) {
-            return settings.getProperty(name);
-        }
-        return null;
+        final Request request = ObjectModelHelper.getRequest(this.infoProvider.getObjectModel());
+        final Container container = Container.getCurrentContainer(this.infoProvider.getServletContext(), new CocoonRequestAttributes(request));
+        final Settings settings = container.getSettings();
+        return settings.getProperty(name);
     }
 
     /**
