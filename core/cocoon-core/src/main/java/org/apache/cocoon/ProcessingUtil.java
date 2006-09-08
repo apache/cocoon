@@ -44,7 +44,9 @@ public class ProcessingUtil {
     /**
      * Avoid construction.
      */
-    private ProcessingUtil() {}
+    private ProcessingUtil() {
+        // empty 
+    }
 
     /**
      * The cleanup threads that are invoked after the processing of a
@@ -101,6 +103,7 @@ public class ProcessingUtil {
      * This method returns the current sitemap component manager. This
      * is the manager that holds all the components of the currently
      * processed (sub)sitemap.
+     * @deprecated This method will be removed.
      */
     static public ServiceManager getSitemapServiceManager() {
         return EnvironmentHelper.getSitemapServiceManager(); 

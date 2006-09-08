@@ -48,8 +48,8 @@ public class ProcessInfoProviderImpl
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void contextualize(Context aContext) throws ContextException {
+        this.context = aContext;
         this.servletContext = (ServletContext) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
 

@@ -31,6 +31,7 @@ import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderFactory;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
+import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.excalibur.source.Source;
@@ -94,7 +95,6 @@ public class SitemapHelper {
         buffer.append(uriPrefix);
         buffer.append("\"/>\n");
         addFooter(buffer);
-        System.out.println("NEW CONFIG: " + buffer.toString());
         return buffer.toString();
     }
 
@@ -219,11 +219,10 @@ public class SitemapHelper {
         return globalSitemapVariables;
     }
 
-    public static CocoonWebApplicationContext createApplicationContext(String         uriPrefix,
-                                                                       Configuration  config,
-                                                                       ServletContext servletContext,
-                                                                       SourceResolver sitemapResolver,
-                                                                       Request        request)
+    public static Container createContainer(Configuration  config,
+                                            ServletContext servletContext,
+                                            SourceResolver sitemapResolver,
+                                            Request        request)
     throws Exception {
         // let's determine our context url
         Source s = sitemapResolver.resolveURI("a");
@@ -232,14 +231,19 @@ public class SitemapHelper {
         contextUrl = contextUrl.substring(0, contextUrl.length() - 1);
 
         final RequestAttributes attr = new CocoonRequestAttributes(request);
-        final WebApplicationContext parentContext = CocoonWebApplicationContext.getCurrentContext(servletContext, attr);
+        final Container container = Container.getCurrentContainer(servletContext, attr);
+        // for now we require that the parent container is a web application context (FIXME)
+        if ( !(container.getBeanFactory() instanceof WebApplicationContext) ) {
+            throw new Exception("Parent container is not a web application context: " + container.getBeanFactory());
+        }
+        final WebApplicationContext parentContext = (WebApplicationContext)container.getBeanFactory();
 
         // get classloader
         final ClassLoader classloader = createClassLoader(parentContext, config, servletContext, sitemapResolver);
         // create root bean definition
         final boolean useDefaultIncludes = isUsingDefaultIncludes(config);
         final List propIncludes = getPropertyIncludes(config);
-        final String definition = createDefinition(uriPrefix,
+        final String definition = createDefinition(request.getSitemapURIPrefix(),
                                                    useDefaultIncludes,
                                                    propIncludes,
                                                    getGlobalSitemapVariables(config));
@@ -249,7 +253,7 @@ public class SitemapHelper {
                                                                                         parentContext,
                                                                                         contextUrl,
                                                                                         definition);
-            return context;
+            return new Container(context, context.getClassLoader());
         } finally {
             PARENT_CONTEXT.set(null);
         }
@@ -277,7 +281,7 @@ public class SitemapHelper {
         final String factoryRole = config.getAttribute("factory-role", ClassLoaderFactory.ROLE);
 
         // Create a new classloader
-        ClassLoaderConfiguration configBean = ClassLoaderUtils.createConfiguration(sitemapResolver, config);
+        ClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, config);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
                                            configBean,

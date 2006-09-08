@@ -15,11 +15,17 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import java.util.Iterator;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.TraversableSource;
 
 /**
  * Some utility methods for handling Avalon stuff.
@@ -30,16 +36,29 @@ import org.apache.cocoon.configuration.impl.PropertyHelper;
 public class AvalonUtils {
 
     /**
-     * Replace all properties
+     * Replace all properties in the configuration object.
+     * @param tree     The configuration.
+     * @param settings The settings object to resolve the properties.
      */
     public static Configuration replaceProperties(Configuration tree, Settings settings)
     throws ConfigurationException {
+        if ( tree == null || settings == null ) {
+            return tree;
+        }
+        // first clone the tree
         final DefaultConfiguration root = new DefaultConfiguration(tree, true);
-        convert(root, settings);
+        // now replace properties
+        _replaceProperties(root, settings);
         return root;
     }
 
-    protected static void convert(DefaultConfiguration config, Settings settings)
+    /**
+     * Recursivly replace the properties of a configuration object.
+     * @param config   The configuration.
+     * @param settings The settings object to resolve the properties.
+     * @throws ConfigurationException
+     */
+    protected static void _replaceProperties(DefaultConfiguration config, Settings settings)
     throws ConfigurationException {
         final String[] names = config.getAttributeNames();
         for(int i=0; i<names.length; i++) {
@@ -52,7 +71,65 @@ public class AvalonUtils {
         }
         final Configuration[] children = config.getChildren();
         for(int m=0; m<children.length; m++) {
-            convert((DefaultConfiguration)children[m], settings);
+            _replaceProperties((DefaultConfiguration)children[m], settings);
         }
+    }
+
+    /**
+     * Read the configuration for a class loader from an Avalon configuration.
+     * This method is used by the sitemap to determine the classpath for the sitemap.
+     * If a lib-directory is configured this method scans the directory and adds
+     * all found jar/zip files to the classpath.
+     * @param resolver   The source resolver for the current sitemap.
+     * @param config     The configuration for the class loader
+     * @return           A class loader configuration object.
+     * @throws Exception
+     */
+    public static ClassLoaderConfiguration createConfiguration(SourceResolver resolver,
+                                                               Configuration  config)
+    throws Exception {
+        final ClassLoaderConfiguration configBean = new ClassLoaderConfiguration();
+        final Configuration[] children = config.getChildren();
+        for (int i = 0; i < children.length; i++) {
+            final Configuration child = children[i];
+            final String name = child.getName();
+            if ("class-dir".equals(name)) {
+                Source src = null;
+                try {
+                    src = resolver.resolveURI(child.getAttribute("src"));
+                    configBean.addClassDirectory(src.getURI());
+                } finally {
+                    resolver.release(src);
+                }
+            } else if ("lib-dir".equals(name)) {
+                Source src = null;
+                try {
+                    src = resolver.resolveURI(child.getAttribute("src"));
+                    if (!src.exists()) {
+                        throw new Exception(src.getURI() + " doesn't exist");
+                    } else if (!(src instanceof TraversableSource) || !((TraversableSource)src).isCollection()) {
+                        throw new Exception(src.getURI() + " is not a directory");
+                    }
+                    Iterator iter = ((TraversableSource)src).getChildren().iterator();
+                    while (iter.hasNext()) {
+                        final Source childSrc = (Source)iter.next();
+                        String childURI = childSrc.getURI();
+                        resolver.release(childSrc);
+                        if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
+                            configBean.addClassDirectory(childURI);
+                        }
+                    }
+                } finally {
+                    resolver.release(src);
+                }
+            } else if ("include-classes".equals(name)) {
+                configBean.addInclude(child.getAttribute("pattern"));
+            } else if ("exclude-classes".equals(name)) {
+                configBean.addExclude(child.getAttribute("pattern"));
+            } else {
+                throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
+            }
+        }
+        return configBean;
     }
 }

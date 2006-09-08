@@ -80,28 +80,22 @@ public class ConfigurationReader {
 
     /**
      * This method reads in an Avalon style sitemap.
-     * @param source         The location of the sitemap.
+     * @param src         The location of the sitemap.
      * @param resourceLoader The resource loader to load included configs.
      * @return               A configuration containing all defined objects.
      * @throws Exception
      */
     public static ConfigurationInfo readSitemap(ConfigurationInfo parentInfo,
-                                                String            source,
+                                                String            src,
                                                 ResourceLoader    resourceLoader)
     throws Exception {
+        String source = src;
         if ( source == null || source.trim().length() == 0 ) {
             source = "sitemap.xmap";
         }
         final ConfigurationReader converter = new ConfigurationReader(parentInfo, resourceLoader);
         converter.convertSitemap(source);
         return converter.configInfo;
-    }
-
-    public static ConfigurationInfo readConfiguration(Configuration     config,
-                                                      ConfigurationInfo parentInfo,
-                                                      ResourceLoader    resourceLoader)
-    throws Exception {
-        return readConfiguration(config, null, parentInfo, resourceLoader);
     }
 
     public static ConfigurationInfo readConfiguration(Configuration     rolesConfig,
@@ -147,6 +141,11 @@ public class ConfigurationReader {
         }
     }
 
+    /**
+     * Convert an avalon url (with possible cocoon protocols) to a spring url.
+     * @param url The avalon url.
+     * @return The spring url.
+     */
     protected String convertUrl(String url) {
         if ( url == null ) {
             return null;
@@ -157,9 +156,9 @@ public class ConfigurationReader {
         if ( url.startsWith("resource:") ) {
             return "classpath:" + url.substring(10);
         }
-        if ( url.indexOf(':') == -1 && !url.startsWith("/")) {
-            return '/' + url;
-        }
+        //if ( url.indexOf(':') == -1 && !url.startsWith("/")) {
+        //    return '/' + url;
+        //}
         return url;
     }
 
@@ -171,12 +170,16 @@ public class ConfigurationReader {
     }
 
     protected String getUrl(String url, String base) {
-        if ( url == null ) {
-            return url;
+        if ( url == null || base == null ) {
+            return this.convertUrl(url);
         }
-        if ( base != null && url.indexOf(":/") < 2) {
-            // TODO - we have to check if url is relative or absolute
-            System.out.println("URL: " + url + " (" + base + ")");            
+        if ( url.indexOf(":/") < 2) {
+            int posSeparator = base.lastIndexOf('/');
+            int posFileSeparator = base.lastIndexOf(File.separatorChar);
+            if ( posFileSeparator > posSeparator ) {
+                posSeparator = posFileSeparator;
+            }
+            return this.convertUrl(base.substring(0, posSeparator+1) + url);
         }
         return this.convertUrl(url);
     }
@@ -186,7 +189,7 @@ public class ConfigurationReader {
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug("Reading Avalon configuration from " + relativePath);
         }
-        Resource root = this.resolver.getResource(this.convertUrl(relativePath));
+        Resource root = this.resolver.getResource(this.getUrl(relativePath, null));
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
         
         final Configuration config = b.build(this.getInputSource(root));
@@ -211,9 +214,12 @@ public class ConfigurationReader {
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug("Reading sitemap from " + sitemapLocation);
         }
-        final Resource root = this.resolver.getResource(this.convertUrl(sitemapLocation));
+        final Resource root = this.resolver.getResource(this.getUrl(sitemapLocation, null));
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Resolved sitemap: " + root.getURL());
+        }
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
-        
+
         final Configuration config = b.build(this.getInputSource(root));
         // validate cocoon.xconf
         if (!"sitemap".equals(config.getName())) {
@@ -447,7 +453,7 @@ public class ConfigurationReader {
             
         } else {
             // test if directory exists
-            Resource dirResource = this.resolver.getResource(this.convertUrl(directoryURI));
+            Resource dirResource = this.resolver.getResource(this.getUrl(directoryURI, contextURI));
             if ( dirResource.exists() ) {
                 final String pattern = includeStatement.getAttribute("pattern", null);
                 try {
@@ -546,7 +552,7 @@ public class ConfigurationReader {
 
         } else {
             // test if directory exists
-            Resource dirResource = this.resolver.getResource(this.convertUrl(directoryURI));
+            Resource dirResource = this.resolver.getResource(this.getUrl(directoryURI, contextURI));
             if ( dirResource.exists() ) {
                 final String pattern = includeStatement.getAttribute("pattern", null);
                 try {
