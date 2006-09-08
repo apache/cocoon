@@ -91,7 +91,6 @@ public class SitemapServlet extends HttpServlet {
         // create the tree processor
         try {
 			TreeProcessor treeProcessor =  new TreeProcessor();
-            treeProcessor.setBeanFactory(this.beanFactory);			
             // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all. 
             this.processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
                     this.logger,

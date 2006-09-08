@@ -30,11 +30,15 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
+import org.apache.cocoon.core.container.spring.Container;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * Helper class for maintaining the environment stack.
@@ -93,8 +97,8 @@ implements SourceResolver, Serviceable, Disposable {
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager avalonManager) throws ServiceException {
+        this.manager = avalonManager;
         this.resolver = (org.apache.excalibur.source.SourceResolver)
                           this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
         Source source = null;
@@ -391,18 +395,11 @@ implements SourceResolver, Serviceable, Disposable {
     static public ServiceManager getSitemapServiceManager() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
-            EnvironmentInfo info = stack.getCurrentInfo();
-            Processor processor = info.processor;
-            BeanFactory factory = info.processor.getBeanFactory();
-            while ( factory == null && processor != null ) {
-                processor = processor.getParent();
-                if ( processor != null ) {
-                    factory = processor.getBeanFactory();
-                }
-            }
-            if ( factory != null ) {
-                return (ServiceManager) factory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
-            }
+            final EnvironmentInfo info = stack.getCurrentInfo();
+            final Request request = ObjectModelHelper.getRequest(info.environment.getObjectModel());
+            final Context context = ObjectModelHelper.getContext(info.environment.getObjectModel());
+            final Container container = Container.getCurrentContainer(context, new CocoonRequestAttributes(request));
+            return (ServiceManager)container.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         }
         return null;
     }

@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.apache.cocoon.core.container.spring.Container;
 
 /**
  *
@@ -29,11 +29,9 @@ public interface TreeBuilder {
 
     String ROLE = TreeBuilder.class.getName();
 
-    ConfigurableListableBeanFactory getBeanFactory();
+    Container getContainer();
 
     ConcreteTreeProcessor getProcessor();
-
-    ClassLoader getClassLoader();
 
     void setProcessor(ConcreteTreeProcessor processor);
 

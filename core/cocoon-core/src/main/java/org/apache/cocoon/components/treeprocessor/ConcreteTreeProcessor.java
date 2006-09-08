@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -30,12 +29,12 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
-import org.apache.cocoon.core.container.spring.CocoonBeanFactory;
+import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
+import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
@@ -61,8 +60,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                                    implements Processor,
                                               Disposable,
                                               ExecutionContext {
-
-    private static final String BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE = CocoonBeanFactory.class.getName() + "/Stack";
 
     /** Our ServiceManager */
     private ServiceManager manager;
@@ -92,7 +89,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     protected Map processorAttributes = new HashMap();
 
     /** Bean Factory for this sitemap. */
-    protected BeanFactory beanFactory;
+    protected Container beanFactory;
 
     /** Classloader for this sitemap. */
     protected ClassLoader classLoader;
@@ -110,8 +107,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }
 
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(BeanFactory beanFactory,
-                                 ClassLoader classLoader,
+    public void setProcessorData(Container container,
                                  ProcessingNode rootNode,
                                  List disposableNodes,
                                  List enterSitemapEventListeners,
@@ -119,9 +115,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
-        this.classLoader = classLoader;
-        this.beanFactory = beanFactory;
-        this.manager = (ServiceManager)this.beanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+        this.classLoader = container.getClassLoader();
+        this.beanFactory = container;
+        this.manager = (ServiceManager)this.beanFactory.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
@@ -195,41 +191,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }
 
     /**
-     * @see org.apache.cocoon.sitemap.EnterSitemapEventListener#enteredSitemap(org.apache.cocoon.sitemap.EnterSitemapEvent)
-     */
-    protected void enteredSitemap(EnterSitemapEvent event) {
-        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
-        final Object oldContext = request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-        if ( oldContext != null ) {
-            Stack stack = (Stack)request.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-            if ( stack == null ) {
-                stack = new Stack();
-                request.setAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, stack, Request.REQUEST_SCOPE);
-            }
-            stack.push(oldContext);
-        }
-        request.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, this.beanFactory, Request.REQUEST_SCOPE);
-    }
-
-    /**
-     * @see org.apache.cocoon.sitemap.LeaveSitemapEventListener#leftSitemap(org.apache.cocoon.sitemap.LeaveSitemapEvent)
-     */
-    protected void leftSitemap(LeaveSitemapEvent event) {
-        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
-        final Stack stack = (Stack)request.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-        if ( stack == null ) {
-            request.removeAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-        } else {
-            final Object oldContext = stack.pop();
-            request.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, oldContext, Request.REQUEST_SCOPE);
-            if ( stack.size() == 0 ) {
-                request.removeAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-            }
-        }
-    }
-
-
-    /**
      * Do the actual processing, be it producing the response or just building the pipeline
      * @param environment
      * @param context
@@ -246,12 +207,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(this.classLoader);
+        Object handle = null;
         try {
-            final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
-            this.enteredSitemap(enterEvent);
+            handle = this.beanFactory.enteringContext(new CocoonRequestAttributes(ObjectModelHelper.getRequest(environment.getObjectModel())));
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
+                final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
                 final Iterator enterSEI = this.enterSitemapEventListeners.iterator();
                 while ( enterSEI.hasNext() ) {
                     final EnterSitemapEventListener current = (EnterSitemapEventListener)enterSEI.next();
@@ -282,11 +244,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         } finally {
             this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
-            final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
-            this.leftSitemap(leaveEvent);
+            this.beanFactory.leavingContext(new CocoonRequestAttributes(ObjectModelHelper.getRequest(environment.getObjectModel())), handle);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
+                final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
                 final Iterator leaveSEI = this.leaveSitemapEventListeners.iterator();
                 while ( leaveSEI.hasNext() ) {
                     final LeaveSitemapEventListener current = (LeaveSitemapEventListener)leaveSEI.next();
@@ -463,7 +425,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
      * @see org.apache.cocoon.Processor#getBeanFactory()
      */
     public BeanFactory getBeanFactory() {
-        return this.beanFactory;
+        return this.beanFactory.getBeanFactory();
     }
 
     /**

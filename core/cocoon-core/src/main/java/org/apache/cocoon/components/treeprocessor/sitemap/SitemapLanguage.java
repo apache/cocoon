@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -35,12 +34,10 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.AbstractConfiguration;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -55,45 +52,32 @@ import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ConcreteTreeProcessor;
 import org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder;
+import org.apache.cocoon.components.treeprocessor.NodeBuilderSelector;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
-import org.apache.cocoon.components.treeprocessor.NodeBuilderSelector;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.configuration.PropertyProvider;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.MutableSettings;
-import org.apache.cocoon.configuration.impl.PropertyHelper;
-import org.apache.cocoon.configuration.impl.SettingsHelper;
-import org.apache.cocoon.core.container.spring.BeanFactoryFactoryImpl;
+import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.core.container.spring.avalon.SitemapHelper;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
-import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
 import org.apache.regexp.RE;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.ListableBeanFactory;
 
 /**
  * The tree builder for the sitemap language.
@@ -102,15 +86,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  */
 public class SitemapLanguage
     extends AbstractLogEnabled
-    implements TreeBuilder, Contextualizable, Serviceable, Recyclable, BeanFactoryAware {
-
-    private static final String DEFAULT_CONFIG_PROPERTIES = "config/properties";
-
-    private static final String DEFAULT_CONFIG_XCONF  = "config/xconf";
-
-    private static final String DEFAULT_CONFIG_SPRING = "config/spring";
-
-    private static final String CLASSLOADER_CONFIG_NAME = "classloader";
+    implements TreeBuilder, Contextualizable, Serviceable, Recyclable {
 
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
@@ -118,10 +94,6 @@ public class SitemapLanguage
     private static final String EQUALS_SPLIT_REGEXP = "[\\s]*=[\\s]*";
 
     protected Map attributes = new HashMap();
-
-    /** Spring application context. */
-    protected ConfigurableListableBeanFactory beanFactory;
-
 
     // ----- lifecycle-related objects ------
 
@@ -153,7 +125,7 @@ public class SitemapLanguage
      */
     private ServiceManager itsManager;
 
-    private ConfigurableListableBeanFactory itsBeanFactory;
+    private Container itsContainer;
 
     /**
      * Helper object which sets up components in the context of the processor
@@ -197,9 +169,6 @@ public class SitemapLanguage
 
     /** Nodes registered using registerNode() */
     private Map registeredNodes = new HashMap();
-
-    /** Class Loader for this sitemap. */
-    private ClassLoader itsClassLoader = this.getClass().getClassLoader();
 
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
@@ -255,17 +224,10 @@ public class SitemapLanguage
     }
 
     /**
-     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getBeanFactory()
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getContainer()
      */
-    public ConfigurableListableBeanFactory getBeanFactory() {
-        return this.itsBeanFactory;
-    }
-
-    /**
-     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getClassLoader()
-     */
-    public ClassLoader getClassLoader() {
-        return this.itsClassLoader;
+    public Container getContainer() {
+        return this.itsContainer;
     }
 
     /**
@@ -371,179 +333,31 @@ public class SitemapLanguage
     }
 
     /**
-     * compatibility with 2.1.x - check for global variables in sitemap
-     * TODO - This will be removed in later versions!
-     */
-    protected Properties getGlobalSitemapVariables(Configuration tree)
-    throws ConfigurationException {
-        // compatibility with 2.1.x - check for global variables in sitemap
-        // TODO - This will be removed in later versions!
-        Properties globalSitemapVariables = null;
-        if ( tree.getChild("pipelines").getChild("component-configurations", false) != null ) {
-            Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
-            globalSitemapVariables = new Properties();
-            // now check for global variables - if any other element occurs: throw exception
-            Configuration[] children = tree.getChild("pipelines").getChild("component-configurations").getChildren();
-            for(int i=0; i<children.length; i++) {
-                if ( "global-variables".equals(children[i].getName()) ) {
-                    Configuration[] variables = children[i].getChildren();
-                    for(int v=0; v<variables.length; v++) {
-                        globalSitemapVariables.setProperty(variables[v].getName(), variables[v].getValue());
-                    }
-               } else {
-                    throw new ConfigurationException("Component configurations in the sitemap are not allowed for component: " + children[i].getName());
-                }
-            }
-        }
-        return globalSitemapVariables;
-    }
-
-    /**
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree) throws Exception {
-        /*
         // get the request
         final Request request = ContextHelper.getRequest(this.context);
-        final String prefix = request.getSitemapURIPrefix();
-        SitemapHelper.createApplicationContext(prefix,
+        this.itsContainer = SitemapHelper.createContainer(
                                                tree, 
                                                (ServletContext)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT), 
                                                this.processor.getSourceResolver(), 
                                                request);
-        */
+        final Context itsContext = (Context)this.itsContainer.getBeanFactory().getBean(ProcessingUtil.CONTEXT_ROLE);
         // The namespace used in the whole sitemap is the one of the root
         // element
         this.itsNamespace = tree.getNamespace();
 
-        Configuration componentConfig = tree.getChild("components", false);
-        Configuration classPathConfig = null;
-
-        if (componentConfig == null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap has no components definition at " + tree.getLocation());
-            }
-        }
-
-        // by default we include configuration files and properties from
-        // predefined locations
-        boolean useDefaultIncludes = true;
-        if ( componentConfig != null ) {
-            useDefaultIncludes = componentConfig.getAttributeAsBoolean("use-default-includes", true);
-        }
-
-        // Context and manager and classloader for the sitemap we build        
-        final Context itsContext = this.createContext();
-
-        // TODO Get factory from spring
-        final BeanFactoryFactoryImpl factory = new BeanFactoryFactoryImpl();
-        factory.setBeanFactory(this.beanFactory);
-
-        // compatibility with 2.1.x - check for global variables in sitemap
-        // TODO - This will be removed in later versions!
-        final Properties globalSitemapVariables = this.getGlobalSitemapVariables(tree);
-
-        // check for sitemap local properties
-        Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(Settings.ROLE);
-        if ( componentConfig != null ) {
-            List propertyDirs = null;
-            Configuration[] propertyDirConfigs = componentConfig.getChildren("include-properties");
-            if ( propertyDirConfigs.length > 0 ) {
-                propertyDirs = new ArrayList();
-                for(int i=0; i < propertyDirConfigs.length; i++) {
-                    propertyDirs.add(propertyDirConfigs[i].getAttribute("dir"));
-                }
-            }
-            settings = this.createSettings(settings, propertyDirs, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext), globalSitemapVariables);
-        } else if ( globalSitemapVariables != null ) {
-            MutableSettings s = new MutableSettings(settings);
-            PropertyHelper.replaceAll(globalSitemapVariables, settings);
-            s.configure(globalSitemapVariables);
-            settings = s;
-        }
         // replace properties?
-        if ( componentConfig == null || componentConfig.getAttributeAsBoolean("replace-properties", true) ) {
-            tree = AvalonUtils.replaceProperties(tree, settings);
+        if ( tree.getChild("components").getAttributeAsBoolean("replace-properties", true) ) {
+            tree = AvalonUtils.replaceProperties(tree, this.itsContainer.getSettings());
         }
 
-        // if we want to add the default includes and have no component section
-        // we have to create own!
-        if ( componentConfig == null && useDefaultIncludes ) {
-            componentConfig = new DefaultConfiguration("components",
-                                                       tree.getLocation(),
-                                                       tree.getNamespace(),
-                                                       "");
-        }
+        this.itsManager = (ServiceManager) this.itsContainer.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+        // register listeners
+        this.registerListeners();
 
-        if ( componentConfig != null ) {
-            // before we pass the configuration we have to strip the
-            // additional configuration parts, like classpath as these
-            // are not configurations for the component container
-            final DefaultConfiguration c = new DefaultConfiguration(componentConfig.getName(), 
-                    componentConfig.getLocation(),
-                    componentConfig.getNamespace(),
-                    "");
-            c.addAll(componentConfig);
-            classPathConfig = c.getChild(CLASSLOADER_CONFIG_NAME, false);
-            if ( classPathConfig != null ) {
-                c.removeChild(classPathConfig);
-            }
-            // and now add default includes
-            if ( useDefaultIncludes ) {
-                final SourceResolver resolver = this.processor.getSourceResolver();
-                Source directory = null;
-                try {
-                    directory = resolver.resolveURI(DEFAULT_CONFIG_XCONF, null, CONTEXT_PARAMETERS);
-                    if (directory.exists() && directory instanceof TraversableSource) {
-                        final DefaultConfiguration includeElement = new DefaultConfiguration("include", 
-                                                                                             c.getLocation(),
-                                                                                             c.getNamespace(),
-                                                                                             "");
-                        includeElement.setAttribute("dir", DEFAULT_CONFIG_XCONF);
-                        includeElement.setAttribute("pattern", "*.xconf");
-                        c.addChild(includeElement);
-                    }
-                } finally {
-                    resolver.release(directory);
-                    directory = null;
-                }
-                try {
-                    directory = resolver.resolveURI(DEFAULT_CONFIG_SPRING, null, CONTEXT_PARAMETERS);
-                    if (directory.exists() && directory instanceof TraversableSource) {
-                        final DefaultConfiguration includeElement = new DefaultConfiguration("include-beans", 
-                                                                                             c.getLocation(),
-                                                                                             c.getNamespace(),
-                                                                                             "");
-                        includeElement.setAttribute("dir", DEFAULT_CONFIG_SPRING);
-                        includeElement.setAttribute("pattern", "*.xml");
-                        c.addChild(includeElement);
-                    }
-                } finally {
-                    resolver.release(directory);
-                    directory = null;
-                }
-            }
-            componentConfig = c;
-        }
-
-        // Create class loader
-        this.itsClassLoader = factory.createClassLoader(itsContext, this.processor.getSourceResolver(), classPathConfig);
-
-        // FIXME: Internal configurations doesn't work in a non bean factory
-        // environment
-        this.itsBeanFactory = factory.createBeanFactory(this.itsClassLoader,
-                                                        this.getLogger(),
-                                                        componentConfig,
-                                                        itsContext,
-                                                        this.processor.getSourceResolver(),
-                                                        settings);
-        this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
-        if (componentConfig != null) {
-            // only register listeners if a new bean factory is created
-            this.registerListeners();
-        }
-        this.itsComponentInfo = (ProcessorComponentInfo) this.itsManager
-                .lookup(ProcessorComponentInfo.ROLE);
+        this.itsComponentInfo = (ProcessorComponentInfo) this.itsManager.lookup(ProcessorComponentInfo.ROLE);
         // Create a helper object to setup components
         this.itsLifecycle = new LifecycleHelper(getLogger(), itsContext, this.itsManager, null /* configuration */);
 
@@ -735,7 +549,7 @@ public class SitemapLanguage
         }
 
         final String beanName = role + '/' + type;
-        if ( !this.itsBeanFactory.containsBean(beanName) ) {
+        if ( !this.itsContainer.getBeanFactory().containsBean(beanName) ) {
             throw new ConfigurationException("Type '" + type + "' does not exist for 'map:"
                     + statement.getName() + "' at " + statement.getLocation());
         }
@@ -787,28 +601,23 @@ public class SitemapLanguage
      * Register all registered sitemap listeners
      */
     protected void registerListeners() {
-        String[] names = this.itsBeanFactory.getBeanNamesForType(EnterSitemapEventListener.class);
-        for(int i=0; i<names.length; i++) {
-            final String beanName = names[i];
-            this.enterSitemapEventListeners.add(this.itsBeanFactory.getBean(beanName));
+        if ( this.itsContainer.getBeanFactory() instanceof ListableBeanFactory ) {
+            final ListableBeanFactory listableFactory = (ListableBeanFactory)this.itsContainer.getBeanFactory();
+            Map beans = listableFactory.getBeansOfType(EnterSitemapEventListener.class);
+            if ( beans != null ) {
+                final Iterator i = beans.values().iterator();
+                while ( i.hasNext() ) {
+                    this.enterSitemapEventListeners.add(i.next());                    
+                }
+            }
+            beans = listableFactory.getBeansOfType(LeaveSitemapEventListener.class);
+            if ( beans != null ) {
+                final Iterator i = beans.values().iterator();
+                while ( i.hasNext() ) {
+                    this.leaveSitemapEventListeners.add(i.next());
+                }
+            }
         }
-        names = this.itsBeanFactory.getBeanNamesForType(LeaveSitemapEventListener.class);
-        for(int i=0; i<names.length; i++) {
-            final String beanName = names[i];
-            this.leaveSitemapEventListeners.add(this.itsBeanFactory.getBean(beanName));
-        }
-    }
-
-    /**
-     * Create the context for this sitemap.
-     */
-    protected Context createContext() {
-        // Create sub-context for this sitemap
-        DefaultContext newContext = new DefaultContext(this.context);
-        Environment env = EnvironmentHelper.getCurrentEnvironment();
-        newContext.put(Constants.CONTEXT_ENV_PREFIX, env.getURIPrefix());
-
-        return newContext;
     }
 
     // ---- Views management
@@ -1135,89 +944,4 @@ public class SitemapLanguage
         }
         return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
     }
-
-    /**
-     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        if (!(beanFactory instanceof ConfigurableListableBeanFactory)) {
-            throw new BeanCreationException(
-                    "Bean factory for tree processor must be an instance of "
-                            + ConfigurableListableBeanFactory.class.getName());
-        }
-        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
-    }
-
-    /**
-     * Get the settings for Cocoon.
-     * This method reads several property files and merges the result. If there
-     * is more than one definition for a property, the last one wins.
-     * The property files are read in the following order:
-     * 1) PROPERTYDIR/*.properties
-     *    Default values for the core and each block - the order in which the files are read is not guaranteed.
-     * 2) PROPERTYDIR/[RUNNING_MODE]/*.properties
-     *    Default values for the running mode - the order in which the files are read is not guaranteed.
-     * 3) Property providers (ToBeDocumented)
-     *
-     * @return A new Settings object
-     */
-    protected MutableSettings createSettings(Settings    parent,
-                                             List        directories,
-                                             boolean     useDefaultIncludes,
-                                             BeanFactory parentBeanFactory,
-                                             Properties  globalSitemapVariables) {
-        // get the running mode
-        final String mode = parent.getRunningMode();
-        // get properties
-        final Properties properties = new Properties();
-
-        // create an empty settings objects
-        final MutableSettings s = new MutableSettings(parent);
-
-        // read properties from default includes
-        if ( useDefaultIncludes ) {
-        	SourceResolver resolver = this.processor.getSourceResolver();
-            SettingsHelper.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES, s, properties, resolver, getLogger());
-            // read all properties from the mode dependent directory
-            SettingsHelper.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s, properties, resolver, getLogger());    
-        }
-
-        if ( directories != null ) {
-        	SourceResolver resolver = this.processor.getSourceResolver();
-            final Iterator i = directories.iterator();
-            while ( i.hasNext() ) {
-                final String directory = (String)i.next();
-                // now read all properties from the properties directory
-                SettingsHelper.readProperties(directory, s, properties, resolver, getLogger());
-                // read all properties from the mode dependent directory
-                SettingsHelper.readProperties(directory + '/' + mode, s, properties, resolver, getLogger());
-            }
-        }
-
-        // Next look for a custom property provider in the parent bean factory
-        if (parentBeanFactory != null && parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
-            try {
-                final Environment env = EnvironmentHelper.getCurrentEnvironment();
-                final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
-                // TODO - add the name of the sitemap file to the path
-                final Properties providedProperties = provider.getProperties(s, mode, env.getURIPrefix());
-                if ( providedProperties != null ) {
-                    properties.putAll(providedProperties);
-                }
-            } catch (Exception ignore) {
-                this.getLogger().warn("Unable to get properties from provider.", ignore);
-                this.getLogger().warn("Continuing initialization.");            
-            }
-        }
-        if ( globalSitemapVariables != null ) {
-            properties.putAll(globalSitemapVariables);
-        }
-        PropertyHelper.replaceAll(properties, parent);
-        s.configure(properties);
-
-        return s;
-    }
-
-    /** Parameter map for the context protocol */
-    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 }
