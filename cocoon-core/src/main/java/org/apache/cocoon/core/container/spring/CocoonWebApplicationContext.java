@@ -21,6 +21,7 @@ import java.util.Stack;
 
 import javax.servlet.ServletContext;
 
+import org.apache.cocoon.configuration.Settings;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ByteArrayResource;
@@ -39,9 +40,12 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * @since 2.2
  * @version $Id$
  */
-public class CocoonWebApplicationContext extends XmlWebApplicationContext {
+public class CocoonWebApplicationContext extends XmlWebApplicationContext implements Container {
 
-    private static final String BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE = CocoonWebApplicationContext.class.getName() + "/Stack";
+    /** The name of the request attribute containing the current bean factory. */
+    public static final String WEB_APPLICATION_CONTEXT_REQUEST_ATTRIBUTE = CocoonWebApplicationContext.class.getName();
+
+    private static final String WEB_APPLICATION_CONTEXT_STACK_REQUEST_ATTRIBUTE = CocoonWebApplicationContext.class.getName() + "/Stack";
 
     /** The base url (already postfixed with a '/'). */
     protected final String baseUrl;
@@ -106,16 +110,16 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
      */
     public Object enteringContext(RequestAttributes attributes) {
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-        final Object oldContext = attributes.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        final Object oldContext = attributes.getAttribute(WEB_APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         if ( oldContext != null ) {
-            Stack stack = (Stack)attributes.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+            Stack stack = (Stack)attributes.getAttribute(WEB_APPLICATION_CONTEXT_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
             if ( stack == null ) {
                 stack = new Stack();
-                attributes.setAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, stack, RequestAttributes.SCOPE_REQUEST);
+                attributes.setAttribute(WEB_APPLICATION_CONTEXT_STACK_REQUEST_ATTRIBUTE, stack, RequestAttributes.SCOPE_REQUEST);
             }
             stack.push(oldContext);
         }
-        attributes.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, this, RequestAttributes.SCOPE_REQUEST);
+        attributes.setAttribute(WEB_APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, this, RequestAttributes.SCOPE_REQUEST);
         Thread.currentThread().setContextClassLoader(this.classLoader);
         return oldClassLoader;
     }
@@ -127,14 +131,14 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
      */
     public void leavingContext(RequestAttributes attributes, Object handle) {
         Thread.currentThread().setContextClassLoader((ClassLoader)handle);
-        final Stack stack = (Stack)attributes.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        final Stack stack = (Stack)attributes.getAttribute(WEB_APPLICATION_CONTEXT_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         if ( stack == null ) {
-            attributes.removeAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+            attributes.removeAttribute(WEB_APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         } else {
             final Object oldContext = stack.pop();
-            attributes.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, oldContext, RequestAttributes.SCOPE_REQUEST);
+            attributes.setAttribute(WEB_APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, oldContext, RequestAttributes.SCOPE_REQUEST);
             if ( stack.size() == 0 ) {
-                attributes.removeAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+                attributes.removeAttribute(WEB_APPLICATION_CONTEXT_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
             }
         }
     }
@@ -148,10 +152,17 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
     public static WebApplicationContext getCurrentContext(ServletContext servletContext,
                                                           RequestAttributes attributes) {
         WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-        if (attributes.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
+        if (attributes.getAttribute(WEB_APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
             parentContext = (CocoonWebApplicationContext) attributes
-                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+                    .getAttribute(WEB_APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         }
         return parentContext;
+    }
+
+    /**
+     * @see org.apache.cocoon.core.container.spring.Container#getSettings()
+     */
+    public Settings getSettings() {
+        return (Settings)this.getBean(Settings.ROLE);
     }
 }

@@ -17,7 +17,10 @@
 package org.apache.cocoon.core.container.spring.avalon;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
@@ -29,6 +32,7 @@ import org.apache.cocoon.classloader.ClassLoaderFactory;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
@@ -50,33 +54,58 @@ public class SitemapHelper {
 
     private static final String DEFAULT_CONFIG_SPRING = "config/spring";
 
-    public static String createDefinition(String uriPrefix) {
+    protected static String createDefinition(String     uriPrefix,
+                                             boolean    useDefaultIncludes,
+                                             List       includes,
+                                             Properties globalVariables) {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
         // Settings
-        // TODO: use default includes, global variables and directories
-        buffer.append("<cocoon:properties/>");
+        buffer.append("  <cocoon:properties useDefaultIncludes=\"");
+        buffer.append(useDefaultIncludes);
+        buffer.append("\">\n");
+        if ( includes != null && includes.size() > 0 ) {
+            buffer.append("    <property name=\"directories\">\n      <list>\n");
+            final Iterator i = includes.iterator();
+            while ( i.hasNext() ) {
+                final String current = (String)i.next();
+                buffer.append("        <value>");
+                buffer.append(current);
+                buffer.append("</value>\n");
+            }
+            buffer.append("      </list>\n    </property>");            
+        }
+        if ( globalVariables != null && globalVariables.size() > 0 ) {
+            buffer.append("    <property name=\"globalSitemapVariables\">\n      <props>\n");
+            final Iterator i = globalVariables.entrySet().iterator();
+            while ( i.hasNext() ) {
+                final Map.Entry current = (Map.Entry)i.next();
+                buffer.append("        <prop key=\"");
+                buffer.append(current.getKey().toString());
+                buffer.append("\">");
+                buffer.append(current.getValue().toString());
+                buffer.append("</prop>\n");
+            }
+            buffer.append("      </props>\n    </property>\n");
+        }
+        buffer.append("  </cocoon:properties>\n");
         // Avalon
-        buffer.append("<avalon:sitemap location=\"sitemap.xmap\" uriPrefix=\"");
+        buffer.append("  <avalon:sitemap location=\"sitemap.xmap\" uriPrefix=\"");
         buffer.append(uriPrefix);
-        buffer.append("\"/>");
+        buffer.append("\"/>\n");
         addFooter(buffer);
+        System.out.println("NEW CONFIG: " + buffer.toString());
         return buffer.toString();
     }
 
-    public static Configuration createSitemapConfiguration(Configuration config)
+    protected static boolean isUsingDefaultIncludes(Configuration config) {
+        return config.getChild("components").getAttributeAsBoolean("use-default-includes", true);
+    }
+
+    protected static List getPropertyIncludes(Configuration config)
     throws ConfigurationException {
-        Configuration componentConfig = config.getChild("components", false);
-        Configuration classPathConfig = null;
-
-        // by default we include configuration files and properties from
-        // predefined locations
-        boolean useDefaultIncludes = true;
-        if ( componentConfig != null ) {
-            useDefaultIncludes = componentConfig.getAttributeAsBoolean("use-default-includes", true);
-        }
-
         List propertyDirs = null;
+        final Configuration componentConfig = config.getChild("components", false);
         if ( componentConfig != null ) {
             Configuration[] propertyDirConfigs = componentConfig.getChildren("include-properties");
             if ( propertyDirConfigs.length > 0 ) {
@@ -86,6 +115,17 @@ public class SitemapHelper {
                 }
             }
         }
+        return propertyDirs;        
+    }
+
+    public static Configuration createSitemapConfiguration(Configuration config)
+    throws ConfigurationException {
+        Configuration componentConfig = config.getChild("components", false);
+        Configuration classPathConfig = null;
+
+        // by default we include configuration files and properties from
+        // predefined locations
+        final boolean useDefaultIncludes = isUsingDefaultIncludes(config);
 
         // if we want to add the default includes and have no component section
         // we have to create one!
@@ -144,11 +184,39 @@ public class SitemapHelper {
         buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd");
         buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd");
         buffer.append(" http://org.apache.cocoon/core http://org.apache.cocoon/core.xsd");
-        buffer.append(" http://org.apache.cocoon/avalon http://org.apache.cocoon/avalon.xsd\">");
+        buffer.append(" http://org.apache.cocoon/avalon http://org.apache.cocoon/avalon.xsd\">\n");
     }
 
     protected static void addFooter(StringBuffer buffer) {
-        buffer.append("</beans>");
+        buffer.append("</beans>\n");
+    }
+
+    /**
+     * compatibility with 2.1.x - check for global variables in sitemap
+     * TODO - This will be removed in later versions!
+     */
+    protected static Properties getGlobalSitemapVariables(Configuration tree)
+    throws ConfigurationException {
+        // compatibility with 2.1.x - check for global variables in sitemap
+        // TODO - This will be removed in later versions!
+        Properties globalSitemapVariables = null;
+        if ( tree.getChild("pipelines").getChild("component-configurations", false) != null ) {
+            Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
+            globalSitemapVariables = new Properties();
+            // now check for global variables - if any other element occurs: throw exception
+            Configuration[] children = tree.getChild("pipelines").getChild("component-configurations").getChildren();
+            for(int i=0; i<children.length; i++) {
+                if ( "global-variables".equals(children[i].getName()) ) {
+                    Configuration[] variables = children[i].getChildren();
+                    for(int v=0; v<variables.length; v++) {
+                        globalSitemapVariables.setProperty(variables[v].getName(), variables[v].getValue());
+                    }
+               } else {
+                    throw new ConfigurationException("Component configurations in the sitemap are not allowed for component: " + children[i].getName());
+                }
+            }
+        }
+        return globalSitemapVariables;
     }
 
     public static CocoonWebApplicationContext createApplicationContext(String         uriPrefix,
@@ -169,7 +237,12 @@ public class SitemapHelper {
         // get classloader
         final ClassLoader classloader = createClassLoader(parentContext, config, servletContext, sitemapResolver);
         // create root bean definition
-        final String definition = createDefinition(uriPrefix);
+        final boolean useDefaultIncludes = isUsingDefaultIncludes(config);
+        final List propIncludes = getPropertyIncludes(config);
+        final String definition = createDefinition(uriPrefix,
+                                                   useDefaultIncludes,
+                                                   propIncludes,
+                                                   getGlobalSitemapVariables(config));
         PARENT_CONTEXT.set(parentContext);
         try {
             final CocoonWebApplicationContext context = new CocoonWebApplicationContext(classloader,

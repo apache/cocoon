@@ -15,8 +15,8 @@
   limitations under the License.
 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://org.apache.cocoon/core"
-        xmlns:tns="http://org.apache.cocoon/core">
+            targetNamespace="http://org.apache.cocoon/core"
+            xmlns:tns="http://org.apache.cocoon/core">
 
     <xsd:element name="settings" type="tns:settingsType"/>
 
@@ -26,6 +26,10 @@
 
     <xsd:element name="properties" type="tns:propertiesType"/>
     <xsd:complexType name="propertiesType">
-      <xsd:attribute name="useDefaultIncludes" type="xsd:string" use="optional"></xsd:attribute>
+     <xsd:complexContent>
+       <xsd:extension base="xsd:anyType">
+         <xsd:attribute name="useDefaultIncludes" type="xsd:string" use="optional"></xsd:attribute>
+       </xsd:extension>
+      </xsd:complexContent>
     </xsd:complexType>
 </xsd:schema>
