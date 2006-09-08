@@ -482,7 +482,6 @@ public class ConfigurationReader {
         }
         if (!loadedURIs.contains(uri)) {
             if ( this.logger.isDebugEnabled() ) {
-                System.out.println("Loading " + uri);
                 this.logger.debug("Loading configuration: " + uri);
             }
             // load it and store it in the read set
