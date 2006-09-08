@@ -36,9 +36,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.impl.MutableSettings;
-import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.avalon.AvalonEnvironment;
-import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -294,9 +292,11 @@ public class ContainerTestCase extends TestCase {
         avalonEnv.context = this.context;
         avalonEnv.settings = new MutableSettings("test");
         // read roles and components
-        ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
+        // FIXME
+        ConfigurationInfo rolesInfo = null;//ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
         this.addComponents( rolesInfo );
-        this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, null);
+        // FIXME
+        this.beanFactory = null; //BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, null);
 
         this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
     }

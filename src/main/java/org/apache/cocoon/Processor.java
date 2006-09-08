@@ -20,7 +20,6 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  *
@@ -117,9 +116,6 @@ public interface Processor {
      * @since 2.2
      */
     Object removeAttribute(String name);
-
-    /** FIXME - Remove this and use ProcessingUtil. */
-    BeanFactory getBeanFactory();
 
     /**
      * Get the parent processor (if any).

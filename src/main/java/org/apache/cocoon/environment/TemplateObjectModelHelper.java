@@ -25,10 +25,9 @@ import java.util.Set;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
+import org.apache.cocoon.core.container.spring.Container;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
@@ -45,7 +44,9 @@ import org.apache.commons.jxpath.JXPathIntrospector;
 public class TemplateObjectModelHelper {
     
     /** Avoid instantiation */
-    private TemplateObjectModelHelper() {}
+    private TemplateObjectModelHelper() {
+        // empty
+    }
 
     public static void fillContext(Object contextObject, Map map) {
         // Hack: I use jxpath to populate the context object's properties
@@ -127,11 +128,8 @@ public class TemplateObjectModelHelper {
             cocoon.put("parameters", new ParametersMap(parameters));
         }
 
-        Processor processor = EnvironmentHelper.getCurrentProcessor();
-        if (processor != null) {
-            final Settings settings = (Settings) processor.getBeanFactory().getBean(Settings.ROLE);
-            cocoon.put("settings", settings);
-        }
+        final Container container = Container.getCurrentContainer(context, new CocoonRequestAttributes(request));
+        cocoon.put("settings", container.getSettings());
 
         final Map map = new HashMap();
         map.put("cocoon", cocoon);
