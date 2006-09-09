@@ -39,7 +39,7 @@ public class SubSettingsBeanFactoryPostProcessor
 
     private static final String DEFAULT_CONFIG_PROPERTIES = "config/properties";
 
-    protected String sitemapUri;
+    protected String location;
 
     protected List directories;
 
@@ -48,7 +48,7 @@ public class SubSettingsBeanFactoryPostProcessor
     protected Properties globalSitemapVariables;    
 
     /**
-     * Initialize this processor.
+     * Initialize this settings.
      * Setup the settings object.
      * @throws Exception
      */
@@ -62,16 +62,16 @@ public class SubSettingsBeanFactoryPostProcessor
         this.settings.makeReadOnly();
     }
 
+    public void setLocation(String sitemapUri) {
+        this.location = sitemapUri;
+    }
+
     public void setDirectories(List directories) {
         this.directories = directories;
     }
 
     public void setGlobalSitemapVariables(Properties globalSitemapVariables) {
         this.globalSitemapVariables = globalSitemapVariables;
-    }
-
-    public void setSitemapUri(String sitemapUri) {
-        this.sitemapUri = sitemapUri;
     }
 
     public void setUseDefaultIncludes(boolean useDefaultIncludes) {
@@ -103,13 +103,13 @@ public class SubSettingsBeanFactoryPostProcessor
         final MutableSettings s = new MutableSettings(parent);
 
         // read properties from default includes
-        if ( useDefaultIncludes ) {
+        if ( this.useDefaultIncludes ) {
             this.readProperties(DEFAULT_CONFIG_PROPERTIES, properties);
             // read all properties from the mode dependent directory
             this.readProperties(DEFAULT_CONFIG_PROPERTIES + '/' + mode, properties);    
         }
 
-        if ( directories != null ) {
+        if ( this.directories != null ) {
             final Iterator i = directories.iterator();
             while ( i.hasNext() ) {
                 final String directory = (String)i.next();
@@ -123,7 +123,7 @@ public class SubSettingsBeanFactoryPostProcessor
         // Next look for a custom property provider in the parent bean factory
         if (parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
             try {
-                final Resource r = this.resourceLoader.getResource(this.sitemapUri);
+                final Resource r = this.resourceLoader.getResource(this.location);
                 final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
                 final Properties providedProperties = provider.getProperties(s, mode, r.getURL().toExternalForm());
                 if ( providedProperties != null ) {

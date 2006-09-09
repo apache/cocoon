@@ -16,6 +16,9 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.apache.cocoon.configuration.Settings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +29,10 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * This is a base class for all bean definition parser used in Cocoon.
@@ -156,5 +163,65 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         final RootBeanDefinition beanDef = this.createBeanDefinition(componentClass, initMethod, requiresSettings);
 
         this.register(beanDef, beanName, registry);
+    }
+
+    /**
+     * Handle include for spring bean configurations.
+     * @throws ConfigurationException
+     */
+    protected void handleBeanInclude(ParserContext parserContext,
+                                     String         src,
+                                     String         dir,
+                                     String         pattern,
+                                     boolean optional)
+    throws Exception {
+        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+        final String includeURI = src;
+        String directoryURI = null;
+        if (includeURI == null) {
+            // check for directories
+            directoryURI = dir;
+        }
+        if (includeURI == null && directoryURI == null) {
+            throw new Exception("Include statement must either have a 'src' or 'dir' attribute.");
+        }
+
+        if (includeURI != null) {
+            Resource rsrc = null;
+            try {
+                rsrc = resourceLoader.getResource(includeURI);
+
+                this.handleImport(parserContext, rsrc.getURL().toExternalForm());
+            } catch (Exception e) {
+                throw new Exception("Cannot load '" + includeURI + "'.", e);
+            }
+
+        } else {
+            // test if directory exists
+            Resource dirResource = resourceLoader.getResource(directoryURI);
+            if ( dirResource.exists() ) {
+                try {
+                    Resource[] resources = resolver.getResources(directoryURI + '/' + pattern);
+                    if ( resources != null ) {
+                        Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
+                        for(int i=0; i < resources.length; i++) {
+                            this.handleImport(parserContext, resources[i].getURL().toExternalForm());
+                        }
+                    }
+                } catch (IOException ioe) {
+                    throw new Exception("Unable to read configurations from " + directoryURI);
+                }
+            } else {
+                if ( !optional ) {
+                    throw new Exception("Directory '" + directoryURI + "' does not exist.");
+                }
+            }
+        }
+    }
+
+    protected void handleImport(ParserContext parserContext, String uri) {
+        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
+        parserContext.getDelegate().getReaderContext().getReader().loadBeanDefinitions(resourceLoader.getResource(uri));        
     }
 }
