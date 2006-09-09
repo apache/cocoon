@@ -298,7 +298,11 @@ public class ConfigurationReader {
             if ("include".equals(componentName)) {
                 this.handleInclude(contextURI, loadedURIs, componentConfig);
             } else if ( "include-beans".equals(componentName) ) {
-                this.handleBeanInclude(contextURI, componentConfig);
+                // we ignore include-beans if this is a child context as this has already been
+                // processed by the sitemap element
+                if ( this.isRootContext ) {
+                    this.handleBeanInclude(contextURI, componentConfig);
+                }
                 // we ignore include-properties if this is a child context
             } else if ( this.isRootContext || !"include-properties".equals(componentName) ) {
                 // Component declaration, add it to list

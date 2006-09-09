@@ -59,7 +59,7 @@ public interface TreeBuilder {
     /**
      * Build a processing tree from a <code>Configuration</code> object holding the sitemap program.
      */
-    ProcessingNode build(Configuration config) throws Exception;
+    ProcessingNode build(Configuration config, String location) throws Exception;
 
     /**
      * Return the list of <code>ProcessingNodes</code> part of this tree that are
