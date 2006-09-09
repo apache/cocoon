@@ -24,13 +24,8 @@
     	<xsd:attribute name="processorClassName" type="xsd:string" use="optional"></xsd:attribute>
     </xsd:complexType>
 
-    <xsd:element name="properties" type="tns:propertiesType"/>
-    <xsd:complexType name="propertiesType">
-     <xsd:complexContent>
-       <xsd:extension base="xsd:anyType">
-         <xsd:attribute name="useDefaultIncludes" type="xsd:string" use="optional"></xsd:attribute>
-         <xsd:attribute name="sitemapUri" type="xsd:string" use="required"></xsd:attribute>
-       </xsd:extension>
-      </xsd:complexContent>
+    <xsd:element name="sitemap" type="tns:sitemapType"/>
+    <xsd:complexType name="sitemapType">
+         <xsd:attribute name="location" type="xsd:string" use="required"></xsd:attribute>
     </xsd:complexType>
 </xsd:schema>

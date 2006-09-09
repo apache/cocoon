@@ -34,12 +34,6 @@
       +-->
   <include dir="context://WEB-INF/cocoon/sitemap-additions" pattern="*.xmap"/>
   
-  <!--+
-      | Include Spring beans definition files ending with ".xml" from
-      | the spring directory.
-      +-->
-  <include-beans dir="context://WEB-INF/cocoon/spring" pattern="*.xml"/>
-
   $devblocks:{ devblock |
     $if(devblock.springConfPath)$
     <include-beans dir="$devblock.springConfPath$" pattern="*.xml"/>
