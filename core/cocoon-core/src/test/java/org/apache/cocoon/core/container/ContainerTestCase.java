@@ -2,7 +2,7 @@
  * Copyright 2002-2004 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
- * You may obtain a copy of the License at 
+ * You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -64,7 +64,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  * <p>
  *   The following test case configuration can be used as a basis for new tests.
  *   Detailed explanations of the configuration elements can be found after
- *   the example. 
+ *   the example.
  * </p>
  * <pre>
  *   &lt;testcase&gt;
@@ -100,7 +100,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  * <dl>
  * <dt>testcase</dt>
  * <dd>Defines a test case configuration.  Must contain one each of the
- *  following elements: 
+ *  following elements:
  *  <code>context</code>, <code>roles</code>, and <code>components</code>
  *  </dd>.
  *
@@ -110,18 +110,18 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  *
  * <dt>roles</dt>
  * <dd>Roles configuration for the components configured in the
- *  <code>components</code> element.  
+ *  <code>components</code> element.
  * </dd>
  *
  * <dt>components</dt>
- * <dd>Used to configure any Components used by the test cases.  
+ * <dd>Used to configure any Components used by the test cases.
  * </dd>
  *
  * </dl>
  *
  * @version $Id$
  */
-public class ContainerTestCase extends TestCase {
+public abstract class ContainerTestCase extends TestCase {
 
     /** The default logger */
     private Logger logger;
@@ -279,7 +279,7 @@ public class ContainerTestCase extends TestCase {
      * This method may be overwritten by subclasses to add aditional
      * components.
      */
-    protected void addComponents(ConfigurationInfo info) 
+    protected void addComponents(ConfigurationInfo info)
     throws Exception {
         // subclasses can add components here
     }
@@ -312,7 +312,7 @@ public class ContainerTestCase extends TestCase {
 
     private Object getComponent(String classname,
                                 Configuration conf,
-                                Parameters p) 
+                                Parameters p)
     throws Exception {
         final Object instance = Class.forName(classname).newInstance();
         ContainerUtil.enableLogging(instance, getLogger());
@@ -330,25 +330,25 @@ public class ContainerTestCase extends TestCase {
             if ( p == null ) {
                 p = new Parameters();
             }
-            ContainerUtil.parameterize(instance, p);                       
+            ContainerUtil.parameterize(instance, p);
         }
         ContainerUtil.initialize(instance);
         return instance;
     }
 
     protected Object getComponent(String classname,
-                                  Configuration conf) 
+                                  Configuration conf)
     throws Exception {
         return this.getComponent(classname, conf, null);
     }
 
     protected Object getComponent(String classname,
-                                  Parameters p) 
+                                  Parameters p)
     throws Exception {
         return this.getComponent(classname, null, p);
     }
 
-    protected Object getComponent(String classname) 
+    protected Object getComponent(String classname)
     throws Exception {
         return this.getComponent(classname, null, null);
     }
