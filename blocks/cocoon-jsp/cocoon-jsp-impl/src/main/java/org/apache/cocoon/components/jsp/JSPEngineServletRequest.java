@@ -102,4 +102,8 @@ public class JSPEngineServletRequest implements HttpServletRequest {
     public java.lang.StringBuffer getRequestURL() { return null; }
     public java.util.Map getParameterMap() { return null; }
     public void setCharacterEncoding(java.lang.String s) { }
+    public String getLocalAddr() { return request.getLocalAddr(); }
+    public String getLocalName() { return request.getLocalName(); }
+    public int getLocalPort() { return request.getLocalPort(); }
+    public int getRemotePort() { return request.getRemotePort(); }
 }
