@@ -347,6 +347,8 @@ public class IncludeTransformer extends AbstractTransformer
         // and released their Sources.
         this.resolver = null;
 
+        this.processor = null;
+        this.environment = null;
         super.recycle();
     }
 
