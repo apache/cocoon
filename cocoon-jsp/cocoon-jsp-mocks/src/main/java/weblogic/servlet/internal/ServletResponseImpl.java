@@ -184,4 +184,12 @@ public class ServletResponseImpl implements HttpServletResponse {
 
     public void setupOutputStream(ServletOutputStream anOutputStream) {
     }
+
+    public String getContentType() {
+        return null;
+    }
+
+    public void setCharacterEncoding(String arg0) {
+    }
+
 }
