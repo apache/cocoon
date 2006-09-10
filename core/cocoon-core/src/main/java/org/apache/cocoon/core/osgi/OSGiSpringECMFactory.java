@@ -30,7 +30,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.avalon.AvalonEnvironment;
 import org.apache.cocoon.environment.Context;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -112,7 +111,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
         // create a minimal OSGi servlet context
         Context osgiServletContext = new OSGiServletContext(this.logger, componentContext);     
 
-        AvalonEnvironment avalonEnvironment = this.createAvalonEnvironment(osgiServletContext);
+        //AvalonEnvironment avalonEnvironment = this.createAvalonEnvironment(osgiServletContext);
 		
 		// get the configuration file property
 		String configFile= (String) this.componentContext.getProperties().get(CONFIG_FILE);
@@ -137,7 +136,6 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
      * @return the Avalon environment
      * @throws ServletException
      * @throws MalformedURLException
-     */
     private AvalonEnvironment createAvalonEnvironment(Context osgiServletContext) throws ServletException, MalformedURLException {
         URL manifestUrl = this.componentContext.getBundleContext().getBundle().getEntry(MANIFEST_FILE);
 		String contextPath = manifestUrl.toString();
@@ -156,6 +154,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 		avalonEnvironment.settings = this.settings;
         return avalonEnvironment;
     }
+     */
     
     protected void deactivate(ComponentContext componentContext) {
         this.beanFactory.destroySingletons();
