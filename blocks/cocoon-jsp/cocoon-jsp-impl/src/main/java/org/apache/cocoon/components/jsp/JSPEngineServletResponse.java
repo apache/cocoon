@@ -129,5 +129,7 @@ public class JSPEngineServletResponse implements HttpServletResponse {
     public void setBufferSize(int size) {}
     public void flushBuffer() throws IOException {}
     public boolean isCommitted() { return false; }
+    public String getContentType() { return servletResponse.getContentType(); }
+    public void setCharacterEncoding(String arg0) { servletResponse.setCharacterEncoding(arg0); }
 
 }
