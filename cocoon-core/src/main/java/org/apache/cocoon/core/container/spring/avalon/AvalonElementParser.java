@@ -39,6 +39,7 @@ import org.apache.cocoon.transformation.Transformer;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.BeanDefinitionReader;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -60,52 +61,74 @@ public class AvalonElementParser extends AbstractElementParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
+        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
+        // read avalon style configuration
+        // the schema ensures that location is never null
+        final String location = element.getAttribute("location");
+        try {
+            final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
+    
+            this.createComponents(element,
+                                  info,
+                                  parserContext.getRegistry(),
+                                  parserContext.getDelegate().getReaderContext().getReader(),
+                                  resourceLoader);
+        } catch (Exception e) {
+            throw new BeanDefinitionStoreException("Unable to read Avalon configuration from '" + location + "'.",e);
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @param element        Can be null
+     * @param registry
+     * @param reader         Can be null
+     * @param resourceLoader
+     */
+    public void createComponents(Element                element,
+                                 ConfigurationInfo      info,
+                                 BeanDefinitionRegistry registry,
+                                 BeanDefinitionReader   reader,
+                                 ResourceLoader         resourceLoader)
+    throws Exception {
         // add context
-        this.addContext(element, parserContext.getRegistry());
+        this.addContext(element, registry);
 
         // add service manager
         this.addComponent(AvalonServiceManager.class,
                 ProcessingUtil.SERVICE_MANAGER_ROLE,
                 null,
                 false,
-                parserContext.getRegistry());
+                registry);
 
-        // read avalon style configuration
-        // the schema ensures that location is never null
-        final String location = element.getAttribute("location");
-        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
-        try {
-            final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
-            // add logger
-            final String loggingConfiguration = element.getAttribute("loggingConfiguration");
-            this.addLogger(loggingConfiguration, parserContext.getRegistry(), info.getRootLogger());
+        // add logger
+        final String loggingConfiguration = (element == null ? null : element.getAttribute("loggingConfiguration"));
+        this.addLogger(loggingConfiguration, registry, info.getRootLogger());
 
-            // handle includes of spring configurations
-            final Iterator includeIter = info.getImports().iterator();
-            while ( includeIter.hasNext() ) {
-                final String uri = (String)includeIter.next();
-                parserContext.getDelegate().getReaderContext().getReader().loadBeanDefinitions(resourceLoader.getResource(uri));
+        // handle includes of spring configurations
+        final Iterator includeIter = info.getImports().iterator();
+        while ( includeIter.hasNext() ) {
+            if ( reader == null ) {
+                throw new Exception("Import of spring configuration files not supported. (Reader is null)");
             }
-
-            // then create components
-            this.createConfig(info, parserContext.getRegistry());
-
-            // register component infos for child factories
-            this.registerComponentInfo(info, parserContext.getRegistry());
-
-            // and finally add avalon bean post processor
-            final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonBeanPostProcessor.class, null, true);
-            beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(ProcessingUtil.LOGGER_ROLE));
-            beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
-            beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
-
-            this.register(beanDef, AvalonBeanPostProcessor.class.getName(), parserContext.getRegistry());
-
-        } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read Avalon configuration from '" + location + "'.",e);
+            final String uri = (String)includeIter.next();
+            reader.loadBeanDefinitions(resourceLoader.getResource(uri));
         }
 
-        return null;
+        // then create components
+        this.createConfig(info, registry);
+
+        // register component infos for child factories
+        this.registerComponentInfo(info, registry);
+
+        // and finally add avalon bean post processor
+        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonBeanPostProcessor.class, null, true);
+        beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(ProcessingUtil.LOGGER_ROLE));
+        beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
+        beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
+
+        this.register(beanDef, AvalonBeanPostProcessor.class.getName(), registry);
     }
 
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)

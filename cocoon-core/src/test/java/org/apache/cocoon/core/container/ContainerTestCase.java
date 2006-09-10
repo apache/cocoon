@@ -18,6 +18,9 @@ package org.apache.cocoon.core.container;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -35,11 +38,22 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
-import org.apache.cocoon.core.container.spring.avalon.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationReader;
 import org.apache.cocoon.environment.mock.MockContext;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.w3c.dom.Element;
 
 /**
  * JUnit TestCase for Cocoon Components.
@@ -129,6 +143,8 @@ public abstract class ContainerTestCase extends TestCase {
     /** The service manager to use */
     private ServiceManager manager;
 
+    private Map contextProperties;
+
     /** The context */
     private Context context;
 
@@ -207,9 +223,9 @@ public abstract class ContainerTestCase extends TestCase {
         }
 
         // setup context
-        this.context = this.setupContext( conf.getChild( "context" ) );
+        this.contextProperties = this.setupContext( conf.getChild( "context" ) );
 
-        this.setupBeanFactories( conf.getChild( "components" ),  conf.getChild( "roles" ) );
+        this.setupBeanFactory( conf.getChild( "components" ),  conf.getChild( "roles" ) );
     }
 
     /**
@@ -240,9 +256,9 @@ public abstract class ContainerTestCase extends TestCase {
      * A method addContext(DefaultContext context) is called here to enable subclasses
      * to put additional objects into the context programmatically.
      */
-    final private Context setupContext( final Configuration conf )
+    final private Map setupContext( final Configuration conf )
     throws Exception {
-        final DefaultContext context = new DefaultContext();
+        final Map defaultContext = new HashMap();
         final Configuration[] confs = conf.getChildren( "entry" );
         for( int i = 0; i < confs.length; i++ ) {
             final String key = confs[ i ].getAttribute( "name" );
@@ -250,28 +266,27 @@ public abstract class ContainerTestCase extends TestCase {
             if( value == null ) {
                 String clazz = confs[ i ].getAttribute( "class" );
                 Object obj = getClass().getClassLoader().loadClass( clazz ).newInstance();
-                context.put( key, obj );
+                defaultContext.put( key, obj );
                 if( getLogger().isInfoEnabled() ) {
                     getLogger().info( "ContainerTestCase: added an instance of class " + clazz + " to context entry " + key );
                 }
             } else {
-                context.put( key, value );
+                defaultContext.put( key, value );
                 if( getLogger().isInfoEnabled() ) {
                     getLogger().info( "ContainerTestCase: added value \"" + value + "\" to context entry " + key );
                 }
             }
         }
-        context.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new MockContext());
-        this.addContext( context );
-        context.makeReadOnly();
-        return context ;
+        defaultContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new MockContext());
+        this.addContext( defaultContext );
+        return defaultContext ;
     }
 
     /**
      * This method may be overwritten by subclasses to put additional objects
      * into the context programmatically.
      */
-    protected void addContext( DefaultContext context ) {
+    protected void addContext( Map defaultContext ) {
         // nothing to add here
     }
 
@@ -284,21 +299,30 @@ public abstract class ContainerTestCase extends TestCase {
         // subclasses can add components here
     }
 
-    final private void setupBeanFactories( final Configuration confCM,
-                                           final Configuration confRM)
-    throws Exception {
-        final AvalonEnvironment avalonEnv = new AvalonEnvironment();
-        avalonEnv.logger = this.logger;
-        avalonEnv.context = this.context;
-        avalonEnv.settings = new MutableSettings("test");
-        // read roles and components
-        // FIXME
-        ConfigurationInfo rolesInfo = null;//ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
-        this.addComponents( rolesInfo );
-        // FIXME
-        this.beanFactory = null; //BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, null);
+    protected void addSettings(BeanDefinitionRegistry registry) {
+        RootBeanDefinition def = new RootBeanDefinition();
+        def.setBeanClass(MutableSettings.class);
+        def.setSingleton(true);
+        def.setLazyInit(false);
+        def.getConstructorArgumentValues().addIndexedArgumentValue(0, "test");
+        BeanDefinitionHolder holder = new BeanDefinitionHolder(def, Settings.ROLE);
+        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+    }
 
+    final private void setupBeanFactory( final Configuration confCM,
+                                         final Configuration confRM)
+    throws Exception {
+        // read roles and components
+        ConfigurationInfo rolesInfo = ConfigurationReader.readConfiguration(confRM, confCM, null, null);
+        this.addComponents( rolesInfo );
+        this.beanFactory = new DefaultListableBeanFactory();
+        this.addSettings((DefaultListableBeanFactory)this.beanFactory);
+        
+        AvalonInstantiator aep = new AvalonInstantiator(this.contextProperties);
+        aep.createComponents(null, rolesInfo, (DefaultListableBeanFactory)this.beanFactory,  null, new DefaultResourceLoader());
+        ((DefaultListableBeanFactory)this.beanFactory).preInstantiateSingletons();
         this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
+        this.context = (Context)this.beanFactory.getBean(ProcessingUtil.CONTEXT_ROLE);
     }
 
     protected final Object lookup( final String key )
@@ -310,22 +334,23 @@ public abstract class ContainerTestCase extends TestCase {
         manager.release( object );
     }
 
-    private Object getComponent(String classname,
-                                Configuration conf,
-                                Parameters p)
+    private Object getComponent(String        classname,
+                                Configuration config,
+                                Parameters    params)
     throws Exception {
         final Object instance = Class.forName(classname).newInstance();
         ContainerUtil.enableLogging(instance, getLogger());
         ContainerUtil.contextualize(instance, this.context);
         ContainerUtil.service(instance, getManager());
         if ( instance instanceof Configurable ) {
+            Configuration c = config;
             // default configuration to invoke method!
-            if ( conf == null ) {
-                conf = new DefaultConfiguration("", "-");
+            if ( c == null ) {
+                c = new DefaultConfiguration("", "-");
             }
-            ContainerUtil.configure(instance, conf);
-        }
-        if ( instance instanceof Parameterizable ) {
+            ContainerUtil.configure(instance, c);
+        } else if ( instance instanceof Parameterizable ) {
+            Parameters p = params;
             // default configuration to invoke method!
             if ( p == null ) {
                 p = new Parameters();
@@ -351,5 +376,69 @@ public abstract class ContainerTestCase extends TestCase {
     protected Object getComponent(String classname)
     throws Exception {
         return this.getComponent(classname, null, null);
+    }
+
+    protected static class AvalonInstantiator extends AvalonElementParser {
+
+        protected final Map properties;
+
+        public AvalonInstantiator(Map props) {
+            this.properties = props;
+        }
+
+        protected void addContext(Element element, BeanDefinitionRegistry registry) {
+            RootBeanDefinition def = this.createBeanDefinition(ContextFactoryBean.class, "init", false);
+            def.getPropertyValues().addPropertyValue("properties", this.properties);
+            this.register(def, ProcessingUtil.CONTEXT_ROLE, registry);
+        }
+
+        /**
+         * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#addLogger(java.lang.String, org.springframework.beans.factory.support.BeanDefinitionRegistry, java.lang.String)
+         */
+        protected void addLogger(String configuration, BeanDefinitionRegistry registry, String loggerCategory) {
+            this.addComponent(ConsoleLogger.class, ProcessingUtil.LOGGER_ROLE, null, false, registry);
+        }
+    }
+
+    protected static class ContextFactoryBean implements FactoryBean {
+        protected Map properties;
+
+        protected final DefaultContext avalonContext = new DefaultContext();
+
+        public void setProperties(Map properties) {
+            this.properties = properties;
+        }
+
+        public void init() {
+            if ( this.properties != null ) {
+                final Iterator i = this.properties.entrySet().iterator();
+                while ( i.hasNext() ) {
+                    final Map.Entry current = (Map.Entry)i.next();
+                    this.avalonContext.put(current.getKey(), current.getValue());
+                }
+            }
+            this.avalonContext.makeReadOnly();
+        }
+
+        /**
+         * @see org.springframework.beans.factory.FactoryBean#getObject()
+         */
+        public Object getObject() throws Exception {
+            return this.avalonContext;
+        }
+
+        /**
+         * @see org.springframework.beans.factory.FactoryBean#getObjectType()
+         */
+        public Class getObjectType() {
+            return Context.class;
+        }
+
+        /**
+         * @see org.springframework.beans.factory.FactoryBean#isSingleton()
+         */
+        public boolean isSingleton() {
+            return true;
+        }
     }
 }
