@@ -286,4 +286,14 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     public void setStatus(int sc, String sm) {
         // Ignore
     }
+
+    public String getContentType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void setCharacterEncoding(String arg0) {
+        // TODO Auto-generated method stub
+        
+    }
 }
