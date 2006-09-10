@@ -41,13 +41,16 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
+import org.apache.cocoon.core.container.spring.avalon.AvalonBeanPostProcessor;
 import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationReader;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -224,7 +227,13 @@ public abstract class ContainerTestCase extends TestCase {
 
         // setup context
         this.contextProperties = this.setupContext( conf.getChild( "context" ) );
-
+        this.context = new DefaultContext();
+        final Iterator i = this.contextProperties.entrySet().iterator();
+        while ( i.hasNext() ) {
+            final Map.Entry current = (Map.Entry)i.next();
+            ((DefaultContext)this.context).put(current.getKey(), current.getValue());
+        }
+        ((DefaultContext)this.context).makeReadOnly();
         this.setupBeanFactory( conf.getChild( "components" ),  conf.getChild( "roles" ) );
     }
 
@@ -318,8 +327,16 @@ public abstract class ContainerTestCase extends TestCase {
         this.beanFactory = new DefaultListableBeanFactory();
         this.addSettings((DefaultListableBeanFactory)this.beanFactory);
         
-        AvalonInstantiator aep = new AvalonInstantiator(this.contextProperties);
+        final AvalonInstantiator aep = new AvalonInstantiator(this.contextProperties);
         aep.createComponents(null, rolesInfo, (DefaultListableBeanFactory)this.beanFactory,  null, new DefaultResourceLoader());
+        
+        AvalonBeanPostProcessor postProcessor = new AvalonBeanPostProcessor();
+        postProcessor.setLogger(new ConsoleLogger());
+        postProcessor.setContext(this.context);
+        postProcessor.setConfigurationInfo(rolesInfo);
+        postProcessor.setBeanFactory(this.beanFactory);
+        this.beanFactory.addBeanPostProcessor(postProcessor);
+
         ((DefaultListableBeanFactory)this.beanFactory).preInstantiateSingletons();
         this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
         this.context = (Context)this.beanFactory.getBean(ProcessingUtil.CONTEXT_ROLE);
