@@ -32,29 +32,7 @@
   <artifactId>cocoon-blocks-fw-demo2</artifactId>
   <packaging>jar</packaging>
   <version>1.0.0-SNAPSHOT</version>
-  <name>OSGi Demo Block 2</name>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestFile>META-INF/MANIFEST.MF</manifestFile>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-    <resources>
-      <resource>
-        <directory>META-INF</directory>
-        <targetPath>META-INF</targetPath>
-        <includes>
-          <include>components.xml</include>
-        </includes>
-      </resource>
-    </resources>
-  </build>
+  <name>Blocks Framework Demo Block 2</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
