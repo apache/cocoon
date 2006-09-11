@@ -16,6 +16,7 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -107,6 +108,22 @@ public class BlockServlet extends HttpServlet {
     public BlockServlet() {
         this.blockContext = new BlockContext();
     }
+    
+    public void setMountPath(String mountPath) {
+        this.blockContext.setMountPath(mountPath);        
+    }
+    
+    public String getMountPath() {
+        return this.blockContext.getMountPath();
+    }
+    
+    public void setContextURL(URL contextURL) {
+        this.blockContext.setContextURL(contextURL);
+    }
+    
+    public void setBlockServletClass(String blockServletClass) {
+        this.blockServletClass = blockServletClass;
+    }
 
     public void setProperties(Map properties) {
         this.blockContext.setProperties(properties);
@@ -114,13 +131,5 @@ public class BlockServlet extends HttpServlet {
     
     public void setConnections(Map connections) {
         this.blockContext.setConnections(connections);
-    }
-    
-    public void setMountPath(String mountPath) {
-        this.blockContext.setMountPath(mountPath);        
-    }
-    
-    public void setBlockServletClass(String blockServletClass) {
-        this.blockServletClass = blockServletClass;
     }
 }
