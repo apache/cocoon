@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @version $Id: TestServlet2.java 388756 2006-03-25 13:43:42Z danielf $
  */
-public class TestServlet2 extends HttpServlet {
+public class DemoServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getPathInfo();
@@ -46,6 +46,8 @@ public class TestServlet2 extends HttpServlet {
             RequestDispatcher demo2 = this.getServletContext().getNamedDispatcher("demo2");
             demo2.forward(request, response);
         } else if ("/test3".equals(path)) {
+            throw new ServletException("Unknown path " + path);
+            /* TODO: implement the block protocol for the Spring context
             URL url = new URL("block:/test1");
             URLConnection conn = url.openConnection();
             InputStream is = conn.getInputStream();
@@ -56,7 +58,10 @@ public class TestServlet2 extends HttpServlet {
             copy(is, os);
             is.close();
             os.close();
+            */
         } else if ("/test4".equals(path)) {
+            throw new ServletException("Unknown path " + path);
+            /* TODO: implement the block protocol for the Spring context
             URL url = new URL("block:demo2:/any");
             URLConnection conn = url.openConnection();
             InputStream is = conn.getInputStream();
@@ -67,6 +72,7 @@ public class TestServlet2 extends HttpServlet {
             copy(is, os);
             is.close();
             os.close();
+            */
         } else {
             throw new ServletException("Unknown path " + path);
         }
