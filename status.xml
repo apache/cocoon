@@ -185,6 +185,9 @@
 -->
   <release version="2.1.10" date="TBD">
     <action dev="AN" type="fix">
+      Core: Off-by-1 bug in WildcardMatcher found pattern matches which were not there.
+    </action>
+    <action dev="AN" type="fix">
       Core: '**' in complex WildcardMatcher pattern did not match an empty pathstep.
     </action>
     <action dev="AN" type="fix">
