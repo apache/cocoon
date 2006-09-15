@@ -237,7 +237,7 @@ public class WildcardMatcherHelper {
                 int eistr = lstr - l;
 
                 // beause the '**' wildcard need to be greedy we scan from the end of the string for a match
-                while(istr < eistr && ! strncmp(apat, sipat, astr, eistr, l)) eistr--;
+                while(istr <= eistr && ! strncmp(apat, sipat, astr, eistr, l)) eistr--;
 
                 if(istr > eistr) return false;
 
