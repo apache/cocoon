@@ -60,10 +60,11 @@ public class Union extends AbstractContainerWidget {
     public void initialize() {
         String caseWidgetId = definition.getCaseWidgetId();
         this.caseWidget = getParent().lookupWidget(caseWidgetId);
-        if(this.caseWidget == null) {
-            throw new RuntimeException("Could not find case widget \""
-                + caseWidgetId + "\" for union \"" + getId() + "\" at " + getLocation());
+        if (this.caseWidget == null) {
+            throw new RuntimeException("Could not find case widget \"" + caseWidgetId +
+                                       "\" for union \"" + getId() + "\" at " + getLocation());
         }
+
         ((ValueChangedListenerEnabled)caseWidget).addValueChangedListener(
             new ValueChangedListener() {
                 public void valueChanged(ValueChangedEvent event) {

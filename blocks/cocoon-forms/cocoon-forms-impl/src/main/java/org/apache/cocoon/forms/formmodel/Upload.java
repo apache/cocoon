@@ -87,10 +87,11 @@ public class Upload extends AbstractWidget
         }
 
         if ((object == null) || (object instanceof Part)) {
-            this.part = (Part)object;
+            this.part = (Part) object;
         } else {
             throw new RuntimeException("The value of an upload widget must be of type " + Part.class + ".");
         }
+
         changed();
     }
 
@@ -142,7 +143,7 @@ public class Upload extends AbstractWidget
 
         // And keep the current state if the parameter doesn't exist or is null
     }
-    
+
     private void changed() {
         if (this.hasValueChangedListeners() || this.getForm().hasFormHandler()) {
             this.getForm().addWidgetEvent(new ValueChangedEvent(this, null, this.part));
@@ -176,7 +177,7 @@ public class Upload extends AbstractWidget
      */
     private boolean validateOversize() {
         if (!this.part.isRejected()) {
-            return true; 
+            return true;
         }
 
         // Set a validation error indicating the sizes in kbytes (rounded)
@@ -241,7 +242,7 @@ public class Upload extends AbstractWidget
     public void removeValueChangedListener(ValueChangedListener listener) {
         this.listener = WidgetEventMulticaster.remove(this.listener, listener);
     }
-    
+
     public boolean hasValueChangedListeners() {
         return this.listener != null;
     }

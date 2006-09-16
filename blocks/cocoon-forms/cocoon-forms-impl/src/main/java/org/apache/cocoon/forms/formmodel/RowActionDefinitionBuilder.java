@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,16 +24,16 @@ import org.apache.cocoon.util.Deprecation;
 import org.w3c.dom.Element;
 
 /**
- * 
+ *
  * @version $Id$
  */
 public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    
-    
+
+
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         // Get the "command" attribute
         String actionCommand = DomHelper.getAttribute(widgetElement, "command", null);
-        
+
         // If unspecified, check the deprecated "action-command" deprecated attribute
         if (actionCommand == null) {
             actionCommand = DomHelper.getAttribute(widgetElement, "action-command", null);
@@ -56,7 +56,7 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
         Element buggyOnActivate = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "on-activate", false);
         if (buggyOnActivate != null) {
             throw new Exception("Use 'on-action' instead of 'on-activate' on row-action at " +
-                DomHelper.getLocation(buggyOnActivate));
+                                DomHelper.getLocation(buggyOnActivate));
         }
 
         Iterator iter = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
@@ -67,7 +67,7 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
         definition.makeImmutable();
         return definition;
     }
-    
+
     protected RowActionDefinition createDefinition(Element element, String actionCommand) throws Exception {
 
         if ("delete".equals(actionCommand)) {

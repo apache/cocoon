@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,14 +35,14 @@ import org.xml.sax.SAXException;
 
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
+
     private FormDefinition formDefinition;
     protected WidgetDefinition parent;
-    
-    protected Library enclosingLibrary = null;
+    protected Library enclosingLibrary;
 
     //TODO consider final on these
     private Location location = Location.UNKNOWN;
@@ -57,10 +57,11 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
 
     protected CreateListener createListener;
 
+
     public FormDefinition getFormDefinition() {
         if (this.formDefinition == null) {
             if (this instanceof FormDefinition) {
-                this.formDefinition = (FormDefinition)this;
+                this.formDefinition = (FormDefinition) this;
             } else if(this.parent != null) {
                 this.formDefinition = this.parent.getFormDefinition();
             } else {
@@ -70,57 +71,61 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         }
         return this.formDefinition;
     }
-    
+
     public Library getEnclosingLibrary() {
     	if (this.enclosingLibrary == null) {
     		this.enclosingLibrary = this.parent.getEnclosingLibrary();
         }
         return this.enclosingLibrary;
     }
+
     public void setEnclosingLibrary(Library library) {
     	enclosingLibrary = library;
     }
-    
+
     /**
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
-        if(definition instanceof AbstractWidgetDefinition) {
-            AbstractWidgetDefinition other = (AbstractWidgetDefinition)definition;
+        if (definition instanceof AbstractWidgetDefinition) {
+            AbstractWidgetDefinition other = (AbstractWidgetDefinition) definition;
 
             this.state = other.state;
             this.createListener = other.createListener; // this works, we don't really remove listeners, right?
 
             this.validators = new ArrayList();
-            if(other.validators!=null) {
-                for(int i=0; i<other.validators.size(); i++)
+            if (other.validators != null) {
+                for (int i = 0; i < other.validators.size(); i++) {
                     this.validators.add(other.validators.get(i));
+                }
             }
 
-            if(other.attributes!=null) {
-                if(attributes==null)
+            if (other.attributes != null) {
+                if (attributes == null) {
                     attributes = new HashMap();
+                }
                 attributes.putAll(other.attributes);
             }
-            if(other.displayData!=null) {
-                if(displayData==null)
+            if (other.displayData != null) {
+                if (displayData == null) {
                     displayData = new HashMap();
+                }
                 displayData.putAll(other.displayData);
             }
         } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
+            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
         }
     }
 
     /**
      * Checks if this definition is complete or not.
      */
-    public void checkCompleteness() throws IncompletenessException
-    {
+    public void checkCompleteness()
+    throws IncompletenessException {
         // FormDefinition is the only one allowed not to have an ID
-        if( (id==null || "".equals(id) && !(this instanceof FormDefinition) ))
-            throw new IncompletenessException("Widget found without an ID! "+this,this);
-
+        if (id == null || "".equals(id) && !(this instanceof FormDefinition)) {
+            throw new IncompletenessException("Widget found without an ID! " + this, this);
+        }
 
         // TODO: don't know what else to check now
     }
@@ -132,7 +137,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void makeImmutable() {
         this.mutable = false;
     }
-    
+
     /**
      * Check that this definition is mutable, i.e. is in setup phase. If not, throw an exception.
      */
@@ -146,8 +151,8 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
      * Sets the parent of this definition
      */
     public void setParent(WidgetDefinition definition) {
-        //FIXME(SW) calling checkMutable() here is not possible as NewDefinition.resolve() does some weird
-        //reorganization of the definition tree
+        //FIXME(SW) calling checkMutable() here is not possible as NewDefinition.resolve()
+        //          does some weird reorganization of the definition tree
         this.parent = definition;
     }
 
@@ -188,16 +193,13 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
 
     public void setAttributes(Map attributes) {
         checkMutable();
-        //this.attributes = attributes;
-        if(this.attributes==null) {
-            this.attributes = attributes;
-            return;
-        }
-        if(attributes==null)
-            return;
 
-        // merge attribute lists
-        this.attributes.putAll(attributes);
+        if (this.attributes == null) {
+            this.attributes = attributes;
+        } else if (attributes != null) {
+            // merge attribute lists
+            this.attributes.putAll(attributes);
+        }
     }
 
     public Object getAttribute(String name) {
@@ -237,19 +239,19 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
      * Sets the various display data for this widget. This includes the label, hint and help.
      * They must all be objects implementing the XMLizable interface. This approach
      * allows to have mixed content in these data.
-     * 
+     *
      * @param displayData an association of {name, sax fragment}
      */
     public void setDisplayData(Map displayData) {
         checkMutable();
-        //this.displayData = displayData;
 
-        if(this.displayData==null) {
+        if (this.displayData == null) {
             this.displayData = displayData;
             return;
         }
-        if(displayData==null)
+        if (displayData == null) {
             return;
+        }
 
         // merge displayData lists
         Iterator entries = displayData.entrySet().iterator();
@@ -257,8 +259,9 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             Map.Entry entry = (Map.Entry)entries.next();
             Object key = entry.getKey();
             Object value = entry.getValue();
-            if(value!=null || !this.displayData.containsKey(key))
-                this.displayData.put(key,value);
+            if (value != null || !this.displayData.containsKey(key)) {
+                this.displayData.put(key, value);
+            }
         }
     }
 
@@ -284,14 +287,14 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         // Output all non-null display data
         Iterator iter = this.displayData.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry)iter.next();
+            Map.Entry entry = (Map.Entry) iter.next();
             if (entry.getValue() != null) {
-                String name = (String)entry.getKey();
+                String name = (String) entry.getKey();
 
                 // Enclose the data into a "wi:{name}" element
                 contentHandler.startElement(FormsConstants.INSTANCE_NS, name, FormsConstants.INSTANCE_PREFIX_COLON + name, XMLUtils.EMPTY_ATTRIBUTES);
 
-                ((XMLizable)entry.getValue()).toSAX(contentHandler);
+                ((XMLizable) entry.getValue()).toSAX(contentHandler);
 
                 contentHandler.endElement(FormsConstants.INSTANCE_NS, name, FormsConstants.INSTANCE_PREFIX_COLON + name);
             }
@@ -305,9 +308,9 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
 
         }
         Iterator iter = this.validators.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             WidgetValidator validator = (WidgetValidator)iter.next();
-            if (! validator.validate(widget)) {
+            if (!validator.validate(widget)) {
                 // Stop at the first validator that fails
                 return false;
             }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,38 +32,38 @@ import org.xml.sax.SAXException;
 
 /**
  * A tree widget, heavily inspired by Swing's <code>JTree</code>.
- * 
+ *
  * @version $Id$
  */
 public class Tree extends AbstractWidget {
-    
+
     public static final int SINGLE_SELECTION = 0;
     public static final int MULTIPLE_SELECTION = 1;
-    
+
     public interface ActionHandler {
         public void act(Tree tree, FormContext context);
     }
-    
+
     private TreeDefinition treeDef;
 
     private TreeModel treeModel;
-    
+
     private Set expandedPaths = new HashSet();
-    
+
     private Set selectedPaths = new HashSet();
-    
+
     private Set changedPaths = new HashSet();
-    
+
     private HashMap pathWidgets = new HashMap();
-    
+
     private boolean rootVisible = true;
 
     private boolean expandSelectedPath = false;
-    
+
     private TreeSelectionListener selectionListener;
-    
+
     private int selectionModel = MULTIPLE_SELECTION;
-    
+
     private TreeModelListener modelListener = new TreeModelListener() {
         public void treeStructureChanged(TreeModelEvent event) {
             markForRefresh(event.getPath());
@@ -93,15 +93,15 @@ public class Tree extends AbstractWidget {
     }
 
     protected void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-	    	throw new UnsupportedOperationException(this + " cannot be rendered using <ft:widget>. Please use <ft:tree>.");
+        throw new UnsupportedOperationException(this + " cannot be rendered using <ft:widget>. Please use <ft:tree>.");
     }
 
     public void readFromRequest(FormContext formContext) {
         //TODO: crawl open nodes, calling their widget's readFromRequest
-        
+
         Request req = formContext.getRequest();
         String paramName = getRequestParameterName();
-        
+
         //---------------------------------------------------------------------
         // Handle node selection using checkboxes named <id>$select
         //---------------------------------------------------------------------
@@ -112,7 +112,7 @@ public class Tree extends AbstractWidget {
             for (int i = 0; i < selectValues.length; i++) {
                 newSelection.add(TreePath.valueOf(selectValues[i]));
             }
-            
+
             // Check if all visible selections are in the new selection
             TreePath[] currentSelection = (TreePath[])this.selectedPaths.toArray(new TreePath[this.selectedPaths.size()]);
             for (int i = 0; i < currentSelection.length; i++) {
@@ -128,30 +128,30 @@ public class Tree extends AbstractWidget {
                 addSelectionPath((TreePath)iter.next());
             }
         }
-        
+
         //---------------------------------------------------------------------
         // Handle tree actions:
         // - action is in <name>$action
         // - path is in <name>$path
         //---------------------------------------------------------------------
         String action = req.getParameter(paramName + ":action");
-        
+
         if (action == null || action.length() == 0) {
             // Nothing more to do here
             return;
         }
-        
+
         getForm().setSubmitWidget(this);
         String pathValue = req.getParameter(paramName + ":path");
-        
+
         if (pathValue == null || pathValue.length() == 0) {
             //this.treeDef.getLogger().warn("No tree path given");
             return;
         }
-        
+
         // Parse the path
         TreePath path = TreePath.valueOf(pathValue);
-        
+
         if ("expand".equals(action)) {
             this.expandPath(path);
         } else if ("collapse".equals(action)) {
@@ -181,7 +181,7 @@ public class Tree extends AbstractWidget {
     public TreeModel getModel() {
         return this.treeModel;
     }
-    
+
     public void setModel(TreeModel model) {
         if (model == null) {
             model = DefaultTreeModel.UNSPECIFIED_MODEL;
@@ -190,31 +190,31 @@ public class Tree extends AbstractWidget {
         this.treeModel = model;
         model.addTreeModelListener(this.modelListener);
     }
-    
+
     private void markForRefresh(TreePath path) {
         this.changedPaths.add(path);
         getForm().addWidgetUpdate(this);
     }
-    
+
     //---------------------------------------------------------------------------------------------
     // Selection
     //---------------------------------------------------------------------------------------------
-    
+
     public void setSelectionModel(int model) {
         if (model < 0 || model > MULTIPLE_SELECTION) {
             throw new IllegalArgumentException("Illegal selection model " + model);
         }
-        
+
         if (model == this.selectionModel) {
             return;
         }
-        
+
         this.selectionModel = model;
         if (model == SINGLE_SELECTION && getSelectionCount() > 1) {
             clearSelection();
         }
     }
-    
+
     public int getSelectionCount() {
         return this.selectedPaths.size();
     }
@@ -226,29 +226,29 @@ public class Tree extends AbstractWidget {
             return (TreePath)this.selectedPaths.iterator().next();
         }
     }
-    
+
     public TreePath[] getSelectionPaths() {
         return (TreePath[])this.selectedPaths.toArray(new TreePath[this.selectedPaths.size()]);
     }
-    
+
     public boolean isPathSelected(TreePath path) {
         return this.selectedPaths.contains(path);
     }
-    
+
     public boolean isSelectionEmpty() {
         return this.selectedPaths.isEmpty();
     }
-    
+
     public void setSelectionPath(TreePath path) {
         clearSelection();
         addSelectionPath(path);
     }
-    
+
     public void setSelectionPaths(TreePath paths[]) {
         clearSelection();
         addSelectionPaths(paths);
     }
-    
+
     public void addSelectionPath(TreePath path) {
         if (this.selectionModel == SINGLE_SELECTION) {
             clearSelection();
@@ -264,7 +264,7 @@ public class Tree extends AbstractWidget {
             }
         }
     }
-    
+
     public void addSelectionPaths(TreePath paths[]) {
         if (this.selectionModel == SINGLE_SELECTION) {
             setSelectionPath(paths[0]);
@@ -285,14 +285,14 @@ public class Tree extends AbstractWidget {
             }
         }
     }
-    
+
     public void removeSelectionPaths(TreePath paths[]) {
         for (int i = 0; i < paths.length; i++) {
             removeSelectionPath(paths[i]);
             // FIXME: use array-based constructors of TreeSelectionEvent
         }
     }
-    
+
     public void clearSelection() {
         if (this.isSelectionEmpty()) {
             return;
@@ -308,23 +308,23 @@ public class Tree extends AbstractWidget {
             this.selectionListener.selectionChanged(new TreeSelectionEvent(this, paths, false));
         }
     }
-    
+
     public void addTreeSelectionListener(TreeSelectionListener listener) {
         this.selectionListener = WidgetEventMulticaster.add(this.selectionListener, listener);
     }
-    
+
     public void removeTreeSelectionListener(TreeSelectionListener listener) {
         this.selectionListener = WidgetEventMulticaster.remove(this.selectionListener, listener);
     }
-    
+
     //---------------------------------------------------------------------------------------------
     // Visibility, expand & collapse
     //---------------------------------------------------------------------------------------------
-    
+
     public boolean isCollapsed(TreePath path) {
         return !isExpanded(path);
     }
-    
+
     public boolean isExpanded(TreePath path) {
         if (this.expandedPaths.contains(path)) {
             // Ensure all parents are expanded
@@ -334,11 +334,11 @@ public class Tree extends AbstractWidget {
             return false;
         }
     }
-    
+
     /**
      * Returns true if the value identified by path is currently viewable,
      * which means it is either the root or all of its parents are expanded.
-     * Otherwise, this method returns false. 
+     * Otherwise, this method returns false.
      *
      * @return true if the node is viewable, otherwise false
      */
@@ -358,7 +358,7 @@ public class Tree extends AbstractWidget {
             return false;
         }
     }
-    
+
     public void makeVisible(TreePath path) {
         if (path != null) {
             TreePath parent = path.getParentPath();
@@ -367,11 +367,11 @@ public class Tree extends AbstractWidget {
             }
         }
     }
-    
+
     public boolean isRootVisible() {
         return this.rootVisible;
     }
-    
+
     public void setRootVisible(boolean visible) {
         if (this.rootVisible != visible) {
             this.markForRefresh(TreePath.ROOT_PATH);
@@ -382,7 +382,7 @@ public class Tree extends AbstractWidget {
             }
         }
     }
-    
+
     public void collapsePath(TreePath path) {
         if (path != null) {
             if (this.expandedPaths.remove(path)) {
@@ -398,15 +398,15 @@ public class Tree extends AbstractWidget {
             }
         }
     }
-    
+
     public void setExpandsSelectedPath(boolean value) {
         this.expandSelectedPath  = value;
     }
-    
+
     //---------------------------------------------------------------------------------------------
     // Widget management
     //---------------------------------------------------------------------------------------------
-    
+
     public Widget getWidgetForPath(TreePath path) {
         Widget result = (Widget)this.pathWidgets.get(path);
         if (result == null && !this.pathWidgets.containsKey(path)) {
@@ -416,15 +416,15 @@ public class Tree extends AbstractWidget {
             }
             this.pathWidgets.put(path, result);
         }
-        
+
         return result;
     }
-    
+
     private Widget createWidgetForPath(TreePath path) {
         //TODO
         return null;
     }
-    
+
     //---------------------------------------------------------------------------------------------
     // TreeNode widget, which is the actual parent of widgets contained in a node
     //---------------------------------------------------------------------------------------------

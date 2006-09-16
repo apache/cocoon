@@ -70,7 +70,7 @@ public class CaptchaField extends Field {
         SecureRandom sr = null;
         try {
             sr = SecureRandom.getInstance("SHA1PRNG");
-        } catch(java.security.NoSuchAlgorithmException nsae) {
+        } catch (java.security.NoSuchAlgorithmException nsae) {
             // Maybe we are on IBM's SDK
             try {
                 sr = SecureRandom.getInstance("IBMSecureRandom");

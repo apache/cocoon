@@ -93,7 +93,7 @@ public abstract class AbstractWidget implements Widget {
     public String getId() {
         return getDefinition().getId();
     }
-    
+
     public String getName() {
         return getId();
     }
@@ -182,7 +182,7 @@ public abstract class AbstractWidget implements Widget {
     // still allowing ids to change (e.g. repeater rows when they are reordered).
     private String cachedParentParamName;
     private String cachedParamName;
-    
+
     /**
      * Should be called when a widget's own name has changed, in order to clear
      * internal caches used to compute request parameters.
@@ -191,11 +191,11 @@ public abstract class AbstractWidget implements Widget {
         this.cachedParentParamName = null;
         this.cachedParamName = null;
     }
-    
+
     public String getFullName() {
         return getRequestParameterName();
     }
-    
+
     public String getRequestParameterName() {
 
         if (this.parent == null) {
@@ -227,7 +227,7 @@ public abstract class AbstractWidget implements Widget {
         }
 
         Widget relativeWidget;
-        String relativePath = null;
+        String relativePath;
         int sepPosition = path.indexOf("" + Widget.PATH_SEPARATOR);
 
         if (sepPosition < 0) {
@@ -266,7 +266,7 @@ public abstract class AbstractWidget implements Widget {
 
     public Widget getWidget(String id) {
         throw new UnsupportedOperationException("getWidget(id) got deprecated from the API. \n" +
-                "Consider using getChild(id) or even lookupWidget(path) instead.");
+                                                "Consider using getChild(id) or even lookupWidget(path) instead.");
     }
 
     public Object getValue() {
@@ -289,9 +289,9 @@ public abstract class AbstractWidget implements Widget {
      */
     public void broadcastEvent(WidgetEvent event) {
         if (event instanceof CreateEvent) {
-            ((AbstractWidgetDefinition)getDefinition()).fireCreateEvent((CreateEvent)event);
+            ((AbstractWidgetDefinition) getDefinition()).fireCreateEvent((CreateEvent) event);
         } else {
-            throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
+            throw new UnsupportedOperationException("Widget " + getRequestParameterName() + " doesn't handle events.");
         }
     }
 
@@ -349,7 +349,7 @@ public abstract class AbstractWidget implements Widget {
         }
 
         // Successful validation
-        
+
         if (this instanceof ValidationErrorAware) {
             // Clear validation error if any
             ((ValidationErrorAware)this).setValidationError(null);
@@ -431,7 +431,7 @@ public abstract class AbstractWidget implements Widget {
 
         // Add the "state" attribute
         attrs.addCDATAAttribute("state", getCombinedState().getName());
-        
+
         // Add the "listening" attribute is the value has change listeners
         if (this instanceof ValueChangedListenerEnabled &&
             ((ValueChangedListenerEnabled)this).hasValueChangedListeners()) {
@@ -540,7 +540,7 @@ public abstract class AbstractWidget implements Widget {
         if (last != -1) {
             className = className.substring(last+1);
         }
-        
+
         String name = getRequestParameterName();
         return name.length() == 0 ? className : className + " '" + getRequestParameterName() + "'";
     }

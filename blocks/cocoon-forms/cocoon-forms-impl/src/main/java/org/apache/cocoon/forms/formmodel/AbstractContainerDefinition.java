@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,9 +24,11 @@ import java.util.List;
  *
  * @version $Id$
  */
-public abstract class AbstractContainerDefinition
-        extends AbstractWidgetDefinition implements ContainerDefinition {
+public abstract class AbstractContainerDefinition extends AbstractWidgetDefinition
+                                                  implements ContainerDefinition {
+
     protected WidgetDefinitionList definitions;
+
 
     public AbstractContainerDefinition() {
         definitions = new WidgetDefinitionList(this);
@@ -39,28 +41,28 @@ public abstract class AbstractContainerDefinition
     public void createWidgets(Widget parent) {
         definitions.createWidgets(parent);
     }
-    
+
     /**
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
-    	super.initializeFrom(definition);
-    	
-    	if(definition instanceof AbstractContainerDefinition) {
-    		AbstractContainerDefinition other = (AbstractContainerDefinition)definition;
-    		
-    		Iterator otherwidgets = other.definitions.getWidgetDefinitions().iterator();
-    		while(otherwidgets.hasNext()) {
-    			try {
-    				WidgetDefinition def = (WidgetDefinition)otherwidgets.next();
-    				this.definitions.addWidgetDefinition(def);
-    			} catch(DuplicateIdException ignore) {}
-    		}
-    	} else {
-    		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
-    	}
+        super.initializeFrom(definition);
+
+        if (definition instanceof AbstractContainerDefinition) {
+            AbstractContainerDefinition other = (AbstractContainerDefinition) definition;
+
+            Iterator i = other.definitions.getWidgetDefinitions().iterator();
+            while(i.hasNext()) {
+                try {
+                    WidgetDefinition def = (WidgetDefinition) i.next();
+                    this.definitions.addWidgetDefinition(def);
+                } catch (DuplicateIdException e) { /* ignored */ }
+            }
+        } else {
+            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        }
     }
-    
+
     /**
      * checks completeness of this definition
      */
@@ -69,7 +71,8 @@ public abstract class AbstractContainerDefinition
         this.definitions.checkCompleteness();
     }
 
-    public void addWidgetDefinition(WidgetDefinition definition) throws Exception, DuplicateIdException {
+    public void addWidgetDefinition(WidgetDefinition definition)
+    throws Exception, DuplicateIdException {
         //FIXME: cannot enforce this check here as more children are added in the resolve() phase
         //checkMutable();
         definition.setParent(this);
