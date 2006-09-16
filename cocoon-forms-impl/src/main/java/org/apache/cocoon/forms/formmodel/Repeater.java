@@ -66,7 +66,7 @@ public class Repeater extends AbstractWidget
     protected ValidationError validationError;
     private boolean orderable = false;
     private RepeaterListener listener;
-    
+
     // pagination
     private PageStorage storage;
     private boolean pageable = false;
@@ -81,16 +81,16 @@ public class Repeater extends AbstractWidget
         for (int i = 0; i < this.definition.getInitialSize(); i++) {
             rows.add(new RepeaterRow(definition));
         }
-        
+
         this.orderable = this.definition.getOrderable();
         this.listener = this.definition.getRepeaterListener();
-        
+
         this.pageable = this.definition.isPageable();
         if (pageable) {
         	this.currentPage = this.definition.getInitialPage();
         	this.pageSize = this.definition.getPageSize();
         }
-        
+
     }
 
     public WidgetDefinition getDefinition() {
@@ -182,7 +182,6 @@ public class Repeater extends AbstractWidget
 
         if (result == null) {
             throw new RuntimeException("Could not find a parent row for widget " + widget);
-
         }
         return (Repeater.RepeaterRow)result;
     }
@@ -213,31 +212,31 @@ public class Repeater extends AbstractWidget
      */
     public void moveRow(int from, int to) {
         int size = this.rows.size();
-        
+
         if (from < 0 || from >= size || to < 0 || to > size) {
             throw new IllegalArgumentException("Cannot move from " + from + " to " + to +
-                    " on repeater with " + size + " rows");
+                                               " on repeater with " + size + " rows");
         }
-        
+
         if (from == to) {
             return;
         }
-        
+
         Object fromRow = this.rows.remove(from);
         if (to == size) {
             // Move at the end
             this.rows.add(fromRow);
-            
+
         } else if (to > from) {
             // Index of "to" was moved by removing
             this.rows.add(to - 1, fromRow);
-            
+
         } else {
             this.rows.add(to, fromRow);
         }
 
         getForm().addWidgetUpdate(this);
-        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));        
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));
     }
 
     /**
@@ -253,7 +252,7 @@ public class Repeater extends AbstractWidget
 
         if (from < 0 || from >= size || to < 0 || to >= size) {
             throw new IllegalArgumentException("Cannot move from " + from + " to " + to +
-                    " on repeater with " + size + " rows");
+                                               " on repeater with " + size + " rows");
         }
 
         if (from == to) {
@@ -276,7 +275,7 @@ public class Repeater extends AbstractWidget
             this.rows.set(index, temp);
         }
         getForm().addWidgetUpdate(this);
-        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));                
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));
     }
 
     public void moveRowRight(int index) {
@@ -288,7 +287,7 @@ public class Repeater extends AbstractWidget
             this.rows.set(index, temp);
         }
         getForm().addWidgetUpdate(this);
-        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));                
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));
     }
 
     /**
@@ -303,9 +302,9 @@ public class Repeater extends AbstractWidget
      * Clears all rows from the repeater and go back to the initial size
      */
     public void clear() {
-        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_CLEARING));        
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_CLEARING));
         rows.clear();
-        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_CLEARED));        
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_CLEARED));
 
         // and reset to initial size
         for (int i = 0; i < this.definition.getInitialSize(); i++) {
@@ -313,7 +312,7 @@ public class Repeater extends AbstractWidget
         }
         getForm().addWidgetUpdate(this);
     }
-    
+
     public void addRepeaterListener(RepeaterListener listener) {
         this.listener = WidgetEventMulticaster.add(this.listener, listener);
     }
@@ -336,7 +335,7 @@ public class Repeater extends AbstractWidget
             super.broadcastEvent(event);
         }
     }
-    
+
 
     /**
      * Gets a widget on a certain row.
@@ -352,11 +351,11 @@ public class Repeater extends AbstractWidget
     public void readFromRequest(FormContext formContext) {
         if (!getCombinedState().isAcceptingInputs())
             return;
-        
+
         // read number of rows from request, and make an according number of rows
         Request req = formContext.getRequest();
         String paramName = getRequestParameterName();
-        
+
         String sizeParameter = req.getParameter(paramName + ".size");
         if (sizeParameter != null) {
             int size = 0;
@@ -368,8 +367,9 @@ public class Repeater extends AbstractWidget
 
             // some protection against people who might try to exhaust the server by supplying very large
             // size parameters
-            if (size > 500)
+            if (size > 500) {
                 throw new RuntimeException("Client is not allowed to specify a repeater size larger than 500.");
+            }
 
             int currentSize = getSize();
             if (currentSize < size) {
@@ -389,7 +389,7 @@ public class Repeater extends AbstractWidget
             RepeaterRow row = (RepeaterRow)rowIt.next();
             row.readFromRequest(formContext);
         }
-        
+
         // Handle repeater-level actions
         String action = req.getParameter(paramName + ".action");
         if (action == null) {
@@ -402,9 +402,10 @@ public class Repeater extends AbstractWidget
             if (!this.orderable) {
                 throw new FormsRuntimeException(this + " is not orderable", getLocation());
             }
+
             int from = Integer.parseInt(req.getParameter(paramName + ".from"));
             int before = Integer.parseInt(req.getParameter(paramName + ".before"));
-            
+
             Object row = this.rows.get(from);
             // Add to the new location
             this.rows.add(before, row);
@@ -412,10 +413,10 @@ public class Repeater extends AbstractWidget
             // because of the previous add()
             if (before < from) from++;
             this.rows.remove(from);
-            
+
             // Needs refresh
             getForm().addWidgetUpdate(this);
-            
+
         } else {
             throw new FormsRuntimeException("Unknown action " + action + " for " + this, getLocation());
         }
@@ -521,9 +522,11 @@ public class Repeater extends AbstractWidget
      */
     public void generateWidgetLabel(String widgetId, ContentHandler contentHandler) throws SAXException {
         WidgetDefinition widgetDefinition = definition.getWidgetDefinition(widgetId);
-        if (widgetDefinition == null)
+        if (widgetDefinition == null) {
             throw new SAXException("Repeater \"" + getRequestParameterName() + "\" at " + this.getLocation()
                                    + " contains no widget with id \"" + widgetId + "\".");
+        }
+
         widgetDefinition.generateLabel(contentHandler);
     }
 
@@ -575,6 +578,7 @@ public class Repeater extends AbstractWidget
             if (pos == -1) {
                 throw new IllegalStateException("Row has currently no position");
             }
+
             if (pos != this.cachedPosition) {
                 this.cachedPosition = pos;
                 // id of a RepeaterRow is the position of the row in the list of rows.
@@ -583,7 +587,7 @@ public class Repeater extends AbstractWidget
             }
             return this.cachedId;
         }
-        
+
         public String getRequestParameterName() {
             // Get the id to check potential position change
             getId();
@@ -603,7 +607,7 @@ public class Repeater extends AbstractWidget
               ((Widget)it.next()).initialize();
             }
         }
-        
+
         public boolean validate() {
             // Validate only child widtgets, as the definition's validators are those of the parent repeater
             return widgets.validate();
@@ -663,7 +667,7 @@ public class Repeater extends AbstractWidget
         this.storage = storage;
     }
 
-	
-    
-    
+
+
+
 }

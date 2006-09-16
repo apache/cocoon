@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The {@link WidgetDefinition} part of a AggregateField widget, see {@link AggregateField} for more information.
+ * The {@link WidgetDefinition} part of a AggregateField widget, see {@link AggregateField}
+ * for more information.
  *
  * @version $Id$
  */
@@ -78,29 +79,29 @@ public class AggregateFieldDefinition extends FieldDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
     	super.initializeFrom(definition);
 
-    	if(definition instanceof AggregateFieldDefinition) {
-    		AggregateFieldDefinition other = (AggregateFieldDefinition)definition;
+    	if (definition instanceof AggregateFieldDefinition) {
+    		AggregateFieldDefinition other = (AggregateFieldDefinition) definition;
 
     		this.combineExpr = other.combineExpr;
     		this.splitRegexp = other.splitRegexp;
     		this.splitPattern = other.splitPattern;
     		this.splitFailMessage = other.splitFailMessage;
 
-    		Iterator defs = other.container.getWidgetDefinitions().iterator();
-    		while(defs.hasNext()) {
-    			container.addWidgetDefinition((WidgetDefinition)defs.next());
-    		}
+            Iterator defs = other.container.getWidgetDefinitions().iterator();
+            while (defs.hasNext()) {
+                container.addWidgetDefinition((WidgetDefinition) defs.next());
+            }
 
-    		Collections.copy(this.splitMappings,other.splitMappings);
+            Collections.copy(this.splitMappings, other.splitMappings);
 
-    		Iterator fields = other.mappedFields.iterator();
-    		while(fields.hasNext()) {
-    			this.mappedFields.add(fields.next());
-    		}
+            Iterator fields = other.mappedFields.iterator();
+            while (fields.hasNext()) {
+                this.mappedFields.add(fields.next());
+            }
 
-    	} else {
-    		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
-    	}
+        } else {
+            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        }
     }
 
     public void addWidgetDefinition(WidgetDefinition widgetDefinition) throws DuplicateIdException {
@@ -114,24 +115,27 @@ public class AggregateFieldDefinition extends FieldDefinition {
     public void checkCompleteness() throws IncompletenessException {
     	super.checkCompleteness();
 
-    	if(this.container.size()==0)
-    		throw new IncompletenessException("AggregateField doesn't have any child widgets!",this);
+        if (this.container.size() == 0) {
+            throw new IncompletenessException("AggregateField doesn't have any child widgets!", this);
+        }
 
-    	if(this.combineExpr==null)
-    		throw new IncompletenessException("AggregateField requires a combine expression!",this);
+        if (this.combineExpr == null) {
+            throw new IncompletenessException("AggregateField requires a combine expression!", this);
+        }
 
-    	if(this.splitPattern==null)
-    		throw new IncompletenessException("AggregateField requires a split regular expression!",this);
+        if (this.splitPattern == null) {
+            throw new IncompletenessException("AggregateField requires a split regular expression!", this);
+        }
 
-    	if(this.splitMappings.size()==0)
-    		throw new IncompletenessException("AggregateField requires at least one group to field mapping!",this);
+        if (this.splitMappings.size() == 0) {
+            throw new IncompletenessException("AggregateField requires at least one group to field mapping!", this);
+        }
 
-    	// now check children's completeness
-    	List defs = container.getWidgetDefinitions();
-    	Iterator it = defs.iterator();
-    	while(it.hasNext()) {
-    		((WidgetDefinition)it.next()).checkCompleteness();
-    	}
+        // now check children's completeness
+        Iterator i = container.getWidgetDefinitions().iterator();
+        while (i.hasNext()) {
+            ((WidgetDefinition) i.next()).checkCompleteness();
+        }
     }
 
     public boolean hasWidget(String id) {
@@ -173,8 +177,9 @@ public class AggregateFieldDefinition extends FieldDefinition {
     protected void addSplitMapping(int group, String fieldId) {
         checkMutable();
 
-        if(mappedFields.contains(fieldId))
-        	throw new RuntimeException("Field '"+fieldId+"' is already mapped to another group!");
+        if (mappedFields.contains(fieldId)) {
+            throw new RuntimeException("Field '" + fieldId + "' is already mapped to another group!");
+        }
 
         mappedFields.add(fieldId);
 
@@ -188,10 +193,10 @@ public class AggregateFieldDefinition extends FieldDefinition {
     public Widget createInstance() {
         AggregateField aggregateField = new AggregateField(this);
 
-        Iterator fieldDefinitionIt = container.getWidgetDefinitions().iterator();
-        while (fieldDefinitionIt.hasNext()) {
-            FieldDefinition fieldDefinition = (FieldDefinition)fieldDefinitionIt.next();
-            aggregateField.addField((Field)fieldDefinition.createInstance());
+        Iterator i = container.getWidgetDefinitions().iterator();
+        while (i.hasNext()) {
+            FieldDefinition fieldDefinition = (FieldDefinition) i.next();
+            aggregateField.addField((Field) fieldDefinition.createInstance());
         }
 
         return aggregateField;

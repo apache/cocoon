@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,38 +19,37 @@ import org.apache.avalon.framework.context.Context;
 
 /**
  * A {@link FieldDefinition} for {@link CaptchaField}s.
- * 
+ *
  * @see <a href="http://www.captcha.net">www.captcha.net</a>
  * @version $Id$
  */
 public class CaptchaFieldDefinition extends FieldDefinition {
-    
+
     private Context avalonContext;
     private int length;
 
     public CaptchaFieldDefinition(Context avalonContext) {
         this.avalonContext = avalonContext;
     }
-    
+
     /**
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
     	super.initializeFrom(definition);
-    	
-    	if(definition instanceof CaptchaFieldDefinition) {
-    		CaptchaFieldDefinition other = (CaptchaFieldDefinition)definition;
-    		
-    		this.length = other.length;
-    		
+
+        if (definition instanceof CaptchaFieldDefinition) {
+            CaptchaFieldDefinition other = (CaptchaFieldDefinition) definition;
+
+            this.length = other.length;
+
     	} else {
-    		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
-    	}
+            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        }
     }
 
     public Widget createInstance() {
-        CaptchaField field = new CaptchaField(this, avalonContext);
-        return field;
+        return new CaptchaField(this, avalonContext);
     }
 
     public int getLength() {
@@ -61,5 +60,4 @@ public class CaptchaFieldDefinition extends FieldDefinition {
         checkMutable();
         this.length = length;
     }
-
 }

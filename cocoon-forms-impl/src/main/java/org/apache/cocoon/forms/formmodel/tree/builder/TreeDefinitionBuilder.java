@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 
 /**
  * Builds a {@link org.apache.cocoon.forms.formmodel.tree.Tree}.
- * 
+ *
  * @version $Id$
  */
 public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
@@ -40,13 +40,13 @@ public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         definition.makeImmutable();
         return definition;
     }
-    
+
     protected void setupDefinition(Element widgetElement, TreeDefinition definition) throws Exception {
         super.setupDefinition(widgetElement, definition);
-        
+
         // Get the optional "root-visible" attribute
         definition.setRootVisible(DomHelper.getAttributeAsBoolean(widgetElement, "root-visible", true));
-        
+
         // Get the optional "selection" attribute
         String selection = DomHelper.getAttribute(widgetElement, "selection", null);
         if (selection == null) {
@@ -57,16 +57,16 @@ public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
             definition.setSelectionModel(Tree.SINGLE_SELECTION);
         } else {
             throw new Exception("Invalid value selection value '" + selection + "' at " +
-                    DomHelper.getLocation(widgetElement));
+                                DomHelper.getLocation(widgetElement));
         }
-        
+
         // Get the model optional element
         Element modelElt = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "tree-model", false);
         if (modelElt != null) {
             String type = DomHelper.getAttribute(modelElt, "type");
             ServiceSelector selector =
                 (ServiceSelector)this.serviceManager.lookup(TreeModelDefinitionBuilder.ROLE + "Selector");
-            
+
             TreeModelDefinitionBuilder builder = (TreeModelDefinitionBuilder)selector.select(type);
             try {
                 definition.setModelDefinition(builder.build(modelElt));
@@ -75,7 +75,7 @@ public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
                 serviceManager.release(selector);
             }
         }
-        
+
         // parse "on-selection-changed"
         Iterator iter = buildEventListeners(widgetElement, "on-selection-changed", TreeSelectionListener.class).iterator();
         while (iter.hasNext()) {

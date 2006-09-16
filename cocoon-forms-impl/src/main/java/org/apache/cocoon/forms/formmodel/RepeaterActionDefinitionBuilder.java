@@ -56,13 +56,13 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         // Get the "command" attribute
         String actionCommand = DomHelper.getAttribute(widgetElement, "command", null);
-        
+
         // If unspecified, check the deprecated "action-command" deprecated attribute
         if (actionCommand == null) {
             actionCommand = DomHelper.getAttribute(widgetElement, "action-command", null);
             if (actionCommand != null) {
                 Deprecation.logger.info("The 'action-command' attribute is deprecated and replaced by 'command', at " +
-                    DomHelper.getLocation(widgetElement));
+                                        DomHelper.getLocation(widgetElement));
             }
         }
         if (actionCommand == null) {
@@ -80,7 +80,7 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
         Element buggyOnActivate = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "on-activate", false);
         if (buggyOnActivate != null) {
             throw new Exception("Use 'on-action' instead of 'on-activate' on row-action at " +
-                DomHelper.getLocation(buggyOnActivate));
+                                DomHelper.getLocation(buggyOnActivate));
         }
 
         Iterator iter = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
@@ -109,16 +109,16 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
 
         } else if ("page-first".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.FIRST);
-        
+
         } else if ("page-prev".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.PREV);
-        
+
         } else if ("page-next".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.NEXT);
-        
+
         } else if ("page-last".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.LAST);
-        
+
         } else if ("page-custom".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.CUSTOM);
 

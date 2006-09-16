@@ -23,6 +23,7 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
  * @version $Id$
  */
 public class OutputDefinition extends AbstractDatatypeWidgetDefinition {
+
     public Widget createInstance() {
         return new Output(this);
     }
