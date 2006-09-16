@@ -79,7 +79,13 @@ public class LocationUtils {
 
         String uri = location.getURI();
         if (uri != null) {
-            result.append(uri).append(':').append(location.getLineNumber()).append(':').append(location.getColumnNumber());
+            result.append(uri);
+            if (location.getLineNumber() != -1) {
+                result.append(':').append(location.getLineNumber());
+                if (location.getColumnNumber() != -1) {
+                    result.append(':').append(location.getColumnNumber());
+                }
+            }
         } else {
             result.append(UNKNOWN_STRING);
         }
