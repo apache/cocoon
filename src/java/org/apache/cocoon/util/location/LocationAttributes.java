@@ -172,7 +172,7 @@ public class LocationAttributes {
             return Location.UNKNOWN;
         }
 
-        return new LocationImpl(description == null ? elem.getNodeName() : description,
+        return new LocationImpl(description == null ? "<" + elem.getNodeName() + ">" : description,
                                 srcAttr.getValue(), getLine(elem), getColumn(elem));
     }
 
