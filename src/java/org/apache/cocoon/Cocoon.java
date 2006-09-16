@@ -99,10 +99,10 @@ public class Cocoon
 
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.
-    private static final LocationUtils.LocationFinder confLocFinder = new LocationUtils.LocationFinder() {
+    private static final LocationUtils.LocationFinder LOCATION_FINDER = new LocationUtils.LocationFinder() {
         public Location getLocation(Object obj, String description) {
             if (obj instanceof Configuration) {
-                Configuration config = (Configuration)obj;
+                Configuration config = (Configuration) obj;
                 String locString = config.getLocation();
                 Location result = LocationUtils.parse(locString);
                 if (LocationUtils.isKnown(result)) {
@@ -126,7 +126,9 @@ public class Cocoon
             if (obj instanceof Exception) {
                 // Many exceptions in Cocoon have a message like "blah blah at file://foo/bar.xml:12:1"
                 String msg = ((Exception)obj).getMessage();
-                if (msg == null) return null;
+                if (msg == null) {
+                    return null;
+                }
 
                 int pos = msg.lastIndexOf(" at ");
                 if (pos != -1) {
@@ -143,7 +145,7 @@ public class Cocoon
     };
 
     static {
-        LocationUtils.addFinder(confLocFinder);
+        LocationUtils.addFinder(LOCATION_FINDER);
     }
 
     static Cocoon instance;

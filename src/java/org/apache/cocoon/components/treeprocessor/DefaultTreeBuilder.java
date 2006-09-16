@@ -167,7 +167,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
-    
+
     public Object getAttribute(String name) {
         return this.attributes.get(name);
     }
@@ -437,7 +437,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     public ComponentManager getSitemapComponentManager() {
         return this.manager;
     }
-    
+
     /**
      * Setup a <code>ProcessingNode</code> by setting its location, calling all
      * the lifecycle interfaces it implements and giving it the parameter map if
@@ -450,7 +450,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
       throws Exception {
         Location location = getLocation(config);
         if (node instanceof AbstractProcessingNode) {
-            ((AbstractProcessingNode)node).setLocation(location);
+            ((AbstractProcessingNode) node).setLocation(location);
         }
 
         this.lifecycle.setupComponent(node, false);
@@ -479,7 +479,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             // So make some reasonable guess on the prefix until it becomes public
             String namespace = null;
             try {
-                namespace = ((AbstractConfiguration)config).getNamespace();
+                namespace = config.getNamespace();
             } catch (ConfigurationException e) {
                 // ignore
             }
@@ -487,7 +487,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
                 prefix="map";
             }
         }
-        
+
         StringBuffer desc = new StringBuffer().append('<');
         if (prefix.length() > 0) {
             desc.append(prefix).append(':').append(config.getName());
@@ -499,7 +499,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             desc.append(" type=\"").append(type).append('"');
         }
         desc.append('>');
-        
+
         Location rawLoc = LocationUtils.getLocation(config, null);
         return new LocationImpl(desc.toString(), rawLoc.getURI(), rawLoc.getLineNumber(), rawLoc.getColumnNumber());
     }
@@ -513,7 +513,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     protected Map getParameters(Configuration config, Location location) throws ConfigurationException {
 
         Configuration[] children = config.getChildren(this.parameterElement);
-        
+
         if (children.length == 0) {
             // Parameters are only the component's location
             // TODO Optimize this
