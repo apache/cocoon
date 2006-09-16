@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
+import org.apache.cocoon.util.location.Location;
+
 /**
  * This exception is thrown by WidgetDefinitions that contain other WidgetDefinitions,
  * such as the {@link FormDefinition} or the {@link RepeaterDefinition}, in case
@@ -23,9 +26,13 @@ package org.apache.cocoon.forms.formmodel;
  *
  * @version $Id$
  */
-public class DuplicateIdException extends Exception {
+public class DuplicateIdException extends FormsException {
 
     public DuplicateIdException(String message) {
         super(message);
+    }
+
+    public DuplicateIdException(String message, Location location) {
+        super(message, location);
     }
 }
