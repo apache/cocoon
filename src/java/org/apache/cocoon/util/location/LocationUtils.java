@@ -260,6 +260,7 @@ public class LocationUtils {
                     newFinders.remove(ref);
                     finders = newFinders;
                 }
+                continue;
             }
 
             Location result = finder.getLocation(obj, description);
