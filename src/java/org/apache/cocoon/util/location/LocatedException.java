@@ -70,8 +70,9 @@ public class LocatedException extends NestableException
      * used to print stacktraces.
      */
     public static void ensureCauseChainIsSet(Throwable thr) {
-        if (INIT_CAUSE_METHOD == null)
+        if (INIT_CAUSE_METHOD == null) {
             return;
+        }
 
         // Loop either until null or encountering exceptions that use this method.
         while (thr != null && !(thr instanceof LocatedRuntimeException) && !(thr instanceof LocatedException)) {
@@ -106,6 +107,7 @@ public class LocatedException extends NestableException
             // Locatable handles its location itself
             return;
         }
+
         // Add parent location first
         addCauseLocations(self, ExceptionUtils.getCause(cause));
         // then ourselve's
@@ -123,7 +125,7 @@ public class LocatedException extends NestableException
     }
 
     public Location getLocation() {
-        return locations == null ? null : (Location)locations.get(0);
+        return locations == null ? null : (Location) locations.get(0);
     }
 
     public List getLocations() {
@@ -161,8 +163,9 @@ public class LocatedException extends NestableException
     }
 
     public void addLocation(Location loc) {
-        if (LocationUtils.isUnknown(loc))
+        if (LocationUtils.isUnknown(loc)) {
             return;
+        }
 
         if (locations == null) {
             this.locations = new ArrayList(1); // Start small

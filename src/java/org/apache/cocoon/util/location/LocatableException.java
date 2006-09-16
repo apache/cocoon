@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,17 +26,17 @@ package org.apache.cocoon.util.location;
  * and location separately. This interface gives access to the raw message.
  * <p>
  * <strong>Note:</strong> care should be taken for locatable exceptions to use only immutable and
- * serializable implementations of {@link Location} 
+ * serializable implementations of {@link Location}
  * @see org.apache.cocoon.util.location.LocationImpl#get(Location)
- * 
+ *
  * @since 2.1.8
  * @version $Id$
  */
 public interface LocatableException extends Locatable {
-    
+
     /**
      * Get the raw message of the exception (the one used in the constructor)
-     * 
+     *
      * @return the raw message
      */
     public String getRawMessage();
