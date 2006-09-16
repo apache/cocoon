@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,23 +40,29 @@ public class NewDefinition extends AbstractWidgetDefinition {
     private ClassDefinition getClassDefinition() throws Exception {
         FormDefinition formDefinition = getFormDefinition();
         WidgetDefinition classDefinition = null;
-        
+
         // we found a form definition to ask
-        if( formDefinition != null ) {
-        	classDefinition = formDefinition.getWidgetDefinition(getId());
-        	
-        	if (classDefinition == null) // not found in local form, try library
+        if (formDefinition != null) {
+            classDefinition = formDefinition.getWidgetDefinition(getId());
+
+            if (classDefinition == null) { // not found in local form, try library
             	classDefinition = formDefinition.getLocalLibrary().getDefinition(getId());
+            }
         }
-        
-        if (classDefinition == null && getEnclosingLibrary() != null) // not found in form's library, so ask enclosing library
-        	classDefinition = getEnclosingLibrary().getDefinition(getId());
-        
-        if (classDefinition == null)
+
+        if (classDefinition == null && getEnclosingLibrary() != null) { // not found in form's library, so ask enclosing library
+            classDefinition = getEnclosingLibrary().getDefinition(getId());
+        }
+
+        if (classDefinition == null) {
             throw new Exception("NewDefinition: Class with id \"" + getId() + "\" does not exist (" + getLocation() + ")");
-        if (!(classDefinition instanceof ClassDefinition))
+        }
+
+        if (!(classDefinition instanceof ClassDefinition)) {
             throw new Exception("NewDefinition: Id \"" + getId() + "\" is not a class (" + getLocation() + ")");
-        return (ClassDefinition)classDefinition;
+        }
+
+        return (ClassDefinition) classDefinition;
     }
 
     // TODO: Should add checking for union defaults which would cause non-terminating recursion.
@@ -67,12 +73,17 @@ public class NewDefinition extends AbstractWidgetDefinition {
             ListIterator parentsIt = parents.listIterator(parents.size());
             while(parentsIt.hasPrevious()) {
                 WidgetDefinition definition = (WidgetDefinition)parentsIt.previous();
-                if (definition instanceof UnionDefinition) break;
-                if (definition == this)
-                    throw new Exception("NewDefinition: Non-terminating recursion detected in widget definition : "
-                        + parent.getId() + " (" + getLocation() + ")");
+                if (definition instanceof UnionDefinition) {
+                    break;
+                }
+
+                if (definition == this) {
+                    throw new Exception("NewDefinition: Non-terminating recursion detected in widget definition : " +
+                                        parent.getId() + " (" + getLocation() + ")");
+                }
             }
         }
+
         // Resolution
         resolving = true;
         parents.add(this);
@@ -85,7 +96,7 @@ public class NewDefinition extends AbstractWidgetDefinition {
             if (definition instanceof ContainerDefinition) {
                 ((ContainerDefinition)definition).resolve(parents, parent);
             }
-            
+
             // Add the current definition if it's not itself a "fd:new"
             if (definition instanceof NewDefinition) {
                 ((NewDefinition)definition).resolve(parents, parent);

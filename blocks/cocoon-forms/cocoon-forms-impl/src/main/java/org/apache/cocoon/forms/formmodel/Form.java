@@ -40,7 +40,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class Form extends AbstractContainerWidget
                   implements ValidationErrorAware {
-    
+
     /** Form parameter containing the submit widget's id */
     public static final String SUBMIT_ID_PARAMETER = "forms_submit_id";
 
@@ -128,7 +128,7 @@ public class Form extends AbstractContainerWidget
 
     /**
      * Mark a widget as being updated. When it Ajax mode, only updated widgets will be redisplayed
-     * 
+     *
      * @param widget the updated widget
      * @return <code>true</code> if this widget was added to the list (i.e. wasn't alredy marked for update)
      */
@@ -137,12 +137,12 @@ public class Form extends AbstractContainerWidget
             if (this.updatedWidgets.add(widget.getRequestParameterName())) {
                 // Wasn't already there: register parents
                 Widget parent = widget.getParent();
-                addParents: while (parent != this && parent != null) {
+                while (parent != this && parent != null) {
                     if (this.childUpdatedWidgets.add(parent.getRequestParameterName())) {
                         parent = parent.getParent();
                     } else {
                         // Parent already there, and therefore its own parents.
-                        break addParents;
+                        break;
                     }
                 }
                 return true;
@@ -245,14 +245,14 @@ public class Form extends AbstractContainerWidget
 
         if (this.submitWidget != null) {
             throw new IllegalStateException("Submit widget already set to " + this.submitWidget +
-                    ". Cannot set also " + widget);
+                                            ". Cannot set also " + widget);
         }
-        
+
         // Check that the submit widget is active
         if (widget.getCombinedState() != WidgetState.ACTIVE) {
             throw new IllegalStateException("Widget " + widget + " that submitted the form is not active.");
         }
-        
+
         // If the submit widget is not an action (e.g. a field with an event listener),
         // we end form processing after the current phase and redisplay the form.
         // Actions (including submits) will call endProcessing() themselves and it's their
@@ -309,7 +309,7 @@ public class Form extends AbstractContainerWidget
         fireEvents();
 
         this.phase = ProcessingPhase.PROCESSING_INITIALIZE;
-        
+
         // setup processing
         this.submitWidget = null;
         this.locale = formContext.getLocale();
@@ -334,7 +334,7 @@ public class Form extends AbstractContainerWidget
             // Find the submit widget, if not an action
             // This has to occur after reading from the request, to handle stateless forms
             // where the submit widget is recreated when the request is read (e.g. a row-action).
-            
+
             // Note that we don't check this if the submit widget was already set, as it can cause problems
             // if the user triggers submit with an input (which sets 'forms_submit_id'), then clicks back
             // and submits using a regular submit button.

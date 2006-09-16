@@ -53,7 +53,7 @@ public class Field extends AbstractWidget
      * If the field was rendered as a suggestion-list and the user chose one of the suggestions,
      * the field's value is the chosen item's value and the <code>SUGGESTED_LABEL_ATTR</code> field
      * attribute contains the chosen item's label.
-     * 
+     *
      * @see #isSuggested()
      * @since 2.1.9
      */
@@ -74,7 +74,7 @@ public class Field extends AbstractWidget
     protected Object value;
 
     protected boolean required;
-    
+
     /**
      * Value state indicating that a new value has been read from the request,
      * but has not yet been parsed.
@@ -152,34 +152,34 @@ public class Field extends AbstractWidget
         this.required = this.fieldDefinition.isRequired();
         super.initialize();
     }
-    
+
     /**
      * If this field has a selection-list, indicates if the value comes from that list
      * or if a new value was input by the user.
-     * 
+     *
      * @since 2.1.9
      * @return true if the user has chosen a suggested value
      */
     public boolean isSuggested() {
         return this.getAttribute(SUGGESTED_LABEL_ATTR) != null;
     }
-    
+
     /**
      * Set the suggestion label associated to the widget's current value. This is used to initialize
      * a combobox's rendering. If not such label exists, the widget's value is used.
-     * 
+     *
      * @since 2.1.9
      */
     public void setSuggestionLabel(String label) {
         if (this.fieldDefinition.getSuggestionList() == null) {
-            throw new FormsRuntimeException(this + " has no suggestion list", this.getLocation());
+            throw new FormsRuntimeException(this + " has no suggestion list", getLocation());
         }
         this.setAttribute(SUGGESTED_LABEL_ATTR, label);
     }
-    
+
     /**
      * If the user has chosen an item in a suggestion list, returns that item's label.
-     * 
+     *
      * @since 2.1.9
      * @return the item's label, or <code>null</code> if the user entered a new value or
      *         if there's not suggestion list.
@@ -267,14 +267,14 @@ public class Field extends AbstractWidget
 
         String paramName = getRequestParameterName();
         Request request = formContext.getRequest();
-        
+
         String newEnteredValue = request.getParameter(paramName);
 
         if (this.fieldDefinition.getSuggestionList() != null) {
             // The Dojo ComboBox sends the typed value or the chosen item's label in the
             // request parameter and sends an additional "*_selected" parameter containing
             // the value of the chosen item (if any).
-            // So if *_selected exists, use 
+            // So if *_selected exists, use
             String selectedValue = request.getParameter(paramName + "_selected");
             if (StringUtils.isNotEmpty(selectedValue)) {
                 setSuggestionLabel(newEnteredValue);
@@ -511,7 +511,7 @@ public class Field extends AbstractWidget
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             contentHandler.endElement(FormsConstants.INSTANCE_NS, VALUE_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALUE_EL);
         }
-        
+
         // Suggested label, if any
         String suggestedLabel = getSuggestionLabel();
         if (suggestedLabel != null) {
@@ -583,7 +583,7 @@ public class Field extends AbstractWidget
     public void setSelectionList(Object model, String valuePath, String labelPath) {
         setSelectionList(getFieldDefinition().buildSelectionListFromModel(model, valuePath, labelPath));
     }
-    
+
     public SelectionList getSuggestionList() {
         return getFieldDefinition().getSuggestionList();
     }
