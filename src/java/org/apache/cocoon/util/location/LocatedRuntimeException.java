@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,32 +30,35 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * <code>LocatedRuntimeException</code>, then the default behavior is to add the location to the cause
  * exception and immediately rethrow the cause. This avoids exception nesting and builds a location
  * stack.
- * 
+ *
  * @since 2.1.8
  * @version $Id$
  */
-public class LocatedRuntimeException extends NestableRuntimeException implements LocatableException, MultiLocatable {
-    
+public class LocatedRuntimeException extends NestableRuntimeException
+                                     implements LocatableException, MultiLocatable {
+
     private List locations;
 
     public LocatedRuntimeException(String message) {
         this(message, null, null, true);
     }
-    
-    public LocatedRuntimeException(String message, Throwable cause) throws LocatedRuntimeException {
+
+    public LocatedRuntimeException(String message, Throwable cause)
+    throws LocatedRuntimeException {
         this(message, cause, null, true);
     }
-    
+
     public LocatedRuntimeException(String message, Location location) {
         this(message, null, location, true);
     }
-    
-    public LocatedRuntimeException(String message, Throwable cause, Location location) throws LocatedRuntimeException {
+
+    public LocatedRuntimeException(String message, Throwable cause, Location location)
+    throws LocatedRuntimeException {
         this(message, cause, location, true);
     }
 
     public LocatedRuntimeException(String message, Throwable cause, Location location, boolean rethrowLocated)
-        throws LocatedRuntimeException {
+    throws LocatedRuntimeException {
         super(message, cause);
         if (rethrowLocated && cause instanceof LocatedRuntimeException) {
             LocatedRuntimeException lreCause = (LocatedRuntimeException)cause;
@@ -70,7 +73,7 @@ public class LocatedRuntimeException extends NestableRuntimeException implements
     }
 
     public Location getLocation() {
-        return locations == null ? null : (Location)locations.get(0);
+        return locations == null ? null : (Location) locations.get(0);
     }
 
     public List getLocations() {
@@ -84,10 +87,11 @@ public class LocatedRuntimeException extends NestableRuntimeException implements
     public String getMessage() {
         return LocatedException.getMessage(super.getMessage(), locations);
     }
-    
+
     public void addLocation(Location loc) {
-        if (LocationUtils.isUnknown(loc))
+        if (LocationUtils.isUnknown(loc)) {
             return;
+        }
 
         if (locations == null) {
             this.locations = new ArrayList(1); // Start small
