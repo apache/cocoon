@@ -60,9 +60,10 @@ public class WidgetDefinitionList {
                 Location containerLocation = containerDefinition.getLocation();
                 Location firstLocation = getWidgetDefinition(id).getLocation();
                 throw new DuplicateIdException(
-                    "Duplicate widget id \"" + id + "\" detected at " + duplicateLocation + ".\n" +
-                    "Container widget \"" + containerDefinition.getId() + "\" at " + containerLocation + "\n" +
-                    "already contains a widget with id \"" + id + "\" at " + firstLocation + ".");
+                    "Detected duplicate widget id '" + id + "'.\n" +
+                    "Container widget '" + containerDefinition.getId() + "' at " + containerLocation + "\n" +
+                    "already contains a widget with the same id at " + firstLocation + ".",
+                        duplicateLocation);
             }
             widgetDefinitionsById.put(widgetDefinition.getId(), widgetDefinition);
         }
