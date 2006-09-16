@@ -87,6 +87,7 @@ public class LocatedException extends Exception
             // Locatable handles its location itself
             return;
         }
+
         // Add parent location first
         addCauseLocations(self, ExceptionUtils.getCause(cause));
         // then ourselve's
@@ -104,7 +105,7 @@ public class LocatedException extends Exception
     }
 
     public Location getLocation() {
-        return locations == null ? null : (Location)locations.get(0);
+        return locations == null ? null : (Location) locations.get(0);
     }
 
     public List getLocations() {
@@ -142,8 +143,9 @@ public class LocatedException extends Exception
     }
 
     public void addLocation(Location loc) {
-        if (LocationUtils.isUnknown(loc))
+        if (LocationUtils.isUnknown(loc)) {
             return;
+        }
 
         if (locations == null) {
             this.locations = new ArrayList(1); // Start small
