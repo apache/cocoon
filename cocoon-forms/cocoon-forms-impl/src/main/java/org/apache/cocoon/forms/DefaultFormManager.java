@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms;
 
-import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -42,6 +41,7 @@ import org.apache.cocoon.forms.formmodel.library.LibraryManager;
 import org.apache.cocoon.forms.formmodel.library.LibraryManagerImpl;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.SimpleServiceSelector;
+import org.apache.cocoon.util.location.LocationImpl;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -131,8 +131,13 @@ public class DefaultFormManager extends AbstractLogEnabled
         SourceResolver resolver = null;
         Source source = null;
         try {
-            resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(uri);
+            try {
+                resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+                source = resolver.resolveURI(uri);
+            } catch (Exception e) {
+                throw new FormsException("Could not resolve form definition URI.",
+                                         e, new LocationImpl("[FormManager]", uri));
+            }
             return createForm(source);
         } finally {
             if (source != null) {
@@ -161,8 +166,13 @@ public class DefaultFormManager extends AbstractLogEnabled
         SourceResolver sourceResolver = null;
         Source source = null;
         try {
-            sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
-            source = sourceResolver.resolveURI(uri);
+            try {
+                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+                source = sourceResolver.resolveURI(uri);
+            } catch (Exception e) {
+                throw new FormsException("Could not resolve form definition.",
+                                         e, new LocationImpl("[FormManager]", uri));
+            }
             return createFormDefinition(source);
         } finally {
             if (source != null) {
@@ -191,8 +201,8 @@ public class DefaultFormManager extends AbstractLogEnabled
                 inputSource.setSystemId(source.getURI());
                 formDocument = DomHelper.parse(inputSource, this.manager);
             } catch (Exception e) {
-                throw new CascadingException("Could not parse form definition from " +
-                                             source.getURI(), e);
+                throw new FormsException("Could not parse form definition.",
+                                         e, new LocationImpl("[FormManager]", source.getURI()));
             }
 
             Element formElement = formDocument.getDocumentElement();
@@ -205,7 +215,8 @@ public class DefaultFormManager extends AbstractLogEnabled
     public FormDefinition createFormDefinition(Element formElement) throws Exception {
         // check that the root element is a fd:form element
         if (!FormsConstants.DEFINITION_NS.equals(formElement.getNamespaceURI()) || !formElement.getLocalName().equals("form")) {
-            throw new Exception("Expected a Cocoon Forms form element at " + DomHelper.getLocation(formElement));
+            throw new FormsException("Expected forms definition <fd:form> element.",
+                                     DomHelper.getLocationObject(formElement));
         }
 
         FormDefinitionBuilder builder = (FormDefinitionBuilder) widgetDefinitionBuilderSelector.select("form");
