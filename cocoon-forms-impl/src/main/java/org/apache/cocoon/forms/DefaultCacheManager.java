@@ -15,52 +15,37 @@
  */
 package org.apache.cocoon.forms;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.commons.collections.FastHashMap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 
-import java.io.IOException;
-import java.util.Map;
+import org.apache.commons.collections.FastHashMap;
 
 /**
  * Component implementing the {@link CacheManager} role.
  *
  * @version $Id$
  */
-public class DefaultCacheManager
-        extends AbstractLogEnabled
-        implements CacheManager, ThreadSafe, Serviceable, Disposable,
-                   Configurable, Component {
-// FIXME: Component is there to allow this block to also run in the 2.1 branch
+public class DefaultCacheManager extends AbstractLogEnabled
+                                 implements CacheManager, Disposable, ThreadSafe, Component {
+    // NOTE: Component is there to allow this block to also run in the 2.1 branch
 
-    protected ServiceManager manager;
-    protected Configuration configuration;
+    // FIXME Unbounded map - the road to OOME
     protected Map cache;
+
 
     public DefaultCacheManager() {
         this.cache = new FastHashMap();
     }
 
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.manager = serviceManager;
-    }
-
-    /**
-     * Configurable
-     */
-    public void configure(Configuration configuration) throws ConfigurationException {
-        this.configuration = configuration;
+    public void dispose() {
+        this.cache = null;
     }
 
     public Object get(Source source, String prefix) {
@@ -92,19 +77,15 @@ public class DefaultCacheManager
     }
 
     public void set(Object object, Source source, String prefix) throws IOException {
-        final String key = prefix + source.getURI();
         final SourceValidity validity = source.getValidity();
         if (validity != null) {
-            Object[] objectAndValidity = {object,  validity};
-            this.cache.put(key, objectAndValidity);
+            final String key = prefix + source.getURI();
+            this.cache.put(key, new Object[]{ object, validity });
         }
     }
 
-    /**
-     * Disposable
-     */
-    public void dispose() {
-        this.manager = null;
-        this.cache = null;
+    public void remove(Source source, String prefix) throws IOException {
+        final String key = prefix + source.getURI();
+        this.cache.remove(key);
     }
 }
