@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,20 +23,20 @@ import org.apache.cocoon.forms.event.ActionListener;
 /**
  * Abstract repeater action. Subclasses will typically just self-add an
  * event handler that will act on the repeater.
- * 
+ *
  * @see RepeaterActionDefinitionBuilder
  * @version $Id$
  */
 public abstract class RepeaterActionDefinition extends ActionDefinition {
 
     private String name = null;
-    
+
     /**
      * Builds an action whose target repeater is the parent of this widget
      */
     public RepeaterActionDefinition() {
     }
-    
+
     /**
      * Builds an action whose target is a sibling of this widget
      * @param repeaterName the name of the repeater
@@ -44,38 +44,38 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
     public RepeaterActionDefinition(String repeaterName) {
         this.name = repeaterName;
     }
-    
+
     /**
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
     	super.initializeFrom(definition);
-    	
-    	if(definition instanceof RepeaterActionDefinition) {
-    		RepeaterActionDefinition other = (RepeaterActionDefinition)definition;
-    		
-    		this.name = other.name;
-    		
+
+        if (definition instanceof RepeaterActionDefinition) {
+            RepeaterActionDefinition other = (RepeaterActionDefinition) definition;
+
+            this.name = other.name;
+
     	} else {
-    		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
-    	}
+            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        }
     }
 
     public Widget createInstance() {
         return new RepeaterAction(this);
     }
-    
+
     /**
      * Get the name of the repeater on which to act. If <code>null</code>, the repeater
      * is the parent of the current widget (i.e. actions are in repeater rows). Otherwise,
      * the repeater is a sibling of the current widget.
-     * 
+     *
      * @return the repeater name (can be <code>null</code>).
      */
     public String getRepeaterName() {
         return this.name;
     }
-    
+
     //---------------------------------------------------------------------------------------------
 
     /**
@@ -98,17 +98,17 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
          */
         public void initializeFrom(WidgetDefinition definition) throws Exception {
         	super.initializeFrom(definition);
-        	
+
         	if(definition instanceof DeleteRowsActionDefinition) {
         		DeleteRowsActionDefinition other = (DeleteRowsActionDefinition)definition;
-        		
+
         		this.selectName = other.selectName;
-        		
+
         	} else {
         		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
         	}
         }
-        
+
         public boolean hasActionListeners() {
             // we always want to be notified
             return true;
@@ -145,7 +145,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
                     for (int i=0; i<AddRowActionDefinition.this.insertRows; i++) {
-                        repeater.addRow(); 
+                        repeater.addRow();
                     }
                 }
             });
@@ -168,14 +168,14 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
         public void initializeFrom(WidgetDefinition definition) throws Exception {
         	super.initializeFrom(definition);
 
-        	if(definition instanceof InsertRowsActionDefinition) {
-        		InsertRowsActionDefinition other = (InsertRowsActionDefinition)definition;
+            if (definition instanceof InsertRowsActionDefinition) {
+                InsertRowsActionDefinition other = (InsertRowsActionDefinition) definition;
 
-        		this.selectName = other.selectName;
+                this.selectName = other.selectName;
 
-        	} else {
-        		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
-        	}
+            } else {
+                throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+            }
         }
 
         public InsertRowsActionDefinition(String repeaterName, String selectWidgetName) {
@@ -204,14 +204,14 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             });
         }
     }
-    
 
-  
+
+
     public static class ChangePageActionDefinition extends RepeaterActionDefinition {
 
        protected int method;
-       
-       public static final int FIRST = 0; 
+
+       public static final int FIRST = 0;
        public static final int PREV = 1;
        public static final int NEXT = 2;
        public static final int LAST = 3;
@@ -222,25 +222,27 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
          */
         public void initializeFrom(WidgetDefinition definition) throws Exception {
             super.initializeFrom(definition);
-            if(definition instanceof ChangePageActionDefinition) {
-                ChangePageActionDefinition other = (ChangePageActionDefinition)definition;
+            if (definition instanceof ChangePageActionDefinition) {
+                ChangePageActionDefinition other = (ChangePageActionDefinition) definition;
+
                 this.method = other.method;
+
             } else {
-                throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
+                throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
             }
         }
 
         public ChangePageActionDefinition(String repeaterName, int m) {
             super(repeaterName);
-            
+
             this.method = m;
-            
+
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
-                    
+
                     int page = repeater.getCurrentPage();
-                    
+
                     if (method == FIRST) {
                         page = 0;
                     } else if (method == PREV && page > 0) {
@@ -254,7 +256,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                     } else {
                         return;
                     }
-                    
+
                     if (repeater.isPageable()) {
                         try {
                             if (repeater.validate()) {
@@ -265,11 +267,11 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } 
+                    }
                 }
             });
         }
     }
-    
-    
+
+
 }

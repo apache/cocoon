@@ -206,7 +206,8 @@ public class MultiValueField extends AbstractWidget
         } else if (value.getClass().isArray()) {
             setValues((Object[])value);
         } else {
-            throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " + value.getClass().getName());
+            throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " +
+                                       value.getClass().getName());
         }
         getForm().addWidgetUpdate(this);
     }
@@ -214,8 +215,10 @@ public class MultiValueField extends AbstractWidget
     public void setValues(Object[] values) {
         // check that all the objects in the array correspond to the datatype
         for (int i = 0; i < values.length; i++) {
-            if (!definition.getDatatype().getTypeClass().isAssignableFrom(values[i].getClass()))
-                throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " + values[i].getClass().getName());
+            if (!definition.getDatatype().getTypeClass().isAssignableFrom(values[i].getClass())) {
+                throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " +
+                                           values[i].getClass().getName());
+            }
         }
         Object[] oldValues = this.values;
         this.values = values;
@@ -233,8 +236,7 @@ public class MultiValueField extends AbstractWidget
         }
 
         if (selectionList.getDatatype() != null &&
-            selectionList.getDatatype() != definition.getDatatype()) {
-
+                selectionList.getDatatype() != definition.getDatatype()) {
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         }
         this.selectionList = selectionList;

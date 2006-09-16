@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -46,7 +46,7 @@ public class WidgetDefinitionList {
         this.containerDefinition = definition;
         wasHere = false;
     }
-    
+
     public int size() {
     	return widgetDefinitions.size();
     }
@@ -78,7 +78,7 @@ public class WidgetDefinitionList {
     }
 
     public WidgetDefinition getWidgetDefinition(String id) {
-        return (WidgetDefinition)widgetDefinitionsById.get(id);
+        return (WidgetDefinition) widgetDefinitionsById.get(id);
     }
 
     public void resolve(List parents, WidgetDefinition parent) throws Exception {
@@ -87,16 +87,17 @@ public class WidgetDefinitionList {
             this.definitionsIt = widgetDefinitions.listIterator();
             parents.add(containerDefinition);
             while (this.definitionsIt.hasNext()) {
-                WidgetDefinition widgetDefinition = (WidgetDefinition)this.definitionsIt.next();
+                WidgetDefinition widgetDefinition = (WidgetDefinition) this.definitionsIt.next();
                 // ClassDefinition's get resolved by NewDefinition rather than here.
                 if (!(widgetDefinition instanceof ClassDefinition)) {
                     if (widgetDefinition instanceof NewDefinition) {
                         // Remove NewDefinition in preparation for its referenced class of widget definitions to be added.
                         this.definitionsIt.remove();
-                        ((NewDefinition)widgetDefinition).resolve(parents, containerDefinition);
+                        ((NewDefinition) widgetDefinition).resolve(parents, containerDefinition);
                     } else {
-                        if (widgetDefinition instanceof ContainerDefinition)
-                            ((ContainerDefinition)widgetDefinition).resolve(parents, containerDefinition);
+                        if (widgetDefinition instanceof ContainerDefinition) {
+                            ((ContainerDefinition) widgetDefinition).resolve(parents, containerDefinition);
+                        }
                     }
                 }
             }
@@ -108,53 +109,61 @@ public class WidgetDefinitionList {
             ListIterator parentsIt = parents.listIterator(parents.size());
             while(parentsIt.hasPrevious()) {
                 WidgetDefinition widgetDefinition = (WidgetDefinition)parentsIt.previous();
-                if (widgetDefinition instanceof UnionDefinition) break;
-                if (widgetDefinition instanceof RepeaterDefinition) break;
+                if (widgetDefinition instanceof UnionDefinition) {
+                    break;
+                }
+                if (widgetDefinition instanceof RepeaterDefinition) {
+                    break;
+                }
                 if (widgetDefinition == containerDefinition) {
                     Location location = containerDefinition.getLocation();
                     if (parent instanceof FormDefinition) {
                         throw new Exception("Container: Non-terminating recursion detected in form definition (" + location + ")");
-                    } 
-                    throw new Exception("Container: Non-terminating recursion detected in widget definition: "
-                        + parent.getId() + " (" + location + ")");
+                    }
+
+                    throw new Exception("Container: Non-terminating recursion detected in widget definition: " +
+                                        parent.getId() + " (" + location + ")");
                 }
             }
         }
     }
- 
+
     public void createWidget(Widget parent, String id) {
-        WidgetDefinition widgetDefinition = (WidgetDefinition)widgetDefinitionsById.get(id);
+        WidgetDefinition widgetDefinition = (WidgetDefinition) widgetDefinitionsById.get(id);
         if (widgetDefinition == null) {
             throw new RuntimeException(containerDefinition.getId() + ": WidgetDefinition \"" + id +
-                    "\" does not exist (" + containerDefinition.getLocation() + ")");
+                                       "\" does not exist (" + containerDefinition.getLocation() + ")");
         }
+
         Widget widget = widgetDefinition.createInstance();
-        if (widget != null)
-            ((ContainerWidget)parent).addChild(widget);
+        if (widget != null) {
+            ((ContainerWidget) parent).addChild(widget);
+        }
     }
 
     public void createWidgets(Widget parent) {
-        Iterator definitionsIt = widgetDefinitions.iterator();
-        while (definitionsIt.hasNext()) {
-            WidgetDefinition widgetDefinition = (WidgetDefinition)definitionsIt.next();
+        Iterator i = widgetDefinitions.iterator();
+        while (i.hasNext()) {
+            WidgetDefinition widgetDefinition = (WidgetDefinition) i.next();
             Widget widget = widgetDefinition.createInstance();
-            if (widget != null)
-                ((ContainerWidget)parent).addChild(widget);
+            if (widget != null) {
+                ((ContainerWidget) parent).addChild(widget);
+            }
         }
     }
 
     public void checkCompleteness() throws IncompletenessException {
         if (!wasHere) {
             wasHere = true;
-// FIXME: is it legal to have no widgets in a container? There are some cases of this in Swan
-//            if(size() == 0)
-//                throw new IncompletenessException(this.containerDefinition.getClass().getName() + 
-//                        " requires at least one child widget!", this.containerDefinition);
-            
+            // FIXME: is it legal to have no widgets in a container? There are some cases of this in Swan
+            // if(size() == 0)
+            //     throw new IncompletenessException(this.containerDefinition.getClass().getName() +
+            //                                       " requires at least one child widget!", this.containerDefinition);
+
             // now check children's completeness
-            Iterator it = widgetDefinitions.iterator();
-            while(it.hasNext()) {
-                ((WidgetDefinition)it.next()).checkCompleteness();
+            Iterator i = widgetDefinitions.iterator();
+            while (i.hasNext()) {
+                ((WidgetDefinition) i.next()).checkCompleteness();
             }
             wasHere = false;
         }
