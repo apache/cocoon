@@ -121,10 +121,6 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
             widgetDefinition.setId(DomHelper.getAttribute(widgetElement, "id", ""));
         } else {
             String id = DomHelper.getAttribute(widgetElement, "id");
-            if (id.length() < 1) {
-                throw new Exception("Missing id attribute on element '" + widgetElement.getTagName() + "' at " +
-                                    DomHelper.getLocation(widgetElement));
-            }
             if (id.indexOf('/') != -1 || id.indexOf('.') != -1) {
                 throw new Exception("A widget name cannot contain '.' or '/' as this conflicts with widget paths, at " +
                                     DomHelper.getLocation(widgetElement));

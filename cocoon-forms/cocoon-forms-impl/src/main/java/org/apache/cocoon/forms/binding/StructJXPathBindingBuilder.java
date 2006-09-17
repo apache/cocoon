@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,11 +33,10 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class StructJXPathBindingBuilder
-    extends JXPathBindingBuilderBase {
+public class StructJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
-            throws BindingException {
+    throws BindingException {
         Deprecation.logger.info("'fb:struct' is deprecated and replaced by 'fb:group' at " + DomHelper.getLocation(bindingElm));
         try {
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
@@ -46,20 +45,22 @@ public class StructJXPathBindingBuilder
 
             JXPathBindingBase[] childBindings = new JXPathBindingBase[0];
 
-//          do inheritance
-            StructJXPathBinding otherBinding = (StructJXPathBinding)assistant.getContext().getSuperBinding();
-            if(otherBinding!=null) {
-            	childBindings = otherBinding.getChildBindings();
-            	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(),commonAtts);
-            	
-            	if(xpath==null)
-            		xpath = otherBinding.getXPath();
-            	if(widgetId==null)
-            		widgetId = otherBinding.getId();
+            // do inheritance
+            StructJXPathBinding otherBinding = (StructJXPathBinding) assistant.getContext().getSuperBinding();
+            if (otherBinding != null) {
+                childBindings = otherBinding.getChildBindings();
+                commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(), commonAtts);
+
+                // FIXME Never happens
+                if (xpath == null)
+                    xpath = otherBinding.getXPath();
+                // FIXME Never happens
+                if (widgetId == null)
+                    widgetId = otherBinding.getId();
             }
-            
+
             childBindings = assistant.makeChildBindings(bindingElm,childBindings);
-            
+
             StructJXPathBinding structBinding =
                 new StructJXPathBinding(commonAtts, widgetId, xpath, childBindings);
             return structBinding;

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * by delegating the creation of them to {@link DatatypeBuilder}s and {@link ValidationRuleBuilder}s.
  * Currently the list of datatype and validationrule builders is hardcoded, but this will
  * become externally configurable in the future.
- * 
+ *
  * @version $Id$
  *
  */
@@ -83,9 +83,9 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
 
     public Datatype createDatatype(Element datatypeElement, boolean arrayType) throws Exception {
         String typeName = DomHelper.getAttribute(datatypeElement, "base");
-        DatatypeBuilder builder = null;
+        DatatypeBuilder builder;
         try {
-            builder = (DatatypeBuilder)typeBuilderSelector.select(typeName);
+            builder = (DatatypeBuilder) typeBuilderSelector.select(typeName);
         } catch (ServiceException e) {
             throw new CascadingException("Unknown datatype '" + typeName + "' specified at " + DomHelper.getLocation(datatypeElement), e);
         }
@@ -94,9 +94,9 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
 
     public ValidationRule createValidationRule(Element validationRuleElement) throws Exception {
         String name  = validationRuleElement.getLocalName();
-        ValidationRuleBuilder builder = null;
+        ValidationRuleBuilder builder;
         try {
-            builder = (ValidationRuleBuilder)validationRuleBuilderSelector.select(name);
+            builder = (ValidationRuleBuilder) validationRuleBuilderSelector.select(name);
         } catch (ServiceException e) {
             throw new CascadingException("Unknown validation rule \"" + name + "\" specified at " + DomHelper.getLocation(validationRuleElement), e);
         }
