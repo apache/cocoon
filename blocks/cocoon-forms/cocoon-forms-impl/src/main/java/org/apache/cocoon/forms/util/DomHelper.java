@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,19 +22,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
 import javax.xml.XMLConstants;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.xml.sax.XMLizable;
+
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationAttributes;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -58,7 +60,7 @@ import org.xml.sax.SAXNotSupportedException;
  * <p>This class depends specifically on the Xerces DOM implementation to be
  * able to provide information about the location of elements in their source
  * XML file. See the {@link #getLocation(Element)} method.
- * 
+ *
  * @version $Id$
  */
 public class DomHelper {
@@ -77,11 +79,11 @@ public class DomHelper {
     public static String getLocation(Element element) {
         return LocationAttributes.getLocationString(element);
     }
-    
+
     public static String getSystemIdLocation(Element element) {
         return LocationAttributes.getURI(element);
     }
-    
+
     public static int getLineLocation(Element element) {
         return LocationAttributes.getLine(element);
     }
@@ -103,7 +105,7 @@ public class DomHelper {
                     && namespace.equals(node.getNamespaceURI()))
                 elements.add(node);
         }
-        return (Element[])elements.toArray(new Element[elements.size()]);
+        return (Element[]) elements.toArray(new Element[elements.size()]);
     }
 
     /**
@@ -111,27 +113,29 @@ public class DomHelper {
      * namespace and have the given local name.
      */
     public static Element[] getChildElements(Element element,
-            String namespace, String localName) {
+                                             String namespace,
+                                             String localName) {
         ArrayList elements = new ArrayList();
         NodeList nodeList = element.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node instanceof Element
-                    && namespace.equals(node.getNamespaceURI()) 
+                    && namespace.equals(node.getNamespaceURI())
                     && localName.equals(node.getLocalName())) {
                 elements.add(node);
             }
         }
-        return (Element[])elements.toArray(new Element[elements.size()]);
+        return (Element[]) elements.toArray(new Element[elements.size()]);
     }
 
     /**
      * Returns the first child element with the given namespace and localName,
      * or null if there is no such element.
      */
-    public static Element getChildElement(Element element, String namespace, 
-            String localName) {
-        Element node = null;
+    public static Element getChildElement(Element element,
+                                          String namespace,
+                                          String localName) {
+        Element node;
         try {
             node = getChildElement(element, namespace, localName, false);
         } catch (Exception e) {
@@ -145,24 +149,26 @@ public class DomHelper {
      * or null if there is no such element and required flag is unset or
      * throws an Exception if the "required" flag is set.
      */
-    public static Element getChildElement(Element element, String namespace, 
-            String localName, boolean required) throws Exception {
+    public static Element getChildElement(Element element,
+                                          String namespace,
+                                          String localName,
+                                          boolean required) throws Exception {
         NodeList nodeList = element.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node instanceof Element
-                    && namespace.equals(node.getNamespaceURI()) 
+                    && namespace.equals(node.getNamespaceURI())
                     && localName.equals(node.getLocalName())) {
-                return (Element)node;
+                return (Element) node;
             }
         }
+
         if (required) {
-            throw new Exception("Missing element \"" + localName +
-                    "\" as child of element \"" + element.getTagName() + 
-                    "\" at " + DomHelper.getLocation(element));
-        } else {
-            return null;
+            throw new FormsException("Required element '" + localName + "' is missing.",
+                                     DomHelper.getLocationObject(element));
         }
+
+        return null;
     }
 
     /**
@@ -170,22 +176,23 @@ public class DomHelper {
      * if the element has no such attribute.
      */
     public static String getAttribute(Element element, String attributeName)
-            throws Exception {
+    throws Exception {
         String attrValue = element.getAttribute(attributeName);
         if (attrValue.length() == 0) {
-            throw new Exception("Missing attribute \"" + attributeName + 
-                    "\" on element \"" + element.getTagName() + 
-                    "\" at " + getLocation(element));
+            throw new FormsException("Required attribute '" + attributeName + "' is missing.",
+                                     DomHelper.getLocationObject(element));
         }
+
         return attrValue;
     }
 
     /**
-     * Returns the value of an element's attribute, or a default value if the 
+     * Returns the value of an element's attribute, or a default value if the
      * element has no such attribute.
      */
-    public static String getAttribute(Element element, String attributeName, 
-            String defaultValue) {
+    public static String getAttribute(Element element,
+                                      String attributeName,
+                                      String defaultValue) {
         String attrValue = element.getAttribute(attributeName);
         if (attrValue.length() == 0) {
             return defaultValue;
@@ -193,58 +200,58 @@ public class DomHelper {
         return attrValue;
     }
 
-    public static int getAttributeAsInteger(Element element, 
-            String attributeName) throws Exception {
+    public static int getAttributeAsInteger(Element element,
+                                            String attributeName) throws Exception {
         String attrValue = getAttribute(element, attributeName);
         try {
             return Integer.parseInt(attrValue);
         } catch (NumberFormatException e) {
-            throw new Exception("Cannot parse the value \"" + attrValue + 
-                    "\" as an integer in the attribute \"" + attributeName + 
-                    "\" on the element \"" + element.getTagName() + 
-                    "\" at " + getLocation(element));
+            throw new FormsException("Cannot parse the value '" + attrValue + "' " +
+                                     "as an integer in the attribute '" + attributeName + "'," +
+                                     DomHelper.getLocationObject(element));
         }
     }
 
-    public static int getAttributeAsInteger(Element element, 
-            String attributeName, int defaultValue) throws Exception {
+    public static int getAttributeAsInteger(Element element,
+                                            String attributeName,
+                                            int defaultValue) throws Exception {
         String attrValue = element.getAttribute(attributeName);
         if (attrValue.length() == 0) {
             return defaultValue;
-        } else {
-            try {
-                return Integer.parseInt(attrValue);
-            } catch (NumberFormatException e) {
-                throw new Exception("Cannot parse the value \"" + attrValue + 
-                        "\" as an integer in the attribute \"" + 
-                        attributeName + "\" on the element \"" +
-                        element.getTagName() + "\" at " +
-                        getLocation(element));
-            }
+        }
+
+        try {
+            return Integer.parseInt(attrValue);
+        } catch (NumberFormatException e) {
+            throw new FormsException("Cannot parse the value '" + attrValue + "' " +
+                                     "as an integer in the attribute '" + attributeName + "'," +
+                                     DomHelper.getLocationObject(element));
         }
     }
 
-    public static boolean getAttributeAsBoolean(Element element, 
-                String attributeName, boolean defaultValue) {
+    public static boolean getAttributeAsBoolean(Element element,
+                                                String attributeName,
+                                                boolean defaultValue) {
         String attrValue = element.getAttribute(attributeName);
+        if (attrValue.length() == 0) {
+            return defaultValue;
+        }
+
         Boolean result;
         try {
             result = BooleanUtils.toBooleanObject(attrValue, "true", "false", null);
-        } catch (IllegalArgumentException iae) {
-            result = null;
+        } catch (IllegalArgumentException e1) {
+            try {
+                result = BooleanUtils.toBooleanObject(attrValue, "yes", "no", null);
+            } catch (IllegalArgumentException e2) {
+                result = null;
+            }
         }
-        if (result != null) {
-            return result.booleanValue();
+        if (result == null) {
+            return defaultValue;
         }
-        try {
-            result = BooleanUtils.toBooleanObject(attrValue, "yes", "no", null);
-        } catch (IllegalArgumentException iae) {
-            result = null;
-        }
-        if (result != null) {
-            return result.booleanValue();
-        }
-        return defaultValue;    
+
+        return result.booleanValue();
     }
 
     public static String getElementText(Element element) {
@@ -281,9 +288,8 @@ public class DomHelper {
             } catch (SAXException e) {
                 // It's unlikely that an exception will occur here,
                 // so use a runtime exception
-                throw new RuntimeException(
-                        "Error in DomHelper.compileElementContent: " + 
-                        e.toString());
+                throw new RuntimeException("Error in DomHelper.compileElementContent: " +
+                                           e.toString());
             }
         }
         return saxBuffer;
@@ -298,69 +304,63 @@ public class DomHelper {
      * @param manager the service manager where to lookup the entity resolver
      */
     public static Document parse(InputSource inputSource, ServiceManager manager)
-            throws SAXException, SAXNotSupportedException, IOException, ServiceException {
-        
+    throws SAXException, SAXNotSupportedException, IOException, ServiceException {
+
         SAXParser parser = (SAXParser)manager.lookup(SAXParser.ROLE);
         DOMBuilder builder = new DOMBuilder();
-        
+
         // Enhance the sax stream with location information
         ContentHandler locationHandler = new LocationAttributes.Pipe(builder);
-        
+
         try {
             parser.parse(inputSource, locationHandler);
         } finally {
             manager.release(parser);
         }
-        
+
         return builder.getDocument();
     }
 
-    public static Map getLocalNSDeclarations(Element elm)
-    {
+    public static Map getLocalNSDeclarations(Element elm) {
         return addLocalNSDeclarations(elm, null);
     }
-    
-    private static Map addLocalNSDeclarations(Element elm, Map nsDeclarations)
-    {
+
+    private static Map addLocalNSDeclarations(Element elm, Map nsDeclarations) {
         NamedNodeMap atts = elm.getAttributes();
         int attsSize = atts.getLength();
 
-        for (int i = 0; i < attsSize; i++)
-        {
-            Attr attr = (Attr)atts.item(i);
-            if (XMLNS_URI.equals(attr.getNamespaceURI()))
-            {
+        for (int i = 0; i < attsSize; i++) {
+            Attr attr = (Attr) atts.item(i);
+            if (XMLNS_URI.equals(attr.getNamespaceURI())) {
                 String nsUri = attr.getValue();
                 String pfx = attr.getLocalName();
                 if (nsDeclarations == null)
                     nsDeclarations = new HashMap();
                 nsDeclarations.put(nsUri, pfx);
             }
-        }        
-        return nsDeclarations;    }
-    
-    public static Map getInheritedNSDeclarations(Element elm)
-    {
+        }
+        return nsDeclarations;
+    }
+
+    public static Map getInheritedNSDeclarations(Element elm) {
         List ancestorsAndSelf = new LinkedList();
         Element current = elm;
-        while (current != null) 
-        {
+        while (current != null) {
             ancestorsAndSelf.add(current);
             Node parent = current.getParentNode();
             if (parent.getNodeType() == Node.ELEMENT_NODE)
-                current = (Element)parent;
-            else 
+                current = (Element) parent;
+            else
                 current = null;
         }
-        
+
         Map nsDeclarations = null;
-        ListIterator iter = ancestorsAndSelf.listIterator(ancestorsAndSelf.size());
-        while (iter.hasPrevious())
-        {
-            Element element = (Element) iter.previous();
+        ListIterator i = ancestorsAndSelf.listIterator(ancestorsAndSelf.size());
+        while (i.hasPrevious()) {
+            Element element = (Element) i.previous();
             nsDeclarations = addLocalNSDeclarations(element, nsDeclarations);
         }
-        
+
         return nsDeclarations;
     }
 }
