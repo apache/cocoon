@@ -56,7 +56,7 @@ public class DefaultFormManager extends AbstractLogEnabled
                                            Disposable, ThreadSafe, Component {
     // NOTE: Component is there to allow this block to run in the 2.1 branch
 
-    protected static final String PREFIX = "CocoonForm:";
+    private static final String PREFIX = "CocoonForms:";
 
     private Context avalonContext;
     protected ServiceManager manager;

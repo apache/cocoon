@@ -39,7 +39,7 @@ public class FormDefinition extends AbstractContainerDefinition {
 
     public FormDefinition(LibraryManager libraryManager) {
         super();
-        localLibrary = libraryManager.getNewLibrary();
+        localLibrary = libraryManager.newLibrary();
     }
 
     public Library getLocalLibrary() {

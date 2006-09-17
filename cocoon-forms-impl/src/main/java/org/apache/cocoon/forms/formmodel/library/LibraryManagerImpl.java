@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms.formmodel.library;
 
-import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -33,6 +32,7 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.forms.CacheManager;
 import org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.location.LocationImpl;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -45,7 +45,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
                                 implements LibraryManager, Serviceable, Configurable,
                                            Disposable, ThreadSafe, Component {
 
-    protected static final String PREFIX = "CocoonFormLibrary:";
+    private static final String PREFIX = "CocoonFormsLibrary:";
 
     private ServiceManager manager;
     private CacheManager cacheManager;
@@ -78,39 +78,40 @@ public class LibraryManagerImpl extends AbstractLogEnabled
     // Business methods
     //
 
-    public boolean libraryInCache(String sourceURI) throws Exception {
-        return libraryInCache(sourceURI, null);
+    public Library get(String sourceURI) throws LibraryException {
+        return get(sourceURI, null);
     }
 
-    public boolean libraryInCache(String sourceURI, String baseURI) throws Exception {
+    public Library get(String sourceURI, String baseURI) throws LibraryException {
         SourceResolver sourceResolver = null;
         Source source = null;
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Checking if library is in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
-        }
-
-        Library lib;
-        boolean result = false;
         try {
-            sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-            source = sourceResolver.resolveURI(sourceURI, baseURI, null);
+            try {
+                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+                source = sourceResolver.resolveURI(sourceURI, baseURI, null);
+            } catch (Exception e) {
+                throw new LibraryException("Unable to resolve library.",
+                                           e, new LocationImpl("[LibraryManager]", sourceURI));
+            }
 
-            lib = (Library) this.cacheManager.get(source, PREFIX);
-
+            Library lib = (Library) this.cacheManager.get(source, PREFIX);
             if (lib != null && lib.dependenciesHaveChanged()) {
-                result = false;
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Library IS REMOVED from cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                }
                 this.cacheManager.remove(source, PREFIX); // evict?
-            } else if (lib == null) {
-                result = false;
-            } else {
-                result = true;
+                return null;
             }
-        } catch(Exception e) {
-            if (getLogger().isErrorEnabled()) {
-                getLogger().error("Problem getting library '" + sourceURI + "' relative to '" + baseURI + "'!", e);
+
+            if (getLogger().isDebugEnabled()) {
+                if (lib != null) {
+                    getLogger().debug("Library IS in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                } else {
+                    getLogger().debug("Library IS NOT in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                }
             }
-            throw e;
+
+            return lib;
         } finally {
             if (source != null) {
                 sourceResolver.release(source);
@@ -119,66 +120,58 @@ public class LibraryManagerImpl extends AbstractLogEnabled
                 manager.release(sourceResolver);
             }
         }
-
-        if (getLogger().isDebugEnabled()) {
-            if (result) {
-                getLogger().debug("Library IS in cache : '" + sourceURI + "' relative to '" + baseURI + "'");
-            } else {
-                getLogger().debug("Library IS NOT in cache : '" + sourceURI + "' relative to '" + baseURI + "'");
-            }
-        }
-
-        return result;
     }
 
-    public Library getLibrary(String librarysource) throws Exception {
-        return getLibrary(librarysource,null);
+    public Library load(String sourceURI) throws LibraryException {
+        return load(sourceURI, null);
     }
 
-    public Library getLibrary(String librarysource, String relative)
-    throws Exception {
+    public Library load(String sourceURI, String baseURI) throws LibraryException {
         SourceResolver sourceResolver = null;
         Source source = null;
-        Document libraryDocument;
-
-        Library lib = null;
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Getting library instance: '" + librarysource + "' relative to '" + relative + "'");
+            getLogger().debug("Loading library: '" + sourceURI + "' relative to '" + baseURI + "'");
         }
 
         try {
-            sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-            source = sourceResolver.resolveURI(librarysource, relative, null);
+            try {
+                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+                source = sourceResolver.resolveURI(sourceURI, baseURI, null);
+            } catch (Exception e) {
+                throw new LibraryException("Unable to resolve library.",
+                                           e, new LocationImpl("[LibraryManager]", sourceURI));
+            }
 
-            lib = (Library) this.cacheManager.get(source, PREFIX);
-
+            Library lib = (Library) this.cacheManager.get(source, PREFIX);
             if (lib != null && lib.dependenciesHaveChanged()) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Library dependencies changed, invalidating!");
+                    getLogger().debug("Library IS EXPIRED in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
                 }
                 lib = null;
             }
 
             if (lib == null) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Library not in cache, creating!");
+                    getLogger().debug("Library IS NOT in cache, loading: '" + sourceURI + "' relative to '" + baseURI + "'");
                 }
 
                 try {
                     InputSource inputSource = new InputSource(source.getInputStream());
                     inputSource.setSystemId(source.getURI());
-                    libraryDocument = DomHelper.parse(inputSource, this.manager);
 
-                    lib = getNewLibrary();
-                    lib.buildLibrary(libraryDocument.getDocumentElement());
+                    Document doc = DomHelper.parse(inputSource, this.manager);
+                    lib = newLibrary();
+                    lib.buildLibrary(doc.getDocumentElement());
 
                     this.cacheManager.set(lib, source, PREFIX);
                 } catch (Exception e) {
-                    throw new CascadingException("Could not parse form definition from " +
-                                                 source.getURI(), e);
+                    throw new LibraryException("Unable to load library.",
+                                               e, new LocationImpl("[LibraryManager]", source.getURI()));
                 }
             }
+
+            return lib;
         } finally {
             if (source != null) {
                 sourceResolver.release(source);
@@ -187,17 +180,15 @@ public class LibraryManagerImpl extends AbstractLogEnabled
                 manager.release(sourceResolver);
             }
         }
-
-        return lib;
     }
 
-    public Library getNewLibrary() {
+    public Library newLibrary() {
         Library lib = new Library(this);
         lib.enableLogging(getLogger());
         lib.setWidgetDefinitionBuilderSelector(this.widgetDefinitionBuilderSelector);
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Created new library! " + lib);
+            getLogger().debug("Created a new library: " + lib);
         }
 
         return lib;
