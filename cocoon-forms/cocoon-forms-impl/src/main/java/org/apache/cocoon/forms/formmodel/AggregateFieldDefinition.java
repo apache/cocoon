@@ -77,15 +77,15 @@ public class AggregateFieldDefinition extends FieldDefinition {
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
-    	super.initializeFrom(definition);
+        super.initializeFrom(definition);
 
-    	if (definition instanceof AggregateFieldDefinition) {
-    		AggregateFieldDefinition other = (AggregateFieldDefinition) definition;
+        if (definition instanceof AggregateFieldDefinition) {
+            AggregateFieldDefinition other = (AggregateFieldDefinition) definition;
 
-    		this.combineExpr = other.combineExpr;
-    		this.splitRegexp = other.splitRegexp;
-    		this.splitPattern = other.splitPattern;
-    		this.splitFailMessage = other.splitFailMessage;
+            this.combineExpr = other.combineExpr;
+            this.splitRegexp = other.splitRegexp;
+            this.splitPattern = other.splitPattern;
+            this.splitFailMessage = other.splitFailMessage;
 
             Iterator defs = other.container.getWidgetDefinitions().iterator();
             while (defs.hasNext()) {
@@ -113,22 +113,22 @@ public class AggregateFieldDefinition extends FieldDefinition {
      * checks completeness of this definition
      */
     public void checkCompleteness() throws IncompletenessException {
-    	super.checkCompleteness();
+        super.checkCompleteness();
 
         if (this.container.size() == 0) {
-            throw new IncompletenessException("AggregateField doesn't have any child widgets!", this);
+            throw new IncompletenessException("Aggregate field '" + getId() + "' doesn't have any child widgets.", this);
         }
 
         if (this.combineExpr == null) {
-            throw new IncompletenessException("AggregateField requires a combine expression!", this);
+            throw new IncompletenessException("Aggregate field '" + getId() + "' requires combine expression.", this);
         }
 
         if (this.splitPattern == null) {
-            throw new IncompletenessException("AggregateField requires a split regular expression!", this);
+            throw new IncompletenessException("Aggregate field '" + getId() + "' requires split regular expression.", this);
         }
 
         if (this.splitMappings.size() == 0) {
-            throw new IncompletenessException("AggregateField requires at least one group to field mapping!", this);
+            throw new IncompletenessException("Aggregate field '" + getId() + "' requires at least one group to field mapping.", this);
         }
 
         // now check children's completeness
