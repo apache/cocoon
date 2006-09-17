@@ -49,14 +49,14 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
-    	super.initializeFrom(definition);
+        super.initializeFrom(definition);
 
         if (definition instanceof RepeaterActionDefinition) {
             RepeaterActionDefinition other = (RepeaterActionDefinition) definition;
 
             this.name = other.name;
 
-    	} else {
+        } else {
             throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
         }
     }
@@ -97,16 +97,16 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
          * initialize this definition with the other, sort of like a copy constructor
          */
         public void initializeFrom(WidgetDefinition definition) throws Exception {
-        	super.initializeFrom(definition);
+            super.initializeFrom(definition);
 
-        	if(definition instanceof DeleteRowsActionDefinition) {
-        		DeleteRowsActionDefinition other = (DeleteRowsActionDefinition)definition;
+            if (definition instanceof DeleteRowsActionDefinition) {
+                DeleteRowsActionDefinition other = (DeleteRowsActionDefinition) definition;
 
-        		this.selectName = other.selectName;
+                this.selectName = other.selectName;
 
-        	} else {
-        		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
-        	}
+            } else {
+                throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+            }
         }
 
         public boolean hasActionListeners() {
@@ -166,7 +166,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
          * initialize this definition with the other, sort of like a copy constructor
          */
         public void initializeFrom(WidgetDefinition definition) throws Exception {
-        	super.initializeFrom(definition);
+            super.initializeFrom(definition);
 
             if (definition instanceof InsertRowsActionDefinition) {
                 InsertRowsActionDefinition other = (InsertRowsActionDefinition) definition;

@@ -56,13 +56,13 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         if (splitElement != null) {
             String patternString = DomHelper.getAttribute(splitElement, "pattern");
             Perl5Compiler compiler = new Perl5Compiler();
-	        Pattern pattern = null;
-	        try {
-	            pattern = compiler.compile(patternString, Perl5Compiler.READ_ONLY_MASK);
-	        } catch (MalformedPatternException e) {
-	            throw new Exception("Invalid regular expression at " + DomHelper.getLocation(splitElement) + ": " + e.getMessage());
-	        }
-	        definition.setSplitPattern(pattern, patternString);
+            Pattern pattern = null;
+            try {
+                pattern = compiler.compile(patternString, Perl5Compiler.READ_ONLY_MASK);
+            } catch (MalformedPatternException e) {
+                throw new Exception("Invalid regular expression at " + DomHelper.getLocation(splitElement) + ": " + e.getMessage());
+            }
+            definition.setSplitPattern(pattern, patternString);
         }
 
         // read split mappings
@@ -77,10 +77,10 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
             }
 
             try {
-            	definition.addSplitMapping(group, field);
+                definition.addSplitMapping(group, field);
             } catch(RuntimeException e) {
-            	throw new Exception("Two groups are mapped to the same widget id \"" + field + "\", at " +
-                        DomHelper.getLocation(mapElements[i]));
+                throw new Exception("Two groups are mapped to the same widget id \"" + field + "\", at " +
+                                    DomHelper.getLocation(mapElements[i]));
             }
         }
 
@@ -94,7 +94,7 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         // compile combine expression
         Element combineElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "combine", true);
         if(combineElement!=null) {
-        	String combineExprString = DomHelper.getAttribute(combineElement, "expression");
+            String combineExprString = DomHelper.getAttribute(combineElement, "expression");
             Expression combineExpr = null;
             try {
                 combineExpr = expressionManager.parse(combineExprString);

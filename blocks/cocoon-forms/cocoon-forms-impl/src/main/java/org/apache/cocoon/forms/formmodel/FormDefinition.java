@@ -43,7 +43,7 @@ public class FormDefinition extends AbstractContainerDefinition {
     }
 
     public Library getLocalLibrary() {
-    	return localLibrary;
+        return localLibrary;
     }
 
     public void resolve() throws Exception {
