@@ -36,7 +36,7 @@ public class ActionDefinition extends AbstractWidgetDefinition {
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
-    	super.initializeFrom(definition);
+        super.initializeFrom(definition);
 
         if (definition instanceof ActionDefinition) {
             ActionDefinition other = (ActionDefinition) definition;

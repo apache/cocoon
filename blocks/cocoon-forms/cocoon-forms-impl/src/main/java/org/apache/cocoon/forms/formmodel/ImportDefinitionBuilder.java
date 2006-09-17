@@ -25,13 +25,13 @@ import org.w3c.dom.Element;
  */
 public class ImportDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-	public static final String PREFIX_ATTRIBUTE = "prefix";
-	public static final String URI_ATTRIBUTE = "uri";
+    public static final String PREFIX_ATTRIBUTE = "prefix";
+    public static final String URI_ATTRIBUTE = "uri";
 
-	/**
-	 * Imports a new library
-	 */
-	public WidgetDefinition buildWidgetDefinition(Element widgetElement)
+    /**
+     * Imports a new library
+     */
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement)
     throws Exception {
 
         if (this.context == null || this.context.getLocalLibrary() == null) {
@@ -40,8 +40,8 @@ public class ImportDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         }
 
         Library lib = this.context.getLocalLibrary();
-		String prefix = DomHelper.getAttribute(widgetElement, PREFIX_ATTRIBUTE);
-		String uri = DomHelper.getAttribute(widgetElement, URI_ATTRIBUTE);
+        String prefix = DomHelper.getAttribute(widgetElement, PREFIX_ATTRIBUTE);
+        String uri = DomHelper.getAttribute(widgetElement, URI_ATTRIBUTE);
 
         if (!lib.includeAs(prefix, uri)) {
             throw new Exception("Import statement did not succeed (probably used ':' in the prefix?)! (at " +
@@ -49,5 +49,5 @@ public class ImportDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         }
 
         return null;
-	}
+    }
 }

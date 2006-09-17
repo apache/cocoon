@@ -25,6 +25,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
  * @version $Id$
  */
 public class RepeaterDefinition extends AbstractContainerDefinition {
+
     private int initialSize = 0;
     private int minSize;
     private int maxSize;
@@ -35,7 +36,9 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     private int initialPage=0;
     private int pageSize;
 
-    public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable, boolean orderable) {
+
+    public RepeaterDefinition(int initialSize, int minSize, int maxSize,
+                              boolean selectable, boolean orderable) {
         super();
         this.initialSize = initialSize;
         this.minSize = minSize;
@@ -43,22 +46,20 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
         this.orderable = orderable;
     }
 
+    public RepeaterDefinition(int initialSize, int minSize, int maxSize,
+                              boolean selectable, boolean orderable, boolean pageable,
+                              int initialPage, int pageSize) {
+        super();
+        this.initialSize = initialSize;
+        this.minSize = minSize;
+        this.maxSize = maxSize;
+        this.orderable = orderable;
+        this.pageable = pageable;
+        this.initialPage = initialPage;
+        this.pageSize = pageSize;
+    }
 
-
-    public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable,boolean orderable,boolean pageable, int initialPage, int pageSize) {
-		super();
-		this.initialSize = initialSize;
-		this.minSize = minSize;
-		this.maxSize = maxSize;
-		this.orderable = orderable;
-		this.pageable = pageable;
-		this.initialPage = initialPage;
-		this.pageSize = pageSize;
-	}
-
-
-
-	/**
+    /**
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
@@ -115,26 +116,15 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
         return this.listener;
     }
 
+    public int getInitialPage() {
+        return initialPage;
+    }
 
+    public boolean isPageable() {
+        return pageable;
+    }
 
-	public int getInitialPage() {
-		return initialPage;
-	}
-
-
-
-	public boolean isPageable() {
-		return pageable;
-	}
-
-
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-
-
-
-
+    public int getPageSize() {
+        return pageSize;
+    }
 }

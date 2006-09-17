@@ -28,8 +28,10 @@ import java.util.ListIterator;
  * @version $Id$
  */
 public class NewDefinition extends AbstractWidgetDefinition {
+
     private boolean resolving;
     private ClassDefinition classDefinition;
+
 
     public NewDefinition() {
         super();
@@ -46,7 +48,7 @@ public class NewDefinition extends AbstractWidgetDefinition {
             classDefinition = formDefinition.getWidgetDefinition(getId());
 
             if (classDefinition == null) { // not found in local form, try library
-            	classDefinition = formDefinition.getLocalLibrary().getDefinition(getId());
+                classDefinition = formDefinition.getLocalLibrary().getDefinition(getId());
             }
         }
 
