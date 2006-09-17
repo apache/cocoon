@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="update">
+      Updated xercesImpl to 2.8.1.
+    </action>
     <action dev="VG" type="update">
       CForms: FormManager now caches form definitions created from Source or URI.
     </action>
