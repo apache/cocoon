@@ -65,22 +65,22 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             } else if(this.parent != null) {
                 this.formDefinition = this.parent.getFormDefinition();
             } else {
-            	// no form definition in this widget tree, must be in a library!
-            	return null;
+                // no form definition in this widget tree, must be in a library!
+                return null;
             }
         }
         return this.formDefinition;
     }
 
     public Library getEnclosingLibrary() {
-    	if (this.enclosingLibrary == null) {
-    		this.enclosingLibrary = this.parent.getEnclosingLibrary();
+        if (this.enclosingLibrary == null) {
+            this.enclosingLibrary = this.parent.getEnclosingLibrary();
         }
         return this.enclosingLibrary;
     }
 
     public void setEnclosingLibrary(Library library) {
-    	enclosingLibrary = library;
+        enclosingLibrary = library;
     }
 
     /**
