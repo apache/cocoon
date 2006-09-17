@@ -31,17 +31,16 @@ import org.w3c.dom.Element;
  */
 public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuilder {
 
-	protected LibraryManager libraryManager;
+    protected LibraryManager libraryManager;
 
-	public void service(ServiceManager manager) throws ServiceException {
-		super.service(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        libraryManager = (LibraryManager) serviceManager.lookup(LibraryManager.ROLE);
+    }
 
-		libraryManager = (LibraryManager) serviceManager.lookup(LibraryManager.ROLE);
-	}
-
-	public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
     throws Exception {
-    	throw new UnsupportedOperationException("Please use the other signature without WidgetDefinitionBuilderContext!");
+        throw new UnsupportedOperationException("Please use the other signature without WidgetDefinitionBuilderContext!");
     }
 
     public WidgetDefinition buildWidgetDefinition(Element formElement) throws Exception {
@@ -56,7 +55,7 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
         while (i.hasNext()) {
             formDefinition.addProcessingPhaseListener((ProcessingPhaseListener) i.next());
         }
-        
+
         super.setupDefinition(formElement, formDefinition);
         setDisplayData(formElement, formDefinition);
 

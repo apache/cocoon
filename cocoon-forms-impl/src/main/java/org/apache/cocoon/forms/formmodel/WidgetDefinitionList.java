@@ -48,7 +48,7 @@ public class WidgetDefinitionList {
     }
 
     public int size() {
-    	return widgetDefinitions.size();
+        return widgetDefinitions.size();
     }
 
     public void addWidgetDefinition(WidgetDefinition widgetDefinition) throws DuplicateIdException {

@@ -31,21 +31,21 @@ import org.xml.sax.SAXException;
  */
 public interface WidgetDefinition extends Locatable {
 
-	/**
-	 * Initializes this definition with values from the given other definition
-	 */
-	void initializeFrom(WidgetDefinition definition) throws Exception;
-	
+    /**
+     * Initializes this definition with values from the given other definition
+     */
+    void initializeFrom(WidgetDefinition definition) throws Exception;
+
     /**
      * Gets the {@link FormDefinition}.
      */
     FormDefinition getFormDefinition();
-    
+
     /**
      * Gets the Library object containing this definition
      */
     Library getEnclosingLibrary();
-    
+
     /**
      * Sets the Library object containing this definition (should only be used by Library itself!)
      */
@@ -89,7 +89,7 @@ public interface WidgetDefinition extends Locatable {
      * createInstance() though.
      */
     void checkCompleteness() throws IncompletenessException;
-    
+
     /**
      * Creates and returns a widget based on this widget definition.
      */
