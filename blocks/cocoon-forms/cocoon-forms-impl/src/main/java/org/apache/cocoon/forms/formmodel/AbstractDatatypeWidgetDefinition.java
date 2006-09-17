@@ -53,7 +53,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
         super.checkCompleteness();
 
         if (this.datatype == null) {
-            throw new IncompletenessException("A datatype element is required!", this);
+            throw new IncompletenessException("Widget '" + getId() + "' must have a datatype element.", this);
         }
     }
 
