@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * If the specified class is a {@link org.apache.cocoon.forms.formmodel.algorithms.AbstractBaseAlgorithm}
  * subclass, the build process will be delegated to
  *  {@link org.apache.cocoon.forms.formmodel.algorithms.AbstractBaseAlgorithmBuilder}.
- * 
+ *
  * @version $Id$
  */
 public class JavaAlgorithmBuilder extends AbstractBaseAlgorithmBuilder {
@@ -34,13 +34,13 @@ public class JavaAlgorithmBuilder extends AbstractBaseAlgorithmBuilder {
         String clazzname = DomHelper.getAttribute(algorithmElement, "class");
         Class clazz = Class.forName(clazzname);
         if (AbstractBaseAlgorithm.class.isAssignableFrom(clazz)) {
-	        AbstractBaseAlgorithm algorithm = (AbstractBaseAlgorithm) clazz.newInstance();
-	        super.setup(algorithmElement, algorithm);
-	        return algorithm;
+            AbstractBaseAlgorithm algorithm = (AbstractBaseAlgorithm) clazz.newInstance();
+            super.setup(algorithmElement, algorithm);
+            return algorithm;
         } else {
-	        CalculatedFieldAlgorithm algorithm = (CalculatedFieldAlgorithm) clazz.newInstance();
-	        super.setupComponent(algorithm);        	        
-	        return algorithm;            
+            CalculatedFieldAlgorithm algorithm = (CalculatedFieldAlgorithm) clazz.newInstance();
+            super.setupComponent(algorithm);
+            return algorithm;
         }
     }
 
