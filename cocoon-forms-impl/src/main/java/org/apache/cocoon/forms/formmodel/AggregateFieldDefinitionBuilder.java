@@ -56,7 +56,7 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         if (splitElement != null) {
             String patternString = DomHelper.getAttribute(splitElement, "pattern");
             Perl5Compiler compiler = new Perl5Compiler();
-            Pattern pattern = null;
+            Pattern pattern;
             try {
                 pattern = compiler.compile(patternString, Perl5Compiler.READ_ONLY_MASK);
             } catch (MalformedPatternException e) {
@@ -95,7 +95,7 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         Element combineElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "combine", true);
         if(combineElement!=null) {
             String combineExprString = DomHelper.getAttribute(combineElement, "expression");
-            Expression combineExpr = null;
+            Expression combineExpr;
             try {
                 combineExpr = expressionManager.parse(combineExprString);
             } catch (Exception e) {

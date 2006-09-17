@@ -59,6 +59,7 @@ public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Con
 
         String listPath = DomHelper.getAttribute(selectionListElement, "list-path");
         String valuePath = DomHelper.getAttribute(selectionListElement, "value-path");
+
         Map nspfx = DomHelper.getInheritedNSDeclarations(selectionListElement);
         String i18nPfx = FormsConstants.I18N_PREFIX;
         if (nspfx != null) {
@@ -67,33 +68,33 @@ public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Con
                 i18nPfx = FormsConstants.I18N_PREFIX;
             }
         }
+
         String labelPath = DomHelper.getAttribute(selectionListElement, "label-path", null);
         boolean labelIsI18nKey = false;
-        if( labelPath == null )
-        {
+        if (labelPath == null) {
             labelPath = DomHelper.getAttribute(selectionListElement, i18nPfx + ":label-path");
             labelIsI18nKey = true;
         }
+
         String nullText = DomHelper.getAttribute(selectionListElement, "null-text", null);
         boolean nullTextIsI18nKey = false;
-        if( nullText == null ) {
+        if (nullText == null) {
             nullText = DomHelper.getAttribute(selectionListElement, i18nPfx + ":null-text", null);
-            if( nullText != null ) {
+            if (nullText != null) {
                 nullTextIsI18nKey = true;
             }
         }
-        
+
         String i18nCatalog = DomHelper.getAttribute(selectionListElement, "catalogue", null);
 
-
-        return new FlowJXPathSelectionList(context, 
-                                           listPath, 
-                                           valuePath, 
-                                           labelPath, 
-                                           datatype, 
-                                           nullText, 
-                                           nullTextIsI18nKey, 
-                                           i18nCatalog, 
+        return new FlowJXPathSelectionList(context,
+                                           listPath,
+                                           valuePath,
+                                           labelPath,
+                                           datatype,
+                                           nullText,
+                                           nullTextIsI18nKey,
+                                           i18nCatalog,
                                            labelIsI18nKey);
     }
 
