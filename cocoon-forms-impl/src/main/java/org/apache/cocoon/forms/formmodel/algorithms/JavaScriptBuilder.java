@@ -26,29 +26,26 @@ import org.w3c.dom.Element;
 
 /**
  * Javascript based calculated field algorithm builder.
- * 
- * <p>
- * With this algorithm the user can implement it's own algorithm directly in javascript and directly inside
- * the form definition.
- * </p>
- * 
- * <p>
- * The syntax is as follows :
- * <code>
+ *
+ * <p>With this algorithm the user can implement it's own algorithm directly in
+ * javascript and directly inside the form definition.</p>
+ *
+ * <p>The syntax is as follows:
+ * <pre>
  *   &lt;fd:value type="javascript" triggers="items,price,discount"&gt;
- *         var price = parent.lookupWidget('price').getValue();
- *         var items = parent.lookupWidget('items').getValue();
- *         var discount = parent.lookupWidget('discount').getValue();
- * 
- *         if (discount == 'completelyfree') return 0;
- *         var total = price * items;
- *         if (discount == 'halfprice') return total / 2;
- * 		    return total;
+ *     var price = parent.lookupWidget('price').getValue();
+ *     var items = parent.lookupWidget('items').getValue();
+ *     var discount = parent.lookupWidget('discount').getValue();
+ *
+ *     if (discount == 'completelyfree') return 0;
+ *     var total = price * items;
+ *     if (discount == 'halfprice') return total / 2;
+ *       return total;
  *   &lt;/fd:value&gt;
- * </code>
+ * </pre>
  * </p>
- * <p>
- *   From inside the javascript function the following objects are accessible :
+ *
+ * <p>From inside the javascript function the following objects are accessible:
  *   <dl>
  *     <dt>form</dt>
  *     <dd>The form object.</dd>
@@ -58,27 +55,27 @@ import org.w3c.dom.Element;
  *     <dd>This are accessible only when flowscript is in use (see bug COCOON-1804)</dd>
  *   </dl>
  * </p>
- * <p>
- *   As you can see, the function must return the calculated value, and not set this directly in the widget. This
- *   way the value can be converted correctly if needed.
- * </p>
+ *
+ * <p>As you can see, the function must return the calculated value, and not set this
+ * directly in the widget. This way the value can be converted correctly if needed.</p>
+ * 
  * @version $Id$
  */
 public class JavaScriptBuilder implements CalculatedFieldAlgorithmBuilder {
 
     public CalculatedFieldAlgorithm build(Element algorithmElement) throws Exception {
         JavaScript ret = new JavaScript();
-        
+
         String fields = DomHelper.getAttribute(algorithmElement, "triggers");
         StringTokenizer stok = new StringTokenizer(fields, ", ");
         while (stok.hasMoreTokens()) {
             String fname = stok.nextToken();
             ret.addTriggerWidget(fname);
         }
-        
+
         Function func = JavaScriptHelper.buildFunction(algorithmElement, "calculate", new String[]{"form", "parent"});
         ret.setJsfunction(func);
-        
+
         return ret;
     }
 
