@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,36 +19,38 @@ import org.apache.cocoon.forms.formmodel.library.Library;
 
 /**
  * Holds context information for the building phase.
- * 
+ *
  * @version $Id$
  */
 public class WidgetDefinitionBuilderContext {
 
-	protected WidgetDefinition superDefinition = null;
-	protected Library localLibrary = null;
-	
-	public WidgetDefinitionBuilderContext() {
-		this.superDefinition = null;
-		this.localLibrary = null;
-	}
-	
-	public WidgetDefinitionBuilderContext(WidgetDefinitionBuilderContext other) {
-		this.superDefinition = other.superDefinition;
-		this.localLibrary = other.localLibrary;
-	}
-	
-	public WidgetDefinition getSuperDefinition() {
-		return superDefinition;
-	}
-	public void setSuperDefinition(WidgetDefinition def) {
-		superDefinition = def;
-	}
-	
-	public Library getLocalLibrary() {
-		return localLibrary;
-	}
-	public void setLocalLibrary(Library lib) {
-		localLibrary = lib;
-	}
-	
+    protected WidgetDefinition superDefinition;
+    protected Library localLibrary;
+
+
+    public WidgetDefinitionBuilderContext() {
+        this.superDefinition = null;
+        this.localLibrary = null;
+    }
+
+    public WidgetDefinitionBuilderContext(WidgetDefinitionBuilderContext other) {
+        this.superDefinition = other.superDefinition;
+        this.localLibrary = other.localLibrary;
+    }
+
+    public WidgetDefinition getSuperDefinition() {
+        return superDefinition;
+    }
+
+    public void setSuperDefinition(WidgetDefinition def) {
+        superDefinition = def;
+    }
+
+    public Library getLocalLibrary() {
+        return localLibrary;
+    }
+
+    public void setLocalLibrary(Library lib) {
+        localLibrary = lib;
+    }
 }

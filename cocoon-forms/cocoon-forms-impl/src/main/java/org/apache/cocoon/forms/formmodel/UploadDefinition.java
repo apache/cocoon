@@ -29,8 +29,8 @@ public class UploadDefinition extends AbstractWidgetDefinition {
     private String mimeTypes;
 
     public UploadDefinition() {
-    	this.mimeTypes = null;
-    	this.required = false;
+        this.mimeTypes = null;
+        this.required = false;
     }
 
     public UploadDefinition(boolean required, String mimeTypes) {

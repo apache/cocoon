@@ -87,8 +87,8 @@ public class Repeater extends AbstractWidget
 
         this.pageable = this.definition.isPageable();
         if (pageable) {
-        	this.currentPage = this.definition.getInitialPage();
-        	this.pageSize = this.definition.getPageSize();
+            this.currentPage = this.definition.getInitialPage();
+            this.pageSize = this.definition.getPageSize();
         }
 
     }
@@ -466,10 +466,10 @@ public class Repeater extends AbstractWidget
 
 
 
-	/**
-	 * Adds @size attribute
-	 */
-	public AttributesImpl getXMLElementAttributes() {
+    /**
+     * Adds @size attribute
+     */
+    public AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("size", String.valueOf(getSize()));
         // Generate the min and max sizes if they don't have the default value
@@ -481,15 +481,15 @@ public class Repeater extends AbstractWidget
         if (size != Integer.MAX_VALUE) {
             attrs.addCDATAAttribute("max-size", String.valueOf(size));
         }
-        if (this.isPageable()) {
-        	attrs.addCDATAAttribute("page", String.valueOf(currentPage));
+        if (isPageable()) {
+            attrs.addCDATAAttribute("page", String.valueOf(currentPage));
         }
-		return attrs;
-	}
+        return attrs;
+    }
 
 
-	public void generateDisplayData(ContentHandler contentHandler)
-			throws SAXException {
+    public void generateDisplayData(ContentHandler contentHandler)
+    throws SAXException {
         // the repeater's label
         contentHandler.startElement(FormsConstants.INSTANCE_NS, LABEL_EL, FormsConstants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
         generateLabel(contentHandler);
@@ -505,8 +505,7 @@ public class Repeater extends AbstractWidget
             contentHandler.endElement(FormsConstants.INSTANCE_NS, HEADING_EL, FormsConstants.INSTANCE_PREFIX_COLON + HEADING_EL);
         }
         contentHandler.endElement(FormsConstants.INSTANCE_NS, HEADINGS_EL, FormsConstants.INSTANCE_PREFIX_COLON + HEADINGS_EL);
-	}
-
+    }
 
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // the actual rows in the repeater
@@ -634,29 +633,29 @@ public class Repeater extends AbstractWidget
         }
     }
 
-	public int getCurrentPage() {
-		return currentPage;
-	}
+    public int getCurrentPage() {
+        return currentPage;
+    }
 
-	public void setCurrentPage(int currentPage) {
-		this.currentPage = currentPage;
-	}
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
 
-	public boolean isPageable() {
-		return pageable;
-	}
+    public boolean isPageable() {
+        return pageable;
+    }
 
-	public void setPageable(boolean pageable) {
-		this.pageable = pageable;
-	}
+    public void setPageable(boolean pageable) {
+        this.pageable = pageable;
+    }
 
-	public int getPageSize() {
-		return pageSize;
-	}
+    public int getPageSize() {
+        return pageSize;
+    }
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
 
     public PageStorage getStorage() {
@@ -666,8 +665,4 @@ public class Repeater extends AbstractWidget
     public void setStorage(PageStorage storage) {
         this.storage = storage;
     }
-
-
-
-
 }

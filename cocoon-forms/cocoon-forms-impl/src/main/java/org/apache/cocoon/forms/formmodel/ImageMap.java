@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,30 +27,30 @@ import org.apache.cocoon.xml.AttributesImpl;
  * displayed as an image and with mouse coordinates stored upon clicking.
  * The image's URI can be set or get, or bind via the binding framework, mouse coordinates
  * can be either retrieved from the ImageMapEvent triggered or from the widget itself.
- * 
+ *
  * @version $Id$
  * @since 2.1.8
  */
 public class ImageMap extends AbstractWidget implements ActionListenerEnabled {
 
-	private final ImageMapDefinition definition;
+    private final ImageMapDefinition definition;
     private ActionListener listener;
     private String imgURI; // URI of widget's image
-	private int x; // Mouse x coordinate
-	private int y; // Mouse y coordinate
+    private int x; // Mouse x coordinate
+    private int y; // Mouse y coordinate
 
-	// XML element and attributes
-	public static final String COMMAND_AT = "command";
-	public static final String VALUE_EL = "imageuri";
-	public static final String ONACTION_EL = "on-action";
-	public static final String IMAGEMAP_EL = "imagemap";
+    // XML element and attributes
+    public static final String COMMAND_AT = "command";
+    public static final String VALUE_EL = "imageuri";
+    public static final String ONACTION_EL = "on-action";
+    public static final String IMAGEMAP_EL = "imagemap";
 
     public ImageMap(ImageMapDefinition definition) {
         super(definition);
         this.definition = definition;
-    	this.imgURI= definition.getImageURI();
-    	this.x= 0;
-    	this.y= 0;
+        this.imgURI = definition.getImageURI();
+        this.x = 0;
+        this.y = 0;
     }
 
     public WidgetDefinition getDefinition() {
@@ -59,38 +59,39 @@ public class ImageMap extends AbstractWidget implements ActionListenerEnabled {
 
     // Retrieves mouse coordinates
     public int getX() {
-    	return this.x;
+        return this.x;
     }
-    
+
     public int getY() {
-    	return this.y;
+        return this.y;
     }
-    
+
     // Get/set image URI
     public String getImageURI() {
-    	if ( this.imgURI != null ) {
-    		return this.imgURI;
-   		} else {
-   			return "";
-   	    }
+        if (this.imgURI != null) {
+            return this.imgURI;
+        } else {
+            return "";
+        }
     }
 
     public void setImageURI(String newImgURI) {
-    	this.imgURI= newImgURI;
+        this.imgURI= newImgURI;
     }
 
-    // The set/getValue methods are used to set the widget's image URI during binding 
+    // The set/getValue methods are used to set the widget's image URI during binding
     public void setValue(Object newImgURI) {
-    	this.setImageURI(newImgURI.toString());
+        setImageURI(newImgURI.toString());
     }
 
     public Object getValue() {
-    	return this.getImageURI();
+        return getImageURI();
     }
 
     public void readFromRequest(final FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isAcceptingInputs()) {
             return;
+        }
 
         Form form = getForm();
 
@@ -100,13 +101,13 @@ public class ImageMap extends AbstractWidget implements ActionListenerEnabled {
 
         // Extracts mouse coordinates from request (ignores malformed numbers)
         try {
-        	this.x= (new Integer(formContext.getRequest().getParameter(fullId + ".x"))).intValue();
-        	this.y= (new Integer(formContext.getRequest().getParameter(fullId + ".y"))).intValue();
+            this.x = (new Integer(formContext.getRequest().getParameter(fullId + ".x"))).intValue();
+            this.y = (new Integer(formContext.getRequest().getParameter(fullId + ".y"))).intValue();
         } catch (java.lang.NumberFormatException e) {
-        	this.x= 0;
-        	this.y= 0;
-       	}
-        
+            this.x = 0;
+            this.y = 0;
+        }
+
         String value = request.getParameter(fullId);
         if (value != null && value.length() > 0) {
             form.setSubmitWidget(this);
@@ -139,7 +140,7 @@ public class ImageMap extends AbstractWidget implements ActionListenerEnabled {
         attrs.addCDATAAttribute("imageuri", this.imgURI);
         return attrs;
     }
-    
+
     /**
      * Handle the fact that this action was activated. The default here is to end the
      * current form processing and redisplay the form, which means that actual behaviour
@@ -156,9 +157,9 @@ public class ImageMap extends AbstractWidget implements ActionListenerEnabled {
         return true;
     }
 
-    public String getXMLElementName() {        
+    public String getXMLElementName() {
         return IMAGEMAP_EL;
-    }  
+    }
 
     /**
      * Adds an ActionListener to this widget instance. Listeners defined

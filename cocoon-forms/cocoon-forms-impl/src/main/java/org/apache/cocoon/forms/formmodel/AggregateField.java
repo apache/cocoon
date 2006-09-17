@@ -76,7 +76,7 @@ public class AggregateField extends Field implements ContainerWidget {
 
     public void initialize() {
         this.selectionList = getAggregateFieldDefinition().getSelectionList();
-        
+
         Iterator it = this.getChildren();
         while(it.hasNext()) {
           ((Widget)it.next()).initialize();
@@ -84,7 +84,7 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public void addChild(Widget widget) {
-    	if (!(widget instanceof Field)) {
+        if (!(widget instanceof Field)) {
             throw new IllegalArgumentException("AggregateField can only contain fields.");
         }
         addField((Field)widget);

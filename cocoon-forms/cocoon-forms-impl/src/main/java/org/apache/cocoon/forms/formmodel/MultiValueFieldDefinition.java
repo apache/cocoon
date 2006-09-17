@@ -26,7 +26,7 @@ public class MultiValueFieldDefinition extends FieldDefinition {
         return new MultiValueField(this);
     }
 
-	public void setRequired(boolean required) {
-		throw new UnsupportedOperationException("The property 'required' is not available on widgets of type multivalue.");
-	}
+    public void setRequired(boolean required) {
+        throw new UnsupportedOperationException("The property 'required' is not available on widgets of type multivalue.");
+    }
 }
