@@ -75,7 +75,7 @@ public class Library extends AbstractLogEnabled {
         this.widgetDefinitionBuilderSelector = selector;
     }
 
-    public boolean dependenciesHaveChanged() throws Exception {
+    public boolean dependenciesHaveChanged() throws LibraryException {
         Iterator i = this.inclusions.values().iterator();
         while (i.hasNext()) {
             Dependency dep = (Dependency) i.next();
@@ -100,7 +100,7 @@ public class Library extends AbstractLogEnabled {
         try {
             // library keys may not contain ":"!
             if ((!inclusions.containsKey(key) || key.indexOf(SEPARATOR) > -1) &&
-                    manager.getLibrary(librarysource, sourceURI) != null) {
+                    manager.load(librarysource, sourceURI) != null) {
                 inclusions.put(key, new Dependency(librarysource));
                 return true;
             }
@@ -127,7 +127,7 @@ public class Library extends AbstractLogEnabled {
         if (librarykey != null) {
             if (inclusions.containsKey(librarykey)) {
                 try {
-                    return manager.getLibrary(((Dependency) inclusions.get(librarykey)).dependencySourceURI, sourceURI).getDefinition(definitionkey);
+                    return manager.load(((Dependency) inclusions.get(librarykey)).dependencyURI, sourceURI).getDefinition(definitionkey);
                 } catch (Exception e) {
                     throw new LibraryException("Couldn't get Library key='" + librarykey + "' source='" + inclusions.get(librarykey) + "", e);
                 }
@@ -195,29 +195,18 @@ public class Library extends AbstractLogEnabled {
      * Encapsulates a uri to designate an import plus a timestamp so previously reloaded
      */
     public class Dependency {
-        private String dependencySourceURI;
+        private String dependencyURI;
         private Object shared;
 
         public Dependency(String dependencySourceURI) throws Exception {
-            this.dependencySourceURI = dependencySourceURI;
-            Library lib = manager.getLibrary(this.dependencySourceURI,sourceURI);
+            this.dependencyURI = dependencySourceURI;
+            Library lib = manager.load(this.dependencyURI, sourceURI);
             this.shared = lib.shared;
         }
 
         public boolean isValid() throws LibraryException {
-            try {
-                if (manager.libraryInCache(dependencySourceURI, sourceURI)) {
-                    Library lib = manager.getLibrary(dependencySourceURI, sourceURI);
-
-                    if (this.shared == lib.shared) {
-                        return true;
-                    }
-                }
-
-                return false;
-            } catch (Exception forward) {
-                throw new LibraryException("Exception occured while checking dependency validity!", forward);
-            }
+            Library lib = manager.get(dependencyURI, sourceURI);
+            return lib != null && this.shared == lib.shared;
         }
     }
 
