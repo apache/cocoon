@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -76,7 +75,7 @@ public class DefaultCacheManager extends AbstractLogEnabled
         return objectAndValidity[0];
     }
 
-    public void set(Object object, Source source, String prefix) throws IOException {
+    public void set(Object object, Source source, String prefix) {
         final SourceValidity validity = source.getValidity();
         if (validity != null) {
             final String key = prefix + source.getURI();
@@ -84,7 +83,7 @@ public class DefaultCacheManager extends AbstractLogEnabled
         }
     }
 
-    public void remove(Source source, String prefix) throws IOException {
+    public void remove(Source source, String prefix) {
         final String key = prefix + source.getURI();
         this.cache.remove(key);
     }

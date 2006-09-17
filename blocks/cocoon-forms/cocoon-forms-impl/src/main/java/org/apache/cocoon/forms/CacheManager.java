@@ -40,5 +40,5 @@ public interface CacheManager {
     /**
      * Removes an object from the cache.
      */
-    void remove(Source source, String prefix) throws IOException;
+    void remove(Source source, String prefix);
 }
