@@ -16,7 +16,6 @@
 package org.apache.cocoon.forms;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -54,7 +53,7 @@ import org.xml.sax.InputSource;
  */
 public class DefaultFormManager extends AbstractLogEnabled
                                 implements FormManager, Contextualizable, Serviceable, Configurable,
-                                           Initializable, Disposable, ThreadSafe, Component {
+                                           Disposable, ThreadSafe, Component {
     // NOTE: Component is there to allow this block to run in the 2.1 branch
 
     protected static final String PREFIX = "CocoonForm:";
@@ -71,12 +70,13 @@ public class DefaultFormManager extends AbstractLogEnabled
     //
 
     public DefaultFormManager() {
-        libraryManager = new LibraryManagerImpl();
         widgetDefinitionBuilderSelector = new SimpleServiceSelector("widget", WidgetDefinitionBuilder.class);
+        libraryManager = new LibraryManagerImpl();
     }
 
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
+        widgetDefinitionBuilderSelector.enableLogging(getLogger());
         libraryManager.enableLogging(getLogger().getChildLogger("library"));
     }
 
@@ -93,18 +93,14 @@ public class DefaultFormManager extends AbstractLogEnabled
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.cacheManager = (CacheManager)manager.lookup(CacheManager.ROLE);
-        libraryManager.service(new FormServiceManager());
+        this.cacheManager = (CacheManager) manager.lookup(CacheManager.ROLE);
         widgetDefinitionBuilderSelector.service(new FormServiceManager());
+        libraryManager.service(new FormServiceManager());
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
         libraryManager.configure(configuration.getChild("libraries"));
         widgetDefinitionBuilderSelector.configure(configuration.getChild("widgets"));
-    }
-
-    public void initialize() throws Exception {
-        libraryManager.initialize();
     }
 
     public void dispose() {

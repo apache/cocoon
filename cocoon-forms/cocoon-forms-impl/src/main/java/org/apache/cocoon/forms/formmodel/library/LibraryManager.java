@@ -24,14 +24,12 @@ package org.apache.cocoon.forms.formmodel.library;
  */
 public interface LibraryManager {
 
-	String ROLE = LibraryManager.class.getName();
+    String ROLE = LibraryManager.class.getName();
 
-	Library getLibrary(String librarysource) throws Exception;
-	Library getLibrary(String librarysource, String relative) throws Exception;
-	Library getNewLibrary();
+    Library getLibrary(String librarysource) throws Exception;
+    Library getLibrary(String librarysource, String relative) throws Exception;
+    Library getNewLibrary();
 
-	boolean libraryInCache(String librarysource) throws Exception;
-	boolean libraryInCache(String librarysource, String relative) throws Exception;
-
-	void debug(String msg);
+    boolean libraryInCache(String librarysource) throws Exception;
+    boolean libraryInCache(String librarysource, String relative) throws Exception;
 }

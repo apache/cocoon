@@ -17,7 +17,6 @@ package org.apache.cocoon.forms.formmodel.library;
 
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -44,28 +43,40 @@ import org.xml.sax.InputSource;
  */
 public class LibraryManagerImpl extends AbstractLogEnabled
                                 implements LibraryManager, Serviceable, Configurable,
-                                           Initializable, Disposable, ThreadSafe, Component {
+                                           Disposable, ThreadSafe, Component {
 
     protected static final String PREFIX = "CocoonFormLibrary:";
 
-    private ServiceManager serviceManager;
+    private ServiceManager manager;
     private CacheManager cacheManager;
 
     private ServiceSelector widgetDefinitionBuilderSelector;
 
+    //
+    // Lifecycle
+    //
 
     public void configure(Configuration configuration) throws ConfigurationException {
         // TODO Read config to "preload" libraries
     }
 
     public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
+        this.manager = serviceManager;
         this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
+        this.widgetDefinitionBuilderSelector = (ServiceSelector) manager.lookup(WidgetDefinitionBuilder.class.getName() + "Selector");
     }
 
-    public void initialize() throws Exception {
-        this.widgetDefinitionBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetDefinitionBuilder.class.getName() + "Selector");
+    public void dispose() {
+        if (this.cacheManager != null) {
+            this.manager.release(this.cacheManager);
+            this.cacheManager = null;
+        }
+        this.manager = null;
     }
+
+    //
+    // Business methods
+    //
 
     public boolean libraryInCache(String sourceURI) throws Exception {
         return libraryInCache(sourceURI, null);
@@ -82,7 +93,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
         Library lib;
         boolean result = false;
         try {
-            sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
+            sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
             source = sourceResolver.resolveURI(sourceURI, baseURI, null);
 
             lib = (Library) this.cacheManager.get(source, PREFIX);
@@ -105,7 +116,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
                 sourceResolver.release(source);
             }
             if (sourceResolver != null) {
-                serviceManager.release(sourceResolver);
+                manager.release(sourceResolver);
             }
         }
 
@@ -137,7 +148,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
         }
 
         try {
-            sourceResolver = (SourceResolver) serviceManager.lookup(SourceResolver.ROLE);
+            sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
             source = sourceResolver.resolveURI(librarysource, relative, null);
 
             lib = (Library) this.cacheManager.get(source, PREFIX);
@@ -157,7 +168,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
                 try {
                     InputSource inputSource = new InputSource(source.getInputStream());
                     inputSource.setSystemId(source.getURI());
-                    libraryDocument = DomHelper.parse(inputSource, this.serviceManager);
+                    libraryDocument = DomHelper.parse(inputSource, this.manager);
 
                     lib = getNewLibrary();
                     lib.buildLibrary(libraryDocument.getDocumentElement());
@@ -173,7 +184,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
                 sourceResolver.release(source);
             }
             if (sourceResolver != null) {
-                serviceManager.release(sourceResolver);
+                manager.release(sourceResolver);
             }
         }
 
@@ -182,6 +193,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
 
     public Library getNewLibrary() {
         Library lib = new Library(this);
+        lib.enableLogging(getLogger());
         lib.setWidgetDefinitionBuilderSelector(this.widgetDefinitionBuilderSelector);
 
         if (getLogger().isDebugEnabled()) {
@@ -189,17 +201,5 @@ public class LibraryManagerImpl extends AbstractLogEnabled
         }
 
         return lib;
-    }
-
-    public void dispose() {
-        this.serviceManager.release(this.cacheManager);
-        this.cacheManager = null;
-        this.serviceManager = null;
-    }
-
-    public void debug(String msg) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug(msg);
-        }
     }
 }

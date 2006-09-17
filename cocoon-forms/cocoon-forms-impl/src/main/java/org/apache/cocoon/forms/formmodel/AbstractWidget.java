@@ -239,8 +239,8 @@ public abstract class AbstractWidget implements Widget {
             relativeWidget = getForm();
             relativePath = path.substring(1);
         } else {
-        	if (path.startsWith(".." + Widget.PATH_SEPARATOR))  {
-        		relativeWidget = getParent();
+            if (path.startsWith(".." + Widget.PATH_SEPARATOR))  {
+                relativeWidget = getParent();
                 relativePath = path.substring(3);
             } else {
                 String childId = path.substring(0, sepPosition );
@@ -249,7 +249,10 @@ public abstract class AbstractWidget implements Widget {
             }
         }
 
-        if (relativeWidget == null) return null;
+        if (relativeWidget == null) {
+            return null;
+        }
+
         return relativeWidget.lookupWidget(relativePath);
     }
 
@@ -261,7 +264,7 @@ public abstract class AbstractWidget implements Widget {
      * @return <code>null</code> if not overriden.
      */
     protected Widget getChild(String id) {
-    	return null;
+        return null;
     }
 
     public Widget getWidget(String id) {
@@ -505,7 +508,7 @@ public abstract class AbstractWidget implements Widget {
         }
     }
 
-	public Object getAttribute(String name) {
+    public Object getAttribute(String name) {
         Object result = null;
 
         // First check locally
