@@ -152,7 +152,8 @@ public class DomHelper {
     public static Element getChildElement(Element element,
                                           String namespace,
                                           String localName,
-                                          boolean required) throws Exception {
+                                          boolean required)
+    throws FormsException {
         NodeList nodeList = element.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -176,7 +177,7 @@ public class DomHelper {
      * if the element has no such attribute.
      */
     public static String getAttribute(Element element, String attributeName)
-    throws Exception {
+    throws FormsException {
         String attrValue = element.getAttribute(attributeName);
         if (attrValue.length() == 0) {
             throw new FormsException("Required attribute '" + attributeName + "' is missing.",
@@ -201,7 +202,8 @@ public class DomHelper {
     }
 
     public static int getAttributeAsInteger(Element element,
-                                            String attributeName) throws Exception {
+                                            String attributeName)
+    throws FormsException {
         String attrValue = getAttribute(element, attributeName);
         try {
             return Integer.parseInt(attrValue);
@@ -214,7 +216,8 @@ public class DomHelper {
 
     public static int getAttributeAsInteger(Element element,
                                             String attributeName,
-                                            int defaultValue) throws Exception {
+                                            int defaultValue)
+    throws FormsException {
         String attrValue = element.getAttribute(attributeName);
         if (attrValue.length() == 0) {
             return defaultValue;
