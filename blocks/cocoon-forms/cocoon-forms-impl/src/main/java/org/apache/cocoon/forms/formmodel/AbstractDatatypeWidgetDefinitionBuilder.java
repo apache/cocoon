@@ -19,7 +19,9 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.avalon.framework.service.ServiceSelector;
+
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.datatype.SelectionListBuilder;
@@ -27,6 +29,7 @@ import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.i18n.I18nUtils;
+
 import org.w3c.dom.Element;
 
 /**
@@ -43,7 +46,8 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
     }
 
     protected void setupDefinition(Element widgetElement,
-                                   AbstractDatatypeWidgetDefinition definition, boolean isArrayType)
+                                   AbstractDatatypeWidgetDefinition definition,
+                                   boolean isArrayType)
     throws Exception {
         super.setupDefinition(widgetElement, definition);
         // parse "label", "hint", etc.
@@ -69,8 +73,8 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
                 String value = DomHelper.getElementText(initialValueElement);
                 ConversionResult result = datatype.convertFromString(value, locale);
                 if (!result.isSuccessful()) {
-                    throw new Exception("Cannot parse initial value '" + value + "' at " +
-                                        DomHelper.getLocation(initialValueElement));
+                    throw new FormsException("Cannot parse initial value '" + value + "'.",
+                                             DomHelper.getLocationObject(initialValueElement));
                 }
                 initialValue = result.getResult();
             }
