@@ -100,8 +100,8 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
 
     protected void setupDefinition(Element widgetElement, AbstractWidgetDefinition definition)
     throws Exception {
-    	// location
-    	definition.setLocation(DomHelper.getLocationObject(widgetElement));
+        // location
+        definition.setLocation(DomHelper.getLocationObject(widgetElement));
 
         if (this.context.getSuperDefinition() != null) {
             definition.initializeFrom(this.context.getSuperDefinition());
