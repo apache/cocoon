@@ -124,7 +124,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     throws IncompletenessException {
         // FormDefinition is the only one allowed not to have an ID
         if (id == null || "".equals(id) && !(this instanceof FormDefinition)) {
-            throw new IncompletenessException("Widget found without an ID! " + this, this);
+            throw new IncompletenessException("Widget must have an id attribute.", this);
         }
 
         // TODO: don't know what else to check now

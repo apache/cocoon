@@ -35,4 +35,8 @@ public class DuplicateIdException extends FormsException {
     public DuplicateIdException(String message, Location location) {
         super(message, location);
     }
+
+    public DuplicateIdException(String message, WidgetDefinition widget) {
+        super(message, widget.getLocation());
+    }
 }
