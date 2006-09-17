@@ -56,14 +56,13 @@ public class WidgetDefinitionList {
         // Do not add NewDefinition id's hash.
         if (!(widgetDefinition instanceof NewDefinition)) {
             if (widgetDefinitionsById.containsKey(id)) {
-                Location duplicateLocation = widgetDefinition.getLocation();
                 Location containerLocation = containerDefinition.getLocation();
                 Location firstLocation = getWidgetDefinition(id).getLocation();
                 throw new DuplicateIdException(
                     "Detected duplicate widget id '" + id + "'.\n" +
                     "Container widget '" + containerDefinition.getId() + "' at " + containerLocation + "\n" +
                     "already contains a widget with the same id at " + firstLocation + ".",
-                        duplicateLocation);
+                        widgetDefinition);
             }
             widgetDefinitionsById.put(widgetDefinition.getId(), widgetDefinition);
         }

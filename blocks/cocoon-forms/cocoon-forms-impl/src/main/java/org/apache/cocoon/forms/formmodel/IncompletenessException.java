@@ -15,32 +15,19 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.avalon.framework.CascadingException;
+import org.apache.cocoon.forms.FormsException;
 
 /**
  * @version $Id$
  */
-public class IncompletenessException extends CascadingException {
+public class IncompletenessException extends FormsException {
 
-	private WidgetDefinition causingDefinition;
-
-
-    public IncompletenessException(String message, WidgetDefinition incomplete) {
-        super(message);
-        causingDefinition = incomplete;
+    public IncompletenessException(String message, WidgetDefinition widget) {
+        super(message, widget.getLocation());
     }
 
-    public IncompletenessException(String message, WidgetDefinition incomplete , Exception e) {
-        super(message, e);
-        causingDefinition = incomplete;
-    }
-
-    public String toString() {
-    	String msg = super.toString();
-
-        if (causingDefinition != null)
-            msg += " (Caused by widget '" + causingDefinition.getId() + "', last modified at " + causingDefinition.getLocation() + ")";
-
-        return msg;
+    public IncompletenessException(String message, WidgetDefinition widget , Exception e) {
+        super(message, e, widget.getLocation());
     }
 }
+
