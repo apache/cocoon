@@ -1,9 +1,10 @@
 <page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"  jx:cache-key="abc" jx:cache-validity="${Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}">
-	<title>JX Caching</title>
+    <h4 class="samplesGroup">JXTG template caching with static cache key and NOP Validity</h4>
+	<title>Sample page</title>
 	<content>
 		<p>
 			This content has been generated at <jx:formatDate value="${java.util.Calendar.getInstance().getTime()}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>
-		</p>
+        </p>
 		<p>
 			Caching configuration is <b>jx:cache-key=&quot;abc&quot;
 			jx:cache-validity=&quot;$ {Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}&quot;</b>
