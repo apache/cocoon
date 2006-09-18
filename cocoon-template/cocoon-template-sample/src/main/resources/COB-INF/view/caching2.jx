@@ -1,5 +1,6 @@
 <page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"  jx:cache-key="${cocoon.request.parameters.foo}" jx:cache-validity="${Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}">
-    <title>JX Caching</title>
+    <h4 class="samplesGroup">JXTG template caching with a dynamic cache key and NOP Validity</h4>
+    <title>Single request parameter</title>
     <content>
         <p>
             This content has been generated at <jx:formatDate value="${java.util.Calendar.getInstance().getTime()}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>
@@ -18,8 +19,12 @@
         <p>
             You may try to <a href="">reload the page</a> and see if generation date changes.<br/>
             Try other 'foo' values: <a href="?">not defined</a>, <a href="?foo=">empty</a>,
-            <a href="?foo=bar">bar</a>, <a href="?foo=zoo">zoo</a> and watch document generation date.<br/>
-            When the 'foo' parameter is not defined the page does NOT get cached (TBD: why?).
+            <a href="?foo=bar">bar</a>, <a href="?foo=zoo">zoo</a> and watch document generation date.
+        </p>
+        <p>
+            When the 'foo' parameter is not defined the page does NOT get cached.<br/>
+            This is because the whole cache-key has to evaluate to non null value.<br/>
+            If you to cache also this kind of request you have to modify your cache-key to always be not null.
         </p>
 
         <p>
