@@ -25,6 +25,7 @@
  <group name="Caching">
   <sample name="Static caching" href="view/caching1">Static caching</sample>
   <sample name="Request parameter based caching" href="view/caching2">Request parameter based caching</sample>
-  <sample name="Request parameter based caching" href="view/caching3">Caching with all request parameters</sample>
+  <sample name="Caching with all request parameters" href="view/caching3">Caching with all request parameters</sample>
+  <sample name="Using ExpiresValidity" href="view/caching3">Using ExpiresValidity</sample>
  </group>
 </samples>
