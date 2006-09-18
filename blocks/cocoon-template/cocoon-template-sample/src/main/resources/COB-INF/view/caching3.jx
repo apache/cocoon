@@ -25,7 +25,7 @@
         </p>
 
         <p>
-            Next sample: none.<br/>
+            Next sample: <a href="../view/caching4">Setting other validities</a>.<br/>
             Go <a href="../">Back</a> to Cocoon Template samples.
         </p>
     </content>
