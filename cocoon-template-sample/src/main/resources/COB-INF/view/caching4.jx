@@ -1,0 +1,28 @@
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"  jx:cache-key="abc" jx:cache-validity="${Packages.org.apache.excalibur.source.impl.validity.ExpiresValidity(10000)}">
+	<title>JX Caching</title>
+	<content>
+		<p>
+			This content has been generated at <jx:formatDate value="${java.util.Calendar.getInstance().getTime()}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>
+		</p>
+		<p>
+			Caching configuration is <b>jx:cache-key=&quot;abc&quot;
+			jx:cache-validity=&quot;$ {Packages.org.apache.excalibur.source.impl.validity.ExpiresValidity(10000)}&quot;</b>
+		</p>
+
+		<p>
+			This means that once the content is generated it expires after 10 seconds.<br/>
+			The cache key is static so there will only be one instance of cached document.<br/>
+			You may of course mix various cache key generation strategies with different validities.<br/>
+		</p>
+
+		<p>
+			You may try to <a href="">reload the page</a> and see if generation date changes.<br/>
+			You may try to <a href="?foo=bar">define additional request parameters</a> to see that it does not change a thing.
+		</p>
+
+		<p>
+			Next sample: none.<br/>
+			Go <a href="../">back</a> to Cocoon Template samples.
+		</p>
+	</content>
+</page>
