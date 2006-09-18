@@ -1,5 +1,6 @@
 <page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"  jx:cache-key="${cocoon.request.parameters.toString()}" jx:cache-validity="${Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}">
-    <title>JX Caching</title>
+    <h4 class="samplesGroup">JXTG template caching with a dynamic cache key and NOP Validity</h4>
+    <title>All request parameters</title>
     <content>
         <p>
             This content has been generated at <jx:formatDate value="${java.util.Calendar.getInstance().getTime()}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>

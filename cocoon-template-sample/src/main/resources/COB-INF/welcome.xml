@@ -23,9 +23,9 @@
   <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
  </group>
  <group name="Caching">
-  <sample name="Static caching" href="view/caching1">Static caching</sample>
-  <sample name="Request parameter based caching" href="view/caching2">Request parameter based caching</sample>
-  <sample name="Caching with all request parameters" href="view/caching3">Caching with all request parameters</sample>
-  <sample name="Using ExpiresValidity" href="view/caching3">Using ExpiresValidity</sample>
+  <sample name="Static caching" href="view/caching1">see the usage of NOPValidity with static cache key</sample>
+  <sample name="Request parameter based caching" href="view/caching2">how to make cocoon cache different documents basing on a single request parameter</sample>
+  <sample name="Caching with all request parameters" href="view/caching3">how to make cocoon cache different documents basing on all request parameters</sample>
+  <sample name="Using ExpiresValidity" href="view/caching4">other type of validity in action</sample>
  </group>
 </samples>
