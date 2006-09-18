@@ -23,18 +23,20 @@
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-template</artifactId>
     <version>2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-template</artifactId>
-  <packaging>pom</packaging>
-  <name>Template framework [modules]</name>
-  <version>2-SNAPSHOT</version>
-  <modules>
-    <module>cocoon-template-impl</module>
-    <module>cocoon-template-sample</module>
-  </modules>
+  <artifactId>cocoon-template-sample</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>Template Block Samples</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-template-impl</artifactId>
+      <version>1.0.0-M2-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
 </project>
