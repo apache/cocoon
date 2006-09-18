@@ -1,0 +1,32 @@
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"  jx:cache-key="${cocoon.request.parameters.toString()}" jx:cache-validity="${Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}">
+    <title>JX Caching</title>
+    <content>
+        <p>
+            This content has been generated at <jx:formatDate value="${java.util.Calendar.getInstance().getTime()}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>
+            Request parameters: ${cocoon.request.parameters}
+        </p>
+        <p>
+            Caching configuration is <b>jx:cache-key=&quot;$ {cocoon.request.parameters.toString()}&quot;
+            jx:cache-validity=&quot;$ {Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}&quot;</b>
+        </p>
+
+        <p>
+            The content will be cached separately for any combination of request parameters.
+            Once the content is generated it never expires (unless the template source changes).<br/>
+            You have to use $ {cocoon.request.parameters.toString()} instead of $ {cocoon.request.parameters} because the cache-key needs to be Serializable.
+        </p>
+
+        <p>
+            Try some combinations:<br/>
+            <a href="">Reload the page</a><br/>
+            See <a href="?foo=bar">?foo=bar</a><br/>
+            See <a href="?foo=bar&amp;bar=foo">?foo=bar&amp;bar=foo</a><br/>
+            See <a href="?bar=foo&amp;foo=bar">?bar=foo&amp;foo=bar</a> (Luckily the request parameters' order is irrelevant. TBD: can we rely on such functionality?)<br/>
+        </p>
+
+        <p>
+            Next sample: none.<br/>
+            Go <a href="../">Back</a> to Cocoon Template samples.
+        </p>
+    </content>
+</page>

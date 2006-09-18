@@ -1,0 +1,30 @@
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"  jx:cache-key="${cocoon.request.parameters.foo}" jx:cache-validity="${Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}">
+    <title>JX Caching</title>
+    <content>
+        <p>
+            This content has been generated at <jx:formatDate value="${java.util.Calendar.getInstance().getTime()}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>
+            'foo' request parameter: ${cocoon.request.parameters.foo}
+        </p>
+        <p>
+            Caching configuration is <b>jx:cache-key=&quot;$ {cocoon.request.parameters.foo}&quot;
+            jx:cache-validity=&quot;$ {Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}&quot;</b>
+        </p>
+
+        <p>
+            The content will be cached separately for each value of request parameter named 'foo'.
+            Once the content is generated it never expires (unless the template source changes).
+        </p>
+
+        <p>
+            You may try to <a href="">reload the page</a> and see if generation date changes.<br/>
+            Try other 'foo' values: <a href="?">not defined</a>, <a href="?foo=">empty</a>,
+            <a href="?foo=bar">bar</a>, <a href="?foo=zoo">zoo</a> and watch document generation date.<br/>
+            When the 'foo' parameter is not defined the page does NOT get cached (TBD: why?).
+        </p>
+
+        <p>
+            Next sample: <a href="../view/caching3">Caching with all request parameters</a>.<br/>
+            Go <a href="../">Back</a> to Cocoon Template samples.
+        </p>
+    </content>
+</page>
