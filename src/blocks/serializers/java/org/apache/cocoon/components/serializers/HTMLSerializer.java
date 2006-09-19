@@ -156,7 +156,7 @@ public class HTMLSerializer extends XHTMLSerializer {
             this.doctype = HTML401_DOCTYPE_FRAMESET;
         } else if (this.doctype != null) {
             /* The root element is uppercase, always!!! */
-            this.doctype = new DocType(this.doctype.getName().toUpperCase(),
+            this.doctype = new SGMLDocType(this.doctype.getName().toUpperCase(),
                                        this.doctype.getPublicId(),
                                        this.doctype.getSystemId());
         }
