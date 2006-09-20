@@ -101,8 +101,8 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
         Element selectionListElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, name);
 
         if (selectionListElement != null && definition.getDatatype() == null) {
-            throw new Exception("A widget with a selection list always requires a datatype as well! (at " +
-                                DomHelper.getLocation(selectionListElement) + " )");
+            throw new FormsException("A widget with a selection list requires a datatype.",
+                                     DomHelper.getLocationObject(widgetElement));
         }
 
         if (selectionListElement == null) {

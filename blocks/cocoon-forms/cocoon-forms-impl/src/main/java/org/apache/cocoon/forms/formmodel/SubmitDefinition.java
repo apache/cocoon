@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
+
 /**
  * Definition for a {@link Submit}.
  *
@@ -31,14 +33,14 @@ public class SubmitDefinition extends ActionDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof SubmitDefinition) {
-            SubmitDefinition other = (SubmitDefinition) definition;
-
-            this.validateForm = other.validateForm;
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof SubmitDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not a SubmitDefinition.",
+                                     getLocation());
         }
+
+        SubmitDefinition other = (SubmitDefinition) definition;
+
+        this.validateForm = other.validateForm;
     }
 
     public void setValidateForm(boolean validateForm) {

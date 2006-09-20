@@ -30,6 +30,7 @@ import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.AttributesImpl;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -273,11 +274,11 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public Object getValue() {
-        throw new UnsupportedOperationException("Widget " + toString() + " has no value, at " + getLocation());
+        throw new UnsupportedOperationException("Widget " + this + " has no value, at " + getLocation());
     }
 
     public void setValue(Object object) {
-        throw new UnsupportedOperationException("Widget " + toString() + " has no value, at " + getLocation());
+        throw new UnsupportedOperationException("Widget " + this + " has no value, at " + getLocation());
     }
 
     public boolean isRequired() {

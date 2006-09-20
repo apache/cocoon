@@ -15,7 +15,9 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.util.DomHelper;
+
 import org.w3c.dom.Element;
 
 /**
@@ -29,9 +31,9 @@ public class ExpandDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         String id = DomHelper.getAttribute(element, "id");
 
         WidgetDefinition definition = context.getLocalLibrary().getDefinition(id);
-
         if (definition == null) {
-            throw new Exception("Widget '" + id + "' not found! (at " + DomHelper.getLocation(element) + ")");
+            throw new FormsException("Widget '" + id + "' not found.",
+                                     DomHelper.getLocationObject(element));
         }
 
         return definition;

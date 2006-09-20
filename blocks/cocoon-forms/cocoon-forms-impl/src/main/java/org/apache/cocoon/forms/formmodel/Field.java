@@ -15,25 +15,31 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Locale;
+
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormsRuntimeException;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
-import org.apache.cocoon.forms.event.*;
+import org.apache.cocoon.forms.event.DeferredValueChangedEvent;
+import org.apache.cocoon.forms.event.ValueChangedEvent;
+import org.apache.cocoon.forms.event.ValueChangedListener;
+import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
+import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * A general-purpose Widget that can hold one value. A Field widget can be associated
@@ -172,9 +178,10 @@ public class Field extends AbstractWidget
      */
     public void setSuggestionLabel(String label) {
         if (this.fieldDefinition.getSuggestionList() == null) {
-            throw new FormsRuntimeException(this + " has no suggestion list", getLocation());
+            throw new FormsRuntimeException("Field '" + getRequestParameterName() + "' has no suggestion list.",
+                                            getLocation());
         }
-        this.setAttribute(SUGGESTED_LABEL_ATTR, label);
+        setAttribute(SUGGESTED_LABEL_ATTR, label);
     }
 
     /**
@@ -218,9 +225,9 @@ public class Field extends AbstractWidget
 
     public void setValue(Object newValue) {
         if (newValue != null && !getDatatype().getTypeClass().isAssignableFrom(newValue.getClass())) {
-            throw new RuntimeException("Incorrect value type for \"" + getRequestParameterName() +
-                           "\" (expected " + getDatatype().getTypeClass() +
-                           ", got " + newValue.getClass() + ").");
+            throw new FormsRuntimeException("Incorrect value type for '" + getRequestParameterName() +
+                                            "'. Expected " + getDatatype().getTypeClass() + ", got " + newValue.getClass() + ").",
+                                            getLocation());
         }
 
         // Is it a new value?

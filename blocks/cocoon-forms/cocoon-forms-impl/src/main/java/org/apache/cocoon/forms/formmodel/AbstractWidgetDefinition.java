@@ -21,7 +21,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.CreateEvent;
 import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
@@ -29,7 +32,7 @@ import org.apache.cocoon.forms.formmodel.library.Library;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.XMLUtils;
-import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -87,33 +90,34 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
-        if (definition instanceof AbstractWidgetDefinition) {
-            AbstractWidgetDefinition other = (AbstractWidgetDefinition) definition;
+        if (!(definition instanceof AbstractWidgetDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not an AbstractWidgetDefinition.",
+                                     getLocation());
+        }
 
-            this.state = other.state;
-            this.createListener = other.createListener; // this works, we don't really remove listeners, right?
+        AbstractWidgetDefinition other = (AbstractWidgetDefinition) definition;
 
-            this.validators = new ArrayList();
-            if (other.validators != null) {
-                for (int i = 0; i < other.validators.size(); i++) {
-                    this.validators.add(other.validators.get(i));
-                }
-            }
+        this.state = other.state;
+        this.createListener = other.createListener; // this works, we don't really remove listeners, right?
 
-            if (other.attributes != null) {
-                if (attributes == null) {
-                    attributes = new HashMap();
-                }
-                attributes.putAll(other.attributes);
+        this.validators = new ArrayList();
+        if (other.validators != null) {
+            for (int i = 0; i < other.validators.size(); i++) {
+                this.validators.add(other.validators.get(i));
             }
-            if (other.displayData != null) {
-                if (displayData == null) {
-                    displayData = new HashMap();
-                }
-                displayData.putAll(other.displayData);
+        }
+
+        if (other.attributes != null) {
+            if (attributes == null) {
+                attributes = new HashMap();
             }
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+            attributes.putAll(other.attributes);
+        }
+        if (other.displayData != null) {
+            if (displayData == null) {
+                displayData = new HashMap();
+            }
+            displayData.putAll(other.displayData);
         }
     }
 
@@ -277,7 +281,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException {
         Object data = this.displayData.get(name);
         if (data != null) {
-            ((XMLizable)data).toSAX(contentHandler);
+            ((XMLizable) data).toSAX(contentHandler);
         } else if (!this.displayData.containsKey(name)) {
             throw new IllegalArgumentException("Unknown display data name '" + name + "'");
         }

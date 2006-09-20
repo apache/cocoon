@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 
@@ -44,16 +45,16 @@ public class UploadDefinition extends AbstractWidgetDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof UploadDefinition) {
-            UploadDefinition other = (UploadDefinition) definition;
-
-            this.required = other.required;
-            this.mimeTypes = other.mimeTypes;
-            this.listener = WidgetEventMulticaster.add(this.listener, other.listener);
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof UploadDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not an UploadDefinition.",
+                                     getLocation());
         }
+
+        UploadDefinition other = (UploadDefinition) definition;
+
+        this.required = other.required;
+        this.mimeTypes = other.mimeTypes;
+        this.listener = WidgetEventMulticaster.add(this.listener, other.listener);
     }
 
     public void addMimeTypes(String types) {
@@ -74,8 +75,7 @@ public class UploadDefinition extends AbstractWidgetDefinition {
     }
 
     public Widget createInstance() {
-        Upload upload = new Upload(this);
-        return upload;
+        return new Upload(this);
     }
 
     public boolean isRequired() {

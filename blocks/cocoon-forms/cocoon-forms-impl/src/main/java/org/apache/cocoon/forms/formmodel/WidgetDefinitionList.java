@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.cocoon.forms.FormsException;
+import org.apache.cocoon.forms.FormsRuntimeException;
 import org.apache.cocoon.util.location.Location;
 
 // TODO: Refine and i18n the exception messages.
@@ -118,11 +120,12 @@ public class WidgetDefinitionList {
                 if (widgetDefinition == containerDefinition) {
                     Location location = containerDefinition.getLocation();
                     if (parent instanceof FormDefinition) {
-                        throw new Exception("Container: Non-terminating recursion detected in form definition (" + location + ")");
+                        throw new FormsException("Container: Non-terminating recursion detected in form definition.",
+                                                 location);
                     }
 
-                    throw new Exception("Container: Non-terminating recursion detected in widget definition: " +
-                                        parent.getId() + " (" + location + ")");
+                    throw new FormsException("Container: Non-terminating recursion detected in widget definition: " + parent.getId(),
+                                             location);
                 }
             }
         }
@@ -131,8 +134,8 @@ public class WidgetDefinitionList {
     public void createWidget(Widget parent, String id) {
         WidgetDefinition widgetDefinition = (WidgetDefinition) widgetDefinitionsById.get(id);
         if (widgetDefinition == null) {
-            throw new RuntimeException(containerDefinition.getId() + ": WidgetDefinition \"" + id +
-                                       "\" does not exist (" + containerDefinition.getLocation() + ")");
+            throw new FormsRuntimeException(containerDefinition.getId() + ": WidgetDefinition '" + id + "' does not exist.",
+                                            containerDefinition.getLocation());
         }
 
         Widget widget = widgetDefinition.createInstance();

@@ -17,6 +17,8 @@ package org.apache.cocoon.forms.formmodel;
 
 import org.apache.avalon.framework.context.Context;
 
+import org.apache.cocoon.forms.FormsException;
+
 /**
  * A {@link FieldDefinition} for {@link CaptchaField}s.
  *
@@ -38,14 +40,14 @@ public class CaptchaFieldDefinition extends FieldDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof CaptchaFieldDefinition) {
-            CaptchaFieldDefinition other = (CaptchaFieldDefinition) definition;
-
-            this.length = other.length;
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof CaptchaFieldDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not a CaptchaFieldDefinition.",
+                                     getLocation());
         }
+
+        CaptchaFieldDefinition other = (CaptchaFieldDefinition) definition;
+
+        this.length = other.length;
     }
 
     public Widget createInstance() {

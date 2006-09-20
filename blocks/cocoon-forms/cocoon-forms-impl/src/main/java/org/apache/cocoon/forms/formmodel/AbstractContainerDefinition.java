@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.cocoon.forms.FormsException;
+
 /**
  * The {@link AbstractContainerDefinition} corresponding to an {@link AbstractContainerWidget}.
  *
@@ -48,18 +50,19 @@ public abstract class AbstractContainerDefinition extends AbstractWidgetDefiniti
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof AbstractContainerDefinition) {
-            AbstractContainerDefinition other = (AbstractContainerDefinition) definition;
+        if (!(definition instanceof AbstractContainerDefinition)) {
+            throw new FormsException("Parent definition " + definition.getClass().getName() + " is not an AbstractContainerDefinition.",
+                                     getLocation());
+        }
 
-            Iterator i = other.definitions.getWidgetDefinitions().iterator();
-            while(i.hasNext()) {
-                try {
-                    WidgetDefinition def = (WidgetDefinition) i.next();
-                    this.definitions.addWidgetDefinition(def);
-                } catch (DuplicateIdException e) { /* ignored */ }
-            }
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        AbstractContainerDefinition other = (AbstractContainerDefinition) definition;
+
+        Iterator i = other.definitions.getWidgetDefinitions().iterator();
+        while(i.hasNext()) {
+            try {
+                WidgetDefinition def = (WidgetDefinition) i.next();
+                this.definitions.addWidgetDefinition(def);
+            } catch (DuplicateIdException e) { /* ignored */ }
         }
     }
 
