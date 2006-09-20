@@ -19,16 +19,11 @@
 -->
 #macro ( banner $banner $id )
   #if ( $banner )
-##    #if( $banner.href )
-##      <a href="$banner.href" id="$id">
-##    #else
-##        <span id="$id">
-##    #end
-
-## start Cocoon specific modification    
-    <a href="$project.getProperties().get("externalUrl")" id="$id">
-## end Cocoon specific modification    
-
+    #if( $banner.href )
+      <a href="$banner.href" id="$id">
+    #else
+        <span id="$id">
+    #end
     #if( $banner.src )
         #set ( $src = $banner.src )
         #if ( ! ( $src.toLowerCase().startsWith("http") || $src.toLowerCase().startsWith("https") ) )
@@ -45,16 +40,11 @@
         $banner.name
     #end
 
-##    #if( $banner.href )
-##        </a>
-##    #else
-##        </span>
-##    #end
-
-## start Cocoon specific modification    
-          </a>
-## end Cocoon specific modification  
-
+    #if( $banner.href )
+        </a>
+    #else
+        </span>
+    #end
   #end
 #end
 
@@ -333,8 +323,18 @@
   </head>
   <body class="composite">
     <div id="banner">
-      #banner( $decoration.bannerLeft "bannerLeft" )
-      #banner( $decoration.bannerRight "bannerRight" )
+##      #banner( $decoration.bannerLeft "bannerLeft" )
+##      #banner( $decoration.bannerRight "bannerRight" )
+
+## Cocoon specific modification: start 
+		<a href="$project.getProperties().get("externalUrl")" id="bannerLeft">
+			<img src="$PathTool.calculateLink( "images/cocoon-project-logo.png", $relativePath )" alt="Cocoon Project Logo" />
+		</a>
+		<a href="$project.getProperties().get("externalUrl")" id="bannerRight">
+			<img src="$PathTool.calculateLink( "images/cocoon-logo.gif", $relativePath )" alt="Cocoon Logo" />
+		</a>		
+## Cocoon specific modification: end
+
       <div class="clear">
         <hr/>
       </div>
