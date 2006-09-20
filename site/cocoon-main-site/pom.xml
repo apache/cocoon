@@ -38,18 +38,13 @@
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
   
-  <properties>
-    <deploymentBaseUrl>file://${basedir}/../../../site/site</deploymentBaseUrl>
-    <externalUrl>http://cocoon.apache.org</externalUrl>
-  </properties>  
-  
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}/s</url>
+      <url>${deploymentBaseUrl}</url>
     </site>
   </distributionManagement>
-  
+
   <scm><!-- repeated here so that maven-site is not appended -->
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
