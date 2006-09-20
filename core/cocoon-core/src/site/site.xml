@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 --><!--+
-    | @version $Id: pom.xml 434413 2006-08-24 16:21:16Z cziegeler $
+    | @version $Id$
     +--><project name="Cocoon Core">
   <skin>
     <groupId>org.apache.cocoon</groupId>
