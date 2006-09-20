@@ -34,14 +34,19 @@
   <artifactId>cocoon-main-site</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   
-  <name>Cocoon</name>
+  <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
+  
+  <properties>
+    <deploymentBaseUrl>file://${basedir}/../../../site/site</deploymentBaseUrl>
+    <externalUrl>http://cocoon.apache.org</externalUrl>
+  </properties>  
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>file://${basedir}/../../../site/site/</url>
+      <url>${deploymentBaseUrl}/s</url>
     </site>
   </distributionManagement>
   
@@ -73,6 +78,5 @@
       </plugin>      
     </plugins>
   </build>
- 
   
 </project>

@@ -19,14 +19,6 @@
 --><!--+
     | @version $Id: pom.xml 434413 2006-08-24 16:21:16Z cziegeler $
     +--><project name="Cocoon Forms">
-  <bannerLeft>
-    <name>Cocoon Forms</name>
-    <src>images/cocoon-project-logo.png</src>
-    <href>http://cocoon.apache.org/index.html</href>
-  </bannerLeft>
-  <bannerRight>
-    <src>images/cocoon-logo.gif</src>
-  </bannerRight>
   <skin>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-maven-site-skin</artifactId> 
