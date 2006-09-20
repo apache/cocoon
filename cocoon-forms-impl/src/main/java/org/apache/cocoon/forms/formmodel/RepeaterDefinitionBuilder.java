@@ -17,10 +17,11 @@ package org.apache.cocoon.forms.formmodel;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.util.DomHelper;
+
 import org.w3c.dom.Element;
 
 /**
@@ -38,15 +39,18 @@ public final class RepeaterDefinitionBuilder extends AbstractContainerDefinition
 
         // should throw error on negative values ? Just correct them for now.
         if (minSize < 0) {
-            throw new ConfigurationException("min-size should be positive, at " + DomHelper.getLocationObject(repeaterElement));
+            throw new FormsException("min-size should be positive.",
+                                     DomHelper.getLocationObject(repeaterElement));
         }
 
         if (maxSize < 0) {
-            throw new ConfigurationException("max-size should be positive, at " + DomHelper.getLocationObject(repeaterElement));
+            throw new FormsException("max-size should be positive.",
+                                     DomHelper.getLocationObject(repeaterElement));
         }
 
         if (maxSize < minSize) {
-            throw new ConfigurationException("max-size should be greater that or equal to min-size, at " + DomHelper.getLocationObject(repeaterElement));
+            throw new FormsException("max-size should be greater than or equal to min-size.",
+                                     DomHelper.getLocationObject(repeaterElement));
         }
 
         // initial size is at least the min size

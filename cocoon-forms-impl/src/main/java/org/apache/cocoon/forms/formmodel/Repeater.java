@@ -349,8 +349,9 @@ public class Repeater extends AbstractWidget
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isAcceptingInputs()) {
             return;
+        }
 
         // read number of rows from request, and make an according number of rows
         Request req = formContext.getRequest();
@@ -400,7 +401,8 @@ public class Repeater extends AbstractWidget
         // as reordering rows changes their IDs and therefore their child widget's ID too.
         if (action.equals("move")) {
             if (!this.orderable) {
-                throw new FormsRuntimeException(this + " is not orderable", getLocation());
+                throw new FormsRuntimeException("Widget " + this + " is not orderable",
+                                                getLocation());
             }
 
             int from = Integer.parseInt(req.getParameter(paramName + ".from"));
@@ -522,8 +524,8 @@ public class Repeater extends AbstractWidget
     public void generateWidgetLabel(String widgetId, ContentHandler contentHandler) throws SAXException {
         WidgetDefinition widgetDefinition = definition.getWidgetDefinition(widgetId);
         if (widgetDefinition == null) {
-            throw new SAXException("Repeater \"" + getRequestParameterName() + "\" at " + this.getLocation()
-                                   + " contains no widget with id \"" + widgetId + "\".");
+            throw new SAXException("Repeater '" + getRequestParameterName() + "' at " + getLocation()
+                                   + " contains no widget with id '" + widgetId + "'.");
         }
 
         widgetDefinition.generateLabel(contentHandler);
@@ -629,7 +631,7 @@ public class Repeater extends AbstractWidget
         }
 
         public void broadcastEvent(WidgetEvent event) {
-            throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
+            throw new UnsupportedOperationException("Widget " + this + " doesn't handle events.");
         }
     }
 

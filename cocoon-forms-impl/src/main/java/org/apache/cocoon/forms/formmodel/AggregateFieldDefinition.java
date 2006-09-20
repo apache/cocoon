@@ -15,17 +15,20 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.apache.oro.text.regex.Pattern;
-
-import org.outerj.expression.Expression;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.excalibur.xml.sax.XMLizable;
+
+import org.apache.cocoon.forms.FormsException;
+import org.apache.cocoon.forms.FormsRuntimeException;
+
+import org.apache.oro.text.regex.Pattern;
+import org.outerj.expression.Expression;
 
 /**
  * The {@link WidgetDefinition} part of a AggregateField widget, see {@link AggregateField}
@@ -79,28 +82,28 @@ public class AggregateFieldDefinition extends FieldDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof AggregateFieldDefinition) {
-            AggregateFieldDefinition other = (AggregateFieldDefinition) definition;
+        if (!(definition instanceof AggregateFieldDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not an AggregateFieldDefinition.",
+                                     getLocation());
+        }
 
-            this.combineExpr = other.combineExpr;
-            this.splitRegexp = other.splitRegexp;
-            this.splitPattern = other.splitPattern;
-            this.splitFailMessage = other.splitFailMessage;
+        AggregateFieldDefinition other = (AggregateFieldDefinition) definition;
 
-            Iterator defs = other.container.getWidgetDefinitions().iterator();
-            while (defs.hasNext()) {
-                container.addWidgetDefinition((WidgetDefinition) defs.next());
-            }
+        this.combineExpr = other.combineExpr;
+        this.splitRegexp = other.splitRegexp;
+        this.splitPattern = other.splitPattern;
+        this.splitFailMessage = other.splitFailMessage;
 
-            Collections.copy(this.splitMappings, other.splitMappings);
+        Iterator defs = other.container.getWidgetDefinitions().iterator();
+        while (defs.hasNext()) {
+            container.addWidgetDefinition((WidgetDefinition) defs.next());
+        }
 
-            Iterator fields = other.mappedFields.iterator();
-            while (fields.hasNext()) {
-                this.mappedFields.add(fields.next());
-            }
+        Collections.copy(this.splitMappings, other.splitMappings);
 
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        Iterator fields = other.mappedFields.iterator();
+        while (fields.hasNext()) {
+            this.mappedFields.add(fields.next());
         }
     }
 
@@ -178,7 +181,8 @@ public class AggregateFieldDefinition extends FieldDefinition {
         checkMutable();
 
         if (mappedFields.contains(fieldId)) {
-            throw new RuntimeException("Field '" + fieldId + "' is already mapped to another group!");
+            throw new FormsRuntimeException("Field '" + fieldId + "' is already mapped to another group.",
+                                            getLocation());
         }
 
         mappedFields.add(fieldId);

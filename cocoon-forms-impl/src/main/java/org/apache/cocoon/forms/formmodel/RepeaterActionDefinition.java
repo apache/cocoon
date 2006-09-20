@@ -15,8 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.cocoon.forms.binding.BindingException;
-import org.apache.cocoon.forms.binding.RepeaterJXPathBinding;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 
@@ -51,14 +50,14 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof RepeaterActionDefinition) {
-            RepeaterActionDefinition other = (RepeaterActionDefinition) definition;
-
-            this.name = other.name;
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof RepeaterActionDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not a RepeaterActionDefinition.",
+                                     getLocation());
         }
+
+        RepeaterActionDefinition other = (RepeaterActionDefinition) definition;
+
+        this.name = other.name;
     }
 
     public Widget createInstance() {
@@ -99,14 +98,14 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
         public void initializeFrom(WidgetDefinition definition) throws Exception {
             super.initializeFrom(definition);
 
-            if (definition instanceof DeleteRowsActionDefinition) {
-                DeleteRowsActionDefinition other = (DeleteRowsActionDefinition) definition;
-
-                this.selectName = other.selectName;
-
-            } else {
-                throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+            if (!(definition instanceof DeleteRowsActionDefinition)) {
+                throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not a DeleteRowsActionDefinition.",
+                                         getLocation());
             }
+
+            DeleteRowsActionDefinition other = (DeleteRowsActionDefinition) definition;
+
+            this.selectName = other.selectName;
         }
 
         public boolean hasActionListeners() {
@@ -168,14 +167,14 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
         public void initializeFrom(WidgetDefinition definition) throws Exception {
             super.initializeFrom(definition);
 
-            if (definition instanceof InsertRowsActionDefinition) {
-                InsertRowsActionDefinition other = (InsertRowsActionDefinition) definition;
-
-                this.selectName = other.selectName;
-
-            } else {
-                throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+            if (!(definition instanceof InsertRowsActionDefinition)) {
+                throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not an InsertRowsActionDefinition.",
+                                         getLocation());
             }
+
+            InsertRowsActionDefinition other = (InsertRowsActionDefinition) definition;
+
+            this.selectName = other.selectName;
         }
 
         public InsertRowsActionDefinition(String repeaterName, String selectWidgetName) {
@@ -222,14 +221,15 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
          */
         public void initializeFrom(WidgetDefinition definition) throws Exception {
             super.initializeFrom(definition);
-            if (definition instanceof ChangePageActionDefinition) {
-                ChangePageActionDefinition other = (ChangePageActionDefinition) definition;
 
-                this.method = other.method;
-
-            } else {
-                throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+            if (!(definition instanceof ChangePageActionDefinition)) {
+                throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not a ChangePageActionDefinition.",
+                                         getLocation());
             }
+
+            ChangePageActionDefinition other = (ChangePageActionDefinition) definition;
+
+            this.method = other.method;
         }
 
         public ChangePageActionDefinition(String repeaterName, int m) {

@@ -15,8 +15,10 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.w3c.dom.Element;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.util.DomHelper;
+
+import org.w3c.dom.Element;
 
 /**
  * The ButtonDefinitionBuilder has been replaced by {@link ActionDefinitionBuilder}. This implementation
@@ -27,6 +29,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 public class ButtonDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        throw new Exception("The button widget has been renamed to action. Please update your form definition files. Found at " + DomHelper.getLocation(widgetElement));
+        throw new FormsException("The button widget has been renamed to action. Please update your form definition files.",
+                                 DomHelper.getLocationObject(widgetElement));
     }
 }
