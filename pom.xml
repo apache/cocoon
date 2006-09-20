@@ -20,7 +20,6 @@
 
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -35,18 +34,13 @@
   <version>2-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+  <inceptionYear>1999</inceptionYear>  
   <modules>
     <module>blocks</module>
     <module>commons</module>
     <module>core</module>
     <module>tools</module>
+    <module>site/cocoon-maven-site-skin</module>    
   </modules>
   <repositories>
     <repository>
@@ -66,14 +60,18 @@
       <layout>legacy</layout>
     </repository>
   </repositories>
-  <!-- Activate this element if you want to use snapshot versions of plugins
   <pluginRepositories>
+    <pluginRepository>
+      <id>reinhard-m2-snapshot-repository</id>
+      <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
+    </pluginRepository>
+    <!-- Activate this element if you want to use snapshot versions of plugins
     <pluginRepository>
       <id>snapshots</id>
       <url>http://snapshots.maven.codehaus.org/maven2</url>
     </pluginRepository>
-  </pluginRepositories>
-  -->
+    -->    
+  </pluginRepositories>   
   <organization>
     <name>The Apache Software Foundation</name>
     <url>http://www.apache.org/</url>
@@ -136,7 +134,7 @@
     </developer>
     <developer>
       <id>joerg</id>
-      <name>Jörg Heinicke</name>
+      <name>Joerg Heinicke</name>
       <email>joerg@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
@@ -315,6 +313,10 @@
       <name>snapshot repository</name>
       <url>scpexe://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
     </snapshotRepository>
+    <site>
+      <id>website</id>
+      <url>${deploymentBaseUrl}</url>
+    </site>    
   </distributionManagement>
   <build>
     <pluginManagement>
@@ -324,6 +326,53 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.2</version>
         </plugin>
+	      <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-site-plugin</artifactId>
+	        <version>2.0-beta-5</version>
+	      </plugin>       
+        <!-- this plugin configuration has to be moved to the Cocoon main pom -->
+        <plugin>
+          <groupId>org.daisycms</groupId>
+          <artifactId>daisy-maven-plugin</artifactId>
+          <version>1.0.0-SNAPSHOT</version>
+          <configuration>
+            <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
+            <editUrl>http://cocoon.zones.apache.org/daisy/cocoon-documentation/</editUrl>  
+            <daisyServerId>cocoon-daisy</daisyServerId>
+            <author>The Cocoon Community</author>  
+            <collections>
+              <collection>
+                <name>cdocs-site-main</name>
+                <path>/</path>
+              </collection>     
+              <collection>
+                <name>cdocs-site-blocks</name>
+                <path>blocks/</path>
+              </collection> 
+              <collection>
+                <name>cdocs-core</name>
+                <path>core/2.2/</path>
+              </collection>                                       
+              <collection>
+                <name>cdocs-forms</name>
+                <path>blocks/forms/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-template</name>
+                <path>blocks/template/1.0/</path>
+              </collection>
+            </collections>        
+          </configuration>
+          <executions>
+            <execution>
+              <phase>pre-site</phase>
+              <goals>
+                <goal>cocoon</goal>
+              </goals>
+            </execution>
+          </executions>          
+        </plugin>         
       </plugins>
     </pluginManagement>
     <extensions>
@@ -363,6 +412,7 @@
     </plugins>
   </build>
   <reporting>
+    <excludeDefaults>true</excludeDefaults>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -370,17 +420,19 @@
         <reportSets>
           <reportSet>
             <reports>
-              <report>dependencies</report>
               <report>project-team</report>
               <report>mailing-list</report>
               <report>cim</report>
               <report>issue-tracking</report>
               <report>license</report>
-              <report>scm</report>
             </reports>
           </reportSet>
         </reportSets>
       </plugin>
     </plugins>
   </reporting>
+  <properties>
+    <deploymentBaseUrl>file://${basedir}/../../../site/site</deploymentBaseUrl>
+    <externalUrl>http://cocoon.apache.org</externalUrl>
+  </properties>     
 </project>
