@@ -48,12 +48,16 @@
   #end
 #end
 
-#macro ( links $links )
+#macro ( links $links ) 
   #set ( $counter = 0 )
+
+## Cocoon specific modification: start  
   <a href="http://www.apache.org/">The Apache Software Foundation</a> |  
   <a href="$project.getProperties().get("externalUrl")/core/">Cocoon Core</a> | 
   <a href="$project.getProperties().get("externalUrl")/blocks/">Cocoon Blocks</a> |   
   <a href="$project.getProperties().get("externalUrl")/maven-plugins/">Cocoon Maven Plugins</a>
+## Cocoon specific modification: end  
+  
   #if ( $links.size() > 0 ) 
    |
   #end  
@@ -183,10 +187,11 @@
 #end
 
 #macro ( publishDate $position $publishDate $version )
+
   #if ( $publishDate && $publishDate.format )
     #set ( $format = $publishDate.format )
   #else
-    #set ( $format = "MM/dd/yyyy" )
+    #set ( $format = "dd/MM/yyyy" )
   #end
 
   $dateFormat.applyPattern( $format )
@@ -206,6 +211,10 @@
       #set ( $versionPosition = "left" )
     #end
   #end
+
+## Cocoon modification: start  
+  #set ( $datePosition = "navigation-bottom" )
+## Cocoon modification: end
 
   #set ( $breadcrumbs = $decoration.body.breadcrumbs )
 
@@ -340,6 +349,7 @@
       </div>
     </div>
     <div id="breadcrumbs">
+      <div id="projectName">$decoration.getName()</div>
       #publishDate( "left" $decoration.publishDate $decoration.version )
       <div class="xright">#links( $decoration.body.links )#publishDate( "right" $decoration.publishDate $decoration.version )</div>
       <div class="clear">
