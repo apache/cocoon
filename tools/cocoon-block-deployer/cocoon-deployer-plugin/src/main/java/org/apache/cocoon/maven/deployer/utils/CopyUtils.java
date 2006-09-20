@@ -30,13 +30,6 @@ import org.apache.commons.io.IOUtils;
 
 public class CopyUtils {
     public static void copy( InputStream is, OutputStream os ) throws IOException {
-        if ( !(is instanceof BufferedInputStream) ) {
-            is = new BufferedInputStream( is );
-        }
-        if ( !(os instanceof BufferedOutputStream) ) {
-            os = new BufferedOutputStream( os );
-        }
-        
         try {
             IOUtils.copy(is, os);
         } finally {
