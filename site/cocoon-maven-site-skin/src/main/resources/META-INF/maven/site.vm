@@ -19,11 +19,15 @@
 -->
 #macro ( banner $banner $id )
   #if ( $banner )
-    #if( $banner.href )
-      <a href="$banner.href" id="$id">
-    #else
-        <span id="$id">
-    #end
+##    #if( $banner.href )
+##      <a href="$banner.href" id="$id">
+##    #else
+##        <span id="$id">
+##    #end
+
+## start Cocoon specific modification    
+    <a href="$project.getProperties().get("externalUrl")" id="$id">
+## end Cocoon specific modification    
 
     #if( $banner.src )
         #set ( $src = $banner.src )
@@ -41,20 +45,25 @@
         $banner.name
     #end
 
-    #if( $banner.href )
-        </a>
-    #else
-        </span>
-    #end
+##    #if( $banner.href )
+##        </a>
+##    #else
+##        </span>
+##    #end
+
+## start Cocoon specific modification    
+          </a>
+## end Cocoon specific modification  
+
   #end
 #end
 
 #macro ( links $links )
   #set ( $counter = 0 )
   <a href="http://www.apache.org/">The Apache Software Foundation</a> |  
-  <a href="http://cocoon.apache.org/core/">Cocoon Core</a> | 
-  <a href="http://cocoon.apache.org/blocks/">Cocoon Blocks</a> |   
-  <a href="http://cocoon.apache.org/maven-plugins/">Cocoon Maven Plugins</a>
+  <a href="$project.getProperties().get("externalUrl")/core/">Cocoon Core</a> | 
+  <a href="$project.getProperties().get("externalUrl")/blocks/">Cocoon Blocks</a> |   
+  <a href="$project.getProperties().get("externalUrl")/maven-plugins/">Cocoon Maven Plugins</a>
   #if ( $links.size() > 0 ) 
    |
   #end  
@@ -115,9 +124,11 @@
 ##      ## By default collapsed
 ##      #set ( $collapse = "collapsed" )
 ##    #end
-    
+
+## start Cocoon specific modification    
     #set ( $collapse = "collapsed" )
-    
+## end Cocoon specific modification    
+
     #set ( $display = false )
     #displayTree( $display $item )
 
