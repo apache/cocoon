@@ -17,16 +17,22 @@ package org.apache.cocoon.forms.formmodel;
 
 import java.util.Locale;
 
-import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormContext;
-import org.apache.cocoon.forms.event.*;
+import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsRuntimeException;
+import org.apache.cocoon.forms.event.ValueChangedEvent;
+import org.apache.cocoon.forms.event.ValueChangedListener;
+import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
+import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.event.WidgetEventMulticaster;
+import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.apache.cocoon.forms.validation.ValidationErrorAware;
-import org.apache.cocoon.forms.validation.ValidationError;
-import org.apache.commons.lang.BooleanUtils;
 
 /**
  * A widget to select a boolean value. Usually rendered as a checkbox.
@@ -154,7 +160,7 @@ public class BooleanField extends AbstractWidget
         }
 
         if (!(object instanceof Boolean)) {
-            throw new RuntimeException("Cannot set value of boolean field \"" + getRequestParameterName() + "\" to a non-Boolean value.");
+            throw new RuntimeException("Cannot set value of boolean field '" + getRequestParameterName() + "' to a non-Boolean value.");
         }
 
         Object oldValue = value;
@@ -180,7 +186,7 @@ public class BooleanField extends AbstractWidget
     public void removeValueChangedListener(ValueChangedListener listener) {
         this.listener = WidgetEventMulticaster.remove(this.listener, listener);
     }
-    
+
     public boolean hasValueChangedListeners() {
         return this.listener != null;
     }

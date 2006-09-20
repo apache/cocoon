@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
+
 /**
  * The {@link WidgetDefinition} corresponding to a {@link Union} widget.
  *
@@ -31,14 +33,14 @@ public class UnionDefinition extends AbstractContainerDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof UnionDefinition) {
-            UnionDefinition other = (UnionDefinition) definition;
-
-            this.caseWidgetId = other.caseWidgetId;
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ").");
+        if (!(definition instanceof UnionDefinition)) {
+            throw new FormsException("Parent definition " + definition.getClass().getName() + " is not a UnionDefinition.",
+                                     getLocation());
         }
+
+        UnionDefinition other = (UnionDefinition) definition;
+
+        this.caseWidgetId = other.caseWidgetId;
     }
 
     public void setCaseWidgetId(String id) {

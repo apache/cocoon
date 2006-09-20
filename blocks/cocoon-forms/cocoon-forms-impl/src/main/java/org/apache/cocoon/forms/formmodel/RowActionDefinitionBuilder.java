@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 import java.util.Iterator;
 
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.Deprecation;
@@ -43,7 +44,8 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
             }
         }
         if (actionCommand == null) {
-            throw new Exception("Missing attribute 'command' at " + DomHelper.getLocation(widgetElement));
+            throw new FormsException("Required attribute 'command' is missing.",
+                                     DomHelper.getLocationObject(widgetElement));
         }
 
         RowActionDefinition definition = createDefinition(widgetElement, actionCommand);
@@ -55,8 +57,8 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
         // Warn of the mis-named 'on-action' that existed initially
         Element buggyOnActivate = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "on-activate", false);
         if (buggyOnActivate != null) {
-            throw new Exception("Use 'on-action' instead of 'on-activate' on row-action at " +
-                                DomHelper.getLocation(buggyOnActivate));
+            throw new FormsException("Use 'on-action' instead of 'on-activate' on row-action.",
+                                     DomHelper.getLocationObject(buggyOnActivate));
         }
 
         Iterator iter = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
@@ -83,7 +85,8 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
             return new RowActionDefinition.MoveDownDefinition();
 
         } else {
-            throw new Exception("Unknown repeater row action '" + actionCommand + "' at " + DomHelper.getLineLocation(element));
+            throw new FormsException("Unknown repeater row action '" + actionCommand + "'.",
+                                     DomHelper.getLocationObject(element));
         }
     }
 }

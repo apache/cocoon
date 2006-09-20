@@ -16,9 +16,11 @@
 package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.FormsRuntimeException;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
+
 import org.apache.commons.lang.ObjectUtils;
 
 /**
@@ -61,8 +63,8 @@ public class Union extends AbstractContainerWidget {
         String caseWidgetId = definition.getCaseWidgetId();
         this.caseWidget = getParent().lookupWidget(caseWidgetId);
         if (this.caseWidget == null) {
-            throw new RuntimeException("Could not find case widget \"" + caseWidgetId +
-                                       "\" for union \"" + getId() + "\" at " + getLocation());
+            throw new FormsRuntimeException("Could not find case widget '" + caseWidgetId + "' for union '" + getId() + "'.",
+                                            getLocation());
         }
 
         ((ValueChangedListenerEnabled)caseWidget).addValueChangedListener(

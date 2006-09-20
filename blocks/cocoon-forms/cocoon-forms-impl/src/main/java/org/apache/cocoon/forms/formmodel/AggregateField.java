@@ -21,12 +21,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.forms.FormsConstants;
+import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsRuntimeException;
 import org.apache.cocoon.forms.formmodel.AggregateFieldDefinition.SplitMapping;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
-import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
@@ -87,7 +90,7 @@ public class AggregateField extends Field implements ContainerWidget {
         if (!(widget instanceof Field)) {
             throw new IllegalArgumentException("AggregateField can only contain fields.");
         }
-        addField((Field)widget);
+        addField((Field) widget);
     }
 
     protected void addField(Field field) {

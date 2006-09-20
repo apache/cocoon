@@ -25,6 +25,8 @@ import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
+import org.apache.cocoon.forms.FormsException;
+import org.apache.cocoon.forms.FormsRuntimeException;
 
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
@@ -63,15 +65,17 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof AbstractDatatypeWidgetDefinition) {
-            AbstractDatatypeWidgetDefinition other = (AbstractDatatypeWidgetDefinition) definition;
-            this.datatype = other.datatype;
-            this.initialValue = other.initialValue;
-            this.selectionList = other.selectionList;
-            this.listener = other.listener;
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof AbstractDatatypeWidgetDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not an AbstractDatatypeWidgetDefinition.",
+                                     getLocation());
         }
+
+        AbstractDatatypeWidgetDefinition other = (AbstractDatatypeWidgetDefinition) definition;
+
+        this.datatype = other.datatype;
+        this.initialValue = other.initialValue;
+        this.selectionList = other.selectionList;
+        this.listener = other.listener;
     }
 
     public Datatype getDatatype() {
@@ -91,7 +95,8 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     public void setSelectionList(SelectionList selectionList) {
         checkMutable();
         if (selectionList != null && selectionList.getDatatype() != getDatatype()) {
-            throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
+            throw new FormsRuntimeException("Tried to assign a selection list that is not associated with this widget's datatype.",
+                                            getLocation());
         }
         this.selectionList = selectionList;
     }

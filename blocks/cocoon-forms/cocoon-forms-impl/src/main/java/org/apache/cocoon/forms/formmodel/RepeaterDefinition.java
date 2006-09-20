@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.RepeaterEvent;
 import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
@@ -65,16 +66,16 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof RepeaterDefinition) {
-            RepeaterDefinition other = (RepeaterDefinition) definition;
-
-            this.initialSize = other.initialSize;
-            this.maxSize = other.maxSize;
-            this.minSize = other.minSize;
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof RepeaterDefinition)) {
+            throw new FormsException("Parent definition " + definition.getClass().getName() + " is not a RepeaterDefinition.",
+                                     getLocation());
         }
+
+        RepeaterDefinition other = (RepeaterDefinition) definition;
+
+        this.initialSize = other.initialSize;
+        this.maxSize = other.maxSize;
+        this.minSize = other.minSize;
     }
 
     public Widget createInstance() {

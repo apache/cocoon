@@ -15,10 +15,11 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.formmodel.library.Library;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.w3c.dom.Element;
 
+import org.w3c.dom.Element;
 
 /**
  * @version $Id$
@@ -33,10 +34,9 @@ public class ImportDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
      */
     public WidgetDefinition buildWidgetDefinition(Element widgetElement)
     throws Exception {
-
         if (this.context == null || this.context.getLocalLibrary() == null) {
-            throw new Exception("Import statement seen and context is empty! (at " +
-                                DomHelper.getLocation(widgetElement) + ")");
+            throw new FormsException("Import statement seen and context is empty.",
+                                     DomHelper.getLocationObject(widgetElement));
         }
 
         Library lib = this.context.getLocalLibrary();
@@ -44,8 +44,8 @@ public class ImportDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         String uri = DomHelper.getAttribute(widgetElement, URI_ATTRIBUTE);
 
         if (!lib.includeAs(prefix, uri)) {
-            throw new Exception("Import statement did not succeed (probably used ':' in the prefix?)! (at " +
-                                DomHelper.getLocation(widgetElement) + ")");
+            throw new FormsException("Import statement did not succeed (probably used ':' in the prefix?).",
+                                     DomHelper.getLocationObject(widgetElement));
         }
 
         return null;
