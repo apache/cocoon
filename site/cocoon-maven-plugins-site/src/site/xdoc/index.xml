@@ -16,17 +16,26 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
---><!--+
-    | @version $Id$
-    +--><project name="Apache Cocoon Main Site">
-  <skin>
-    <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-maven-site-skin</artifactId> 
-    <version>1.0.0-SNAPSHOT</version> 
-  </skin>
+-->
+<document>
+  <properties>
+    <title>Cocoon Maven Plugins</title>
+    <author>The Cocoon Community</author>
+  </properties>
   <body>
-    <links/>
-    <!-- @daisy-start@ --><menu name="About Cocoon"><item name="The Apache Cocoon PMC" href="1169_1_1.html"/></menu><!-- @daisy-end@ -->
-    ${reports}
+    <h1>Cocoon Maven Plugins</h1>
+    <table>
+      <tr>
+        <td>Name</td>
+        <td>Versions</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td><a href="cocoon-deployer/1.0.x/">Cocoon Deployer</a></td>
+        <td><a href="cocoon-deployer/1.0.x/">1.0.x</a></td>
+        <td>asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf 
+            asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf asdf </td>
+      </tr>
+    </table>
   </body>
-</project>
+</document>
