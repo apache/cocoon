@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
@@ -41,16 +42,16 @@ public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof BooleanFieldDefinition) {
-            BooleanFieldDefinition other = (BooleanFieldDefinition) definition;
-
-            this.listener = other.listener;
-            this.initialValue = other.initialValue;
-            this.trueParamValue = other.trueParamValue;
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof BooleanFieldDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not a BooleanFieldDefinition.",
+                                     getLocation());
         }
+
+        BooleanFieldDefinition other = (BooleanFieldDefinition) definition;
+
+        this.listener = other.listener;
+        this.initialValue = other.initialValue;
+        this.trueParamValue = other.trueParamValue;
     }
 
     public void setInitialValue(Boolean value) {

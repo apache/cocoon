@@ -18,13 +18,16 @@ package org.apache.cocoon.forms.formmodel.tree.builder;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.service.ServiceSelector;
+
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.formmodel.AbstractWidgetDefinitionBuilder;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.formmodel.tree.Tree;
 import org.apache.cocoon.forms.formmodel.tree.TreeDefinition;
 import org.apache.cocoon.forms.formmodel.tree.TreeSelectionListener;
 import org.apache.cocoon.forms.util.DomHelper;
+
 import org.w3c.dom.Element;
 
 /**
@@ -56,8 +59,8 @@ public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         } else if ("single".equals(selection)) {
             definition.setSelectionModel(Tree.SINGLE_SELECTION);
         } else {
-            throw new Exception("Invalid value selection value '" + selection + "' at " +
-                                DomHelper.getLocation(widgetElement));
+            throw new FormsException("Invalid value selection value '" + selection + "'.",
+                                     DomHelper.getLocationObject(widgetElement));
         }
 
         // Get the model optional element

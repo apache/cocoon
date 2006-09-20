@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.cocoon.forms.FormsException;
+
 // TODO: The exception messages should use I18n.
 /**
  * This is the "{@link WidgetDefinition}" which is used to instantiate a
@@ -30,13 +32,10 @@ import java.util.ListIterator;
 public class NewDefinition extends AbstractWidgetDefinition {
 
     private boolean resolving;
-    private ClassDefinition classDefinition;
 
 
     public NewDefinition() {
         super();
-        resolving = false;
-        classDefinition = null;
     }
 
     private ClassDefinition getClassDefinition() throws Exception {
@@ -57,11 +56,13 @@ public class NewDefinition extends AbstractWidgetDefinition {
         }
 
         if (classDefinition == null) {
-            throw new Exception("NewDefinition: Class with id \"" + getId() + "\" does not exist (" + getLocation() + ")");
+            throw new FormsException("NewDefinition: Class with id '" + getId() + "' does not exist.",
+                                     getLocation());
         }
 
         if (!(classDefinition instanceof ClassDefinition)) {
-            throw new Exception("NewDefinition: Id \"" + getId() + "\" is not a class (" + getLocation() + ")");
+            throw new FormsException("NewDefinition: Id '" + getId() + "' is not a class.",
+                                     getLocation());
         }
 
         return (ClassDefinition) classDefinition;
@@ -80,8 +81,8 @@ public class NewDefinition extends AbstractWidgetDefinition {
                 }
 
                 if (definition == this) {
-                    throw new Exception("NewDefinition: Non-terminating recursion detected in widget definition : " +
-                                        parent.getId() + " (" + getLocation() + ")");
+                    throw new FormsException("NewDefinition: Non-terminating recursion detected in widget definition '" + parent.getId() + "'.",
+                                             getLocation());
                 }
             }
         }
@@ -89,24 +90,23 @@ public class NewDefinition extends AbstractWidgetDefinition {
         // Resolution
         resolving = true;
         parents.add(this);
-        classDefinition = getClassDefinition();
-        Iterator definitionsIt = classDefinition.getWidgetDefinitions().iterator();
+        Iterator definitionsIt = getClassDefinition().getWidgetDefinitions().iterator();
         parents.add(this);
         while (definitionsIt.hasNext()) {
-            WidgetDefinition definition = (WidgetDefinition)definitionsIt.next();
+            WidgetDefinition definition = (WidgetDefinition) definitionsIt.next();
             // Recursively resolve containers
             if (definition instanceof ContainerDefinition) {
-                ((ContainerDefinition)definition).resolve(parents, parent);
+                ((ContainerDefinition) definition).resolve(parents, parent);
             }
 
             // Add the current definition if it's not itself a "fd:new"
             if (definition instanceof NewDefinition) {
-                ((NewDefinition)definition).resolve(parents, parent);
+                ((NewDefinition) definition).resolve(parents, parent);
             } else {
-                ((ContainerDefinition)parent).addWidgetDefinition(definition);
+                ((ContainerDefinition) parent).addWidgetDefinition(definition);
             }
         }
-        parents.remove(parents.size()-1);
+        parents.remove(parents.size() - 1);
         resolving = false;
     }
 

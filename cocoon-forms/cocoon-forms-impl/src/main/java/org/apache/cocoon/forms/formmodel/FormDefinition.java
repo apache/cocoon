@@ -18,11 +18,13 @@ package org.apache.cocoon.forms.formmodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.ProcessingPhaseEvent;
 import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.formmodel.library.Library;
 import org.apache.cocoon.forms.formmodel.library.LibraryManager;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -79,8 +81,8 @@ public class FormDefinition extends AbstractContainerDefinition {
         // Check that no child is named "submit" if this form has no id. This causes some weird behaviour
         // in HTML as it collides with the submit() function on the <form> element...
         if ("submit".equals(definition.getId()) && StringUtils.isEmpty(this.getId())) {
-            throw new IllegalArgumentException("Top-level widgets should not be named 'submit' to avoid problems " +
-                                               " with HTML <form> elements, at " + definition.getLocation());
+            throw new FormsException("Top-level widgets should not be named 'submit' to avoid problems " +
+                                     "with HTML <form> elements.", definition.getLocation());
         }
 
         super.addWidgetDefinition(definition);

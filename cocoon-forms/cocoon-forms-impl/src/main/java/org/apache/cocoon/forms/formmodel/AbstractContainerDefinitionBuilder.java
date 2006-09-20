@@ -55,8 +55,8 @@ public abstract class AbstractContainerDefinitionBuilder extends AbstractWidgetD
                 } else if ((def = definition.getWidgetDefinition(newId)) != null) {
                     this.context.setSuperDefinition(def);
                 }
-                // throw new Exception("Widget to inherit from ("+newId+") not
-                // found! (at "+DomHelper.getLocation(element)+")");
+                // throw new FormsException("Widget to inherit from ("+newId+") not
+                // found!", DomHelper.getLocationObject(element));
             }
 
             WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);

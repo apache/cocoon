@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms.formmodel.tree.builder;
 
-import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -23,11 +22,14 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.formmodel.tree.JavaTreeModelDefinition;
 import org.apache.cocoon.forms.formmodel.tree.TreeModel;
 import org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition;
 import org.apache.cocoon.forms.util.DomHelper;
+
 import org.w3c.dom.Element;
 
 /**
@@ -37,11 +39,13 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public class JavaTreeModelDefinitionBuilder extends AbstractLogEnabled
-    implements TreeModelDefinitionBuilder, Contextualizable, Serviceable {
+                                            implements TreeModelDefinitionBuilder, Contextualizable,
+                                                       Serviceable {
 
     Context ctx;
     ServiceManager manager;
 
+    
     public void contextualize(Context context) throws ContextException {
         this.ctx = context;
     }
@@ -57,13 +61,13 @@ public class JavaTreeModelDefinitionBuilder extends AbstractLogEnabled
         try {
             modelClass = Thread.currentThread().getContextClassLoader().loadClass(className);
         } catch(Exception e) {
-            throw new CascadingException("Cannot load class '" + className + "', at " +
-                                         DomHelper.getLocation(treeModelElement), e);
+            throw new FormsException("Cannot load class '" + className + "'.",
+                                     e, DomHelper.getLocationObject(treeModelElement));
         }
 
         if (!TreeModel.class.isAssignableFrom(modelClass)) {
-            throw new Exception("Class '" + className + "' doesn't implement TreeModel, at " +
-                                DomHelper.getLocation(treeModelElement));
+            throw new FormsException("Class '" + className + "' doesn't implement TreeModel.",
+                                     DomHelper.getLocationObject(treeModelElement));
         }
 
         JavaTreeModelDefinition definition = new JavaTreeModelDefinition();

@@ -22,13 +22,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.datatype.DatatypeManager;
 import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.WidgetListener;
@@ -36,7 +38,7 @@ import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.expression.ExpressionManager;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.validation.WidgetValidatorBuilder;
-import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -122,14 +124,14 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         } else {
             String id = DomHelper.getAttribute(widgetElement, "id");
             if (id.indexOf('/') != -1 || id.indexOf('.') != -1) {
-                throw new Exception("A widget name cannot contain '.' or '/' as this conflicts with widget paths, at " +
-                                    DomHelper.getLocation(widgetElement));
+                throw new FormsException("A widget name cannot contain '.' or '/' as this conflicts with widget paths.",
+                                         DomHelper.getLocationObject(widgetElement));
             }
             // NewDefinitions are allowed to have a : in their id because they can look up
             // class widgets from the library directly
             if (id.indexOf(':') != -1 && !(widgetDefinition instanceof NewDefinition)) {
-                throw new Exception("A widget name cannot contain ':' as this conflicts with library prefixes, at " +
-                                    DomHelper.getLocation(widgetElement));
+                throw new FormsException("A widget name cannot contain ':' as this conflicts with library prefixes",
+                                         DomHelper.getLocationObject(widgetElement));
             }
             widgetDefinition.setId(id);
         }
@@ -139,8 +141,8 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         if (stateValue != null) {
             WidgetState state = WidgetState.stateForName(stateValue);
             if (state == null) {
-                throw new Exception ("Unknown value '" + stateValue +"' for state attribute at " +
-                                     DomHelper.getLocation(widgetElement));
+                throw new FormsException("Unknown value '" + stateValue +"' for state attribute.",
+                                         DomHelper.getLocationObject(widgetElement));
             }
             widgetDefinition.setState(state);
         }
@@ -168,8 +170,8 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         try {
             builder = (WidgetDefinitionBuilder)widgetDefinitionBuilderSelector.select(widgetName);
         } catch (ServiceException e) {
-            throw new CascadingException("Unknown kind of widget '" + widgetName + "' at " +
-                                         DomHelper.getLocation(widgetDefinition), e);
+            throw new FormsException("Unknown kind of widget '" + widgetName + "'.",
+                                     e, DomHelper.getLocationObject(widgetDefinition));
         }
 
         return builder.buildWidgetDefinition(widgetDefinition, this.context);
@@ -188,8 +190,8 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
                     try {
                         builder = (WidgetListenerBuilder) widgetListenerBuilderSelector.select(listenerElement.getLocalName());
                     } catch (ServiceException e) {
-                        throw new CascadingException("Unknown kind of eventlistener '" + listenerElement.getLocalName() +
-                                                     "' at " + DomHelper.getLocation(listenerElement), e);
+                        throw new FormsException("Unknown kind of eventlistener '" + listenerElement.getLocalName() + "'.", e,
+                                                 DomHelper.getLocationObject(listenerElement));
                     }
                     WidgetListener listener = builder.buildListener(listenerElement, listenerClass);
                     widgetListenerBuilderSelector.release(builder);
@@ -236,8 +238,8 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
                     try {
                         builder = (WidgetValidatorBuilder)this.widgetValidatorBuilderSelector.select(name);
                     } catch(ServiceException e) {
-                        throw new CascadingException("Unknown kind of validator '" + name + "' at " +
-                                                     DomHelper.getLocation(element), e);
+                        throw new FormsException("Unknown kind of validator '" + name + "'.",
+                                                 e, DomHelper.getLocationObject(element));
                     }
 
                     widgetDefinition.addValidator(builder.build(element, widgetDefinition));

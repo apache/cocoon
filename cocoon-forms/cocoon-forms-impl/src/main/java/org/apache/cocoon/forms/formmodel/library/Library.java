@@ -19,18 +19,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
+
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder;
 import org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilderContext;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.location.LocationAttributes;
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -174,15 +174,15 @@ public class Library extends AbstractLogEnabled {
         String widgetName = widgetDefinition.getLocalName();
         WidgetDefinitionBuilder builder;
         try {
-            builder = (WidgetDefinitionBuilder)widgetDefinitionBuilderSelector.select(widgetName);
+            builder = (WidgetDefinitionBuilder) widgetDefinitionBuilderSelector.select(widgetName);
         } catch (ServiceException e) {
-            throw new CascadingException("Unknown kind of widget '" + widgetName + "' at " +
-                    DomHelper.getLocation(widgetDefinition), e);
+            throw new LibraryException("Unknown kind of widget '" + widgetName + "'.",
+                                       e, DomHelper.getLocationObject(widgetDefinition));
         }
 
         context.setSuperDefinition(null);
-        String extend = DomHelper.getAttribute(widgetDefinition, "extends", null);
 
+        String extend = DomHelper.getAttribute(widgetDefinition, "extends", null);
         if (extend != null) {
             context.setSuperDefinition(getDefinition(extend));
         }

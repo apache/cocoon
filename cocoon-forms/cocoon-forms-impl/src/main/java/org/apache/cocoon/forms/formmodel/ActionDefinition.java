@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
@@ -38,15 +39,15 @@ public class ActionDefinition extends AbstractWidgetDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         super.initializeFrom(definition);
 
-        if (definition instanceof ActionDefinition) {
-            ActionDefinition other = (ActionDefinition) definition;
-
-            this.actionCommand = other.actionCommand;
-            this.listener = other.listener;
-
-        } else {
-            throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
+        if (!(definition instanceof ActionDefinition)) {
+            throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not an ActionDefinition.",
+                                     getLocation());
         }
+
+        ActionDefinition other = (ActionDefinition) definition;
+
+        this.actionCommand = other.actionCommand;
+        this.listener = other.listener;
     }
 
     public String getActionCommand() {

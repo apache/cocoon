@@ -15,9 +15,12 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.cocoon.forms.FormsConstants;
-import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.excalibur.xml.sax.XMLizable;
+
+import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.FormsException;
+import org.apache.cocoon.forms.util.DomHelper;
+
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Compiler;
@@ -60,7 +63,8 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
             try {
                 pattern = compiler.compile(patternString, Perl5Compiler.READ_ONLY_MASK);
             } catch (MalformedPatternException e) {
-                throw new Exception("Invalid regular expression at " + DomHelper.getLocation(splitElement) + ": " + e.getMessage());
+                throw new FormsException("Invalid regular expression '" + patternString + "'.",
+                                         e, DomHelper.getLocationObject(splitElement));
             }
             definition.setSplitPattern(pattern, patternString);
         }
@@ -72,15 +76,15 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
             String field = DomHelper.getAttribute(mapElements[i], "field");
             // check that this field exists
             if (!definition.hasWidget(field)) {
-                throw new Exception("Unknown widget id \"" + field + "\", at " +
-                                    DomHelper.getLocation(mapElements[i]));
+                throw new FormsException("Unknown widget id '" + field + "' referenced.",
+                                         DomHelper.getLocationObject(mapElements[i]));
             }
 
             try {
                 definition.addSplitMapping(group, field);
             } catch(RuntimeException e) {
-                throw new Exception("Two groups are mapped to the same widget id \"" + field + "\", at " +
-                                    DomHelper.getLocation(mapElements[i]));
+                throw new FormsException("Two groups are mapped to the same widget id '" + field + "'.",
+                                         DomHelper.getLocationObject(mapElements[i]));
             }
         }
 
@@ -99,13 +103,13 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
             try {
                 combineExpr = expressionManager.parse(combineExprString);
             } catch (Exception e) {
-                throw new Exception("Problem with combine expression defined at " +
-                                    DomHelper.getLocation(combineElement) + ": " + e.getMessage());
+                throw new FormsException("Invalid combine expression '" + combineExprString + "'.",
+                                         e, DomHelper.getLocationObject(combineElement));
             }
             Class clazz = definition.getDatatype().getTypeClass();
             if (combineExpr.getResultType() != null && !clazz.isAssignableFrom(combineExpr.getResultType())) {
-                throw new Exception("The result of the combine expression should be " + clazz.getName() + ", at " +
-                                    DomHelper.getLocation(combineElement));
+                throw new FormsException("The result of the combine expression should be '" + clazz.getName() + "', not '" + combineExpr.getResultType().getName() + "'.",
+                                         DomHelper.getLocationObject(combineElement));
             }
             definition.setCombineExpression(combineExpr);
         }
