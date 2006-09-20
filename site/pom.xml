@@ -99,5 +99,10 @@
       <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
     </pluginRepository>
   </pluginRepositories>
+  
+  <properties>
+    <deploymentBaseUrl>file://${basedir}/../../../site/site</deploymentBaseUrl>
+    <externalUrl>http://cocoon.apache.org</externalUrl>
+  </properties>    
 
 </project>
