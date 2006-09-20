@@ -16,9 +16,11 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
---><!--+
+-->
+<!--+
     | @version $Id$
-    +--><project name="Apache Cocoon Main Site">
+    +-->
+<project name="Cocoon Core Modules">
   <skin>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-maven-site-skin</artifactId> 
@@ -26,7 +28,8 @@
   </skin>
   <body>
     <links/>
-    <!-- @daisy-start@ --><menu name="About Cocoon"><item name="The Apache Cocoon PMC" href="1169_1_1.html"/></menu><!-- @daisy-end@ -->
-    ${reports}
+    <menu name="Available core modules">
+    	<item name="List" href="index.html"/>
+    </menu>
   </body>
 </project>

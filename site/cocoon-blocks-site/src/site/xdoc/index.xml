@@ -16,17 +16,27 @@
   KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations
   under the License.
---><!--+
-    | @version $Id$
-    +--><project name="Apache Cocoon Main Site">
-  <skin>
-    <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-maven-site-skin</artifactId> 
-    <version>1.0.0-SNAPSHOT</version> 
-  </skin>
+-->
+<document>
+  <properties>
+    <title>Cocoon Blocks</title>
+    <author>The Cocoon Community</author>
+  </properties>
   <body>
-    <links/>
-    <!-- @daisy-start@ --><menu name="About Cocoon"><item name="The Apache Cocoon PMC" href="1169_1_1.html"/></menu><!-- @daisy-end@ -->
-    ${reports}
+    <h1>Cocoon Blocks</h1>
+    <table>
+      <tr>
+        <td>Name</td>
+        <td>Versions</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td><a href="forms/1.0.x/">Cocoon Forms</a></td>
+        <td><a href="forms/1.0.x/">1.0.x</a></td>
+        <td>Cocoon has an advanced forms framework. Together with Flow and JXTemplates, Cocoon Forms (or CForms) provides a solid basis for 
+            building interactive web applications. Cocoon Forms handles complex use cases while still being simple enough to be used by non-Java-programmers 
+            who want to add forms to their site.</td>
+      </tr>
+    </table>
   </body>
-</project>
+</document>

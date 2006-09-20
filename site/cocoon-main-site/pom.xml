@@ -19,7 +19,7 @@
 -->
 
 <!--+
-    | @version $Id: pom.xml 434413 2006-08-24 16:21:16Z cziegeler $
+    | @version $Id$
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -34,7 +34,7 @@
   <artifactId>cocoon-main-site</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   
-  <name>Apache Cocoon</name>
+  <name>Apache Cocoon Main Site</name>
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
   
@@ -56,19 +56,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>2.0-beta-5</version>
       </plugin>
       <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
         <configuration>
-          <!--navDocId>1203</navDocId>
+          <navDocId>1203</navDocId>
           <collection>cdocs-site-main</collection>
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel-->          
-          <navDocId>1152</navDocId>
-          <collection>cdocs-forms</collection>          
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
         </configuration>
       </plugin>      
     </plugins>
