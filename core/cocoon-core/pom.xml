@@ -85,6 +85,19 @@
           -->
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1206</navDocId>
+          <collection>cdocs-core</collection>          
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+        </configuration>
+      </plugin>       
     </plugins>
     <resources>
       <resource>
@@ -93,6 +106,12 @@
       </resource>
     </resources>
   </build>
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${deploymentBaseUrl}/core-modules/core/2.2.x/</url>
+    </site>
+  </distributionManagement>  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
