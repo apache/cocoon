@@ -41,7 +41,7 @@
             <include>**/*TestCase.class</include>
             <include>**/*Test.class</include>
           </includes>
-<!-- + 
+          <!-- + 
                | These test cases doesn't work currently as the Avalon context
                | in the ContainerTestCase doesn't contain the environmen-context key.
                + -->
@@ -54,8 +54,27 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1152</navDocId>
+          <collection>cdocs-forms</collection>          
+          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+        </configuration>
+      </plugin>         
     </plugins>
   </build>
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${deploymentBaseUrl}/blocks/forms/1.0.x/</url>
+    </site>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
