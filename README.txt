@@ -32,13 +32,13 @@ as explained in
 
   http://maven.apache.org/guides/mini/guide-mirror-settings.html
 
-People have been reporting good results with the dotsrc.org mirror, at
-least from Europe. 
+People have been reporting good results with the dotsrc repo 
+(mirrors.dotsrc.org/maven2), at least from Europe. 
+A good US based repo is the one from mergere (repo.mergere.com/maven2).
 
 Build times will vary dramatically depending on how good your connectivity
-to the Maven repository/mirror is, and how well it performs, and on whether
-you already have a loaded local Maven repository. A full build can take
-from 5 minutes to maybe 4 hours...
+to the Maven repository/mirror is, how well it performs, and whether
+you already have a loaded local Maven repository. 
 
 HOW TO BUILD THE COCOON WEBAPP (NON OSGI MODE)
 ----------------------------------------------
