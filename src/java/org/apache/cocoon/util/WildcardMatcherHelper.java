@@ -16,12 +16,16 @@
  */
 package org.apache.cocoon.util;
 
+import org.apache.regexp.RE;
+import org.apache.regexp.RECompiler;
+import org.apache.regexp.REProgram;
+
 import java.util.HashMap;
 import java.util.Map;
 
 
 /**
- * This class is an utility class that perform wilcard-patterns matching and isolation.
+ * This class is an utility class that perform wildcard-patterns matching and isolation.
  *
  * @version $Id$
  */
@@ -61,17 +65,14 @@ public class WildcardMatcherHelper {
      * When more than two '*' characters, not separated by another character, are found their value is
      * considered as '**' and immediate succeeding '*' are skipped.
      * <br>
-     * The '**' wildcard is greedy and thus the following sample cannot match:
+     * The '**' wildcard is greedy and thus the following sample matches as {"foo/bar","baz","bug"}:
      * <dl>
      *   <dt>pattern</dt>
      *   <dd>STAR,STAR,PATHSEP,STAR,PATHSEP,STAR,STAR (why can't I express it litterally?)</dt>
      *   <dt>string</dt>
      *   <dd>foo/bar/baz/bug</dt>
      * </dl>
-     * The first '**' in the pattern will suck up until the last '/' in string and thus will not match.
-     * <br>
-     * A more advance algorithm could cerainly check whether there is an other literal later in the pattern to ev. match in string
-     * but I'll leave this exercise to someone else ATM if one needs such.
+     * The first '**' in the pattern will suck up as much as possible without making the match fail.
      * 
      * @param pat The pattern string.
      * @param str The string to math agains the pattern
@@ -83,14 +84,30 @@ public class WildcardMatcherHelper {
      */
     public static Map match(final String pat,
                             final String str) {
-        final Matcher map = new Matcher(pat, str);
-
-        if(map.isMatch()) {
-            return map.getMap();
+        Matcher matcher;
+        synchronized (cache) {
+            matcher = (Matcher) cache.get(pat);
+            if ( matcher == null ) {
+                matcher = new Matcher(pat);
+                cache.put(pat, matcher);
+            }
         }
 
-        return null;
+        String[] list = matcher.getMatches(str);
+        if ( list == null )
+            return null;
+
+        int n = list.length;
+        Map map = new HashMap(n * 2 + 1);
+        for ( int i = 0; i < n; i++ ) {
+            map.put(String.valueOf(i), list[i]);
+        }
+
+        return map;
     }
+
+    /** Cache for compiled pattern matchers */
+    private static final Map cache = new HashMap();
 
     //~ Inner Classes ------------------------------------------------------------------------------
 
@@ -98,34 +115,41 @@ public class WildcardMatcherHelper {
      * The private matcher class
      */
     private static class Matcher {
+
+        /** Regexp to split constant parts from front and back leaving wildcards in the middle. */
+        private static final REProgram splitter;
+
+        static {
+            final String fixedRE = "([^*\\\\]*)";
+            final String wcardRE = "(.*[*\\\\])";
+            final String splitRE = "^" + fixedRE + wcardRE + fixedRE + "$";
+            splitter = new RECompiler().compile(splitRE);
+        }
+
+        /** Wildcard types to short-cut simple '*' and "**' matches. */
+        private static final int WC_CONST = 0;
+        private static final int WC_STAR = 1;
+        private static final int WC_STARSTAR = 2;
+        private static final int WC_REGEXP = 3;
+
         //~ Instance fields ------------------------------------------------------------------------
 
-        /** The character array of the pattern */
-        private final char[] apat;
+        // All fields declared final to emphasize requirement to be thread-safe.
 
-        /** The length of the character array of the pattern */
-        private final int lpat;
+        /** Fixed text at start of pattern. */
+        private final String prefix;
 
-        /** The character array of the string */
-        private final char[] astr;
-
-        /** The length of the character array of the string */
-        private final int lstr;
-
-        /** The <code>Map</code> to be filled */
-        private Map map = new HashMap();
-
-        /** Whether string matched to pattern */
-        private final boolean matched;
-
-        /** map index */
-        private int idx = 0;
-
-        /** index into pattern */
-        private int ipat = 0;
-
-        /** index into string */
-        private int istr = 0;
+        /** Fixed text at end of pattern. */
+        private final String suffix;
+        
+        /** Length of prefix and suffix. */
+        private final int fixlen;
+        
+        /** Wildcard type of pattern. */
+        private final int wctype;
+        
+        /** Compiled regexp equivalent to wildcard pattern between prefix and suffix. */
+        private final REProgram regexp;
 
         //~ Constructors ---------------------------------------------------------------------------
 
@@ -135,239 +159,155 @@ public class WildcardMatcherHelper {
          * @param pat The pattern
          * @param str The string
          */
-        public Matcher(final String pat,
-                       final String str) {
-            apat = pat.toCharArray();
-            lpat = apat.length;
-            astr = str.toCharArray();
-            lstr = astr.length;
-            add(str);
-            matched = match();
+        Matcher(final String pat) {
+            RE re = new RE(splitter);
+
+            if ( re.match(pat) ) {
+
+                // Split pattern into (foo/)(*)(/bar).
+
+                prefix = re.getParen(1);
+                String wildcard = re.getParen(2);
+                String tail = re.getParen(3);
+
+                // If wildcard ends with \ then add the first char of postfix to wildcard.
+                if ( tail.length() != 0 && wildcard.charAt(wildcard.length() - 1) == ESC ) {
+                    wildcard = wildcard + tail.substring(0, 1);
+                    suffix = tail.substring(1);
+                }
+                else {
+                    suffix = tail;
+                }
+
+                // Use short-cuts for single * or ** wildcards
+
+                if ( wildcard.equals("*") ) {
+                    wctype = WC_STAR;
+                    regexp = null;
+                }
+                else if ( wildcard.equals("**") ) {
+                    wctype = WC_STARSTAR;
+                    regexp = null;
+                }
+                else {
+                    wctype = WC_REGEXP;
+                    regexp = compileRegexp(wildcard);
+                }
+            }
+            else {
+                // Pattern is a constant without '*' or '\'.
+                prefix = pat;
+                suffix = "";
+                wctype = WC_CONST;
+                regexp = null;
+            }
+
+            fixlen = prefix.length() + suffix.length();
         }
 
         //~ Methods --------------------------------------------------------------------------------
 
         /**
-         * DOCUMENT ME!
-         *
-         * @return DOCUMENT ME!
+         * Match string against pattern.
+         * 
+         * @param str The string
+         * @return list of wildcard matches, null if match failed
          */
-        public Map getMap() {
-            return map;
-        }
+        String[] getMatches(final String str) {
 
-        /**
-         * Has it matched?
-         *
-         * @return whether it has matched
-         */
-        public boolean isMatch() {
-            return matched;
-        }
+            // Protect against 'foo' matching 'foo*foo'.
+            if ( str.length() < fixlen )
+                return null;
 
-        /**
-         * Add a extracted substring to the map
-         *
-         * @param aStr The extracted substring
-         */
-        private void add(final String aStr) {
-            map.put(String.valueOf(idx++), aStr);
-        }
+            if ( !str.startsWith(prefix) )
+                return null;
 
-        /**
-         * Scans the pattern and the search string from the start toward the end
-         *
-         * @return wether the pstring matches the pattern
-         */
-        private boolean match() {
-            // scan a common literal prefix
-            scanLiteralPrefix();
+            if ( !str.endsWith(suffix) )
+                return null;
 
-            // if we are already at the end of both strings 
-            // than the pattern matched
-            if(ipat >= lpat && istr >= lstr) return true;
+            String infix = str.substring(prefix.length(), str.length() - suffix.length());
 
-            // if hole string has matched the pattern so far and the rest of the pattern only has wildcard(s)
-            // we match too otherwise we clearly don't match
-            if(ipat < lpat && istr >= lstr) {
-                while(ipat < lpat && apat[ipat] == STAR) ipat++;
+            if ( wctype == WC_REGEXP ) {
+                RE re = new RE(regexp);
+                if ( !re.match(infix) )
+                    return null;
 
-                if(ipat >= lpat) {
-                    add("");
-
-                    return true;
-                } else {
-                    return false;
-                }
+                int n = re.getParenCount();
+                String[] list = new String[n];
+                list[0] = str;
+                for ( int i = 1; i < n; i++ )
+                    list[i] = re.getParen(i);
+                return list;
             }
 
-            // if hole pattern has matched the string so far but the string has more characters left
-            // we don't match
-            if(ipat >= lpat && istr < lstr) return false;
-
-            // if we have not stopped at a wildcard character 
-            // a character doesn't match and thus we do not match at all
-            if(apat[ipat] != STAR) return false;
-
-            // if it is a double (or more) wildcard pattern
-            if(ipat < lpat - 1 && apat[ipat + 1] == STAR) {
-                // skip to first non star charater in the pattern
-                while(++ipat < lpat && apat[ipat] == STAR);
-
-                // if we are at the end of the pattern we've matched and are finish scanning
-                if(ipat >= lpat) {
-                    add(new String(astr, istr, lstr - istr));
-
-                    return true;
-                }
-
-                // Now we need to scan for the end of the literal characters in the pattern
-                final int sipat = ipat; // start position of a literal character used for substring operations
-
-                while(ipat < lpat && (apat[ipat] != STAR || (ipat > 0 && apat[ipat - 1] == ESC))) ipat++;
-
-                // if we reached the end of the pattern just do a string compare with the corresponding part from 
-                // the end of the string
-                if(ipat >= lpat) {
-                    return checkEnds(sipat, false);
-                }
-
-                // Now we need to check whether the litteral substring of the pattern 
-                // is contained in the string somewhere
-                final int l = ipat - sipat;
-                int eistr = lstr - l;
-
-                // beause the '**' wildcard need to be greedy we scan from the end of the string for a match
-                while(istr <= eistr && ! strncmp(apat, sipat, astr, eistr, l)) eistr--;
-
-                if(istr > eistr) return false;
-
-                add(new String(astr, istr, eistr - istr));
-                istr = eistr + l;
-            } else {// if it is a single star pattern
-                // skip the star
-                ++ipat;
-
-                // if we are at the beginning of the pattern we have to check there is no PATH_SEP in string
-                if(ipat >= lpat) {
-                    final int sistr = istr;
-
-                    while(istr < lstr && (astr[istr] != PATHSEP)) istr++;
-
-                    if(istr >= lstr) {
-                        add(new String(astr, sistr, lstr - sistr));
-
-                        return true;
-                    }
-
-                    // otherwise we do not match
-                    return false;
-                }
-
-                // Now we need to search for the start of either a path sparator or another wildcard characters 
-                // in the pattern
-                final int sipat = ipat;
-
-                while(ipat < lpat &&
-                      apat[ipat] != STAR &&
-                      (apat[ipat] != ESC || ipat < lpat - 1 && apat[ipat + 1] != STAR) &&
-                      apat[ipat] != PATHSEP) {
-                    ipat++;
-                }
-
-                // if we reached the end of the pattern just do a string compare with the corresponding part from 
-                // the end of the string
-                if(ipat >= lpat) {
-                    return checkEnds(sipat, true);
-                }
-
-                // If we stopped at an other wildcard
-                // we exclude it from being compared
-                if(apat[ipat] == STAR) {
-                    ipat--;
-                }
-
-                // Now we need to check whether the litteral substring of the pattern 
-                // is contained in the string somewhere
-                final int l = ipat- sipat + 1;
-                final int sistr = istr;
-
-                while(istr < lstr && ! strncmp(apat, sipat, astr, istr, l)) istr++;
-
-                if(istr >= lstr) return false;
-
-                add(new String(astr, sistr, istr - sistr));
-                ipat++;
-                istr += l;
+            if ( wctype == WC_CONST ) {
+                if ( infix.length() != 0 )
+                    return null;
+                return new String[] {
+                    str
+                };
             }
 
-            return match();
-        }
-
-        /**
-         * Scan a possible common suffix
-         */
-        private final void scanLiteralPrefix() {
-            // scan a common literal suffix
-            while(ipat < lpat &&
-                  istr < lstr &&
-                  (apat[ipat] == ESC && ipat < lpat - 1 && apat[ipat + 1] == STAR && apat[++ipat] == astr[istr] ||
-                   apat[ipat] != STAR &&
-                   apat[ipat] == astr[istr])) {
-                ipat++;
-                istr++;
+            if ( wctype == WC_STAR ) {
+                if ( infix.indexOf(PATHSEP) != -1 )
+                    return null;
             }
+
+            return new String[] {
+                str, infix
+            };
         }
+    }
 
-        /**
-         * Compare two charater array from  individual offsets
-         *
-         * @param a1 The first character array
-         * @param o1 The offset into the first character array
-         * @param a2 The second character array
-         * @param o2 The offset into the second character array
-         * @param l The length to compare
-         *
-         * @return Whether the all the mentioned characters match each other
-         */
-        private final boolean strncmp(final char[] a1,
-                                final int o1,
-                                final char[] a2,
-                                final int o2,
-                                final int l) {
-            int i = 0;
+    /**
+     * Compile wildcard pattern into regexp pattern.
+     * 
+     * @param pat The wildcard pattern
+     * @return compiled regexp program.
+     */
+    private static REProgram compileRegexp(String pat) {
+        StringBuffer repat = new StringBuffer(pat.length() * 6);
+        repat.append('^');
 
-            while(i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i]) i++;
+        // Add an extra character to allow unchecked wcpat[i+1] accesses.
+        // Unterminated ESC sequences are silently handled as '\\'.
+        char[] wcpat = (pat + ESC).toCharArray();
+        for ( int i = 0, n = pat.length(); i < n; i++ ) {
+            char ch = wcpat[i];
 
-            return i == l;
-        }
-        
-        private final boolean checkEnds(final int sipat, final boolean isSingleStart)
-        {
-            // if the remaining length of the string isn't the same as that found in the pattern 
-            // we do not match
-            final int l = lpat - sipat; // calculate length of comparison
-            final int ostr = lstr - l; // calculate offset into string
-            if(ostr >= 0 && strncmp(apat, sipat, astr, ostr, l)) {
-                if( isSingleStart )
-                {
-                    // if the ends matches make sure there isn't a PATHSEP in the candidate string part
-                    int i = ostr - istr;
-                    while( i > istr )
-                    {
-                        if( astr[--i] == PATHSEP )
-                        {
-                            return false; // we cannot match because of a PATHSEP in the matched part
-                        }
-                    }
+            if ( ch == STAR ) {
+                if ( wcpat[i + 1] != STAR ) {
+                    repat.append("([^/]*)");
+                    continue;
                 }
-                add(new String(astr, istr, ostr - istr));
 
-                return true;
+                // Handle two and more '*' as single '**'.
+                while ( wcpat[i + 1] == STAR )
+                    i++;
+                repat.append("(.*)");
+                continue;
             }
 
-            // otherwise we do not match
-            return false;
+            // Match ESC+ESC and ESC+STAR as literal ESC and STAR which needs to be escaped
+            // in regexp. Match ESC+other as two characters ESC+other where other may also
+            // need to be escaped in regexp.
+            if ( ch == ESC ) {
+                ch = wcpat[++i];
+                if ( ch != ESC && ch != STAR )
+                    repat.append("\\\\");
+            }
+
+            if ( ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9'
+                 || ch == '/' ) {
+                repat.append(ch);
+                continue;
+            }
+
+            repat.append('\\');
+            repat.append(ch);
         }
+        repat.append('$');
+
+        return new RECompiler().compile(repat.toString());
     }
 }
