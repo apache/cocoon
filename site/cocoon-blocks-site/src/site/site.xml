@@ -28,8 +28,6 @@
   </skin>
   <body>
     <links/>
-    <menu name="Available blocks">
-    	<item name="List" href="index.html"/>
-    </menu>
+    <!-- @daisy-start@ --><menu name="Available Blocks"><item name="List" href="1204_1_1.html"/></menu><!-- @daisy-end@ -->
   </body>
 </project>
