@@ -184,6 +184,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AN" type="fix">
+      Core: Rewrite of WildcardMatcherHelper where the heavy-lifting is left to the regexp library.
+      That fixes a false positive where "menu/foo/bar.xml" was matched by "menu/*.xml" in the old
+      implementation.  The new code also removes the over-greedyness of '**' that "**/*/*" can now
+      be matched successfully.
+    </action>
     <action dev="AG" type="update">
       Updated xercesImpl to 2.8.1.
     </action>
