@@ -49,7 +49,16 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-      </plugin>    
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>
+          <navDocId>1205</navDocId>
+          <collection>cdocs-site-blocks</collection>
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
+        </configuration>
+      </plugin>   
     </plugins>
   </build>
   
