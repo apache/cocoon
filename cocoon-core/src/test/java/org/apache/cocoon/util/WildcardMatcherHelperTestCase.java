@@ -34,6 +34,7 @@ public class WildcardMatcherHelperTestCase
         Map result = WildcardMatcherHelper.match("test", "test");
         assertNotNull(result);
         assertEquals("test", result.get("0"));
+        assertNull(result.get("1"));
     }
 
     public void test02WildcardURIMatch()
@@ -210,9 +211,11 @@ public class WildcardMatcherHelperTestCase
 
     public void test26WildcardURIMatch()
     throws Exception {
-        // greedy '**' patter swallows all until last '/' and thus doesn't match
         Map result = WildcardMatcherHelper.match("**/*/**", "foo/bar/baz/bug");
-        assertNull(result);
+        assertNotNull(result);
+        assertEquals("foo/bar", result.get("1"));
+        assertEquals("baz", result.get("2"));
+        assertEquals("bug", result.get("3"));
     }
 
     public void test27WildcardURIMatch()
@@ -235,16 +238,20 @@ public class WildcardMatcherHelperTestCase
 
     public void test29WildcardURIMatch()
     throws Exception {
-        // greedy '**' patter swallows all until last '/' and thus doesn't match
         Map result = WildcardMatcherHelper.match("end**end**end**end", "endXXendYendend");
-        assertNull(result);
+        assertNotNull(result);
+        assertEquals("XX", result.get("1"));
+        assertEquals("Y", result.get("2"));
+        assertEquals("", result.get("3"));
     }
 
     public void test30WildcardURIMatch()
     throws Exception {
-        // greedy '**' patter swallows all until last '/' and thus doesn't match
         Map result = WildcardMatcherHelper.match("end**end**end**end", "endendendend");
-        assertNull(result);
+        assertNotNull(result);
+        assertEquals("", result.get("1"));
+        assertEquals("", result.get("2"));
+        assertEquals("", result.get("3"));
     }
 
     public void test31WildcardURIMatch()
@@ -287,6 +294,18 @@ public class WildcardMatcherHelperTestCase
     throws Exception {
         Map result = WildcardMatcherHelper.match("menu/**/foo/*", "menu/bar/baz.xml");
         assertNull(result);
+    }
+
+    public void test37WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("menu/*.xml", "menu/foo/bar.xml");
+        assertNull(result);
+    }
+
+    public void test38WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("\\\\foo\\*\\n\\0\\", "\\foo*\\n\\0\\");
+        assertNotNull(result);
     }
 
     public void testEmptyPattern() throws Exception {
