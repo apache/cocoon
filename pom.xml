@@ -330,8 +330,7 @@
 	        <groupId>org.apache.maven.plugins</groupId>
 	        <artifactId>maven-site-plugin</artifactId>
 	        <version>2.0-beta-5</version>
-	      </plugin>       
-        <!-- this plugin configuration has to be moved to the Cocoon main pom -->
+	      </plugin>
         <plugin>
           <groupId>org.daisycms</groupId>
           <artifactId>daisy-maven-plugin</artifactId>
@@ -381,6 +380,7 @@
 								  </skin>
 								  <body>
 								    <!-- @daisy-start@ --><!-- @daisy-end@ -->
+								    <menu ref="reports"/>
 								  </body>
 								</project>            
             	]]>
@@ -442,10 +442,6 @@
         <reportSets>
           <reportSet>
             <reports>
-              <report>project-team</report>
-              <report>mailing-list</report>
-              <report>cim</report>
-              <report>issue-tracking</report>
               <report>license</report>
             </reports>
           </reportSet>
