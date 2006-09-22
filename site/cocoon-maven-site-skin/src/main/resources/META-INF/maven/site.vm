@@ -170,6 +170,23 @@
     #end
 #end
 
+#macro ( nameAndVersion ) 
+  #if ( $decoration.name ) 
+    $decoration.name
+  #else
+    #if ( $project.getProperties().get("docs.name") ) 
+      $project.getProperties().get("docs.name")
+    #else 
+      #if ( $project.name )
+	      $project.name
+	  #end
+    #end
+  #end
+  #if ( $project.getProperties().get("docs.version") )
+  	$project.getProperties().get("docs.version")
+  #end
+#end
+
 <html>
   <head>
     <title>$title</title>
@@ -186,10 +203,10 @@
   </head>
   <body class="composite">
     <div id="banner">
-		<a href="$project.getProperties().get("externalUrl")" id="bannerLeft">
+		<a href="$project.getProperties().get("docs.externalUrl")" id="bannerLeft">
 			<img src="$PathTool.calculateLink( "images/cocoon-project-logo.png", $relativePath )" alt="Cocoon Project Logo" />
 		</a>
-		<a href="$project.getProperties().get("externalUrl")" id="bannerRight">
+		<a href="$project.getProperties().get("docs.externalUrl")" id="bannerRight">
 			<img src="$PathTool.calculateLink( "images/cocoon-logo.gif", $relativePath )" alt="Cocoon Logo" />
 		</a>
       <div class="clear">
@@ -197,16 +214,12 @@
       </div>
     </div>
     <div id="breadcrumbs">
-      <div id="projectName">$decoration.getName() 
-      #if ( $project.getProperties().get("moduleVersion") )
-      	$project.getProperties().get("moduleVersion")
-      #end
-      </div>
+      <div id="projectName">#nameAndVersion()</div>
       <div class="xright">
 		  <a href="http://www.apache.org/">The Apache Software Foundation</a> |  
-		  <a href="$project.getProperties().get("externalUrl")/core-modules/">Cocoon Core</a> | 
-		  <a href="$project.getProperties().get("externalUrl")/blocks/">Cocoon Blocks</a> |   
-		  <a href="$project.getProperties().get("externalUrl")/maven-plugins/">Cocoon Maven Plugins</a>    
+		  <a href="$project.getProperties().get("docs.externalUrl")/core-modules/">Cocoon Core</a> | 
+		  <a href="$project.getProperties().get("docs.externalUrl")/blocks/">Cocoon Blocks</a> |   
+		  <a href="$project.getProperties().get("docs.externalUrl")/maven-plugins/">Cocoon Maven Plugins</a>    
       	  #links( $decoration.body.links )</div>
       <div class="clear">
         <hr/>
