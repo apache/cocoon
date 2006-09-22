@@ -315,7 +315,7 @@
     </snapshotRepository>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}</url>
+      <url>${docs.deploymentBaseUrl}</url>
     </site>    
   </distributionManagement>
   <build>
@@ -351,6 +351,10 @@
                 <path>blocks/</path>
               </collection> 
               <collection>
+                <name>cdocs-site-maven-plugins</name>
+                <path>maven-plugins/</path>
+              </collection>               
+              <collection>
                 <name>cdocs-core</name>
                 <path>core/2.2/</path>
               </collection>                                       
@@ -362,7 +366,21 @@
                 <name>cdocs-template</name>
                 <path>blocks/template/1.0/</path>
               </collection>
-            </collections>        
+            </collections>
+            <siteXmlContent>
+            	<![CDATA[  
+								<project>
+								  <skin>
+								    <groupId>org.apache.cocoon</groupId>
+								    <artifactId>cocoon-maven-site-skin</artifactId> 
+								    <version>1.0.0-SNAPSHOT</version> 
+								  </skin>
+								  <body>
+								    <!-- @daisy-start@ --><!-- @daisy-end@ -->
+								  </body>
+								</project>            
+            	]]>
+            </siteXmlContent>     
           </configuration>
           <executions>
             <execution>
@@ -432,7 +450,7 @@
     </plugins>
   </reporting>
   <properties>
-    <deploymentBaseUrl>file://${basedir}/../../../site/site</deploymentBaseUrl>
-    <externalUrl>http://cocoon.apache.org</externalUrl>
+    <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
+    <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
   </properties>     
 </project>
