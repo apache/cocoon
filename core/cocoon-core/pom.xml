@@ -106,10 +106,14 @@
       </resource>
     </resources>
   </build>
+  <properties>
+    <docs.name>Cocoon Core</docs.name>    
+    <docs.version>2.2</docs.version>
+  </properties>  
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}/core-modules/core/2.2.x/</url>
+      <url>${docs.deploymentBaseUrl}/core-modules/core/${docs.version}/</url>
     </site>
   </distributionManagement>  
   <dependencies>
