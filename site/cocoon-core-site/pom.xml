@@ -44,7 +44,7 @@
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}/core-modules/</url>
+      <url>${docs.deploymentBaseUrl}/core-modules/</url>
     </site>
   </distributionManagement>
   
