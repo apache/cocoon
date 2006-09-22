@@ -351,6 +351,10 @@
                 <path>blocks/</path>
               </collection> 
               <collection>
+                <name>cdocs-site-core-modules</name>
+                <path>core-modules/</path>
+              </collection>               
+              <collection>
                 <name>cdocs-site-maven-plugins</name>
                 <path>maven-plugins/</path>
               </collection>               
