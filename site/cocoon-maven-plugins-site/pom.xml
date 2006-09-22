@@ -44,6 +44,10 @@
     </site>
   </distributionManagement>
   
+  <properties>
+    <docs.name>Maven Plugins</docs.name>    
+  </properties>    
+  
   <build>
     <plugins>
       <plugin>
