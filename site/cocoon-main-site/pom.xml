@@ -38,10 +38,14 @@
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
   
+  <properties>
+    <docs.name>Apache Cocoon</docs.name>    
+  </properties>  
+  
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}</url>
+      <url>${docs.deploymentBaseUrl}</url>
     </site>
   </distributionManagement>
 
