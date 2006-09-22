@@ -60,7 +60,7 @@
         <configuration>
           <navDocId>1205</navDocId>
           <collection>cdocs-site-blocks</collection>
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>         
         </configuration>
       </plugin>   
     </plugins>

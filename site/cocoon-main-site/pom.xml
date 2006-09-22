@@ -67,10 +67,46 @@
         <configuration>
           <navDocId>1203</navDocId>
           <collection>cdocs-site-main</collection>
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>    
+          <siteXmlContent>
+          	<![CDATA[  
+							<project>
+							  <skin>
+							    <groupId>org.apache.cocoon</groupId>
+							    <artifactId>cocoon-maven-site-skin</artifactId> 
+							    <version>1.0.0-SNAPSHOT</version> 
+							  </skin>
+							  <body>
+							    <!-- @daisy-start@ --><!-- @daisy-end@ -->
+							    <menu ref="reports"/>
+							  </body>
+							</project>            
+          	]]>
+          </siteXmlContent>                   
         </configuration>
       </plugin>      
     </plugins>
   </build>
+  
+  <reporting>
+    <excludeDefaults>true</excludeDefaults>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>project-team</report>
+              <report>mailing-list</report>
+              <report>cim</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>  
   
 </project>

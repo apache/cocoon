@@ -52,6 +52,41 @@
     
     <!-- Core modules -->
     <module>../core/cocoon-core</module>    
-  </modules>  
+  </modules>
+  
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.daisycms</groupId>
+          <artifactId>daisy-maven-plugin</artifactId>
+          <configuration>
+            <siteXmlContent>
+            	<![CDATA[  
+								<project>
+								  <skin>
+								    <groupId>org.apache.cocoon</groupId>
+								    <artifactId>cocoon-maven-site-skin</artifactId> 
+								    <version>1.0.0-SNAPSHOT</version> 
+								  </skin>
+								  <body>
+								    <!-- @daisy-start@ --><!-- @daisy-end@ -->
+								  </body>
+								</project>            
+            	]]>
+            </siteXmlContent>     
+          </configuration>
+          <executions>
+            <execution>
+              <phase>pre-site</phase>
+              <goals>
+                <goal>cocoon</goal>
+              </goals>
+            </execution>
+          </executions>          
+        </plugin>         
+      </plugins>
+    </pluginManagement>
+  </build>  
  
 </project>
