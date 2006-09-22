@@ -72,9 +72,13 @@
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}/blocks/forms/1.0.x/</url>
+      <url>${deploymentBaseUrl}/blocks/forms/${docs.version}/</url>
     </site>
   </distributionManagement>
+  <properties>
+    <docs.name>Cocoon Forms</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>    
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
