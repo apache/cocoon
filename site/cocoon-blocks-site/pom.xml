@@ -37,10 +37,14 @@
   <name>Apache Cocoon Blocks Site</name>
   <url>http://cocoon.apache.org</url>
   
+  <properties>
+    <docs.name>Cocoon Blocks</docs.name>    
+  </properties>  
+  
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}/blocks/</url>
+      <url>${docs.deploymentBaseUrl}/blocks/</url>
     </site>
   </distributionManagement>
   
