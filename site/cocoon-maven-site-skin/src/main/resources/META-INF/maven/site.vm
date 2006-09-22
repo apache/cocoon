@@ -170,7 +170,7 @@
     #end
 #end
 
-#macro ( nameAndVersion ) 
+#macro ( title )
   #if ( $decoration.name ) 
     $decoration.name
   #else
@@ -182,6 +182,10 @@
 	  #end
     #end
   #end
+#end
+
+#macro ( nameAndVersion ) 
+  #title()
   #if ( $project.getProperties().get("docs.version") )
   	$project.getProperties().get("docs.version")
   #end
@@ -189,7 +193,7 @@
 
 <html>
   <head>
-    <title>$title</title>
+    <title>#title()</title>
     <style type="text/css" media="all">
       @import url("$relativePath/css/maven-base.css");
       @import url("$relativePath/css/maven-theme.css");
