@@ -339,6 +339,7 @@
             <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
             <editUrl>http://cocoon.zones.apache.org/daisy/cocoon-documentation/</editUrl>  
             <daisyServerId>cocoon-daisy</daisyServerId>
+            <cleanSiteXml>true</cleanSiteXml>
             <author>The Cocoon Community</author>  
             <collections>
               <collection>
