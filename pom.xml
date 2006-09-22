@@ -360,7 +360,7 @@
               </collection>               
               <collection>
                 <name>cdocs-core</name>
-                <path>core/2.2/</path>
+                <path>core-modules/core/2.2/</path>
               </collection>                                       
               <collection>
                 <name>cdocs-forms</name>
