@@ -72,7 +72,7 @@
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${deploymentBaseUrl}/blocks/forms/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/blocks/forms/${docs.version}/</url>
     </site>
   </distributionManagement>
   <properties>
