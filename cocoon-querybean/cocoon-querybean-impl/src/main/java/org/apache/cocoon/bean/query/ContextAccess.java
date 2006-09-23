@@ -1,9 +1,10 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -25,7 +26,7 @@ import org.apache.avalon.framework.context.Contextualizable;
  * Probably only a temporary solution to getting this from within a FlowScript.
  * cocoon.createObject (Packages.org.apache.cocoon.bean.query.ContextAccess);
  *
- * @version $Id: ContextAccess.java 30941 2004-07-29 19:56:58Z vgritsenko $
+ * @version $Id$
  */
 
 public class ContextAccess implements Contextualizable {
