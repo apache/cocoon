@@ -17,7 +17,6 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -118,10 +117,19 @@ public class BlockServlet extends HttpServlet {
         return this.blockContext.getMountPath();
     }
     
-    public void setContextURL(URL contextURL) {
-        this.blockContext.setContextURL(contextURL);
+    /**
+     * The path to the blocks resolurces relative to the servlet context URL,
+     * must start with an '/'.
+     * @param blockContextURL
+     */
+    // FIXME: would like to throw an exeption if the form of the url is faulty,
+    // what is the prefered way of handling faulty properties in Spring?
+    // TODO: for development it would be nice to be able to provide an absolute
+    // url for the blocks resources context path
+    public void setBlockContextURL(String blockContextURL) {
+        this.blockContext.setBlockContextURL(blockContextURL);
     }
-    
+
     public void setBlockServletClass(String blockServletClass) {
         this.blockServletClass = blockServletClass;
     }
