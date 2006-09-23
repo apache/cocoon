@@ -25,9 +25,10 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.DirectFieldAccessor;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -36,6 +37,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * A servlet that dispatch to managed sevlets from the context Spring container.
  * It dispatch to servlets that has the property mountPath, and dispatches to the
  * servlet with the longest prefix of the request pathInfo.
+ * 
+ * This servlet will also initialize and destroy all the servlets that it finds
+ * from the context container. This means that there must only be one dispatcher
+ * servlet, otherwise the managed servlets will be initialized several times.
  *
  * @version $Id$
  */
@@ -48,23 +53,41 @@ public class DispatcherServlet
     private Map mountableServlets = new HashMap();
 
     private ListableBeanFactory beanFactory;
- 
+    
     /* (non-Javadoc)
      * @see javax.servlet.GenericServlet#init()
      */
     public void init() throws ServletException {
         this.beanFactory =
             WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+        this.log("DispatcherServlet: initializing");
         // the returned map contains the bean names as key and the beans as values
         final Map servlets = 
             BeanFactoryUtils.beansOfTypeIncludingAncestors(this.beanFactory, Servlet.class);
+        // register and initialize the servlets that has a mount path property
         final Iterator i = servlets.values().iterator();
         while ( i.hasNext() ) {
             final Servlet servlet = (Servlet) i.next();
-            DirectFieldAccessor accessor = new DirectFieldAccessor(servlet);
-            if (accessor.isReadableProperty(MOUNT_PATH)) {
-                this.mountableServlets.put(accessor.getPropertyValue(MOUNT_PATH), servlet);
+            this.log("DispatcherServlet: initializing servlet " + servlet);
+            BeanWrapperImpl wrapper = new BeanWrapperImpl(servlet);
+            if (wrapper.isReadableProperty(MOUNT_PATH)) {
+                String mountPath = (String) wrapper.getPropertyValue(MOUNT_PATH);
+                this.log("DispatcherServlet: initializing servlet at " + mountPath);
+                this.mountableServlets.put(mountPath, servlet);
+                servlet.init(super.getServletConfig());
             }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.GenericServlet#destroy()
+     */
+    public void destroy() {
+        super.destroy();
+        final Iterator i = this.mountableServlets.values().iterator();
+        while (i.hasNext()) {
+            final Servlet servlet = (Servlet) i.next();
+            servlet.destroy();
         }
     }
 
@@ -73,6 +96,8 @@ public class DispatcherServlet
      */
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String path = req.getPathInfo();
+        path = path == null ? "" : path;
+        // find the servlet which mount path is the longest prefix of the path info
         int index = path.length();
         Servlet servlet = null;
         while (servlet == null && index != -1) {
@@ -83,8 +108,29 @@ public class DispatcherServlet
         if (servlet == null) {
             throw new ServletException("No block for " + req.getPathInfo());
         }
-        // FIXME: the request object should be modified so that pathInfo
-        // and the rest of the parts of the request uri are correct 
-        servlet.service(req, res);
+
+        // Move the mount path from the start of the path info to the end of the
+        // servlet path to get reasonable values in the called servlet
+        final String mountPath = path;
+        HttpServletRequest request =
+            new HttpServletRequestWrapper(req) {
+
+                /* (non-Javadoc)
+                 * @see javax.servlet.http.HttpServletRequestWrapper#getServletPath()
+                 */
+                public String getServletPath() {
+                    return super.getServletPath() + mountPath;
+                }
+
+                /* (non-Javadoc)
+                 * @see javax.servlet.http.HttpServletRequestWrapper#getPathInfo()
+                 */
+                public String getPathInfo() {
+                    String pathInfo = super.getPathInfo().substring(mountPath.length()); 
+                    return pathInfo.length() == 0 ? null : pathInfo;
+                }
+            
+        };
+        servlet.service(request, res);
     }
 }

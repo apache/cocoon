@@ -47,7 +47,7 @@ public class BlockContext extends ServletContextWrapper {
     private Hashtable attributes = new Hashtable();
     private Servlet servlet;
     private String mountPath;
-    private URL contextURL;
+    private String blockContextURL;
     private Map properties;
     private Map connections;
 
@@ -103,8 +103,15 @@ public class BlockContext extends ServletContextWrapper {
     public URL getResource(String path) throws MalformedURLException {
         if (path.length() == 0 || path.charAt(0) != '/')
             throw new MalformedURLException("The path must start with '/' " + path);
-        path = path.substring(1);
-        return new URL(this.contextURL, path);
+        if (this.blockContextURL.length() != 0 && this.blockContextURL.charAt(0) != '/')
+            throw new MalformedURLException("The blockContextURL must be empty or start with '/' "
+                    + this.blockContextURL);
+        
+        // prefix the path with the block context resolve and resolve in the embeding
+        // servlet context
+        path = this.blockContextURL + path;
+        
+        return super.getResource(path);
     }
 
     /*
@@ -303,10 +310,10 @@ public class BlockContext extends ServletContextWrapper {
     }
     
     /**
-     * @param contextURL The contextURL to set.
+     * @param blockContextURL the blockContextURL to set
      */
-    public void setContextURL(URL contextURL) {
-        this.contextURL = contextURL;
+    public void setBlockContextURL(String blockContextURL) {
+        this.blockContextURL = blockContextURL;
     }
 
     /**
