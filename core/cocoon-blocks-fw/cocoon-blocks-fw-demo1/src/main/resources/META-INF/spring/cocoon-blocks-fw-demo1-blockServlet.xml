@@ -30,7 +30,7 @@
 		</property>
 		<property name="connections">
 			<map>
-				<entry key="demo2" value-ref="org.apache.cocoon.blocks.demo1.block"/>
+				<entry key="demo2" value-ref="org.apache.cocoon.blocks.demo2.block"/>
 			</map>
 		</property>
 	</bean>
