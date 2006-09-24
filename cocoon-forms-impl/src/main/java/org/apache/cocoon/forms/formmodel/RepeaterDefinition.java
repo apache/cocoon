@@ -34,9 +34,10 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     private boolean orderable;
     private RepeaterListener listener;
 
-    private boolean pageable=false;
+    private boolean enhanced=false;
     private int initialPage=0;
     private int pageSize;
+	private String customPageId;
 
 
     public RepeaterDefinition(int initialSize, int minSize, int maxSize,
@@ -47,19 +48,18 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
         this.maxSize = maxSize;
         this.orderable = orderable;
     }
-
-    public RepeaterDefinition(int initialSize, int minSize, int maxSize,
-                              boolean selectable, boolean orderable, boolean pageable,
-                              int initialPage, int pageSize) {
-        super();
-        this.initialSize = initialSize;
-        this.minSize = minSize;
-        this.maxSize = maxSize;
-        this.orderable = orderable;
-        this.pageable = pageable;
-        this.initialPage = initialPage;
-        this.pageSize = pageSize;
-    }
+    
+    public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable,boolean orderable,boolean enhanced, int initialPage, int pageSize, String customPageId) {
+		super();
+		this.initialSize = initialSize;
+		this.minSize = minSize;
+		this.maxSize = maxSize;
+		this.orderable = orderable;
+		this.enhanced = enhanced;
+		this.initialPage = initialPage;
+		this.pageSize = pageSize;
+		this.customPageId = customPageId;
+	}
 
     /**
      * initialize this definition with the other, sort of like a copy constructor
@@ -73,14 +73,21 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
         }
 
         RepeaterDefinition other = (RepeaterDefinition) definition;
-
         this.initialSize = other.initialSize;
         this.maxSize = other.maxSize;
         this.minSize = other.minSize;
+        this.enhanced = other.enhanced;
+        this.orderable = other.orderable;
+        this.initialPage = other.initialPage;
+        this.pageSize = other.pageSize;
     }
 
     public Widget createInstance() {
-        return new Repeater(this);
+    	if (enhanced) {
+    		return new EnhancedRepeater(this);
+    	} else {
+    		return new Repeater(this);
+    	}
     }
 
     public int getInitialSize() {
@@ -118,15 +125,20 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
         return this.listener;
     }
 
-    public int getInitialPage() {
-        return initialPage;
-    }
+	public int getInitialPage() {
+		return initialPage;
+	}
 
-    public boolean isPageable() {
-        return pageable;
-    }
+	public int getPageSize() {
+		return pageSize;
+	}
 
-    public int getPageSize() {
-        return pageSize;
-    }
+	public boolean isEnhanced() {
+		return enhanced;
+	}
+
+	public String getCustomPageId() {
+		return customPageId;
+	}
+    
 }
