@@ -171,4 +171,11 @@
     <sample name="Hotel Booking Sample" href="library/hotel.flow">Hotel Booking Sample, elaborate use of libraries.</sample>
   </group>
 
+  <group name="Repeater advanced features">
+    <note>
+      This demonstrates the Google Summer of Code 2006 improvements to the repeater.
+    </note>
+    <sample name="Pagination, sorting and filtering" href="pagination/paginated.do">Pagination, sorting and filtering.</sample>
+  </group>
+
 </samples>
