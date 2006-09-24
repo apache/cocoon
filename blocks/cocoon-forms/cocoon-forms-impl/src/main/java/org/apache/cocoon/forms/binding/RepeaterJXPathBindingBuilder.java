@@ -64,9 +64,7 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
      * @return JXPathBindingBase
      */
     public JXPathBindingBase buildBinding(Element bindingElm,
-                                          JXPathBindingManager.Assistant assistant)
-    throws BindingException {
-
+            JXPathBindingManager.Assistant assistant) throws BindingException {
         if (bindingElm.hasAttribute("unique-row-id")) {
             throw new BindingException("Attribute 'unique-row-id' is no more supported, use <fb:identity> instead",
                                        LocationAttributes.getLocation(bindingElm));
@@ -88,15 +86,17 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
             String rowPath =
                     DomHelper.getAttribute(bindingElm, "row-path", null);
             String rowPathForInsert =
-                    DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
-
-            // retrieve inherited bindings
+                DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
+            String adapterClass = 
+            	DomHelper.getAttribute(bindingElm, "adapter-class", null);
+            
+//          do inheritance
+            RepeaterJXPathBinding otherBinding = (RepeaterJXPathBinding)assistant.getContext().getSuperBinding();
             JXPathBindingBase[] existingOnBind = null;
             JXPathBindingBase[] existingOnDelete = null;
             JXPathBindingBase[] existingOnInsert = null;
             JXPathBindingBase[] existingIdentity = null;
 
-            RepeaterJXPathBinding otherBinding = (RepeaterJXPathBinding)assistant.getContext().getSuperBinding();
             if (otherBinding != null) {
             	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(), commonAtts);
 
@@ -175,11 +175,11 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 // Use the children of the current element
                 childBindings = assistant.makeChildBindings(bindingElm, existingOnBind);
             }
-
+            
             RepeaterJXPathBinding repeaterBinding =
-                new RepeaterJXPathBinding(commonAtts, repeaterId, parentPath,
+                new EnhancedRepeaterJXPathBinding(commonAtts, repeaterId, parentPath,
                         rowPath, rowPathForInsert,
-                        childBindings, insertBinding, deleteBindings, identityBinding);
+                        childBindings, insertBinding, deleteBindings, identityBinding, adapterClass);
             return repeaterBinding;
         } catch (BindingException e) {
             throw e;
