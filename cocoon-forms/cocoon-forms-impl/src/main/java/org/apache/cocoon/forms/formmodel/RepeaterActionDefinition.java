@@ -16,7 +16,9 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.forms.FormsException;
+import org.apache.cocoon.forms.binding.BindingException;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 
@@ -118,14 +120,24 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             // Call action listeners, if any
             super.fireActionEvent(event);
 
-            // and actually delete the rows
             Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+            
+            // and actually delete the rows
             for (int i = repeater.getSize() - 1; i >= 0; i--) {
                 Repeater.RepeaterRow row = repeater.getRow(i);
                 if (Boolean.TRUE.equals(row.getChild(this.selectName).getValue())) {
                     repeater.removeRow(i);
                 }
             }
+            
+            if (repeater instanceof EnhancedRepeater) {
+            	try {
+					((EnhancedRepeater)repeater).refreshPage();
+				} catch (BindingException e) {
+					throw new CascadingRuntimeException("Error refreshing repeater page", e);
+				}
+            }
+            
         }
     }
 
@@ -135,16 +147,22 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
      * The definition of a repeater action that adds a row to a sibling repeater.
      */
     public static class AddRowActionDefinition extends RepeaterActionDefinition {
-        private int insertRows;
+        private int insertRows = 1;
 
-        public AddRowActionDefinition(String repeaterName, int insertRows) {
+        public AddRowActionDefinition(String repeaterName) {
             super(repeaterName);
-            this.insertRows = insertRows;
-
+            
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
-                    for (int i=0; i<AddRowActionDefinition.this.insertRows; i++) {
+                    if (repeater instanceof EnhancedRepeater) {
+                    	try {
+							((EnhancedRepeater)repeater).goToPage(((EnhancedRepeater)repeater).getMaxPage());
+						} catch (BindingException e) {
+							throw new CascadingRuntimeException("Error switching page", e);
+						}
+                    }
+                    for (int i=0; i < AddRowActionDefinition.this.insertRows; i++) {
                         repeater.addRow();
                     }
                 }
@@ -204,14 +222,39 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             });
         }
     }
+    
+    public static class SortActionDefinition extends RepeaterActionDefinition {
+    	protected String field = null;
+    	
+        public SortActionDefinition(String repeaterName, String field) {
+            super(repeaterName);
+            this.field = field;
+            
+            this.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                    Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+                    if (repeater instanceof EnhancedRepeater) {
+                    	EnhancedRepeater erep = (EnhancedRepeater) repeater;
+                        try {
+                            if (repeater.validate()) {
+                            	erep.sortBy(SortActionDefinition.this.field);
+                            }
+                        } catch (Exception e) {
+                            throw new CascadingRuntimeException("Error switching page", e);
+                        }
+                    }
+                }
+            });
+            
+        }
+    }
 
-
-
+  
     public static class ChangePageActionDefinition extends RepeaterActionDefinition {
 
        protected int method;
-
-       public static final int FIRST = 0;
+       
+       public static final int FIRST = 0; 
        public static final int PREV = 1;
        public static final int NEXT = 2;
        public static final int LAST = 3;
@@ -222,57 +265,49 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
          */
         public void initializeFrom(WidgetDefinition definition) throws Exception {
             super.initializeFrom(definition);
-
-            if (!(definition instanceof ChangePageActionDefinition)) {
-                throw new FormsException("Ancestor definition " + definition.getClass().getName() + " is not a ChangePageActionDefinition.",
-                                         getLocation());
+            if(definition instanceof ChangePageActionDefinition) {
+                ChangePageActionDefinition other = (ChangePageActionDefinition)definition;
+                this.method = other.method;
+            } else {
+                throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
             }
-
-            ChangePageActionDefinition other = (ChangePageActionDefinition) definition;
-
-            this.method = other.method;
         }
 
         public ChangePageActionDefinition(String repeaterName, int m) {
             super(repeaterName);
-
+            
             this.method = m;
-
+            
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
-
-                    int page = repeater.getCurrentPage();
-
-                    if (method == FIRST) {
-                        page = 0;
-                    } else if (method == PREV && page > 0) {
-                        page = repeater.getCurrentPage() - 1;
-                    } else if (method == NEXT && page < repeater.getStorage().getMaxPage()) {
-                        page = repeater.getCurrentPage() + 1;
-                    } else if (method == LAST) {
-                        page = repeater.getStorage().getMaxPage();
-                    } else if (method == CUSTOM) {
-                        ((Integer)repeater.getForm().lookupWidget("page-custom").getValue()).intValue();
-                    } else {
-                        return;
-                    }
-
-                    if (repeater.isPageable()) {
+                    if (repeater instanceof EnhancedRepeater) {
+                    	EnhancedRepeater erep = (EnhancedRepeater) repeater;
+                        int page = erep.getCurrentPage();
+                        if (method == FIRST) {
+                            page = 0;
+                        } else if (method == PREV && page > 0) {
+                            page = erep.getCurrentPage() - 1;
+                        } else if (method == NEXT && page < erep.getMaxPage()) {
+                            page = erep.getCurrentPage() + 1;
+                        } else if (method == LAST) {
+                            page = erep.getMaxPage();
+                        } else if (method == CUSTOM) {
+                            page = erep.getCustomPageWidgetValue();
+                        } else {
+                            return;
+                        }
                         try {
                             if (repeater.validate()) {
-                                repeater.getStorage().doPageSave();
-                                repeater.setCurrentPage(page);
-                                repeater.getStorage().doPageLoad();
+                            	erep.goToPage(page);
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            throw new CascadingRuntimeException("Error switching page", e);
                         }
-                    }
+                    } 
                 }
             });
         }
     }
-
-
+    
 }

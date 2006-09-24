@@ -105,25 +105,28 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
             return new RepeaterActionDefinition.DeleteRowsActionDefinition(repeater, select);
 
         } else if ("add-row".equals(actionCommand)) {
-            int insertRows = DomHelper.getAttributeAsInteger(element,"number-of-rows",1);
-            return new RepeaterActionDefinition.AddRowActionDefinition(repeater,insertRows);
+            return new RepeaterActionDefinition.AddRowActionDefinition(repeater);
 
         } else if ("insert-rows".equals(actionCommand)) {
             String select = DomHelper.getAttribute(element, "select");
             return new RepeaterActionDefinition.InsertRowsActionDefinition(repeater, select);
 
+        } else if ("sort-by".equals(actionCommand)) {
+            String field = DomHelper.getAttribute(element, "field", null);
+            return new RepeaterActionDefinition.SortActionDefinition(repeater, field);
+            
         } else if ("page-first".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.FIRST);
-
+        
         } else if ("page-prev".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.PREV);
-
+        
         } else if ("page-next".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.NEXT);
-
+        
         } else if ("page-last".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.LAST);
-
+        
         } else if ("page-custom".equals(actionCommand)) {
             return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.CUSTOM);
 

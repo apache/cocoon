@@ -25,8 +25,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormsRuntimeException;
-import org.apache.cocoon.forms.binding.Binding;
-import org.apache.cocoon.forms.binding.RepeaterJXPathBinding.PageStorage;
 import org.apache.cocoon.forms.event.RepeaterEvent;
 import org.apache.cocoon.forms.event.RepeaterEventAction;
 import org.apache.cocoon.forms.event.RepeaterListener;
@@ -62,17 +60,11 @@ public class Repeater extends AbstractWidget
     private static final String LABEL_EL = "label";
     private static final String REPEATER_SIZE_EL = "repeater-size";
 
-    private final RepeaterDefinition definition;
+    protected final RepeaterDefinition definition;
     protected final List rows = new ArrayList();
     protected ValidationError validationError;
     private boolean orderable = false;
     private RepeaterListener listener;
-
-    // pagination
-    private PageStorage storage;
-    private boolean pageable = false;
-    private int currentPage;
-    private int pageSize;
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
         super(repeaterDefinition);
@@ -85,13 +77,6 @@ public class Repeater extends AbstractWidget
 
         this.orderable = this.definition.getOrderable();
         this.listener = this.definition.getRepeaterListener();
-
-        this.pageable = this.definition.isPageable();
-        if (pageable) {
-            this.currentPage = this.definition.getInitialPage();
-            this.pageSize = this.definition.getPageSize();
-        }
-
     }
 
     public WidgetDefinition getDefinition() {
@@ -127,7 +112,7 @@ public class Repeater extends AbstractWidget
         broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROW_ADDED, rows.size() - 1));
         return repeaterRow;
     }
-
+    
     public RepeaterRow addRow(int index) {
         RepeaterRow repeaterRow = new RepeaterRow(definition);
         if (index >= this.rows.size()) {
@@ -484,9 +469,6 @@ public class Repeater extends AbstractWidget
         if (size != Integer.MAX_VALUE) {
             attrs.addCDATAAttribute("max-size", String.valueOf(size));
         }
-        if (isPageable()) {
-            attrs.addCDATAAttribute("page", String.valueOf(currentPage));
-        }
         return attrs;
     }
 
@@ -634,38 +616,6 @@ public class Repeater extends AbstractWidget
         public void broadcastEvent(WidgetEvent event) {
             throw new UnsupportedOperationException("Widget " + this + " doesn't handle events.");
         }
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public boolean isPageable() {
-        return pageable;
-    }
-
-    public void setPageable(boolean pageable) {
-        this.pageable = pageable;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-
-    public PageStorage getStorage() {
-        return storage;
-    }
-
-    public void setStorage(PageStorage storage) {
-        this.storage = storage;
-    }
+    }	
+    
 }
