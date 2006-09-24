@@ -59,19 +59,21 @@ public final class RepeaterDefinitionBuilder extends AbstractContainerDefinition
 
         boolean orderable = DomHelper.getAttributeAsBoolean(repeaterElement, "orderable", false);
         boolean selectable = DomHelper.getAttributeAsBoolean(repeaterElement, "selectable", false);
+        boolean enhanced = DomHelper.getAttributeAsBoolean(repeaterElement, "enhanced", false);
 
-        boolean pageable = false;
         int initialPage = 0;
-        int pageSize = 0;
+        int pageSize = Integer.MAX_VALUE;
+        String customPageId = null;
 
         Element pagesElement = DomHelper.getChildElement(repeaterElement, FormsConstants.DEFINITION_NS, "pages");
         if (pagesElement!=null) {
-            pageable = true;
-            initialPage = DomHelper.getAttributeAsInteger(pagesElement, "initial", 0);
+            enhanced = true;
+            initialPage = DomHelper.getAttributeAsInteger(pagesElement, "initial", 1) - 1;
             pageSize = DomHelper.getAttributeAsInteger(pagesElement, "size", 0);
+            customPageId = DomHelper.getAttribute(pagesElement, "page-field", null);
         }
 
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable, pageable,initialPage,pageSize);
+        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable, enhanced, initialPage, pageSize, customPageId);
         super.setupDefinition(repeaterElement, repeaterDefinition);
         setDisplayData(repeaterElement, repeaterDefinition);
 
