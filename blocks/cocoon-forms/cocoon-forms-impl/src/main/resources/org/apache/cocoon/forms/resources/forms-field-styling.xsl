@@ -38,6 +38,13 @@
         dojo.addOnLoad(forms_onload);
         dojo.require("cocoon.forms.*");
     </script>
+    
+    <!-- googlemap-key -->
+    <xsl:if test="/*/fi:googlemap">
+      <script src="/*/fi:googlemap/fi:key" type="text/javascript"/>
+    </xsl:if>
+
+    
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms/css/forms.css"/>
   </xsl:template>
   
@@ -537,6 +544,7 @@
       +-->
   <xsl:template match="fi:repeater">
     <input type="hidden" name="{@id}.size" value="{@size}"/>
+    <input type="hidden" name="{@id}.page" value="{@page}"/>
     <table id="{@id}" border="1">
       <xsl:apply-templates select="." mode="css"/>
       <tr>
@@ -748,5 +756,103 @@
       </xsl:variable>
       <xsl:attribute name="class"><xsl:value-of select="normalize-space($class)"/></xsl:attribute>
   </xsl:template>
+  
+  <!--+
+      | fi:googlemap - generate div and hidden fields for value
+      +-->
+  <xsl:template match="fi:googlemap">
+    
+    <!-- we need a unique id without . as js variable-->
+    <xsl:variable name="jsid" select="generate-id(@id)"/>
+    
+    <!-- the map-div and (optional), the geocoding input field -->
+    <div>
+      <xsl:apply-templates select="fi:value/fi:usermarker" mode="geo"/>
+      <div id="{@id}">
+        <xsl:copy-of select="fi:styling/@*"/>
+      </div>
+    </div>
+    
+    <!-- map creation -->
+    <script type="text/javascript">
+        var map_<xsl:value-of select="$jsid"/> = new GMap2(document.getElementById("<xsl:value-of select="@id"/>"),[G_HYBRID_MAP]);
+        map_<xsl:value-of select="$jsid"/>.addControl(new GLargeMapControl());
+        map_<xsl:value-of select="$jsid"/>.addControl(new GScaleControl());
+        map_<xsl:value-of select="$jsid"/>.addControl(new GMapTypeControl());
+        map_<xsl:value-of select="$jsid"/>.setCenter(new GLatLng(<xsl:value-of select="fi:value/@lat"/>, <xsl:value-of select="fi:value/@lng"/>), <xsl:value-of select="fi:value/@zoom"/>);
+        
+        GEvent.addListener(map_<xsl:value-of select="$jsid"/>, "dragend", function() {
+          document.getElementById("<xsl:value-of select="@id"/>_lng").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().x);
+          document.getElementById("<xsl:value-of select="@id"/>_lat").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().y);
+        });
+        GEvent.addListener(map_<xsl:value-of select="$jsid"/>, "zoomend", function(oldLevel,newLevel) {
+          document.getElementById("<xsl:value-of select="@id"/>_zoom").value=newLevel;
+        });
+        
+        <xsl:apply-templates select="fi:value/fi:markers/fi:marker"/>
+        <xsl:apply-templates select="fi:value/fi:usermarker" mode="script"/>
+        
+    </script>
+    
+    <!-- hidden fields to store widget values -->
+    <input name="{@id}_lng" id="{@id}_lng" value="{fi:value/@lng}" type="hidden"/>
+    <input name="{@id}_lat" id="{@id}_lat" value="{fi:value/@lat}" type="hidden"/>
+    <input name="{@id}_zoom" id="{@id}_zoom" value="{fi:value/@zoom}" type="hidden"/>
+    <input name="{@id}_current" id="{@id}_current" value="{fi:value/@current}" type="hidden"/>
+    <input name="{@id}_usermarker-lng" id="{@id}_usermarker-lng" value="{fi:value/fi:usermarker/@lng}" type="hidden"/>
+    <input name="{@id}_usermarker-lat" id="{@id}_usermarker-lat" value="{fi:value/fi:usermarker/@lat}" type="hidden"/>
+  </xsl:template>
+  
+  
+  <!-- list of markers, the last selected is stored in hidden field "current" -->
+  <xsl:template match="fi:value/fi:markers/fi:marker">
+    
+    <!-- we need a unique id without . as js variable-->
+    <xsl:variable name="jsid" select="generate-id(../../../@id)"/>
+    
+    var marker = new GMarker(new GLatLng(<xsl:value-of select="@lat"/>, <xsl:value-of select="@lng"/>));
+    GEvent.addListener(marker, "click", function() {
+      marker.openInfoWindowHtml("<xsl:value-of select="fi:text"/>");
+      document.getElementById("<xsl:value-of select="../../../@id"/>_current").value=<xsl:value-of select="position()"/>
+    });
+    map_<xsl:value-of select="$jsid"/>.addOverlay(marker);
+  </xsl:template>
+  
+  <!-- usermarker: user-click on map places this marker -->
+  <xsl:template match="fi:value/fi:usermarker" mode="script">
+    
+    <!-- we need a unique id without . as js variable-->
+    <xsl:variable name="jsid" select="generate-id(../../@id)"/>
+    
+    var usermarker_<xsl:value-of select="$jsid"/> = new GMarker(new GLatLng(<xsl:value-of select="@lat"/>, <xsl:value-of select="@lng"/>));
+    map_<xsl:value-of select="$jsid"/>.addOverlay(usermarker_<xsl:value-of select="$jsid"/>);
+    GEvent.addListener(map_<xsl:value-of select="$jsid"/>, "click", function(overlay,point) {
+      usermarker_<xsl:value-of select="$jsid"/>.setPoint(point);
+      document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lng").value=point.x;
+      document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lat").value=point.y;
+    });
+    usermarker_<xsl:value-of select="$jsid"/>.showAddress = function showAddress(address) {
+      var geocoder = new GClientGeocoder();
+      geocoder.getLatLng(
+      address,
+      function(point) {
+        if (!point) {
+          alert(address + " not found");
+        } else {
+          usermarker_<xsl:value-of select="$jsid"/>.setPoint(point);
+          map_<xsl:value-of select="$jsid"/>.setCenter(point);
+          document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lng").value=point.x;
+          document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lat").value=point.y;
+          document.getElementById("<xsl:value-of select="../../@id"/>_lng").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().x);
+          document.getElementById("<xsl:value-of select="../../@id"/>_lat").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().y);
+        }
+      });
+    }
+  </xsl:template>
+  <xsl:template match="fi:value/fi:usermarker" mode="geo">
+    <xsl:variable name="jsid" select="generate-id(../../@id)"/>
+    <input name="{../../@id}_geo" id="{../../@id}_geo"/>
+    <input name="{../../@id}_geo_go" id="{../../@id}_geo_go" value="Go!" onclick="usermarker_{$jsid}.showAddress(this.form['{../../@id}_geo'].value)" type="button"/>
+  </xsl:template>   
 
 </xsl:stylesheet>
