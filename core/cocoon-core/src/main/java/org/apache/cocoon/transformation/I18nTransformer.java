@@ -2098,7 +2098,7 @@ public class I18nTransformer extends AbstractTransformer
      * @param catalogueID if not null, this catalogue will be used instead of the default one.
      * @return SaxBuffer containing message, or null if not found.
      */
-    private ParamSaxBuffer getMessage(String catalogueID, String key) {
+    protected ParamSaxBuffer getMessage(String catalogueID, String key) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Getting key " + key + " from catalogue " + catalogueID);
         }
@@ -2140,6 +2140,7 @@ public class I18nTransformer extends AbstractTransformer
     private ParamSaxBuffer getMessage(String key, ParamSaxBuffer defaultValue) {
         SaxBuffer value = getMessage(currentCatalogueId, key);
         if (value == null) {
+        	getLogger().debug("Untranslated key: '" + key + "'");
             return defaultValue;
         }
 
@@ -2176,7 +2177,7 @@ public class I18nTransformer extends AbstractTransformer
      * can contain references to input modules, and are resolved upon each transformer
      * usage. It is important that releaseCatalog is called when the transformer is recycled.
      */
-    private final class CatalogueInfo {
+    public final class CatalogueInfo {
         VariableResolver name;
         VariableResolver[] locations;
         String resolvedName;
