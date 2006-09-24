@@ -58,13 +58,13 @@ public class BlockContext extends ServletContextWrapper {
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
      */
     /*
-     *  TODO It would probably be usefull to inherit context attribute from the 
-     *  surounding servlet context and also to be able to inject context
-     *  attributes in the container  
+     *  TODO ineritance of attributes from the parent context is only
+     *  partly implemented: removeAttribute and getAttributeNames
+     *  doesn't respect inheritance yet.  
      */
     public Object getAttribute(String name) {
         Object value = this.attributes.get(name);
-        return value;
+        return value != null ? value : super.getAttribute(name);
     }
 
     /*
@@ -131,6 +131,8 @@ public class BlockContext extends ServletContextWrapper {
      */
     // FIXME, this should be defined in the config instead
     public String getInitParameter(String name) {
+        if (this.properties == null)
+            return null;
         String value = (String) this.properties.get(name);
         // Ask the super block for the property
         if (value == null) {
