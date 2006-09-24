@@ -49,9 +49,8 @@ import org.springframework.web.context.WebApplicationContext;
  */
 public class SitemapServlet extends HttpServlet {
 
-	private static final String MANIFEST_FILE = "/META-INF/MANIFEST.MF";
     private static final String DEFAULT_CONTAINER_ENCODING = "ISO-8859-1";
-	private static final String DEFAULT_SITEMAP_PATH = "/COB-INF/sitemap.xmap";	
+	private static final String DEFAULT_SITEMAP_PATH = "context://sitemap.xmap";	
 	private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
 
 	private BeanFactory beanFactory;
@@ -86,16 +85,13 @@ public class SitemapServlet extends HttpServlet {
     	// create the Cocoon context out of the Servlet context
         this.cocoonContext = new HttpContext(config.getServletContext());
         
-        // get the Avalon context
-        org.apache.avalon.framework.context.Context avalonContext = (org.apache.avalon.framework.context.Context) this.beanFactory.getBean(ProcessingUtil.CONTEXT_ROLE);
-        
         // create the tree processor
         try {
 			TreeProcessor treeProcessor =  new TreeProcessor();
             // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all. 
             this.processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
                     this.logger,
-                    avalonContext,
+                    null,
                     serviceManager,
                     createTreeProcessorConfiguration());
 		} catch (Exception e) {
@@ -114,10 +110,13 @@ public class SitemapServlet extends HttpServlet {
 		try {
 	        EnvironmentHelper.enterProcessor(this.processor, environment);			
 			this.processor.process(environment);
+            environment.commitResponse();
 		} catch (Exception e) {
+            environment.tryResetResponse();
 			throw new ServletException(e);
 		} finally { 
-            EnvironmentHelper.leaveProcessor();	
+            EnvironmentHelper.leaveProcessor();
+            environment.finishingProcessing();
 	    } 
 	}    
 	
