@@ -29,6 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * @version $Id$
@@ -44,6 +47,19 @@ public class BlockServlet extends HttpServlet {
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         this.blockContext.setServletContext(servletConfig.getServletContext());
+
+        // create a sub container that resolves paths relative to the block
+        // context rather than the parent context and make it available in
+        // a context attribute
+        WebApplicationContext parentContainer =
+            WebApplicationContextUtils.getRequiredWebApplicationContext(servletConfig.getServletContext());
+        GenericWebApplicationContext container = new GenericWebApplicationContext();
+        container.setParent(parentContainer);
+        container.setServletContext(this.blockContext);
+        container.refresh();
+        this.blockContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, container);
+        
+        // create a servlet config based on the block servlet context
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(servletConfig, this.blockContext) {
 
@@ -56,8 +72,9 @@ public class BlockServlet extends HttpServlet {
                 public Enumeration getInitParameterNames() {
                     return super.getServletContext().getInitParameterNames();
                 }
-            
         };
+        
+        // create and initialize the embeded servlet
         try {
             this.blockServlet =
                 (Servlet) this.getClass().getClassLoader().loadClass(this.blockServletClass).newInstance();

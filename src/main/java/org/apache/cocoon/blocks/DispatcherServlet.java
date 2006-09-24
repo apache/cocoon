@@ -131,6 +131,10 @@ public class DispatcherServlet
                 }
             
         };
+        this.log("DispatcherServlet: service servlet=" + servlet +
+                " mountPath=" + mountPath +
+                " servletPath=" + request.getServletPath() +
+                " pathInfo=" + request.getPathInfo());
         servlet.service(request, res);
     }
 }
