@@ -93,22 +93,17 @@ public class Library extends AbstractLogEnabled {
      * Definitions will be accessible locally through prefixing: "prefix:definitionid"
      *
      * @param key the key
-     * @param librarysource the source of the library to be know as "key"
+     * @param sourceURI the source of the library to be know as "key"
      * @return true if there was no such key used before, false otherwise
      */
-    public boolean includeAs(String key, String librarysource)
+    public boolean includeAs(String key, String sourceURI)
     throws LibraryException {
-        try {
-            // library keys may not contain ":"!
-            if ((!inclusions.containsKey(key) || key.indexOf(SEPARATOR) > -1) &&
-                    manager.load(librarysource, sourceURI) != null) {
-                inclusions.put(key, new Dependency(librarysource));
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            throw new LibraryException("Could not include library '" + librarysource + "'", e);
+        if (!inclusions.containsKey(key) || key.indexOf(SEPARATOR) > -1) {
+            manager.load(sourceURI, this.sourceURI);
+            inclusions.put(key, new Dependency(sourceURI));
+            return true;
         }
+        return false;
     }
 
     public WidgetDefinition getDefinition(String key) throws LibraryException {
@@ -126,11 +121,12 @@ public class Library extends AbstractLogEnabled {
         }
 
         if (librarykey != null) {
-            if (inclusions.containsKey(librarykey)) {
+            Dependency dependency = (Dependency) inclusions.get(librarykey);
+            if (dependency != null) {
                 try {
-                    return manager.load(((Dependency) inclusions.get(librarykey)).dependencyURI, sourceURI).getDefinition(definitionkey);
+                    return manager.load(dependency.dependencyURI, sourceURI).getDefinition(definitionkey);
                 } catch (Exception e) {
-                    throw new LibraryException("Couldn't get Library key='" + librarykey + "' source='" + inclusions.get(librarykey) + "", e);
+                    throw new LibraryException("Couldn't get Library key='" + librarykey + "' source='" + dependency + "", e);
                 }
             } else {
                 throw new LibraryException("Library '" + librarykey + "' does not exist! (lookup: '" + key + "')");
@@ -199,7 +195,7 @@ public class Library extends AbstractLogEnabled {
         private String dependencyURI;
         private Object shared;
 
-        public Dependency(String dependencySourceURI) throws Exception {
+        public Dependency(String dependencySourceURI) throws LibraryException {
             this.dependencyURI = dependencySourceURI;
             Library lib = manager.load(this.dependencyURI, sourceURI);
             this.shared = lib.shared;
