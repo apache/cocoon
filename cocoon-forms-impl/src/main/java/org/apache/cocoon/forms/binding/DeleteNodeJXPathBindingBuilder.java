@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant;
+
 import org.w3c.dom.Element;
 
 /**
@@ -30,8 +31,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class DeleteNodeJXPathBindingBuilder
-    extends JXPathBindingBuilderBase {
+public class DeleteNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link DeleteNodeJXPathBinding}.
@@ -39,12 +39,12 @@ public class DeleteNodeJXPathBindingBuilder
     public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) throws BindingException {
         CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
-//      do inheritance
-        DeleteNodeJXPathBinding otherBinding = (DeleteNodeJXPathBinding)assistant.getContext().getSuperBinding();
-        if(otherBinding!=null) {
-        	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(),commonAtts);
+        // do inheritance
+        DeleteNodeJXPathBinding otherBinding = (DeleteNodeJXPathBinding) assistant.getContext().getSuperBinding();
+        if (otherBinding != null) {
+            commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(), commonAtts);
         }
-        
+
         return new DeleteNodeJXPathBinding(commonAtts);
     }
 }

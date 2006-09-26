@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.location.LocationAttributes;
+
 import org.w3c.dom.Element;
 
 /**
@@ -64,7 +65,8 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
      * @return JXPathBindingBase
      */
     public JXPathBindingBase buildBinding(Element bindingElm,
-            JXPathBindingManager.Assistant assistant) throws BindingException {
+                                          JXPathBindingManager.Assistant assistant)
+    throws BindingException {
         if (bindingElm.hasAttribute("unique-row-id")) {
             throw new BindingException("Attribute 'unique-row-id' is no more supported, use <fb:identity> instead",
                                        LocationAttributes.getLocation(bindingElm));
@@ -87,9 +89,9 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
                     DomHelper.getAttribute(bindingElm, "row-path", null);
             String rowPathForInsert =
                 DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
-            String adapterClass = 
+            String adapterClass =
             	DomHelper.getAttribute(bindingElm, "adapter-class", null);
-            
+
 //          do inheritance
             RepeaterJXPathBinding otherBinding = (RepeaterJXPathBinding)assistant.getContext().getSuperBinding();
             JXPathBindingBase[] existingOnBind = null;
@@ -175,18 +177,15 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 // Use the children of the current element
                 childBindings = assistant.makeChildBindings(bindingElm, existingOnBind);
             }
-            
-            RepeaterJXPathBinding repeaterBinding =
-                new EnhancedRepeaterJXPathBinding(commonAtts, repeaterId, parentPath,
-                        rowPath, rowPathForInsert,
-                        childBindings, insertBinding, deleteBindings, identityBinding, adapterClass);
-            return repeaterBinding;
+
+            return new EnhancedRepeaterJXPathBinding(commonAtts, repeaterId, parentPath,
+                    rowPath, rowPathForInsert,
+                    childBindings, insertBinding, deleteBindings, identityBinding, adapterClass);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException(
-                    "Error building repeater binding defined at " +
-                    DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building repeater binding defined at " +
+                            DomHelper.getLocation(bindingElm), e);
         }
     }
 }

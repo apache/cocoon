@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,9 +17,10 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.forms.binding.JXPathBindingBuilderBase.CommonAttributes;
+
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.ClassUtils;
+
 import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
@@ -37,9 +38,9 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
      * the relative contextPath for the sub-bindings of this context
      */
     private final String xpath;
-    
+
     /**
-     * The name of a factory class for building intermediate elements. Must implement 
+     * The name of a factory class for building intermediate elements. Must implement
      * {@link org.apache.commons.jxpath.AbstractFactory}.
      */
     private AbstractFactory factory;
@@ -47,7 +48,9 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
     /**
      * Constructs ContextJXPathBinding for the specified xpath sub-context
      */
-    public ContextJXPathBinding(CommonAttributes commonAtts, String contextPath, JXPathBindingBase[] childBindings) {
+    public ContextJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                String contextPath,
+                                JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.xpath = contextPath;
     }
@@ -55,7 +58,10 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
     /**
      * Constructs ContextJXPathBinding for the specified xpath sub-context and optional JXPath factory class.
      */
-    public ContextJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String contextPath, String factoryClassName, JXPathBindingBase[] childBindings) {
+    public ContextJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                String contextPath,
+                                String factoryClassName,
+                                JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.xpath = contextPath;
         if (factoryClassName != null) {
@@ -66,7 +72,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
             }
         }
     }
-    
+
     public String getFactoryClassName() {
         return this.factory == null ? null : this.factory.getClass().getName();
     }
@@ -109,7 +115,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
             getLogger().debug("done saving " + toString());
         }
     }
-    
+
     /** To allow child classes to know which path they bind to */
     public String getXPath() {
         return this.xpath;

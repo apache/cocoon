@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
@@ -43,12 +44,12 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
      * @param childBindings
      */
     public NewJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
-            String widgetId, JXPathBindingBase[] childBindings) {
+                            String widgetId, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.classBinding = null;
     }
-    
+
     public String getId() { return widgetId; }
 
     /**
@@ -67,8 +68,9 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        if (classBinding == null)
+        if (classBinding == null) {
             resolve();
+        }
         Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
         if (subBindings != null) {
             int size = subBindings.length;
@@ -84,8 +86,9 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        if (classBinding == null)
+        if (classBinding == null) {
             resolve();
+        }
         Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
         if (subBindings != null) {
             int size = subBindings.length;

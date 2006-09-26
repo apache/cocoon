@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant;
 import org.apache.cocoon.forms.util.DomHelper;
+
 import org.w3c.dom.Element;
 
 /**
@@ -51,6 +52,7 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
+
     private static final Class[] DOMELEMENT_METHODARGS;
     private static final Class[] EMPTY_METHODARGS;
 
@@ -68,8 +70,8 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
      * @return the freshly built binding based on the configuration element
      * @throws BindingException
      */
-    public JXPathBindingBase buildBinding(Element bindingElm,
-        Assistant assistant) throws BindingException {
+    public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant)
+    throws BindingException {
 
         try {
             CommonAttributes commonAtts =
@@ -116,16 +118,19 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
             }
 
             // do inheritance
-            CustomJXPathBinding otherBinding = (CustomJXPathBinding)assistant.getContext().getSuperBinding();
-            if(otherBinding!=null) {
-            	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(),commonAtts);
+            CustomJXPathBinding otherBinding = (CustomJXPathBinding) assistant.getContext().getSuperBinding();
+            if (otherBinding != null) {
+                commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(), commonAtts);
 
-            	if(xpath==null)
-            		xpath = otherBinding.getXPath();
-            	if(widgetId==null)
-            		widgetId = otherBinding.getId();
-            	if(bindingInstance==null)
-            		bindingInstance = otherBinding.getWrappedBinding();
+                if (xpath == null) {
+                    xpath = otherBinding.getXPath();
+                }
+                if (widgetId == null) {
+                    widgetId = otherBinding.getId();
+                }
+                if (bindingInstance == null) {
+                    bindingInstance = otherBinding.getWrappedBinding();
+                }
             }
 
             CustomJXPathBinding customBinding =

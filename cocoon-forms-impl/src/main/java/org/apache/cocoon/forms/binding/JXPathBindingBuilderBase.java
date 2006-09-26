@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,11 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.commons.lang.BooleanUtils;
+
 import org.apache.commons.jxpath.AbstractFactory;
+import org.apache.commons.lang.BooleanUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -43,6 +45,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
     private Logger logger;
 
+
     /**
      * Receives the Avalon logger to use.
      */
@@ -52,7 +55,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
             logger.debug("JXPathBindingBuilderBase got logger...");
         }
     }
-    
+
 
     /**
      * Makes the logger available to the subclasses.
@@ -71,9 +74,9 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
      * @param assistant
      * @return JXPathBindingBase
      */
-    public abstract JXPathBindingBase buildBinding(
-        Element bindingElm,
-        JXPathBindingManager.Assistant assistant) throws BindingException;
+    public abstract JXPathBindingBase buildBinding(Element bindingElm,
+                                                   JXPathBindingManager.Assistant assistant)
+    throws BindingException;
 
     /**
      * Helper method for interpreting the common attributes which are supported
@@ -116,13 +119,13 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
             String leniency = DomHelper.getAttribute(bindingElm, "lenient", null);
 
-            //TODO: current jxpath is not inheriting registered namespaces over to 
-            // child-relative jxpath contexts --> because of that we can't just 
-            // remember the getLocalNSDeclarations but need the full set from 
+            //TODO: current jxpath is not inheriting registered namespaces over to
+            // child-relative jxpath contexts --> because of that we can't just
+            // remember the getLocalNSDeclarations but need the full set from
             // getInheritedNSDeclarations
             // IMPORTANT NOTE: if jxpath would change this behaviour we would however
-            // still need to be able to unregister namespace-declarations 
-            // (in a smart way: unhide what is possably available from your parent.   
+            // still need to be able to unregister namespace-declarations
+            // (in a smart way: unhide what is possably available from your parent.
             // So both changes to jxpath need to be available before changing the below.
             Map nsDeclarationMap = DomHelper.getInheritedNSDeclarations(bindingElm);
             // we (actually jxpath) doesn't support un-prefixed namespace-declarations:
@@ -141,7 +144,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
                     throw new BindingException("Error with specified jxpath factory " + jxPathFactoryName, e);
                 }
             }
-            
+
             return new CommonAttributes(location, direction, leniency, nsDeclarationMap, jxPathFactory);
         } catch (BindingException e) {
             throw e;
@@ -149,45 +152,45 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
             throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
      }
-    
+
     public static CommonAttributes mergeCommonAttributes(CommonAttributes existing, CommonAttributes extra) {
-    	
-    	if (extra == null)
-    		return existing;
-    	
-    	Boolean leniency = null;
-    	if(existing.leniency==null)
-    		leniency = extra.leniency;
-    	else
-    		leniency = existing.leniency;
-    	
-    	String strLeniency = null;
-    	if(leniency != null)
-    		strLeniency = leniency.toString();
-    	
-    	String direction = existing.direction;
-    	if(extra.direction!=null) // was defined
-    		direction = extra.direction;
+
+    	if (extra == null) {
+            return existing;
+        }
+
+        Boolean leniency;
+        if (existing.leniency == null)
+            leniency = extra.leniency;
+        else
+            leniency = existing.leniency;
+
+        String strLeniency = null;
+        if (leniency != null)
+            strLeniency = leniency.toString();
+
+        String direction = existing.direction;
+        if (extra.direction != null) // was defined
+            direction = extra.direction;
 
         AbstractFactory jxPathFactory = existing.jxPathFactory;
         if (extra.jxPathFactory != null)
             jxPathFactory = extra.jxPathFactory;
 
-
-        return new CommonAttributes(extra.location,direction,strLeniency,extra.nsDeclarations, jxPathFactory);
+        return new CommonAttributes(extra.location, direction, strLeniency, extra.nsDeclarations, jxPathFactory);
     }
 
-     /**
-      * CommonAttributes is a simple helper class for holding the distinct data
-      * member fields indicating the activity of the separate load and save
-      * actions of a given binding.
-      */
-     public static class CommonAttributes{
+    /**
+     * CommonAttributes is a simple helper class for holding the distinct data
+     * member fields indicating the activity of the separate load and save
+     * actions of a given binding.
+     */
+    public static class CommonAttributes{
 
-    	/**
-    	 * store direction (load/save enabledness) too for easier merging
-    	 */
-    	String direction;
+        /**
+         * store direction (load/save enabledness) too for easier merging
+         */
+        String direction;
         /**
          * Source location of this binding.
          */
@@ -201,29 +204,30 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          */
         final boolean saveEnabled;
         /**
-         * Flag which controls whether the jxpath context used by this binding 
-         * should be operating in lenient mode or not 
+         * Flag which controls whether the jxpath context used by this binding
+         * should be operating in lenient mode or not
          */
         final Boolean leniency;
         /**
-         * Array of namespace-declarations (prefix-uri pairs) that need to be set on the jxpath 
+         * Array of namespace-declarations (prefix-uri pairs) that need to be set on the jxpath
          */
         final Map nsDeclarations;
-         /**
-          * The factory to be set on the JXPath Context object
-          */
+        /**
+         * The factory to be set on the JXPath Context object
+         */
         final AbstractFactory jxPathFactory;
 
         final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null, null, null);
 
-        CommonAttributes(String location, String direction, String leniency, Map nsDeclarations, AbstractFactory jxPathFactory){
+        CommonAttributes(String location, String direction, String leniency,
+                         Map nsDeclarations, AbstractFactory jxPathFactory){
             this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency), nsDeclarations, jxPathFactory);
             this.direction = direction;
         }
 
         CommonAttributes(String location, boolean loadEnabled, boolean saveEnabled, Boolean leniency,
-                Map nsDeclarations, AbstractFactory jxPathFactory){
-        	this.direction = null;
+                         Map nsDeclarations, AbstractFactory jxPathFactory){
+            this.direction = null;
             this.location = location;
             this.loadEnabled = loadEnabled;
             this.saveEnabled = saveEnabled;
