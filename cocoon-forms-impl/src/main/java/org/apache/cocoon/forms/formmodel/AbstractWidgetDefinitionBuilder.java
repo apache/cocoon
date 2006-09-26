@@ -115,7 +115,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         setCreateListeners(widgetElement, definition);
     }
 
-    private void setCommonProperties(Element widgetElement, AbstractWidgetDefinition widgetDefinition)
+    protected void setCommonProperties(Element widgetElement, AbstractWidgetDefinition widgetDefinition)
     throws Exception {
 
         // id
@@ -226,7 +226,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         widgetDefinition.setDisplayData(displayData);
     }
 
-    private void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition)
+    protected void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition)
     throws Exception {
         Element validatorElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "validation");
         if (validatorElement != null) {
@@ -250,7 +250,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         }
     }
 
-    private void setCreateListeners(Element widgetElement, AbstractWidgetDefinition widgetDefinition)
+    protected void setCreateListeners(Element widgetElement, AbstractWidgetDefinition widgetDefinition)
     throws Exception {
         Iterator i = buildEventListeners(widgetElement, "on-create", CreateListener.class).iterator();
         while (i.hasNext()) {
