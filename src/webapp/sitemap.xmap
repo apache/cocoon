@@ -592,8 +592,8 @@
 		  <map:read src="resources/{1}/{2}"/>
 		</map:when>
 		<!-- For Cocoon development, read directly from source directories
-                <map:when test="../../src/blocks/{1}/java/org/apache/cocoon/{1}/resources/{2}">
-                  <map:read src="../../src/blocks/{1}/java/org/apache/cocoon/{1}/resources/{2}"/>
+          <map:when test="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}">
+              <map:read src="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}"/>
 	        </map:when>
 		-->
 		<map:otherwise>
