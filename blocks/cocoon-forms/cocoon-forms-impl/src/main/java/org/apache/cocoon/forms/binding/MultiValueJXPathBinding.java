@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,9 +21,11 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 
@@ -42,10 +44,14 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
     private final Convertor convertor;
     private final Locale convertorLocale;
 
-    public MultiValueJXPathBinding(
-        JXPathBindingBuilderBase.CommonAttributes commonAtts, String multiValueId,
-        String multiValuePath, String rowPath,
-        JXPathBindingBase[] updateBindings, Convertor convertor, Locale convertorLocale) {
+
+    public MultiValueJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                   String multiValueId,
+                                   String multiValuePath,
+                                   String rowPath,
+                                   JXPathBindingBase[] updateBindings,
+                                   Convertor convertor,
+                                   Locale convertorLocale) {
         super(commonAtts);
         this.multiValueId = multiValueId;
         this.multiValuePath = multiValuePath;
@@ -54,7 +60,12 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
         this.convertor = convertor;
         this.convertorLocale = convertorLocale;
     }
-    
+
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        this.updateBinding.enableLogging(logger);
+    }
+
     public String getId() { return multiValueId; }
     public String getMultiValuePath() { return multiValuePath; }
     public String getRowPath() { return rowPath; }
@@ -112,11 +123,11 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
         JXPathContext multiValueContext = jctx.getRelativeContext(jctx.createPath(this.multiValuePath));
 
         // Delete all that is already present
-        
-        // Unfortunately the following statement doesn't work (it doesn't removes all elements from the 
+
+        // Unfortunately the following statement doesn't work (it doesn't removes all elements from the
         // list because of a bug in JXPath I wasn't able to locate).
         //multiValueContext.removeAll(this.rowPath);
-        
+
         // TODO: This is a workaround until the bug in commons-jxpath is found, fixed and released
         Iterator rowPointers = multiValueContext.iteratePointers(this.rowPath);
         int cnt = 0;
@@ -167,8 +178,4 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
         return "MultiValueJXPathBinding [widget=" + this.multiValueId + ", xpath=" + this.multiValuePath + "]";
     }
 
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.updateBinding.enableLogging(logger);
-    }
 }

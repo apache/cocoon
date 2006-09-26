@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,9 +24,11 @@ import java.util.Map;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+
 import org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+
 import org.mozilla.javascript.Function;
 import org.w3c.dom.Element;
 
@@ -68,15 +70,18 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase implements Contextualizable {
+public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase
+                                            implements Contextualizable {
 
     private Context avalonContext;
+
 
     public void contextualize(Context context) throws ContextException {
         this.avalonContext = context;
     }
 
-    public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
+    public JXPathBindingBase buildBinding(Element element, Assistant assistant)
+    throws BindingException {
         try {
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(element);
 
@@ -84,22 +89,25 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
             String path = DomHelper.getAttribute(element, "path", null);
 
             JavaScriptJXPathBinding otherBinding = (JavaScriptJXPathBinding)assistant.getContext().getSuperBinding();
-            
-            if(otherBinding!=null) {
-            	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(),commonAtts);
-            	
-            	if(id==null)
-            		id=otherBinding.getId();
-            	if(path==null)
-            		path=otherBinding.getPath();
+
+            if (otherBinding != null) {
+                commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(), commonAtts);
+
+                if (id == null) {
+                    id = otherBinding.getId();
+                }
+                if (path == null) {
+                    path = otherBinding.getPath();
+                }
             }
-            
+
             // Build load script
             Function loadScript = null;
             if (commonAtts.loadEnabled) {
-                if (otherBinding != null)
-                	loadScript = otherBinding.getLoadScript();
-            	
+                if (otherBinding != null) {
+                    loadScript = otherBinding.getLoadScript();
+                }
+
                 Element loadElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "load-form");
                 if (loadElem != null) {
                 	loadScript = JavaScriptHelper.buildFunction(loadElem, "loadForm", JavaScriptJXPathBinding.LOAD_PARAMS);
@@ -109,9 +117,10 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
             // Build save script
             Function saveScript = null;
             if (commonAtts.saveEnabled) {
-            	if (otherBinding != null)
-            		saveScript = otherBinding.getSaveScript();
-            	
+            	if (otherBinding != null) {
+                    saveScript = otherBinding.getSaveScript();
+                }
+
                 Element saveElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "save-form");
                 if (saveElem != null) {
                 	saveScript = JavaScriptHelper.buildFunction(saveElem, "saveForm", JavaScriptJXPathBinding.SAVE_PARAMS);
@@ -120,16 +129,16 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
 
             // Build child bindings
             Map childBindings = new HashMap();
-            
+
             if (otherBinding != null) {
             	Map otherChildren = otherBinding.getChildBindingsMap();
-            	Iterator it = otherChildren.entrySet().iterator();
-            	while(it.hasNext()) {
-            		Map.Entry entry = (Map.Entry)it.next();
-            		childBindings.put(entry.getKey(),entry.getValue());
-            	}
+                Iterator it = otherChildren.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry entry = (Map.Entry) it.next();
+                    childBindings.put(entry.getKey(), entry.getValue());
+                }
             }
-            
+
             Element[] children = DomHelper.getChildElements(element, BindingManager.NAMESPACE, "child-binding");
             if (children.length != 0) {
                 for (int i = 0; i < children.length; i++) {
@@ -137,13 +146,13 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
 
                     // Get the binding name and check its uniqueness
                     String name = DomHelper.getAttribute(child, "name");
-                    
+
                     JXPathBindingBase[] otherBindings = null;
                     if (childBindings.containsKey(name)) {
                         //throw new BindingException("Duplicate name '" + name + "' at " + DomHelper.getLocation(child));
                     	otherBindings = ((ComposedJXPathBindingBase)childBindings.get(name)).getChildBindings();
                     }
-                    
+
                     // Build the child binding
                     JXPathBindingBase[] bindings = assistant.makeChildBindings(child,otherBindings);
                     if (bindings == null) {
@@ -157,7 +166,7 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
             }
 
             JXPathBindingBase result = new JavaScriptJXPathBinding(this.avalonContext, commonAtts, id, path, loadScript, saveScript,
-                Collections.unmodifiableMap(childBindings));
+                    Collections.unmodifiableMap(childBindings));
             result.enableLogging(getLogger());
             return result;
 

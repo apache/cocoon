@@ -17,21 +17,18 @@
 package org.apache.cocoon.forms.binding;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.forms.formmodel.Repeater;
-import org.apache.cocoon.forms.formmodel.RepeaterDefinition;
-import org.apache.cocoon.forms.formmodel.Widget;
-import org.apache.cocoon.forms.formmodel.Repeater.RepeaterRow;
+
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
+import org.apache.cocoon.forms.formmodel.Repeater;
+import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
@@ -57,12 +54,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(
-            JXPathBindingBuilderBase.CommonAttributes commonAtts,
-            String repeaterId, String repeaterPath, String rowPath,
-            String rowPathForInsert,
-            JXPathBindingBase[] childBindings, JXPathBindingBase insertBinding,
-            JXPathBindingBase[] deleteBindings, JXPathBindingBase[] identityBindings) {
+    public RepeaterJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                 String repeaterId,
+                                 String repeaterPath,
+                                 String rowPath,
+                                 String rowPathForInsert,
+                                 JXPathBindingBase[] childBindings,
+                                 JXPathBindingBase insertBinding,
+                                 JXPathBindingBase[] deleteBindings,
+                                 JXPathBindingBase[] identityBindings) {
         super(commonAtts);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
@@ -98,6 +98,20 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
         else
             this.identityBinding = null;
+    }
+
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        if (this.deleteRowBinding != null) {
+            this.deleteRowBinding.enableLogging(logger);
+        }
+        if (this.insertRowBinding != null) {
+            this.insertRowBinding.enableLogging(logger);
+        }
+        this.rowBinding.enableLogging(logger);
+        if (this.identityBinding != null) {
+            this.identityBinding.enableLogging(logger);
+        }
     }
 
     public String getId() { return repeaterId; }
@@ -382,19 +396,4 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         return "RepeaterJXPathBinding [widget=" + this.repeaterId +
                 ", xpath=" + this.repeaterPath + "]";
     }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        if (this.deleteRowBinding != null) {
-            this.deleteRowBinding.enableLogging(logger);
-        }
-        if (this.insertRowBinding != null) {
-            this.insertRowBinding.enableLogging(logger);
-        }
-        this.rowBinding.enableLogging(logger);
-        if (this.identityBinding != null) {
-            this.identityBinding.enableLogging(logger);
-        }
-    }
-
 }
