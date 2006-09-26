@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1919" due-to="Guillaume Déflache" due-to-email="guillaume@anyware-tech.com">
+      In AbstractWidgetDefinitionBuilder, methods "setValidators", "setCreateListeners", and "setCommonProperties" now have visibility "protected" instead of "private"
+    </action>
     <action dev="AN" type="fix">
       Core: Rewrite of WildcardMatcherHelper where the heavy-lifting is left to the regexp library.
       That fixes a false positive where "menu/foo/bar.xml" was matched by "menu/*.xml" in the old
