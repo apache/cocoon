@@ -45,6 +45,8 @@ public interface EntryManager {
 	public Map find(String context, Map match_attributes) throws ProcessingException;
 	
 	public void modify(String entry_name, int mod_operand, Map mod_attributes) throws ProcessingException;
+
+	public void remove(String entry_name) throws ProcessingException;
 	
 }
 

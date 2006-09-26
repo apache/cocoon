@@ -50,7 +50,7 @@ import org.apache.cocoon.ProcessingException;
  *   Example configuration (goes in cocoon.xconf)
  *   <pre><tt>
  *	&lt;component role="org.apache.cocoon.component.EntryManager" class="org.apache.cocoon.components.naming.LDAPEntryManager" logger="flow.ldap"&gt;
- *	  &lt;parameter name="ldap-host" value="hostname:port"/&gt;
+ *	  &lt;parameter name="ldap-host" value="ldap://hostname:port"/&gt;
  *	  &lt;parameter name="ldap-base" value="dc=example,dc=com"/&gt;
  *	  &lt;parameter name="ldap-user" value="username"/&gt;
  *	  &lt;parameter name="ldap-pass" value="password"/&gt;
@@ -257,6 +257,24 @@ public class LDAPEntryManager
 			context.modifyAttributes (name, mod_op, map2Attributes (attributes));
 		} catch (Exception e) {
 			getLogger ().error ("LDAPEntryManager.modify() :" + e.getMessage());
+			throw new ProcessingException (e);
+		}
+	}
+
+	/**
+	 *	Deletes an Entry
+	 *
+	 * 	@param  name  The name of the Entry to delete
+	 */
+	public void remove(String name) throws ProcessingException {
+		try {
+			if (this.context == null) initialize ();
+			if (getLogger ().isDebugEnabled ()) {
+				getLogger ().debug ("LDAPEntryManager destorying Context: " + name);
+			}
+			context.destroySubcontext (name);
+		} catch (Exception e) {
+			getLogger ().error ("LDAPEntryManager.deleteSubcontext() :" + e.getStackTrace().toString());
 			throw new ProcessingException (e);
 		}
 	}
