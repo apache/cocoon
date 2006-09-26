@@ -1465,59 +1465,65 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     private void i18nCharacters(String textValue) throws SAXException {
-        // Trim text values to avoid parsing errors.
-        textValue = textValue.trim();
-        if (textValue.length() == 0) {
-            return;
-        }
-
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug( "i18n message text = '" + textValue + "'" );
+            getLogger().debug("i18n message text = '" + textValue + "'");
         }
 
-        char[] ch = textValue.toCharArray();
+        SaxBuffer buffer;
         switch (current_state) {
             case STATE_INSIDE_TEXT:
-                text_recorder.characters(ch, 0, ch.length);
+                buffer = text_recorder;
                 break;
 
             case STATE_INSIDE_PARAM:
-                param_recorder.characters(ch, 0, ch.length);
+                buffer = param_recorder;
                 break;
 
             case STATE_INSIDE_WHEN:
             case STATE_INSIDE_OTHERWISE:
                 // Previously handeld to avoid the String() conversion.
-                break;
+                return;
 
             case STATE_INSIDE_TRANSLATE:
-                if(tr_text_recorder == null) {
+                if (tr_text_recorder == null) {
                     tr_text_recorder = new ParamSaxBuffer();
                 }
-                tr_text_recorder.characters(ch, 0, ch.length);
+                buffer = tr_text_recorder;
                 break;
 
             case STATE_INSIDE_CHOOSE:
                 // No characters allowed. Send an exception ?
-                getLogger().debug("No characters allowed inside <i18n:choose> tags");
-                break;
+                if (getLogger().isDebugEnabled()) {
+                    textValue = textValue.trim();
+                    if (textValue.length() > 0) {
+                        getLogger().debug("No characters allowed inside <i18n:choose> tag. Received: " + textValue);
+                    }
+                }
+                return;
 
             case STATE_INSIDE_DATE:
             case STATE_INSIDE_DATE_TIME:
             case STATE_INSIDE_TIME:
             case STATE_INSIDE_NUMBER:
-                if (formattingParams.get(I18N_VALUE_ATTRIBUTE) == null) {
-                    formattingParams.put(I18N_VALUE_ATTRIBUTE, textValue);
-                } else {
-                    // ignore the text inside of date element
+                // Trim text values to avoid parsing errors.
+                textValue = textValue.trim();
+                if (textValue.length() > 0) {
+                    if (formattingParams.get(I18N_VALUE_ATTRIBUTE) == null) {
+                        formattingParams.put(I18N_VALUE_ATTRIBUTE, textValue);
+                    } else {
+                        // ignore the text inside of date element
+                    }
                 }
-                break;
+                return;
 
             default:
                 throw new IllegalStateException(getClass().getName() +
                                                 " developer's fault: characters not handled. " +
                                                 "Current state: " + current_state);
         }
+
+        char[] ch = textValue.toCharArray();
+        buffer.characters(ch, 0, ch.length);
     }
 
     // Translate all attributes that are listed in i18n:attr attribute
