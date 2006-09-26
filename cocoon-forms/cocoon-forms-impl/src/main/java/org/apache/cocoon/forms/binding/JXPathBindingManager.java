@@ -32,6 +32,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.CacheManager;
 import org.apache.cocoon.forms.binding.library.Library;
@@ -42,9 +45,8 @@ import org.apache.cocoon.forms.datatype.DatatypeManager;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.SimpleServiceSelector;
 import org.apache.cocoon.util.location.LocationAttributes;
+
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -56,9 +58,9 @@ import org.xml.sax.InputSource;
  *
  * @version $Id$
  */
-public class JXPathBindingManager extends AbstractLogEnabled implements
-BindingManager, Contextualizable, Serviceable, Disposable, Initializable, Configurable,
-ThreadSafe {
+public class JXPathBindingManager extends AbstractLogEnabled
+                                  implements BindingManager, Contextualizable, Serviceable,
+                                             Configurable, Initializable, Disposable, ThreadSafe {
 
     private static final String PREFIX = "CocoonFormBinding:";
 
@@ -76,6 +78,7 @@ ThreadSafe {
 
     protected LibraryManagerImpl libraryManager;
 
+
     public void contextualize(Context context) throws ContextException {
         this.avalonContext = context;
     }
@@ -92,8 +95,7 @@ ThreadSafe {
     }
 
     public void initialize() throws Exception {
-        bindingBuilderSelector = new SimpleServiceSelector("binding",
-                JXPathBindingBuilderBase.class);
+        bindingBuilderSelector = new SimpleServiceSelector("binding", JXPathBindingBuilderBase.class);
         LifecycleHelper.setupComponent(bindingBuilderSelector,
                 getLogger(),
                 this.avalonContext,
@@ -202,7 +204,7 @@ ThreadSafe {
 
         private BindingBuilderContext context = new BindingBuilderContext();
         private Stack contextStack = new Stack();
-        
+
         private JXPathBindingBuilderBase getBindingBuilder(String bindingType)
         throws BindingException {
             try {
@@ -219,8 +221,8 @@ ThreadSafe {
          * Creates a {@link Binding} following the specification in the
          * provided config element.
          */
-        public JXPathBindingBase getBindingForConfigurationElement(
-                Element configElm) throws BindingException {
+        public JXPathBindingBase getBindingForConfigurationElement(Element configElm)
+        throws BindingException {
             String bindingType = configElm.getLocalName();
             JXPathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
 
@@ -289,13 +291,13 @@ ThreadSafe {
                         list.add(extra[i]);
                     }
                 }
-            }	
+            }
             return (JXPathBindingBase[])list.toArray(new JXPathBindingBase[list.size()]);
         }
 
         /**
          * proxy for compatibility
-         * 
+         *
          */
         public JXPathBindingBase[] makeChildBindings(Element parentElement) throws BindingException {
             return makeChildBindings(parentElement,new JXPathBindingBase[0]);
@@ -377,8 +379,8 @@ ThreadSafe {
         }
 
         private void popContext() {
-            if(!contextStack.empty()) {
-                context = (BindingBuilderContext)contextStack.pop();
+            if (!contextStack.empty()) {
+                context = (BindingBuilderContext) contextStack.pop();
             } else {
                 context = new BindingBuilderContext();
             }

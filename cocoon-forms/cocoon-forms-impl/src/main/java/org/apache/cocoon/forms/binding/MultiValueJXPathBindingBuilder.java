@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.i18n.I18nUtils;
+
 import org.w3c.dom.Element;
 
 /**
@@ -40,12 +41,11 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class MultiValueJXPathBindingBuilder
-    extends JXPathBindingBuilderBase {
+public class MultiValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
-    public JXPathBindingBase buildBinding(
-        Element bindingElem,
-        JXPathBindingManager.Assistant assistant) throws BindingException {
+    public JXPathBindingBase buildBinding(Element bindingElem,
+                                          JXPathBindingManager.Assistant assistant)
+    throws BindingException {
 
         try {
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElem);
@@ -54,7 +54,6 @@ public class MultiValueJXPathBindingBuilder
             String parentPath = DomHelper.getAttribute(bindingElem, "parent-path", null);
             String rowPath = DomHelper.getAttribute(bindingElem, "row-path", null);
 
-            
             Convertor convertor = null;
             Locale convertorLocale = Locale.US;
             Element convertorEl = DomHelper.getChildElement(bindingElem, FormsConstants.DEFINITION_NS, "convertor");
@@ -67,26 +66,26 @@ public class MultiValueJXPathBindingBuilder
 
                 convertor = assistant.getDatatypeManager().createConvertor(datatype, convertorEl);
             }
-            
-            MultiValueJXPathBinding existingBinding = (MultiValueJXPathBinding)assistant.getContext().getSuperBinding();
-            JXPathBindingBase[] existingBindings = new JXPathBindingBase[0]; 
-            if(existingBinding != null) {
-            	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(existingBinding.getCommonAtts(),commonAtts);
-            	existingBindings = existingBinding.getUpdateBinding().getChildBindings();
-            	
-            	if(multiValueId == null)
-            		multiValueId = existingBinding.getId();
-            	if(parentPath == null)
-            		parentPath = existingBinding.getMultiValuePath();
-            	if(rowPath == null)
-            		rowPath = existingBinding.getRowPath();
-            	
-            	if(convertor == null) {
-            		convertor = existingBinding.getConvertor();
-            		convertorLocale = existingBinding.getLocale();
-            	}	
+
+            MultiValueJXPathBinding existingBinding = (MultiValueJXPathBinding) assistant.getContext().getSuperBinding();
+            JXPathBindingBase[] existingBindings = new JXPathBindingBase[0];
+            if (existingBinding != null) {
+                commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(existingBinding.getCommonAtts(), commonAtts);
+                existingBindings = existingBinding.getUpdateBinding().getChildBindings();
+
+                if (multiValueId == null)
+                    multiValueId = existingBinding.getId();
+                if (parentPath == null)
+                    parentPath = existingBinding.getMultiValuePath();
+                if (rowPath == null)
+                    rowPath = existingBinding.getRowPath();
+
+                if (convertor == null) {
+                    convertor = existingBinding.getConvertor();
+                    convertorLocale = existingBinding.getLocale();
+                }
             }
-            
+
             Element updateWrapElement =
                 DomHelper.getChildElement(bindingElem, BindingManager.NAMESPACE, "on-update");
             JXPathBindingBase[] updateBindings = assistant.makeChildBindings(updateWrapElement,existingBindings);

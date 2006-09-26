@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,10 @@ package org.apache.cocoon.forms.binding;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 import org.w3c.dom.Document;
@@ -49,12 +51,17 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
     private final boolean deleteIfEmpty;
     private final boolean virtualRows;
 
-    public TempRepeaterJXPathBinding(
-            JXPathBindingBuilderBase.CommonAttributes commonAtts,
-            String repeaterId, String repeaterPath,
-            String rowPath, String rowPathInsert,
-            boolean virtualRows, boolean clearOnLoad, boolean deleteIfEmpty,
-            JXPathBindingBase rowBinding, JXPathBindingBase insertBinding) {
+
+    public TempRepeaterJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                     String repeaterId,
+                                     String repeaterPath,
+                                     String rowPath,
+                                     String rowPathInsert,
+                                     boolean virtualRows,
+                                     boolean clearOnLoad,
+                                     boolean deleteIfEmpty,
+                                     JXPathBindingBase rowBinding,
+                                     JXPathBindingBase insertBinding) {
         super(commonAtts);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
@@ -68,7 +75,15 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         this.clearOnLoad = clearOnLoad;
         this.deleteIfEmpty = deleteIfEmpty;
     }
-    
+
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        if (this.insertRowBinding != null) {
+            this.insertRowBinding.enableLogging(logger);
+        }
+        this.rowBinding.enableLogging(logger);
+    }
+
     public String getId() { return repeaterId; }
     public String getRepeaterPath() { return repeaterPath; }
     public String getRowPath() { return rowPath; }
@@ -95,7 +110,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                 "TempRepeaterJXPathBinding: Repeater \"" + fullId + this.repeaterId +
                 "\" does not exist (" + frmModel.getLocation() + ")");
         }
- 
+
         // Start by clearing the repeater, if necessary.
         if (this.clearOnLoad) {
             repeater.clear();
@@ -107,7 +122,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         // Check if there is data present.
         //
         // (Otherwise, should we check the leniency config option
-        // to decide whether to be silent or throw an exception?) 
+        // to decide whether to be silent or throw an exception?)
         if (repeaterPointer != null) {
 
             // Narrow to repeater context.
@@ -143,7 +158,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                 // (This implementation of virtual rows currently only supports DOM
                 // bindings, but could easily be extended to support other bindings.)
 
-                if (virtualRows == true) {
+                if (virtualRows) {
                     Node repeaterNode = (Node)repeaterPointer.getNode();
                     Node virtualNode = repeaterNode.getOwnerDocument().createElementNS(null, "virtual");
                     Node node = (Node)rowPointer.getNode();
@@ -198,13 +213,13 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                         JXPathContext rowContext = repeaterContext.getRelativeContext(rowPointer);
 
                         // Variables used for virtual rows.
-                        // They are initialized here just to keep the compiler happy. 
+                        // They are initialized here just to keep the compiler happy.
                         Node rowNode = null;
                         Node virtualNode = null;
 
                         // If virtual rows are requested, create a temporary node and
                         // narrow the context to this initially empty new virtual row.
-                        if (virtualRows == true) {
+                        if (virtualRows) {
                             rowNode = (Node)rowContext.getContextBean();
                             Document document = rowNode.getOwnerDocument();
                             virtualNode = document.createElementNS(null, "virtual");
@@ -222,7 +237,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
                         // If virtual rows are requested, finish by appending the
                         // children of the virtual row to the real context node.
-                        if (virtualRows == true) {
+                        if (virtualRows) {
                             NodeList list = virtualNode.getChildNodes();
                             int count = list.getLength();
                             for (int j = 0; j < count; j++) {
@@ -243,13 +258,5 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
     public String toString() {
         return "TempRepeaterJXPathBinding [widget=" + this.repeaterId + ", xpath=" + this.repeaterPath + "]";
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        if (this.insertRowBinding != null) {
-            this.insertRowBinding.enableLogging(logger);
-        }
-        this.rowBinding.enableLogging(logger);
     }
 }

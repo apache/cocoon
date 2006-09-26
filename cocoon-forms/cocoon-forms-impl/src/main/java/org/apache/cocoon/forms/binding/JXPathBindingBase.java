@@ -21,12 +21,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.cocoon.forms.binding.library.Library;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
+
+import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
-import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.ri.model.beans.BeanPropertyPointer;
 import org.apache.commons.jxpath.util.TypeUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -38,15 +40,14 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  *
  * @version $Id$
  */
-public abstract class JXPathBindingBase
-    extends AbstractLogEnabled
-    implements Binding {
+public abstract class JXPathBindingBase extends AbstractLogEnabled
+                                        implements Binding {
 
     /**
      * the local library, if this is the top binding
      */
     private Library enclosingLibrary;
-    
+
     /**
      * Object holding the values of the common objects on all Bindings.
      */
@@ -62,45 +63,43 @@ public abstract class JXPathBindingBase
      */
     protected Map classes;
 
-    private JXPathBindingBase() {
-        this(JXPathBindingBuilderBase.CommonAttributes.DEFAULT);
-    }
 
-    protected JXPathBindingBase(
-            JXPathBindingBuilderBase.CommonAttributes commonAtts) {
+    protected JXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes commonAtts) {
         this.commonAtts = commonAtts;
     }
-    
+
     public Library getEnclosingLibrary() {
-    	if(parent != null) {
-    		return parent.getEnclosingLibrary();
-    	} else {
-    		return enclosingLibrary;
-    	}
+        if (parent != null) {
+            return parent.getEnclosingLibrary();
+        } else {
+            return enclosingLibrary;
+        }
     }
+
     public void setEnclosingLibrary(Library lib) {
     	this.enclosingLibrary = lib;
     }
-    
+
     public boolean isValid() {
-    	if(this.enclosingLibrary!=null) {
-    		if(parent!=null)
-    			return parent.isValid();
-    		return true; // no library used
-    	} else {
-    		try {
-    			return !this.enclosingLibrary.dependenciesHaveChanged();
-    		} catch(Exception e) {
-    			getLogger().error("Error checking dependencies!",e);
-    			throw new NestableRuntimeException("Error checking dependencies!",e);
-    		}
-    	}
+        if (this.enclosingLibrary != null) {
+            if (parent != null) {
+                return parent.isValid();
+            }
+            return true; // no library used
+        }
+
+        try {
+            return !this.enclosingLibrary.dependenciesHaveChanged();
+        } catch (Exception e) {
+            getLogger().error("Error checking dependencies!", e);
+            throw new NestableRuntimeException("Error checking dependencies!", e);
+        }
     }
-    
+
     public JXPathBindingBuilderBase.CommonAttributes getCommonAtts() {
     	return this.commonAtts;
     }
-    
+
     /**
      * Gets source location of this binding.
      */
@@ -123,18 +122,19 @@ public abstract class JXPathBindingBase
     }
 
     public Binding getClass(String id) {
-        
+
         Binding classBinding = null;
-        
         try {
-            if(this.enclosingLibrary!=null && (classBinding = this.enclosingLibrary.getBinding(id))!=null)
+            if (this.enclosingLibrary != null && (classBinding = this.enclosingLibrary.getBinding(id)) != null) {
                 return classBinding;
-        } catch(Exception ignore) {}
-        
+            }
+        } catch (Exception e) { /* ignored */ }
+
         if (classes != null) {
             // Query cache for class
             classBinding = (Binding)classes.get(id);
         }
+
         if (classBinding == null) {
             // Query parent for class
             if (parent != null) {
@@ -151,29 +151,29 @@ public abstract class JXPathBindingBase
                 throw new RuntimeException("Class \"" + id + "\" not found (" + getLocation() + ")");
             }
         }
+
         return classBinding;
     }
 
     /**
      * Helper method that selects a child-widget with a given id from a parent.
-     *  
-     * @param parent containing the child-widget to return. 
+     *
+     * @param parent containing the child-widget to return.
      * @param id of the childWidget to find, if this is <code>null</code> then the parent is returned.
      * @return the selected widget
-     * 
-     * @throws RuntimeException  if the id is not null and points to a 
-     *   child-widget that cannot be found. 
+     *
+     * @throws RuntimeException  if the id is not null and points to a
+     *   child-widget that cannot be found.
      */
     protected Widget selectWidget(Widget parent, String id) {
-        if (id == null) return parent;
-        
-        Widget childWidget = null;
-        
-        childWidget = parent.lookupWidget(id);
-            
+        if (id == null) {
+            return parent;
+        }
+
+        Widget childWidget = parent.lookupWidget(id);
         if (childWidget == null) {
             String containerId = parent.getRequestParameterName();
-            if(containerId == null || "".equals(containerId)) {
+            if (containerId == null || "".equals(containerId)) {
                 containerId = "top-level form-widget";
             } else {
                 containerId = "container \"" + containerId + "\"";
@@ -182,7 +182,7 @@ public abstract class JXPathBindingBase
                     id + "\" does not exist in the " + containerId +
                     " (" + parent.getLocation() + ").");
         }
-        
+
         return childWidget;
     }
 
@@ -191,7 +191,7 @@ public abstract class JXPathBindingBase
      * Abstract method that subclasses need to implement for specific activity.
      */
     public abstract void doLoad(Widget frmModel, JXPathContext jxpc)
-        throws BindingException;
+    throws BindingException;
 
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather
@@ -233,7 +233,7 @@ public abstract class JXPathBindingBase
      * Abstract method that subclasses need to implement for specific activity.
      */
     public abstract void doSave(Widget frmModel, JXPathContext jxpc)
-            throws BindingException;
+    throws BindingException;
 
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather
@@ -242,7 +242,7 @@ public abstract class JXPathBindingBase
      * depending on the configured value of the "direction" attribute.
      */
     public final void saveFormToModel(Widget frmModel, JXPathContext jxpc)
-            throws BindingException{
+    throws BindingException{
         boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
         applyNSDeclarations(jxpc);
@@ -260,10 +260,10 @@ public abstract class JXPathBindingBase
      * @see org.apache.cocoon.forms.binding.Binding#saveFormToModel(org.apache.cocoon.forms.formmodel.Widget, java.lang.Object)
      */
     public void saveFormToModel(Widget frmModel, Object objModel)
-                throws BindingException {
+    throws BindingException {
         if (objModel != null) {
             JXPathContext jxpc = makeJXPathContext(objModel);
-            saveFormToModel(frmModel, jxpc);    
+            saveFormToModel(frmModel, jxpc);
         } else {
             throw new NullPointerException(
                     "null object passed to saveFormToModel() method");
@@ -276,13 +276,10 @@ public abstract class JXPathBindingBase
         }
     }
 
-    private void applyNSDeclarations(JXPathContext jxpc)
-    {
-        if (this.commonAtts.nsDeclarations != null)
-        {
+    private void applyNSDeclarations(JXPathContext jxpc) {
+        if (this.commonAtts.nsDeclarations != null) {
             Iterator keysIter = this.commonAtts.nsDeclarations.keySet().iterator();
-            while (keysIter.hasNext())
-            {
+            while (keysIter.hasNext()) {
                 String nsuri = (String) keysIter.next();
                 String pfx = (String) this.commonAtts.nsDeclarations.get(nsuri);
                 jxpc.registerNamespace(pfx, nsuri);
@@ -312,25 +309,25 @@ public abstract class JXPathBindingBase
      * JXPath factory that combines the DOMFactory and support for collections.
      */
     private static class BindingJXPathFactory extends DOMFactory {
-        
+
         public boolean createObject(JXPathContext context, Pointer pointer, Object parent, String name, int index) {
             if (createCollectionItem(context, pointer, parent, name, index)) {
                 return true;
-            // AG: If this is a bean, then the object is supposed to exists.  
+            // AG: If this is a bean, then the object is supposed to exists.
             } else if (pointer instanceof BeanPropertyPointer) {
                 return createBeanField(context, pointer, parent, name, index);
             } else {
                 return super.createObject(context, pointer, parent, name, index);
             }
         }
-        
+
         private boolean createCollectionItem(JXPathContext context, Pointer pointer, Object parent, String name, int index) {
             // FIXME: don't clearly understand how this works.
             // see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=111148567029114&w=2
             final Object o = context.getValue(name);
             if (o == null) {
                 return false;
-            } 
+            }
             if (o instanceof Collection) {
                 ((Collection)o).add(null);
             } else if(o.getClass().isArray()) {

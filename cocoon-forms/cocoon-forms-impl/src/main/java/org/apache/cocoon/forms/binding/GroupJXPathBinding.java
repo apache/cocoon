@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.formmodel.Group;
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
@@ -35,19 +36,23 @@ public class GroupJXPathBinding extends ContextJXPathBinding {
 
     private final String widgetId;
 
+
     /**
      * Constructs GroupJXPathBinding
      * @param widgetId
      * @param xpath
      * @param childBindings
      */
-    public GroupJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+    public GroupJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                              String widgetId,
+                              String xpath,
+                              JXPathBindingBase[] childBindings) {
         super(commonAtts, xpath, childBindings);
         this.widgetId = widgetId;
     }
 
     public String getId() { return widgetId; }
-    
+
     /**
      * Narrows the scope on the form-model to the member widget-field, and
      * narrows the scope on the object-model to the member xpath-context

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.util.DomHelper;
+
 import org.w3c.dom.Element;
 
 /**
@@ -31,9 +32,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class SetAttributeJXPathBindingBuilder
-    extends JXPathBindingBuilderBase {
-
+public class SetAttributeJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link SetAttributeJXPathBinding} according to
@@ -50,24 +49,23 @@ public class SetAttributeJXPathBindingBuilder
             String attValue = DomHelper.getAttribute(bindingElm, "value", null);
 
             // do inheritance
-            SetAttributeJXPathBinding otherBinding = (SetAttributeJXPathBinding)assistant.getContext().getSuperBinding();
-            if(otherBinding!=null) {
-            	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(),commonAtts);
-            	
-            	if(attName==null)
-            		attName = otherBinding.getId();
-            	if(attValue==null)
-            		attValue = otherBinding.getValue();
+            SetAttributeJXPathBinding otherBinding = (SetAttributeJXPathBinding) assistant.getContext().getSuperBinding();
+            if (otherBinding != null) {
+                commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(), commonAtts);
+
+                if (attName == null) {
+                    attName = otherBinding.getId();
+                }
+                if (attValue == null) {
+                    attValue = otherBinding.getValue();
+                }
             }
-            
-            SetAttributeJXPathBinding attBinding =
-                new SetAttributeJXPathBinding(commonAtts, attName, attValue);
-            return attBinding;
+
+            return new SetAttributeJXPathBinding(commonAtts, attName, attValue);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException(
-                    "Error building set-attribute binding defined at " +
+            throw new BindingException("Error building set-attribute binding defined at " +
                     DomHelper.getLocation(bindingElm), e);
         }
     }
