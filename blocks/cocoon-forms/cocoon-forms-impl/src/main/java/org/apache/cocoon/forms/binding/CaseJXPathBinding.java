@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,13 +18,14 @@ package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.formmodel.Union;
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
  * CaseJXPathBinding provides an implementation of a {@link Binding}
  * that narrows the context towards provided childbindings.
- * <p>
- * NOTES: <ol>
+ * <p>NOTES:
+ * <ol>
  * <li>This Binding assumes that the provided widget-id points to a
  * case of a union.</li>
  * </ol>
@@ -34,7 +35,6 @@ import org.apache.commons.jxpath.JXPathContext;
 public class CaseJXPathBinding extends ComposedJXPathBindingBase {
 
     private final String xpath;
-
     private final String widgetId;
 
     /**
@@ -44,7 +44,10 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public CaseJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+    public CaseJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                             String widgetId,
+                             String xpath,
+                             JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;

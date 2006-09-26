@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,11 @@ package org.apache.cocoon.forms.binding;
 import java.util.Locale;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.forms.datatype.convertor.Convertor;
+
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
+import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathException;
 
@@ -62,13 +64,18 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      */
     private final Locale convertorLocale;
 
+
     /**
      * Constructs FieldJXPathBinding.
      *
      * @param convertor may be null
      */
-    public ValueJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] updateBindings,
-                              Convertor convertor, Locale convertorLocale) {
+    public ValueJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                              String widgetId,
+                              String xpath,
+                              JXPathBindingBase[] updateBindings,
+                              Convertor convertor,
+                              Locale convertorLocale) {
         super(commonAtts);
         this.fieldId = widgetId;
         this.xpath = xpath;
@@ -76,7 +83,12 @@ public class ValueJXPathBinding extends JXPathBindingBase {
         this.convertor = convertor;
         this.convertorLocale = convertorLocale;
     }
-    
+
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        this.updateBinding.enableLogging(logger);
+    }
+
     public String getId() { return fieldId; }
     public ComposedJXPathBindingBase getUpdateBinding() { return (ComposedJXPathBindingBase)updateBinding; }
 
@@ -157,11 +169,6 @@ public class ValueJXPathBinding extends JXPathBindingBase {
 
     public String toString() {
         return "ValueJXPathBinding [widget=" + this.fieldId + ", xpath=" + this.xpath + "]";
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.updateBinding.enableLogging(logger);
     }
 
     public String getFieldId() {

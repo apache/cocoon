@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
@@ -26,8 +27,8 @@ import org.w3c.dom.Node;
  * InsertNodeJXPathBinding provides an implementation of a {@link Binding}
  * that inserts a clone of some 'template document-fragment' into the target
  * back-end model upon save.
- * <p>
- * NOTES: <ol>
+ * <p>NOTES:
+ * <ol>
  * <li>This Binding does not perform any actions when loading.</li>
  * <li>This expects the back-end model to be an XML file.</li>
  * </ol>
@@ -41,11 +42,12 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs InsertNodeJXPathBinding
      */
-    public InsertNodeJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, DocumentFragment domTemplate) {
+    public InsertNodeJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                   DocumentFragment domTemplate) {
         super(commonAtts);
         this.template = domTemplate;
     }
-    
+
     public DocumentFragment getTemplate() { return template; }
 
     /**

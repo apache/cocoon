@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +17,14 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.util.location.LocationAttributes;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
+
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.location.LocationAttributes;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -43,16 +45,15 @@ import org.w3c.dom.NodeList;
  *
  * @version $Id$
  */
-public class InsertNodeJXPathBindingBuilder
-    extends JXPathBindingBuilderBase {
+public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link InsertNodeJXPathBinding} configured
      * with the nested template of the bindingElm.
      */
-    public JXPathBindingBase buildBinding(
-        Element bindingElm,
-        JXPathBindingManager.Assistant assistant) throws BindingException {
+    public JXPathBindingBase buildBinding(Element bindingElm,
+                                          JXPathBindingManager.Assistant assistant)
+    throws BindingException {
 
         try {
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
@@ -105,14 +106,15 @@ public class InsertNodeJXPathBindingBuilder
                     domTemplate.appendChild(node);
                 }
             }
-            
-//          do inheritance
-            InsertNodeJXPathBinding otherBinding = (InsertNodeJXPathBinding)assistant.getContext().getSuperBinding();
-            if(otherBinding!=null) {
-            	commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(),commonAtts);
-            	
-            	if(domTemplate==null)
-            		domTemplate = otherBinding.getTemplate();
+
+            // do inheritance
+            InsertNodeJXPathBinding otherBinding = (InsertNodeJXPathBinding) assistant.getContext().getSuperBinding();
+            if (otherBinding != null) {
+                commonAtts = JXPathBindingBuilderBase.mergeCommonAttributes(otherBinding.getCommonAtts(), commonAtts);
+
+                if (domTemplate == null) {
+                    domTemplate = otherBinding.getTemplate();
+                }
             }
 
             return new InsertNodeJXPathBinding(commonAtts, domTemplate);

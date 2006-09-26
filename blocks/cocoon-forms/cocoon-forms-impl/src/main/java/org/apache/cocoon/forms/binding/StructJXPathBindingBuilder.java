@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.Deprecation;
+
 import org.w3c.dom.Element;
 
 /**
@@ -62,9 +63,7 @@ public class StructJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
             childBindings = assistant.makeChildBindings(bindingElm,childBindings);
 
-            StructJXPathBinding structBinding =
-                new StructJXPathBinding(commonAtts, widgetId, xpath, childBindings);
-            return structBinding;
+            return new StructJXPathBinding(commonAtts, widgetId, xpath, childBindings);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,10 @@ package org.apache.cocoon.forms.binding;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 
@@ -42,11 +44,14 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     private final JXPathBindingBase rowBinding;
     private final boolean deleteIfEmpty;
 
-    public SimpleRepeaterJXPathBinding(
-            JXPathBindingBuilderBase.CommonAttributes commonAtts,
-            String repeaterId, String repeaterPath, String rowPath,
-            boolean clearOnLoad, boolean deleteIfEmpty,
-            JXPathBindingBase rowBinding) {
+
+    public SimpleRepeaterJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                       String repeaterId,
+                                       String repeaterPath,
+                                       String rowPath,
+                                       boolean clearOnLoad,
+                                       boolean deleteIfEmpty,
+                                       JXPathBindingBase rowBinding) {
         super(commonAtts);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
@@ -56,7 +61,12 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         this.clearOnLoad = clearOnLoad;
         this.deleteIfEmpty = deleteIfEmpty;
     }
-    
+
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        this.rowBinding.enableLogging(logger);
+    }
+
     public String getId() { return repeaterId; }
     public String getRepeaterPath() { return repeaterPath; }
     public String getRowPath() { return rowPath; }
@@ -65,7 +75,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     public JXPathBindingBase[] getChildBindings() { return ((ComposedJXPathBindingBase)rowBinding).getChildBindings(); }
 
     public void doLoad(Widget frmModel, JXPathContext jctx)
-            throws BindingException {
+    throws BindingException {
         // Find the repeater and clear it
         Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
 
@@ -107,7 +117,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx)
-            throws BindingException {
+    throws BindingException {
         // Find the repeater
         Repeater repeater = (Repeater)selectWidget(frmModel, this.repeaterId);
 
@@ -137,10 +147,5 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     public String toString() {
         return this.getClass().getName()+ " [widget=" + this.repeaterId +
             ", xpath=" + this.repeaterPath + "]";
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.rowBinding.enableLogging(logger);
     }
 }

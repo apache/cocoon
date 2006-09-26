@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,9 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.forms.formmodel.Widget;
+
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
@@ -31,16 +33,17 @@ import org.apache.commons.jxpath.JXPathContext;
  * @version $Id$
  */
 public class ComposedJXPathBindingBase extends JXPathBindingBase {
+
     private final JXPathBindingBase[] subBindings;
 
-    public String getXPath() { return null; }
-    
+
     /**
      * Constructs ComposedJXPathBindingBase
      *
      * @param childBindings sets the array of childBindings
      */
-    public ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes commonAtts, JXPathBindingBase[] childBindings) {
+    public ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+                                     JXPathBindingBase[] childBindings) {
         super(commonAtts);
         this.subBindings = childBindings;
         if (this.subBindings != null) {
@@ -63,6 +66,10 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
         }
     }
 
+    public String getXPath() {
+        return null;
+    }
+
     /**
      * Gets a binding class by id.
      * @param id Id of binding class to get.
@@ -79,7 +86,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
                           classes.put(bindingId, binding);
                     }
                 }
-                
+
                 // Fee memory used by an empty map
                 if (classes.size() == 0) {
                     classes = Collections.EMPTY_MAP;
