@@ -35,6 +35,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.w3c.dom.Element;
 
 /**
  * This is a base class for all bean definition parser used in Cocoon.
@@ -47,6 +48,21 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /** Logger (we use the same logging mechanism as Spring!) */
     protected final Log logger = LogFactory.getLog(getClass());
+
+    /** Get the value of an attribute or if the attribute is not present
+     * return the default value.
+     * For any strange reason, getAttribute() does not return null if the
+     * attribute is not present but an empty string!
+     */
+    protected String getAttributeValue(Element element,
+                                       String  attributeName,
+                                       String  defaultValue) {
+        String value = element.getAttribute(attributeName);
+        if ( value == null || value.trim().length() == 0 ) {
+            value = defaultValue;
+        }
+        return value;
+    }
 
     /**
      * Register a bean definition.

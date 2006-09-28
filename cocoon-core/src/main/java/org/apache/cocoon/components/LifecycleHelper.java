@@ -34,7 +34,7 @@ import org.apache.avalon.framework.service.Serviceable;
  * Utility class for setting up Avalon components. Similar to Excalibur's
  * <code>DefaultComponentFactory</code>, but on existing objects.
  * <p>
- *
+ * @deprecated
  * @version $Id$
  */
 public class LifecycleHelper {
