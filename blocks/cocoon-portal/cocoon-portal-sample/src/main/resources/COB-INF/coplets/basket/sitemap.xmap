@@ -98,7 +98,7 @@
       <map:match pattern="basket-view">
         <map:generate type="basket">
             <map:parameter name="show-coplet" value="BasketContent"/>
-            <map:parameter name="show-layout" value="basket-content"/>
+            <map:parameter name="show-layout" value="basket_content"/>
             <map:parameter name="admin-mode" value="false"/>
           <map:parameter name="type" value="{coplet:attributes/type}"/>
           <map:parameter name="type-location" value="group"/>
@@ -115,7 +115,7 @@
       <map:match pattern="basket.admin">
         <map:generate type="basket">
           <map:parameter name="show-coplet" value="BasketContent"/>
-          <map:parameter name="show-layout" value="basket-content-admin"/>
+          <map:parameter name="show-layout" value="basket_content_admin"/>
           <map:parameter name="admin-mode" value="false"/>
         </map:generate>
         <map:transform type="xslt" src="basket.admin.xsl"/>
@@ -125,7 +125,7 @@
       <map:match pattern="basket-admin">
         <map:generate type="basket">
           <map:parameter name="show-coplet" value="BasketContent"/>
-          <map:parameter name="show-layout" value="basket-content-admin"/>
+          <map:parameter name="show-layout" value="basket_content_admin"/>
           <map:parameter name="admin-mode" value="true"/>
         </map:generate>
         <map:transform src="xsl/basket-pre.xsl"/>

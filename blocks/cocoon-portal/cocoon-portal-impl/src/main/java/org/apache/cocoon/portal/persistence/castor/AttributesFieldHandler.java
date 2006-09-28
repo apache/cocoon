@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.LayoutInstance;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 import org.exolab.castor.mapping.MapItem;
 
@@ -32,24 +33,24 @@ import org.exolab.castor.mapping.MapItem;
  */
 public class AttributesFieldHandler extends AbstractFieldHandler {
 
-    protected Map getAttributes(Object object) {
+    protected Iterator getAttributesIterator(Object object) {
         if (object instanceof CopletDefinition) {
-            return ((CopletDefinition) object).getAttributes();
-        }
-        return ((CopletInstance) object).getAttributes();
+            return ((CopletDefinition) object).getAttributes().entrySet().iterator();
+        } else if ( object instanceof LayoutInstance ) {
+            return ((LayoutInstance) object).getAttributes().entrySet().iterator();
+        } else {
+            return ((CopletInstance) object).getAttributes().entrySet().iterator();
+        }        
     }
-
     /**
      * @see org.exolab.castor.mapping.FieldHandler#getValue(java.lang.Object)
      */
     public Object getValue(Object object) {
-        HashMap map = new HashMap();
-        Iterator iterator = this.getAttributes(object).entrySet().iterator();
-        Map.Entry entry;
-        Object key;
+        final Map map = new HashMap();
+        final Iterator iterator = this.getAttributesIterator(object);
         while (iterator.hasNext()) {
-            entry = (Map.Entry) iterator.next();
-            key = entry.getKey();
+            final Map.Entry entry = (Map.Entry) iterator.next();
+            final Object key = entry.getKey();
             map.put(key, new MapItem(key, entry.getValue()));
         }
         return map;
@@ -76,14 +77,31 @@ public class AttributesFieldHandler extends AbstractFieldHandler {
      * @see org.exolab.castor.mapping.FieldHandler#resetValue(java.lang.Object)
      */
     public void resetValue(Object object) {
-        this.getAttributes(object).clear();
+        final Iterator iterator = this.getAttributesIterator(object);
+        while ( iterator.hasNext() ) {
+            final String key = (String)iterator.next();
+            if ( object instanceof CopletDefinition ) {
+                ((CopletDefinition)object).removeAttribute(key);
+            } else if ( object instanceof LayoutInstance ) {
+                ((LayoutInstance)object).removeAttribute(key);
+            } else {
+                ((CopletInstance)object).removeAttribute(key);
+            }
+        }
     }
 
     /**
      * @see org.exolab.castor.mapping.FieldHandler#setValue(java.lang.Object, java.lang.Object)
      */
     public void setValue(Object object, Object value) {
-        MapItem item = (MapItem) value;
-        this.getAttributes(object).put(item.getKey(), item.getValue());
+        final MapItem item = (MapItem) value;
+        final String key = item.getKey().toString();
+        if (object instanceof CopletDefinition) {
+            ((CopletDefinition)object).setAttribute(key, item.getValue());
+        } else if ( object instanceof LayoutInstance ) {
+            ((LayoutInstance)object).setAttribute(key, item.getValue());
+        } else {
+            ((CopletInstance)object).setAttribute(key, item.getValue());
+        }
     }
 }
