@@ -21,10 +21,10 @@
 function test() {
 
     var component = cocoon.getComponent("spring-test");
-    var settings = cocoon.getComponent("org.apache.cocoon.core.Settings");
+    var settings = cocoon.getComponent(Packages.org.apache.cocoon.configuration.Settings.ROLE);
     
     cocoon.sendPage("test", { "message" : component.getMessage(),
-                              "configuration" : settings.getConfiguration(),
+                              "core" : settings.getUploadDirectory(),
                               "coreinjection" : component.getSettings().getWorkDirectory(),
                               "javaVersion" : component.getJavaVersion()
                              }
