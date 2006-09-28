@@ -22,7 +22,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -68,17 +67,16 @@ extends AbstractAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext renderContext,
+    public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
-                      PortalService service,
                       ContentHandler contenthandler)
     throws SAXException, LayoutException {
         final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
         final ContentStore store;
         final String elementName;
-        if ( renderContext.getAspectConfiguration().equals(Boolean.TRUE) ) {
+        if ( rendererContext.getAspectConfiguration().equals(Boolean.TRUE) ) {
             store = this.basketManager.getBasket();
             elementName = "basket-add-content";
         } else {
@@ -90,16 +88,16 @@ extends AbstractAspect {
         if ( b != null && b.equals(Boolean.TRUE) ) {
             Object item = new ContentItem(cid, true);
             Event event = new AddItemEvent(store, item);
-            XMLUtils.createElement(contenthandler, elementName, service.getLinkService().getLinkURI(event));
+            XMLUtils.createElement(contenthandler, elementName, rendererContext.getPortalService().getLinkService().getLinkURI(event));
         }
         b = (Boolean)cid.getCopletDefinition().getAttribute("basket-link");
         if ( b != null && b.equals(Boolean.TRUE) ) {
             Object item = new ContentItem(cid, false);
             Event event = new AddItemEvent(store, item);
-            XMLUtils.createElement(contenthandler, elementName, service.getLinkService().getLinkURI(event));            
+            XMLUtils.createElement(contenthandler, elementName, rendererContext.getPortalService().getLinkService().getLinkURI(event));            
         }
 
-        renderContext.invokeNext( layout, service, contenthandler );
+        rendererContext.invokeNext( layout, contenthandler );
     }
 
     /**

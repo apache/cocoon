@@ -20,7 +20,6 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.Layout;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -40,9 +39,8 @@ public interface RendererAspect {
      * Stream out raw layout 
      */
     void toSAX(RendererAspectContext context,
-                Layout layout, 
-                PortalService service, 
-                ContentHandler handler)
+               Layout                layout, 
+               ContentHandler        handler)
     throws SAXException, LayoutException;
 
     /**

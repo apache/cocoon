@@ -17,8 +17,8 @@
 package org.apache.cocoon.portal.layout.renderer.aspect;
 
 import org.apache.cocoon.portal.LayoutException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.services.aspects.BasicAspectContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -29,12 +29,12 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public interface RendererAspectContext {
+public interface RendererAspectContext extends BasicAspectContext {
 
     /**
      * Stream out raw layout 
      */
-    void invokeNext(Layout layout, PortalService service, ContentHandler handler)
+    void invokeNext(Layout layout, ContentHandler handler)
     throws SAXException, LayoutException;
 
     /** 

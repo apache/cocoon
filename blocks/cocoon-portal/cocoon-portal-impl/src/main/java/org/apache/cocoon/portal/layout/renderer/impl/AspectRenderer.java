@@ -25,10 +25,12 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LayoutException;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
-import org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultRendererContext;
-import org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain;
+import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
+import org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererContextImpl;
+import org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererAspectChain;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.xml.sax.ContentHandler;
@@ -41,7 +43,7 @@ import org.xml.sax.SAXException;
  * <h2>Configuration</h2>
  * <table><tbody>
  * <tr><th>aspects</th><td>List of aspect renderers to apply. See 
- *      {@link org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain}</td>
+ *      {@link org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererAspectChain}</td>
  *      <td></td><td>Configuration</td><td><code>EmptyConfiguration</code></td></tr>
  * </tbody></table>
  *
@@ -67,16 +69,20 @@ public class AspectRenderer
      */
     public void toSAX(Layout layout, PortalService service, ContentHandler handler)
     throws SAXException, LayoutException {
-        DefaultRendererContext renderContext = new DefaultRendererContext(this.chain);
-        renderContext.invokeNext(layout, service, handler);
+        final RendererContextImpl renderContext = new RendererContextImpl(service, this.chain);
+        renderContext.invokeNext(layout, handler);
     }
 
 	/**
 	 * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
 	 */
 	public void configure(Configuration conf) throws ConfigurationException {
-        this.chain = new RendererAspectChain();
-        this.chain.configure(this.manager, conf.getChild("aspects"));
+        try {
+            this.chain = new RendererAspectChain(RendererAspect.class);
+            this.chain.configure(this.manager, conf);
+        } catch (PortalException ce) {
+            throw new ConfigurationException("Unable configure renderer aspects.", ce);
+        }            
 	}
 
 	/**

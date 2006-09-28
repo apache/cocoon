@@ -46,14 +46,14 @@ public abstract class AbstractCompositeAspect
     extends AbstractAspect {
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext rendererContext,
                 	  Layout                layout,
-                	  PortalService         service,
                 	  ContentHandler        handler)
 	throws SAXException, LayoutException {
         LayoutFeatures.checkLayoutClass(layout, CompositeLayout.class, true);
+        final PortalService service = rendererContext.getPortalService();
         CompositeLayout compositeLayout = (CompositeLayout)layout;
     	// check for maximized information
     	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(service, layout);
@@ -62,16 +62,16 @@ public abstract class AbstractCompositeAspect
             for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
                 Item item = (Item) iter.next();
                 if ( item.equals(maximizedInfo.item) ) {
-                    this.processMaximizedItem(rendererContext, item, maximizedInfo.layout, handler, service);
+                    this.processMaximizedItem(rendererContext, item, maximizedInfo.layout, handler);
                 } else if ( item.getLayout().isStatic() ) {
-                    this.processItem(rendererContext, item, handler, service);	                	
+                    this.processItem(rendererContext, item, handler);	                	
                 }
             }            	
         } else {
         	// loop over all rows
             for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
                 Item item = (Item) iter.next();
-                this.processItem(rendererContext, item, handler, service);
+                this.processItem(rendererContext, item, handler);
             }
         }
 	}
@@ -86,8 +86,7 @@ public abstract class AbstractCompositeAspect
      */
     protected abstract void processItem(RendererAspectContext rendererContext,
                                         Item                  item,
-                                        ContentHandler        handler,
-                                        PortalService         service)
+                                        ContentHandler        handler)
     throws SAXException, LayoutException;
 
     /**
@@ -99,7 +98,7 @@ public abstract class AbstractCompositeAspect
      * @param service portal service providing component access
      * @throws SAXException
      */
-    protected abstract void processMaximizedItem(RendererAspectContext rendererContext, Item item, Layout maximizedLayout, ContentHandler handler, PortalService service)
+    protected abstract void processMaximizedItem(RendererAspectContext rendererContext, Item item, Layout maximizedLayout, ContentHandler handler)
     throws SAXException, LayoutException;
 
     /**

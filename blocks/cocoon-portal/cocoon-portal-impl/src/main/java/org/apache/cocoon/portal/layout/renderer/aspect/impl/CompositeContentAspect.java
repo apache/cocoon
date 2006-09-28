@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
@@ -72,11 +71,10 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     protected static final String ITEM_STRING = "item";
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext,
                       Layout                layout,
-                      PortalService         service,
                       ContentHandler        handler)
     throws SAXException, LayoutException {
         PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
@@ -90,7 +88,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
             }
             XMLUtils.startElement(handler, config.tagName, ai);
         }
-        super.toSAX(rendererContext, layout, service, handler);
+        super.toSAX(rendererContext, layout, handler);
         if ( config.rootTag ) {
             XMLUtils.endElement(handler, config.tagName);
         }
@@ -101,8 +99,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 	 */
 	protected void processItem(RendererAspectContext rendererContext,
                                Item                  item,
-		                       ContentHandler        handler,
-		                       PortalService         service)
+		                       ContentHandler        handler)
     throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         Layout layout = item.getLayout();
@@ -122,7 +119,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
                 XMLUtils.startElement(handler, config.itemTagName, attributes);
             }
         }
-        processLayout(layout, service, handler);
+        processLayout(layout, rendererContext.getPortalService(), handler);
         if ( config.itemTag ) {
             XMLUtils.endElement(handler, config.itemTagName);
         }
@@ -134,8 +131,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 	protected void processMaximizedItem(RendererAspectContext rendererContext,
                                         Item                  item,
                                         Layout                maximizedLayout,
-                                        ContentHandler        handler,
-                                        PortalService         service)
+                                        ContentHandler        handler)
     throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         Map parameters = item.getParameters();
@@ -153,7 +149,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
                 XMLUtils.startElement(handler, config.itemTagName, attributes);
             }
         }
-        processLayout(maximizedLayout, service, handler);
+        processLayout(maximizedLayout, rendererContext.getPortalService(), handler);
         if ( config.itemTag ) {
             XMLUtils.endElement(handler, config.itemTagName);
         }

@@ -29,6 +29,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -122,8 +123,10 @@ public class DefaultEventManager
     throws ProcessingException {
         if ( this.configuration != null ) {
             try {
-                this.chain = new AspectChain();
-                this.chain.configure(this.manager, EventAspect.class, this.configuration);
+                this.chain = new AspectChain(EventAspect.class);
+                this.chain.configure(this.manager, this.configuration);
+            } catch (PortalException ce) {
+                throw new ProcessingException("Unable configure component.", ce);
             } catch (ConfigurationException ce) {
                 throw new ProcessingException("Unable configure component.", ce);
             }
