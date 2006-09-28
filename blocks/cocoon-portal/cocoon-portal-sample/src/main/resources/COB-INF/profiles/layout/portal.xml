@@ -294,7 +294,7 @@
           <item>
             <composite-layout type="column">
               <item>
-                <coplet-layout type="coplet" id="basket-content">
+                <coplet-layout type="coplet" id="basket_content">
                   <coplet-instance>basketcontent</coplet-instance>
                 </coplet-layout>
               </item>
@@ -320,7 +320,7 @@
             </coplet-layout>
           </item>
           <item>
-            <coplet-layout type="coplet" id="basket-content-admin">
+            <coplet-layout type="coplet" id="basket_content_admin">
               <coplet-instance>basket_content</coplet-instance>
             </coplet-layout>
           </item>
