@@ -41,6 +41,12 @@
     </sample>
   </group>  
 
+  <group name="Spring Sample">
+    <sample name="Spring Sample" href="spring/">
+      A simple example of using a per sitemap Spring application context.
+    </sample>
+  </group>
+
   <group name="Internationalization">
     <sample name="Internationalization (i18n) &amp; Localization (l10n)" href="i18n/">
       Samples of the powerful Cocoon i18n and l10n Cocoon tools. 
