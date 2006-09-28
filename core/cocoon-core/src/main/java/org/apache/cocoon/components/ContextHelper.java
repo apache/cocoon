@@ -20,16 +20,17 @@ import java.util.Map;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * A set of constants and methods to access the content of the context
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @version $Id$
+ * @deprecated Use the {@link ProcessInfoProvider} instead.
  */
 public final class ContextHelper {
 		
@@ -90,20 +91,4 @@ public final class ContextHelper {
             throw new ContextResourceNotFoundException("Unable to get the object model from the context.", ce);
         }
     }
-    
-    /**
-     * Return the current sitemap service manager
-     * @param context The component context
-     * @return The sitemap manager if currently a request is processed
-     * @since 2.2
-     */
-    public static final ServiceManager getSitemapServiceManager(Context context) {
-        // the service manager is always present
-        try {
-            return (ServiceManager)context.get(CONTEXT_SITEMAP_SERVICE_MANAGER);
-        } catch (ContextException ce) {
-            throw new ContextResourceNotFoundException("Unable to get the service manager from the context.", ce);
-        }        
-    }
-
 }
