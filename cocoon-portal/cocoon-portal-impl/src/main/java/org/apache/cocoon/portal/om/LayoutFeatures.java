@@ -52,8 +52,9 @@ public class LayoutFeatures {
         }
     }
 
-    public static Layout getFullScreenInfo(PortalService service, Layout layout) {
-        if ( layout.getId() == null ) {
+    public static Layout getFullScreenInfo(PortalService service) {
+        final Layout layout = service.getProfileManager().getLayout(null);
+        if ( layout == null || layout.getId() == null ) {
             return null;
         }
         final LayoutInstance layoutInstance = service.getProfileManager().getLayoutInstance(layout);
@@ -63,7 +64,8 @@ public class LayoutFeatures {
         return (Layout) layoutInstance.getTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO);
     }
 
-    public static void setFullScreenInfo(PortalService service, Layout layout, Layout fullScreenLayout) {
+    public static void setFullScreenInfo(PortalService service, Layout fullScreenLayout) {
+        final Layout layout = service.getProfileManager().getLayout(null);
         final LayoutInstance layoutInstance = LayoutFeatures.getLayoutInstance(service, layout, true);
         if ( fullScreenLayout == null ) {
             layoutInstance.removeTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO);

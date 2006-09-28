@@ -39,7 +39,6 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.sitemap.PatternException;
@@ -116,11 +115,10 @@ public class XSLTAspect
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
-                      PortalService service,
                       ContentHandler handler)
     throws SAXException, LayoutException {
         PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
@@ -156,7 +154,7 @@ public class XSLTAspect
             }
             transformer.setResult(result);
             transformer.startDocument();
-            rendererContext.invokeNext(layout, service, transformer);
+            rendererContext.invokeNext(layout, transformer);
 
             transformer.endDocument();
         } catch (XSLTProcessorException xpe) {

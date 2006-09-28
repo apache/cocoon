@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -59,11 +58,10 @@ import org.xml.sax.SAXException;
 public final class ParameterAspect extends AbstractAspect {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
-                      PortalService service,
                       ContentHandler contenthandler)
     throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
@@ -81,7 +79,7 @@ public final class ParameterAspect extends AbstractAspect {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
 
-        rendererContext.invokeNext( layout, service, contenthandler );
+        rendererContext.invokeNext( layout, contenthandler );
 
         XMLUtils.endElement(contenthandler, config.tagName);
     }
