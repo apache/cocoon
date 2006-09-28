@@ -44,13 +44,11 @@ public class ParametersFieldHandler extends AbstractFieldHandler {
      * @see org.exolab.castor.mapping.FieldHandler#getValue(java.lang.Object)
      */
     public Object getValue(Object object) {
-        HashMap map = new HashMap();
-        Iterator iterator = this.getParameters(object).entrySet().iterator();
-        Map.Entry entry;
-        Object key;
+        final HashMap map = new HashMap();
+        final Iterator iterator = this.getParameters(object).entrySet().iterator();
         while (iterator.hasNext()) {
-            entry = (Map.Entry) iterator.next();
-            key = entry.getKey();
+            final Map.Entry entry = (Map.Entry) iterator.next();
+            final Object key = entry.getKey();
             map.put(key, new MapItem(key, entry.getValue()));
         }
         return map;

@@ -35,14 +35,12 @@ public class ConfigurationFieldHandler extends AbstractFieldHandler {
      * @see org.exolab.castor.mapping.FieldHandler#getValue(java.lang.Object)
      */
     public Object getValue(Object object) {
-        HashMap map = new HashMap();
-        Iterator iterator =
+        final HashMap map = new HashMap();
+        final Iterator iterator =
             ((CopletType) object).getCopletConfig().entrySet().iterator();
-        Map.Entry entry;
-        Object key;
         while (iterator.hasNext()) {
-            entry = (Map.Entry) iterator.next();
-            key = entry.getKey();
+            final Map.Entry entry = (Map.Entry) iterator.next();
+            final Object key = entry.getKey();
             map.put(key, new MapItem(key, entry.getValue()));
         }
         return map;
