@@ -18,6 +18,8 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import javax.servlet.ServletContext;
+
 import org.apache.cocoon.configuration.Settings;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -58,9 +60,10 @@ public class SettingsElementParser extends AbstractElementParser {
         if ( runningMode != null ) {
             beanDef.getPropertyValues().addPropertyValue("runningMode", runningMode);
         }
-        // register
+        // register settings bean
         this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
 
+        this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false, parserContext.getRegistry());
         return null;
     }
 }
