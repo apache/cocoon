@@ -45,6 +45,12 @@ import org.apache.cocoon.util.ClassUtils;
 public class SettingsBeanFactoryPostProcessor
     extends AbstractSettingsBeanFactoryPostProcessor {
 
+    protected String runningMode = SettingsDefaults.DEFAULT_RUNNING_MODE;
+
+    public void setRunningMode(String runningMode) {
+        this.runningMode = runningMode;
+    }
+
     /**
      * Initialize this processor.
      * Setup the settings object.
@@ -153,7 +159,7 @@ public class SettingsBeanFactoryPostProcessor
      */
     protected MutableSettings createSettings() {
         // get the running mode
-        final String mode = getSystemProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
+        final String mode = getSystemProperty(Settings.PROPERTY_RUNNING_MODE, this.runningMode);
         
         /*
         if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
