@@ -40,7 +40,7 @@ import org.apache.excalibur.xmlizer.XMLizer;
 public abstract class CocoonTestCase extends ContainerTestCase {
 
     /**
-     * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext)
+     * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.spring.test.CocoonXmlWebApplicationContext)
      */
     protected void addComponents(ConfigurationInfo info) 
     throws Exception {
