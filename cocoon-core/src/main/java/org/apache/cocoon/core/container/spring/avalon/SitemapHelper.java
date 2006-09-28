@@ -202,7 +202,7 @@ public class SitemapHelper {
         final String factoryRole = config.getAttribute("factory-role", ClassLoaderFactory.ROLE);
 
         // Create a new classloader
-        ClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, config);
+        ClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, classPathConfig);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
                                            configBean,
