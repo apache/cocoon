@@ -21,6 +21,7 @@ package org.apache.cocoon.core.container.spring;
 import org.apache.cocoon.configuration.Settings;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
@@ -37,6 +38,9 @@ public class SettingsElementParser extends AbstractElementParser {
     /** The name of the configuration attribute to use a different processor class. */
     public static final String PROCESSOR_CLASS_NAME_ATTR = "processorClassName";
 
+    /** The name of the configuration attribute to specify the running mode. */
+    public static final String RUNNING_MODE_ATTR = "runningMode";
+
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
@@ -46,12 +50,16 @@ public class SettingsElementParser extends AbstractElementParser {
         } catch (Exception e) {
             throw new BeanDefinitionStoreException("Unable to read spring configurations.",e);
         }
-        String componentClassName = SettingsBeanFactoryPostProcessor.class.getName();
-        String value = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
-        if ( value != null && value.trim().length() > 0 ) {
-            componentClassName = element.getAttribute(PROCESSOR_CLASS_NAME_ATTR);
+        // create bean definition for settings object
+        final String componentClassName = this.getAttributeValue(element, PROCESSOR_CLASS_NAME_ATTR, SettingsBeanFactoryPostProcessor.class.getName());
+        final RootBeanDefinition beanDef = this.createBeanDefinition(componentClassName, "init", false);
+        // if running mode is specified add it as a property
+        final String runningMode = this.getAttributeValue(element, RUNNING_MODE_ATTR, null);
+        if ( runningMode != null ) {
+            beanDef.getPropertyValues().addPropertyValue("runningMode", runningMode);
         }
-        this.addComponent(componentClassName, Settings.ROLE, "init", false, parserContext.getRegistry());
+        // register
+        this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
 
         return null;
     }

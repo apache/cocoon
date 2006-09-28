@@ -15,6 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- @version $Id$ -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://org.apache.cocoon/core"
             xmlns:tns="http://org.apache.cocoon/core">
@@ -23,6 +24,7 @@
 
     <xsd:complexType name="settingsType">
     	<xsd:attribute name="processorClassName" type="xsd:string" use="optional"></xsd:attribute>
+    	<xsd:attribute name="runningMode" type="xsd:string" use="optional"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:element name="sitemap" type="tns:sitemapType"/>
