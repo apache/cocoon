@@ -615,7 +615,7 @@ public class WSRPAdapter
                     
                     final Layout rootLayout = this.portalService.getProfileManager().getLayout(null);
                     final Layout layout = LayoutFeatures.searchLayout(this.portalService, coplet.getId(), rootLayout);
-                    final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService, rootLayout);
+                    final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService);
                     if ( fullScreenLayout != null 
                          && fullScreenLayout.equals( layout )
                          && !windowState.equals(WindowStates._maximized) ) {

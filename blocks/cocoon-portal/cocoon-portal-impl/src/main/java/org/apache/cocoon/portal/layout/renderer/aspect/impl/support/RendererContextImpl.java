@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.layout.renderer.aspect.impl;
+package org.apache.cocoon.portal.layout.renderer.aspect.impl.support;
 
 import java.util.Iterator;
 
@@ -23,6 +23,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -33,35 +34,48 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public final class DefaultRendererContext implements RendererAspectContext {
+public final class RendererContextImpl
+    extends BasicAspectContextImpl
+    implements RendererAspectContext {
 
-    private Iterator iterator;
-    private Iterator configIterator;
-    private Object config;
+    /** The current configuration object for the renderer aspect. */
+    protected Object aspectConfiguration;
 
-    public DefaultRendererContext(RendererAspectChain chain) {
-        this.iterator = chain.getIterator();
-        this.configIterator = chain.getConfigIterator();
+    /** The iterator used to iterate through the configuration objects. */
+    protected final Iterator configurationIterator;
+
+    public RendererContextImpl(PortalService service, RendererAspectChain chain) {
+        super(service, chain);
+        this.configurationIterator = chain.getConfigurationIterator();
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#invokeNext(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#invokeNext(org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
 	 */
-	public void invokeNext(Layout layout,
-                           PortalService service,
+	public void invokeNext(Layout        layout,
                            ContentHandler handler)
 	throws SAXException, LayoutException {
-		if (iterator.hasNext()) {
-            this.config = this.configIterator.next();
-            final RendererAspect aspect = (RendererAspect) iterator.next();
-            aspect.toSAX(this, layout, service, handler);
+        final RendererAspect aspect = (RendererAspect)this.getNext();
+		if ( aspect != null ) {
+            aspect.toSAX(this, layout, handler);
 		}
 	}
 
 	/**
+	 * @see org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl#getNext()
+	 */
+	protected Object getNext() {
+        final Object o = super.getNext();
+        if ( o != null ) {
+            this.aspectConfiguration = this.configurationIterator.next();
+        }
+        return o;
+    }
+
+    /**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#getAspectConfiguration()
 	 */
 	public Object getAspectConfiguration() {
-		return this.config;
+		return this.aspectConfiguration;
 	}
 }

@@ -18,13 +18,14 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Properties;
 
+import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
@@ -64,13 +65,13 @@ public class CIncludeCopletAspect
     extends AbstractCIncludeAspect {
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext rendererContext,
-                		Layout layout,
-                		PortalService service,
-                		ContentHandler handler)
+                	  Layout                layout,
+                	  ContentHandler        handler)
 	throws SAXException, LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, CopletLayout.class, true);
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
 
@@ -78,13 +79,18 @@ public class CIncludeCopletAspect
             XMLUtils.startElement(handler, config.tagName);
         }
 
-        this.createCInclude("coplet://" + cid.getId(), handler);
+        if ( rendererContext.getPortalService().getConfigurationAsBoolean(Constants.CONFIGURATION_USE_AJAX, Constants.DEFAULT_CONFIGURATION_USE_AJAX) ) {
+            // TODO something else to do
+            this.createCInclude("coplet://" + cid.getId(), handler);
+        } else {
+            this.createCInclude("coplet://" + cid.getId(), handler);
+        }
 
         if ( config.rootTag ) {
             XMLUtils.endElement(handler, config.tagName);
         }
 
-        rendererContext.invokeNext(layout, service, handler);
+        rendererContext.invokeNext(layout, handler);
 	}
 
     protected static class PreparedConfiguration {

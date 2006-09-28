@@ -28,6 +28,7 @@ import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.LayoutException;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
@@ -93,9 +94,13 @@ public class PortalManagerImpl
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration conf) throws ConfigurationException {
-        this.chain = new AspectChain();
-        this.chain.configure(this.manager, PortalManagerAspect.class, conf);
-        this.chain.addAspect(this, null);
+        try {
+            this.chain = new AspectChain(PortalManagerAspect.class);
+            this.chain.configure(this.manager, conf);
+            this.chain.addAspect(this, null);
+        } catch (PortalException pe) {
+            throw new ConfigurationException("Unable to configure portal manager aspects.", pe);
+        }
     }
 
     /**
@@ -115,17 +120,46 @@ public class PortalManagerImpl
     throws SAXException {
         final ProfileManager profileManager = this.portalService.getProfileManager();
 
-        // test for ajax request
         final Request req = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
-        if ( AjaxHelper.isAjaxRequest(req) ) {
+        // check for render parameters
+        // if a parameter for a layout or a coplet is defined
+        // then only this coplet or layout object is rendered
+        final String copletId = (properties == null ? null : properties.getProperty(PortalManager.PROPERTY_RENDER_COPLET, null));
+        final String layoutId = (properties == null ? null : properties.getProperty(PortalManager.PROPERTY_RENDER_LAYOUT, null));
+        if ( StringUtils.isNotEmpty(copletId) && StringUtils.isNotEmpty(layoutId) ) {
+            throw new SAXException("Only one of the paramteters can be specified for rendering: coplet or layout.");
+        }
+        Layout portalLayout = null;
+
+        if ( StringUtils.isNotEmpty(copletId) ) {
+            final CopletInstance cid = profileManager.getCopletInstance(copletId);
+            if ( cid != null ) {
+                portalLayout = LayoutFeatures.searchLayout(this.portalService, cid.getId(), profileManager.getLayout(null));
+                if ( portalLayout == null) {
+                    getLogger().error("No Layout to render for coplet instance with id: " + copletId);
+                    return;
+                }
+            }
+        } else if ( StringUtils.isNotEmpty(layoutId) ) {
+            portalLayout = profileManager.getLayout(layoutId);
+            if ( portalLayout == null) {
+                getLogger().error("No Layout to render for layout instance with id: " + layoutId);
+                return;
+            }
+        }
+
+        ch.startDocument();
+
+        // If no parameter is specified test for ajax request which will
+        // only render the changed coplets
+        if ( portalLayout == null && AjaxHelper.isAjaxRequest(req) ) {
             Layout rootLayout = profileManager.getLayout(null);
-            ch.startDocument();
             XMLUtils.startElement(ch, "coplets");
             final List changed = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(this.portalService);
             final Iterator i = changed.iterator();
             while ( i.hasNext() ) {
                 final CopletInstance current = (CopletInstance)i.next();
-                AttributesImpl a = new AttributesImpl();
+                final AttributesImpl a = new AttributesImpl();
                 a.addCDATAAttribute("id", current.getId());
                 XMLUtils.startElement(ch, "coplet", a);
                 final Layout l = LayoutFeatures.searchLayout(this.portalService, current.getId(), rootLayout);
@@ -138,52 +172,58 @@ public class PortalManagerImpl
                 XMLUtils.endElement(ch, "coplet");
             }
             XMLUtils.endElement(ch, "coplets");
-            ch.endDocument();
         } else {
-            Layout portalLayout = null;
-
-            // check for parameters
-            final String copletId = (properties == null ? null : properties.getProperty(PortalManager.PROPERTY_RENDER_COPLET, null));
-            final String layoutId = (properties == null ? null : properties.getProperty(PortalManager.PROPERTY_RENDER_LAYOUT, null));
-            if ( StringUtils.isNotEmpty(copletId) && StringUtils.isNotEmpty(layoutId) ) {
-                throw new SAXException("Only one of the paramteters can be specified for rendering: coplet or layout.");
-            }
             if ( StringUtils.isNotEmpty(copletId) ) {
-                final CopletInstance cid = profileManager.getCopletInstance(copletId);
-                if ( cid != null ) {
-                    portalLayout = LayoutFeatures.searchLayout(this.portalService, cid.getId(), profileManager.getLayout(null));
-                }
+                XMLUtils.startElement(ch, "coplets");
+                final AttributesImpl a = new AttributesImpl();
+                a.addCDATAAttribute("id", copletId);
+                XMLUtils.startElement(ch, "coplet", a);
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
-                portalLayout = profileManager.getLayout(layoutId);
-            } else {
+                final AttributesImpl a = new AttributesImpl();
+                a.addCDATAAttribute("id", layoutId);
+                XMLUtils.startElement(ch, "layout", a);
+            }
+
+            // if no render parameter is specified we render the whole page or just the full screen coplet
+            if ( portalLayout == null ) {
                 // first check for a full screen layout
-                Layout rootLayout = profileManager.getLayout(layoutId);
-                portalLayout = LayoutFeatures.getFullScreenInfo(this.portalService, rootLayout);
+                portalLayout = LayoutFeatures.getFullScreenInfo(this.portalService);
                 if ( portalLayout == null ) {
-                    portalLayout = rootLayout;
+                    portalLayout = profileManager.getLayout(null);
                 }
             }
-            if ( portalLayout == null) {
-                getLogger().error("No Layout to render");
-                return;
-            }
 
-            Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(portalLayout));
-
-            ch.startDocument();
             try {
+                final Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(portalLayout));
+
                 portalLayoutRenderer.toSAX(portalLayout, this.portalService, ch);
             } catch (LayoutException e) {
                 throw new SAXException(e);
             }
-            ch.endDocument();            
+            if ( StringUtils.isNotEmpty(copletId) ) {
+                XMLUtils.endElement(ch, "coplet");
+                XMLUtils.endElement(ch, "coplets");
+            } else if ( StringUtils.isNotEmpty(layoutId) ) {
+                XMLUtils.endElement(ch, "layout");
+            }
         }
+
+        ch.endDocument();
         // although we should be the last in the queue,
         // let's invoke the next
         renderContext.invokeNext(ch, properties);
     }
 
+    /**
+     * @see org.apache.cocoon.portal.PortalManager#register(org.apache.cocoon.portal.services.aspects.PortalManagerAspect)
+     */
     public void register(PortalManagerAspect aspect) {
-        this.chain.addAspect(aspect, null, 0);
+        try {
+            this.chain.addAspect(aspect, null, 0);
+        } catch (PortalException pe) {
+            final IllegalArgumentException e = new IllegalArgumentException("Unable to add portal manager aspects.");
+            e.initCause(pe);
+            throw e;
+        }
     }
 }

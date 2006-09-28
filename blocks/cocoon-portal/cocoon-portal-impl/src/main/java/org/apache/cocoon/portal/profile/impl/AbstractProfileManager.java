@@ -26,6 +26,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.LayoutException;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserDidLoginEvent;
@@ -83,9 +84,13 @@ public abstract class AbstractProfileManager
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
-        this.configuration = config;
-        this.chain = new AspectChain();
-        this.chain.configure(this.manager, ProfileManagerAspect.class, config);
+        try {
+            this.configuration = config;
+            this.chain = new AspectChain(ProfileManagerAspect.class);
+            this.chain.configure(this.manager, config);
+        } catch (PortalException pe) {
+            throw new ConfigurationException("Unable to configure profile manager aspects.", pe);
+        }
     }
 
     /**

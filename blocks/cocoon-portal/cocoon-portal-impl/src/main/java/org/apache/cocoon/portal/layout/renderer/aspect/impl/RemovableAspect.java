@@ -17,7 +17,6 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.cocoon.portal.LayoutException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.layout.RemoveLayoutEvent;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CopletDefinitionFeatures;
@@ -50,11 +49,10 @@ public class RemovableAspect
     extends AbstractAspect {
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
-                      PortalService service,
                       ContentHandler handler)
 	throws SAXException, LayoutException {
         if ( layout instanceof CopletLayout ) {
@@ -63,14 +61,14 @@ public class RemovableAspect
             boolean mandatory = CopletDefinitionFeatures.isMandatory(cid.getCopletDefinition());
             if ( !mandatory ) {
                 RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
-                XMLUtils.createElement(handler, "remove-uri", service.getLinkService().getLinkURI(lre));
+                XMLUtils.createElement(handler, "remove-uri", rendererContext.getPortalService().getLinkService().getLinkURI(lre));
             }
         } else {
             // for any other layout just create the event
             RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
             XMLUtils.createElement(handler, "remove-uri", 
-                                   service.getLinkService().getLinkURI(lre));
+                                   rendererContext.getPortalService().getLinkService().getLinkURI(lre));
         }
-        rendererContext.invokeNext(layout, service, handler);
+        rendererContext.invokeNext(layout, handler);
 	}
 }

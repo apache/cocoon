@@ -34,25 +34,25 @@ public abstract class BasicAspectContextImpl implements BasicAspectContext {
     protected final PortalService portalService;
 
     /** The iterator used to iterate over the aspects. */
-    protected final Iterator iterator;
+    protected final Iterator aspectsIterator;
     /** The iterator used to iterate over the configuration of the aspects. */
-    protected final Iterator configIterator;
+    protected final Iterator propertiesIterator;
 
     /** The current configuration. */
-    protected Properties aspectConfig;
+    protected Properties aspectProperties;
 
     public BasicAspectContextImpl(PortalService service,
                                   AspectChain   chain) {
         this.portalService = service;
-        this.iterator = chain.getIterator();
-        this.configIterator = chain.getConfigIterator();
+        this.aspectsIterator = chain.getAspectsIterator();
+        this.propertiesIterator = chain.getPropertiesIterator();
     }
 
     /**
      * @see org.apache.cocoon.portal.services.aspects.BasicAspectContext#getAspectProperties()
      */
     public Properties getAspectProperties() {
-        return this.aspectConfig;
+        return this.aspectProperties;
     }
 
     /**
@@ -63,9 +63,9 @@ public abstract class BasicAspectContextImpl implements BasicAspectContext {
     }
 
     protected Object getNext() {
-        if (this.iterator.hasNext()) {
-            this.aspectConfig = (Properties)this.configIterator.next();
-            return this.iterator.next();
+        if (this.aspectsIterator.hasNext()) {
+            this.aspectProperties = (Properties)this.propertiesIterator.next();
+            return this.aspectsIterator.next();
         }
         return null;
     }

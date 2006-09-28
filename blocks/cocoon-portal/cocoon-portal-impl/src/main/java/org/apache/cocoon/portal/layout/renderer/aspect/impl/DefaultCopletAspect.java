@@ -16,15 +16,19 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
+import java.util.Properties;
+
 import org.apache.cocoon.portal.LayoutException;
-import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -52,21 +56,48 @@ import org.xml.sax.SAXException;
 public class DefaultCopletAspect extends AbstractAspect {
 
 	/**
-	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
-                      PortalService service,
                       ContentHandler handler)
 	throws SAXException, LayoutException {
-        XMLUtils.startElement(handler, "content");
-        CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
+        LayoutFeatures.checkLayoutClass(layout, CopletLayout.class, true);
+        final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
+        if ( config.rootTag ) {
+            XMLUtils.startElement(handler, config.tagName);
+        }
 
+        final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
         final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
-        CopletAdapter copletAdapter = service.getCopletAdapter(adapterName);
+        final CopletAdapter copletAdapter = rendererContext.getPortalService().getCopletAdapter(adapterName);
         copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
 
-        XMLUtils.endElement(handler, "content");
-        rendererContext.invokeNext(layout, service, handler);
+        if ( config.rootTag ) {
+            XMLUtils.endElement(handler, config.tagName);
+        }
+        rendererContext.invokeNext(layout, handler);
 	}
+
+    protected static class PreparedConfiguration {
+
+        public String tagName;
+        public boolean rootTag;
+
+        public void takeValues(PreparedConfiguration from) {
+            this.tagName = from.tagName;
+            this.rootTag = from.rootTag;
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(Properties)
+     */
+    public Object prepareConfiguration(Properties configuration)
+    throws PortalException {
+        PreparedConfiguration pc = new PreparedConfiguration();
+        pc.tagName = configuration.getProperty("tag-name", "content");
+        pc.rootTag = BooleanUtils.toBoolean(configuration.getProperty("root-tag", "true"));
+        return pc;
+    }
 }

@@ -23,7 +23,6 @@ import java.util.Properties;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
@@ -105,11 +104,10 @@ public final class WindowAspect extends AbstractAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext,
                       Layout                layout,
-                      PortalService         service,
                       ContentHandler        contenthandler)
     throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
@@ -118,7 +116,7 @@ public final class WindowAspect extends AbstractAspect {
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
-        final CopletAdapter adapter = service.getCopletAdapter(copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName());
+        final CopletAdapter adapter = rendererContext.getPortalService().getCopletAdapter(copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName());
 
         // stream some general infos about the copet instance data
         this.streamCopletInstanceDataInfos(copletInstanceData, adapter, layout, contenthandler);
@@ -135,7 +133,7 @@ public final class WindowAspect extends AbstractAspect {
         // stream the window states and determine if we should invoke the next aspect
         boolean invokeNext = this.streamWindowStates(copletInstanceData, adapter, layout, contenthandler);
         if ( invokeNext ) {
-            rendererContext.invokeNext( layout, service, contenthandler );
+            rendererContext.invokeNext( layout, contenthandler );
         }
 
         if ( config.rootTag ) {
@@ -237,8 +235,7 @@ public final class WindowAspect extends AbstractAspect {
                 if ( this.enableFullScreen ) {
                     boolean supportsFullScreen = CopletDefinitionFeatures.supportsFullScreenMode(cid.getCopletDefinition());
                     if ( supportsFullScreen ) {
-                        final Layout rootLayout = this.portalService.getProfileManager().getLayout(null);
-                        final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService, rootLayout);
+                        final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService);
                         if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
                             event = new CopletInstanceSizingEvent( cid, CopletInstance.SIZE_NORMAL );
                             XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL, this.portalService.getLinkService().getLinkURI(event));
