@@ -17,5 +17,10 @@
   limitations under the License.
 -->
 
-<!-- @version $Id: applicationContext.xml 387946 2006-03-22 21:07:56Z cziegeler $ -->
-<beans/>
+<!-- @version $Id$ -->
+<beans>
+  <bean name="org.apache.cocoon.processing.ProcessInfoProvider"
+        class="org.apache.cocoon.processing.impl.ProcessInfoProviderImpl">
+    <property name="servletContext" ref="javax.servlet.ServletContext"/>
+  </bean>
+</beans>

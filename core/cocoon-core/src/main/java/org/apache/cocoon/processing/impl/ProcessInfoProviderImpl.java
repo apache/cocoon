@@ -22,50 +22,50 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * Default implementation of the process info provider.
  *
- * For a simpler implementation we currently use Avalon functionality.
- *
  * @version $Id$
  * @since 2.2
  */
 public class ProcessInfoProviderImpl
-    implements ProcessInfoProvider, ThreadSafe, Contextualizable {
-
-    protected Context context;
+    implements ProcessInfoProvider {
 
     protected ServletContext servletContext;
 
+    protected Map getCurrentObjectModel() {
+        final Environment env = EnvironmentHelper.getCurrentEnvironment();
+        if ( env == null ) {
+            throw new IllegalStateException("Unable to locate current environment.");
+        }
+        return env.getObjectModel();
+    }
+
     /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     * Set the dependency to the servlet context.
+     * @param context The servlet context.
      */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
-        this.servletContext = (ServletContext) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+    public void setServletContext(ServletContext context) {
+        this.servletContext = context;
     }
 
     /**
      * @see org.apache.cocoon.processing.ProcessInfoProvider#getRequest()
      */
     public HttpServletRequest getRequest() {
-        return (HttpServletRequest) ContextHelper.getObjectModel(this.context).get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+        return (HttpServletRequest) this.getCurrentObjectModel().get(HttpEnvironment.HTTP_REQUEST_OBJECT);
     }
 
     /**
      * @see org.apache.cocoon.processing.ProcessInfoProvider#getResponse()
      */
     public HttpServletResponse getResponse() {
-        return (HttpServletResponse) ContextHelper.getObjectModel(this.context).get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
+        return (HttpServletResponse) this.getCurrentObjectModel().get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
     }
 
     /**
@@ -79,6 +79,6 @@ public class ProcessInfoProviderImpl
      * @see org.apache.cocoon.processing.ProcessInfoProvider#getObjectModel()
      */
     public Map getObjectModel() {
-        return ContextHelper.getObjectModel(this.context);
+        return this.getCurrentObjectModel();
     }
 }
