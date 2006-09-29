@@ -868,6 +868,7 @@ public abstract class AbstractProcessingPipeline
         if (e instanceof SocketException) {
             if (e.getMessage().indexOf("reset") > -1
                     || e.getMessage().indexOf("aborted") > -1
+                    || e.getMessage().indexOf("Broken pipe") > -1
                     || e.getMessage().indexOf("connection abort") > -1) {
                 throw new ConnectionResetException("Connection reset by peer", e);
             }
