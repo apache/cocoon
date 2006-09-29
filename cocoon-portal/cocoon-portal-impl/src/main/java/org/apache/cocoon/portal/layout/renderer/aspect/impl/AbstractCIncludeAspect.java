@@ -45,7 +45,7 @@ public abstract class AbstractCIncludeAspect
     protected void createCInclude(String source, ContentHandler handler)
     throws SAXException {
         handler.startPrefixMapping(PREFIX, NAMESPACE);
-        AttributesImpl attributes = new AttributesImpl();
+        final AttributesImpl attributes = new AttributesImpl();
         attributes.addCDATAAttribute(ATTRIBUTE, source);
         handler.startElement(NAMESPACE, ELEMENT, QELEMENT, attributes);
         handler.endElement(NAMESPACE, ELEMENT, QELEMENT);

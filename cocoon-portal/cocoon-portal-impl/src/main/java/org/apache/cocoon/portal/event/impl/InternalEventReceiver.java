@@ -76,6 +76,27 @@ public final class InternalEventReceiver
                 CopletInstanceSizingEvent e = new CopletInstanceSizingEvent((CopletInstance)target, newSize);
                 this.inform(e, service);
             } else {
+                // special handling of attributes as maps might be unmodifiable atm
+                if ( event.getPath().startsWith("attributes/") && event.getPath().indexOf('/', 12 ) == -1 ) {
+                    final String key = event.getPath().substring(11);
+                    if ( target instanceof CopletInstance ) {
+                        ((CopletInstance)target).setAttribute(key, event.getValue());
+                        return;
+                    } else if ( target instanceof LayoutInstance ) {
+                        ((LayoutInstance)target).setAttribute(key, event.getValue());
+                        return;
+                    }
+                }
+                if ( event.getPath().startsWith("temporaryAttributes/") && event.getPath().indexOf('/', 21 ) == -1 ) {
+                    final String key = event.getPath().substring(20);
+                    if ( target instanceof CopletInstance ) {
+                        ((CopletInstance)target).setTemporaryAttribute(key, event.getValue());
+                        return;
+                    } else if ( target instanceof LayoutInstance ) {
+                        ((LayoutInstance)target).setTemporaryAttribute(key, event.getValue());
+                        return;
+                    }
+                }
                 final JXPathContext jxpathContext = JXPathContext.newContext(target);
                 jxpathContext.setValue(event.getPath(), event.getValue());
             }
