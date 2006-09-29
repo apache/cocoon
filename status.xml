@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="update">
+      Core: Move BackgroundEnvironment from Cron block into the Core.
+    </action>
     <action dev="VG" type="fix">
       Core: i18n transformer was loosing whitespaces in i18n:text, i18n:translate,
       i18n:param elements if they had mixed content.
