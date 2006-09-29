@@ -177,6 +177,9 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="update">
+      Move BackgroundEnvironment from Cron block into the core.
+    </action>
     <action dev="CZ" type="remove">
       Remove deprecated WildcardHelper. Use WildcardMatcherHelper instead.
     </action>
