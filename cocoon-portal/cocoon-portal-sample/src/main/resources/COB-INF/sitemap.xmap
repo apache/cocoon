@@ -197,7 +197,10 @@
         <map:act type="cauth-is-logged-in">
           <map:parameter name="application" value="portal"/>
 
-          <map:generate type="portal" label="content"/>
+          <map:generate type="portal" label="content">
+            <map:parameter name="render-coplet" value="{request-param:render-coplet}"/>
+            <map:parameter name="render-layout" value="{request-param:render-layout}"/>
+          </map:generate>
           <!--
           <map:transform type="htmlroot" />
           -->
