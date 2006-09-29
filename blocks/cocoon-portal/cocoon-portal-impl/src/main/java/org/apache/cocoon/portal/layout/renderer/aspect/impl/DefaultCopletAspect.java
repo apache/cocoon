@@ -18,14 +18,19 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Properties;
 
+import org.apache.cocoon.ajax.AjaxHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
+import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -64,14 +69,31 @@ public class DefaultCopletAspect extends AbstractAspect {
 	throws SAXException, LayoutException {
         LayoutFeatures.checkLayoutClass(layout, CopletLayout.class, true);
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
+
         if ( config.rootTag ) {
             XMLUtils.startElement(handler, config.tagName);
         }
 
         final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
-        final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
-        final CopletAdapter copletAdapter = rendererContext.getPortalService().getCopletAdapter(adapterName);
-        copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
+        // if ajax is used and the current request is not an ajax request, we just send some javascript stuff back
+        if ( config.useAjax && !AjaxHelper.isAjaxRequest(ObjectModelHelper.getRequest(rendererContext.getPortalService().getProcessInfoProvider().getObjectModel()))) {
+            final String uri = rendererContext.getPortalService().getLinkService().getRefreshLinkURI();
+            final char separator = (uri.indexOf('?') == -1 ? '?' : '&');
+            final StringBuffer buffer = new StringBuffer("cocoon.portal.process(\"");
+            buffer.append(uri);
+            buffer.append(separator);
+            buffer.append(PortalManager.PROPERTY_RENDER_COPLET);
+            buffer.append('=');
+            buffer.append(cid.getId());
+            buffer.append("\");");
+            final AttributesImpl a = new AttributesImpl();
+            a.addCDATAAttribute("type", "text/javascript");
+            XMLUtils.createElement(handler, "script", a, buffer.toString());
+        } else {
+            final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
+            final CopletAdapter copletAdapter = rendererContext.getPortalService().getCopletAdapter(adapterName);
+            copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
+        }
 
         if ( config.rootTag ) {
             XMLUtils.endElement(handler, config.tagName);
@@ -83,10 +105,12 @@ public class DefaultCopletAspect extends AbstractAspect {
 
         public String tagName;
         public boolean rootTag;
+        public boolean useAjax;
 
         public void takeValues(PreparedConfiguration from) {
             this.tagName = from.tagName;
             this.rootTag = from.rootTag;
+            this.useAjax = from.useAjax;
         }
     }
 
@@ -98,6 +122,7 @@ public class DefaultCopletAspect extends AbstractAspect {
         PreparedConfiguration pc = new PreparedConfiguration();
         pc.tagName = configuration.getProperty("tag-name", "content");
         pc.rootTag = BooleanUtils.toBoolean(configuration.getProperty("root-tag", "true"));
+        pc.useAjax = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_USE_AJAX, Constants.DEFAULT_CONFIGURATION_USE_AJAX);
         return pc;
     }
 }

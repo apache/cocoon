@@ -18,14 +18,18 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Properties;
 
+import org.apache.cocoon.ajax.AjaxHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
+import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
@@ -79,9 +83,20 @@ public class CIncludeCopletAspect
             XMLUtils.startElement(handler, config.tagName);
         }
 
-        if ( config.useAjax ) {
-            // TODO something else to do
-            this.createCInclude("coplet://" + cid.getId(), handler);
+        // if ajax is used and the current request is not an ajax request, we just send some javascript stuff back
+        if ( config.useAjax && !AjaxHelper.isAjaxRequest(ObjectModelHelper.getRequest(rendererContext.getPortalService().getProcessInfoProvider().getObjectModel()))) {
+            final String uri = rendererContext.getPortalService().getLinkService().getRefreshLinkURI();
+            final char separator = (uri.indexOf('?') == -1 ? '?' : '&');
+            final StringBuffer buffer = new StringBuffer("cocoon.portal.process(\"");
+            buffer.append(uri);
+            buffer.append(separator);
+            buffer.append(PortalManager.PROPERTY_RENDER_COPLET);
+            buffer.append('=');
+            buffer.append(cid.getId());
+            buffer.append("\");");
+            final AttributesImpl a = new AttributesImpl();
+            a.addCDATAAttribute("type", "text/javascript");
+            XMLUtils.createElement(handler, "script", a, buffer.toString());
         } else {
             this.createCInclude("coplet://" + cid.getId(), handler);
         }
