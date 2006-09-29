@@ -111,27 +111,27 @@ public final class WindowAspect extends AbstractAspect {
                       ContentHandler        contenthandler)
     throws SAXException, LayoutException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
-        final CopletInstance copletInstanceData = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
+        final CopletInstance copletInstance = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
 
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
-        final CopletAdapter adapter = rendererContext.getPortalService().getCopletAdapter(copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName());
+        final CopletAdapter adapter = rendererContext.getPortalService().getCopletAdapter(copletInstance.getCopletDefinition().getCopletType().getCopletAdapterName());
 
         // stream some general infos about the copet instance data
-        this.streamCopletInstanceDataInfos(copletInstanceData, adapter, layout, contenthandler);
+        this.streamCopletInstanceDataInfos(copletInstance, adapter, layout, contenthandler);
         
         // stream the title
-        this.streamTitle(copletInstanceData, adapter, layout, contenthandler);
+        this.streamTitle(copletInstance, adapter, layout, contenthandler);
 
         // stream portlet modes if the coplet type supports this
-        this.streamCopletModes(copletInstanceData, adapter, layout, contenthandler);
+        this.streamCopletModes(copletInstance, adapter, layout, contenthandler);
 
         // stream remove button
-        this.streamRemoveButton(copletInstanceData, adapter, layout, contenthandler);
+        this.streamRemoveButton(copletInstance, adapter, layout, contenthandler);
 
         // stream the window states and determine if we should invoke the next aspect
-        boolean invokeNext = this.streamWindowStates(copletInstanceData, adapter, layout, contenthandler);
+        boolean invokeNext = this.streamWindowStates(copletInstance, adapter, layout, contenthandler);
         if ( invokeNext ) {
             rendererContext.invokeNext( layout, contenthandler );
         }

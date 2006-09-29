@@ -79,7 +79,7 @@ public class CIncludeCopletAspect
             XMLUtils.startElement(handler, config.tagName);
         }
 
-        if ( rendererContext.getPortalService().getConfigurationAsBoolean(Constants.CONFIGURATION_USE_AJAX, Constants.DEFAULT_CONFIGURATION_USE_AJAX) ) {
+        if ( config.useAjax ) {
             // TODO something else to do
             this.createCInclude("coplet://" + cid.getId(), handler);
         } else {
@@ -97,10 +97,12 @@ public class CIncludeCopletAspect
 
         public String tagName;
         public boolean rootTag;
+        public boolean useAjax;
 
         public void takeValues(PreparedConfiguration from) {
             this.tagName = from.tagName;
             this.rootTag = from.rootTag;
+            this.useAjax = from.useAjax;
         }
     }
 
@@ -112,6 +114,7 @@ public class CIncludeCopletAspect
         PreparedConfiguration pc = new PreparedConfiguration();
         pc.tagName = configuration.getProperty("tag-name", "content");
         pc.rootTag = BooleanUtils.toBoolean(configuration.getProperty("root-tag", "true"));
+        pc.useAjax = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_USE_AJAX, Constants.DEFAULT_CONFIGURATION_USE_AJAX);
         return pc;
     }
 }
