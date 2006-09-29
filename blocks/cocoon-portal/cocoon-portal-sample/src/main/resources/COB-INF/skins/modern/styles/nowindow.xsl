@@ -15,19 +15,27 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    |
-    | @version $Id$
-    +-->
-<components>
-  <renderer name="nowindow"
-            class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-    <aspects>
-      <aspect type="xslt">
-        <parameter name="style" value="{portal-skin:skin.basepath}/styles/nowindow.xsl"/>
-      </aspect>
-      <aspect type="window"/>
-      <aspect type="coplet-cinclude"/>
-    </aspects>
-  </renderer>
-</components>
+<!-- SVN $Id$ -->
+<xsl:stylesheet version="1.0" 
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+  <xsl:template match="window">
+    <xsl:variable name="copletId"><xsl:value-of select="instance-id"/></xsl:variable>
+    <div class="coplet-nowindow" id="coplet-{$copletId}">
+      <div class="coplet-content" id="coplet-content-{$copletId}">
+        <xsl:apply-templates select="content"/>
+      </div>
+    </div>
+  </xsl:template>
+
+  <!-- This is the content of the coplet. We just remove the surrounding tag. -->
+  <xsl:template match="content">
+    <xsl:copy-of select="*"/>
+  </xsl:template>
+
+  <!-- Copy all and apply templates -->
+  <xsl:template match="@*|node()">
+    <xsl:copy><xsl:apply-templates select="@*|node()" /></xsl:copy>
+  </xsl:template>
+
+</xsl:stylesheet>
