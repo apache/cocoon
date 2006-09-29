@@ -74,7 +74,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
             final ProfileImpl profile = new ProfileImpl(layoutKey);
 
             // first "load" the global data
-            profile.setCopletTypes( this.getGlobalBaseDatas( layoutKey) );
+            profile.setCopletTypes( this.getGlobalCopletTypes( layoutKey) );
             profile.setCopletDefinitions( this.getGlobalDatas( info, profile, layoutKey) );
 
             // create root layout
@@ -101,9 +101,9 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 }
             }
             profile.setCopletInstances(instances);
-            this.prepareObject(instances);
+            this.prepareObject(profile, instances);
 
-            this.prepareObject(rootLayout);
+            this.prepareObject(profile, rootLayout);
             profile.setRootLayout(rootLayout);
 
             final Profile processedProfile = this.processProfile(profile);
@@ -148,7 +148,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                             item.setLayout(copletLayout);
                             rootLayout.addItem(item);
                             try {
-                                 this.prepareObject(copletLayout);
+                                 this.prepareObject(this.getUserProfile(null), copletLayout);
                             } catch (LayoutException le) {
                                 // ignore this
                             }

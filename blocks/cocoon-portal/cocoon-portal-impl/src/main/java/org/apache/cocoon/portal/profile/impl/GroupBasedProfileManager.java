@@ -329,7 +329,7 @@ public class GroupBasedProfileManager
         ProfileImpl profile = new ProfileImpl(layoutKey);
 
         // first "load" the global data
-        profile.setCopletTypes( this.getGlobalBaseDatas(layoutKey) );
+        profile.setCopletTypes( this.getGlobalCopletTypes(layoutKey) );
         profile.setCopletDefinitions( this.getGlobalDatas(info, profile, layoutKey) );
 
         // now load the user/group specific data
@@ -354,7 +354,7 @@ public class GroupBasedProfileManager
         return processedProfile;
     }
 
-    protected Map getGlobalBaseDatas(final String     layoutKey)
+    protected Map getGlobalCopletTypes(final String     layoutKey)
     throws Exception {
         // if we already have loaded the profile and don't check
         // for changes, just return the profile
@@ -399,7 +399,7 @@ public class GroupBasedProfileManager
             this.copletTypes.validity = newValidity;
             this.copletDefinitions.objects = null;
             this.copletDefinitions.validity = null;
-            this.prepareObject(this.copletTypes.objects);
+            this.prepareObject(null, this.copletTypes.objects);
             return this.copletTypes.objects;
         }
     }
@@ -454,7 +454,7 @@ public class GroupBasedProfileManager
                 newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETDEFINITION);
             }
             this.copletDefinitions.validity = newValidity;
-            this.prepareObject(this.copletDefinitions.objects);
+            this.prepareObject(profile, this.copletDefinitions.objects);
             return this.copletDefinitions.objects;
         }
     }
@@ -482,7 +482,7 @@ public class GroupBasedProfileManager
         try {
             Collection cidm = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETINSTANCE, profile.getCopletDefinitionsMap());
             profile.setCopletInstances(cidm);
-            this.prepareObject(profile.getCopletInstancesMap());
+            this.prepareObject(profile, profile.getCopletInstancesMap());
 
             return true;
         } catch (Exception e) {
@@ -505,7 +505,7 @@ public class GroupBasedProfileManager
                                       layoutKey);
         try {
             Layout l = (Layout)loader.loadProfile(key, ProfileLS.PROFILETYPE_LAYOUT, profile.getCopletInstancesMap());
-            this.prepareObject(l);
+            this.prepareObject(profile, l);
             profile.setRootLayout(l);
 
             return true;
@@ -610,7 +610,7 @@ public class GroupBasedProfileManager
         if ( this.copletTypes.objects == null ) {
             try {
                 // first "load" the global data
-                this.getGlobalBaseDatas(this.portalService.getUserService().getDefaultLayoutKey());
+                this.getGlobalCopletTypes(this.portalService.getUserService().getDefaultLayoutKey());
             } catch (Exception e) {
                 throw new ProfileException("Unable to load global base datas.", e);
             }            

@@ -113,18 +113,17 @@ public class TabContentAspect
     extends CompositeContentAspect {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.om.Layout, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext rendererContext,
                       Layout                layout,
-                      PortalService         service,
                       ContentHandler        handler)
     throws SAXException, LayoutException {
         LayoutFeatures.checkLayoutClass(layout, CompositeLayout.class, true);
         final CompositeLayout tabLayout = (CompositeLayout) layout;
-        final LayoutInstance layoutInstance = LayoutFeatures.getLayoutInstance(service, tabLayout, true);
+        final LayoutInstance layoutInstance = LayoutFeatures.getLayoutInstance(rendererContext.getPortalService(), tabLayout, true);
         // check for maximized information
-    	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(service, layout);
+    	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(rendererContext.getPortalService(), layout);
 
         final TabPreparedConfiguration config = (TabPreparedConfiguration)rendererContext.getAspectConfiguration();
 
@@ -135,7 +134,7 @@ public class TabContentAspect
         final AttributesImpl attributes = new AttributesImpl();
 
         // selected tab
-        String selectedTabName = LayoutFeatures.getSelectedTab(service, tabLayout);
+        String selectedTabName = LayoutFeatures.getSelectedTab(rendererContext.getPortalService(), tabLayout);
         int selectedTabIndex = 0;
         if ( selectedTabName != null && !config.useNames) {
             selectedTabIndex = Integer.valueOf(selectedTabName).intValue();
@@ -167,7 +166,7 @@ public class TabContentAspect
             }
             final LayoutInstanceChangeAttributeEvent event;
             event = new ChangeTabEvent(layoutInstance, tab, config.useNames);
-            attributes.addCDATAAttribute("parameter", service.getLinkService().getLinkURI(event)); 
+            attributes.addCDATAAttribute("parameter", rendererContext.getPortalService().getLinkService().getLinkURI(event)); 
 
             // add parameters
             final Iterator iter = tab.getParameters().entrySet().iterator();
@@ -179,19 +178,19 @@ public class TabContentAspect
             XMLUtils.startElement(handler, "named-item", attributes);
             if (selected) {
             	if ( maximizedInfo != null && maximizedInfo.item.equals(tab) ) {
-            		this.processLayout(maximizedInfo.layout, service, handler);
+            		this.processLayout(maximizedInfo.layout, rendererContext.getPortalService(), handler);
             	} else {
-                    this.processLayout(tab.getLayout(), service, handler);
+                    this.processLayout(tab.getLayout(), rendererContext.getPortalService(), handler);
             	}
                 if (config.includeSelected) {
                     List events = new ArrayList();
                     events.add(event);
-                    this.processNavigation(tab.getLayout(), service, handler, events, config);
+                    this.processNavigation(tab.getLayout(), rendererContext.getPortalService(), handler, events, config);
                 }
             } else if (config.showAllNav) {
                 List events = new ArrayList();
                 events.add(event);
-                this.processNavigation(tab.getLayout(), service, handler, events, config);
+                this.processNavigation(tab.getLayout(), rendererContext.getPortalService(), handler, events, config);
             }
 
             // close named-item tag

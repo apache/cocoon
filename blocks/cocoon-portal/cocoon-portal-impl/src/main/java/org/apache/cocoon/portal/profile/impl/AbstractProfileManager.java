@@ -23,8 +23,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -55,18 +53,8 @@ public abstract class AbstractProfileManager
     extends AbstractComponent 
     implements ProfileManager, Receiver, Configurable, Ordered {
 
-    /** The configuration. */
-    protected Configuration configuration;
-
     /** The chain for the configured profile manager aspects. */
     protected AspectChain chain;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        super.service(aManager);
-    }
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
@@ -85,7 +73,6 @@ public abstract class AbstractProfileManager
      */
     public void configure(Configuration config) throws ConfigurationException {
         try {
-            this.configuration = config;
             this.chain = new AspectChain(ProfileManagerAspect.class);
             this.chain.configure(this.manager, config);
         } catch (PortalException pe) {
@@ -156,16 +143,9 @@ public abstract class AbstractProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getProfile(java.lang.String)
-     */
-    public Profile getProfile(String profileName) {
-        return null;
-    }
-
-    /**
      * Prepares the object by using the specified factory.
      */
-    protected void prepareObject(Object object)
+    protected void prepareObject(Profile profile, Object object)
     throws LayoutException {
         if ( object != null ) {
             Object preparableObject = object;
@@ -173,7 +153,7 @@ public abstract class AbstractProfileManager
                 preparableObject = ((Map)object).values();
             }
             if (object instanceof Layout) {
-                preparableObject = this.checkAvailability((Layout)object);
+                preparableObject = this.checkAvailability(profile, (Layout)object);
             } else if (object instanceof Collection) {
                 final Iterator iterator = ((Collection)preparableObject).iterator();
                 while (iterator.hasNext()) {
@@ -194,23 +174,23 @@ public abstract class AbstractProfileManager
         }
     }
 
-    protected Layout checkAvailability(Layout layout) {
+    protected Layout checkAvailability(Profile profile, Layout layout) {
         // is the coplet instance available?
         if ( layout instanceof CopletLayout ) {
             final CopletLayout cl = (CopletLayout)layout;
             if ( cl.getCopletInstanceId() == null ) {
                 return null;
-            }/*
-            final CopletInstance instance = this.getCopletInstance(cl.getCopletInstanceId());
+            }
+            final CopletInstance instance = profile.searchCopletInstance(cl.getCopletInstanceId());
             if ( instance == null || instance.getCopletDefinition() == null ) {
                 return null;
-            }*/
+            }
         } else if ( layout instanceof CompositeLayout ) {
             final CompositeLayout cl = (CompositeLayout)layout;
             final Iterator i = cl.getItems().iterator();
             while ( i.hasNext() ) {
                 Layout current = ((Item)i.next()).getLayout();
-                if ( this.checkAvailability(current) == null ) {
+                if ( this.checkAvailability(profile, current) == null ) {
                     // coplet or instance is not available: remove layout
                     // FIXME: We could display a dummy coplet instead?
                     i.remove();
