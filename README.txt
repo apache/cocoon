@@ -1,14 +1,17 @@
 This is some quick info about the Mavenization (m10n) of Cocoon 2.2.
 
 There are also some Daisy documentation pages about this, for more "stable" information:
-http://cocoon.zones.apache.org/daisy/documentation/g2/756.html
-http://cocoon.zones.apache.org/daisy/documentation/g1/798.html
+
+  http://cocoon.zones.apache.org/daisy/documentation/g2/756.html
+  http://cocoon.zones.apache.org/daisy/documentation/g1/798.html
+
 
 PREREQUISITES
 -------------
 You need a JDK, 1.4.x or 1.5.x.
 
 Maven 2 must be installed (at least 2.0.4??).
+
 
 MAVEN REPOSITORY MIRRORS
 ------------------------
@@ -26,15 +29,16 @@ Build times will vary dramatically depending on how good your connectivity
 to the Maven repository/mirror is, how well it performs, and whether
 you already have a loaded local Maven repository. 
 
-HOW TO BUILD THE COCOON WEBAPP (NON OSGI MODE)
-----------------------------------------------
+
+HOW TO BUILD THE COCOON WEBAPP
+------------------------------
 
 Since Cocoon release 2.2, Cocoon relies on Maven 2 for its build
 process. 
 
 To build Cocoon, use the following command:
 
-  $ mvn -Dmaven.test.skip=true install
+  $ mvn -Dmaven.test.skip=true -Dallblocks install
 
 In case of any failures, repeat command as necessary till you see
 the message:
@@ -43,6 +47,7 @@ the message:
 
 
 See also MAVEN REPOSITORY MIRRORS above.
+
 
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
 ------------------------------------
@@ -68,13 +73,13 @@ For further information about the maven eclipse plugin visit
   http://maven.apache.org/plugins/maven-eclipse-plugin/
 
 
-HOW TO START THE COCOON WEBAPP (NON OSGI MODE)
-----------------------------------------------
+HOW TO START THE COCOON WEBAPP
+------------------------------
 
 Checkout complete trunk and build it. If clean rebuild is desired,
 use command:
 
-  $ mvn clean install
+  $ mvn -Dallblocks clean install
 
 Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
 repositories are temporarily unaccessible and cause the build to fail.
@@ -91,9 +96,9 @@ Point your browser to http://localhost:8888/
 See also MAVEN REPOSITORY MIRRORS above.
 
 
-HOW TO START THE COCOON WEBAPP (OSGI MODE)
-------------------------------------------
-0. checkout complete trunk and
+HOW TO BUILD AND START THE COCOON WITH OSGI
+-------------------------------------------
+0. Checkout complete trunk and
 
   $ mvn clean install -Dmaven.test.skip=true
 
@@ -102,7 +107,7 @@ HOW TO START THE COCOON WEBAPP (OSGI MODE)
   
   See also MAVEN REPOSITORY MIRRORS above.
 
-1. move to ./core/cocoon-core and call "mvn c-eclipse:eclipse -o". This makes the project
+1. Go to ./core/cocoon-core and call "mvn c-eclipse:eclipse -o". This makes the project
    an PDE project. This means that Eclipse offers tools to support development based on
    OSGi. 
   
@@ -111,20 +116,20 @@ HOW TO START THE COCOON WEBAPP (OSGI MODE)
 
 3. Create a new Eclipse workspace and don't forget to set the M2_REPO classpath variable
 
-4. add following projects to your workspace
+4. Add following projects to your workspace
    - cocoon-core
    - cocoon-blocks-fw-impl
    
-5. add the Equinox target platform to your workspace:
+5. Add the Equinox target platform to your workspace:
    - [Window] - [Preferences] - [Plug-In Development] - [Target Platform] and choose
      ./cocoon/trunk/tools/equinox-target-platform as base directory for the new target
      platform
      
-6. start Cocoon:
+6. Start Cocoon:
    - [Run] - [Run ...] - [Equinox OSGI Framework] and create a new instance
    
 7. Run it by hitting the "Run" button
 
-8. point your browser to http://localhost/sitemap-test/test
-   (the first reponse produces an error because nothing is returned, but
+8. Point your browser to http://localhost/sitemap-test/test
+   (the first response produces an error because nothing is returned, but
     after a refresh, everything works fine.)
