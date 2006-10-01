@@ -56,7 +56,9 @@ from /trunk, run mvn eclipse:clean first to remove any left over eclipse
 files. Then run mvn eclipse:eclipse.
 
 Next go to eclipse, and make sure you haven't got trunk mounted as a
-project already. Do File-Import->Existing projects into workspace, then
+project already.  Also remove .classpath and .project files possibly
+remaining in /trunk from a previous project mount.
+Do File-Import->Existing projects into workspace, then
 point to your trunk directory and it should detect the newly created
 blocks as projects.
 
