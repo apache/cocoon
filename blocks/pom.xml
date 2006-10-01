@@ -58,8 +58,7 @@
         <module>cocoon-bsf</module>
         <module>cocoon-captcha</module>
         <module>cocoon-chaperon</module>
-        <module>cocoon-core-samples-additional</module>
-        <module>cocoon-core-samples-main</module>
+        <module>cocoon-core-sample</module>
         <module>cocoon-cron</module>
         <module>cocoon-databases</module>
         <module>cocoon-deli</module>
