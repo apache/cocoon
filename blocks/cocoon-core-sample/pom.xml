@@ -29,12 +29,13 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-core-samples-main</artifactId>
+  <artifactId>cocoon-core-sample</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Core-samples-main Block [modules]</name>
+  <name>Core-samples Block [modules]</name>
   <description/>
   <modules>
-    <module>cocoon-core-samples-main-sample</module>
+    <module>cocoon-core-main-sample</module>
+    <module>cocoon-core-additional-sample</module>
   </modules>
 </project>
