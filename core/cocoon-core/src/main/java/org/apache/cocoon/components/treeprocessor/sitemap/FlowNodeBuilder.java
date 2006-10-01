@@ -18,8 +18,11 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Builder of a {@link FlowNode} instance, corresponding to a
@@ -30,10 +33,15 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  */
 public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
+    protected static String DEFAULT_FLOW_SCRIPT_LOCATION = "flow";
+
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#buildNode(org.apache.avalon.framework.configuration.Configuration)
+     */
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
-        String language = config.getAttribute("language", "javascript");
-        FlowNode node = new FlowNode(language);
+        final String language = config.getAttribute("language", "javascript");
+        final FlowNode node = new FlowNode(language);
 
         if ( !this.treeBuilder.registerNode("flow", node) ) {
             throw new ConfigurationException("Only one <map:flow> is allowed in a sitemap. Another one is declared at " +
@@ -41,6 +49,23 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
         }
         this.treeBuilder.setupNode(node, config);
 
+        // since 2.2 we add by default all flow scripts located in the ./flow directory
+        // The default location can be overwritten by specifying the location attribute.
+        // we only include the scripts if the language is javascript
+        /*
+        if ( "javascript".equals(language) && node.getInterpreter() instanceof AbstractInterpreter ) {
+            // FIXME we need the resource loader
+            final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            final Resource[] resources = resolver.getResources(scriptLocation + "/*.js");
+            if ( resources != null ) {
+                for(int i=0; i < resources.length; i++) {
+                    ((AbstractInterpreter)node.getInterpreter()).register(resources[i].getURL().toExternalForm());
+                }
+            }
+        }
+        */
+        // now process child nodes
         buildChildNodesList(config);
 
         return node;

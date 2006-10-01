@@ -19,7 +19,6 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.components.flow.Interpreter;
@@ -36,10 +35,9 @@ import org.apache.cocoon.environment.Environment;
 public class FlowNode extends AbstractProcessingNode
                       implements Serviceable, Disposable {
 
+    private final String language;
     private ServiceManager manager;
-    private String language;
     private Interpreter interpreter;
-    private ServiceSelector interpreterSelector;
 
     public FlowNode(String language) {
         this.language = language;
@@ -53,13 +51,12 @@ public class FlowNode extends AbstractProcessingNode
      * @param manager a <code>ServiceManager</code> value
      * @exception ServiceException if no flow interpreter could be obtained
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
 
         try {
-            this.interpreterSelector = (ServiceSelector) manager.lookup(Interpreter.ROLE + "Selector");
             // Obtain the Interpreter instance for this language
-            this.interpreter = (Interpreter) this.interpreterSelector.select(language);
+            this.interpreter = (Interpreter) this.manager.lookup(Interpreter.ROLE + '/' + language);
             // Set interpreter ID as URI of the flow node (full sitemap file path)
             this.interpreter.setInterpreterID(this.location.getURI());
         } catch (ServiceException e) {
@@ -89,18 +86,13 @@ public class FlowNode extends AbstractProcessingNode
         return interpreter;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         if (this.manager != null) {
-            if (this.interpreterSelector != null) {
-                this.interpreterSelector.release(this.interpreter);
-                this.interpreter = null;
-
-                this.manager.release(this.interpreterSelector);
-                this.interpreterSelector = null;
-            }
+            this.manager.release(this.interpreter);
+            this.interpreter = null;
             this.manager = null;
         }
     }

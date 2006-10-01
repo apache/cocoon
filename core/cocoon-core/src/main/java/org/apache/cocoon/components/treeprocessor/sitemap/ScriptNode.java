@@ -28,34 +28,32 @@ import org.apache.cocoon.environment.Environment;
  * @since March 13, 2002
  * @version $Id$
  */
-public class ScriptNode extends AbstractProcessingNode
-{
-  String source;
+public class ScriptNode extends AbstractProcessingNode {
 
-  public ScriptNode(String source)
-  {
-    this.source = source;
-  }
+    protected final String source;
+
+    public ScriptNode(String source) {
+        this.source = source;
+    }
   
-  /**
-   * This method should never be called by the TreeProcessor, since a
-   * <map:script> element should not be in an "executable" sitemap
-   * node.
-   *
-   * @param env an <code>Environment</code> value
-   * @param context an <code>InvokeContext</code> value
-   * @return a <code>boolean</code> value
-   * @exception Exception if an error occurs
-   */
-  public boolean invoke(Environment env, InvokeContext context)
-    throws Exception
-  {
-    return true;
-  }
+    /**
+     * This method should never be called by the TreeProcessor, since a
+     * <map:script> element should not be in an "executable" sitemap
+     * node.
+     *
+     * @param env an <code>Environment</code> value
+     * @param context an <code>InvokeContext</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
+    public boolean invoke(Environment env, InvokeContext context)
+    throws Exception {
+        return true;
+    }
 
-  public void registerScriptWithInterpreter(Interpreter interpreter)
-  {
-    if (interpreter instanceof AbstractInterpreter)
-      ((AbstractInterpreter)interpreter).register(source);
-  }
+    public void registerScriptWithInterpreter(Interpreter interpreter) {
+        if (interpreter instanceof AbstractInterpreter) {
+            ((AbstractInterpreter)interpreter).register(this.source);
+        }
+    }
 }
