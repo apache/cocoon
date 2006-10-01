@@ -29,7 +29,7 @@ import org.springframework.web.context.scope.RequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * 
+ * FIXME - What about the ResourceLoader?
  * @version $Id$
  */
 public class Container {

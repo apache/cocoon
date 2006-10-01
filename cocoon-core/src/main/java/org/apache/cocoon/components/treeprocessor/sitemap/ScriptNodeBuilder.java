@@ -30,32 +30,30 @@ import org.apache.cocoon.components.flow.Interpreter;
  * @version $Id$
  */
 public class ScriptNodeBuilder
-  extends AbstractProcessingNodeBuilder
-  implements LinkedProcessingNodeBuilder
-{
-  protected ScriptNode node;
+    extends AbstractProcessingNodeBuilder
+    implements LinkedProcessingNodeBuilder {
 
-  public ProcessingNode buildNode(Configuration config)
-    throws Exception
-  {
-    String source = config.getAttribute("src");
+    protected ScriptNode node;
 
-    this.node = new ScriptNode(source);
-    this.treeBuilder.setupNode(this.node, config);
+    public ProcessingNode buildNode(Configuration config)
+    throws Exception {
+        String source = config.getAttribute("src");
 
-    return this.node;
-  }
+        this.node = new ScriptNode(source);
+        this.treeBuilder.setupNode(this.node, config);
 
-  /**
-   * Call the built node to register the script it contains with the
-   * flow interpreter.
-   */
-  public void linkNode()
-    throws Exception
-  {
-    FlowNode flowNode = (FlowNode)this.treeBuilder.getRegisteredNode("flow");
-    Interpreter interpreter = flowNode.getInterpreter();
+        return this.node;
+    }
 
-    this.node.registerScriptWithInterpreter(interpreter);
-  }
+    /**
+     * Call the built node to register the script it contains with the
+     * flow interpreter.
+     */
+    public void linkNode()
+    throws Exception {
+        FlowNode flowNode = (FlowNode)this.treeBuilder.getRegisteredNode("flow");
+        Interpreter interpreter = flowNode.getInterpreter();
+
+        this.node.registerScriptWithInterpreter(interpreter);
+    }
 }
