@@ -50,6 +50,9 @@
   </group>
 
   <group name="Transformers">
+    <sample href="source-write.xml" name="SourceWritingTransformer">
+      Examples of source writing transformer usage
+    </sample> 
     <sample href="paginator/" name="Paginator">
       Examples of Paginator transformer usage
     </sample> 
