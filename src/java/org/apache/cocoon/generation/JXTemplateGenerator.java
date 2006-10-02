@@ -2988,8 +2988,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 Properties omit = XMLUtils.createPropertiesForXML(true);
                 for (int i = 0; i < len; i++) {
                     try {
-                        String str = XMLUtils.serializeNode(nodeList.item(i), omit);
-                        buf.append(StringUtils.substringAfter(str, ">")); // cut the XML header
+                        buf.append(XMLUtils.serializeNode(nodeList.item(i), omit));
                     } catch (Exception e) {
                         throw new JXTException(e.getMessage(), startJXComment.location, e);
                     }

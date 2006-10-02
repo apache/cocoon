@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1866" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+      JXTemplate: Fix an ArrrayIndexOutOfBoundsException with jx:comment.
+    </action>
     <action dev="AS" type="fix" fixes-bug="COCOON-1818" due-to="Jasha Joachimsthal">
       Apply patch to handle malformed recipient address exception correctly.
     </action>
