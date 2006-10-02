@@ -57,7 +57,7 @@ import org.apache.excalibur.source.SourceUtil;
  */
 public abstract class AbstractInterpreter
         extends AbstractLogEnabled
-        implements Serviceable, Contextualizable, Interpreter,
+        implements Serviceable, Contextualizable, ConfigurableInterpreter,
                    SingleThreaded, Configurable, Disposable {
 
     // The instance ID of this interpreter, used to identify user scopes
