@@ -19,7 +19,6 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -29,19 +28,20 @@
     <artifactId>cocoon</artifactId>
     <version>2-SNAPSHOT</version>
   </parent>
-  <artifactId>cocoon-blocks-modules</artifactId>
+  <artifactId>cocoon-blocks-all-modules</artifactId>
   <version>2-SNAPSHOT</version>
   <name>Cocoon Blocks [modules]</name>
   <modules>
     <module>cocoon-ajax</module>
     <module>cocoon-apples</module>
+    <module>cocoon-core-sample</module>        
     <module>cocoon-forms</module>
     <module>cocoon-template</module>
     <module>cocoon-samples-style</module>
   </modules>
   <profiles>
     <profile>
-      <id>build all modules</id>
+      <id>allblocks</id>
       <activation>
         <property> 
           <name>allblocks</name>
@@ -58,7 +58,6 @@
         <module>cocoon-bsf</module>
         <module>cocoon-captcha</module>
         <module>cocoon-chaperon</module>
-        <module>cocoon-core-sample</module>
         <module>cocoon-cron</module>
         <module>cocoon-databases</module>
         <module>cocoon-deli</module>
@@ -70,7 +69,7 @@
         <module>cocoon-html</module>
         <module>cocoon-itext</module>
         <module>cocoon-javaflow</module>
-<!-- module>cocoon-jcr</module -->
+        <!-- module>cocoon-jcr</module -->
         <module>cocoon-jfor</module>
         <module>cocoon-jms</module>
         <module>cocoon-jsp</module>
