@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 import org.apache.cocoon.forms.binding.Binding;
 import org.apache.cocoon.forms.binding.BindingManager;
@@ -35,7 +36,7 @@ import org.w3c.dom.Element;
 /**
  * @version $Id$
  */
-public class Library {
+public class Library extends AbstractLogEnabled {
 
 	public static final String SEPARATOR = ":";
 
@@ -52,10 +53,6 @@ public class Library {
 	protected String sourceURI;
 	protected JXPathBindingManager.Assistant assistant;
 
-
-    public Library(ServiceManager sm) throws ServiceException {
-        manager = (LibraryManager) sm.lookup(LibraryManager.ROLE);
-	}
 
 	public Library(LibraryManager lm) {
 		manager = lm;
@@ -98,7 +95,7 @@ public class Library {
 		try {
 			// library keys may not contain ":"!
             if ((!inclusions.containsKey(key) || key.indexOf(SEPARATOR) > -1)
-                    && manager.getLibrary(sourceURI, this.sourceURI) != null) {
+                    && manager.load(sourceURI, this.sourceURI) != null) {
                 inclusions.put(key, new Dependency(sourceURI));
                 return true;
             }
@@ -124,7 +121,7 @@ public class Library {
         if (librarykey != null) {
             if (inclusions.containsKey(librarykey)) {
                 try {
-                    return manager.getLibrary(((Dependency) inclusions.get(librarykey)).dependencySourceURI, sourceURI).getBinding(definitionkey);
+                    return manager.load(((Dependency) inclusions.get(librarykey)).dependencySourceURI, sourceURI).getBinding(definitionkey);
                 } catch (Exception e) {
                     throw new LibraryException("Couldn't get Library key='" + librarykey + "' source='" + inclusions.get(librarykey) + "", e);
                 }
@@ -155,7 +152,9 @@ public class Library {
         binding.setEnclosingLibrary(this);
 
         definitions.put(binding.getId(), binding);
-        manager.debug(this + ": Put binding with id: " + binding.getId());
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug(this + ": Put binding with id: " + binding.getId());
+        }
     }
 
 
@@ -169,14 +168,14 @@ public class Library {
 		public Dependency(String dependencySourceURI) throws Exception {
 			this.dependencySourceURI = dependencySourceURI;
 
-			Library lib = manager.getLibrary(this.dependencySourceURI,sourceURI);
+			Library lib = manager.load(this.dependencySourceURI,sourceURI);
 			this.shared = lib.shared;
 		}
 
 		public boolean isValid() throws LibraryException {
             try {
-                if (manager.libraryInCache(dependencySourceURI, sourceURI)) {
-                    Library lib = manager.getLibrary(dependencySourceURI, sourceURI);
+                if (manager.get(dependencySourceURI, sourceURI)) {
+                    Library lib = manager.load(dependencySourceURI, sourceURI);
 
                     if (this.shared == lib.shared) {
                         return true;

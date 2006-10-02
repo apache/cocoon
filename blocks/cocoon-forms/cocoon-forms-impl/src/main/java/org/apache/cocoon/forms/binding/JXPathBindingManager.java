@@ -228,7 +228,9 @@ public class JXPathBindingManager extends AbstractLogEnabled
 
             boolean flag = false;
             if (context.getLocalLibrary() == null) {
+                // FIXME Use newLibrary()?
                 Library lib = new Library(libraryManager);
+                lib.enableLogging(getLogger());
                 context.setLocalLibrary(lib);
                 lib.setAssistant(getBuilderAssistant());
                 lib.setSourceURI(LocationAttributes.getURI(configElm));

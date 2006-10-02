@@ -72,11 +72,11 @@ public class LibraryManagerImpl extends AbstractLogEnabled
         // read config to "preload" libraries
     }
 
-    public boolean libraryInCache(String librarysource) throws Exception {
-    	return libraryInCache(librarysource,null);
+    public boolean get(String librarysource) throws Exception {
+    	return get(librarysource,null);
     }
 
-    public boolean libraryInCache(String librarysource, String relative) throws Exception {
+    public boolean get(String librarysource, String relative) throws Exception {
     	SourceResolver sourceResolver = null;
         Source source = null;
 
@@ -121,11 +121,11 @@ public class LibraryManagerImpl extends AbstractLogEnabled
         return result;
     }
 
-    public Library getLibrary(String librarysource) throws Exception {
-    	return getLibrary(librarysource,null);
+    public Library load(String librarysource) throws Exception {
+    	return load(librarysource,null);
     }
 
-	public Library getLibrary(String librarysource, String relative) throws Exception {
+	public Library load(String librarysource, String relative) throws Exception {
 		SourceResolver sourceResolver = null;
         Source source = null;
         Document libraryDocument = null;
@@ -157,7 +157,7 @@ public class LibraryManagerImpl extends AbstractLogEnabled
                     inputSource.setSystemId(source.getURI());
                     libraryDocument = DomHelper.parse(inputSource, this.serviceManager);
 
-                    lib = getNewLibrary();
+                    lib = newLibrary();
                     lib.buildLibrary(libraryDocument.getDocumentElement());
 
                     this.cacheManager.set(lib,source,PREFIX);
@@ -177,9 +177,10 @@ public class LibraryManagerImpl extends AbstractLogEnabled
         return lib;
 	}
 
-	public Library getNewLibrary() {
+	public Library newLibrary() {
 		Library lib = new Library(this);
-		lib.setAssistant(this.bindingManager.getBuilderAssistant());
+        lib.enableLogging(getLogger());
+        lib.setAssistant(this.bindingManager.getBuilderAssistant());
 
         if(getLogger().isDebugEnabled())
         	getLogger().debug("Created new library! "+lib);

@@ -18,8 +18,8 @@ package org.apache.cocoon.forms.binding.library;
 
 /**
  * The work interface for the LibraryManager, the class that
- * manages all used library definitions so they can be shared between
- * forms.
+ * manages all used form binding library definitions so they can be shared
+ * between forms.
  *
  * @version $Id$
  */
@@ -27,12 +27,46 @@ public interface LibraryManager {
 
 	String ROLE = LibraryManager.class.getName();
 
-	Library getLibrary(String librarysource) throws Exception;
-	Library getLibrary(String librarysource, String relative) throws Exception;
-	Library getNewLibrary();
+    /**
+     * Create new instance of the {@link Library}.
+     * @return new library instance
+     */
+    Library newLibrary();
 
-	boolean libraryInCache(String librarysource) throws Exception;
-	boolean libraryInCache(String librarysource, String relative) throws Exception;
+    /**
+     * Loads (and caches) a library from specified source URI.
+     *
+     * @param sourceURI URI of the library source.
+     * @return Library loaded from the source URI.
+     */
+	Library load(String sourceURI) throws Exception;
 
-	void debug(String msg);
+    /**
+     * Loads (and caches) a library from specified source URI, resolved relative
+     * to the base URI.
+     *
+     * @param sourceURI Relative URI of the library source.
+     * @param baseURI Base URI of the library source.
+     * @return Library loaded from the source URI.
+     */
+	Library load(String sourceURI, String baseURI) throws Exception;
+
+    /**
+     * Get the cached instance of the library loaded from the specified source
+     * URI.
+     *
+     * @param sourceURI URI of the library source.
+     * @return Cached instance of the library, or null if it was not loaded.
+     */
+	boolean get(String sourceURI) throws Exception;
+
+    /**
+     * Get the cached instance of the library loaded from the specified source
+     * URI, resolved relative to the base URI.
+     *
+     * @param sourceURI Relative URI of the library source.
+     * @param baseURI Base URI of the library source.
+     * @return Cached instance of the library, or null if it was not loaded.
+     */
+	boolean get(String sourceURI, String baseURI) throws Exception;
 }
