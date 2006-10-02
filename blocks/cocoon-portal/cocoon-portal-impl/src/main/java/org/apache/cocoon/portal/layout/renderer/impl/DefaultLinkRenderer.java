@@ -16,8 +16,10 @@
  */
 package org.apache.cocoon.portal.layout.renderer.impl;
 
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
@@ -35,27 +37,25 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class DefaultLinkRenderer extends AbstractRenderer {
+public class DefaultLinkRenderer implements Renderer, ThreadSafe {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.impl.AbstractRenderer#process(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.impl.AbstractRenderer#toSAX(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void process(Layout layout, PortalService service, ContentHandler handler)
-    throws SAXException {
-        try {
-            LayoutFeatures.checkLayoutClass(layout, LinkLayout.class, true);
-            String layoutId = null;
-            final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
-            if ( instance != null ) {
-                layoutId = (String)instance.getTemporaryAttribute("link-layout-id");                
-            }
-            if ( layoutId == null){
-				// get default values
-				layoutId = ((LinkLayout)layout).getLayoutId();
-			}
-            this.processLayout(service.getProfileManager().getLayout(layoutId), service, handler);
-        } catch (LayoutException le) {
-            throw new SAXException(le);
-        }        
+    public void toSAX(Layout layout, PortalService service, ContentHandler handler)
+    throws SAXException, LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, LinkLayout.class, true);
+        String layoutId = null;
+        final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
+        if ( instance != null ) {
+            layoutId = (String)instance.getTemporaryAttribute("link-layout-id");                
+        }
+        if ( layoutId == null){
+            // get default values
+            layoutId = ((LinkLayout)layout).getLayoutId();
+        }
+        final Layout linkedLayout = service.getProfileManager().getLayout(layoutId);
+        final String rendererName = service.getLayoutFactory().getRendererName(linkedLayout);
+        service.getRenderer(rendererName).toSAX(linkedLayout, service, handler);
     }
 }
