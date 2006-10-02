@@ -66,6 +66,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="AS" type="fix" fixes-bug="COCOON-1818" due-to="Jasha Joachimsthal">
+      Apply patch to handle malformed recipient address exception correctly.
+    </action>
     <action dev="UH" type="add" due-to="Johan Stuyts">
       The SendMailTransformer can now configure the smtp port.
     </action>
