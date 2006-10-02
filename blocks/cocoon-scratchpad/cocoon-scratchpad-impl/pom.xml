@@ -46,6 +46,11 @@
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-flowscript-impl</artifactId>
+      <version>1.0.0-M2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.axis</groupId>
       <artifactId>axis</artifactId>
       <version>1.4</version>
