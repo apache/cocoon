@@ -66,6 +66,9 @@
   <!-- The following list contains the changes since the latest 2.1.x version. -->
   <changes>
     <release version="@version@" date="@date@">
+      <action dev="JH" type="fix" fixes-bug="COCOON-1866" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+        Fix an ArrrayIndexOutOfBoundsException with jx:comment.
+      </action>
       <action dev="LG" type="add">
         New syntax for jx:attribute tag: apart from &lt;jx:atttribute name="text" value="abc"/&gt; one can do:
         &lt;jx:atttribute name="text"&gt;abc&lt;/jx:attribute&gt; This is most useful for nesting jx:* tags:
