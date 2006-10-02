@@ -35,6 +35,8 @@ import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Element;
 
 /**
+ * Form model library.
+ *
  * @version $Id$
  */
 public class Library extends AbstractLogEnabled {
@@ -52,16 +54,17 @@ public class Library extends AbstractLogEnabled {
     protected Map inclusions = new HashMap();
 
     // shared object with dependencies
-    protected Object shared = new Object();
+    protected final Object shared = new Object();
 
     protected String sourceURI;
     protected WidgetDefinitionBuilderContext context;
 
 
-    public Library(LibraryManager lm) {
+    public Library(LibraryManager lm, ServiceSelector builderSelector) {
         manager = lm;
         context = new WidgetDefinitionBuilderContext();
         context.setLocalLibrary(this);
+        widgetDefinitionBuilderSelector = builderSelector;
     }
 
     public void setSourceURI(String uri) {
@@ -70,10 +73,6 @@ public class Library extends AbstractLogEnabled {
 
     public String getSourceURI() {
         return sourceURI;
-    }
-
-    public void setWidgetDefinitionBuilderSelector(ServiceSelector selector) {
-        this.widgetDefinitionBuilderSelector = selector;
     }
 
     public boolean dependenciesHaveChanged() throws LibraryException {
@@ -191,9 +190,9 @@ public class Library extends AbstractLogEnabled {
     /**
      * Encapsulates a uri to designate an import plus a timestamp so previously reloaded
      */
-    public class Dependency {
-        private String dependencyURI;
-        private Object shared;
+    protected class Dependency {
+        private final String dependencyURI;
+        private final Object shared;
 
         public Dependency(String dependencySourceURI) throws LibraryException {
             this.dependencyURI = dependencySourceURI;
