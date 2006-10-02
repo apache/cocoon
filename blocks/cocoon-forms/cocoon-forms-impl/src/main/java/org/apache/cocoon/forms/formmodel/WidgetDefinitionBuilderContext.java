@@ -30,8 +30,6 @@ public class WidgetDefinitionBuilderContext {
 
 
     public WidgetDefinitionBuilderContext() {
-        this.superDefinition = null;
-        this.localLibrary = null;
     }
 
     public WidgetDefinitionBuilderContext(WidgetDefinitionBuilderContext other) {
