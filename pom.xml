@@ -21,7 +21,9 @@
 <!--+
     | @version $Id$
     +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache</groupId>
@@ -34,13 +36,13 @@
   <version>2-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
-  <inceptionYear>1999</inceptionYear>  
+  <inceptionYear>1999</inceptionYear>
   <modules>
     <module>blocks</module>
     <module>commons</module>
     <module>core</module>
     <module>tools</module>
-    <module>site/cocoon-maven-site-skin</module>    
+    <module>site/cocoon-maven-site-skin</module>
   </modules>
   <repositories>
     <repository>
@@ -70,12 +72,14 @@
       <id>snapshots</id>
       <url>http://snapshots.maven.codehaus.org/maven2</url>
     </pluginRepository>
-    -->    
-  </pluginRepositories>   
+    -->
+  </pluginRepositories>
+
   <organization>
     <name>The Apache Software Foundation</name>
     <url>http://www.apache.org/</url>
   </organization>
+
   <developers>
     <developer>
       <id>crossley</id>
@@ -232,10 +236,12 @@
       <timezone>-5</timezone>
     </developer>
   </developers>
+
   <issueManagement>
     <system>jira</system>
     <url>https://issues.apache.org/jira/browse/COCOON</url>
   </issueManagement>
+
   <ciManagement>
     <system>continuum</system>
     <url>http://cocoon.zones.apache.org:12000/continuum/servlet/continuum</url>
@@ -248,6 +254,7 @@
       </notifier>
     </notifiers>
   </ciManagement>
+
   <mailingLists>
     <mailingList>
       <name>Cocoon User List</name>
@@ -297,11 +304,13 @@
       </otherArchives>
     </mailingList>
   </mailingLists>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
     <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
   </scm>
+
   <distributionManagement>
     <repository>
       <id>cocoon-staging-repo</id>
@@ -316,8 +325,9 @@
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}</url>
-    </site>    
+    </site>
   </distributionManagement>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -326,42 +336,42 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.2</version>
         </plugin>
-	      <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-site-plugin</artifactId>
-	        <version>2.0-beta-5</version>
-	      </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>2.0-beta-5</version>
+        </plugin>
         <plugin>
           <groupId>org.daisycms</groupId>
           <artifactId>daisy-maven-plugin</artifactId>
           <version>1.0.0-SNAPSHOT</version>
           <configuration>
             <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
-            <editUrl>http://cocoon.zones.apache.org/daisy/cocoon-documentation/</editUrl>  
+            <editUrl>http://cocoon.zones.apache.org/daisy/cocoon-documentation/</editUrl>
             <daisyServerId>cocoon-daisy</daisyServerId>
             <cleanSiteXml>true</cleanSiteXml>
-            <author>The Cocoon Community</author>  
+            <author>The Cocoon Community</author>
             <collections>
               <collection>
                 <name>cdocs-site-main</name>
                 <path>/</path>
-              </collection>     
+              </collection>
               <collection>
                 <name>cdocs-site-blocks</name>
                 <path>blocks/</path>
-              </collection> 
+              </collection>
               <collection>
                 <name>cdocs-site-core-modules</name>
                 <path>core-modules/</path>
-              </collection>               
+              </collection>
               <collection>
                 <name>cdocs-site-maven-plugins</name>
                 <path>maven-plugins/</path>
-              </collection>               
+              </collection>
               <collection>
                 <name>cdocs-core</name>
                 <path>core-modules/core/2.2/</path>
-              </collection>                                       
+              </collection>
               <collection>
                 <name>cdocs-forms</name>
                 <path>blocks/forms/1.0/</path>
@@ -372,20 +382,20 @@
               </collection>
             </collections>
             <siteXmlContent>
-            	<![CDATA[  
+              <![CDATA[
 								<project>
 								  <skin>
 								    <groupId>org.apache.cocoon</groupId>
-								    <artifactId>cocoon-maven-site-skin</artifactId> 
-								    <version>1.0.0-SNAPSHOT</version> 
+								    <artifactId>cocoon-maven-site-skin</artifactId>
+								    <version>1.0.0-SNAPSHOT</version>
 								  </skin>
 								  <body>
 								    <!-- @daisy-start@ --><!-- @daisy-end@ -->
 								    <menu ref="reports"/>
 								  </body>
-								</project>            
+								</project>
             	]]>
-            </siteXmlContent>     
+            </siteXmlContent>
           </configuration>
           <executions>
             <execution>
@@ -394,8 +404,8 @@
                 <goal>cocoon</goal>
               </goals>
             </execution>
-          </executions>          
-        </plugin>         
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
     <extensions>
@@ -432,8 +442,21 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags</tagBase>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <descriptor>assembly.xml</descriptor>
+          <!--
+          <finalName>final_name</finalName>
+          -->
+          <outputDirectory>target/release</outputDirectory>
+          <workDirectory>target/assembly/work</workDirectory>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
   <reporting>
     <excludeDefaults>true</excludeDefaults>
     <plugins>
@@ -450,8 +473,9 @@
       </plugin>
     </plugins>
   </reporting>
+
   <properties>
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
-  </properties>     
+  </properties>
 </project>
