@@ -179,28 +179,6 @@ public abstract class AbstractInterpreter
     }
 
     /**
-     * Call the Cocoon sitemap for the given URI, sending the output of the
-     * eventually matched pipeline to the specified outputstream.
-     *
-     * @param uri The URI for which the request should be generated.
-     * @param biz Extra data associated with the subrequest.
-     * @param out An OutputStream where the output should be written to.
-     * @exception Exception If an error occurs.
-     */
-    protected void process(String uri, Object biz, OutputStream out)
-    throws Exception {
-        // FIXME (SW): should we deprecate this method in favor of PipelineUtil?
-        PipelineUtil pipeUtil = new PipelineUtil();
-        try {
-            pipeUtil.contextualize(this.avalonContext);
-            pipeUtil.service(this.manager);
-            pipeUtil.processToStream(uri, biz, out);
-        } finally {
-            pipeUtil.dispose();
-        }
-    }
-
-    /**
      * @see org.apache.cocoon.components.flow.Interpreter#forwardTo(java.lang.String, java.lang.Object, org.apache.cocoon.components.flow.WebContinuation, org.apache.cocoon.environment.Redirector)
      */
     public void forwardTo(String uri, Object bizData,
