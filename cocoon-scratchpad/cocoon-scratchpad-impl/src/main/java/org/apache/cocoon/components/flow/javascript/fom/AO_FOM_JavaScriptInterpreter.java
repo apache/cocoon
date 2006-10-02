@@ -44,6 +44,7 @@ import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.JSErrorReporter;
 import org.apache.cocoon.components.flow.javascript.ScriptablePointerFactory;
 import org.apache.cocoon.components.flow.javascript.ScriptablePropertyHandler;
+import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -754,7 +755,14 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                     OutputStream out)
         throws Exception {
         setupView(scope, cocoon, null);
-        super.process(uri, bizData, out);
+        PipelineUtil pipeUtil = new PipelineUtil();
+        try {
+            pipeUtil.contextualize(this.avalonContext);
+            pipeUtil.service(this.manager);
+            pipeUtil.processToStream(uri, bizData, out);
+        } finally {
+            pipeUtil.dispose();
+        }
     }
     
     private void setupView(Scriptable scope,

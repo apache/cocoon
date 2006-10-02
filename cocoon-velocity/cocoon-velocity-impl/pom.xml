@@ -41,6 +41,11 @@
       <version>2.2.0-M2-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>rhino</groupId>
+      <artifactId>js</artifactId>
+      <version>1.6R2</version>
+    </dependency>
+    <dependency>
       <groupId>velocity</groupId>
       <artifactId>velocity</artifactId>
       <version>1.4</version>
