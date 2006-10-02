@@ -180,4 +180,13 @@ public interface Interpreter {
     void handleContinuation(String continuationId, List params,
                             Redirector redirector)
     throws Exception;
+
+    /**
+     * Registers a source file with the interpreter. Using this method
+     * an implementation keeps track of all the script files which are
+     * compiled. This allows them to reload the script files which get
+     * modified on the file system.
+     *
+     */
+    void register(String source);
 }

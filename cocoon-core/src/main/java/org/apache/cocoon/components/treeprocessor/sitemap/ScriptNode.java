@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.cocoon.components.flow.ConfigurableInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
@@ -52,8 +51,6 @@ public class ScriptNode extends AbstractProcessingNode {
     }
 
     public void registerScriptWithInterpreter(Interpreter interpreter) {
-        if (interpreter instanceof ConfigurableInterpreter) {
-            ((ConfigurableInterpreter)interpreter).register(this.source);
-        }
+        interpreter.register(this.source);
     }
 }
