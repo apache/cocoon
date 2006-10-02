@@ -47,7 +47,9 @@
        
     <!-- Cocoon Blocks -->
     <module>../blocks/cocoon-forms/cocoon-forms-impl</module>
-    
+    <module>../blocks/cocoon-forms/cocoon-fop-impl</module>
+    <module>../blocks/cocoon-forms/cocoon-template-impl</module>
+        
     <!-- Maven plugins -->
     
     <!-- Core modules -->
