@@ -28,7 +28,7 @@
     <artifactId>cocoon</artifactId>
     <version>2-SNAPSHOT</version>
   </parent>
-  <artifactId>cocoon-blocks-all-modules</artifactId>
+  <artifactId>cocoon-blocks-modules</artifactId>
   <version>2-SNAPSHOT</version>
   <name>Cocoon Blocks [modules]</name>
   <modules>
