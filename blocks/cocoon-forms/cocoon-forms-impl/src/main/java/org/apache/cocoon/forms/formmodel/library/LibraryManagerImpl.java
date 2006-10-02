@@ -184,10 +184,8 @@ public class LibraryManagerImpl extends AbstractLogEnabled
     }
 
     public Library newLibrary() {
-        Library lib = new Library(this);
+        Library lib = new Library(this, widgetDefinitionBuilderSelector);
         lib.enableLogging(getLogger());
-        lib.setWidgetDefinitionBuilderSelector(this.widgetDefinitionBuilderSelector);
-
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Created a new library: " + lib);
         }
