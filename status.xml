@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AS" type="fix" fixes-bug="COCOON-1818" due-to="Jasha Joachimsthal">
+      Apply patch to handle malformed recipient address exception correctly.
+    </action>
     <action dev="VG" type="fix" fixes-bug="COCOON-1906" due-to="Lars Trieloff" due-to-email="lars@trieloff.net">
       CForms: Apply patch to disambiguate toSAX method call.
     </action>

@@ -452,8 +452,10 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     /**
      *
      */
-    private void sendMail() {
+    private void sendMail() throws SAXException {
         try {
+        	this.ignoreHooksCount++;
+            super.sendStartElementEventNS(ELEMENT_RESULT);
             Properties props = new Properties();
             props.put("mail.smtp.host", this.mailHost);
             props.put("mail.smtp.port", String.valueOf(this.mailPort));
@@ -482,9 +484,6 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
             this.smtpMessage = setUpMessage(session);
 
-	        this.ignoreHooksCount++;
-            super.sendStartElementEventNS(ELEMENT_RESULT);
-
             if (this.sendPartial) {
                 for (int i = 0; i < this.toAddresses.size(); i++) {
                     List v = new ArrayList(1);
@@ -496,11 +495,15 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             }
 
             trans.close();
-            super.sendEndElementEventNS(ELEMENT_RESULT);
-            this.ignoreHooksCount--;
+        } catch (SAXException e){
+        	throw e;
         } catch (Exception e) {
             getLogger().error("Exception sending mail", e);
             sendExceptionElement(e);
+        }
+        finally {
+        	super.sendEndElementEventNS(ELEMENT_RESULT);
+            this.ignoreHooksCount--;
         }
     }
 
@@ -512,13 +515,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                    throws Exception {
         AddressHandler[] iA = new AddressHandler[newAddresses.size()];
 
-        for (int i = 0; i < newAddresses.size(); i++) {
-            InternetAddress inA = new InternetAddress((String) newAddresses.get(i));
-            iA[i] = new AddressHandler(inA);
-        }
-
         try {
-            InternetAddress[] iaArr = SendMailTransformer.getAddresses(iA);
+        	for (int i = 0; i < newAddresses.size(); i++) {
+                InternetAddress inA = new InternetAddress((String) newAddresses.get(i));
+                iA[i] = new AddressHandler(inA);
+            }
+        	InternetAddress[] iaArr = SendMailTransformer.getAddresses(iA);
             this.smtpMessage.setRecipients(Message.RecipientType.TO, iaArr);
             trans.sendMessage(this.smtpMessage, iaArr);
         } catch (SendFailedException e) {

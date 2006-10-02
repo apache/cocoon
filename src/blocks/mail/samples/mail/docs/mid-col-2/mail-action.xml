@@ -104,7 +104,7 @@
   </map:action>
   
   <!-- access javamail objects -->
-  <map:generator type="serverpages" src="docs/{1}.xsp"/>
+  <map:generate type="serverpages" src="docs/{1}.xsp"/>
   <map:transform src="stylesheets/mail2html.xsl"/>
   <map:transform type="html"/>
 </map:match>
