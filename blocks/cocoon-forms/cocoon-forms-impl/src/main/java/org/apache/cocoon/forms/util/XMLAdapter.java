@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,8 +41,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * Adapter class that wraps a <code>Form</code> object and makes it
  * possible to populate a widget hierarchy from XML in form of SAX
  * events and serialize the content of the widget hierarchy as XML.
- * 
- * The XML format is such that there is one XML element for each
+ *
+ * <p>The XML format is such that there is one XML element for each
  * widget and the element get the widgets id as name. Exceptions from
  * this is that the elements in a repeater gets the name
  * <code>item</code> and a attribute <code>position</code> with the
@@ -50,12 +50,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * not allowed as element name). Childs of a
  * <code>MultiValueField</code> are also embeded within a
  * <code>item</code> element. If the <code>Form</code> widget does
- * not have an id it get the name <code>uknown</code>.
+ * not have an id it get the name <code>uknown</code>.</p>
  *
- * An <code>AggregateField</code> can both be interpreted as one value
+ * <p>An <code>AggregateField</code> can both be interpreted as one value
  * and as several widgets. This ambiguity is resolved by chosing to emit
  * the single value rather than the fields as XML. For population of the
- * form both forms are however allowed.
+ * form both forms are however allowed.</p>
  *
  * @version $Id$
  */
@@ -71,23 +71,23 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
     private final static String PREFIX = "";
     /** The namespace URI of this component. */
     private final static String URI = "";
+
     /** The <code>ContentHandler</code> receiving SAX events. */
     private ContentHandler contentHandler;
     /** The <code>Widget</code> to read and write XML to. */
     private Widget widget;
     /** The <code>Widget</code> that we are currently writing to. */
-    private Widget currentWidget = null;
+    private Widget currentWidget;
     /** The <code>Locale</code> that decides how to convert widget values to strings */
     private Locale locale;
     /** Is a <code>MultiValueField</code> handled? */
-    private boolean isMultiValueItem = false;
+    private boolean isMultiValueItem;
     /** The buffer used to receive character events */
     private StringBuffer textBuffer;
 
 
     /**
      * Wrap a <code>Form</code> with an <code>XMLAdapter</code>
-     *
      */
     public XMLAdapter(Widget widget) {
         this.widget = widget;
@@ -137,34 +137,37 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
         handleText();
+
         if (this.currentWidget == null) {
             // The name of the root element is ignored
             this.currentWidget = this.widget;
-            return;
+
         } else if (this.currentWidget instanceof ContainerWidget) {
             Widget child = ((ContainerWidget)this.currentWidget).getChild(loc);
-            if (child != null)
-                this.currentWidget = child;
-            else
+            if (child == null) {
                 throw new SAXException("There is no widget with id: " + loc +
                                        " as child to: " + this.currentWidget.getId());
+            }
+            this.currentWidget = child;
+
         } else if (this.currentWidget instanceof Repeater) {
             // In a repeater the XML elements are added in the order
             // they are recieved, the position attribute is not used
-            if (ITEM.equals(loc)) {
-                Repeater repeater = (Repeater)currentWidget;
-                currentWidget = repeater.addRow();
-            } else
+            if (!ITEM.equals(loc)) {
                 throw new SAXException("The element: " + loc +
                                        " is not allowed as a direct child of a Repeater");
+            }
+            Repeater repeater = (Repeater) currentWidget;
+            this.currentWidget = repeater.addRow();
+
         } else if (this.currentWidget instanceof MultiValueField) {
             this.isMultiValueItem = true;
-            if (!ITEM.equals(loc))
+            if (!ITEM.equals(loc)) {
                 throw new SAXException("The element: " + loc +
                                        " is not allowed as a direct child of a MultiValueField");
+            }
         }
     }
-
 
     /**
      * Receive notification of the end of an element.
@@ -216,51 +219,50 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
         // Buffer text, as a single text node can be sent in several chunks.
         if (this.textBuffer == null) {
             this.textBuffer = new StringBuffer();
-        } 
+        }
         this.textBuffer.append(ch, start, len);
     }
-    
+
     /**
      * Handle text nodes, if any. Called on every potential text node boundary,
      * i.e. start and end element events.
-     * 
+     *
      * @throws SAXException
      */
     private void handleText() throws SAXException {
         if (this.textBuffer == null)
             return;
-        
+
         String input = this.textBuffer.toString().trim();
         this.textBuffer = null; // clear buffer
         if (input.length() == 0)
             return;
 
         if (this.currentWidget instanceof MultiValueField && isMultiValueItem) {
-            MultiValueField field = (MultiValueField)this.currentWidget;
+            MultiValueField field = (MultiValueField) this.currentWidget;
             Datatype type = field.getDatatype();
-            ConversionResult conv =
-                type.convertFromString(input, this.locale);
-            if (conv.isSuccessful()) {
-                Object[] values = (Object[])field.getValue();
-                int valLen = values == null ? 0 : values.length;
-                Object[] newValues = new Object[valLen + 1];
-                for (int i = 0; i < valLen; i++)
-                    newValues[i] = values[i];
-                newValues[valLen] = conv.getResult();
-                field.setValues(newValues);
-            } else
+            ConversionResult conv = type.convertFromString(input, this.locale);
+            if (!conv.isSuccessful()) {
                 throw new SAXException("Could not convert: " + input +
                                        " to " + type.getTypeClass());
+            }
+            Object[] values = (Object[]) field.getValue();
+            int valLen = values == null ? 0 : values.length;
+            Object[] newValues = new Object[valLen + 1];
+            for (int i = 0; i < valLen; i++) {
+                newValues[i] = values[i];
+            }
+            newValues[valLen] = conv.getResult();
+            field.setValues(newValues);
         } else if (this.currentWidget instanceof DataWidget) {
-            DataWidget data = (DataWidget)this.currentWidget;
+            DataWidget data = (DataWidget) this.currentWidget;
             Datatype type = data.getDatatype();
-            ConversionResult conv =
-                type.convertFromString(input, this.locale);
-            if (conv.isSuccessful()) {
-                data.setValue(conv.getResult());
-            } else
+            ConversionResult conv = type.convertFromString(input, this.locale);
+            if (!conv.isSuccessful()) {
                 throw new SAXException("Could not convert: " + input +
                                        " to " + type.getTypeClass());
+            }
+            data.setValue(conv.getResult());
         } else if (this.currentWidget instanceof BooleanField) {
             // FIXME: BooleanField should implement DataWidget, which
             // would make this case unnecessary
@@ -274,7 +276,6 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
             throw new SAXException("Unknown widget type: " + this.currentWidget);
         }
     }
-
 
     /* ================ Widget -> SAX ================ */
 
