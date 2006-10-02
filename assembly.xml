@@ -25,6 +25,7 @@
     <!--
     <format>tar.gz</format>
     <format>tar.bz2</format>
+    <format>dir</format>
     -->
     <format>zip</format>
   </formats>
@@ -33,12 +34,6 @@
 
   <moduleSets>
     <moduleSet>
-      <!--
-      <includes>
-        <include>org.apache.cocoon:cocoon-bootstrap</include>
-        <include>org.apache.cocoon:cocoon-core</include>
-      </includes>
-      -->
       <!--
       <sources>
         <outputDirectory></outputDirectory>
