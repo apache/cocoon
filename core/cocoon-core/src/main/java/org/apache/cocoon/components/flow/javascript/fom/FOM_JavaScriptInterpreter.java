@@ -43,6 +43,7 @@ import org.apache.cocoon.components.flow.javascript.JSErrorReporter;
 import org.apache.cocoon.components.flow.javascript.LocationTrackingDebugger;
 import org.apache.cocoon.components.flow.javascript.ScriptablePointerFactory;
 import org.apache.cocoon.components.flow.javascript.ScriptablePropertyHandler;
+import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -706,12 +707,29 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                         redirector);
     }
 
+    /**
+     * Call the Cocoon sitemap for the given URI, sending the output of the
+     * eventually matched pipeline to the specified outputstream.
+     *
+     * @param uri The URI for which the request should be generated.
+     * @param biz Extra data associated with the subrequest.
+     * @param out An OutputStream where the output should be written to.
+     * @exception Exception If an error occurs.
+     */
     // package access as this is called by FOM_Cocoon
     void process(Scriptable scope, FOM_Cocoon cocoon, String uri,
                  Object bizData, OutputStream out)
     throws Exception {
         setupView(scope, cocoon, null);
-        super.process(uri, bizData, out);
+        // FIXME (SW): should we deprecate this method in favor of PipelineUtil?
+        PipelineUtil pipeUtil = new PipelineUtil();
+        try {
+            pipeUtil.contextualize(this.avalonContext);
+            pipeUtil.service(this.manager);
+            pipeUtil.processToStream(uri, bizData, out);
+        } finally {
+            pipeUtil.dispose();
+        }
     }
 
     private void setupView(Scriptable scope, FOM_Cocoon cocoon, FOM_WebContinuation kont) {
