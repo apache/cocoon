@@ -29,32 +29,25 @@
     <format>zip</format>
   </formats>
 
+  <includeBaseDirectory>false</includeBaseDirectory>
+
   <moduleSets>
     <moduleSet>
+      <!--
       <includes>
         <include>org.apache.cocoon:cocoon-bootstrap</include>
         <include>org.apache.cocoon:cocoon-core</include>
       </includes>
+      -->
+      <!--
       <sources>
-        <outputDirectory>sources</outputDirectory>
+        <outputDirectory></outputDirectory>
       </sources>
+      -->
       <binaries>
         <includeDependencies>true</includeDependencies>
-        <unpack>true</unpack>
-        <outputDirectory>binaries</outputDirectory>
-      </binaries>
-    </moduleSet>
-    <moduleSet>
-      <includes>
-        <include>org.apache.cocoon:cocoon-webapp</include>
-      </includes>
-      <sources>
-        <outputDirectory>webappsrc</outputDirectory>
-      </sources>
-      <binaries>
-        <includeDependencies>true</includeDependencies>
-        <unpack>true</unpack>
-        <outputDirectory>webappbin</outputDirectory>
+        <unpack>false</unpack>
+        <outputDirectory>lib</outputDirectory>
       </binaries>
     </moduleSet>
   </moduleSets>
@@ -67,15 +60,9 @@
         <include>NOTICE*</include>
       </includes>
     </fileSet>
-    <fileSet>
-      <directory>target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*.jar</include>
-      </includes>
-    </fileSet>
   </fileSets>
 
+  <!--
   <dependencySets>
     <dependencySet>
       <outputDirectory>dependencies</outputDirectory>
@@ -83,4 +70,5 @@
       <scope>runtime</scope>
     </dependencySet>
   </dependencySets>
+  -->
 </assembly>
