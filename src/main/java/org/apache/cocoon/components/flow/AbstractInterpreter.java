@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.flow;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -33,7 +32,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Redirector;
