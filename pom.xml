@@ -51,7 +51,7 @@
       <artifactId>cocoon-flowscript-impl</artifactId>
       <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
-<!--  
+    <!--  
           Test dependencies
           TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
      -->
@@ -86,7 +86,28 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/blocks/template/${docs.version}/</url>
+    </site>
+  </distributionManagement>
+  <properties>
+    <docs.name>Cocoon Template</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>     
   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1216</navDocId>
+          <collection>cdocs-template</collection>          
+          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+        </configuration>
+      </plugin>         
+    </plugins>    
     <resources>
       <resource>
         <directory>src/main/resources</directory>
