@@ -58,9 +58,8 @@ Form.prototype.getModel = function() {
     return this.formWidget;
 }
 
-
 /**
- * Get the actual Form-Widget (the Java object)
+ * Get the actual form widget (the Java object)
  */
 Form.prototype.getWidget = function(name) {
     if (name != undefined) {
@@ -160,11 +159,11 @@ Form.prototype.sendFormAndWait = function(uri, viewdata, ttl) {
 
         var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
 
-        // Prematurely add the viewdata as in the object model so that event listeners can use it 	 
-        // (the same is done by cocoon.sendPage()) 	 
-        // FIXME : hack needed because FOM doesn't provide access to the object model 	 
-        var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext); 	 
-        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata); 	 
+        // Prematurely add the viewdata as in the object model so that event listeners can use it
+        // (the same is done by cocoon.sendPage())
+        // FIXME : hack needed because FOM doesn't provide access to the object model
+        var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
+        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata);
 
         finished = this.form.process(formContext);
 
@@ -178,7 +177,7 @@ Form.prototype.sendFormAndWait = function(uri, viewdata, ttl) {
                 // Ask the client to issue a new request reloading the whole page.
                 // As we have nothing special to send back, so a header should be just what we need...
                 // e.g. cocoon.response.setHeader("X-Cocoon-Ajax", "continue");
-                //      cocoon.sendStatus(200);               
+                //      cocoon.sendStatus(200);
                 // ...but Safari doesn't consider empty responses (with content-length = 0) as
                 // valid ones. So send a continue response by using directly the HttpResponse's
                 // output stream. Avoiding this hack would require to put an additional pipeline
@@ -244,16 +243,18 @@ Form.prototype.createBinding = function(bindingURI) {
 }
 
 Form.prototype.load = function(object) {
-    if (this.binding == null)
+    if (this.binding == null) {
         throw new Error("Binding not configured for this form.");
+    }
     this.form.informStartLoadingModel();
     this.binding.loadFormFromModel(this.form, object);
     this.form.informEndLoadingModel();
 }
 
 Form.prototype.save = function(object) {
-    if (this.binding == null)
+    if (this.binding == null) {
         throw new Error("Binding not configured for this form.");
+    }
     this.form.informStartSavingModel();
     this.binding.saveFormToModel(this.form, object);
     this.form.informEndSavingModel();
@@ -285,11 +286,12 @@ Form.prototype.loadXML = function(uri) {
     try {
         resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
         source = resolver.resolveURI(uri);
-        Packages.org.apache.cocoon.components.source.SourceUtil.toSAX(source, this.getXML());
+        // Disambiguate toSAX method: Pick the one with Sosurce argument.
+        Packages.org.apache.cocoon.components.source.SourceUtil["toSAX(org.apache.excalibur.source.Source,org.xml.sax.ContentHandler)"](source, this.getXML())
     } finally {
-        if (source != null)
+        if (source != null) {
             resolver.release(source);
-
+        }
         cocoon.releaseComponent(resolver);
     }
 }
@@ -319,9 +321,9 @@ Form.prototype.saveXML = function(uri) {
         }
 
     } finally {
-        if (source != null)
+        if (source != null) {
             resolver.release(source);
-
+        }
         cocoon.releaseComponent(resolver);
 
         if (outputStream != null) {
@@ -375,11 +377,11 @@ function processForm(viewdata) {
 
     var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
 
-    // Prematurely add the viewdata as in the object model so that event listeners can use it 	 
-    // (the same is done by cocoon.sendPage()) 	 
-    // FIXME : hack needed because FOM doesn't provide access to the object model 	 
-    var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext); 	 
-    org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata); 	 
+    // Prematurely add the viewdata as in the object model so that event listeners can use it
+    // (the same is done by cocoon.sendPage())
+    // FIXME : hack needed because FOM doesn't provide access to the object model
+    var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
+    org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata);
 
     if (this.restoreHook) {
         this.restoreHook(this);
