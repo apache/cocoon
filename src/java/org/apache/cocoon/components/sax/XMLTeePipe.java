@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,24 +23,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-
 /**
  * This is a simple Tee Component.
  * The incoming events are forwarded to two other components.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
-public final class XMLTeePipe
-implements XMLPipe {
-
-    /**
-     * Set the <code>XMLConsumer</code> that will receive XML data.
-     */
-    public void setConsumer(XMLConsumer consumer) {
-        ((XMLProducer)this.firstConsumer).setConsumer(consumer);
-    }
+public class XMLTeePipe implements XMLPipe {
 
     private XMLConsumer firstConsumer;
     private XMLConsumer secondConsumer;
@@ -54,10 +43,24 @@ implements XMLPipe {
         this.secondConsumer = secondConsumer;
     }
 
+    /**
+     * Set the <code>XMLConsumer</code> that will receive XML data.
+     */
+    public void setConsumer(XMLConsumer consumer) {
+        ((XMLProducer) this.firstConsumer).setConsumer(consumer);
+    }
+
+    /**
+     * Reset consumers.
+     */
     public void recycle() {
         this.firstConsumer = null;
         this.secondConsumer = null;
     }
+
+    //
+    // XMLPipe interface
+    //
 
     public void startDocument() throws SAXException {
         this.firstConsumer.startDocument();
@@ -152,5 +155,4 @@ implements XMLPipe {
         this.firstConsumer.comment(ary, start, length);
         this.secondConsumer.comment(ary, start, length);
     }
-
 }
