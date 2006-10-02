@@ -18,8 +18,8 @@ package org.apache.cocoon.forms.formmodel.library;
 
 /**
  * The work interface for the LibraryManager, the class that
- * manages all used library definitions so they can be shared between
- * forms.
+ * manages all used form model library definitions so they can be shared
+ * between forms.
  *
  * @version $Id$
  */
