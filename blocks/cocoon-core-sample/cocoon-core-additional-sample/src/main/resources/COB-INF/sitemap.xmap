@@ -96,14 +96,6 @@
 
       <!-- ======================= Other Samples =========================== -->
 
-      <map:match pattern="scratchpad">
-        <map:generate src="scratchpad-samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
-        <map:serialize/>
-      </map:match>
-
       <map:match pattern="components">
         <map:generate src="components-samples.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
@@ -117,6 +109,42 @@
         <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="request.html">
+        <map:generate type="request"/>
+        <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="source-write.xml">
+        <map:generate src="components/source-writing-transformer.xml"/>
+        <map:transform type="write-source"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="cal">
+        <map:generate type="calendar" label="content">
+          <!-- Uncomment and set a value for the desired month and year
+          <map:parameter name="month" value="6"/>
+          <map:parameter name="year" value="1998"/>
+          -->
+          <!-- Uncomment the line below to set a fixed date format -->
+          <!--
+          <map:parameter name="dateFormat" value="EEEE, MMMM d yyyy"/>
+          -->
+          <map:parameter name="lang" value="{request-param:lang}"/>
+          <map:parameter name="country" value="{request-param:country}"/>
+        </map:generate>
+        <map:transform src="stylesheets/calendar2html.xslt"/>
+        <!-- to localize the column headers, remove the comments below -->
+        <!--
+        <map:transform type="i18n">
+           <map:parameter name="default-catalogue-id" value="messages"/>
+           <map:parameter name="locale" value="{request-param:lang}"/>
+        </map:transform> 
+        -->
         <map:serialize/>
       </map:match>
 
@@ -147,7 +175,7 @@
 
       <map:match pattern="status-with-continuations.xml">
         <map:generate type="status">
-					<map:parameter name="show-cont" value="true"/>
+          <map:parameter name="show-cont" value="true"/>
         </map:generate>
         <map:serialize type="xml"/>
       </map:match>     
@@ -181,36 +209,6 @@
         <map:generate src="no-persistent-store.xml"/>
         <map:transform src="context://stylesheets/system/xml2html.xslt"/>
         <map:serialize type="html"/>
-      </map:match>
-
-      <map:match pattern="request.html">
-        <map:generate type="request"/>
-        <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-        <map:serialize/>
-      </map:match>
-
-      <map:match pattern="cal">
-        <map:generate type="calendar" label="content">
-          <!-- Uncomment and set a value for the desired month and year
-          <map:parameter name="month" value="6"/>
-          <map:parameter name="year" value="1998"/>
-          -->
-          <!-- Uncomment the line below to set a fixed date format -->
-          <!--
-          <map:parameter name="dateFormat" value="EEEE, MMMM d yyyy"/>
-          -->
-          <map:parameter name="lang" value="{request-param:lang}"/>
-          <map:parameter name="country" value="{request-param:country}"/>
-        </map:generate>
-        <map:transform src="stylesheets/calendar2html.xslt"/>
-        <!-- to localize the column headers, remove the comments below -->
-        <!--
-        <map:transform type="i18n">
-           <map:parameter name="default-catalogue-id" value="messages"/>
-           <map:parameter name="locale" value="{request-param:lang}"/>
-        </map:transform> 
-        -->
-        <map:serialize/>
       </map:match>
 
       <!-- ========================= Automount ============================= -->
