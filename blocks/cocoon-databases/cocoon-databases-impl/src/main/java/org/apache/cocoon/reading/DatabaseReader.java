@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,23 +55,26 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class DatabaseReader extends ServiceableReader
-    implements Configurable, Disposable, CacheableProcessingComponent
-{
+                            implements Configurable, Disposable, CacheableProcessingComponent {
 
-    private ServiceSelector dbselector;
-    private String dsn;
-    private long lastModified = System.currentTimeMillis();
-    private InputStream resource = null; // because HSQL doesn't yet implement getBlob()
-    private Connection con = null;
-    private DataSourceComponent datasource = null;
-    private String mimeType = null;
-    private int typeColumn = 0;
-    private boolean doCommit = false;
+    private ServiceSelector datasourceSelector;
+    private DataSourceComponent datasource;
+
+    private int typeColumn;
     private boolean defaultCache = true;
+
+    private Connection connection;
+    private PreparedStatement statement;
+    private ResultSet resultSet;
+    private InputStream resource; // because HSQL doesn't yet implement getBlob()
+    private String mimeType;
+    private long lastModified = System.currentTimeMillis();
+    private boolean doCommit;
+
 
     public void service(final ServiceManager manager) throws ServiceException {
         super.service(manager);
-        this.dbselector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
+        this.datasourceSelector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
 
     /**
@@ -79,8 +82,14 @@ public class DatabaseReader extends ServiceableReader
      * for all instances.
      */
     public void configure(Configuration conf) throws ConfigurationException {
-        this.dsn = conf.getChild("use-connection").getValue();
         this.defaultCache = conf.getChild("invalidate").getValue("never").equals("always");
+
+        String datasourceName = conf.getChild("use-connection").getValue();
+        try {
+            this.datasource = (DataSourceComponent) datasourceSelector.select(datasourceName);
+        } catch (ServiceException e) {
+            throw new ConfigurationException("Datasource '" + datasourceName + "' is not available.", e);
+        }
     }
 
     /**
@@ -88,33 +97,34 @@ public class DatabaseReader extends ServiceableReader
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
         try {
-            this.datasource = (DataSourceComponent) dbselector.select(dsn);
-            this.con = datasource.getConnection();
-
-            if (this.con.getAutoCommit()) {
-                this.con.setAutoCommit(false);
+            this.connection = datasource.getConnection();
+            if (this.connection.getAutoCommit()) {
+                this.connection.setAutoCommit(false);
             }
 
-            PreparedStatement statement = con.prepareStatement(getQuery());
+            statement = connection.prepareStatement(getQuery());
             statement.setString(1, this.source);
-            ResultSet set = statement.executeQuery();
-            if (!set.next()) throw new ResourceNotFoundException("There is no resource with that key");
+
+            resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                throw new ResourceNotFoundException("There is no resource with that key");
+            }
 
             Response response = ObjectModelHelper.getResponse(objectModel);
             Request request = ObjectModelHelper.getRequest(objectModel);
 
-            if (this.modifiedSince(set, request, response)) {
-                this.resource = set.getBinaryStream(1);
-                if (this.typeColumn != 0) {
-                    this.mimeType = set.getString(this.typeColumn);
-                }
-
+            if (modifiedSince(resultSet, request, response)) {
+                this.resource = resultSet.getBinaryStream(1);
                 if (this.resource == null) {
                     throw new ResourceNotFoundException("There is no resource with that key");
+                }
+
+                if (this.typeColumn != 0) {
+                    this.mimeType = resultSet.getString(this.typeColumn);
                 }
             }
 
@@ -158,14 +168,12 @@ public class DatabaseReader extends ServiceableReader
     public void generate() throws ProcessingException, SAXException, IOException {
         try {
             Response response = ObjectModelHelper.getResponse(objectModel);
-            this.serialize(response);
-        } catch (IOException ioe) {
+            serialize(response);
+        } catch (IOException e) {
             getLogger().warn("Assuming client reset stream");
-
             this.doCommit = false;
         } catch (Exception e) {
             this.doCommit = false;
-
             throw new ResourceNotFoundException("DatabaseReader error:", e);
         }
     }
@@ -175,14 +183,13 @@ public class DatabaseReader extends ServiceableReader
      * If the required parameters do not exist, then we cannot build a
      * correct query.
      */
-    public String getQuery() throws Exception {
+    protected String getQuery() throws ProcessingException {
         String table = this.parameters.getParameter("table", null);
         String column = this.parameters.getParameter("image", null);
         String key = this.parameters.getParameter("key", null);
         String where = this.parameters.getParameter("where", null);
         String orderBy = this.parameters.getParameter("order-by", null);
         String typeColumn = this.parameters.getParameter("type-column", null);
-        int columnNo = 1;
 
         if (table == null || column == null || key==null) {
             throw new ProcessingException("We are missing a required parameter.  Please include 'table', 'image', and 'key'");
@@ -191,6 +198,7 @@ public class DatabaseReader extends ServiceableReader
         String date = this.parameters.getParameter("last-modified", null);
         StringBuffer query = new StringBuffer("SELECT ");
 
+        int columnNo = 1;
         query.append(column);
         columnNo++;
 
@@ -213,7 +221,6 @@ public class DatabaseReader extends ServiceableReader
         if (null != typeColumn) {
             query.append(", ").append(typeColumn);
             this.typeColumn = columnNo;
-            columnNo++;
         }
 
         query.append(" FROM ").append(table);
@@ -242,10 +249,9 @@ public class DatabaseReader extends ServiceableReader
      * more prone to change than filesystems, and don't have intrinsic
      * timestamps on column updates.
      */
-    public boolean modifiedSince(ResultSet set, Request request, Response response)
+    protected boolean modifiedSince(ResultSet set, Request request, Response response)
     throws SQLException {
         String lastModified = this.parameters.getParameter("last-modified", null);
-
         if (lastModified != null) {
             Timestamp modified = set.getTimestamp(lastModified, null);
             if (null != modified) {
@@ -255,7 +261,6 @@ public class DatabaseReader extends ServiceableReader
             }
 
             response.setDateHeader("Last-Modified", this.lastModified);
-
             return this.lastModified > request.getDateHeader("if-modified-since");
         }
 
@@ -276,7 +281,6 @@ public class DatabaseReader extends ServiceableReader
         InputStream is = new BufferedInputStream(this.resource);
 
         long expires = parameters.getParameterAsInteger("expires", -1);
-
         if (expires > 0) {
             response.setDateHeader("Expires", System.currentTimeMillis() + expires);
         }
@@ -284,8 +288,7 @@ public class DatabaseReader extends ServiceableReader
         response.setHeader("Accept-Ranges", "bytes");
 
         byte[] buffer = new byte[8192];
-        int length = -1;
-
+        int length;
         while ((length = is.read(buffer)) > -1) {
             out.write(buffer, 0, length);
         }
@@ -328,44 +331,56 @@ public class DatabaseReader extends ServiceableReader
         this.mimeType = null;
         this.typeColumn = 0;
 
-        if (this.con != null) {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        } catch (SQLException e) { /* ignored */ }
+        resultSet = null;
+
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) { /* ignored */ }
+        statement = null;
+
+        if (this.connection != null) {
             try {
                 if (this.doCommit) {
-                    this.con.commit();
+                    this.connection.commit();
                 } else {
-                    this.con.rollback();
+                    this.connection.rollback();
                 }
-            } catch (SQLException se) {
-                getLogger().warn("Could not commit or rollback connection", se);
+            } catch (SQLException e) {
+                getLogger().warn("Could not commit or rollback connection", e);
             }
 
             try {
-                this.con.close();
-            } catch (SQLException se) {
-                getLogger().warn("Could not close connection", se);
-            }
-
-            this.con = null;
-        }
-
-        if (this.datasource != null) {
-            this.dbselector.release(this.datasource);
-            this.datasource = null;
+                this.connection.close();
+            } catch (SQLException e) { /* ignored */ }
+            this.connection = null;
         }
     }
 
-    /**
-     * dispose()
-     */
-    public void dispose()
-    {
-        this.manager.release(this.dbselector);
+    public void dispose() {
+        recycle();
+        if (datasource != null) {
+            datasourceSelector.release(datasource);
+            datasource = null;
+        }
+        if (datasourceSelector != null) {
+            manager.release(datasourceSelector);
+            datasourceSelector = null;
+        }
+        manager = null;
     }
 
     public String getMimeType() {
-        return (this.mimeType != null ? 
-                this.mimeType : 
-                this.parameters.getParameter("content-type", super.getMimeType()));
-    }
+        if (mimeType != null) {
+            return mimeType;
+        }
 
+        return this.parameters.getParameter("content-type", super.getMimeType());
+    }
 }
