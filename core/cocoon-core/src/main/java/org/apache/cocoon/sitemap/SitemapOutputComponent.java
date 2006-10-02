@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import java.io.OutputStream;
  * responsibility at this point in time is to give the user what he wants--the
  * rendered object (page/image/etc.).
  * </p>
- * 
+ *
  * @version $Id$
  */
 public interface SitemapOutputComponent {
@@ -54,9 +54,16 @@ public interface SitemapOutputComponent {
     void setOutputStream(OutputStream out) throws IOException;
 
     /**
-     * Obtain the mime type for the results being serialized.  It helps
-     * responsible browsers to identify how to show the information to the
-     * user.
+     * Obtain the media type for the results being serialized. The
+     * returned value is used to set <code>Content-Type</code> header
+     * in the response, unless it was overwritten in the sitemap.
+     * It helps responsible browsers to identify how to show the
+     * information to the user.
+     *
+     * <p>
+     * Example content type value: <code>text/html; charset=utf-8</code>.
+     * </p>
+     *
      * <p>
      * <strong>Warning:</strong>Microsoft Internet Explorer is a poor
      * netizen and does not always respect this information.  I am talking
@@ -72,6 +79,7 @@ public interface SitemapOutputComponent {
      * It is because the file extension ".xml" will be remapped to "text/xml"
      * even if you set the mime type correctly.
      * </p>
+     *
      * <p>
      * You may have some incorrectly configured servers that will work for one
      * browser and not the other because the mime-type and file extension do
@@ -79,7 +87,7 @@ public interface SitemapOutputComponent {
      * accepted the mime type.  Just be aware of this issue when you are
      * creating your sitemap and serializing your results.
      *
-     * @return the mime-type for the results.
+     * @return the media type for the results.
      */
     String getMimeType();
 

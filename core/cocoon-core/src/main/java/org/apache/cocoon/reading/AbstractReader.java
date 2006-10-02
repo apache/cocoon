@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,7 +65,7 @@ public abstract class AbstractReader
      * Set the <code>OutputStream</code>
      */
     public void setOutputStream(OutputStream out) {
-        if ( out instanceof BufferedOutputStream 
+        if ( out instanceof BufferedOutputStream
              || out instanceof org.apache.cocoon.util.BufferedOutputStream ) {
             this.out = out;
         } else {
@@ -75,8 +75,6 @@ public abstract class AbstractReader
 
     /**
      * Get the mime-type of the output of this <code>Reader</code>
-     * This default implementation returns null to indicate that the
-     * mime-type specified in the sitemap is to be used
      */
     public String getMimeType() {
         return null;
