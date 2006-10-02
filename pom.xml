@@ -69,6 +69,10 @@
     </pluginRepository>
     <!-- Activate this element if you want to use snapshot versions of plugins
     <pluginRepository>
+      <id>apache.snapshot</id>
+      <url>http://svn.apache.org/maven-snapshot-repository</url>
+    </pluginRepository>
+    <pluginRepository>
       <id>snapshots</id>
       <url>http://snapshots.maven.codehaus.org/maven2</url>
     </pluginRepository>
@@ -347,7 +351,7 @@
           <version>1.0.0-SNAPSHOT</version>
           <configuration>
             <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
-            <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>  
+            <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
             <daisyServerId>cocoon-daisy</daisyServerId>
             <cleanSiteXml>true</cleanSiteXml>
             <author>The Cocoon Community</author>
@@ -442,18 +446,17 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags</tagBase>
         </configuration>
       </plugin>
+      <!--
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.1</version>
+        <version>2.2-SNAPSHOT</version>
         <configuration>
           <descriptor>assembly.xml</descriptor>
-          <!--
-          <finalName>final_name</finalName>
-          -->
-          <outputDirectory>target/release</outputDirectory>
+          <outputDirectory>target</outputDirectory>
           <workDirectory>target/assembly/work</workDirectory>
         </configuration>
       </plugin>
+      -->
     </plugins>
   </build>
 
@@ -477,93 +480,94 @@
   <properties>
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
-  </properties>    
+  </properties>
+
   <profiles>
     <profile>
       <id>all-reports</id>
       <pluginRepositories>
-				<pluginRepository>
-				    <id>snapshots.maven.codehaus</id>
-				    <url>http://snapshots.maven.codehaus.org/maven2/</url>
-				    <snapshots>
-				        <enabled>true</enabled>
-				    </snapshots>
-				    <releases>
-				        <enabled>false</enabled>
-				    </releases>
-				</pluginRepository>
+        <pluginRepository>
+          <id>snapshots.maven.codehaus</id>
+          <url>http://snapshots.maven.codehaus.org/maven2/</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+        </pluginRepository>
       </pluginRepositories>
-		  <reporting>
-		    <plugins>
-		      <!--plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-report-plugin</artifactId>
-						<version>2.0</version>
-		      </plugin-->   
-		      <plugin>
-		        <artifactId>maven-javadoc-plugin</artifactId>
-		        <version>2.0</version>
-		        <configuration>
-		          <maxmemory>512m</maxmemory>
-		        </configuration>        
-		      </plugin>
-		      <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>changes-maven-plugin</artifactId>
-		        <version>2.0-beta-1</version>        
-		      </plugin>      
-		      <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>taglist-maven-plugin</artifactId>
-		        <version>2.0</version>          
-		      </plugin>           
-		      <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>jxr-maven-plugin</artifactId>
-		        <version>2.0-beta-1</version>                
-		      </plugin>           
-		      <!--plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>cobertura-maven-plugin</artifactId>
-		        <version>2.0</version>                 
-		      </plugin-->
-		      <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>jdepend-maven-plugin</artifactId>
-		        <version>2.0-beta-1</version>     
-		      </plugin>    
-		      <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>changelog-maven-plugin</artifactId>
-		        <version>2.0-beta-1</version>
-		        <reportSets>
-		          <reportSet>
-		            <id>dual-report</id>
-		            <configuration>
-		              <type>range</type>
-		              <range>30</range>
-		            </configuration>
-		            <reports>
-		              <report>changelog</report>
-		              <report>file-activity</report>
-		              <report>dev-activity</report>
-		            </reports>
-		          </reportSet>
-		        </reportSets>
-		      </plugin>
-		    </plugins>    
-		  </reporting>
+      <reporting>
+        <plugins>
+          <!--plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.0</version>
+          </plugin-->
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.0</version>
+            <configuration>
+              <maxmemory>512m</maxmemory>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>changes-maven-plugin</artifactId>
+            <version>2.0-beta-1</version>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>taglist-maven-plugin</artifactId>
+            <version>2.0</version>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jxr-maven-plugin</artifactId>
+            <version>2.0-beta-1</version>
+          </plugin>
+          <!--plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>2.0</version>
+          </plugin-->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jdepend-maven-plugin</artifactId>
+            <version>2.0-beta-1</version>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>changelog-maven-plugin</artifactId>
+            <version>2.0-beta-1</version>
+            <reportSets>
+              <reportSet>
+                <id>dual-report</id>
+                <configuration>
+                  <type>range</type>
+                  <range>30</range>
+                </configuration>
+                <reports>
+                  <report>changelog</report>
+                  <report>file-activity</report>
+                  <report>dev-activity</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
     <profile>
       <id>simian-report</id>
       <reporting>
         <plugins>
-		      <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>simian-report-maven-plugin</artifactId>
-		        <version>1.0-SNAPSHOT</version>
-		      </plugin>        
-		    </plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>simian-report-maven-plugin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </plugin>
+        </plugins>
       </reporting>
     </profile>
   </profiles>
