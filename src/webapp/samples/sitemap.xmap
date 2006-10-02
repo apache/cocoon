@@ -16,29 +16,27 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!-- $Id$ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- ========================= Components ================================ -->
 
- <map:components>
-  <map:generators default="file">
-   <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
-   <map:generator name="calendar" src="org.apache.cocoon.generation.CalendarGenerator"/>
-  </map:generators>
- 
-  <map:transformers default="xslt">
-   <!-- Configure i18n transformer -->
-   <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-    <catalogues default="messages">
-     <catalogue id="messages" name="messages" location="common/i18n"/>
-    </catalogues>
-    <cache-at-startup>true</cache-at-startup>
-    </map:transformer>
-   </map:transformers>
+  <map:components>
+    <map:generators default="file">
+      <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
+      <map:generator name="calendar" src="org.apache.cocoon.generation.CalendarGenerator"/>
+    </map:generators>
+
+    <map:transformers default="xslt">
+      <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="messages">
+          <catalogue id="messages" name="messages" location="common/i18n"/>
+        </catalogues>
+        <cache-at-startup>true</cache-at-startup>
+      </map:transformer>
+    </map:transformers>
   </map:components>
- 
+
 
 <!-- =========================== Views =================================== -->
 
@@ -68,9 +66,9 @@
          <global-sitemap>This value is defined in the samples/sitemap.xmap</global-sitemap>
          <global-sitemap-override>This value is defined in the samples/sitemap.xmap, should be overridden by samples/modules/sitemap.xmap</global-sitemap-override>
       </global-variables>
-    </map:component-configurations>
+  </map:component-configurations>
 
-    <map:pipeline>
+  <map:pipeline>
    <map:match pattern="">
      <map:generate src="samples.xml"/>
      <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
@@ -102,14 +100,6 @@
 
    <!-- ======================= Other Samples =========================== -->
 
-   <map:match pattern="scratchpad">
-    <map:generate src="scratchpad-samples.xml"/>
-    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
-    <map:serialize/>
-   </map:match>
-
    <map:match pattern="components">
     <map:generate src="components-samples.xml"/>
     <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
@@ -125,6 +115,39 @@
     </map:transform>
     <map:serialize/>
    </map:match>
+
+    <map:match pattern="source-write.xml">
+      <map:generate src="components/source-writing-transformer.xml"/>
+      <map:transform type="write-source"/>
+      <map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="request.html">
+      <map:generate type="request"/>
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize/>
+    </map:match>
+
+    <map:match pattern="cal">
+     <map:generate type="calendar" label="content">
+       <!-- Uncomment and set a value for the desired month and year
+       <map:parameter name="month" value="6"/>
+       <map:parameter name="year" value="1998"/>
+       -->
+       <map:parameter name="dateFormat" value="EEEE, MMMM d yyyy"/>
+       <map:parameter name="lang" value="{request-param:lang}"/>
+       <map:parameter name="country" value="{request-param:country}"/>
+     </map:generate>
+     <map:transform src="context://stylesheets/system/calendar2html.xslt"/>
+     <!-- to localize the column headers, remove the comments below -->
+     <!--
+     <map:transform type="i18n">
+        <map:parameter name="default-catalogue-id" value="messages"/>
+        <map:parameter name="locale" value="{request-param:lang}"/>
+     </map:transform>
+     -->
+     <map:serialize/>
+    </map:match>
 
    <!-- ======================== Utilities ============================== -->
 
@@ -144,68 +167,42 @@
    </map:match>
 
    <map:match pattern="status.html">
-    <map:generate src="status" type="status"/>
-    <map:transform src="context://stylesheets/system/status2html.xslt">
-      <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
-    <map:serialize/>
-   </map:match>
-
-   <map:match pattern="clearcache.html">
-    <map:act type="clear-cache">
-     <map:generate src="status" type="status"/>
-    <map:transform src="context://stylesheets/system/status2html.xslt">
-      <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
-     <map:serialize/>
-    </map:act>
-   </map:match>
-
-   <map:match pattern="clearpersistentstore.html">
-    <map:act type="clear-persistent-store">
      <map:generate src="status" type="status"/>
      <map:transform src="context://stylesheets/system/status2html.xslt">
-      <map:parameter name="contextPath" value="{request:contextPath}"/>
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
      </map:transform>
      <map:serialize/>
-    </map:act>
-    <map:generate src="no-persistent-store.xml"/>
-    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-    <map:serialize type="html"/>
    </map:match>
 
-   <map:match pattern="request.html">
-    <map:generate type="request"/>
-    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-    <map:serialize/>
-   </map:match>
+    <map:match pattern="clearcache.html">
+      <map:act type="clear-cache">
+        <map:generate src="status" type="status"/>
+        <map:transform src="context://stylesheets/system/status2html.xslt">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:act>
+    </map:match>
 
-   <map:match pattern="cal">
-    <map:generate type="calendar" label="content">
-      <!-- Uncomment and set a value for the desired month and year
-      <map:parameter name="month" value="6"/>
-      <map:parameter name="year" value="1998"/>
-      -->
-      <map:parameter name="dateFormat" value="EEEE, MMMM d yyyy"/>
-      <map:parameter name="lang" value="{request-param:lang}"/>
-      <map:parameter name="country" value="{request-param:country}"/>
-    </map:generate>
-    <map:transform src="context://stylesheets/system/calendar2html.xslt"/>
-    <!-- to localize the column headers, remove the comments below -->
-    <!--
-    <map:transform type="i18n">
-       <map:parameter name="default-catalogue-id" value="messages"/>
-       <map:parameter name="locale" value="{request-param:lang}"/>
-    </map:transform> 
-    -->
-    <map:serialize/>
-   </map:match>
+    <map:match pattern="clearpersistentstore.html">
+      <map:act type="clear-persistent-store">
+        <map:generate src="status" type="status"/>
+        <map:transform src="context://stylesheets/system/status2html.xslt">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:act>
+      <map:generate src="no-persistent-store.xml"/>
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:match>
 
    <!-- ========================= Automount ============================= -->
 
-   <map:match pattern="*/**">
-     <map:mount uri-prefix="{1}" src="{1}/" check-reload="yes"/>
-   </map:match>
+    <map:match pattern="*/**">
+      <map:mount uri-prefix="{1}" src="{1}/" check-reload="yes"/>
+    </map:match>
+
   </map:pipeline>
 
  </map:pipelines>
