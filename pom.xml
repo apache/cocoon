@@ -496,17 +496,15 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags</tagBase>
         </configuration>
       </plugin>
-      <!--
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.2-SNAPSHOT</version>
         <configuration>
           <descriptor>assembly.xml</descriptor>
           <outputDirectory>target</outputDirectory>
-          <workDirectory>target/assembly/work</workDirectory>
+          <workDirectory>target/assembly</workDirectory>
         </configuration>
       </plugin>
-      -->
     </plugins>
   </build>
 

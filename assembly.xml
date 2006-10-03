@@ -25,15 +25,20 @@
     <!--
     <format>tar.gz</format>
     <format>tar.bz2</format>
-    <format>dir</format>
-    -->
     <format>zip</format>
+    -->
+    <format>dir</format>
   </formats>
 
   <includeBaseDirectory>false</includeBaseDirectory>
 
   <moduleSets>
     <moduleSet>
+      <excludes>
+        <exclude>org.apache.cocoon:cocoon-webapp</exclude>
+        <exclude>org.apache.cocoon:cocoon-deployer-minimal-webapp</exclude>
+        <exclude>org.apache.cocoon:cocoon-dists-modules</exclude>
+      </excludes>
       <!--
       <sources>
         <outputDirectory></outputDirectory>
@@ -43,6 +48,19 @@
         <includeDependencies>true</includeDependencies>
         <unpack>false</unpack>
         <outputDirectory>lib</outputDirectory>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+
+  <moduleSets>
+    <moduleSet>
+      <includes>
+        <include>org.apache.cocoon:cocoon-webapp</include>
+      </includes>
+      <binaries>
+        <includeDependencies>true</includeDependencies>
+        <unpack>false</unpack>
+        <outputDirectory>www</outputDirectory>
       </binaries>
     </moduleSet>
   </moduleSets>
