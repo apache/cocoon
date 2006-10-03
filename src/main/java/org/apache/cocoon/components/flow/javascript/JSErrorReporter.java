@@ -36,8 +36,7 @@ public class JSErrorReporter implements ErrorReporter
   private Location location;
   private StringBuffer message;
 
-  public JSErrorReporter(Logger logger)
-  {
+  public JSErrorReporter(Logger logger) {
       this.logger = logger;
   }
   
