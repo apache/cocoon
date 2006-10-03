@@ -32,6 +32,29 @@
   <artifactId>cocoon-flowscript-impl</artifactId>
   <version>1.0.0-M2-SNAPSHOT</version>
   <name>Flowscript Block</name>
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/blocks/flowscript/${docs.version}/</url>
+    </site>
+  </distributionManagement>
+  <properties>
+    <docs.name>Cocoon FlowScript</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1229</navDocId>
+          <collection>cdocs-flowscript</collection>          
+          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+        </configuration>
+      </plugin>      
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>rhino</groupId>
