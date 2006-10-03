@@ -250,30 +250,6 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         }
     }
 
-    protected static class SettingsProperties extends Properties {
-
-        protected final Settings settings;
-
-        public SettingsProperties(Settings s) {
-            this.settings = s;
-        }
-
-        /**
-         * @see java.util.Properties#getProperty(java.lang.String, java.lang.String)
-         */
-        public String getProperty(String key, String defaultValue) {
-            return this.settings.getProperty(key, defaultValue);
-        }
-
-        /**
-         * @see java.util.Properties#getProperty(java.lang.String)
-         */
-        public String getProperty(String key) {
-            return this.settings.getProperty(key);
-        }
-        
-    }
-
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
