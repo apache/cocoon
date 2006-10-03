@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -169,15 +169,19 @@ import org.apache.cocoon.util.ImageUtils;
  *
  * @version $Id$
  */
-public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Disposable {
+public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction
+                                             implements Disposable {
+
     protected Map files = new HashMap();
     protected static final Map typeConstants;
     protected ServiceSelector dbselector;
 
     static {
-        /** Initialize the map of type names to jdbc column types.
-            Note that INTEGER, BLOB, and VARCHAR column types map to more than
-            one type name. **/
+        /*
+         * Initialize the map of type names to jdbc column types.
+         * Note that INTEGER, BLOB, and VARCHAR column types map to more than
+         * one type name.
+         */
         Map constants = new HashMap();
         constants.put("ascii", new Integer(Types.CLOB));
         constants.put("big-decimal", new Integer(Types.BIGINT));
@@ -216,6 +220,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
         super.service(manager);
         this.dbselector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
+
     /**
      * Get the Datasource we need.
      */
@@ -248,13 +253,17 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
         switch (type.intValue()) {
             case Types.CLOB:
                 Clob dbClob = set.getClob(dbcol);
-                int length = (int) dbClob.length();
-                InputStream asciiStream = new BufferedInputStream(dbClob.getAsciiStream());
-                byte[] buffer = new byte[length];
-                asciiStream.read(buffer);
-                String str = new String(buffer);
-                asciiStream.close();
-                value = str;
+                if (dbClob != null) {
+                    int length = (int) dbClob.length();
+                    InputStream is = new BufferedInputStream(dbClob.getAsciiStream());
+                    try {
+                        byte[] buffer = new byte[length];
+                        length = is.read(buffer);
+                        value = new String(buffer, 0, length);
+                    } finally {
+                        is.close();
+                    }
+                }
                 break;
             case Types.BIGINT:
                 value = set.getBigDecimal(dbcol);
@@ -693,7 +702,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
     }
 
     /**
-     * Build a separed list with the Values of a Configuration Array  
+     * Build a separed list with the Values of a Configuration Array
      * @param values - build the list from
      * @param separator - Put a separator between the values of the list
      * @return - an StringBuffer with the builded List
@@ -712,7 +721,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
     }
 
     /**
-     * Build a separed list with the Values of a Configuration Array  
+     * Build a separed list with the Values of a Configuration Array
      * @param values - build the list from
      * @param begin - Initial index
      * @return - an StringBuffer with the builded List
