@@ -87,7 +87,6 @@ Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
 repositories are temporarily unaccessible and cause the build to fail.
 
 Go to core/cocoon-webapp:
-  $ mvn cocoon:deploy
   $ mvn jetty6:run
 
 Point your browser to http://localhost:8888/
