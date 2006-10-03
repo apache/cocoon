@@ -34,9 +34,25 @@
   <artifactId>cocoon-dists-modules</artifactId>
   <version>2-SNAPSHOT</version>
   <name>Cocoon Distributions [modules]</name>
+
   <modules>
-    <module>cocoon-dist-publishing</module>
+    <module>cocoon-dist-samples</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>alldists</id>
+      <activation>
+        <property> 
+          <name>alldists</name>
+        </property> 
+      </activation>
+      <modules>
+        <module>cocoon-dist-publishing</module>
+      </modules>
+    </profile>
+  </profiles>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/dists</connection>
   </scm>
