@@ -54,19 +54,16 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
         // since 2.2 we add by default all flow scripts located in the ./flow directory
         // The default location can be overwritten by specifying the location attribute.
-        // we only include the scripts if the language is javascript
-        if ( "javascript".equals(language) ) {
-            final BeanFactory beanFactory = this.treeBuilder.getContainer().getBeanFactory();
-            if ( beanFactory instanceof ApplicationContext ) {
-                final ResourceLoader resourceLoader = (ApplicationContext)beanFactory;
-                final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
-                if ( resourceLoader.getResource(scriptLocation).exists() ) {
-                    final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
-                    final Resource[] resources = resolver.getResources(scriptLocation + "/*.js");
-                    if ( resources != null ) {
-                        for(int i=0; i < resources.length; i++) {
-                            node.getInterpreter().register(ResourceUtils.getUri(resources[i]));
-                        }
+        final BeanFactory beanFactory = this.treeBuilder.getContainer().getBeanFactory();
+        if ( beanFactory instanceof ApplicationContext ) {
+            final ResourceLoader resourceLoader = (ApplicationContext)beanFactory;
+            final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
+            if ( resourceLoader.getResource(scriptLocation).exists() ) {
+                final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+                final Resource[] resources = resolver.getResources(scriptLocation + "/*");
+                if ( resources != null ) {
+                    for(int i=0; i < resources.length; i++) {
+                        node.getInterpreter().register(ResourceUtils.getUri(resources[i]));
                     }
                 }
             }
