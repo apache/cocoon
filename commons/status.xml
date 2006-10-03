@@ -104,6 +104,7 @@
   <person name="Konstantin Piroumian" email="kpiroumian@apache.org" id="KP"/>
   <person name="Marc Portier" email="mpo@apache.org" id="MPO"/>
   <person name="Ovidiu Predescu" email="ovidiu@apache.org" id="OP"/>
+  <person name="Jean-Baptiste Quenot" email="jbq@apache.org" id="JBQ"/>
   <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
   <person name="Reinhard P&#246;tz" email="reinhard@apache.org" id="RP"/>
   <person name="Gianugo Rabellino" email="gianugo@apache.org" id="GR"/>
@@ -177,6 +178,14 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="JBQ" type="update">
+      Ported various caching pipeline fixes and improvements from branch 2.1:
+      <ul>
+        <li>locking feature, see http://svn.apache.org/viewcvs.cgi?rev=379792&view=rev</li>
+        <li>COCOON-1279: caching point pipelines and smart caching, see http://issues.apache.org/jira/browse/COCOON-1279</li>
+        <li>COCOON-1799: Threads waste when reading a not found resource, see http://issues.apache.org/jira/browse/COCOON-1799</li>
+      </ul>
+    </action>
     <action dev="VG" type="update">
       Move BackgroundEnvironment from Cron block into the core.
     </action>
