@@ -34,6 +34,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.core.container.spring.AbstractSettingsBeanFactoryPostProcessor;
+import org.apache.cocoon.core.container.spring.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
@@ -486,15 +487,7 @@ public class ConfigurationReader {
                            final Configuration includeStatement) 
     throws ConfigurationException, IOException {
         // If already loaded: do nothing
-        String uri = src.getURL().toExternalForm();
-        // if it is a file we have to recreate the url,
-        // otherwise we get problems under windows with some file
-        // references starting with "/DRIVELETTER" and some
-        // just with "DRIVELETTER"
-        if ( uri.startsWith("file:") ) {
-            final File f = new File(uri.substring(5));
-            uri = "file://" + f.getAbsolutePath();
-        }
+        final String uri = ResourceUtils.getUri(src);
         if (!loadedURIs.contains(uri)) {
             if ( this.logger.isDebugEnabled() ) {
                 this.logger.debug("Loading configuration: " + uri);
