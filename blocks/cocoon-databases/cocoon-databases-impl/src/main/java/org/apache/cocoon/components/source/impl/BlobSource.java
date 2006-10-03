@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,18 +30,17 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.Iterator;
 
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
-
-import org.apache.avalon.excalibur.datasource.DataSourceComponent;
-
-import org.apache.cocoon.CascadingIOException;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
+
+import org.apache.cocoon.CascadingIOException;
 
 /**
  * A <code>Source</code> that takes its content in a single JDBC column. Any
@@ -61,14 +60,16 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @version $Id$
  */
-public class BlobSource extends AbstractLogEnabled implements Source, Serviceable {
+public class BlobSource extends AbstractLogEnabled
+                        implements Source, Serviceable {
+
+    private static final String URL_PREFIX = "blob:/";
+    private static final int URL_PREFIX_LEN = URL_PREFIX.length();
 
     /** The ServiceManager instance */
-    private ServiceManager manager = null;
+    private ServiceManager manager;
 
-    /**
-     * The system ID for this source
-     */
+    /** The system ID for this source */
     private String systemId;
 
     private String datasourceName;
@@ -79,23 +80,18 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
 
     private String condition;
 
-    private final static String URL_PREFIX = "blob:/";
-    private final static int URL_PREFIX_LEN = URL_PREFIX.length();
-
     /**
      * Create a file source from a 'blob:' url and a component manager.
      * <p>The url is of the form "blob:/datasource/table/column[condition]
      */
     public BlobSource(String url) throws MalformedURLException {
-
         this.systemId = url;
 
         // Parse the url
         int start = URL_PREFIX_LEN;
-        int end;
 
         // Datasource
-        end = url.indexOf('/', start);
+        int end = url.indexOf('/', start);
         if (end == -1) {
             throw new MalformedURLException("Malformed blob source (cannot find datasource) : " + url);
         }
@@ -163,12 +159,11 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
             );
         }
 
-        Connection cnx = null;
+        Connection conn = null;
         Statement stmt = null;
-
         try {
-            cnx = getConnection();
-            stmt = cnx.createStatement();
+            conn = getConnection();
+            stmt = conn.createStatement();
 
             StringBuffer selectBuf = new StringBuffer("SELECT ").append(this.columnName).
                 append(" FROM ").append(this.tableName);
@@ -183,43 +178,50 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
             }
 
             ResultSet rs = stmt.executeQuery(select);
-            rs.next();
+            if (!rs.next()) {
+                throw new SourceNotFoundException("Source not found.");
+            }
 
             int colType = rs.getMetaData().getColumnType(1);
-
             switch(colType) {
                 case Types.BLOB :
                     Blob blob = rs.getBlob(1);
-                    return new JDBCInputStream(blob.getBinaryStream(), cnx);
-                //break;
+                    if (blob != null) {
+                        return new JDBCInputStream(blob.getBinaryStream(), conn);
+                    }
+                    break;
 
                 case Types.CLOB :
                     Clob clob = rs.getClob(1);
-                    return new JDBCInputStream(clob.getAsciiStream(), cnx);
-                //break;
+                    if (clob != null) {
+                        return new JDBCInputStream(clob.getAsciiStream(), conn);
+                    }
+                    break;
 
                 default :
                     String value = rs.getString(1);
-                    stmt.close();
-                    rs.close();
-                    cnx.close();
-                    return new ByteArrayInputStream(value.getBytes());
+                    if (value != null) {
+                        return new ByteArrayInputStream(value.getBytes());
+                    }
             }
-        } catch(SQLException sqle) {
+
+            return new ByteArrayInputStream(new byte[0]);
+        } catch (SQLException e) {
             String msg = "Cannot retrieve content from " + this.systemId;
-            getLogger().error(msg, sqle);
-
+            getLogger().error(msg, e);
+            // IOException would be more adequate, but SourceException is cascaded...
+            throw new SourceException(msg, e);
+        } finally {
             try {
-                if (cnx != null) {
-                    cnx.close();
+                if (stmt != null) {
+                    stmt.close();
                 }
-            } catch(SQLException sqle2) {
-                // PITA
-                throw new SourceException("Cannot close connection", sqle2);
-            }
-
-            // IOException would be more adequate, but ProcessingException is cascaded...
-            throw new SourceException(msg, sqle);
+            } catch (SQLException e) { /* ignored */ }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) { /* ignored */ }
         }
     }
 
@@ -232,23 +234,23 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
     public SourceValidity getValidity() {
         return null;
     }
-    
+
     /**
      * Refresh the content of this object after the underlying data
      * content has changed.
      */
     public void refresh() {
     }
-    
+
     /**
-     * 
+     *
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
         // FIXME
         return true;
     }
-    
+
     /**
      * The mime-type of the content described by this object.
      * If the source is not able to determine the mime-type by itself
@@ -257,7 +259,7 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
     public String getMimeType() {
         return null;
     }
-    
+
     /**
      * Return the content length of the content or -1 if the length is
      * unknown
@@ -302,7 +304,7 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
         return new EmptyIterator();
     }
 
-    class EmptyIterator implements Iterator {
+    static class EmptyIterator implements Iterator {
         public boolean hasNext() { return false; }
         public Object next() { return null; }
         public void remove() {}
@@ -319,7 +321,7 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
 
                 datasource = (DataSourceComponent)selector.select(this.datasourceName);
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 String msg = "Cannot get datasource '" + this.datasourceName + "'";
                 getLogger().error(msg);
                 throw new SourceException(msg, e);
@@ -327,7 +329,7 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
 
             try {
                 return datasource.getConnection();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 String msg = "Cannot get connection for datasource '" + this .datasourceName + "'";
                 getLogger().error(msg);
                 throw new SourceException(msg, e);
@@ -346,18 +348,18 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
      */
     private class JDBCInputStream extends FilterInputStream {
 
-        Connection cnx;
+        private Connection cnx;
 
-        private final void closeCnx() throws IOException {
+        private void closeCnx() throws IOException {
             if (this.cnx != null) {
                 try {
-                    Connection tmp = cnx;
-                    cnx = null;
-                    tmp.close();
-                } catch(Exception e) {
+                    cnx.close();
+                } catch (Exception e) {
                     String msg = "Error closing the connection for " + BlobSource.this.getURI();
                     BlobSource.this.getLogger().warn(msg, e);
                     throw new CascadingIOException(msg + " : " + e.getMessage(), e);
+                } finally {
+                    cnx = null;
                 }
             }
         }
@@ -412,4 +414,3 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
         }
     }
 }
-
