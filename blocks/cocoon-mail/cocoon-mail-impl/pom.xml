@@ -34,6 +34,29 @@
   <packaging>jar</packaging>
   <name>Mail Block Implementation</name>
   <description/>
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/blocks/mail/${docs.version}/</url>
+    </site>
+  </distributionManagement>
+  <properties>
+    <docs.name>Cocoon Mail</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1233</navDocId>
+          <collection>cdocs-mail</collection>          
+          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+        </configuration>
+      </plugin>      
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
