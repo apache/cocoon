@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Blob;
@@ -39,8 +40,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.servlet.multipart.Part;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
-
 
 /**
  * Provide some utility methods to read from JDBC result sets or store
@@ -145,30 +146,35 @@ public class JDBCTypeConversions {
         }
         return object;
     }
-                    
-      
 
     /**
      * Get the Statement column so that the results are mapped correctly.
      * (this has been copied from AbstractDatabaseAction and modified slightly)
      */
-    public static Object getColumn(ResultSet set, Configuration column ) throws Exception {
+    public static Object getColumn(ResultSet set, Configuration column)
+    throws Exception {
 
         Integer type = (Integer) JDBCTypeConversions.typeConstants.get(column.getAttribute("type"));
         String dbcol = column.getAttribute("name");
-        Object value = null;
+        Object value;
 
         switch (type.intValue()) {
         case Types.CLOB:
         case Types.CHAR:
             Clob dbClob = set.getClob(dbcol);
-            int length = (int) dbClob.length();
-            InputStream asciiStream = new BufferedInputStream(dbClob.getAsciiStream());
-            byte[] buffer = new byte[length];
-            asciiStream.read(buffer);
-            String str = new String(buffer);
-            asciiStream.close();
-            value = str;
+            if (dbClob != null) {
+                int length = (int) dbClob.length();
+                char[] buffer = new char[length];
+                Reader r = dbClob.getCharacterStream();
+                try {
+                    length = r.read(buffer);
+                    value = new String(buffer, 0, length);
+                } finally {
+                    r.close();
+                }
+            } else {
+                value = null;
+            }
             break;
         case Types.BIGINT:
             value = set.getBigDecimal(dbcol);
@@ -207,7 +213,7 @@ public class JDBCTypeConversions {
             value = set.getArray(dbcol); // new Integer(set.getInt(dbcol));
             break;
         case Types.BIT:
-            value = new Boolean(set.getBoolean(dbcol));
+            value = BooleanUtils.toBooleanObject(set.getBoolean(dbcol));
             break;
         case Types.STRUCT:
             value = set.getObject(dbcol);
@@ -261,16 +267,16 @@ public class JDBCTypeConversions {
             }
         }
 
-        File file = null;
-        int length = -1;
-        InputStream asciiStream = null;
+        File file;
+        int length;
+        InputStream asciiStream;
 
         //System.out.println("========================================================================");
         //System.out.println("JDBCTypeConversions: setting type "+typeObject.intValue());
         switch (typeObject.intValue()) {
         case Types.CLOB:
             //System.out.println("CLOB");
-            Clob clob = null;
+            Clob clob;
             if (value instanceof Clob) {
                 clob = (Clob) value;
             } else if (value instanceof File) {
@@ -297,13 +303,13 @@ public class JDBCTypeConversions {
                 length = asciiText.length();
                 clob = new ClobHelper(asciiStream, length);
             }
-            
+
             statement.setClob(position, clob);
             break;
         case Types.CHAR:
             // simple large object, e.g. Informix's TEXT
             //System.out.println("CHAR");
-            
+
             if (value instanceof File) {
                 File asciiFile = (File) value;
                 asciiStream = new BufferedInputStream(new FileInputStream(asciiFile));
@@ -324,13 +330,13 @@ public class JDBCTypeConversions {
                 asciiStream = new BufferedInputStream(new ByteArrayInputStream(asciiText.getBytes()));
                 length = asciiText.length();
             }
-            
+
             statement.setAsciiStream(position, asciiStream, length);
             break;
         case Types.BIGINT:
             //System.out.println("BIGINT");
-            BigDecimal bd = null;
-            
+            BigDecimal bd;
+
             if (value instanceof BigDecimal) {
                 bd = (BigDecimal) value;
             } else if (value instanceof Number) {
@@ -338,13 +344,12 @@ public class JDBCTypeConversions {
             } else {
                 bd = new BigDecimal(value.toString());
             }
-            
+
             statement.setBigDecimal(position, bd);
             break;
         case Types.TINYINT:
             //System.out.println("TINYINT");
-            Byte b = null;
-            
+            Byte b;
             if (value instanceof Byte) {
                 b = (Byte) value;
             } else if (value instanceof Number) {
@@ -352,13 +357,12 @@ public class JDBCTypeConversions {
             } else {
                 b = new Byte(value.toString());
             }
-            
+
             statement.setByte(position, b.byteValue());
             break;
         case Types.DATE:
             //System.out.println("DATE");
-            Date d = null;
-            
+            Date d;
             if (value instanceof Date) {
                 d = (Date) value;
             } else if (value instanceof java.util.Date) {
@@ -368,13 +372,13 @@ public class JDBCTypeConversions {
             } else {
                 d = Date.valueOf(value.toString());
             }
-            
+
             statement.setDate(position, d);
             break;
         case Types.DOUBLE:
             //System.out.println("DOUBLE");
             double db;
-            
+
             if (value instanceof Number) {
                 db = (((Number) value).doubleValue());
             } else {
@@ -385,7 +389,7 @@ public class JDBCTypeConversions {
         case Types.FLOAT:
             //System.out.println("FLOAT");
             float f;
-            
+
             if (value instanceof Number) {
                 f = (((Number) value).floatValue());
             } else {
@@ -396,19 +400,18 @@ public class JDBCTypeConversions {
         case Types.NUMERIC:
             //System.out.println("NUMERIC");
             long l;
-            
+
             if (value instanceof Number) {
                 l = (((Number) value).longValue());
             } else {
                 l = Long.parseLong(value.toString());
             }
-            
+
             statement.setLong(position, l);
             break;
         case Types.SMALLINT:
             //System.out.println("SMALLINT");
-            Short s = null;
-            
+            Short s;
             if (value instanceof Short) {
                 s = (Short) value;
             } else if (value instanceof Number) {
@@ -416,13 +419,12 @@ public class JDBCTypeConversions {
             } else {
                 s = new Short(value.toString());
             }
-            
+
             statement.setShort(position, s.shortValue());
             break;
         case Types.TIME:
             //System.out.println("TIME");
-            Time t = null;
-            
+            Time t;
             if (value instanceof Time) {
                 t = (Time) value;
             } else if (value instanceof java.util.Date){
@@ -430,13 +432,12 @@ public class JDBCTypeConversions {
             } else {
                 t = Time.valueOf(value.toString());
             }
-            
+
             statement.setTime(position, t);
             break;
         case Types.TIMESTAMP:
             //System.out.println("TIMESTAMP");
-            Timestamp ts = null;
-            
+            Timestamp ts;
             if (value instanceof Time) {
                 ts = (Timestamp) value;
             } else if (value instanceof java.util.Date) {
@@ -444,7 +445,7 @@ public class JDBCTypeConversions {
             } else {
                 ts = Timestamp.valueOf(value.toString());
             }
-            
+
             statement.setTimestamp(position, ts);
             break;
         case Types.ARRAY:
@@ -472,7 +473,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Source){
                 statement.setBinaryStream(position, ((Source)value).getInputStream(), (int)((Source)value).getContentLength());
             } else {
-                Blob blob = null;
+                Blob blob;
                 if (value instanceof Blob) {
                     blob = (Blob) value;
                 } else if( value instanceof File) {
@@ -500,7 +501,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Part) {
                 statement.setBinaryStream(position, ((Part)value).getInputStream(), ((Part)value).getSize());
             } else {
-                if (value instanceof File) {           
+                if (value instanceof File) {
                    file = (File)value;
                } else if (value instanceof String) {
                    file = new File((String)value);
@@ -514,11 +515,11 @@ public class JDBCTypeConversions {
             break;
         case Types.INTEGER:
             //System.out.println("INTEGER");
-            Integer i = null;
+            Integer i;
             if (value instanceof Integer) {
                 i = (Integer) value;
-            } else if (value instanceof java.lang.Number) {
-                i = new Integer(((java.lang.Number) value).intValue());
+            } else if (value instanceof Number) {
+                i = new Integer(((Number) value).intValue());
             } else {
                 i = new Integer(value.toString());
             }
@@ -526,23 +527,21 @@ public class JDBCTypeConversions {
             break;
         case Types.BIT:
             //System.out.println("BIT");
-            Boolean bo = null;
+            Boolean bo;
             if (value instanceof Boolean) {
-                bo = (Boolean) value;
-            } else if (value instanceof java.lang.Number) {
-                bo = new Boolean(((java.lang.Number) value).intValue()==1);
+                bo = (Boolean)value;
+            } else if (value instanceof Number) {
+                bo = BooleanUtils.toBooleanObject(((Number) value).intValue()==1);
             } else {
-                bo = new Boolean(value.toString());
+                bo = BooleanUtils.toBooleanObject(value.toString());
             }
             statement.setBoolean(position, bo.booleanValue());
             break;
-            
+
         default:
             //System.out.println("default");
             throw new SQLException("Impossible exception - invalid type ");
         }
         //System.out.println("========================================================================");
     }
-    
-    
 }
