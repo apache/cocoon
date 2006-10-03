@@ -15,13 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!-- @version $Id$ -->
-
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:flow language="javascript">
-    <map:script src="flow.js"/>
-  </map:flow>
+  <!-- By default all flow scripts from the ./flow directory are read. -->
+  <map:flow language="javascript"/>
 
   <map:pipelines>
     <map:pipeline>
