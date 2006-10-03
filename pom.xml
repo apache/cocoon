@@ -66,6 +66,12 @@
     <pluginRepository>
       <id>reinhard-m2-snapshot-repository</id>
       <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </pluginRepository>
     <!-- Activate this element if you want to use snapshot versions of plugins
     <pluginRepository>
