@@ -203,7 +203,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     private ThreadScope getSessionScope() throws Exception {
         final String scopeID = USER_GLOBAL_SCOPE + getInterpreterID();
-        final Request request = ContextHelper.getRequest(this.avalonContext);
+        final Request request = ObjectModelHelper.getRequest(this.processInfoProvider.getObjectModel());
 
         ThreadScope scope = null;
 
@@ -234,7 +234,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     private void setSessionScope(ThreadScope scope) throws Exception {
         if (scope.useSession) {
             final String scopeID = USER_GLOBAL_SCOPE + getInterpreterID();
-            final Request request = ContextHelper.getRequest(this.avalonContext);
+            final Request request = ObjectModelHelper.getRequest(this.processInfoProvider.getObjectModel());
 
             // FIXME: Where "session scope" should go when session is invalidated?
             // Attach the scope to the current context
@@ -733,7 +733,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     }
 
     private void setupView(Scriptable scope, FOM_Cocoon cocoon, FOM_WebContinuation kont) {
-        Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+        final Map objectModel = this.processInfoProvider.getObjectModel();
 
         // Make the JS live-connect objects available to the view layer
         FOM_JavaScriptFlowHelper.setPackages(objectModel,
