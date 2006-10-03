@@ -377,12 +377,56 @@
                 <path>core-modules/core/2.2/</path>
               </collection>
               <collection>
+                <name>cdocs-ajax</name>
+                <path>blocks/ajax/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-auth</name>
+                <path>blocks/auth/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-captcha</name>
+                <path>blocks/captcha/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-flowscript</name>
+                <path>blocks/flowscript/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-fop</name>
+                <path>blocks/fop/1.0/</path>
+              </collection>
+              <collection>
                 <name>cdocs-forms</name>
                 <path>blocks/forms/1.0/</path>
               </collection>
               <collection>
+                <name>cdocs-javaflow</name>
+                <path>blocks/javaflow/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-lucene</name>
+                <path>blocks/lucene/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-mail</name>
+                <path>blocks/mail/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-portal</name>
+                <path>blocks/portal/1.0/</path>
+              </collection>
+              <collection>
+                <name>cdocs-serializers</name>
+                <path>blocks/serializers/1.0/</path>
+              </collection>
+              <collection>
                 <name>cdocs-template</name>
                 <path>blocks/template/1.0/</path>
+              </collection>
+			<collection>
+                <name>cdocs-fop</name>
+                <path>blocks/fop/1.0/</path>
               </collection>
             </collections>
             <siteXmlContent>
