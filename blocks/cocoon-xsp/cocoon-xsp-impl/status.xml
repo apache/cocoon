@@ -66,6 +66,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1196">
+      Use namespace-uri and not the namespace-prefix to select parameters in logicsheet-util.xsl.
+    </action>
   </release>
  </changes>
 
