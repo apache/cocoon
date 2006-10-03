@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="fix" fixes-bug="COCOON-1462">
+      Databases: Check for null LOBs.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1866" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
       JXTemplate: Fix an ArrrayIndexOutOfBoundsException with jx:comment.
     </action>

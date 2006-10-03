@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,33 +16,140 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.Reader;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Blob;
+import java.sql.CallableStatement;
 import java.sql.Clob;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
  * This is a helper class to remove redundant code in
- * esql pages
+ * esql pages.
  *
- * based on the orginal esql.xsl
+ * Based on the orginal esql.xsl.
+ *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
  * @version CVS $Id$
  */
-
 public class EsqlHelper {
 
-    /** returns byte array from BLOB
-     */
-    public final static byte[] getBlob(ResultSet set, String column) throws RuntimeException {
+    private static void close(Object lob) {
+        if (lob == null) {
+            return;
+        }
 
+        // ORACLE 'temporary lob' problem patch start
+        Class clazz = lob.getClass();
+        String name = clazz.getName();
+        if (name.equals("oracle.sql.BLOB") || name.equals("oracle.sql.CLOB")) {
+            try {
+                if (clazz.getMethod("isTemporary", new Class[0]).invoke(lob, new Object[0]).equals(Boolean.TRUE)) {
+                    clazz.getMethod("freeTemporary", new Class[0]).invoke(lob, new Object[0]);
+                }
+            } catch (IllegalAccessException e) {
+                /* ignored */
+            } catch (InvocationTargetException e) {
+                /* ignored */
+            } catch (NoSuchMethodException e) {
+                /* ignored */
+            }
+        }
+    }
+
+    private static byte[] readBytes(Blob blob, byte[] defaultValue)
+    throws SQLException, IOException {
+        if (blob == null) {
+            return defaultValue;
+        }
+
+        InputStream is = null;
+        try {
+            int length = (int) blob.length();
+            if (length == 0) {
+                return defaultValue;
+            }
+
+            byte[] buffer = new byte[length];
+            is = blob.getBinaryStream();
+            is.read(buffer);
+
+            return buffer;
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) { /* ignored */ }
+            close(blob);
+        }
+    }
+
+    private static String readAscii(Clob clob, String defaultValue)
+    throws SQLException, IOException {
+        if (clob == null) {
+            return defaultValue;
+        }
+
+        InputStream is = null;
+        try {
+            int length = (int) clob.length();
+            if (length == 0) {
+                return defaultValue;
+            }
+
+            byte[] buffer = new byte[length];
+            is = clob.getAsciiStream();
+            is.read(buffer);
+
+            return new String(buffer, 0, length);
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) { /* ignored */ }
+            close(clob);
+        }
+    }
+
+    private static String read(Clob clob, String defaultValue)
+    throws SQLException, IOException {
+        if (clob == null) {
+            return defaultValue;
+        }
+
+        Reader r = null;
+        try {
+            int length = (int) clob.length();
+            if (length == 0) {
+                return defaultValue;
+            }
+
+            char[] buffer = new char[length];
+            r = clob.getCharacterStream();
+            r.read(buffer);
+
+            return new String(buffer, 0, length);
+        } finally {
+            try {
+                if (r != null) {
+                    r.close();
+                }
+            } catch (IOException e) { /* ignored */ }
+            close(clob);
+        }
+    }
+
+    /** returns byte array from BLOB */
+    public static byte[] getBlob(ResultSet set, String column)
+    throws RuntimeException {
         try {
             return EsqlHelper.getBlob(set, set.findColumn(column));
         } catch (Exception e) {
@@ -50,91 +157,51 @@ public class EsqlHelper {
         }
     }
 
-    /** returns byte array from BLOB
-     */
-    public final static byte[] getBlob(ResultSet set, int column) throws java.lang.Exception {
-
-        InputStream reader = null;
-        byte[] buffer = null;
-        Blob dbBlob = null;
-
+    /** returns byte array from BLOB */
+    public static byte[] getBlob(ResultSet set, int column)
+    throws Exception {
         try {
             if (set.getMetaData().getColumnType(column) == java.sql.Types.BLOB) {
-                dbBlob = set.getBlob(column);
-                int length = (int) dbBlob.length();
-                reader = dbBlob.getBinaryStream();
-                buffer = new byte[length];
-                reader.read(buffer);
-                reader.close();
-                return buffer != null ? buffer : null;
+                return readBytes(set.getBlob(column), null);
             } else {
-                return set.getString(column).getBytes();
+                String value = set.getString(column);
+                if (value == null) {
+                    return null;
+                }
+                return value.getBytes();
             }
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting blob data for column " + column, e);
-        } finally {
-            // ORACLE 'temporary lob' problem patch start
-            if (dbBlob != null && dbBlob.getClass().getName().equals("oracle.sql.BLOB")) {
-                if (dbBlob
-                    .getClass()
-                    .getMethod("isTemporary", new Class[0])
-                    .invoke(dbBlob, new Object[0])
-                    .equals(Boolean.TRUE))
-                    dbBlob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
-                        dbBlob,
-                        new Object[0]);
-            }
         }
     }
 
-    /** returns byte array from BLOB
-     */
-    public final static byte[] getBlob(CallableStatement cs, int column, String defaultString)
-        throws java.lang.Exception {
+    /** returns byte array from BLOB */
+    public static byte[] getBlob(CallableStatement cs, int column, String defaultString)
+    throws Exception {
 
-        InputStream reader = null;
-        byte[] buffer = null;
-        byte[] result = null;
-        Blob dbBlob = null;
+        byte[] defaultValue = null;
+        if (defaultString != null && !defaultString.equals("_null_")) {
+            defaultValue = defaultString.getBytes();
+        }
 
         try {
-            dbBlob = cs.getBlob(column);
-            int length = (int) dbBlob.length();
-            reader = dbBlob.getBinaryStream();
-            buffer = new byte[length];
-            reader.read(buffer);
-            reader.close();
-            if (buffer != null) {
-                result = buffer;
-            } else if (defaultString != null && !defaultString.equals("_null_")) {
-                result = defaultString.getBytes();
+            if (cs.getMetaData().getColumnType(column) == java.sql.Types.BLOB) {
+                return readBytes(cs.getBlob(column), defaultValue);
             } else {
-                result = null;
+                String value = cs.getString(column);
+                if (value == null) {
+                    return defaultValue;
+                }
+                return value.getBytes();
             }
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting blob data for column " + column, e);
-        } finally {
-            // ORACLE 'temporary lob' problem patch start
-            if (dbBlob != null && dbBlob.getClass().getName().equals("oracle.sql.BLOB")) {
-                if (dbBlob
-                    .getClass()
-                    .getMethod("isTemporary", new Class[0])
-                    .invoke(dbBlob, new Object[0])
-                    .equals(Boolean.TRUE)) {
-                    dbBlob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
-                        dbBlob,
-                        new Object[0]);
-                }
-            }
         }
-        return result;
     }
 
-    /** returns Unicode encoded string from CLOB or String column 
-     */
-    public final static String getStringOrClob(ResultSet set, String column, String defaultString)
-        throws RuntimeException {
-
+    /** returns Unicode encoded string from CLOB or String column */
+    public static String getStringOrClob(ResultSet set, String column, String defaultString)
+    throws RuntimeException {
         try {
             return EsqlHelper.getStringOrClob(set, set.findColumn(column), defaultString);
         } catch (Exception e) {
@@ -142,117 +209,47 @@ public class EsqlHelper {
         }
     }
 
-    /** returns Unicode encoded string from CLOB or String column 
-     */
-    public final static String getStringOrClob(ResultSet set, int column, String defaultString)
-        throws java.lang.Exception {
-
-        Reader reader = null;
-        char[] buffer = null;
-        String result = null;
-        Clob dbClob = null;
+    /** returns Unicode encoded string from CLOB or String column */
+    public static String getStringOrClob(ResultSet set, int column, String defaultString)
+    throws Exception {
+        if (defaultString != null && defaultString.equals("_null_")) {
+            defaultString = null;
+        }
 
         try {
             if (set.getMetaData().getColumnType(column) == java.sql.Types.CLOB) {
-                dbClob = set.getClob(column);
-                int length = (int) dbClob.length();
-                reader = new BufferedReader(dbClob.getCharacterStream());
-                buffer = new char[length];
-                reader.read(buffer);
-                if (buffer != null) {
-                    result = new String(buffer);
-                } else if (defaultString != null && !defaultString.equals("_null_")) {
-                    result = defaultString;
-                } else {
-                    result = null;
-                }
+                return read(set.getClob(column), defaultString);
             } else {
-                result = set.getString(column);
-                if (result == null && defaultString != null && !defaultString.equals("_null_"))
+                String result = set.getString(column);
+                if (result == null) {
                     result = defaultString;
+                }
+                return result;
             }
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting text from column " + column, e);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-            // ORACLE 'temporary lob' problem patch start
-            if (dbClob != null && dbClob.getClass().getName().equals("oracle.sql.CLOB")) {
-                try {
-                    if (dbClob
-                        .getClass()
-                        .getMethod("isTemporary", new Class[0])
-                        .invoke(dbClob, new Object[0])
-                        .equals(Boolean.TRUE)) {
-                        dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
-                            dbClob,
-                            new Object[0]);
-                    }
-                } catch (Exception e1) {
-                    // swallow
-                }
-            }
         }
-        return result;
     }
 
-    /** returns Unicode encoded string from CLOB or String column 
-     */
-    public final static String getStringOrClob(
-        CallableStatement cs,
-        int column,
-        String defaultString)
-        throws java.lang.Exception {
-
-        Reader reader = null;
-        char[] buffer = null;
-        String result = null;
-        Clob dbClob = null;
+    /** returns Unicode encoded string from CLOB or String column */
+    public static String getStringOrClob(CallableStatement cs,
+                                         int column,
+                                         String defaultString)
+    throws Exception {
+        if (defaultString != null && defaultString.equals("_null_")) {
+            defaultString = null;
+        }
 
         try {
-            dbClob = cs.getClob(column);
-            int length = (int) dbClob.length();
-            reader = new BufferedReader(dbClob.getCharacterStream());
-            buffer = new char[length];
-            reader.read(buffer);
-            if (buffer != null) {
-                result = new String(buffer);
-            } else if (defaultString != null && !defaultString.equals("_null_")) {
-                result = defaultString;
-            } else {
-                result = null;
-            }
+            return read(cs.getClob(column), defaultString);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting text from column " + column, e);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-            // ORACLE 'temporary lob' problem patch start
-            if (dbClob != null && dbClob.getClass().getName().equals("oracle.sql.CLOB")) {
-                try {
-                    if (dbClob
-                        .getClass()
-                        .getMethod("isTemporary", new Class[0])
-                        .invoke(dbClob, new Object[0])
-                        .equals(Boolean.TRUE))
-                        dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
-                            dbClob,
-                            new Object[0]);
-                } catch (Exception e1) {
-                    // swallow
-                }
-            }
         }
-        return result;
     }
 
-    /** returns ascii string from CLOB or String column 
-     */
-    public final static String getAscii(ResultSet set, String column, String defaultString)
-        throws RuntimeException {
-
+    /** returns ascii string from CLOB or String column */
+    public static String getAscii(ResultSet set, String column, String defaultString)
+    throws RuntimeException {
         try {
             int colIndex = set.findColumn(column);
             return EsqlHelper.getAscii(set, colIndex, defaultString);
@@ -261,122 +258,39 @@ public class EsqlHelper {
         }
     }
 
-    /** returns ascii string from CLOB or String column 
-     */
-    public final static String getAscii(ResultSet set, int column, String defaultString) {
-        InputStream asciiStream = null;
-        String result = null;
-        Clob dbClob = null;
+    /** returns ascii string from CLOB or String column */
+    public static String getAscii(ResultSet set, int column, String defaultString) {
+        if (defaultString != null && defaultString.equals("_null_")) {
+            defaultString = null;
+        }
 
         try {
             if (set.getMetaData().getColumnType(column) == Types.CLOB) {
-                byte[] buffer = null;
-                dbClob = set.getClob(column);
-                int length = (int) dbClob.length();
-                asciiStream = new BufferedInputStream(dbClob.getAsciiStream());
-                buffer = new byte[length];
-                asciiStream.read(buffer);
-                asciiStream.close();
-                if (buffer != null) {
-                    result = new String(buffer);
-                } else if (defaultString != null && !defaultString.equals("_null_")) {
-                    result = defaultString;
-                } else {
-                    result = null;
-                }
+                return readAscii(set.getClob(column), defaultString);
             } else {
-                result = set.getString(column);
-                if (result == null && defaultString != null && !defaultString.equals("_null_")) {
+                String result = set.getString(column);
+                if (result == null) {
                     result = defaultString;
                 }
+                return result;
             }
         } catch (Exception e) {
-            throw new CascadingRuntimeException(
-                "Error getting ascii data from column " + column, e);
-        } finally {
-            if (asciiStream != null) {
-                try {
-                    asciiStream.close();
-                } catch (Exception ase) {
-                    throw new CascadingRuntimeException("Error closing clob stream", ase);
-                }
-            }
-            // ORACLE 'temporary lob' problem patch start
-            if (dbClob != null && dbClob.getClass().getName().equals("oracle.sql.CLOB")) {
-                try {
-                    if (dbClob
-                        .getClass()
-                        .getMethod("isTemporary", new Class[0])
-                        .invoke(dbClob, new Object[0])
-                        .equals(Boolean.TRUE)) {
-                        dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
-                            dbClob,
-                            new Object[0]);
-                    }
-                } catch (Exception e1) {
-                    // swallow
-                }
-            }
+            throw new CascadingRuntimeException("Error getting ascii data from column " + column, e);
         }
-        return result;
     }
 
-    /** returns ascii string from CLOB or String column 
-     */
-    public final static String getAscii(CallableStatement cs, int column, String defaultString) {
-        InputStream asciiStream = null;
-        String result = null;
-        Clob dbClob = null;
-
+    /** returns ascii string from CLOB or String column */
+    public static String getAscii(CallableStatement cs, int column, String defaultString) {
         try {
-            byte[] buffer = null;
-            dbClob = cs.getClob(column);
-            int length = (int) dbClob.length();
-            asciiStream = new BufferedInputStream(dbClob.getAsciiStream());
-            buffer = new byte[length];
-            asciiStream.read(buffer);
-            asciiStream.close();
-            if (buffer != null) {
-                result = new String(buffer);
-            } else if (defaultString != null && !defaultString.equals("_null_")) {
-                result = defaultString;
-            } else {
-                result = null;
-            }
+            return readAscii(cs.getClob(column), defaultString);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting ascii data for column " + column, e);
-        } finally {
-            if (asciiStream != null) {
-                try {
-                    asciiStream.close();
-                } catch (Exception ase) {
-                    throw new CascadingRuntimeException("Error closing clob stream", ase);
-                }
-            }
-            // ORACLE 'temporary lob' problem patch start
-            if (dbClob != null && dbClob.getClass().getName().equals("oracle.sql.CLOB")) {
-                try {
-                    if (dbClob
-                        .getClass()
-                        .getMethod("isTemporary", new Class[0])
-                        .invoke(dbClob, new Object[0])
-                        .equals(Boolean.TRUE)) {
-                        dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
-                            dbClob,
-                            new Object[0]);
-                    }
-                } catch (Exception e1) {
-                    // swallow
-                }
-            }
         }
-        return result;
     }
 
-    public final static String getStringFromByteArray(
-        byte[] bytes,
-        String encoding,
-        String defaultString) {
+    public static String getStringFromByteArray(byte[] bytes,
+                                                String encoding,
+                                                String defaultString) {
         if (bytes != null) {
             try {
                 return new String(bytes, encoding);
