@@ -34,6 +34,7 @@ import org.apache.cocoon.components.flow.apples.AppleRequest;
 import org.apache.cocoon.components.flow.apples.DefaultAppleRequest;
 import org.apache.cocoon.components.flow.apples.DefaultAppleResponse;
 import org.apache.cocoon.components.flow.apples.StatelessAppleController;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
@@ -45,6 +46,7 @@ import org.apache.cocoon.environment.Response;
  * @version $Id$
  */
 public class ApplesProcessor extends AbstractInterpreter implements ContinuationsDisposer {
+
     public void callFunction(String className, List params, Redirector redirector) throws Exception {
         AppleController app = instantiateController(className);
 
@@ -99,9 +101,9 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
 
     private void processApple(List params, Redirector redirector, AppleController app, WebContinuation wk)
             throws Exception {
-        Request cocoonRequest = ContextHelper.getRequest(this.avalonContext);
+        Request cocoonRequest = ObjectModelHelper.getRequest(this.processInfoProvider.getObjectModel());
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
-        Response cocoonResponse = ContextHelper.getResponse(this.avalonContext);
+        Response cocoonResponse = ObjectModelHelper.getResponse(this.processInfoProvider.getObjectModel());
         DefaultAppleResponse res = new DefaultAppleResponse(cocoonResponse);
 
         try {
