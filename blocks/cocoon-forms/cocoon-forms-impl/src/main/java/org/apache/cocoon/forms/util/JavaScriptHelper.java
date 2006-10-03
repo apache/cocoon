@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
+import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
@@ -209,7 +210,7 @@ public class JavaScriptHelper {
             }
 
             Object result = script.exec(ctx, scope);
-            return FlowHelper.unwrap(result);
+            return PipelineUtil.unwrap(result);
         } finally {
             Context.exit();
         }
@@ -239,7 +240,7 @@ public class JavaScriptHelper {
             }
             func.setParentScope(scope);
             Object result = func.call(ctx, scope, thisObject == null? null: Context.toObject(thisObject, scope), arguments);
-            return FlowHelper.unwrap(result);
+            return PipelineUtil.unwrap(result);
         } finally {
             Context.exit();
         }
