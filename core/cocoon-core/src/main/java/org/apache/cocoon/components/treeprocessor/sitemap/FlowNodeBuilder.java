@@ -18,10 +18,13 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.core.container.spring.ResourceUtils;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
@@ -52,19 +55,23 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
         // since 2.2 we add by default all flow scripts located in the ./flow directory
         // The default location can be overwritten by specifying the location attribute.
         // we only include the scripts if the language is javascript
-        /*
-        if ( "javascript".equals(language) && node.getInterpreter() instanceof AbstractInterpreter ) {
-            // FIXME we need the resource loader
-            final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
-            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            final Resource[] resources = resolver.getResources(scriptLocation + "/*.js");
-            if ( resources != null ) {
-                for(int i=0; i < resources.length; i++) {
-                    ((AbstractInterpreter)node.getInterpreter()).register(resources[i].getURL().toExternalForm());
+        if ( "javascript".equals(language) ) {
+            final BeanFactory beanFactory = this.treeBuilder.getContainer().getBeanFactory();
+            if ( beanFactory instanceof ApplicationContext ) {
+                final ResourceLoader resourceLoader = (ApplicationContext)beanFactory;
+                final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
+                if ( resourceLoader.getResource(scriptLocation).exists() ) {
+                    final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+                    final Resource[] resources = resolver.getResources(scriptLocation + "/*.js");
+                    if ( resources != null ) {
+                        for(int i=0; i < resources.length; i++) {
+                            node.getInterpreter().register(ResourceUtils.getUri(resources[i]));
+                        }
+                    }
                 }
             }
         }
-        */
+
         // now process child nodes
         buildChildNodesList(config);
 
