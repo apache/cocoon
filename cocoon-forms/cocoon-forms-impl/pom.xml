@@ -62,7 +62,7 @@
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
-          <navDocId>1152</navDocId>
+          <navDocId>1255</navDocId>
           <collection>cdocs-forms</collection>          
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
