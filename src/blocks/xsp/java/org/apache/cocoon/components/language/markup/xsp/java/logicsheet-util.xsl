@@ -119,20 +119,11 @@
     <xsl:param name="default"/>
     <xsl:param name="required">false</xsl:param>
 
-    <!-- for some unknown reason this needs to be called every time,
-         otherwise only the first invocation uses a correct namespace
-         prefix. -->
-    <xsl:variable name="namespace-prefix"><xsl:call-template name="get-namespace-prefix"/></xsl:variable>
-
-    <xsl:variable name="qname">
-      <xsl:value-of select="concat($namespace-prefix, ':param')"/>
-    </xsl:variable>
-
     <xsl:choose>
       <xsl:when test="@*[name(.) = $name]">"<xsl:value-of select="@*[name(.) = $name]"/>"</xsl:when>
-      <xsl:when test="(*[name(.) = $qname])[@name = $name]">
+      <xsl:when test="(*[namespace-uri(.) = $namespace-uri and local-name(.) = 'param'])[@name = $name]">
         <xsl:call-template name="get-nested-string">
-          <xsl:with-param name="content" select="(*[name(.) = $qname])[@name = $name]"/>
+          <xsl:with-param name="content" select="(*[namespace-uri(.) = $namespace-uri and local-name(.) = 'param'])[@name = $name]"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -194,20 +185,11 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
     <xsl:param name="default"/>
     <xsl:param name="required">false</xsl:param>
 
-    <!-- for some unknown reason this needs to be called every time,
-         otherwise only the first invocation uses a correct namespace
-         prefix. -->
-    <xsl:variable name="namespace-prefix"><xsl:call-template name="get-namespace-prefix"/></xsl:variable>
-
-    <xsl:variable name="qname">
-      <xsl:value-of select="concat($namespace-prefix, ':param')"/>
-    </xsl:variable>
-
     <xsl:choose>
       <xsl:when test="@*[name(.) = $name]"><xsl:value-of select="@*[name(.) = $name]"/></xsl:when>
-      <xsl:when test="(*[name(.) = $qname])[@name = $name]">
+      <xsl:when test="(*[namespace-uri(.) = $namespace-uri and local-name(.) = 'param'])[@name = $name]">
         <xsl:call-template name="get-nested-content">
-          <xsl:with-param name="content" select="(*[name(.) = $qname])[@name = $name]"/>
+          <xsl:with-param name="content" select="(*[namespace-uri(.) = $namespace-uri and local-name(.) = 'param'])[@name = $name]"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -254,20 +236,11 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
     <xsl:param name="default"/>
     <xsl:param name="required">false</xsl:param>
 
-    <!-- for some unknown reason this needs to be called every time,
-         otherwise only the first invocation uses a correct namespace
-         prefix. -->
-    <xsl:variable name="namespace-prefix"><xsl:call-template name="get-namespace-prefix"/></xsl:variable>
-
-    <xsl:variable name="qname">
-      <xsl:value-of select="concat($namespace-prefix, ':param')"/>
-    </xsl:variable>
-
     <xsl:choose>
       <xsl:when test="@*[name(.) = $name]">"<xsl:value-of select="@*[name(.) = $name]"/>"</xsl:when>
-      <xsl:when test="(*[name(.) = $qname])[@name = $name]">
+      <xsl:when test="(*[namespace-uri(.) = $namespace-uri and local-name(.) = 'param'])[@name = $name]">
         <xsl:call-template name="get-nested-content">
-          <xsl:with-param name="content" select="(*[name(.) = $qname])[@name = $name]"/>
+          <xsl:with-param name="content" select="(*[namespace-uri(.) = $namespace-uri and local-name(.) = 'param'])[@name = $name]"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
