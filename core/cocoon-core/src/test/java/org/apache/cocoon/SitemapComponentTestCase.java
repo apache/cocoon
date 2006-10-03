@@ -40,9 +40,12 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
+import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
+import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;
@@ -61,6 +64,8 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -115,6 +120,15 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         objectmodel.clear();
 
         request.reset();
+        MockContext cont = this.getContext();
+       
+        //setting up an webapplicationcontext is neccesarry to make spring believe
+        //it runs in a servlet container. we initialize it with our current
+        //bean factory to get consistent bean resolution behaviour
+        WebApplicationContext staticWebApplicationContext = new MockWebApplicationContext(this.getBeanFactory(), cont);
+		cont.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, staticWebApplicationContext);
+        Container container = Container.getCurrentContainer(cont, new CocoonRequestAttributes(request));
+        request.setAttribute(Container.CONTAINER_REQUEST_ATTRIBUTE, container, Request.REQUEST_SCOPE);
         objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
 
         response.reset();
@@ -363,6 +377,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         // enter & leave environment, as a manager is looked up using
         // the processing context stack
         MockEnvironment env = new MockEnvironment();
+        env.setObjectModel(this.objectmodel);
         Processor processor = new MockProcessor(this.getBeanFactory());
         
         EnvironmentHelper.enterProcessor(processor, env);
