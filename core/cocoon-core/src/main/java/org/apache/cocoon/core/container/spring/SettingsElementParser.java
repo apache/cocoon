@@ -63,6 +63,10 @@ public class SettingsElementParser extends AbstractElementParser {
         // register settings bean
         this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
 
+        // register a PropertyPlaceholderConfigurer
+        this.addComponent(CocoonPropertyOverrideConfigurer.class.getName(), CocoonPropertyOverrideConfigurer.class.getName(), null, true, parserContext.getRegistry());
+
+        // add the servelt context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false, parserContext.getRegistry());
         return null;
     }
