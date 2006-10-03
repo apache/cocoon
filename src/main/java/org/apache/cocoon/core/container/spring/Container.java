@@ -57,9 +57,11 @@ public class Container {
      */
     public static Container getCurrentContainer(ServletContext servletContext,
                                                 RequestAttributes attributes) {
-        if (attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
-            return (Container) attributes
-                    .getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        if ( attributes != null ) {
+            if (attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
+                return (Container) attributes
+                        .getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+            }
         }
         if ( ROOT_CONTAINER == null ) {
             final WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
