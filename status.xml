@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1196">
+      XSP: Use namespace-uri and not the namespace-prefix to select parameters in logicsheet-util.xsl.
+    </action>
     <action dev="VG" type="fix" fixes-bug="COCOON-1462">
       Databases: Check for null LOBs.
     </action>
