@@ -30,11 +30,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.SourceUtil;
 
 /**
@@ -62,15 +60,14 @@ public abstract class AbstractInterpreter
     private String instanceID;
 
     protected org.apache.avalon.framework.context.Context avalonContext;
-
     /**
      * List of source locations that need to be resolved.
      */
     protected ArrayList needResolve = new ArrayList();
 
-    protected org.apache.cocoon.environment.Context context;
     protected ServiceManager manager;
     protected ContinuationsManager continuationsMgr;
+    protected ProcessInfoProvider processInfoProvider;
 
     /** The settings of Cocoon. */
     protected Settings settings;
@@ -120,15 +117,15 @@ public abstract class AbstractInterpreter
         this.manager = sm;
         this.continuationsMgr = (ContinuationsManager)sm.lookup(ContinuationsManager.ROLE);
         this.settings = (Settings)this.manager.lookup(Settings.ROLE);
+        this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
     }
 
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(org.apache.avalon.framework.context.Context context)
+    public void contextualize(org.apache.avalon.framework.context.Context aContext)
     throws ContextException{
-        this.avalonContext = context;
-        this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        this.avalonContext = aContext;
     }
 
     /**
@@ -137,9 +134,12 @@ public abstract class AbstractInterpreter
     public void dispose() {
         if ( this.manager != null ) {
             this.manager.release( this.continuationsMgr );
+            this.manager.release( this.settings );
+            this.manager.release( this.processInfoProvider );
             this.continuationsMgr = null;
-            this.manager = null;
             this.settings = null;
+            this.processInfoProvider = null;
+            this.manager = null;
         }
     }
 
@@ -185,7 +185,7 @@ public abstract class AbstractInterpreter
     throws Exception {
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+            final Map objectModel = this.processInfoProvider.getObjectModel();
             FlowHelper.setWebContinuation(objectModel, continuation);
             FlowHelper.setContextObject(objectModel, bizData);
             if (redirector.hasRedirected()) {
