@@ -24,6 +24,11 @@
       <note>
         FOP block requires Batik block to be present for generating PDF with embedded images.
       </note>   
+      <note>
+        This is the "old" FOP block which uses FOP 0.2x - see the "FOP NG" block to use 
+        the current version of FOP.
+      </note>
+      
     </group>
 
     <group name="Simple FOP examples">
