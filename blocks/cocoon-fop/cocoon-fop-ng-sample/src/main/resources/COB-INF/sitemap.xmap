@@ -35,6 +35,10 @@
       <map:serialize type="html"/>
     </map:view>
 
+    <map:view from-label="xsl-fo" name="xsl-fo">
+      <map:serialize type="xml"/>
+    </map:view>
+
     <map:view from-position="last" name="links">
       <map:serialize type="links"/>
     </map:view>
@@ -43,7 +47,7 @@
   <map:resources>
     <map:resource name="hello">
       <map:generate src="context://blocks/cocoon-core-main-sample/hello-world/content/hello.xml"/>
-      <map:transform src="context://blocks/cocoon-core-main-sample/hello-world/style/xsl/page2fo.xsl"/>
+      <map:transform label="xsl-fo" src="context://blocks/cocoon-core-main-sample/hello-world/style/xsl/page2fo.xsl"/>
     </map:resource>
   </map:resources>
 

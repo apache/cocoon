@@ -16,14 +16,16 @@
   limitations under the License.
 -->
 <!-- CVS $Id$ -->
-<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="FOP Block Samples">
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="FOP NG Block Samples">
 
     <group name="Back">
       <sample name="Back" href="../..">to Cocoon Samples main page</sample>
       <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
       <note>
-        FOP block requires Batik block to be present for generating PDF with embedded images.
-      </note>   
+        The FOP NG block uses FOP 0.9x, as opposed to the old FOP block which uses 
+        the old 0.2x version. The old FOP block is still provided, for compatibility
+        with existing applications.
+      </note>
     </group>
 
     <group name="Simple FOP examples">
