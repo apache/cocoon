@@ -17,8 +17,8 @@
 -->
 <!-- @version $Id$ -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://org.apache.cocoon/core"
-            xmlns:tns="http://org.apache.cocoon/core">
+            targetNamespace="http://cocoon.apache.org/core"
+            xmlns:tns="http://cocoon.apache.org/core">
 
     <xsd:element name="settings" type="tns:settingsType"/>
 

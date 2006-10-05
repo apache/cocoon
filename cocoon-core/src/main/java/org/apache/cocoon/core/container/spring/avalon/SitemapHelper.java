@@ -36,7 +36,7 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.scope.RequestAttributes;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
@@ -127,12 +127,12 @@ public class SitemapHelper {
         buffer.append("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
         buffer.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
         buffer.append(" xmlns:util=\"http://www.springframework.org/schema/util\"");
-        buffer.append(" xmlns:cocoon=\"http://org.apache.cocoon/core\"");
-        buffer.append(" xmlns:avalon=\"http://org.apache.cocoon/avalon\"");
-        buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd");
-        buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd");
-        buffer.append(" http://org.apache.cocoon/core http://org.apache.cocoon/core.xsd");
-        buffer.append(" http://org.apache.cocoon/avalon http://org.apache.cocoon/avalon.xsd\">\n");
+        buffer.append(" xmlns:cocoon=\"http://cocoon.apache.org/core\"");
+        buffer.append(" xmlns:avalon=\"http://cocoon.apache.org/avalon\"");
+        buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd");
+        buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd");
+        buffer.append(" http://cocoon.apache.org/core http://cocoon.apache.org/core.xsd");
+        buffer.append(" http://cocoon.apache.org/avalon http://cocoon.apache.org/avalon.xsd\">\n");
     }
 
     protected static void addFooter(StringBuffer buffer) {
