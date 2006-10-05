@@ -69,4 +69,7 @@ public class SitemapElementParser extends AvalonElementParser {
         return ConfigurationReader.readSitemap((ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName()), location, resourceLoader);
     }
 
+    protected String getPropertyLocation() {
+        return "config/xconf";
+    }
 }
