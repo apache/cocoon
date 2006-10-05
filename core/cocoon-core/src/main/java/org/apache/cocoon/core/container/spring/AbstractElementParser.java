@@ -188,10 +188,10 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      * @throws ConfigurationException
      */
     protected void handleBeanInclude(ParserContext parserContext,
-                                     String         src,
-                                     String         dir,
-                                     String         pattern,
-                                     boolean optional)
+                                     String        src,
+                                     String        dir,
+                                     String        pattern,
+                                     boolean       optional)
     throws Exception {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
@@ -242,4 +242,20 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         parserContext.getDelegate().getReaderContext().getReader().loadBeanDefinitions(resourceLoader.getResource(uri));        
     }
+
+    /**
+     * Register a property placeholder configurer.
+     * The configurer will read all *.properties files from the specified location.
+     * @param parserContext
+     * @param springConfigLocation
+     */
+    protected void registerPropertyPlaceholderConfigurer(final ParserContext parserContext, final String location) {
+        final RootBeanDefinition beanDef = this.createBeanDefinition(CocoonPropertyOverrideConfigurer.class.getName(),
+                null,
+                false);
+        beanDef.getPropertyValues().addPropertyValue("location", location);
+        beanDef.getPropertyValues().addPropertyValue("resourceLoader",  parserContext.getReaderContext().getReader().getResourceLoader());
+        this.register(beanDef, CocoonPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
+    }
+
 }
