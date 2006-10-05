@@ -46,8 +46,6 @@ import org.xml.sax.InputSource;
  */
 public class SitemapElementParser extends AbstractElementParser {
 
-    private static final String DEFAULT_CONFIG_SPRING = "config/spring";
-
     protected Element readSitemap(String location, ResourceLoader resourceLoader)
     throws Exception {
         // read the sitemap
@@ -122,14 +120,20 @@ public class SitemapElementParser extends AbstractElementParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final String location = element.getAttribute("location");
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
-        RootBeanDefinition def =  this.createBeanDefinition(SubSettingsBeanFactoryPostProcessor.class.getName(),
-                "init",
-                false);
-        def.getPropertyValues().addPropertyValue("location", location);
         try {
             final Element rootElement = this.readSitemap(location, resourceLoader);
             final Element componentsElement = this.getComponentsElement(rootElement);
             final boolean useDefaultIncludes = this.isUseDefaultIncludes(componentsElement);
+
+            // register a PropertyPlaceholderConfigurer
+            if ( useDefaultIncludes ) {
+                this.registerPropertyPlaceholderConfigurer(parserContext, Constants.DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES);
+            }
+            
+            RootBeanDefinition def =  this.createBeanDefinition(SubSettingsBeanFactoryPostProcessor.class.getName(),
+                    "init",
+                    false);
+            def.getPropertyValues().addPropertyValue("location", location);
             def.getPropertyValues().addPropertyValue("useDefaultIncludes", Boolean.valueOf(useDefaultIncludes));
 
             final Properties globalSitemapVariables = this.getGlobalSitemapVariables(rootElement);
@@ -143,7 +147,7 @@ public class SitemapElementParser extends AbstractElementParser {
             }
 
             if ( useDefaultIncludes ) {
-                this.handleBeanInclude(parserContext, null, DEFAULT_CONFIG_SPRING, "*.xml", true);
+                this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES, "*.xml", true);
             }
             // search for includes
             if ( componentsElement != null ) {
@@ -158,10 +162,10 @@ public class SitemapElementParser extends AbstractElementParser {
                     }
                 }
             }
+            this.register(def, Settings.ROLE, parserContext.getRegistry());
         } catch (Exception e) {
             throw new BeanDefinitionStoreException("Unable to process sitemap at '" + location + "'.",e);
         }
-        this.register(def, Settings.ROLE, parserContext.getRegistry());
         return null;
     }
 }
