@@ -20,7 +20,7 @@ package org.apache.cocoon.core.container.spring;
 
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.springframework.web.context.scope.RequestAttributes;
+import org.springframework.web.context.request.RequestAttributes;
 
 /**
  * This is an implementation of Springs {@link RequestAttributes} based
@@ -31,7 +31,8 @@ import org.springframework.web.context.scope.RequestAttributes;
  * @version $Id$
  * @since 2.2
  */
-public class CocoonRequestAttributes implements RequestAttributes {
+public class CocoonRequestAttributes 
+    implements RequestAttributes {
 
     final protected Request request;
 
@@ -100,4 +101,17 @@ public class CocoonRequestAttributes implements RequestAttributes {
         }
     }
 
+    /**
+     * @see org.springframework.web.context.request.RequestAttributes#getSessionId()
+     */
+    public String getSessionId() {
+        return this.request.getSession().getId();
+    }
+
+    /**
+     * @see org.springframework.web.context.request.RequestAttributes#registerDestructionCallback(java.lang.String, java.lang.Runnable, int)
+     */
+    public void registerDestructionCallback(String arg0, Runnable arg1, int arg2) {
+        // we ignore this
+    }
 }

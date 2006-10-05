@@ -25,7 +25,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.scope.RequestAttributes;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
