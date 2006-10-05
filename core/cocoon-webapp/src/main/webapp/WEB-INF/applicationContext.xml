@@ -19,12 +19,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:cocoon="http://org.apache.cocoon/core"
-       xmlns:avalon="http://org.apache.cocoon/avalon"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-                           http://org.apache.cocoon/core http://org.apache.cocoon/core.xsd
-                           http://org.apache.cocoon/avalon http://org.apache.cocoon/avalon.xsd">
+       xmlns:cocoon="http://cocoon.apache.org/core"
+       xmlns:avalon="http://cocoon.apache.org/avalon"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                           http://cocoon.apache.org/core http://cocoon.apache.org/core.xsd
+                           http://cocoon.apache.org/avalon http://cocoon.apache.org/avalon.xsd">
 
   <!-- Load all the properties for Cocoon -->
   <cocoon:settings/>

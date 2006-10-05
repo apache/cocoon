@@ -44,6 +44,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.beans.factory.config.Scope;
@@ -621,5 +622,33 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
      */
     public String[] getSingletonNames() {
         return this.beanFactory.getSingletonNames();
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#copyConfigurationFrom(org.springframework.beans.factory.config.ConfigurableBeanFactory)
+     */
+    public void copyConfigurationFrom(ConfigurableBeanFactory arg0) {
+        beanFactory.copyConfigurationFrom(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#destroyBean(java.lang.String, java.lang.Object)
+     */
+    public void destroyBean(String arg0, Object arg1) {
+        beanFactory.destroyBean(arg0, arg1);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#getRegisteredScope(java.lang.String)
+     */
+    public Scope getRegisteredScope(String arg0) {
+        return beanFactory.getRegisteredScope(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#getRegisteredScopeNames()
+     */
+    public String[] getRegisteredScopeNames() {
+        return beanFactory.getRegisteredScopeNames();
     }
 }

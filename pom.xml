@@ -498,7 +498,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-SNAPSHOT</version>
+        <version>2.1</version>
         <configuration>
           <descriptor>assembly.xml</descriptor>
           <outputDirectory>target</outputDirectory>
