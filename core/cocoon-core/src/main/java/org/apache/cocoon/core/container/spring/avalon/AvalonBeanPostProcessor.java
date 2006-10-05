@@ -16,6 +16,9 @@
 */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -73,6 +76,56 @@ public class AvalonBeanPostProcessor
         this.logger = logger;
     }
 
+    public void init() {
+        if ( true ) {
+            return;
+        }
+        // replace properties in configuration objects
+        final Iterator i = this.configurationInfo.getComponents().values().iterator();
+        while ( i.hasNext() ) {
+            final ComponentInfo info = (ComponentInfo) i.next();
+            if ( info.getConfiguration() != null ) {
+                final List names = this.settings.getPropertyNames(info.getRole() + '.');
+                if ( info.getAlias() != null ) {
+                    names.addAll(this.settings.getPropertyNames(info.getAlias() + '.'));
+                }
+                final Iterator namesIter = names.iterator();
+                while ( namesIter.hasNext() ) {
+                    final String name = (String)namesIter.next();
+                    final String value = this.settings.getProperty(name);
+                    String propName;
+                    if ( name.startsWith(info.getRole()) ) {
+                        propName = name.substring(info.getRole().length() + 1);
+                    } else {
+                        propName = name.substring(info.getAlias().length() + 1);
+                    }
+                    Configuration config = info.getConfiguration();
+                    int pos;
+                    do {
+                        pos = propName.indexOf('.');
+                        if ( pos != - 1 ) {
+                            config = this.getAndCreateConfiguration(config, propName.substring(0, pos));
+                            propName = propName.substring(pos+1);
+                        }
+                    } while ( pos != -1 );
+                    if ( propName.startsWith("@") ) {
+                        ((DefaultConfiguration)config).setAttribute(propName.substring(1), value);
+                    } else {
+                        config = this.getAndCreateConfiguration(config, propName);
+                        ((DefaultConfiguration)config).setValue(value);
+                    }
+                }
+             }
+        }
+    }
+
+    protected Configuration getAndCreateConfiguration(Configuration config, String name) {
+        if ( config.getChild(name, false) == null ) {
+            final DefaultConfiguration newConfig = new DefaultConfiguration(name, config.getLocation());
+            ((DefaultConfiguration)config).addChild(newConfig);
+        }
+        return config.getChild(name, false);
+    }
     /**
      * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
      */
