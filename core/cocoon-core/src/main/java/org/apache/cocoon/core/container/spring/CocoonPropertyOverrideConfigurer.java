@@ -55,16 +55,26 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
      */
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
     throws BeansException {
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Processing bean factory: " + beanFactory);
+            this.logger.debug("Trying to read from directory: " + this.location);
+        }
         final Properties mergedProps = new Properties();
         final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
         final Resource dirResource = resourceLoader.getResource(this.location);
 
         if ( dirResource.exists() ) {
+            if ( this.logger.isDebugEnabled() ) {
+                this.logger.debug("Scanning directory: " + dirResource);
+            }
             try {
                 Resource[] resources = resolver.getResources(this.location + "/*.properties");
                 if ( resources != null ) {
                     Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
                     for(int i=0; i < resources.length; i++) {
+                        if ( this.logger.isDebugEnabled() ) {
+                            this.logger.debug("Reading property file: " + resources[i]);
+                        }
                         final Properties p = new Properties();
                         p.load(resources[i].getInputStream());
                         mergedProps.putAll(p);
