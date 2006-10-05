@@ -30,7 +30,7 @@
   <dummy-root>
     <xsl:text>[&#10;</xsl:text>
     <xsl:apply-templates/>
-    <xsl:text>&#10;];</xsl:text>
+    <xsl:text>&#10;]</xsl:text>
   </dummy-root>
 </xsl:template>
 
