@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="update">
+      Deprecate method org.apache.cocoon.components.flow.FlowHelper.unwrap(Object). This method will be removed in 2.2 release. Use org.apache.cocoon.components.flow.util.PipelineUtil.unwrap(Object) instead.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1196">
       XSP: Use namespace-uri and not the namespace-prefix to select parameters in logicsheet-util.xsl.
     </action>
