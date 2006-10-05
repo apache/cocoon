@@ -16,8 +16,12 @@
 */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -29,12 +33,19 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.impl.MutableSettings;
+import org.apache.cocoon.core.container.spring.AbstractSettingsBeanFactoryPostProcessor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle interfaces.
@@ -51,10 +62,20 @@ public class AvalonBeanPostProcessor
     protected Context context;
     protected BeanFactory beanFactory;
     protected ConfigurationInfo configurationInfo;
-    protected Settings settings;
+    protected Settings settings = new MutableSettings("test");
+    protected ResourceLoader resourceLoader = new DefaultResourceLoader();
+    protected String location = "WEB-INF/cocoon/xconf";
 
     public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    public void setResourceLoader(final ResourceLoader loader) {
+        this.resourceLoader = loader;
+    }
+
+    public void setLocation(final String value) {
+        this.location = value;
     }
 
     /**
@@ -81,42 +102,86 @@ public class AvalonBeanPostProcessor
             return;
         }
         // replace properties in configuration objects
-        final Iterator i = this.configurationInfo.getComponents().values().iterator();
-        while ( i.hasNext() ) {
-            final ComponentInfo info = (ComponentInfo) i.next();
-            if ( info.getConfiguration() != null ) {
-                final List names = this.settings.getPropertyNames(info.getRole() + '.');
-                if ( info.getAlias() != null ) {
-                    names.addAll(this.settings.getPropertyNames(info.getAlias() + '.'));
-                }
-                final Iterator namesIter = names.iterator();
-                while ( namesIter.hasNext() ) {
-                    final String name = (String)namesIter.next();
-                    final String value = this.settings.getProperty(name);
-                    String propName;
-                    if ( name.startsWith(info.getRole()) ) {
-                        propName = name.substring(info.getRole().length() + 1);
-                    } else {
-                        propName = name.substring(info.getAlias().length() + 1);
-                    }
-                    Configuration config = info.getConfiguration();
-                    int pos;
-                    do {
-                        pos = propName.indexOf('.');
-                        if ( pos != - 1 ) {
-                            config = this.getAndCreateConfiguration(config, propName.substring(0, pos));
-                            propName = propName.substring(pos+1);
-                        }
-                    } while ( pos != -1 );
-                    if ( propName.startsWith("@") ) {
-                        ((DefaultConfiguration)config).setAttribute(propName.substring(1), value);
-                    } else {
-                        config = this.getAndCreateConfiguration(config, propName);
-                        ((DefaultConfiguration)config).setValue(value);
-                    }
-                }
-             }
+        if ( this.logger.isDebugEnabled() ) {
+            this.logger.debug("Processing component configurations.");
+            this.logger.debug("Trying to read properties from directory: " + this.location);
         }
+        final Properties mergedProps = new Properties();
+        final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+        final Resource dirResource = resourceLoader.getResource(this.location);
+
+        if ( dirResource.exists() ) {
+            if ( this.logger.isDebugEnabled() ) {
+                this.logger.debug("Scanning directory: " + dirResource);
+            }
+            try {
+                Resource[] resources = resolver.getResources(this.location + "/*.properties");
+                if ( resources != null ) {
+                    Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
+                    for(int i=0; i < resources.length; i++) {
+                        if ( this.logger.isDebugEnabled() ) {
+                            this.logger.debug("Reading property file: " + resources[i]);
+                        }
+                        final Properties p = new Properties();
+                        p.load(resources[i].getInputStream());
+                        mergedProps.putAll(p);
+                    }
+                }
+            } catch (IOException ioe) {
+                throw new BeanDefinitionStoreException("Unable to read property configurations from " + this.location, ioe);
+            }
+        }
+        if ( mergedProps.size() > 0 ) {
+            final Iterator i = this.configurationInfo.getComponents().values().iterator();
+            while ( i.hasNext() ) {
+                final ComponentInfo info = (ComponentInfo) i.next();
+                if ( info.getConfiguration() != null ) {
+                    final List names = this.getKeys(mergedProps, info.getRole());
+                    if ( info.getAlias() != null ) {
+                        names.addAll(this.getKeys(mergedProps, info.getAlias()));
+                    }
+                    final Iterator namesIter = names.iterator();
+                    while ( namesIter.hasNext() ) {
+                        final String name = (String)namesIter.next();
+                        final String value = mergedProps.getProperty(name);
+                        String propName;
+                        if ( name.startsWith(info.getRole()) ) {
+                            propName = name.substring(info.getRole().length() + 1);
+                        } else {
+                            propName = name.substring(info.getAlias().length() + 1);
+                        }
+                        Configuration config = info.getConfiguration();
+                        int pos;
+                        do {
+                            pos = propName.indexOf('.');
+                            if ( pos != - 1 ) {
+                                config = this.getAndCreateConfiguration(config, propName.substring(0, pos));
+                                propName = propName.substring(pos+1);
+                            }
+                        } while ( pos != -1 );
+                        if ( propName.startsWith("@") ) {
+                            ((DefaultConfiguration)config).setAttribute(propName.substring(1), value);
+                        } else {
+                            config = this.getAndCreateConfiguration(config, propName);
+                            ((DefaultConfiguration)config).setValue(value);
+                        }
+                    }
+                 }
+            }
+        }
+    }
+
+    protected List getKeys(Properties mergedProps, String role) {
+        final String prefix = role + '/';
+        final List l = new ArrayList();
+        final Iterator i = mergedProps.keySet().iterator();
+        while ( i.hasNext() ) {
+            final String key = (String)i.next();
+            if ( key.startsWith(prefix) ) {
+                l.add(key);
+            }
+        }
+        return l;
     }
 
     protected Configuration getAndCreateConfiguration(Configuration config, String name) {
