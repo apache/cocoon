@@ -125,7 +125,7 @@ public class AvalonElementParser extends AbstractElementParser {
         this.registerComponentInfo(info, registry);
 
         // and finally add avalon bean post processor
-        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonBeanPostProcessor.class, null, true);
+        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonBeanPostProcessor.class, "init", true);
         beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(ProcessingUtil.LOGGER_ROLE));
         beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
         beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
