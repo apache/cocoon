@@ -47,11 +47,8 @@ public class SettingsElementParser extends AbstractElementParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        try {
-            this.handleBeanInclude(parserContext, null, "/WEB-INF/cocoon/spring", "*.xml", true);
-        } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read spring configurations.",e);
-        }
+        final String springConfigLocation = this.getAttributeValue(element, "location", Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION);
+
         // create bean definition for settings object
         final String componentClassName = this.getAttributeValue(element, PROCESSOR_CLASS_NAME_ATTR, SettingsBeanFactoryPostProcessor.class.getName());
         final RootBeanDefinition beanDef = this.createBeanDefinition(componentClassName, "init", false);
@@ -64,10 +61,17 @@ public class SettingsElementParser extends AbstractElementParser {
         this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
 
         // register a PropertyPlaceholderConfigurer
-        this.addComponent(CocoonPropertyOverrideConfigurer.class.getName(), CocoonPropertyOverrideConfigurer.class.getName(), null, true, parserContext.getRegistry());
+        this.registerPropertyPlaceholderConfigurer(parserContext, springConfigLocation);
 
         // add the servlet context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false, parserContext.getRegistry());
+
+        // handle includes
+        try {
+            this.handleBeanInclude(parserContext, null, springConfigLocation, "*.xml", true);
+        } catch (Exception e) {
+            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + springConfigLocation, e);
+        }
         return null;
     }
 }

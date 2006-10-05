@@ -18,36 +18,69 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
-import org.apache.cocoon.configuration.Settings;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Our version of the property override configurer which uses the settings
  * object to get the properties.
+ *
  * @version $Id$
  */
 public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
 
-    protected Settings settings;
+    protected String location = Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION;
+    protected ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-    public void setSettings(Settings object) {
-        this.settings = object;
+    public void setLocation(final String object) {
+        this.location = object;
+    }
+
+    public void setResourceLoader(final ResourceLoader loader) {
+        this.resourceLoader = loader;
     }
 
     /**
      * @see org.springframework.beans.factory.config.PropertyResourceConfigurer#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)
      */
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        Properties mergedProps = new SettingsProperties(this.settings);
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
+    throws BeansException {
+        final Properties mergedProps = new Properties();
+        final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+        final Resource dirResource = resourceLoader.getResource(this.location);
 
-        // Convert the merged properties, if necessary.
-        convertProperties(mergedProps);
+        if ( dirResource.exists() ) {
+            try {
+                Resource[] resources = resolver.getResources(this.location + "/*.properties");
+                if ( resources != null ) {
+                    Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
+                    for(int i=0; i < resources.length; i++) {
+                        final Properties p = new Properties();
+                        p.load(resources[i].getInputStream());
+                        mergedProps.putAll(p);
+                    }
+                }
+            } catch (IOException ioe) {
+                throw new BeanDefinitionStoreException("Unable to read property configurations from " + this.location, ioe);
+            }
+        }
 
-        // Let the subclass process the properties.
-        processProperties(beanFactory, mergedProps);
+        if ( mergedProps.size() > 0 ) {
+            // Convert the merged properties, if necessary.
+            convertProperties(mergedProps);
+    
+            // Let the subclass process the properties.
+            processProperties(beanFactory, mergedProps);
+        }
     }
 }
