@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" due-to="Christofer Dutz" due-to-email="christofer.dutz@univativ.de">
+      AJAX: Fix cocoon suggest sample.
+    </action>
     <action dev="AG" type="update">
       Deprecate method org.apache.cocoon.components.flow.FlowHelper.unwrap(Object). This method will be removed in 2.2 release. Use org.apache.cocoon.components.flow.util.PipelineUtil.unwrap(Object) instead.
     </action>
