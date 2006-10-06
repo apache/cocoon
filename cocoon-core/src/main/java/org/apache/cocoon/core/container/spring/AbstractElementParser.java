@@ -222,7 +222,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
                 try {
                     Resource[] resources = resolver.getResources(directoryURI + '/' + pattern);
                     if ( resources != null ) {
-                        Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
+                        Arrays.sort(resources, ResourceUtils.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
                             this.handleImport(parserContext, resources[i].getURL().toExternalForm());
                         }

@@ -18,18 +18,15 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Properties;
 
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.SettingsDefaults;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Our version of the property override configurer which reads properties
@@ -50,11 +47,21 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     /**
+     * The settings object.
+     */
+    protected Settings settings;
+
+    /**
      * Set the directory to search in.
      * @param object New value.
      */
     public void setLocation(final String object) {
         this.location = object;
+    }
+
+    /** Set the settings. */
+    public void setSettings(Settings object) {
+        this.settings = object;
     }
 
     /**
@@ -73,34 +80,13 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
     throws BeansException {
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug("Processing bean factory: " + beanFactory);
-            this.logger.debug("Trying to read from directory: " + this.location);
         }
         final Properties mergedProps = new Properties();
-        final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
-        final Resource dirResource = resourceLoader.getResource(this.location);
-
-        if ( dirResource.exists() ) {
-            if ( this.logger.isDebugEnabled() ) {
-                this.logger.debug("Scanning directory: " + dirResource);
-            }
-            try {
-                Resource[] resources = resolver.getResources(this.location + "/*.properties");
-                if ( resources != null ) {
-                    Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
-                    for(int i=0; i < resources.length; i++) {
-                        if ( this.logger.isDebugEnabled() ) {
-                            this.logger.debug("Reading property file: " + resources[i]);
-                        }
-                        final Properties p = new Properties();
-                        p.load(resources[i].getInputStream());
-                        mergedProps.putAll(p);
-                    }
-                }
-            } catch (IOException ioe) {
-                throw new BeanDefinitionStoreException("Unable to read property configurations from " + this.location, ioe);
-            }
-        }
-
+        ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
+        // read properties from running-mode dependent directory
+        final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
+        ResourceUtils.readProperties(this.location + '/' + mode, mergedProps, this.resourceLoader, this.logger);
+        
         if ( mergedProps.size() > 0 ) {
             // Convert the merged properties, if necessary.
             convertProperties(mergedProps);
