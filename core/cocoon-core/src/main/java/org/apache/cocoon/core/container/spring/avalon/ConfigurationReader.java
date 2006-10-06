@@ -33,7 +33,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.core.container.spring.AbstractSettingsBeanFactoryPostProcessor;
 import org.apache.cocoon.core.container.spring.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -466,7 +465,7 @@ public class ConfigurationReader {
                 try {
                     Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
                     if ( resources != null ) {
-                        Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
+                        Arrays.sort(resources, ResourceUtils.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
                            this.loadURI(resources[i], loadedURIs, includeStatement);
                         }
@@ -557,7 +556,7 @@ public class ConfigurationReader {
                 try {
                     Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
                     if ( resources != null ) {
-                        Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
+                        Arrays.sort(resources, ResourceUtils.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
                            this.configInfo.addImport(resources[i].getURL().toExternalForm());
                         }

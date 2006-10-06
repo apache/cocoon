@@ -18,11 +18,6 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -43,10 +38,7 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResourceLoader;
 
@@ -112,67 +104,6 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         return new ServletContextResourceLoader(this.servletContext);
     }
 
-    protected ResourcePatternResolver getResourceResolver() {
-        return new PathMatchingResourcePatternResolver(this.getResourceLoader());
-    }
-
-    /**
-     * Read all property files from the given directory and apply them to the settings.
-     */
-    protected void readProperties(String          directoryName,
-                                  Properties      properties) {
-        if ( this.logger.isDebugEnabled() ) {
-            this.logger.debug("Reading settings from directory: " + directoryName);
-        }
-        // check if directory exists
-        Resource directoryResource = this.getResourceLoader().getResource(directoryName);
-        if ( directoryResource.exists() ) {
-            final String pattern = directoryName + "/*.properties";
-
-            final ResourcePatternResolver resolver = this.getResourceResolver();
-            Resource[] resources = null;
-            try {
-                resources = resolver.getResources(pattern);
-            } catch (IOException ignore) {
-                this.logger.debug("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
-            }
-            if ( resources != null ) {
-                // we process the resources in alphabetical order, so we put
-                // them first into a list, sort them and then read the properties.
-                final List propertyUris = new ArrayList();
-                for(int i=0; i<resources.length; i++ ) {
-                    propertyUris.add(resources[i]);
-                }
-                // sort
-                Collections.sort(propertyUris, getResourceComparator());
-                // now process
-                final Iterator i = propertyUris.iterator();
-                while ( i.hasNext() ) {
-                    final Resource src = (Resource)i.next();
-                    try {
-                        if ( this.logger.isDebugEnabled() ) {
-                            this.logger.debug("Reading settings from '" + src.getURL() + "'.");
-                        }
-                        final InputStream propsIS = src.getInputStream();
-                        properties.load(propsIS);
-                        propsIS.close();
-                    } catch (IOException ignore) {
-                        this.logger.info("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
-                    }
-                }
-            }
-        } else {
-            this.logger.debug("Directory '" + directoryName + "' does not exist - Continuing initialization.");            
-        }
-    }
-
-    /**
-     * Return a resource comparator
-     */
-    public static Comparator getResourceComparator() {
-        return new ResourceComparator();
-    }
-
     protected String getSystemProperty(String key) {
         return this.getSystemProperty(key, null);
     }
@@ -183,19 +114,6 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         } catch (SecurityException se) {
             // we ignore this
             return defaultValue;
-        }
-    }
-
-    protected final static class ResourceComparator implements Comparator {
-
-        /**
-         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-         */
-        public int compare(Object o1, Object o2) {
-            if ( !(o1 instanceof Resource) || !(o2 instanceof Resource)) {
-                return 0;
-            }
-            return ((Resource)o1).getFilename().compareTo(((Resource)o2).getFilename());
         }
     }
 

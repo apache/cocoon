@@ -18,8 +18,19 @@ package org.apache.cocoon.core.container.spring;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
+import org.apache.commons.logging.Log;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 /**
  * Utility class for Spring resource handling
@@ -53,5 +64,83 @@ public class ResourceUtils {
             return "file://" + f.getAbsolutePath();
         }
         return uri;
+    }
+
+    /**
+     * Read all property files from the given directory and apply them to the supplied properties.
+     */
+    public static void readProperties(String          directoryName,
+                                      Properties      properties,
+                                      ResourceLoader  resourceLoader,
+                                      Log             logger) {
+        if ( logger != null && logger.isDebugEnabled() ) {
+            logger.debug("Reading properties from directory: " + directoryName);
+        }
+        // check if directory exists
+        Resource directoryResource = resourceLoader.getResource(directoryName);
+        if ( directoryResource.exists() ) {
+            final String pattern = directoryName + "/*.properties";
+
+            final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+            Resource[] resources = null;
+            try {
+                resources = resolver.getResources(pattern);
+            } catch (IOException ignore) {
+                if ( logger != null && logger.isDebugEnabled() ) {
+                    logger.debug("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
+                }
+            }
+            if ( resources != null ) {
+                // we process the resources in alphabetical order, so we put
+                // them first into a list, sort them and then read the properties.
+                final List propertyUris = new ArrayList();
+                for(int i=0; i<resources.length; i++ ) {
+                    propertyUris.add(resources[i]);
+                }
+                // sort
+                Collections.sort(propertyUris, getResourceComparator());
+                // now process
+                final Iterator i = propertyUris.iterator();
+                while ( i.hasNext() ) {
+                    final Resource src = (Resource)i.next();
+                    try {
+                        if ( logger != null && logger.isDebugEnabled() ) {
+                            logger.debug("Reading settings from '" + src.getURL() + "'.");
+                        }
+                        final InputStream propsIS = src.getInputStream();
+                        properties.load(propsIS);
+                        propsIS.close();
+                    } catch (IOException ignore) {
+                        if ( logger != null && logger.isDebugEnabled() ) {
+                            logger.info("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
+                        }
+                    }
+                }
+            }
+        } else {
+            if ( logger != null && logger.isDebugEnabled() ) {
+                logger.debug("Directory '" + directoryName + "' does not exist - Continuing initialization.");
+            }
+        }
+    }
+
+    /**
+     * Return a resource comparator
+     */
+    public static Comparator getResourceComparator() {
+        return new ResourceComparator();
+    }
+
+    protected final static class ResourceComparator implements Comparator {
+
+        /**
+         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+         */
+        public int compare(Object o1, Object o2) {
+            if ( !(o1 instanceof Resource) || !(o2 instanceof Resource)) {
+                return 0;
+            }
+            return ((Resource)o1).getFilename().compareTo(((Resource)o2).getFilename());
+        }
     }
 }
