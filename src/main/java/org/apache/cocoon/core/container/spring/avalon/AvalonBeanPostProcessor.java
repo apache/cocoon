@@ -34,7 +34,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
-import org.apache.cocoon.core.container.spring.AbstractSettingsBeanFactoryPostProcessor;
+import org.apache.cocoon.core.container.spring.ResourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -117,7 +117,7 @@ public class AvalonBeanPostProcessor
             try {
                 Resource[] resources = resolver.getResources(this.location + "/*.properties");
                 if ( resources != null ) {
-                    Arrays.sort(resources, AbstractSettingsBeanFactoryPostProcessor.getResourceComparator());
+                    Arrays.sort(resources, ResourceUtils.getResourceComparator());
                     for(int i=0; i < resources.length; i++) {
                         if ( this.logger.isDebugEnabled() ) {
                             this.logger.debug("Reading property file: " + resources[i]);
