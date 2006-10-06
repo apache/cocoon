@@ -174,7 +174,7 @@ public class TeeTransformer extends AbstractSAXTransformer {
                 os.close();
 
                 if (this.osCommand != null) {
-                    String command = this.osCommand.replace("%s", this.fileName);
+                    String command = this.osCommand.replaceAll("%s", this.fileName);
                     try {
                         (Runtime.getRuntime()).exec(command,null);
                     } catch(Exception e) {
