@@ -117,11 +117,6 @@
     </site>
   </distributionManagement>  
   <dependencies>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-licenses</artifactId>
-      <version>1.0.0-M2-SNAPSHOT</version>
-    </dependency>
     <!--  bootstrap -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
