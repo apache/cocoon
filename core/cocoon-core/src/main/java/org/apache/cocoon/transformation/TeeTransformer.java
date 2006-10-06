@@ -38,6 +38,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.impl.FileSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -50,13 +51,16 @@ import org.xml.sax.SAXException;
  * The Teetransformer serializes SAX events as-is to the {@link org.apache.excalibur.source.ModifiableSource}
  * specified by its <code>src</code> parameter. 
  * It does not in any way change the events. 
- * <p/>
- * This transformer works just like the unix "tee" command and is useful for debugging
- * received XML streams.
- * <p/>
+ * <p>This transformer works just like the unix "tee" command and is useful for debugging
+ * received XML streams.</p>
+ * <p>It is also able to launch an optional system command to view or edit the generated file, so that every time the
+ * pipeline is executed, your editor pops up.</p>
+ *
  * Usage:<br>
  * <pre>
- * &lt;map:transform type="tee" src="url"/&gt;
+ * &lt;map:transform type="tee" src="url"&gt;
+ * &nbsp;&nbsp;&lt;command&gt;emacs %s&gt;
+ * &lt;/map:transform&gt;
  * </pre>
  * 
  * @version $Id$
@@ -71,9 +75,11 @@ public class TeeTransformer extends AbstractSAXTransformer {
 
     /** the resolver */
     private SourceResolver resolver;
-    
+
     private OutputStream os;
 
+    private String osCommand; 
+    private String fileName = null;
     /*
      * (non-Javadoc)
      * 
@@ -94,8 +100,13 @@ public class TeeTransformer extends AbstractSAXTransformer {
             if (!(source instanceof ModifiableSource)) {
                 throw new ProcessingException("Source '" + systemId + "' is not writeable.");
             }
+            if (this.osCommand != null) {
+                // FileSource is the only option when using the system command feature
+                fileName = ((FileSource)source).getFile().getAbsolutePath();
+            }
             this.serializer = this.transformerFactory.newTransformerHandler();
             os = ((ModifiableSource) source).getOutputStream();
+
             this.serializer.setResult(new StreamResult(os));
         } catch (SourceException e) {
             throw SourceUtil.handle(e);
@@ -117,6 +128,7 @@ public class TeeTransformer extends AbstractSAXTransformer {
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         String tFactoryClass = configuration.getChild("transformer-factory").getValue(null);
+        this.osCommand = configuration.getChild("command").getValue(null);
         if (tFactoryClass != null) {
             try {
                 this.transformerFactory = (SAXTransformerFactory) ClassUtils
@@ -152,6 +164,7 @@ public class TeeTransformer extends AbstractSAXTransformer {
 
     /**
      * Receive notification of the end of a document.
+     * Optionally execute a command to view the output file
      */
     public void endDocument() throws SAXException {
         super.contentHandler.endDocument();
@@ -159,6 +172,15 @@ public class TeeTransformer extends AbstractSAXTransformer {
         if (os != null) {
             try {
                 os.close();
+
+                if (this.osCommand != null) {
+                    String command = this.osCommand.replace("%s", this.fileName);
+                    try {
+                        (Runtime.getRuntime()).exec(command,null);
+                    } catch(Exception e) {
+                        throw new CascadingRuntimeException("Unable to lauch the specified program : "+command, e);
+                    }
+                }
             } catch (IOException e) {
                 throw new CascadingRuntimeException("Error closing output stream.", e);
             }

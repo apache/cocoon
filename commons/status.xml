@@ -178,6 +178,9 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="JBQ" type="update" fixes-bug="COCOON-1706" due-to="Philippe Gassmann" due-to-email="philippe.gassmann@anyware-tech.com">
+      Allow TeeTransformer to run a system command for debugging purposes
+    </action>
     <action dev="JBQ" type="update">
       Ported various caching pipeline fixes and improvements from branch 2.1:
       <ul>
