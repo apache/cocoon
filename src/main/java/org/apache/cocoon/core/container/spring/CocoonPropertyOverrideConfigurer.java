@@ -32,25 +32,41 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
- * Our version of the property override configurer which uses the settings
- * object to get the properties.
+ * Our version of the property override configurer which reads properties
+ * from the Cocoon spring configuration directory.
+ * A property should have the following format: {bean name}/{property name}={value}.
  *
  * @version $Id$
  */
 public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
 
+    /** The location of the directory where the different property files are located. */
     protected String location = Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION;
+
+    /** The resource loader used to load the property files. 
+     * This loader is either resolving relative to the current sitemap or the
+     * root of the context.
+     */
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
 
+    /**
+     * Set the directory to search in.
+     * @param object New value.
+     */
     public void setLocation(final String object) {
         this.location = object;
     }
 
+    /**
+     * Set the resource loader.
+     * @param loader The new resource loader.
+     */
     public void setResourceLoader(final ResourceLoader loader) {
         this.resourceLoader = loader;
     }
 
     /**
+     * Read all property files from the specified location and apply the changes.
      * @see org.springframework.beans.factory.config.PropertyResourceConfigurer#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)
      */
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
