@@ -106,9 +106,9 @@ public class SubSettingsBeanFactoryPostProcessor
 
         // read properties from default includes
         if ( this.useDefaultIncludes ) {
-            this.readProperties(DEFAULT_CONFIG_PROPERTIES, properties);
+            ResourceUtils.readProperties(DEFAULT_CONFIG_PROPERTIES, properties, this.getResourceLoader(), this.logger);
             // read all properties from the mode dependent directory
-            this.readProperties(DEFAULT_CONFIG_PROPERTIES + '/' + mode, properties);    
+            ResourceUtils.readProperties(DEFAULT_CONFIG_PROPERTIES + '/' + mode, properties, this.getResourceLoader(), this.logger);    
         }
 
         if ( this.directories != null ) {
@@ -116,9 +116,9 @@ public class SubSettingsBeanFactoryPostProcessor
             while ( i.hasNext() ) {
                 final String directory = (String)i.next();
                 // now read all properties from the properties directory
-                this.readProperties(directory, properties);
+                ResourceUtils.readProperties(directory, properties, this.getResourceLoader(), this.logger);
                 // read all properties from the mode dependent directory
-                this.readProperties(directory + '/' + mode, properties);
+                ResourceUtils.readProperties(directory + '/' + mode, properties, this.getResourceLoader(), this.logger);
             }
         }
 

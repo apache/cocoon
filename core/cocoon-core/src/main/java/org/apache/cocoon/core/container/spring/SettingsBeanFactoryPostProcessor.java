@@ -176,9 +176,9 @@ public class SettingsBeanFactoryPostProcessor
         final Properties properties = new Properties();
 
         // now read all properties from the properties directory
-        readProperties("/WEB-INF/cocoon/properties", properties);
+        ResourceUtils.readProperties("/WEB-INF/cocoon/properties", properties, this.getResourceLoader(), this.logger);
         // read all properties from the mode dependent directory
-        readProperties("/WEB-INF/cocoon/properties/" + mode, properties);
+        ResourceUtils.readProperties("/WEB-INF/cocoon/properties/" + mode, properties, this.getResourceLoader(), this.logger);
 
         // fill from the servlet context
         if ( s.getWorkDirectory() == null ) {
