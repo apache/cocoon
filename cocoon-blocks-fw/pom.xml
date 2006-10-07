@@ -36,10 +36,6 @@
     <module>cocoon-blocks-fw-demo1</module>
     <module>cocoon-blocks-fw-demo2</module>
     <module>cocoon-blocks-fw-sample</module>
-    <!--
-    <module>cocoon-blocks-fw-ecm-impl</module>
-    <module>cocoon-blocks-fw-servlet-impl</module>
-    -->
     <module>cocoon-default</module>
   </modules>
 </project>
