@@ -38,8 +38,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class BlockServlet extends HttpServlet {
     private BlockContext blockContext;
-    private String blockServletClass;
-    private Servlet blockServlet;
+    private String embededServletClass;
+    private Servlet embededServlet;
 
     /* (non-Javadoc)
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
@@ -76,8 +76,8 @@ public class BlockServlet extends HttpServlet {
         
         // create and initialize the embeded servlet
         try {
-            this.blockServlet =
-                (Servlet) this.getClass().getClassLoader().loadClass(this.blockServletClass).newInstance();
+            this.embededServlet =
+                (Servlet) this.getClass().getClassLoader().loadClass(this.embededServletClass).newInstance();
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -88,15 +88,15 @@ public class BlockServlet extends HttpServlet {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        this.blockServlet.init(blockServletConfig);
-        this.blockContext.setServlet(this.blockServlet);
+        this.embededServlet.init(blockServletConfig);
+        this.blockContext.setServlet(this.embededServlet);
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.GenericServlet#destroy()
      */
     public void destroy() {
-        this.blockServlet.destroy();
+        this.embededServlet.destroy();
         super.destroy();
     }
 
@@ -147,8 +147,8 @@ public class BlockServlet extends HttpServlet {
         this.blockContext.setBlockContextURL(blockContextURL);
     }
 
-    public void setBlockServletClass(String blockServletClass) {
-        this.blockServletClass = blockServletClass;
+    public void setServletClass(String servletClass) {
+        this.embededServletClass = servletClass;
     }
 
     public void setProperties(Map properties) {
