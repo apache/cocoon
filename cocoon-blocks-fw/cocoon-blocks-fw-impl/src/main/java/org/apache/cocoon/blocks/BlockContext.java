@@ -294,7 +294,7 @@ public class BlockContext extends ServletContextWrapper {
     public ServletContext getNamedContext(String name) {
         BlockServlet blockServlet =
             (BlockServlet) this.connections.get(name);
-        return blockServlet.getBlockContext();
+        return blockServlet != null ? blockServlet.getBlockContext() : null;
     }
         
     /**
