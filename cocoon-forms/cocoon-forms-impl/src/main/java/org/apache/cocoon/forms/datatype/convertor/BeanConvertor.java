@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.datatype.convertor;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.commons.jxpath.JXPathContext;
 
 import org.xml.sax.ContentHandler;
@@ -24,8 +25,6 @@ import org.xml.sax.SAXException;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.WeakHashMap;
-
 
 /**
  * Converts String representation of beans to bean instances and vice versa.
@@ -46,7 +45,7 @@ public class BeanConvertor
 
     private Class m_class;
 
-    private Map m_objects = new WeakHashMap(  );
+    private Map m_objects = new ReferenceMap();
 
     private String m_idPath;
 
