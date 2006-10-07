@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLConnection;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,10 +27,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 /**
  * @version $Id: TestServlet2.java 388756 2006-03-25 13:43:42Z danielf $
  */
 public class DemoServlet extends HttpServlet {
+
+    BeanFactory beanFactory;
+    SourceResolver resolver;
+    
+    /* (non-Javadoc)
+     * @see javax.servlet.GenericServlet#init()
+     */
+    public void init() throws ServletException {
+        this.beanFactory =
+            WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+        this.resolver = (SourceResolver) this.beanFactory.getBean(SourceResolver.ROLE);
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getPathInfo();
@@ -47,11 +62,8 @@ public class DemoServlet extends HttpServlet {
             RequestDispatcher demo2 = this.getServletContext().getNamedDispatcher("demo2");
             demo2.forward(request, response);
         } else if ("/test3".equals(path)) {
-            throw new ServletException("Unknown path " + path);
-            /* TODO: implement the block protocol for the Spring context
-            URL url = new URL("block:/test1");
-            URLConnection conn = url.openConnection();
-            InputStream is = conn.getInputStream();
+            Source source = this.resolver.resolveURI("block:/test1");
+            InputStream is = source.getInputStream();
 
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();
@@ -59,21 +71,15 @@ public class DemoServlet extends HttpServlet {
             copy(is, os);
             is.close();
             os.close();
-            */
         } else if ("/test4".equals(path)) {
-            throw new ServletException("Unknown path " + path);
-            /* TODO: implement the block protocol for the Spring context
-            URL url = new URL("block:demo2:/any");
-            URLConnection conn = url.openConnection();
-            InputStream is = conn.getInputStream();
-
+            Source source = this.resolver.resolveURI("block:demo2:/any");
+            InputStream is = source.getInputStream();
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();
             
             copy(is, os);
             is.close();
             os.close();
-            */
         } else {
             throw new ServletException("Unknown path " + path);
         }
