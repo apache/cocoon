@@ -17,6 +17,8 @@
 package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -38,8 +40,8 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Use this servlet as entry point to Cocoon. It wraps the @link {@link TreeProcessor} and delegates
@@ -50,57 +52,66 @@ import org.springframework.web.context.WebApplicationContext;
 public class SitemapServlet extends HttpServlet {
 
     private static final String DEFAULT_CONTAINER_ENCODING = "ISO-8859-1";
-	private static final String DEFAULT_SITEMAP_PATH = "context://sitemap.xmap";	
+	private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap";	
 	private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
 
-	private BeanFactory beanFactory;
 	private Logger logger;
-	private String sitemapPath;
     protected Context cocoonContext;
 	private Processor processor;	
 	private Settings settings;
 
-	/**
-	 * Initialize the servlet. The main purpose of this method is creating a configured @link {@link TreeProcessor}.
-	 */
+    /**
+     * Initialize the servlet. The main purpose of this method is creating a configured @link {@link TreeProcessor}.
+     */
     public void init(ServletConfig config) throws ServletException {
-    	super.init(config);
-
+        super.init(config);
+        
         // Get a bean factory from the servlet context
-        this.beanFactory =
-            (BeanFactory) this.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-        if (this.beanFactory == null)
-            throw new ServletException("No BeanFactory in the context");
+        WebApplicationContext container =
+            WebApplicationContextUtils.getRequiredWebApplicationContext(config.getServletContext());
         
-        this.sitemapPath = this.getServletContext().getInitParameter(SITEMAP_PATH_PROPERTY);
-        if (this.sitemapPath == null)
-            this.sitemapPath = DEFAULT_SITEMAP_PATH;
-        
-    	// get components from the beanFactory
-    	this.logger = (Logger) this.beanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
-    	this.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
+        // get components from the beanFactory
+        this.logger = (Logger) container.getBean(ProcessingUtil.LOGGER_ROLE);
+        this.settings = (Settings) container.getBean(Settings.ROLE);
         ServiceManager serviceManager = (ServiceManager) 
-    		this.beanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);    	
-    	
-    	// create the Cocoon context out of the Servlet context
-        this.cocoonContext = new HttpContext(config.getServletContext());
+        container.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);     
         
+        // create the Cocoon context out of the Servlet context
+        this.cocoonContext = new HttpContext(config.getServletContext());
+
+        // get the uri to the sitemap location and resolve it in the curent servlet context,
+        // observere that it is very important that the Treeprocessor get a resolved uri,
+        // just providing a relative uri relative to the current context is not enough
+        // and doesn't work
+        String sitemapPath = this.getServletContext().getInitParameter(SITEMAP_PATH_PROPERTY);
+        if (sitemapPath== null)
+            sitemapPath= DEFAULT_SITEMAP_PATH;
+
+        String sitemapURI;
+        try {
+            URL uri = this.getServletContext().getResource(sitemapPath);
+            if (uri == null)
+                throw new ServletException("Couldn't find the sitemap " + sitemapPath);
+            sitemapURI = uri.toExternalForm();
+        } catch (MalformedURLException e) {
+            throw new ServletException(e);
+        }
+
         // create the tree processor
         try {
-			TreeProcessor treeProcessor =  new TreeProcessor();
+            TreeProcessor treeProcessor =  new TreeProcessor();
             // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all. 
             this.processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
                     this.logger,
                     null,
                     serviceManager,
-                    createTreeProcessorConfiguration());
-		} catch (Exception e) {
+                    createTreeProcessorConfiguration(sitemapURI));
+        } catch (Exception e) {
             throw new ServletException(e);
-		}
-		
+        }
     }
     
-    /**
+	/**
      * Process the incoming request using the Cocoon tree processor.
      */
 	protected void service(HttpServletRequest request, HttpServletResponse response) 
@@ -148,10 +159,10 @@ public class SitemapServlet extends HttpServlet {
     /**
      * Create an Avalon Configuration @link {@link Configuration} that configures the tree processor.
      */
-	private Configuration createTreeProcessorConfiguration() {
+	private Configuration createTreeProcessorConfiguration(String sitemapURI) {
 		DefaultConfiguration treeProcessorConf = new DefaultConfiguration("treeProcessorConfiguration");
         treeProcessorConf.setAttribute("check-reload", true);
-        treeProcessorConf.setAttribute("file", this.sitemapPath);
+        treeProcessorConf.setAttribute("file", sitemapURI);
 		return treeProcessorConf;
 	}	    
 }

@@ -22,7 +22,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="org.apache.cocoon.blocks.demo1.block" class="org.apache.cocoon.blocks.BlockServlet">
 		<property name="mountPath" value="/test1"/>
-		<property name="blockServletClass" value="org.apache.cocoon.blocks.demo1.DemoServlet"/>
+		<property name="servletClass" value="org.apache.cocoon.blocks.demo1.DemoServlet"/>
 		<property name="properties">
 			<map>
 				<entry key="foo" value="baz"/>

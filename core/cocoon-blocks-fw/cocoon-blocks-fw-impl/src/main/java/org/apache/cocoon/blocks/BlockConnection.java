@@ -23,16 +23,15 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLConnection;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.blocks.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.blocks.util.BlockCallHttpServletResponse;
-import org.osgi.service.log.LogService;
 
 /**
  * Implementation of a {@link URLConnection} that gets its content by
@@ -43,7 +42,7 @@ import org.osgi.service.log.LogService;
  * @version $Id$
  */
 public final class BlockConnection
-    extends URLConnection {
+    /*extends URLConnection*/ {
 
     /** Wrapped request */
     private BlockCallHttpServletRequest request;
@@ -59,20 +58,19 @@ public final class BlockConnection
     
     private String systemId;
     
-    private LogService logger;
+    private Logger logger;
 
     /**
      * Construct a new object
      */
-    public BlockConnection(URL url, LogService logger)
+    public BlockConnection(String url, Logger logger)
         throws MalformedURLException {
 
-        super(url);
         this.logger = logger;
         
         this.context = BlockCallStack.getCurrentBlockContext();
         if (this.context == null)
-            throw new MalformedURLException("Must be used in a block context " + this.getURL());
+            throw new MalformedURLException("Must be used in a block context " + url);
 
         URI blockURI = null;
         try {
@@ -118,7 +116,7 @@ public final class BlockConnection
         }
     }
 
-    protected final LogService getLogger() {
+    protected final Logger getLogger() {
         return this.logger;
     }
 
@@ -131,10 +129,10 @@ public final class BlockConnection
         }
         String scheme = uri.getScheme();
 
-        this.getLogger().log(LogService.LOG_DEBUG, "BlockSource: resolving " + uri.toString() + " with scheme " +
-                        uri.getScheme() + " and ssp " + uri.getSchemeSpecificPart());
+        this.logger.debug("BlockSource: resolving " + uri.toString() + " with scheme " +
+                uri.getScheme() + " and ssp " + uri.getSchemeSpecificPart());
         uri = new URI(uri.getSchemeSpecificPart());
-        this.getLogger().log(LogService.LOG_DEBUG, "BlockSource: resolved to " + uri.toString());
+        this.logger.debug("BlockSource: resolved to " + uri.toString());
         
         this.blockName = uri.getScheme();
         String path = uri.getPath();
