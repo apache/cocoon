@@ -37,13 +37,16 @@
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
+
   <modules>
     <module>blocks</module>
     <module>commons</module>
     <module>core</module>
     <module>tools</module>
     <module>site/cocoon-maven-site-skin</module>
+    <module>dists</module>
   </modules>
+
   <repositories>
     <repository>
       <id>central</id>
@@ -62,6 +65,7 @@
       <layout>legacy</layout>
     </repository>
   </repositories>
+
   <pluginRepositories>
     <pluginRepository>
       <id>reinhard-m2-snapshot-repository</id>
