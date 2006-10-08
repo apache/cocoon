@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
@@ -36,7 +38,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * @version $Id$
  */
 public class ActTypeNode extends SimpleSelectorProcessingNode
-  implements ParameterizableProcessingNode {
+                         implements ParameterizableProcessingNode {
 
     /** The parameters of this node */
     private Map parameters;
@@ -49,8 +51,9 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
     protected boolean inActionSet;
 
-    public ActTypeNode(String type, 
-                       VariableResolver source, 
+
+    public ActTypeNode(String type,
+                       VariableResolver source,
                        String name,
                        boolean inActionSet)  {
         super(Action.ROLE + "Selector", type);
@@ -64,26 +67,21 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-          throws Exception {
+    throws Exception {
 
-        // Perform any common invoke functionality 
+        // Perform any common invoke functionality
         super.invoke(env, context);
 
         // Prepare data needed by the action
         Map objectModel = env.getObjectModel();
-        Redirector redirector = context.getRedirector();
-        SourceResolver resolver = EnvironmentHelper.getCurrentProcessor().getSourceResolver();
         String resolvedSource = source.resolve(context, objectModel);
         Parameters resolvedParams =
-            VariableResolver.buildParameters(this.parameters,
-                    context, objectModel);
-
-        Map actionResult;
+            VariableResolver.buildParameters(this.parameters, context, objectModel);
 
         // If in action set, merge parameters
         if (inActionSet) {
             Parameters callerParams =
-                (Parameters)env.getAttribute(ActionSetNode.CALLER_PARAMETERS);
+                (Parameters) env.getAttribute(ActionSetNode.CALLER_PARAMETERS);
             if (resolvedParams == Parameters.EMPTY_PARAMETERS) {
                 // Just swap
                 resolvedParams = callerParams;
@@ -97,46 +95,52 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
             }
         }
 
-        Action action = (Action)getComponent();
+        Redirector redirector = context.getRedirector();
+        SourceResolver resolver = EnvironmentHelper.getCurrentProcessor().getSourceResolver();
+
         try {
-            actionResult = this.executor.invokeAction(this,
-                                             objectModel, 
-                                             action, 
-                                             redirector, 
-                                             resolver, 
-                                             resolvedSource, 
-                                             resolvedParams);
-        } finally {
-            releaseComponent(action);
-        }
+            Action action = (Action) getComponent();
+            Map actionResult;
+            try {
+                actionResult = this.executor.invokeAction(this,
+                                                          objectModel,
+                                                          action,
+                                                          redirector,
+                                                          resolver,
+                                                          resolvedSource,
+                                                          resolvedParams);
+            } finally {
+                releaseComponent(action);
+            }
 
-        if (redirector.hasRedirected()) {
-            return true;
-        }
+            if (redirector.hasRedirected()) {
+                return true;
+            }
 
-        if (actionResult != null) {
-            // Action succeeded : process children if there are some, with the action result
-            if (this.children != null) {
-                boolean result = this.invokeNodes(this.children, env, context, name, actionResult);
+            if (actionResult != null) {
+                // Action succeeded : process children if there are some, with the action result
+                if (this.children != null) {
+                    boolean result = invokeNodes(this.children, env, context, name, actionResult);
 
-                if (inActionSet) {
-                    // Merge child action results, if any
-                    Map childMap = (Map)env.getAttribute(ActionSetNode.ACTION_RESULTS);
-                    if (childMap != null) {
-                        Map newResults = new HashMap(childMap);
-                        newResults.putAll(actionResult);
-                        env.setAttribute(ActionSetNode.ACTION_RESULTS, newResults);
-                    } else {
-                        // No previous results
-                        env.setAttribute(ActionSetNode.ACTION_RESULTS, actionResult);
+                    if (inActionSet) {
+                        // Merge child action results, if any
+                        Map childMap = (Map) env.getAttribute(ActionSetNode.ACTION_RESULTS);
+                        if (childMap != null) {
+                            Map newResults = new HashMap(childMap);
+                            newResults.putAll(actionResult);
+                            env.setAttribute(ActionSetNode.ACTION_RESULTS, newResults);
+                        } else {
+                            // No previous results
+                            env.setAttribute(ActionSetNode.ACTION_RESULTS, actionResult);
+                        }
                     }
+                    return result;
                 }
-                return result;
-            }// else {
-               // return false; // Return false to continue sitemap invocation
-            //}
-        }// else {
-            return false;   // Action failed
-        //}
+            }
+        } catch (Exception e) {
+            throw ProcessingException.throwLocated("Sitemap: error invoking action", e, getLocation());
+        }
+
+        return false;   // Action failed
     }
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,10 +28,10 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
- *
  * @version $Id$
  */
-public class GenerateNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
+public class GenerateNode extends PipelineEventComponentProcessingNode
+                          implements ParameterizableProcessingNode {
 
     private String generatorName;
 
@@ -50,13 +50,13 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     * @see ProcessingNode#invoke(Environment, InvokeContext)
      */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
         final Map objectModel = env.getObjectModel();
-        
+
         SitemapExecutor.PipelineComponentDescription desc = new SitemapExecutor.PipelineComponentDescription();
         desc.type = this.generatorName;
         desc.source = source.resolve(context, objectModel);
@@ -64,20 +64,16 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
         desc.hintParameters = this.pipelineHints == null
                 ? Parameters.EMPTY_PARAMETERS
                 : VariableResolver.buildParameters(this.pipelineHints, context, objectModel);
-        
-        desc = this.executor.addGenerator(this, objectModel, desc);
-        
-        context.getProcessingPipeline().setGenerator(
-            desc.type,
-            desc.source,
-            desc.parameters,
-            desc.hintParameters
-        );
 
+        desc = this.executor.addGenerator(this, objectModel, desc);
+
+        context.getProcessingPipeline().setGenerator(desc.type,
+                                                     desc.source,
+                                                     desc.parameters,
+                                                     desc.hintParameters);
 
         // Check view
         if (this.views != null) {
-	 
             //inform the pipeline that we have a branch point
             context.getProcessingPipeline().informBranchPoint();
 
@@ -85,7 +81,7 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
             if (cocoonView != null) {
 
                 // Get view node
-                ProcessingNode viewNode = (ProcessingNode)this.views.get(cocoonView);
+                ProcessingNode viewNode = (ProcessingNode) this.views.get(cocoonView);
 
                 if (viewNode != null) {
                     if (getLogger().isInfoEnabled()) {

@@ -72,7 +72,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Root node of the processing tree */
     private ProcessingNode rootNode;
 
-    /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
+    /**
+     * Number of simultaneous uses of this processor (either by concurrent
+     * request or by internal requests)
+     */
     private int requestCount;
 
     /** The sitemap executor */
@@ -233,8 +236,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             context.setLastProcessor(this);
 
             try {
-                final boolean success = this.rootNode.invoke(environment, context);
-                return success;
+                return this.rootNode.invoke(environment, context);
             } finally {
                 EnvironmentHelper.leaveProcessor();
                 // Restore old redirector
