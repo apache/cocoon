@@ -60,6 +60,7 @@ public class PipelineNode extends AbstractParentProcessingNode
     /** Optional sitemap parameters */
     protected Map parameters;
 
+
     /**
      * A constructor to receive the optional expires parameter
      * and optional parameters for the processing pipeline
@@ -107,6 +108,7 @@ public class PipelineNode extends AbstractParentProcessingNode
 
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
+
         boolean passThrough;
         Object passThroughRaw = env.getAttribute(MountNode.COCOON_PASS_THROUGH);
         if (passThroughRaw == null) {
@@ -128,13 +130,12 @@ public class PipelineNode extends AbstractParentProcessingNode
         }
 
         Parameters params = VariableResolver.buildParameters(this.parameters,
-                context,
-                env.getObjectModel());
+                                                             context,
+                                                             env.getObjectModel());
 
         SitemapExecutor.PipelineComponentDescription desc = new SitemapExecutor.PipelineComponentDescription();
         desc.type = this.processingPipeline;
         desc.parameters = params;
-
         desc = this.executor.enteringPipeline(this, env.getObjectModel(), desc);
         context.inform(desc.type, desc.parameters, env.getObjectModel());
 
@@ -144,7 +145,7 @@ public class PipelineNode extends AbstractParentProcessingNode
                 context.setErrorHandler(
                         new SitemapErrorHandler(this.errorHandlerHelper, env, context));
             } else {
-                // Reset internal error handler (previous pipeline might had set it) 
+                // Reset internal error handler (previous pipeline might had set it)
                 context.setErrorHandler(null);
             }
 

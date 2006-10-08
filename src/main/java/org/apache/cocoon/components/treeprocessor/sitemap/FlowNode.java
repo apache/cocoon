@@ -39,6 +39,7 @@ public class FlowNode extends AbstractProcessingNode
     private ServiceManager manager;
     private Interpreter interpreter;
 
+
     public FlowNode(String language) {
         this.language = language;
     }
@@ -51,8 +52,8 @@ public class FlowNode extends AbstractProcessingNode
      * @param manager a <code>ServiceManager</code> value
      * @exception ServiceException if no flow interpreter could be obtained
      */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
 
         try {
             // Obtain the Interpreter instance for this language

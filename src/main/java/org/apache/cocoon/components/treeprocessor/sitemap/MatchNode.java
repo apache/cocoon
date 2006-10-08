@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
@@ -27,11 +29,10 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.matching.Matcher;
 
 /**
- *
  * @version $Id$
  */
 public class MatchNode extends SimpleSelectorProcessingNode
-        implements ParameterizableProcessingNode {
+                       implements ParameterizableProcessingNode {
 
     /** The 'pattern' attribute */
     private VariableResolver pattern;
@@ -40,6 +41,7 @@ public class MatchNode extends SimpleSelectorProcessingNode
     private String name;
 
     private Map parameters;
+
 
     public MatchNode(String type, VariableResolver pattern, String name) {
         super(Matcher.ROLE + "Selector", type);
@@ -52,9 +54,9 @@ public class MatchNode extends SimpleSelectorProcessingNode
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
-	
-        // Perform any common invoke functionality 
+    throws Exception {
+
+        // Perform any common invoke functionality
         super.invoke(env, context);
 
         Map objectModel = env.getObjectModel();
@@ -62,28 +64,32 @@ public class MatchNode extends SimpleSelectorProcessingNode
         String resolvedPattern = pattern.resolve(context, objectModel);
         Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
-        Map result = null;
-
-        Matcher matcher = (Matcher)getComponent();
         try {
-            result = this.executor.invokeMatcher(this, 
-                    objectModel, 
-                    matcher, 
-                    resolvedPattern, 
-                    resolvedParams);
-        } finally {
-            releaseComponent(matcher);
-        }
-
-        if (result != null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Matcher '" + this.componentName + "' matched pattern '" + this.pattern +
-                    "' at " + this.getLocation());
+            Map result = null;
+            Matcher matcher = (Matcher) getComponent();
+            try {
+                result = this.executor.invokeMatcher(this,
+                                                     objectModel,
+                                                     matcher,
+                                                     resolvedPattern,
+                                                     resolvedParams);
+            } finally {
+                releaseComponent(matcher);
             }
 
-            // Invoke children with the matcher results
-            return this.invokeNodes(children, env, context, name, result);
+            if (result != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Matcher '" + this.componentName + "' matched pattern '" + this.pattern +
+                                      "' at " + getLocation());
+                }
+
+                // Invoke children with the matcher results
+                return invokeNodes(children, env, context, name, result);
+            }
+        } catch (Exception e) {
+            throw ProcessingException.throwLocated("Sitemap: error invoking matcher", e, getLocation());
         }
+
         // Matcher failed
         return false;
     }

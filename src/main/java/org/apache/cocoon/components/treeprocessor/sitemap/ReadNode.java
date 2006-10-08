@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,14 +23,15 @@ import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.ProcessingException;
 
 import java.util.Map;
 
 /**
- *
  * @version $Id$
  */
-public class ReadNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
+public class ReadNode extends AbstractProcessingNode
+                      implements ParameterizableProcessingNode {
 
     private String readerName;
 
@@ -41,6 +42,7 @@ public class ReadNode extends AbstractProcessingNode implements ParameterizableP
     private int statusCode;
 
     private Map parameters;
+
 
     /**
      * Build a <code>SerializerNode</code> having a name, a mime-type and a status code (HTTP codes).
@@ -61,7 +63,7 @@ public class ReadNode extends AbstractProcessingNode implements ParameterizableP
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(Environment, InvokeContext)
      */
     public final boolean invoke(Environment env,  InvokeContext context)
     throws Exception {
@@ -75,26 +77,24 @@ public class ReadNode extends AbstractProcessingNode implements ParameterizableP
         desc.source = source.resolve(context, objectModel);
         desc.parameters = VariableResolver.buildParameters(this.parameters, context, objectModel);
         desc.mimeType = this.mimeType.resolve(context, objectModel);
-        
+
         desc = this.executor.addReader(this, objectModel, desc);
 
-        pipeline.setReader(
-            desc.type,
-            desc.source,
-            desc.parameters,
-            desc.mimeType
-        );
+        pipeline.setReader(desc.type,
+                           desc.source,
+                           desc.parameters,
+                           desc.mimeType);
 
         // Set status code if there is one
         if (this.statusCode >= 0) {
             env.setStatus(this.statusCode);
         }
 
-        if (! context.isBuildingPipelineOnly()) {
+        if (!context.isBuildingPipelineOnly()) {
             // Process pipeline
             return pipeline.process(env);
-
         }
+
         // Return true : pipeline is finished.
         return true;
     }
