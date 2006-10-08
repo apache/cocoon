@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,10 +30,10 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
- *
  * @version $Id$
  */
-public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
+public class SerializeNode extends PipelineEventComponentProcessingNode
+                           implements ParameterizableProcessingNode {
 
     private String serializerName;
 
@@ -54,8 +54,8 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
      * @param statusCode the HTTP response status code, or <code>-1</code> if not specified.
      */
     public SerializeNode(String name,
-                         VariableResolver source, 
-                         VariableResolver mimeType, 
+                         VariableResolver source,
+                         VariableResolver mimeType,
                          int statusCode) {
         this.serializerName = name;
         this.source = source;
@@ -75,7 +75,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
 
         // Check view
         if (this.views != null) {
-	   
+
             //inform the pipeline that we have a branch point
             context.getProcessingPipeline().informBranchPoint();
 
@@ -93,7 +93,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
                 }
             }
         }
-        
+
         final Map objectModel = env.getObjectModel();
         final ProcessingPipeline pipeline = context.getProcessingPipeline();
 
@@ -101,7 +101,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
         if (objectModel.containsKey(Constants.LINK_OBJECT)) {
             pipeline.addTransformer("<translator>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
         }
-        
+
         if (objectModel.containsKey(Constants.LINK_COLLECTION_OBJECT) && env.isExternal()) {
             pipeline.addTransformer("<gatherer>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
         }
@@ -117,21 +117,19 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
 
         // inform executor
         desc = this.executor.addSerializer(this, objectModel, desc);
-        
-        pipeline.setSerializer(
-                desc.type,
-                desc.source,
-                desc.parameters,
-                desc.hintParameters,
-                desc.mimeType
-        );
+
+        pipeline.setSerializer(desc.type,
+                               desc.source,
+                               desc.parameters,
+                               desc.hintParameters,
+                               desc.mimeType);
 
         // Set status code if there is one
         if (this.statusCode >= 0) {
             env.setStatus(this.statusCode);
         }
 
-        if (! context.isBuildingPipelineOnly()) {
+        if (!context.isBuildingPipelineOnly()) {
             // Process pipeline
             return pipeline.process(env);
         }

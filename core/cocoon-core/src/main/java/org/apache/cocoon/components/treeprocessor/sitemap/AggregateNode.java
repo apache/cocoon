@@ -62,6 +62,7 @@ public class AggregateNode extends AbstractProcessingNode {
     /** View nodes to jump to */
     private Map viewNodes;
 
+
     public AggregateNode(VariableResolver element, VariableResolver nsURI, VariableResolver nsPrefix) {
         super(null);
         this.element = element;
@@ -103,7 +104,7 @@ public class AggregateNode extends AbstractProcessingNode {
 
         } else {
             // Are there some parts that match this view ?
-            actualParts = (Part[])this.viewParts.get(cocoonView);
+            actualParts = (Part[]) this.viewParts.get(cocoonView);
 
             // If not, keep all parts
             if (actualParts == null) {
@@ -138,7 +139,7 @@ public class AggregateNode extends AbstractProcessingNode {
 
         // Check aggregate-level view
         if (cocoonView != null && this.viewNodes != null) {
-            ProcessingNode viewNode = (ProcessingNode)this.viewNodes.get(cocoonView);
+            ProcessingNode viewNode = (ProcessingNode) this.viewNodes.get(cocoonView);
             if (viewNode != null) {
                 if (infoEnabled) {
                     getLogger().info("Jumping to view '" + cocoonView + "' from aggregate at " + this.getLocation());

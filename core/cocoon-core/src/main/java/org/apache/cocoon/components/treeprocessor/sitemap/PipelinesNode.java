@@ -39,6 +39,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
 
     private ErrorHandlerHelper errorHandlerHelper;
 
+
     /**
      * Constructor
      */

@@ -68,17 +68,12 @@ public class CallFunctionNode extends AbstractProcessingNode implements Paramete
 
         Map objectModel = env.getObjectModel();
 
-        // Resolve parameters
-        Parameters params = VariableResolver.buildParameters(this.parameters, context, objectModel);
-
-        // Build the list of positional arguments
-        //TODO (SW): Deprecate this in the future.
-        // It has be found to be bad practice to pass sitemap parameters
-        // as function arguments, as these are name-value pairs in the sitemap
-        // and positional arguments in the flowscript. If the user doesn't respect
-        // the argument order, this leads to difficult to solve bugs.
+        // Build the list of arguments
         List args;
         if (argumentNames.length != 0) {
+            // Resolve parameters
+            Parameters params = VariableResolver.buildParameters(this.parameters, context, objectModel);
+
             args = new ArrayList(argumentNames.length);
             for (int i = 0; i < argumentNames.length; i++) {
                 String name = argumentNames[i];
@@ -97,11 +92,11 @@ public class CallFunctionNode extends AbstractProcessingNode implements Paramete
         if (continuation != null && continuation.length() > 0) {
             try {
                 interpreter.handleContinuation(continuation, args, redirector);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw ProcessingException.throwLocated("Sitemap: error calling continuation", e, getLocation());
             }
             if (!redirector.hasRedirected()) {
-                throw new ProcessingException("Sitemap: <map:call continuation> did not send a response", getLocation());
+                throw new ProcessingException("Sitemap: continuation did not send a response", getLocation());
             }
             return true;
         }
@@ -112,11 +107,11 @@ public class CallFunctionNode extends AbstractProcessingNode implements Paramete
         if (name != null && name.length() > 0) {
             try {
                 interpreter.callFunction(name, args, redirector);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw ProcessingException.throwLocated("Sitemap: error calling function '" + name + "'", e, getLocation());
             }
             if (!redirector.hasRedirected()) {
-                throw new ProcessingException("Sitemap: <map:call function> did not send a response", getLocation());
+                throw new ProcessingException("Sitemap: function '" + name + "' did not send a response", getLocation());
             }
             return true;
         }

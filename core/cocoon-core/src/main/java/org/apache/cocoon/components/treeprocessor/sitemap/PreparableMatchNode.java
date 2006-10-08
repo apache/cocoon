@@ -29,13 +29,13 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.ProcessingException;
 
 /**
- *
  * @version $Id$
  */
 public class PreparableMatchNode extends SimpleSelectorProcessingNode
-    implements ParameterizableProcessingNode, Initializable {
+                                 implements ParameterizableProcessingNode, Initializable {
 
     /** The 'pattern' attribute */
     private String pattern;
@@ -43,9 +43,10 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
     /** The 'name' for the variable anchor */
     private String name;
 
+    private Map parameters;
+
     private Object preparedPattern;
 
-    private Map parameters;
 
     public PreparableMatchNode(String type, String pattern, String name) {
         super(Matcher.ROLE + "Selector", type);
@@ -54,7 +55,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode#setParameters(java.util.Map)
+     * @see ParameterizableProcessingNode#setParameters(java.util.Map)
      */
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
@@ -71,7 +72,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
         try {
             this.preparedPattern = matcher.preparePattern(this.pattern);
         } catch(PatternException pe) {
-            String msg = "Invalid pattern '" + this.pattern + "' for matcher at " + this.getLocation();
+            String msg = "Invalid pattern '" + this.pattern + "' for matcher at " + getLocation();
             throw new ConfigurationException(msg, pe);
         } finally {
             releaseComponent(matcher);
@@ -84,8 +85,8 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
-      	// Perform any common invoke functionality
-      	super.invoke(env, context);
+          // Perform any common invoke functionality
+          super.invoke(env, context);
 
         Map objectModel = env.getObjectModel();
         Parameters resolvedParams = VariableResolver.buildParameters(
@@ -94,28 +95,33 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
 
         Map result = null;
 
-        PreparableMatcher matcher = (PreparableMatcher)getComponent();
         try {
-            result = this.executor.invokePreparableMatcher(this,
-                                                           objectModel,
-                                                           matcher,
-                                                           this.pattern,
-                                                           preparedPattern,
-                                                           resolvedParams);
-        } finally {
-            releaseComponent(matcher);
-        }
-
-        if (result != null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Matcher '" + this.componentName + "' matched prepared pattern '" +
-                                  this.pattern + "' at " + this.getLocation());
+            PreparableMatcher matcher = (PreparableMatcher)getComponent();
+            try {
+                result = this.executor.invokePreparableMatcher(this,
+                                                               objectModel,
+                                                               matcher,
+                                                               this.pattern,
+                                                               preparedPattern,
+                                                               resolvedParams);
+            } finally {
+                releaseComponent(matcher);
             }
 
-            // Invoke children with the matcher results
-            return this.invokeNodes(children, env, context, name, result);
+            if (result != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Matcher '" + this.componentName + "' matched prepared pattern '" +
+                                      this.pattern + "' at " + this.getLocation());
+                }
 
+                // Invoke children with the matcher results
+                return this.invokeNodes(children, env, context, name, result);
+
+            }
+        } catch (Exception e) {
+            throw ProcessingException.throwLocated("Sitemap: error invoking matcher", e, getLocation());
         }
+
         // Matcher failed
         return false;
     }

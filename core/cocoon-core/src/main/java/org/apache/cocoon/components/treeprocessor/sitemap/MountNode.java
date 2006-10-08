@@ -32,7 +32,6 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
- *
  * @version $Id$
  */
 public class MountNode extends AbstractProcessingNode
@@ -60,6 +59,7 @@ public class MountNode extends AbstractProcessingNode
     /** The value of the 'pass-through' attribute */
     private final Boolean passThrough;
 
+
     public MountNode(VariableResolver prefix,
                      VariableResolver source,
                      TreeProcessor parentProcessor,
@@ -73,7 +73,7 @@ public class MountNode extends AbstractProcessingNode
     }
 
     /**
-     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(Environment, InvokeContext)
      */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
@@ -85,6 +85,7 @@ public class MountNode extends AbstractProcessingNode
         if (resolvedSource.length() == 0) {
             throw new ProcessingException("Source of mount statement is empty");
         }
+
         // Handle directory mounts
         if (resolvedSource.charAt(resolvedSource.length() - 1) == '/') {
             resolvedSource = resolvedSource + "sitemap.xmap";
@@ -137,7 +138,6 @@ public class MountNode extends AbstractProcessingNode
 
         TreeProcessor processor = (TreeProcessor) processors.get(source);
         if (processor == null) {
-
             processor = this.parentProcessor.createChildProcessor(source, this.checkReload, prefix);
 
             // Associate to the original source
