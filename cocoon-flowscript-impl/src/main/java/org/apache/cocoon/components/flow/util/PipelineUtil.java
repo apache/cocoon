@@ -31,12 +31,11 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.Wrapper;
 import org.w3c.dom.Document;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -103,7 +102,7 @@ public class PipelineUtil implements Contextualizable, Serviceable, Disposable {
 
         // Keep the previous view data, if any (is it really necessary?), and set the new one
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, PipelineUtil.unwrap(viewData));
+        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData));
 
         Source src = null;
         InputStream input = null;
@@ -140,7 +139,7 @@ public class PipelineUtil implements Contextualizable, Serviceable, Disposable {
 
         Map objectModel = ContextHelper.getObjectModel(this.context);
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, PipelineUtil.unwrap(viewData));
+        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData));
 
         Source src = null;
         try {
@@ -166,7 +165,7 @@ public class PipelineUtil implements Contextualizable, Serviceable, Disposable {
 
         Map objectModel = ContextHelper.getObjectModel(this.context);
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, PipelineUtil.unwrap(viewData));
+        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData));
 
         Source src = null;
 
@@ -179,17 +178,5 @@ public class PipelineUtil implements Contextualizable, Serviceable, Disposable {
                 this.resolver.release(src);
             }
         }
-    }
-
-    /**
-     * Unwrap a Rhino object (getting the raw java object) and convert undefined to null
-     */
-    public static Object unwrap(Object obj) {
-        if (obj instanceof Wrapper) {
-            obj = ((Wrapper)obj).unwrap();
-        } else if (obj == Undefined.instance) {
-            obj = null;
-        }
-        return obj;
     }
 }
