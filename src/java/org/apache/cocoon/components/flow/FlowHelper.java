@@ -90,7 +90,7 @@ public class FlowHelper {
     
     /**
      * Unwrap a Rhino object (getting the raw java object) and convert undefined to null
-     * @deprecated Use {@link org.apache.cocoon.components.flow.util.PipelineUtil#unwrap(Object)}
+     * @deprecated Use {@link org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper#unwrap(Object)}
      */
     public static Object unwrap(Object obj) {
         if (obj instanceof Wrapper) {
