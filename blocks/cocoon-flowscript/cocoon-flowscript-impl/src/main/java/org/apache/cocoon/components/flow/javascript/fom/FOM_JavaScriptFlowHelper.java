@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.components.flow.javascript.fom;
 
-import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
 
 import org.mozilla.javascript.Scriptable;
 
@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class FOM_JavaScriptFlowHelper extends FlowHelper {
+public class FOM_JavaScriptFlowHelper extends JavaScriptFlowHelper {
 
     // Constants defining keys in the object model used to store the various objects.
     // These constants are private so that access to these objects only go through the
