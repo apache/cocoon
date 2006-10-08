@@ -389,7 +389,7 @@
       | use text but avoids i18n problems related to hardcoding 'yes'/'no' or 'true'/'false'
       +-->
   <xsl:template match="fi:booleanfield[@state='output']" priority="3">
-    <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled" value="{@true-value}">
+    <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled" value="{@true-value}" name="{@id}">
         <xsl:apply-templates select="." mode="css"/>
     	  <xsl:if test="fi:value != 'false'">
     	    <xsl:attribute name="checked">checked</xsl:attribute>
