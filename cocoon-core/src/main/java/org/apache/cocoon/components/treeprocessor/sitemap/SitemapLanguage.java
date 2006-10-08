@@ -80,7 +80,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 
 /**
  * The tree builder for the sitemap language.
- * 
+ *
  * @version $Id$
  */
 public class SitemapLanguage
@@ -119,8 +119,7 @@ public class SitemapLanguage
     protected String itsNamespace;
 
     /**
-     * The service manager for the processor that we are building. It is created
-     * by {@link #createServiceManager(ClassLoader, Context, Configuration)}.
+     * The service manager for the processor that we are building.
      */
     private ServiceManager itsManager;
 
@@ -186,7 +185,7 @@ public class SitemapLanguage
     /**
      * Get the location of the treebuilder config file. Can be overridden for
      * other versions.
-     * 
+     *
      * @return The location of the treebuilder config file
      */
     protected String getBuilderConfigURL() {
@@ -460,7 +459,7 @@ public class SitemapLanguage
             // public
             String namespace = null;
             try {
-                namespace = ((AbstractConfiguration) config).getNamespace();
+                namespace = config.getNamespace();
             } catch (ConfigurationException e) {
                 // ignore
             }
@@ -475,6 +474,7 @@ public class SitemapLanguage
         } else {
             desc.append(config.getName());
         }
+
         String type = config.getAttribute("type", null);
         if (type != null) {
             desc.append(" type=\"").append(type).append('"');
@@ -482,14 +482,16 @@ public class SitemapLanguage
         desc.append('>');
 
         Location rawLoc = LocationUtils.getLocation(config);
-        return new LocationImpl(desc.toString(), rawLoc.getURI(), rawLoc.getLineNumber(), rawLoc
-                .getColumnNumber());
+        return new LocationImpl(desc.toString(),
+                                rawLoc.getURI(),
+                                rawLoc.getLineNumber(),
+                                rawLoc.getColumnNumber());
     }
 
     /**
      * Get &lt;xxx:parameter&gt; elements as a <code>Map</code> of </code>ListOfMapResolver</code>s,
      * that can be turned into parameters using <code>ListOfMapResolver.buildParameters()</code>.
-     * 
+     *
      * @return the Map of ListOfMapResolver, or <code>null</code> if there are
      *         no parameters.
      */
@@ -526,7 +528,7 @@ public class SitemapLanguage
      * Get the type for a statement : it returns the 'type' attribute if
      * present, and otherwhise the default type defined for this role in the
      * components declarations.
-     * 
+     *
      * @throws ConfigurationException
      *             if the type could not be found.
      */
@@ -603,7 +605,7 @@ public class SitemapLanguage
             if ( beans != null ) {
                 final Iterator i = beans.values().iterator();
                 while ( i.hasNext() ) {
-                    this.enterSitemapEventListeners.add(i.next());                    
+                    this.enterSitemapEventListeners.add(i.next());
                 }
             }
             beans = listableFactory.getBeansOfType(LeaveSitemapEventListener.class);
@@ -675,7 +677,7 @@ public class SitemapLanguage
     /**
      * Add a view for a label. This is used to register all views that start
      * from a given label.
-     * 
+     *
      * @param label
      *            the label (or pseudo-label) for the view
      * @param view
@@ -698,7 +700,7 @@ public class SitemapLanguage
      * Get the names of views for a given statement. If the cocoon view exists
      * in the returned collection, the statement can directly branch to the
      * view-handling node.
-     * 
+     *
      * @param role
      *            the component role (e.g. <code>Generator.ROLE</code>)
      * @param hint
@@ -725,7 +727,7 @@ public class SitemapLanguage
         }
 
         // Compute the views attached to this component
-        Set views = null;
+        Set views;
 
         // Build the set for all labels for this statement
         Set labels = new HashSet();
@@ -799,7 +801,7 @@ public class SitemapLanguage
     /**
      * Get the {view name, view node} map for a collection of view names. This
      * allows to resolve view nodes at build time, thus avoiding runtime lookup.
-     * 
+     *
      * @param viewNames
      *            the view names
      * @return association of names to views
@@ -826,7 +828,7 @@ public class SitemapLanguage
 
     /**
      * Extract pipeline-hints from the given statement (if any exist)
-     * 
+     *
      * @param role
      *            the component role (e.g. <code>Generator.ROLE</code>)
      * @param hint
@@ -851,15 +853,14 @@ public class SitemapLanguage
         // the hint.
 
         String statementHintParams = statement.getAttribute("pipeline-hints", null);
-        String componentHintParams = null;
-        String hintParams = null;
 
         // firstly, determine if any pipeline-hints are defined at the component
         // level
         // if so, inherit these pipeline-hints (these hints can be overriden by
         // local pipeline-hints)
-        componentHintParams = this.itsComponentInfo.getPipelineHint(role, hint);
+        String componentHintParams = this.itsComponentInfo.getPipelineHint(role, hint);
 
+        String hintParams;
         if (componentHintParams != null) {
             hintParams = componentHintParams;
 
@@ -934,7 +935,7 @@ public class SitemapLanguage
      *
      * @return the collection of labels (may be empty, nut never null)
      */
-    private static final Collection splitLabels(String labels) {
+    private static Collection splitLabels(String labels) {
         if (labels == null) {
             return Collections.EMPTY_SET;
         }

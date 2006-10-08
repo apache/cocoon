@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.ProcessingException;
 
 import java.util.Map;
 
@@ -31,7 +32,7 @@ import java.util.Map;
  * @version $Id$
  */
 public class ActSetNode extends SimpleParentProcessingNode
-  implements ParameterizableProcessingNode {
+                        implements ParameterizableProcessingNode {
 
     /** The parameters of this node */
     private Map parameters;
@@ -39,10 +40,11 @@ public class ActSetNode extends SimpleParentProcessingNode
     /** The action set to call */
     private ActionSetNode actionSet;
 
+
     public ActSetNode() {
         super(null);
     }
-    
+
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
     }
@@ -52,9 +54,9 @@ public class ActSetNode extends SimpleParentProcessingNode
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
 
-        // Perform any common invoke functionality 
+        // Perform any common invoke functionality
         super.invoke(env, context);
 
         Parameters resolvedParams = VariableResolver.buildParameters(
@@ -63,19 +65,23 @@ public class ActSetNode extends SimpleParentProcessingNode
             env.getObjectModel()
         );
 
-        Map result = this.actionSet.call(env, context, resolvedParams);
+        try {
+            Map result = this.actionSet.call(env, context, resolvedParams);
 
-        if (context.getRedirector().hasRedirected()) {
-            return true;
+            if (context.getRedirector().hasRedirected()) {
+                return true;
 
-        } else if (result == null) {
-            return false;
+            } else if (result == null) {
+                return false;
 
-        } else if (this.children == null) {
-            return true;
+            } else if (this.children == null) {
+                return true;
 
-        } else {
-            return this.invokeNodes(this.children, env, context, null, result);
+            } else {
+                return this.invokeNodes(this.children, env, context, null, result);
+            }
+        } catch (Exception e) {
+            throw ProcessingException.throwLocated("Sitemap: error invoking action set", e, getLocation());
         }
     }
 }

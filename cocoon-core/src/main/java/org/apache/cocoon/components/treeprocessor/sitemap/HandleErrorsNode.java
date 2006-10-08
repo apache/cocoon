@@ -94,9 +94,9 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
 
                     env.getObjectModel().remove(Constants.NOTIFYING_OBJECT);
                     throw new ProcessingException(
-                        "Incomplete pipeline: 'handle-error' without a 'type' must include a generator, at " +
-                        getLocation() + SystemUtils.LINE_SEPARATOR +
-                        "Either add a generator (preferred) or a type='500' attribute (deprecated) on 'handle-errors'");
+                        "Incomplete pipeline: 'handle-error' without a 'type' must include a generator." +
+                        SystemUtils.LINE_SEPARATOR +
+                        "Either add a generator (preferred) or a type='500' attribute (deprecated) on 'handle-errors'", getLocation());
                 }
 
                 // Rethrow the exception
@@ -113,9 +113,9 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
 
                 env.getObjectModel().remove(Constants.NOTIFYING_OBJECT);
                 throw new ProcessingException(
-                        "Error: 'handle-error' with a 'type' attribute has an implicit generator, at " +
-                        getLocation() + SystemUtils.LINE_SEPARATOR +
-                        "Please remove the 'type' attribute on 'handle-error'");
+                        "Error: 'handle-error' with a 'type' attribute has an implicit generator." +
+                        SystemUtils.LINE_SEPARATOR +
+                        "Please remove the 'type' attribute on 'handle-error'", getLocation());
             }
             // Rethrow the exception
             throw e;
