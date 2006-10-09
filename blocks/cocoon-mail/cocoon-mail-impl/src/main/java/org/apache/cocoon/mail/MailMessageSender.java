@@ -440,8 +440,6 @@ public class MailMessageSender
 
             message.saveChanges();
             Transport.send(message);
-        } catch (MessagingException me) {
-            throw new MessagingException(me.getMessage());
         } catch (MalformedURLException e) {
             throw new AddressException("Malformed attachment URL: " +
                                        a.getObject() + " error " + e.getMessage());
