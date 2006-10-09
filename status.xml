@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="update">
+      Updated commons-lang to 2.2.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1900" due-to="Gabriele Columbro" due-to-email="columbro@gmail.com">
       CForms: Add a <code>name</code> attribute to a booleanfield in output mode to make it easily accessible in JavaScript.
     </action>
