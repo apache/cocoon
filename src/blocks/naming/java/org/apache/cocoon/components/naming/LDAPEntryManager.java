@@ -274,7 +274,7 @@ public class LDAPEntryManager
 			}
 			context.destroySubcontext (name);
 		} catch (Exception e) {
-			getLogger ().error ("LDAPEntryManager.deleteSubcontext() :" + e.getStackTrace().toString());
+			getLogger ().error ("LDAPEntryManager.deleteSubcontext() :" + e.getMessage());
 			throw new ProcessingException (e);
 		}
 	}
