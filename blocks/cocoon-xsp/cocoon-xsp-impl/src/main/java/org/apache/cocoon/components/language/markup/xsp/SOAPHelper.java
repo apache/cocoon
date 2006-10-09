@@ -64,12 +64,12 @@ public class SOAPHelper {
         HttpConnection conn = null;
 
         try {
-            if (action == null || action.equals("")) {
-                action = "\"\"";
+            if (this.action == null || this.action.equals("")) {
+                this.action = "\"\"";
             }
 
-            String host = url.getHost();
-            int port = url.getPort();
+            String host = this.url.getHost();
+            int port = this.url.getPort();
 
             if (System.getProperty("http.proxyHost") != null) {
                 String proxyHost = System.getProperty("http.proxyHost");
@@ -79,17 +79,17 @@ public class SOAPHelper {
                 conn = new HttpConnection(host, port);
             }
 
-            PostMethod method = new PostMethod(url.getFile());
+            PostMethod method = new PostMethod(this.url.getFile());
             String request;
 
             try {
                 // Write the SOAP request body
-                if (xscriptObject instanceof XScriptObjectInlineXML) {
+                if (this.xscriptObject instanceof XScriptObjectInlineXML) {
                     // Skip overhead
-                    request = ((XScriptObjectInlineXML) xscriptObject).getContent();
+                    request = ((XScriptObjectInlineXML)this.xscriptObject).getContent();
                 } else {
                     StringBuffer bodyBuffer = new StringBuffer();
-                    InputSource saxSource = xscriptObject.getInputSource();
+                    InputSource saxSource = this.xscriptObject.getInputSource();
 
                     Reader r = null;
                     // Byte stream or character stream?
@@ -102,8 +102,9 @@ public class SOAPHelper {
                     try {
                         char[] buffer = new char[1024];
                         int len;
-                        while ((len = r.read(buffer)) > 0)
+                        while ((len = r.read(buffer)) > 0) {
                             bodyBuffer.append(buffer, 0, len);
+                        }
                     } finally {
                         if (r != null) {
                             r.close();
@@ -119,31 +120,28 @@ public class SOAPHelper {
 
             method.setRequestHeader(
                     new Header("Content-type", "text/xml; charset=\"utf-8\""));
-            method.setRequestHeader(new Header("SOAPAction", action));
+            method.setRequestHeader(new Header("SOAPAction", this.action));
             method.setRequestBody(request);
 
-            if (authorization != null && !authorization.equals("")) {
-               method.setRequestHeader(new Header("Authorization","Basic "+SourceUtil.encodeBASE64(authorization)));
+            if (this.authorization != null && !this.authorization.equals("")) {
+               method.setRequestHeader(
+                       new Header("Authorization",
+                                  "Basic " + SourceUtil.encodeBASE64(this.authorization)));
             }
 
             method.execute(new HttpState(), conn);
 
             String ret = method.getResponseBodyAsString();
-            int startOfXML = ret.indexOf("<?xml");
-            if (startOfXML == -1) { // No xml?!
-                throw new ProcessingException("Invalid response - no xml");
-            }
-
-            return new XScriptObjectInlineXML(
-                    xscriptManager,
-                    ret.substring(startOfXML));
+            return new XScriptObjectInlineXML(this.xscriptManager, ret);
+        } catch (ProcessingException ex) {
+            throw ex;
         } catch (Exception ex) {
-            throw new ProcessingException("Error invoking remote service: " + ex,
-                    ex);
+            throw new ProcessingException("Error invoking remote service: " + ex, ex);
         } finally {
             try {
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (Exception ex) {
             }
         }
