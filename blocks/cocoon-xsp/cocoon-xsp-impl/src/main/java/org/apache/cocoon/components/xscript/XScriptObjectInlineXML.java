@@ -36,51 +36,46 @@ public class XScriptObjectInlineXML extends XScriptObject {
     StringBufferContentHandler streamHandler;
 
     public XScriptObjectInlineXML(XScriptManager manager) {
-        super(manager);
-        stringBuffer = new StringBuffer();
-        stringBuffer.append("<?xml version=\"1.0\"?>\n\n");
-        streamHandler = new StringBufferContentHandler(stringBuffer);
+        this(manager, new StringBuffer("<?xml version=\"1.0\"?>\n\n"));
+    }
+
+    public XScriptObjectInlineXML(XScriptManager manager, String string) {
+        this(manager, new StringBuffer(string));
     }
 
     public XScriptObjectInlineXML(XScriptManager manager, StringBuffer stringBuffer) {
         super(manager);
         this.stringBuffer = stringBuffer;
-        streamHandler = new StringBufferContentHandler(stringBuffer);
-    }
-
-    public XScriptObjectInlineXML(XScriptManager manager, String string) {
-        super(manager);
-        this.stringBuffer = new StringBuffer(string);
-        streamHandler = new StringBufferContentHandler(stringBuffer);
+        this.streamHandler = new StringBufferContentHandler(this.stringBuffer);
     }
 
     public InputStream getInputStream() throws IOException {
         // FIXME(VG): This method should never be used because it
         // always converts content into system encoding. This will
         // ruin i18n documents. Use getInputSource() instead.
-        return new ByteArrayInputStream(stringBuffer.toString().getBytes());
+        return new ByteArrayInputStream(this.stringBuffer.toString().getBytes());
     }
 
     public InputSource getInputSource() throws IOException {
-        InputSource is = new InputSource(new StringReader(stringBuffer.toString()));
+        InputSource is = new InputSource(new StringReader(this.stringBuffer.toString()));
         is.setSystemId(getURI());
         return is;
     }
 
     public ContentHandler getContentHandler() {
-        return streamHandler;
+        return this.streamHandler;
     }
 
     public String toString() {
-        return stringBuffer.toString();
+        return this.stringBuffer.toString();
     }
 
     public long getContentLength() {
-        return stringBuffer.length();
+        return this.stringBuffer.length();
     }
 
     public String getContent() {
-        return stringBuffer.toString();
+        return this.stringBuffer.toString();
     }
 
     public String getURI() {
@@ -88,4 +83,5 @@ public class XScriptObjectInlineXML extends XScriptObject {
         // variables by URI
         return "xscript:inline:" + System.identityHashCode(this);
     }
+
 }
