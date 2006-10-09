@@ -332,5 +332,3 @@ public class LDAPEntryManager
 		return map;
 	}
 }
-
-
