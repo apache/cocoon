@@ -330,7 +330,7 @@
       support the additional languages.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/bsf-2.3.0.jar</lib>
+    <lib>optional/bsf-2.4.0.jar</lib>
     <homepage>http://jakarta.apache.org/bsf/</homepage>
   </file>
 
