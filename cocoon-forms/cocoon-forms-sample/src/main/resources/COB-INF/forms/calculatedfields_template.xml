@@ -25,13 +25,18 @@ limitations under the License.
   <h4 class="samplesGroup">Calculated widgets sample</h4>
   <title>Sample form</title>
   <content>
+
+  
     <p>This is an example of how calculated fields can be used for an invoice form. The invoice business rules are :
     </p>
     <ul>
       <li>VAT is always 20% of total price.</li>
+      <li>Locale is: ${cocoon.parameters.getParameter('locale')}</li>
       <li>Boxes contain 10 items each, and we cannot mix different articles in the same box.</li>
       <li>As a bonus you receive 2 shipment-free boxes if you buy more than 10 boxes, 15 if you buy more than 50, 30 if you buy more than 100.</li>
       <li>You can choose different couriers with different costs.</li>
+      <jx:set var="xhtmlcontentTest" value="&lt;html&gt; Hello &lt;b&gt; world! &lt;/b&gt; &lt;/html&gt;"/>
+      <li>String to XML demo = <jx:out value="${Packages.org.apache.cocoon.xml.StringXMLizable(xhtmlcontentTest)}"/></li>
     </ul>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
       <!-- manual layout of fields, without use of a fi:group -->
