@@ -280,7 +280,9 @@ public class ConfigurationReader {
         final Iterator i = this.configInfo.getRoles().iterator();
         while ( i.hasNext() ) {
             final ComponentInfo current = (ComponentInfo)i.next();
-            current.setLazyInit(true);
+            if ( !current.hasConfiguredLazyInit() ) {
+                current.setLazyInit(true);
+            }
             this.configInfo.addComponent(current);
         }
         this.configInfo.clearRoles();
