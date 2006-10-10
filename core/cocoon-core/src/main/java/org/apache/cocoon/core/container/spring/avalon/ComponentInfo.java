@@ -342,4 +342,8 @@ public final class ComponentInfo {
     public void setProcessedConfiguration(Configuration processedConfiguration) {
         this.processedConfiguration = processedConfiguration;
     }
+
+    public boolean hasConfiguredLazyInit() {
+        return this.configuration != null && this.configuration.getAttribute("lazy-init", null) != null;
+    }
 }
