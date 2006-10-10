@@ -18,9 +18,11 @@
 <!-- SVN $Id: portal.xsamples 126208 2005-01-23 11:03:50Z cziegeler $ -->
 <xsamples xpath="/samples" unless="group[@name='Portal Engine']">
 
-  <group name="Portal Engine">
+  <group name="Portal Block">
     <sample name="Portal Block" href="portal-sample/portal">
-      This is a demo of the new powerful portal engine based on Apache Cocoon.
+      This is a demo of the powerful portal engine based on Apache Cocoon. Make sure that
+      you have installed the portlet api 1.0 (e.g. in commons/lib for Tomcat or WEB-INF/lib
+      for Jetty).
     </sample>
   </group>
   
