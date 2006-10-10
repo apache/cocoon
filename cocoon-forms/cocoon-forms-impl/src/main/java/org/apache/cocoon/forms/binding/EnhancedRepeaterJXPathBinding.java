@@ -64,7 +64,7 @@ public class EnhancedRepeaterJXPathBinding extends RepeaterJXPathBinding {
 	public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
 		Repeater repeater = (Repeater) selectWidget(frmModel, super.getId());
 		if (!(repeater instanceof EnhancedRepeater)) {
-			super.doLoad(frmModel, jxpc);
+			super.doSave(frmModel, jxpc);
 			return;
 		}
 
