@@ -272,7 +272,7 @@
       <coplet-type>URICoplet</coplet-type>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/content</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/content</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketAdmin">
@@ -280,7 +280,7 @@
       <coplet-type>URICoplet</coplet-type>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/basket-admin</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/basket-admin</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="Basket">
@@ -288,7 +288,7 @@
       <coplet-type>URICoplet</coplet-type>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/basket</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/basket</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="Basket_admin">
@@ -296,7 +296,7 @@
       <coplet-type>URICoplet</coplet-type>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/basket.admin</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/basket.admin</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleStaticCoplet">
@@ -308,7 +308,7 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/staticcoplet.add.preflow</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/staticcoplet.add.preflow</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleCopletWithAttribute">
@@ -320,7 +320,7 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/copletwithattr.add.preflow</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/copletwithattr.add.preflow</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleCopletWithInlineProcess">
@@ -332,7 +332,7 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/copletwithinline.add.preflow</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/copletwithinline.add.preflow</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleCopletWithInputProcess">
@@ -352,11 +352,11 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/application</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/application</value>
       </attribute>
       <attribute>
          <name>temporary:application-uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/copletwithinput.add.flow</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/copletwithinput.add.flow</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleCopletWithInputProcessShow">
@@ -368,7 +368,7 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/copletwithinputshow.changeTitle.preflow</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/copletwithinputshow.changeTitle.preflow</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleCopletWithApp">
@@ -388,11 +388,11 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/application</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/application</value>
       </attribute>
       <attribute>
          <name>temporary:application-uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/copletwithapp.add.flow</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/copletwithapp.add.flow</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleCopletList">
@@ -412,11 +412,11 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/application</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/application</value>
       </attribute>
       <attribute>
          <name>temporary:application-uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/copletlist</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/copletlist</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="BasketSampleCopletWithUpload">
@@ -428,7 +428,7 @@
       </attribute>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/copletwithupload.add.preflow</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/basket/copletwithupload.add.preflow</value>
       </attribute>
    </coplet-definition>
 
@@ -486,7 +486,7 @@
       </attribute>
       <attribute>
          <name>temporary:application-uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/samples/form</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-portal-sample/coplets/samples/form</value>
       </attribute>
    </coplet-definition>
    <coplet-definition id="app_test_two">
@@ -506,7 +506,7 @@
       </attribute>
       <attribute>
          <name>temporary:application-uri</name>
-         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/core-samples-main/flow/jxcalc/</value>
+         <value xsi:type="java:java.lang.String">cocoon://blocks/cocoon-core-main-sample/flow/jxcalc/</value>
       </attribute>
    </coplet-definition>
 
