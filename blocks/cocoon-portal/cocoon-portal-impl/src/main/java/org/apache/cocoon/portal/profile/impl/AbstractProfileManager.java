@@ -154,7 +154,7 @@ public abstract class AbstractProfileManager
             }
             if (object instanceof Layout) {
                 preparableObject = this.checkAvailability(profile, (Layout)object);
-            } else if (object instanceof Collection) {
+            } else if (preparableObject instanceof Collection) {
                 final Iterator iterator = ((Collection)preparableObject).iterator();
                 while (iterator.hasNext()) {
                     final Object o = iterator.next();

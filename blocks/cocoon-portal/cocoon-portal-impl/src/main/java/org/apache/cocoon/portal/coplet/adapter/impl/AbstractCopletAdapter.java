@@ -371,6 +371,9 @@ public abstract class AbstractCopletAdapter
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public void init(CopletDefinition coplet) {
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Initializing coplet definition: " + coplet);
+        }
         // nothing to do here, can be overwritten in subclasses
     }
 
@@ -379,19 +382,28 @@ public abstract class AbstractCopletAdapter
      */
     public void destroy(CopletDefinition coplet) {
         // nothing to do here, can be overwritten in subclasses
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Destroying coplet definition: " + coplet);
+        }
     }
 
     /**
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void login(CopletInstance coplet) {
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Login into coplet " + coplet);
+        }
         // copy temporary attributes from the coplet data
-        Iterator iter = coplet.getCopletDefinition().getAttributes().entrySet().iterator();
+        final Iterator iter = coplet.getCopletDefinition().getAttributes().entrySet().iterator();
         while ( iter.hasNext() ) {
-            Map.Entry entry = (Map.Entry)iter.next();
+            final Map.Entry entry = (Map.Entry)iter.next();
             if ( entry.getKey().toString().startsWith("temporary:") ) {
-                coplet.setTemporaryAttribute(entry.getKey().toString().substring(10),
-                        entry.getValue());
+                final String name = entry.getKey().toString().substring(10);
+                if ( this.getLogger().isDebugEnabled() ) {
+                    this.getLogger().debug("Setting temporary attribute '" + name + "' on coplet " + coplet + " : " + entry.getValue());
+                }
+                coplet.setTemporaryAttribute(name, entry.getValue());
             }
         }
     }
@@ -400,6 +412,9 @@ public abstract class AbstractCopletAdapter
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void logout(CopletInstance coplet) {
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Logout from coplet " + coplet);
+        }
         // nothing to do here, can be overwritten in subclasses
     }
 
