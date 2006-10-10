@@ -16,15 +16,17 @@
  */
 package org.apache.cocoon.forms.transformation;
 
+import java.util.LinkedList;
+
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.LocatorImpl;
-
-import java.util.LinkedList;
 
 /**
  * Base class for XMLPipe's. Allows the structure of the source code of
@@ -33,6 +35,24 @@ import java.util.LinkedList;
  * @version $Id$
  */
 public class EffectPipe extends AbstractXMLPipe {
+
+    /**
+     * Java 1.3 contentHandler access method.
+     * <br>
+     * Access to {#contentHandler} from inner class on Java 1.3 causes NoSuchMethod error.
+     */
+    private ContentHandler getContentHandler() {
+        return super.contentHandler;
+    }
+
+    /**
+     * Java 1.3 lexicalHandler access method.
+     * <br>
+     * Access to {#lexicalHandler} from inner class on Java 1.3 causes NoSuchMethod error.  
+     */
+    private LexicalHandler getLexicalHandler() {
+        return super.lexicalHandler;
+    }
 
     /**
      * Handler interface. Accepts SAX events, can return other handler
@@ -267,83 +287,83 @@ public class EffectPipe extends AbstractXMLPipe {
      */
     protected class CopyHandler extends NullHandler {
         public Handler startDocument() throws SAXException {
-            contentHandler.startDocument();
+            getContentHandler().startDocument();
             return this;
         }
 
         public void endDocument() throws SAXException {
-            contentHandler.endDocument();
+            getContentHandler().endDocument();
         }
 
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
-            contentHandler.startPrefixMapping(prefix, uri);
+            getContentHandler().startPrefixMapping(prefix, uri);
         }
 
         public void endPrefixMapping(String prefix) throws SAXException {
-            contentHandler.endPrefixMapping(prefix);
+            getContentHandler().endPrefixMapping(prefix);
         }
 
         public Handler startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
-            contentHandler.startElement(uri, loc, raw, attrs);
+            getContentHandler().startElement(uri, loc, raw, attrs);
             return this;
         }
 
         public void endElement(String uri, String loc, String raw) throws SAXException {
-            contentHandler.endElement(uri, loc, raw);
+            getContentHandler().endElement(uri, loc, raw);
         }
 
         public Handler characters(char ch[], int start, int length) throws SAXException {
-            contentHandler.characters(ch, start, length);
+            getContentHandler().characters(ch, start, length);
             return this;
         }
 
         public Handler ignorableWhitespace(char ch[], int start, int length) throws SAXException {
-            contentHandler.ignorableWhitespace(ch, start, length);
+            getContentHandler().ignorableWhitespace(ch, start, length);
             return this;
         }
 
         public Handler processingInstruction(String target, String data) throws SAXException {
-            contentHandler.processingInstruction(target, data);
+            getContentHandler().processingInstruction(target, data);
             return this;
         }
 
         public Handler skippedEntity(String name) throws SAXException {
-            contentHandler.skippedEntity(name);
+            getContentHandler().skippedEntity(name);
             return this;
         }
 
         public Handler startDTD(String name, String publicId, String systemId) throws SAXException {
-            if (lexicalHandler != null) lexicalHandler.startDTD(name, publicId, systemId);
+            if (getLexicalHandler() != null) getLexicalHandler().startDTD(name, publicId, systemId);
             return this;
         }
 
         public Handler endDTD() throws SAXException {
-            if (lexicalHandler != null) lexicalHandler.endDTD();
+            if (getLexicalHandler() != null) getLexicalHandler().endDTD();
             return this;
         }
 
         public Handler startEntity(String name) throws SAXException {
-            if (lexicalHandler != null) lexicalHandler.startEntity(name);
+            if (getLexicalHandler() != null) getLexicalHandler().startEntity(name);
             return this;
         }
 
         public Handler endEntity(String name) throws SAXException {
-            if (lexicalHandler != null) lexicalHandler.endEntity(name);
+            if (getLexicalHandler() != null) getLexicalHandler().endEntity(name);
             return this;
         }
 
         public Handler startCDATA() throws SAXException {
-            if (lexicalHandler != null) lexicalHandler.startCDATA();
+            if (getLexicalHandler() != null) getLexicalHandler().startCDATA();
             return this;
         }
 
         public Handler endCDATA() throws SAXException {
-            if (lexicalHandler != null) lexicalHandler.endCDATA();
+            if (getLexicalHandler() != null) getLexicalHandler().endCDATA();
             return this;
         }
 
         public Handler comment(char c[], int start, int len) throws SAXException {
-            if (lexicalHandler != null) lexicalHandler.comment(c, start, len);
+            if (getLexicalHandler() != null) getLexicalHandler().comment(c, start, len);
             return this;
         }
     }
@@ -463,10 +483,9 @@ public class EffectPipe extends AbstractXMLPipe {
             return "unknown";
         }
 
-        final String location = " (" + locator.getSystemId() + ":" +
-                                       locator.getLineNumber() + ":" +
-                                       locator.getColumnNumber() + ")";
-        return location;
+        return " (" + locator.getSystemId() + ":" +
+                      locator.getLineNumber() + ":" +
+                      locator.getColumnNumber() + ")";
     }
 
     protected void pushHandler(Handler handler) {
