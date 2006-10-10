@@ -21,6 +21,7 @@ import java.util.Locale;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.Datatype;
+import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
@@ -40,19 +41,13 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class Output extends AbstractWidget implements DataWidget, ValueChangedListenerEnabled {
+public class Output extends AbstractWidget
+                    implements DataWidget, ValueChangedListenerEnabled {
 
     private final OutputDefinition definition;
     private Object value;
     private ValueChangedListener listener;
 
-    public OutputDefinition getOutputDefinition() {
-        return definition;
-    }
-
-    public Datatype getDatatype() {
-        return definition.getDatatype();
-    }
 
     public Output(OutputDefinition definition) {
         super(definition);
@@ -60,7 +55,15 @@ public class Output extends AbstractWidget implements DataWidget, ValueChangedLi
         this.listener = definition.getValueChangedListener();
     }
 
+    public Datatype getDatatype() {
+        return definition.getDatatype();
+    }
+
     public WidgetDefinition getDefinition() {
+        return definition;
+    }
+
+    public OutputDefinition getOutputDefinition() {
         return definition;
     }
 
@@ -110,6 +113,15 @@ public class Output extends AbstractWidget implements DataWidget, ValueChangedLi
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             contentHandler.endElement(FormsConstants.INSTANCE_NS, VALUE_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALUE_EL);
         }
+
+        // generate selection list, if any
+        SelectionList selectionList = definition.getSelectionList();
+        if (selectionList != null) {
+            selectionList.generateSaxFragment(contentHandler, locale);
+        }
+
+        // include some info about the datatype
+        definition.getDatatype().generateSaxFragment(contentHandler, locale);
     }
 
     public Object getValue() {

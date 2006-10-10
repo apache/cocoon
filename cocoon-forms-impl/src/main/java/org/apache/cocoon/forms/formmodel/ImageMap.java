@@ -34,18 +34,19 @@ import org.apache.cocoon.xml.AttributesImpl;
  */
 public class ImageMap extends AbstractWidget implements ActionListenerEnabled {
 
-    private final ImageMapDefinition definition;
-    private ActionListener listener;
-    private String imgURI; // URI of widget's image
-    private int x; // Mouse x coordinate
-    private int y; // Mouse y coordinate
-
     // XML element and attributes
     public static final String COMMAND_AT = "command";
     public static final String VALUE_EL = "imageuri";
     public static final String ONACTION_EL = "on-action";
     public static final String IMAGEMAP_EL = "imagemap";
 
+    private final ImageMapDefinition definition;
+    private ActionListener listener;
+    private String imgURI; // URI of widget's image
+    private int x; // Mouse x coordinate
+    private int y; // Mouse y coordinate
+
+    
     public ImageMap(ImageMapDefinition definition) {
         super(definition);
         this.definition = definition;

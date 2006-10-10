@@ -26,7 +26,6 @@ import org.apache.excalibur.xml.sax.XMLizable;
 
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.FormsConstants;
-import org.apache.cocoon.forms.FormsRuntimeException;
 import org.apache.cocoon.forms.formmodel.AggregateFieldDefinition.SplitMapping;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
@@ -251,6 +250,6 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public Widget getChild(String id) {
-        return (Widget)fieldsById.get(id);
+        return (Widget) fieldsById.get(id);
     }
 }
