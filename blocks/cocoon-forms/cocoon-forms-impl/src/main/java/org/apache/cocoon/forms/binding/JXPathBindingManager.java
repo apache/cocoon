@@ -28,6 +28,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -79,6 +80,15 @@ public class JXPathBindingManager extends AbstractLogEnabled
     protected LibraryManagerImpl libraryManager;
 
 
+    /**
+     * Java 1.3 logger access method.
+     * <br>
+     * Access to {#getLogger} from inner class on Java 1.3 causes NoSuchMethod error.  
+     */
+    protected Logger getMyLogger() {
+        return getLogger();
+    }
+
     public void contextualize(Context context) throws ContextException {
         this.avalonContext = context;
     }
@@ -97,25 +107,26 @@ public class JXPathBindingManager extends AbstractLogEnabled
     public void initialize() throws Exception {
         bindingBuilderSelector = new SimpleServiceSelector("binding", JXPathBindingBuilderBase.class);
         LifecycleHelper.setupComponent(bindingBuilderSelector,
-                getLogger(),
-                this.avalonContext,
-                this.manager,
-                configuration.getChild("bindings"));
+                                       getLogger(),
+                                       this.avalonContext,
+                                       this.manager,
+                                       configuration.getChild("bindings"));
 
         libraryManager = new LibraryManagerImpl();
         libraryManager.setBindingManager(this);
         LifecycleHelper.setupComponent(libraryManager,
-                getLogger(),
-                this.avalonContext,
-                this.manager,
-                configuration.getChild("library"));
+                                       getLogger(),
+                                       this.avalonContext,
+                                       this.manager,
+                                       configuration.getChild("library"));
     }
 
     public Binding createBinding(Source source) throws BindingException {
-        Binding binding = (Binding) this.cacheManager.get(source, PREFIX);
 
-        if (binding != null && !binding.isValid())
+        Binding binding = (Binding) this.cacheManager.get(source, PREFIX);
+        if (binding != null && !binding.isValid()) {
             binding = null; //invalidate
+        }
 
         if (binding == null) {
             try {
@@ -145,6 +156,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
                         source.getURI(), e);
             }
         }
+
         return binding;
     }
 
@@ -195,25 +207,19 @@ public class JXPathBindingManager extends AbstractLogEnabled
      * factory and its builder classes (that could be provided by third
      * parties.)
      */
-    /*
-     * NOTE: To get access to the logger in this inner class you must not call
-     * getLogger() as with JDK 1.3 this gives a NoSuchMethod error. You need to
-     * implement an explicit access method for the logger in the outer class.
-     */
     public class Assistant {
 
         private BindingBuilderContext context = new BindingBuilderContext();
         private Stack contextStack = new Stack();
 
+
         private JXPathBindingBuilderBase getBindingBuilder(String bindingType)
         throws BindingException {
             try {
-                return (JXPathBindingBuilderBase) bindingBuilderSelector
-                .select(bindingType);
+                return (JXPathBindingBuilderBase) bindingBuilderSelector.select(bindingType);
             } catch (ServiceException e) {
-                throw new BindingException(
-                        "Cannot handle binding element with " + "name \""
-                        + bindingType + "\".", e);
+                throw new BindingException("Cannot handle binding element with " + "name \"" +
+                                           bindingType + "\".", e);
             }
         }
 
@@ -230,7 +236,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
             if (context.getLocalLibrary() == null) {
                 // FIXME Use newLibrary()?
                 Library lib = new Library(libraryManager);
-                lib.enableLogging(getLogger());
+                lib.enableLogging(getMyLogger());
                 context.setLocalLibrary(lib);
                 lib.setAssistant(getBuilderAssistant());
                 lib.setSourceURI(LocationAttributes.getURI(configElm));
@@ -257,7 +263,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
 
             // this might get called unnecessarily, but solves issues with the libraries
             if (childBinding != null) {
-                childBinding.enableLogging(getLogger());
+                childBinding.enableLogging(getMyLogger());
             }
             return childBinding;
         }
