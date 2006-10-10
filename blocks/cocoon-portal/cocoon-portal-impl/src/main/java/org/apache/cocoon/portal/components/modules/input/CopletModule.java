@@ -74,12 +74,18 @@ public class CopletModule
         if (copletId == null) {
             return null;
         }
-        
+
         // return the coplet id
+        final Object value;
         if ( name.equals("#") ) {
-            return copletId;
+            value = copletId;
+        } else {
+            JXPathContext jxpathContext = JXPathContext.newContext(portalService.getProfileManager().getCopletInstance(copletId));
+            value = jxpathContext.getValue(name);
         }
-        JXPathContext jxpathContext = JXPathContext.newContext(portalService.getProfileManager().getCopletInstance(copletId));
-        return jxpathContext.getValue(name);
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Getting '" + name + "' for coplet instance with id: " + copletId + " : " + value);
+        }
+        return value;
     }
 }

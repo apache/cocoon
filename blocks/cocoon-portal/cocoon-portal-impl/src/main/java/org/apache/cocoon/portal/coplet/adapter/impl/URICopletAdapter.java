@@ -71,6 +71,9 @@ public class URICopletAdapter
                                  final String uri,
                                  final ContentHandler contentHandler)
     throws SAXException {
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Streaming coplet instance + " + coplet + " using uri: " + uri);
+        }
 		Source copletSource = null;
 		try {
 			if (uri.startsWith("cocoon:")) {
