@@ -139,6 +139,7 @@ public class BooleanField extends AbstractWidget
 
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
         contentHandler.endElement(FormsConstants.INSTANCE_NS, VALUE_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALUE_EL);
+
         // validation message element: only present if the value is not valid
         if (validationError != null) {
             contentHandler.startElement(FormsConstants.INSTANCE_NS, VALIDATION_MSG_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);

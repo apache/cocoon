@@ -59,22 +59,23 @@ public class Form extends AbstractContainerWidget
     private Locale locale = Locale.getDefault();
     private FormHandler formHandler;
     private Widget submitWidget;
-    private ProcessingPhase phase = ProcessingPhase.LOAD_MODEL;
-    private boolean isValid = false;
+    private boolean isValid;
     private ProcessingPhaseListener listener;
 
     //In the "readFromRequest" phase, events are buffered to ensure that all widgets had the chance
     //to read their value before events get fired.
-    private boolean bufferEvents = false;
+    private boolean bufferEvents;
     private CursorableLinkedList events;
 
-    // Widgets that need to be updated in the client when in AJAX mode
+    /** Widgets that need to be updated in the client when in AJAX mode */
     private Set updatedWidgets;
-    // Widgets that have at least one descendant that has to be updated
+
+    /** Widgets that have at least one descendant that has to be updated */
     private Set childUpdatedWidgets;
 
-    // Optional id which overrides the value from the form definition
+    /** Optional id which overrides the value from the form definition */
     private String id;
+
 
     public Form(FormDefinition definition) {
         super(definition);
@@ -309,8 +310,6 @@ public class Form extends AbstractContainerWidget
         // Fire the binding phase events
         fireEvents();
 
-        this.phase = ProcessingPhase.PROCESSING_INITIALIZE;
-
         // setup processing
         this.submitWidget = null;
         this.locale = formContext.getLocale();
@@ -319,15 +318,12 @@ public class Form extends AbstractContainerWidget
 
         // Notify the end of the current phase
         if (this.listener != null) {
-            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, ProcessingPhase.PROCESSING_INITIALIZE));
         }
-
-        this.phase = ProcessingPhase.READ_FROM_REQUEST;
 
         try {
             // Start buffering events
             this.bufferEvents = true;
-
             this.submitWidget = null;
 
             doReadFromRequest(formContext);
@@ -365,8 +361,9 @@ public class Form extends AbstractContainerWidget
 
         // Notify the end of the current phase
         if (this.listener != null) {
-            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, ProcessingPhase.READ_FROM_REQUEST));
         }
+
         if (this.endProcessing != null) {
             return this.endProcessing.booleanValue();
         }
@@ -383,7 +380,7 @@ public class Form extends AbstractContainerWidget
         // Set the indicator that terminates the form processing.
         // If redisplayForm is true, interaction is not finished and process() must
         // return false, hence the negation below.
-        this.endProcessing = BooleanUtils.toBooleanObject( !redisplayForm );
+        this.endProcessing = BooleanUtils.toBooleanObject(!redisplayForm);
     }
 
     /**
@@ -426,7 +423,6 @@ public class Form extends AbstractContainerWidget
      */
     public boolean validate() {
         // Validate the form
-        this.phase = ProcessingPhase.VALIDATE;
         this.isValid = super.validate();
 
         // FIXME: Is this check needed, before invoking the listener?
@@ -437,8 +433,9 @@ public class Form extends AbstractContainerWidget
 
         // Notify the end of the current phase
         if (this.listener != null) {
-            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, ProcessingPhase.VALIDATE));
         }
+
         if (this.endProcessing != null) {
             // De-validate the form if one of the listeners asked to end the processing
             // This allows for additional application-level validation.
@@ -446,6 +443,7 @@ public class Form extends AbstractContainerWidget
             this.wasValid = this.endProcessing.booleanValue();
             return this.wasValid;
         }
+
         this.wasValid = this.isValid && this.validationError == null;
         return this.wasValid;
     }
@@ -458,7 +456,7 @@ public class Form extends AbstractContainerWidget
      * @see org.apache.cocoon.forms.formmodel.AbstractWidget#getId()
      */
     public String getId() {
-        if ( this.id != null ) {
+        if (this.id != null) {
             return this.id;
         }
         return super.getId();

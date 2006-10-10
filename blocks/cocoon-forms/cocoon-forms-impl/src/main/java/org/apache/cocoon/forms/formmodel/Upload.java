@@ -59,23 +59,24 @@ public class Upload extends AbstractWidget
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
 
-    private final UploadDefinition uploadDefinition;
+    private final UploadDefinition definition;
     private Part part;
     private ValidationError validationError;
     private ValueChangedListener listener;
 
+
     public Upload(UploadDefinition uploadDefinition) {
         super(uploadDefinition);
-        this.uploadDefinition = uploadDefinition;
+        this.definition = uploadDefinition;
         this.listener = uploadDefinition.getValueChangedListener();
     }
 
-    public UploadDefinition getUploadDefinition() {
-        return this.uploadDefinition;
+    public WidgetDefinition getDefinition() {
+        return this.definition;
     }
 
-    public WidgetDefinition getDefinition() {
-        return this.uploadDefinition;
+    public UploadDefinition getUploadDefinition() {
+        return this.definition;
     }
 
     public Object getValue() {
@@ -153,7 +154,7 @@ public class Upload extends AbstractWidget
     }
 
     private boolean validateMimeType() {
-        String mimeTypes = this.uploadDefinition.getMimeTypes();
+        String mimeTypes = this.definition.getMimeTypes();
         if (mimeTypes != null) {
             StringTokenizer tok = new StringTokenizer(mimeTypes, ", ");
             String contentType = this.part.getMimeType();
@@ -198,7 +199,7 @@ public class Upload extends AbstractWidget
         }
 
         if (this.part == null) {
-            if (this.uploadDefinition.isRequired()) {
+            if (this.definition.isRequired()) {
                 I18nMessage i18nMessage = new I18nMessage("general.field-required", FormsConstants.I18N_CATALOGUE);
                 setValidationError(new ValidationError(i18nMessage));
             }
@@ -272,9 +273,9 @@ public class Upload extends AbstractWidget
     public AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("id", getRequestParameterName());
-        attrs.addCDATAAttribute("required", String.valueOf(this.uploadDefinition.isRequired()));
-        if (this.uploadDefinition.getMimeTypes() != null) {
-            attrs.addCDATAAttribute("mime-types", this.uploadDefinition.getMimeTypes());
+        attrs.addCDATAAttribute("required", String.valueOf(this.definition.isRequired()));
+        if (this.definition.getMimeTypes() != null) {
+            attrs.addCDATAAttribute("mime-types", this.definition.getMimeTypes());
         }
         return attrs;
     }
