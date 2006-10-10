@@ -44,6 +44,7 @@ public class Union extends AbstractContainerWidget {
 
     private final UnionDefinition definition;
 
+
     public Union(UnionDefinition definition) {
         super(definition);
         this.definition = definition;
@@ -68,7 +69,7 @@ public class Union extends AbstractContainerWidget {
                                             getLocation());
         }
 
-        ((ValueChangedListenerEnabled)caseWidget).addValueChangedListener(
+        ((ValueChangedListenerEnabled) caseWidget).addValueChangedListener(
             new ValueChangedListener() {
                 public void valueChanged(ValueChangedEvent event) {
                     String newValue = (String)event.getNewValue();
@@ -135,6 +136,7 @@ public class Union extends AbstractContainerWidget {
             this.wasValid = true;
             return true;
         }
+
         Widget widget;
         boolean valid = true;
         // Read current case from request

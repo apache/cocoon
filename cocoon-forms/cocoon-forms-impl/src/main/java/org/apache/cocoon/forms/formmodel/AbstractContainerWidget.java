@@ -29,17 +29,18 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
+public abstract class AbstractContainerWidget extends AbstractWidget
+                                              implements ContainerWidget {
 
     /**
      * List of contained widgets.
      */
     protected WidgetList widgets;
-    
+
     /**
      * validation errors on container widgets
      */
-    protected ValidationError validationError;    
+    protected ValidationError validationError;
 
     /**
      * Constructs AbstractContainerWidget
@@ -59,7 +60,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
         while(it.hasNext()) {
           ((Widget)it.next()).initialize();
         }
-        
+
         super.initialize();
     }
 
@@ -80,11 +81,11 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     public Iterator getChildren() {
         return widgets.iterator();
     }
-    
+
     public int getSize() {
         return widgets.getWidgetList().size();
     }
-    
+
     /**
      * Delegates the readFromRequest() down to the contained child-widgets.
      *

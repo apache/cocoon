@@ -54,7 +54,8 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class Field extends AbstractWidget
-                   implements ValidationErrorAware, DataWidget, SelectableWidget, ValueChangedListenerEnabled {
+                   implements ValidationErrorAware, DataWidget, SelectableWidget,
+                              ValueChangedListenerEnabled {
 
     /**
      * If the field was rendered as a suggestion-list and the user chose one of the suggestions,
@@ -66,16 +67,68 @@ public class Field extends AbstractWidget
      */
     public static final String SUGGESTED_LABEL_ATTR = "suggested-label";
 
+    /**
+     * Value state indicating that a new value has been read from the request,
+     * but has not yet been parsed.
+     */
+    protected static final int VALUE_UNPARSED = 0;
+
+    /**
+     * Value state indicating that a value has been parsed, but needs to be
+     * validated (that must occur before the value is given to the application)
+     */
+    protected static final int VALUE_PARSED = 1;
+
+    /**
+     * Value state indicating that a parse error was encountered but should not
+     * yet be displayed.
+     */
+    protected static final int VALUE_PARSE_ERROR = 2;
+
+    /**
+     * Value state indicating that validate() has been called when state was
+     * VALUE_PARSE_ERROR. This makes the error visible on output.
+     */
+    protected static final int VALUE_DISPLAY_PARSE_ERROR = 3;
+
+    /**
+     * Transient value state indicating that validation is going on.
+     *
+     * @see #validate()
+     */
+    protected static final int VALUE_VALIDATING = 4;
+
+    /**
+     * Value state indicating that validation has occured, but that any error should not
+     * yet be displayed.
+     */
+    protected static final int VALUE_VALIDATED = 5;
+
+    /**
+     * Value state indicating that value validation has occured, and the
+     * validation error, if any, should be displayed.
+     */
+    protected static final int VALUE_DISPLAY_VALIDATION = 6;
+
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
 
-    /** Overrides selection list defined in FieldDefinition, if any. */
-    protected SelectionList selectionList;
-    /** Additional listeners to those defined as part of the widget definition (if any). */
-    private ValueChangedListener listener;
 
-    private final FieldDefinition fieldDefinition;
+    /**
+     * Definition of the field.
+     */
+    private final FieldDefinition definition;
+
+    /**
+     * Overrides selection list defined in FieldDefinition, if any.
+     */
+    protected SelectionList selectionList;
+
+    /**
+     * Additional listeners to those defined as part of the widget definition (if any).
+     */
+    private ValueChangedListener listener;
 
     protected String enteredValue;
     protected Object value;
@@ -83,53 +136,8 @@ public class Field extends AbstractWidget
     protected boolean required;
 
     /**
-     * Value state indicating that a new value has been read from the request,
-     * but has not yet been parsed.
-     */
-    protected final static int VALUE_UNPARSED = 0;
-
-    /**
-     * Value state indicating that a value has been parsed, but needs to be
-     * validated (that must occur before the value is given to the application)
-     */
-    protected final static int VALUE_PARSED = 1;
-
-    /**
-     * Value state indicating that a parse error was encountered but should not
-     * yet be displayed.
-     */
-    protected final static int VALUE_PARSE_ERROR = 2;
-
-    /**
-     * Value state indicating that validate() has been called when state was
-     * VALUE_PARSE_ERROR. This makes the error visible on output.
-     */
-    protected final static int VALUE_DISPLAY_PARSE_ERROR = 3;
-
-    /**
-     * Transient value state indicating that validation is going on.
-     *
-     * @see #validate()
-     */
-    protected final static int VALUE_VALIDATING = 4;
-
-    /**
-     * Value state indicating that validation has occured, but that any error should not
-     * yet be displayed.
-     */
-    protected final static int VALUE_VALIDATED = 5;
-
-    /**
-     * Value state indicating that value validation has occured, and the
-     * validation error, if any, should be displayed.
-     */
-    protected final static int VALUE_DISPLAY_VALIDATION = 6;
-
-    // At startup, we have no value to parse (both enteredValue and value are null),
-    // but need to validate (e.g. error if field is required)
-    /**
      * Transient widget processing state indicating that the widget is currently validating
-     * (used to avoid endless loops when a validator calls getValue)
+     * (used to avoid endless loops when a validator calls getValue).
      */
     protected int valueState = VALUE_PARSED;
 
@@ -138,25 +146,32 @@ public class Field extends AbstractWidget
 
     public Field(FieldDefinition fieldDefinition) {
         super(fieldDefinition);
-        this.fieldDefinition = fieldDefinition;
-        this.listener = fieldDefinition.getValueChangedListener();
-    }
 
-    public final FieldDefinition getFieldDefinition() {
-        return this.fieldDefinition;
+        this.definition = fieldDefinition;
+        this.listener = fieldDefinition.getValueChangedListener();
+        /*
+         * At startup, we have no value to parse (both enteredValue and value are null),
+         * but still need to validate (e.g. error if field is required), so initial value
+         * is set to {@link #VALUE_PARSED}.
+         */
+        this.valueState = VALUE_PARSED;
     }
 
     public WidgetDefinition getDefinition() {
-        return this.fieldDefinition;
+        return this.definition;
+    }
+
+    public final FieldDefinition getFieldDefinition() {
+        return this.definition;
     }
 
     public void initialize() {
-        Object value = this.fieldDefinition.getInitialValue();
+        Object value = this.definition.getInitialValue();
         if (value != null) {
             setValue(value);
         }
-        this.selectionList = this.fieldDefinition.getSelectionList();
-        this.required = this.fieldDefinition.isRequired();
+        this.selectionList = this.definition.getSelectionList();
+        this.required = this.definition.isRequired();
         super.initialize();
     }
 
@@ -178,7 +193,7 @@ public class Field extends AbstractWidget
      * @since 2.1.9
      */
     public void setSuggestionLabel(String label) {
-        if (this.fieldDefinition.getSuggestionList() == null) {
+        if (this.definition.getSuggestionList() == null) {
             throw new FormsRuntimeException("Field '" + getRequestParameterName() + "' has no suggestion list.",
                                             getLocation());
         }
@@ -193,7 +208,7 @@ public class Field extends AbstractWidget
      *         if there's not suggestion list.
      */
     public String getSuggestionLabel() {
-        return (String)this.getAttribute(SUGGESTED_LABEL_ATTR);
+        return (String) getAttribute(SUGGESTED_LABEL_ATTR);
     }
 
     public Object getValue() {
@@ -278,7 +293,7 @@ public class Field extends AbstractWidget
 
         String newEnteredValue = request.getParameter(paramName);
 
-        if (this.fieldDefinition.getSuggestionList() != null) {
+        if (this.definition.getSuggestionList() != null) {
             // The Dojo ComboBox sends the typed value or the chosen item's label in the
             // request parameter and sends an additional "*_selected" parameter containing
             // the value of the chosen item (if any).
@@ -541,7 +556,7 @@ public class Field extends AbstractWidget
         }
 
         // include some info about the datatype
-        fieldDefinition.getDatatype().generateSaxFragment(contentHandler, locale);
+        definition.getDatatype().generateSaxFragment(contentHandler, locale);
     }
 
 
