@@ -190,7 +190,7 @@
       +-->
     <role name="org.apache.cocoon.portal.services.UserService"
           default-class="org.apache.cocoon.portal.services.impl.DefaultUserService"
-          shorthand="user-service"/>
+          shorthand="user-service" lazy-init="false"/>
 
   <!--+
       | Event Manager.
