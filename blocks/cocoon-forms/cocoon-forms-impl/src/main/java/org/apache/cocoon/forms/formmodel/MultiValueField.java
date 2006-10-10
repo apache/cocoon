@@ -51,7 +51,8 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class MultiValueField extends AbstractWidget
-                             implements ValidationErrorAware, SelectableWidget, DataWidget, ValueChangedListenerEnabled {
+                             implements ValidationErrorAware, SelectableWidget, DataWidget,
+                                        ValueChangedListenerEnabled {
 
     private static final String MULTIVALUEFIELD_EL = "multivaluefield";
     private static final String VALUES_EL = "values";
@@ -66,6 +67,7 @@ public class MultiValueField extends AbstractWidget
     private Object[] values;
     private ValidationError validationError;
     private ValueChangedListener listener;
+
 
     public MultiValueField(MultiValueFieldDefinition definition) {
         super(definition);
@@ -83,8 +85,9 @@ public class MultiValueField extends AbstractWidget
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isAcceptingInputs()) {
             return;
+        }
 
         enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
         invalidEnteredValue = null;
@@ -184,16 +187,20 @@ public class MultiValueField extends AbstractWidget
         }
         contentHandler.endElement(FormsConstants.INSTANCE_NS, VALUES_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALUES_EL);
 
-        // the selection list
-        if (this.selectionList != null)
-            this.selectionList.generateSaxFragment(contentHandler, locale);
-
         // validation message element
         if (validationError != null) {
             contentHandler.startElement(FormsConstants.INSTANCE_NS, VALIDATION_MSG_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(FormsConstants.INSTANCE_NS, VALIDATION_MSG_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
+
+        // the selection list
+        if (this.selectionList != null) {
+            this.selectionList.generateSaxFragment(contentHandler, locale);
+        }
+
+        // include some info about the datatype
+        definition.getDatatype().generateSaxFragment(contentHandler, locale);
     }
 
 

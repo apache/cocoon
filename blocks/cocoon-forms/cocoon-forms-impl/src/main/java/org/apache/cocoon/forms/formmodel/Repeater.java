@@ -112,7 +112,7 @@ public class Repeater extends AbstractWidget
         broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROW_ADDED, rows.size() - 1));
         return repeaterRow;
     }
-    
+
     public RepeaterRow addRow(int index) {
         RepeaterRow repeaterRow = new RepeaterRow(definition);
         if (index >= this.rows.size()) {
@@ -586,9 +586,9 @@ public class Repeater extends AbstractWidget
         public void initialize() {
             // Initialize children but don't call super.initialize() that would call the repeater's
             // on-create handlers for each row.
-            Iterator it = this.getChildren();
-            while(it.hasNext()) {
-              ((Widget)it.next()).initialize();
+            Iterator i = getChildren();
+            while (i.hasNext()) {
+                ((Widget) i.next()).initialize();
             }
         }
 
@@ -609,13 +609,13 @@ public class Repeater extends AbstractWidget
         }
 
         public void generateDisplayData(ContentHandler contentHandler)
-                throws SAXException {
+        throws SAXException {
             // this widget has its display-data generated in the context of the repeater
         }
 
         public void broadcastEvent(WidgetEvent event) {
             throw new UnsupportedOperationException("Widget " + this + " doesn't handle events.");
         }
-    }	
-    
+    }
+
 }

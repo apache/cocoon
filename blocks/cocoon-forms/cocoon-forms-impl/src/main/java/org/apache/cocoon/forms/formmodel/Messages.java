@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,19 +34,22 @@ import java.util.Iterator;
  *
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
- * 
+ *
  * @version $Id$
  */
 public class Messages extends AbstractWidget {
-    private ArrayList messages = new ArrayList();
-    private final MessagesDefinition definition;
 
     private static final String MESSAGES_EL = "messages";
     private static final String MESSAGE_EL = "message";
 
+    private final MessagesDefinition definition;
+    private ArrayList messages;
+
+
     protected Messages(MessagesDefinition definition) {
         super(definition);
         this.definition = definition;
+        this.messages = new ArrayList();
     }
 
     public WidgetDefinition getDefinition() {
@@ -87,18 +90,18 @@ public class Messages extends AbstractWidget {
         messages.add(message);
         getForm().addWidgetUpdate(this);
     }
-    
+
     /**
      * @return "messages"
      */
     public String getXMLElementName() {
         return MESSAGES_EL;
     }
-    
+
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        Iterator messagesIt = messages.iterator();
-        while (messagesIt.hasNext()) {
-            XMLizable message = (XMLizable)messagesIt.next();
+        Iterator i = messages.iterator();
+        while (i.hasNext()) {
+            XMLizable message = (XMLizable) i.next();
             contentHandler.startElement(FormsConstants.INSTANCE_NS, MESSAGE_EL, FormsConstants.INSTANCE_PREFIX_COLON + MESSAGE_EL, XMLUtils.EMPTY_ATTRIBUTES);
             message.toSAX(contentHandler);
             contentHandler.endElement(FormsConstants.INSTANCE_NS, MESSAGE_EL, FormsConstants.INSTANCE_PREFIX_COLON + MESSAGE_EL);

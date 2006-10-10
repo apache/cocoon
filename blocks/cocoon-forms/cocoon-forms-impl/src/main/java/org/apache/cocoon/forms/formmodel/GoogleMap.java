@@ -24,10 +24,13 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.xml.AttributesImpl;
-import org.xml.sax.Attributes;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+/**
+ * @version $Id$
+ */
 public class GoogleMap extends AbstractWidget   {
 
     private static final String GOOGLEMAP_FIELD_EL = "googlemap";
@@ -39,7 +42,7 @@ public class GoogleMap extends AbstractWidget   {
 
     private GoogleMapValue value;
     private final GoogleMapDefinition definition;
-    
+
 
     public GoogleMap(GoogleMapDefinition definition) {
         super(definition);
@@ -63,48 +66,43 @@ public class GoogleMap extends AbstractWidget   {
             return;
         }
 
-        GoogleMapValue oldValue = value;
-        String paramLng = formContext.getRequest().getParameter(getRequestParameterName()+"_lng");
-        String paramLat = formContext.getRequest().getParameter(getRequestParameterName()+"_lat");
-        String paramZoom = formContext.getRequest().getParameter(getRequestParameterName()+"_zoom");
-        String currentMarker = formContext.getRequest().getParameter(getRequestParameterName()+"_current");
-        String userMarkerLng = formContext.getRequest().getParameter(getRequestParameterName()+"_usermarker-lng");
-        String userMarkerLat = formContext.getRequest().getParameter(getRequestParameterName()+"_usermarker-lat");
-        
-        GoogleMapValue googleMapValue = new GoogleMapValue();
-        googleMapValue.setLng(Float.valueOf(paramLng).floatValue());
-        googleMapValue.setLat(Float.valueOf(paramLat).floatValue());
-        googleMapValue.setZoom(Integer.valueOf(paramZoom).intValue());
-        googleMapValue.setCurrentMarker(Integer.valueOf(currentMarker).intValue());
-        googleMapValue.setMarkers(this.value.getMarkers());
-        
+        final String prefix = getRequestParameterName();
+        String paramLng = formContext.getRequest().getParameter(prefix + "_lng");
+        String paramLat = formContext.getRequest().getParameter(prefix + "_lat");
+        String paramZoom = formContext.getRequest().getParameter(prefix + "_zoom");
+        String currentMarker = formContext.getRequest().getParameter(prefix + "_current");
+        String userMarkerLng = formContext.getRequest().getParameter(prefix + "_usermarker-lng");
+        String userMarkerLat = formContext.getRequest().getParameter(prefix + "_usermarker-lat");
+
+        GoogleMapValue newValue = new GoogleMapValue();
+        newValue.setLng(Float.valueOf(paramLng).floatValue());
+        newValue.setLat(Float.valueOf(paramLat).floatValue());
+        newValue.setZoom(Integer.valueOf(paramZoom).intValue());
+        newValue.setCurrentMarker(Integer.valueOf(currentMarker).intValue());
+        newValue.setMarkers(this.value.getMarkers());
+
         if (userMarkerLng != null && userMarkerLat != null) {
-            GoogleMapMarker usermarker = new GoogleMapMarker();
             try {
-                usermarker.setLng(Float.valueOf(userMarkerLng).floatValue());
-                usermarker.setLat(Float.valueOf(userMarkerLat).floatValue());
-            } catch (NumberFormatException e) {}
-            googleMapValue.setUsermarker(usermarker);
+                GoogleMapMarker marker = new GoogleMapMarker();
+                marker.setLng(Float.valueOf(userMarkerLng).floatValue());
+                marker.setLat(Float.valueOf(userMarkerLat).floatValue());
+                newValue.setUsermarker(marker);
+            } catch (NumberFormatException e) { /* ignored */ }
         }
-        
-        value = googleMapValue;
-        
+
+        GoogleMapValue oldValue = this.value;
+        value = newValue;
+
         if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
     }
-
 
     /**
      * @return "googlemap"
      */
     public String getXMLElementName() {
         return GOOGLEMAP_FIELD_EL;
-    }
-
-    protected AttributesImpl getXMLElementAttributes() {
-        AttributesImpl attrs = super.getXMLElementAttributes();
-        return attrs;
     }
 
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
@@ -114,9 +112,9 @@ public class GoogleMap extends AbstractWidget   {
         attributesImpl.addAttribute("","lat","lat","CDATA",this.value.getLat()+"");
         attributesImpl.addAttribute("","zoom","zoom","CDATA",this.value.getZoom()+"");
         attributesImpl.addAttribute("","current","current","CDATA",this.value.getCurrentMarker()+"");
-        
+
         contentHandler.startElement(FormsConstants.INSTANCE_NS, VALUE_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALUE_EL, attributesImpl);
-        
+
         // usermarker
         if (this.value.getUsermarker() != null) {
             attributesImpl = new AttributesImpl();
@@ -125,7 +123,7 @@ public class GoogleMap extends AbstractWidget   {
             contentHandler.startElement(FormsConstants.INSTANCE_NS, USERMARKER_EL, FormsConstants.INSTANCE_PREFIX_COLON + USERMARKER_EL, attributesImpl);
             contentHandler.endElement(FormsConstants.INSTANCE_NS, USERMARKER_EL, FormsConstants.INSTANCE_PREFIX_COLON + USERMARKER_EL);
         }
-        
+
         // markers
         List markers = this.value.getMarkers();
         if (markers != null) {
@@ -139,7 +137,7 @@ public class GoogleMap extends AbstractWidget   {
                 contentHandler.startElement(FormsConstants.INSTANCE_NS, MARKER_TEXT_EL, FormsConstants.INSTANCE_PREFIX_COLON + MARKER_TEXT_EL, new AttributesImpl());
                 marker.getText().toSAX(contentHandler);
                 contentHandler.endElement(FormsConstants.INSTANCE_NS, MARKER_TEXT_EL, FormsConstants.INSTANCE_PREFIX_COLON + MARKER_TEXT_EL);
-                contentHandler.endElement(FormsConstants.INSTANCE_NS, MARKER_EL, FormsConstants.INSTANCE_PREFIX_COLON + MARKER_EL);    
+                contentHandler.endElement(FormsConstants.INSTANCE_NS, MARKER_EL, FormsConstants.INSTANCE_PREFIX_COLON + MARKER_EL);
             }
             contentHandler.endElement(FormsConstants.INSTANCE_NS, MARKERS_EL, FormsConstants.INSTANCE_PREFIX_COLON + MARKERS_EL);
         }
@@ -155,7 +153,6 @@ public class GoogleMap extends AbstractWidget   {
      * (see class comment).
      */
     public void setValue(Object object) {
-        
         if (!(object instanceof GoogleMapValue)) {
             throw new RuntimeException("Cannot set value of googlemap \"" + getRequestParameterName() + "\" to a non-GoogleMapValue.");
         }
@@ -167,7 +164,7 @@ public class GoogleMap extends AbstractWidget   {
             form.addWidgetUpdate(this);
         }
     }
-    
+
     public void broadcastEvent(WidgetEvent event) {
         if (event instanceof ValueChangedEvent) {
             //
