@@ -29,11 +29,13 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @version $Id$
  */
-public abstract class AbstractModule 
+public abstract class AbstractModule
+    extends AbstractLogEnabled
     implements InputModule, Serviceable, ThreadSafe, Disposable {
 
     /** The service manager. */
