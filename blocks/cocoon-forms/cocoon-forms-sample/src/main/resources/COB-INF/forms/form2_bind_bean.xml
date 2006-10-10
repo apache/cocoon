@@ -76,7 +76,7 @@
 
     <fb:identity>
       <!-- compare to xml-binding: the convertor is not needed here -->
-      <fb:value id="id" path="@id"/>
+      <fb:value id="id" path="id"/>
     </fb:identity>
 
     <fb:on-bind>
@@ -94,9 +94,8 @@
     </fb:on-delete-row>
 
     <fb:on-insert-row>
-      <fb:insert-bean
-        classname="org.apache.cocoon.forms.samples.Contact"
-        addmethod="addContact"/>
+      <fb:insert-bean classname="org.apache.cocoon.forms.samples.Contact"
+                      addmethod="addContact"/>
     </fb:on-insert-row>
   </fb:repeater>
 
