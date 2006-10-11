@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1692" due-to="Suzan Foster" due-to-email="suzan.foster@nerocmediaware.nl">
+      Cforms: Tree widget not handling on-selection-change events correctly.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1883" due-to="Fabian Linz" due-to-email="f.linz@gmx.de">
       XSP: SOAPHelper does no longer accept only replies with an XML declaration.
     </action>
