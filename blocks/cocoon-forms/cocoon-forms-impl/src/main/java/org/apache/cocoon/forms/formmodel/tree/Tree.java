@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.formmodel.AbstractWidget;
 import org.apache.cocoon.forms.formmodel.Widget;
@@ -260,9 +261,7 @@ public class Tree extends AbstractWidget {
             if (this.expandSelectedPath) {
                 expandPath(path);
             }
-            if (this.selectionListener != null) {
-                this.selectionListener.selectionChanged(new TreeSelectionEvent(this, path, true));
-            }
+            this.getForm().addWidgetEvent(new TreeSelectionEvent(this, path, true));
         }
     }
 
@@ -281,9 +280,7 @@ public class Tree extends AbstractWidget {
         if (this.selectedPaths.remove(path)) {
             // Need to redisplay the parent
             markForRefresh(path.getParentPath());
-            if (this.selectionListener != null) {
-                this.selectionListener.selectionChanged(new TreeSelectionEvent(this, path, false));
-            }
+            this.getForm().addWidgetEvent(new TreeSelectionEvent(this, path, false));
         }
     }
 
@@ -305,9 +302,7 @@ public class Tree extends AbstractWidget {
             markForRefresh(paths[i].getParentPath());
         }
         this.selectedPaths.clear();
-        if (this.selectionListener != null) {
-            this.selectionListener.selectionChanged(new TreeSelectionEvent(this, paths, false));
-        }
+        this.getForm().addWidgetEvent(new TreeSelectionEvent(this, paths, false));
     }
 
     public void addTreeSelectionListener(TreeSelectionListener listener) {
@@ -426,6 +421,15 @@ public class Tree extends AbstractWidget {
         return null;
     }
 
+    public void broadcastEvent(WidgetEvent event) {
+       if (event instanceof TreeSelectionEvent) {
+           if (this.selectionListener != null) {
+               this.selectionListener.selectionChanged((TreeSelectionEvent)event);
+           }
+       } else {
+           super.broadcastEvent(event);
+       }
+   }
     //---------------------------------------------------------------------------------------------
     // TreeNode widget, which is the actual parent of widgets contained in a node
     //---------------------------------------------------------------------------------------------
