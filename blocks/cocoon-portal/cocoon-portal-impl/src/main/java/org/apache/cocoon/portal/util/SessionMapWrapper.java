@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * This is a wrapper for a {@link java.util.Map} storing the real map
@@ -38,10 +38,10 @@ import org.apache.cocoon.environment.Session;
 public class SessionMapWrapper implements Map {
 
     protected final String attrName;
-    protected final Context context;
+    protected final ProcessInfoProvider processInfoProvider;
 
-    public SessionMapWrapper(Context context, String attrName) {
-        this.context = context;
+    public SessionMapWrapper(ProcessInfoProvider provider, String attrName) {
+        this.processInfoProvider = provider;
         this.attrName = attrName;
     }
 
@@ -49,8 +49,8 @@ public class SessionMapWrapper implements Map {
      * Get the real map for the current user.
      */
     protected Map getRealMap(boolean create) {
-        final Request req = ContextHelper.getRequest(this.context);
-        final Session session = req.getSession(create);
+        final HttpServletRequest req = this.processInfoProvider.getRequest();
+        final HttpSession session = req.getSession(create);
         if ( session != null ) {
             Map map = (Map)session.getAttribute(this.attrName);
             if ( map != null ) {
