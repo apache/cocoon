@@ -36,9 +36,10 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.core.container.spring.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.xml.sax.InputSource;
 
 /**
@@ -54,7 +55,7 @@ public class ConfigurationReader {
     protected final Log logger = LogFactory.getLog(getClass());
 
     /** Resolver for reading configuration files. */
-    protected final PathMatchingResourcePatternResolver resolver;
+    protected final ServletContextResourcePatternResolver resolver;
 
     /** The configuration info. */
     protected final ConfigurationInfo configInfo;
@@ -115,9 +116,9 @@ public class ConfigurationReader {
     throws Exception {
         this.isRootContext = parentInfo == null;
         if ( resourceLoader != null ) {
-            this.resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+            this.resolver = new ServletContextResourcePatternResolver(resourceLoader);
         } else {
-            this.resolver = new PathMatchingResourcePatternResolver();
+            this.resolver = new ServletContextResourcePatternResolver(new DefaultResourceLoader());
         }
 
         // now add selectors from parent
