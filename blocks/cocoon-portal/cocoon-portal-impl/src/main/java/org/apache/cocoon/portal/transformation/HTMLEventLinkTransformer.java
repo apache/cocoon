@@ -127,13 +127,11 @@ extends AbstractCopletTransformer {
 
     protected void createAnchorEvent(Attributes attributes)
     throws SAXException {
-        AttributesImpl newAttributes = new AttributesImpl(attributes);
+        final CopletInstance cid = this.getCopletInstanceData();
+        final AttributesImpl newAttributes = new AttributesImpl(attributes);
         newAttributes.removeAttribute("href");
         newAttributes.removeAttribute("external");
-        String link = attributes.getValue("href");
-
-        CopletInstance cid = this.getCopletInstanceData();
-        link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), link);
+        final String link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), attributes.getValue("href"));
 
         newAttributes.addCDATAAttribute("path", this.jxPath);
         newAttributes.addCDATAAttribute("value", link);
@@ -148,12 +146,10 @@ extends AbstractCopletTransformer {
 
     protected void createFormEvent(Attributes attributes)
     throws SAXException {
-        AttributesImpl newAttributes = new AttributesImpl(attributes);
+        final CopletInstance cid = this.getCopletInstanceData();
+        final AttributesImpl newAttributes = new AttributesImpl(attributes);
         newAttributes.removeAttribute("action");
-        String link = attributes.getValue("action");
-
-        CopletInstance cid = this.getCopletInstanceData();
-        link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), link);
+        final String link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), attributes.getValue("action"));
 
         newAttributes.addCDATAAttribute("path", this.jxPath);
         newAttributes.addCDATAAttribute("value", link);

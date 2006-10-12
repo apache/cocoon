@@ -29,8 +29,8 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 
 /**
  * Utility class for Spring resource handling
@@ -81,7 +81,7 @@ public class ResourceUtils {
         if ( directoryResource.exists() ) {
             final String pattern = directoryName + "/*.properties";
 
-            final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+            final ResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
             Resource[] resources = null;
             try {
                 resources = resolver.getResources(pattern);

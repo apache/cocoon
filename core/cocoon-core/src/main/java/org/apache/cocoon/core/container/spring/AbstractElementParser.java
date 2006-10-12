@@ -34,7 +34,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.w3c.dom.Element;
 
 /**
@@ -194,7 +194,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
                                      boolean       optional)
     throws Exception {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+        ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
         final String includeURI = src;
         String directoryURI = null;
         if (includeURI == null) {
