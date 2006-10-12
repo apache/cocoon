@@ -25,7 +25,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 
 /**
  * Builder of a {@link FlowNode} instance, corresponding to a
@@ -59,7 +59,7 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
             final ResourceLoader resourceLoader = (ApplicationContext)beanFactory;
             final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
             if ( resourceLoader.getResource(scriptLocation).exists() ) {
-                final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+                final ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
                 final Resource[] resources = resolver.getResources(scriptLocation + "/*");
                 if ( resources != null ) {
                     for(int i=0; i < resources.length; i++) {
