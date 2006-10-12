@@ -45,7 +45,7 @@ import org.springframework.beans.factory.config.DestructionAwareBeanPostProcesso
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 
 /**
  * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle interfaces.
@@ -107,7 +107,7 @@ public class AvalonBeanPostProcessor
             this.logger.debug("Trying to read properties from directory: " + this.location);
         }
         final Properties mergedProps = new Properties();
-        final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+        final ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
         final Resource dirResource = resourceLoader.getResource(this.location);
 
         if ( dirResource.exists() ) {
