@@ -52,16 +52,31 @@
       <id>central</id>
       <name>Maven central repository</name>
       <url>http://repo1.maven.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+        <!-- only look for jars here when they are not present locally -->
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
     <repository>
       <id>apache.snapshot</id>
       <name>Apache Snapshot Repository</name>
-      <url>http://svn.apache.org/maven-snapshot-repository</url>
+      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+      <releases>
+        <!-- excalibur poms are located here -->
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
     <repository>
       <id>apache-cvs</id>
-      <name>Apache Maven Repository</name>
-      <url>http://svn.apache.org/repository</url>
+      <name>Apache Maven 1 Repository</name>
+      <url>http://people.apache.org/repo/m1-snapshot-repository</url>
       <layout>legacy</layout>
     </repository>
   </repositories>
