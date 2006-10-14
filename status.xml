@@ -184,6 +184,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1878">
+      Validation: Replaced references to constant declarations in
+      <code>javax.xml.XMLConstants</code>, which are not in the official API.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1692" due-to="Suzan Foster" due-to-email="suzan.foster@nerocmediaware.nl">
       Cforms: Tree widget not handling on-selection-change events correctly.
     </action>
