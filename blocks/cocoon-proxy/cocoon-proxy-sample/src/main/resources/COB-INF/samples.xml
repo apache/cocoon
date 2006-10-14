@@ -22,17 +22,13 @@
     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
-  <group name="No samples">
-    <note>There are currently no samples for this block. It will be revisited in
-          in a future version</note>
-  </group>
-
-  <!-- Samples disabled
   <group name="Web Site Syndication">
+    <!-- Sample disabled as it references xmlforms
     <sample name="Examples" href="wsproxy/">
       Demonstrates how to embed one website's functionality into another.
       Using the WebServiceProxyGenerator remote web app integration is easy.
     </sample>
+    -->
     <sample name="Virtual Portal Demo" href="cocoonhive/">
       A more sophisticated example including Amazon and OpenWiki.
       Shows how a personalized portal can be built by connecting multiple remote
@@ -40,6 +36,5 @@
       Only styling is used in addition to the proxy.
     </sample>
   </group> 
-  -->
 
 </samples>
