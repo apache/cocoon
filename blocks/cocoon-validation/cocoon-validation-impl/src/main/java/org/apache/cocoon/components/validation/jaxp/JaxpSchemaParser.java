@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.XMLConstants;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.SchemaFactory;
 
@@ -66,9 +65,9 @@ implements Configurable, ThreadSafe {
      * instance.</p>
      * 
      * <p>Grammars will be automatically detected if the {@link SchemaFactory}
-     * supports one of the {@link XMLConstants#RELAXNG_NS_URI RELAX-NG} grammar,
-     * {@link XMLConstants#W3C_XML_SCHEMA_NS_URI XML-Schema} grammar, or the
-     * {@link XMLConstants#XML_DTD_NS_URI XML-DTD} grammar.</p>
+     * supports one of the {@link Validator.GRAMMAR_RELAX_NG RELAX-NG} grammar,
+     * {@link Validator.GRAMMAR_XML_SCHEMA XML-Schema} grammar, or the
+     * {@link Validator.GRAMMAR_XML_DTD XML-DTD} grammar.</p>
      * 
      * <p>If the factory is known to support different grammars, the default
      * detection can be overridden specifying in the configuration something similar
@@ -112,13 +111,13 @@ implements Configurable, ThreadSafe {
         } else {
 
             /* Attempt to detect the languages directly using the JAXP factory */
-            if (fact.isSchemaLanguageSupported(XMLConstants.W3C_XML_SCHEMA_NS_URI)) {
+            if (fact.isSchemaLanguageSupported(Validator.GRAMMAR_XML_SCHEMA)) {
                 grammars.add(Validator.GRAMMAR_XML_SCHEMA);
             }
-            if (fact.isSchemaLanguageSupported(XMLConstants.RELAXNG_NS_URI)) {
+            if (fact.isSchemaLanguageSupported(Validator.GRAMMAR_RELAX_NG)) {
                 grammars.add(Validator.GRAMMAR_RELAX_NG);
             }
-            if (fact.isSchemaLanguageSupported(XMLConstants.XML_DTD_NS_URI)) {
+            if (fact.isSchemaLanguageSupported(Validator.GRAMMAR_XML_DTD)) {
                 grammars.add(Validator.GRAMMAR_XML_DTD);
             }
         }
