@@ -30,9 +30,7 @@
 <xsl:stylesheet 
     version="1.0" 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xf="http://apache.org/cocoon/xmlform/1.0"
-    exclude-result-prefixes="xalan"
->
+    xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 
 	<xsl:template match="document">
 		<html>
