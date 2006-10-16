@@ -23,12 +23,20 @@ import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -36,10 +44,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 /**
  * @version $Id$
  */
-public class BlockServlet extends HttpServlet {
+public class BlockServlet extends HttpServlet
+    implements ApplicationContextAware, ServletContextAware, BeanNameAware, InitializingBean, DisposableBean {
     private BlockContext blockContext;
     private String embededServletClass;
     private Servlet embededServlet;
+    private ServletContext servletContext;
+    private String beanName;
+    private ApplicationContext parentContainer;
 
     /* (non-Javadoc)
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
@@ -51,10 +63,11 @@ public class BlockServlet extends HttpServlet {
         // create a sub container that resolves paths relative to the block
         // context rather than the parent context and make it available in
         // a context attribute
-        WebApplicationContext parentContainer =
-            WebApplicationContextUtils.getRequiredWebApplicationContext(servletConfig.getServletContext());
+        if (this.parentContainer == null)
+            this.parentContainer =
+                WebApplicationContextUtils.getRequiredWebApplicationContext(servletConfig.getServletContext());
         GenericWebApplicationContext container = new GenericWebApplicationContext();
-        container.setParent(parentContainer);
+        container.setParent(this.parentContainer);
         container.setServletContext(this.blockContext);
         container.refresh();
         this.blockContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, container);
@@ -126,6 +139,18 @@ public class BlockServlet extends HttpServlet {
         this.blockContext = new BlockContext();
     }
     
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.parentContainer = applicationContext;
+    }
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
+    }
+
     public void setMountPath(String mountPath) {
         this.blockContext.setMountPath(mountPath);        
     }
@@ -157,5 +182,31 @@ public class BlockServlet extends HttpServlet {
     
     public void setConnections(Map connections) {
         this.blockContext.setConnections(connections);
+    }
+
+    public void afterPropertiesSet() throws Exception {
+
+        // Create a servlet config object based on the servlet context
+        // from the webapp container
+        ServletConfig servletConfig = new ServletConfig() {
+
+            public String getInitParameter(String parameter) {
+                return BlockServlet.this.servletContext.getInitParameter(parameter);
+            }
+
+            public Enumeration getInitParameterNames() {
+                return BlockServlet.this.servletContext.getInitParameterNames();
+            }
+
+            public ServletContext getServletContext() {
+                return BlockServlet.this.servletContext;
+            }
+
+            public String getServletName() {
+                return BlockServlet.this.beanName;
+            }
+            
+        };
+        this.init(servletConfig);
     }
 }

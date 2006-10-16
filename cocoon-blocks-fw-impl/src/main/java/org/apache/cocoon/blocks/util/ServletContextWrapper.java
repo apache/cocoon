@@ -203,9 +203,7 @@ public class ServletContextWrapper implements ServletContext {
      * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
      */
     public String getInitParameter(String path) {
-        // FIXME hack to get around problem with initalization order of blocks
-        // that makes inheritance of init parameters not necesarrily working during init
-        return this.servletContext != null ? this.servletContext.getInitParameter(path) : null;
+        return this.servletContext.getInitParameter(path);
     }
 
     /*
