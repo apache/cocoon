@@ -68,26 +68,12 @@ public class DispatcherServlet
         final Iterator i = servlets.values().iterator();
         while ( i.hasNext() ) {
             final Servlet servlet = (Servlet) i.next();
-            this.log("DispatcherServlet: initializing servlet " + servlet);
             BeanWrapperImpl wrapper = new BeanWrapperImpl(servlet);
             if (wrapper.isReadableProperty(MOUNT_PATH)) {
                 String mountPath = (String) wrapper.getPropertyValue(MOUNT_PATH);
-                this.log("DispatcherServlet: initializing servlet at " + mountPath);
+                this.log("DispatcherServlet: initializing servlet " + servlet + " at " + mountPath);
                 this.mountableServlets.put(mountPath, servlet);
-                servlet.init(super.getServletConfig());
             }
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see javax.servlet.GenericServlet#destroy()
-     */
-    public void destroy() {
-        super.destroy();
-        final Iterator i = this.mountableServlets.values().iterator();
-        while (i.hasNext()) {
-            final Servlet servlet = (Servlet) i.next();
-            servlet.destroy();
         }
     }
 
