@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1894" due-to="Geurt Wisselink" due-to-email="gwk@home.nl">
+      Databases: Added support for the SQL:XML tag in SQLTransformer.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1878">
       Validation: Replaced references to constant declarations in
       <code>javax.xml.XMLConstants</code>, which are not in the official API.

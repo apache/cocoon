@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.transformation;
 
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -32,6 +31,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -103,10 +103,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * The following DTD is valid:
  * <code>
  * &lt;!ENTITY % param "(own-connection?,(use-connection|(dburl,username,password))?,show-nr-or-rows?,doc-element?,row-element?,namespace-uri?,namespace-prefix?,clob-encoding?)"&gt;<br>
- * &lt;!ELEMENT execute-query (query,(in-parameter|out-parameter)*,execute-query?, %param;)&gt;<br>
+ * &lt;!ELEMENT execute-query (query,(in-parameter|in-xml-parameter|out-parameter)*,execute-query?, %param;)&gt;<br>
  * &lt;!ELEMENT own-connection (#PCDATA)&gt;<br>
  * &lt;!ELEMENT use-connection (#PCDATA)&gt;<br>
- * &lt;!ELEMENT query (#PCDATA | substitute-value | ancestor-value | escape-string)*&gt;<br>
+ * &lt;!ELEMENT query (#PCDATA | substitute-value | ancestor-value | escape-string| xml)*&gt;<br>
  * &lt;!ATTLIST query name CDATA #IMPLIED isstoredprocedure (true|false) "false" isupdate (true|false) "false"&gt;<br>
  * &lt;!ELEMENT substitute-value EMPTY&gt;<br>
  * &lt;!ATTLIST substitute-value name CDATA #REQUIRED&gt;<br>
@@ -114,9 +114,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * &lt;!ATTLIST ancestor-value name CDATA #REQUIRED level CDATA #REQUIRED&gt;<br>
  * &lt;!ELEMENT in-parameter EMPTY&gt;<br>
  * &lt;!ATTLIST in-parameter nr CDATA #REQUIRED type CDATA #REQUIRED&gt;<br>
+ * &lt;!ELEMENT in-xml-parameter EMPTY&gt;<br>
+ * &lt;!ATTLIST in-xml-parameter nr CDATA #REQUIRED type CDATA #REQUIRED&gt;<br>
  * &lt;!ELEMENT out-parameter EMPTY&gt;<br>
  * &lt;!ATTLIST out-parameter nr CDATA #REQUIRED name CDATA #REQUIRED type CDATA #REQUIRED&gt;<br>
  * &lt;!ELEMENT escape-string (#PCDATA)&gt;<br>
+ * &lt;!ELEMENT xml (#PCDATA)&gt;<br>
  * </code>
  * </p>
  *
@@ -133,16 +136,16 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * <p>
- * By default, CLOBs are read from the database using character stream, so that character
+ * By default, CLOBs are read from the database using getSubString, so that character
  * decoding is performed by the database. Using <code>clob-encoding</code> parameter,
  * this behavior can be overrided, so that data is read as byte stream and decoded using
  * specified character encoding.
  * </p>
  *
  * <p>
- * TODO: Support inserting of the XML data into the database without need to escape it.
- *       Can be implemented by introducing new &lt;sql:xml/&gt; tag to indicate that
- *       startSerializedXMLRecording(...) should be used.
+ * Inserting of XML data can be done by using the new sql:xml or SQL:in-xml-parameter tags.
+ * - sql:xml must be used like sql:escape-string
+ * - sql:in-xml-parameter must be used like sql:in-parameter.
  * </p>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
@@ -169,6 +172,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
     public static final String MAGIC_DBURL = "dburl";
     public static final String MAGIC_USERNAME = "username";
     public static final String MAGIC_PASSWORD = "password";
+    public static final String MAGIC_PROP = "prop";
     public static final String MAGIC_NR_OF_ROWS = "show-nr-of-rows";
     public static final String MAGIC_QUERY = "query";
     public static final String MAGIC_VALUE = "value";
@@ -183,6 +187,8 @@ public class SQLTransformer extends AbstractSAXTransformer {
     public static final String MAGIC_OUT_PARAMETER_NR_ATTRIBUTE = "nr";
     public static final String MAGIC_OUT_PARAMETER_TYPE_ATTRIBUTE = "type";
     public static final String MAGIC_ESCAPE_STRING = "escape-string";
+    public static final String MAGIC_XML = "xml";
+    public static final String MAGIC_IN_XML_PARAMETER = "in-xml-parameter";
     public static final String MAGIC_ERROR = "error";
 
     public static final String MAGIC_NS_URI_ELEMENT = "namespace-uri";
@@ -208,6 +214,8 @@ public class SQLTransformer extends AbstractSAXTransformer {
     protected static final int STATE_INSIDE_IN_PARAMETER_ELEMENT = 6;
     protected static final int STATE_INSIDE_OUT_PARAMETER_ELEMENT = 7;
     protected static final int STATE_INSIDE_ESCAPE_STRING = 8;
+    protected static final int STATE_INSIDE_XML = 9;
+    protected static final int STATE_INSIDE_IN_XML_PARAMETER_ELEMENT = 10;
 
     //
     // Configuration
@@ -586,6 +594,82 @@ public class SQLTransformer extends AbstractSAXTransformer {
         }
     }
 
+    /** &lt;xml&gt; */
+    protected void startXmlElement(Attributes attributes)
+    throws ProcessingException, SAXException {
+        switch (state) {
+            case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
+                final String value = endTextRecording();
+                if (value.length() > 0) {
+                    query.addQueryPart(value);
+                }
+                startSerializedXMLRecording( null);
+
+                state = SQLTransformer.STATE_INSIDE_XML;
+                //this.getLogger().debug("startXmlElement: ");
+                break;
+
+            default:
+                throwIllegalStateException("Not expecting a start escape-string element");
+        }
+    }
+
+    /** &lt;/xml&gt; */
+    protected void endXmlElement()
+    throws ProcessingException, SAXException {
+        switch (state) {
+            case SQLTransformer.STATE_INSIDE_XML:
+                String value = endSerializedXMLRecording();
+               //this.getLogger().debug("endXmlElement: " + value);
+                if (value.length() > 0) {
+                    value = StringEscapeUtils.escapeSql(value);
+                    query.addQueryPart(value);
+                }
+                startTextRecording();
+                state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
+                break;
+
+            default:
+                throwIllegalStateException("Not expecting a end escape-string element");
+        }
+    }
+
+    /** &lt;xml&gt; */
+    protected void startInXmlParameterElement(Attributes attributes)
+    throws ProcessingException, SAXException {
+        switch (state) {
+            case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
+                String nr = getAttributeValue(attributes, SQLTransformer.MAGIC_IN_PARAMETER_NR_ATTRIBUTE);
+                this.stack.push(nr);
+                startSerializedXMLRecording( null);
+
+                state = SQLTransformer.STATE_INSIDE_IN_XML_PARAMETER_ELEMENT;
+                //this.getLogger().debug("startXmlElement: ");
+                break;
+
+            default:
+                throwIllegalStateException("Not expecting a start escape-string element");
+        }
+    }
+
+    /** &lt;/xml&gt; */
+    protected void endInXmlParameterElement()
+    throws ProcessingException, SAXException {
+        switch (state) {
+            case SQLTransformer.STATE_INSIDE_IN_XML_PARAMETER_ELEMENT:
+                String value = endSerializedXMLRecording();
+                //this.getLogger().debug("endXmlElement: "+value);
+                if (value.length() > 0) {
+                    int position = Integer.parseInt((String)this.stack.pop());
+                    query.setInXmlParameter(position, value);
+                }
+                state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                break;
+
+            default:
+                throwIllegalStateException("Not expecting a end escape-string element");
+        }
+    }
     /** &lt;in-parameter&gt; */
     protected void startInParameterElement(Attributes attributes) {
         switch (state) {
@@ -656,6 +740,10 @@ public class SQLTransformer extends AbstractSAXTransformer {
             startOutParameterElement(attributes);
         } else if (name.equals(SQLTransformer.MAGIC_ESCAPE_STRING)) {
             startEscapeStringElement(attributes);
+        } else if (name.equals(SQLTransformer.MAGIC_XML)) {
+            startXmlElement(attributes);
+        } else if (name.equals(SQLTransformer.MAGIC_IN_XML_PARAMETER)) {
+           startInXmlParameterElement(attributes);
         } else {
             startValueElement(name);
         }
@@ -680,6 +768,10 @@ public class SQLTransformer extends AbstractSAXTransformer {
             endOutParameterElement();
         } else if (name.equals(SQLTransformer.MAGIC_ESCAPE_STRING)) {
             endEscapeStringElement();
+        } else if (name.equals(SQLTransformer.MAGIC_XML)) {
+            endXmlElement();
+        } else if (name.equals(SQLTransformer.MAGIC_IN_XML_PARAMETER)) {
+           endInXmlParameterElement();
         } else {
             endValueElement();
         }
@@ -835,17 +927,28 @@ public class SQLTransformer extends AbstractSAXTransformer {
             if (dburl != null) {
                 final String username = params.getParameter(SQLTransformer.MAGIC_USERNAME, null);
                 final String password = params.getParameter(SQLTransformer.MAGIC_PASSWORD, null);
+                final String prop = params.getParameter(SQLTransformer.MAGIC_PROP, null);
 
                 if (username == null || password == null) {
                     result = DriverManager.getConnection(dburl);
-                } else {
+                } else if (prop == null) {
                     result = DriverManager.getConnection(dburl, username, password);
-                }
+                } else {
+                    Properties props = new Properties();
+                    props.put("user", username );
+                    props.put("password", password);
+                    int proppos = prop.indexOf('=');
+                    if (proppos > 0) {
+                       String propname = prop.substring(0, proppos);
+                       String propvalue = prop.substring(proppos+1);
+                       props.put(propname, propvalue);
+                    }
+                    result = DriverManager.getConnection(dburl, props);
+               }
             } else {
                 // Nothing configured
             }
         }
-
         return result;
     }
 
@@ -941,6 +1044,9 @@ public class SQLTransformer extends AbstractSAXTransformer {
         /** Registered IN parameters */
         protected Map inParameters;
 
+        /** Registered IN XML parameters */
+        protected Map inXmlParameters;
+
         /** Registered OUT parameters */
         protected Map outParameters;
 
@@ -1030,6 +1136,13 @@ public class SQLTransformer extends AbstractSAXTransformer {
             inParameters.put(new Integer(pos), val);
         }
 
+        protected void setInXmlParameter(int pos, String val) {
+            if (inXmlParameters == null) {
+                inXmlParameters = new HashMap();
+            }
+            inXmlParameters.put(new Integer(pos), val);
+        }
+
         protected void setOutParameter(int pos, String type, String name) {
             if (outParameters == null) {
                 // make sure output parameters are ordered
@@ -1055,49 +1168,61 @@ public class SQLTransformer extends AbstractSAXTransformer {
         }
 
         private void registerInParameters() throws SQLException {
-            if (inParameters == null) {
-                return;
+            if (inParameters != null) {
+                Iterator i = inParameters.keySet().iterator();
+                while (i.hasNext()) {
+                    Integer counter = (Integer) i.next();
+                    String value = (String) inParameters.get(counter);
+                    try {
+                        pst.setObject(counter.intValue(), value);
+                    } catch (SQLException e) {
+                        getLogger().error("Caught a SQLException", e);
+                        throw e;
+                    }
+                }
             }
+        }
 
-            Iterator i = inParameters.keySet().iterator();
-            while (i.hasNext()) {
-                Integer counter = (Integer) i.next();
-                String value = (String) inParameters.get(counter);
-                try {
-                    pst.setObject(counter.intValue(), value);
-                } catch (SQLException e) {
-                    getLogger().error("Caught a SQLException", e);
-                    throw e;
+        private void registerInXmlParameters() throws SQLException {
+            if (inXmlParameters != null) {
+                Iterator i = inXmlParameters.keySet().iterator();
+                while (i.hasNext()) {
+                    Integer counter = (Integer) i.next();
+                    String value = (String) inXmlParameters.get(counter);
+                    try {
+                       pst.setString(counter.intValue(), value);
+                    } catch (SQLException e) {
+                        getLogger().error("Caught a SQLException", e);
+                        throw e;
+                    }
                 }
             }
         }
 
         private void registerOutParameters(CallableStatement cst) throws SQLException {
-            if (outParameters == null) {
-                return;
-            }
-
-            Iterator i = outParameters.keySet().iterator();
-            while (i.hasNext()) {
-                Integer counter = (Integer) i.next();
-                String type = (String) outParameters.get(counter);
-
-                int index = type.lastIndexOf(".");
-                String className, fieldName;
-                if (index == -1) {
-                    getLogger().error("Invalid SQLType: " + type, null);
-                    throw new SQLException("Invalid SQLType: " + type);
-                }
-                className = type.substring(0, index);
-                fieldName = type.substring(index + 1, type.length());
-
-                try {
-                    Class clss = Class.forName(className);
-                    Field fld = clss.getField(fieldName);
-                    cst.registerOutParameter(counter.intValue(), fld.getInt(fieldName));
-                } catch (Exception e) {
-                    // Lots of different exceptions to catch
-                    getLogger().error("Invalid SQLType: " + className + "." + fieldName, e);
+            if (outParameters != null) {
+                Iterator i = outParameters.keySet().iterator();
+                while (i.hasNext()) {
+                    Integer counter = (Integer) i.next();
+                    String type = (String) outParameters.get(counter);
+    
+                    int index = type.lastIndexOf(".");
+                    String className, fieldName;
+                    if (index == -1) {
+                        getLogger().error("Invalid SQLType: " + type, null);
+                        throw new SQLException("Invalid SQLType: " + type);
+                    }
+                    className = type.substring(0, index);
+                    fieldName = type.substring(index + 1, type.length());
+    
+                    try {
+                        Class clss = Class.forName(className);
+                        Field fld = clss.getField(fieldName);
+                        cst.registerOutParameter(counter.intValue(), fld.getInt(fieldName));
+                    } catch (Exception e) {
+                        // Lots of different exceptions to catch
+                        getLogger().error("Invalid SQLType: " + className + "." + fieldName, e);
+                    }
                 }
             }
         }
@@ -1280,6 +1405,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
             }
 
             registerInParameters();
+            registerInXmlParameters();
             boolean result = pst.execute();
             if (result) {
                 rs = pst.getResultSet();
@@ -1533,14 +1659,21 @@ public class SQLTransformer extends AbstractSAXTransformer {
             if (object instanceof Clob && this.clobEncoding != null) {
                 Clob clob = (Clob) object;
                 StringBuffer buffer = new StringBuffer();
-                InputStream is = clob.getAsciiStream();
                 try {
-                    byte[] bytes = new byte[BUFFER_SIZE];
-                    int n;
-                    while ((n = is.read(bytes)) > -1) {
-                        buffer.append(new String(bytes, 0, n, this.clobEncoding));
-                    }
-                } catch (IOException e) {
+                   int blocksize = BUFFER_SIZE;
+                   long length = clob.length();
+                   long nMax = length / blocksize;
+                   for (int n = 0; n < nMax; n++) {
+                       String sText = clob.getSubString(n*blocksize+1, blocksize);
+                       buffer.append( sText);
+                   }
+                   //Read the last block
+                   int lastblocksize = (int)length%blocksize;
+                   if (lastblocksize > 0) {
+                       String sText = clob.getSubString(nMax*blocksize+1, lastblocksize);
+                       buffer.append( sText);
+                   }
+                } catch (Exception e) {
                     throw new SQLException("Error reading stream from CLOB");
                 }
                 return buffer.toString();
