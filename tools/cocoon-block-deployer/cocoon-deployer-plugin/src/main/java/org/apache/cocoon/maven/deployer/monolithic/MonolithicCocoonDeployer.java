@@ -61,6 +61,7 @@ public class MonolithicCocoonDeployer {
             final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
             throws DeploymentException {
 
+        xwebPatcher.setLogger( logger );
         // iterate over all blocks that need to be installed into a J2EE web
         // application
         for (Iterator it = libraries.entrySet().iterator(); it.hasNext();) {
