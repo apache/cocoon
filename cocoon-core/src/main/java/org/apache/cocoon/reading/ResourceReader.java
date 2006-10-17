@@ -238,7 +238,9 @@ public class ResourceReader extends AbstractReader
         }
 
         final String systemId = (String) documents.get(request.getRequestURI());
-        if (systemId == null || inputSource.getURI().equals(systemId)) {
+        // Note: getURI() might be null in some incomplete implementations
+        final String sourceURI = inputSource.getURI();
+        if (systemId == null || (sourceURI != null && sourceURI.equals(systemId))) {
             return inputSource.getLastModified();
         }
 
