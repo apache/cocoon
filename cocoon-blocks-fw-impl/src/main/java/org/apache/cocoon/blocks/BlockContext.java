@@ -103,15 +103,19 @@ public class BlockContext extends ServletContextWrapper {
     public URL getResource(String path) throws MalformedURLException {
         if (path.length() == 0 || path.charAt(0) != '/')
             throw new MalformedURLException("The path must start with '/' " + path);
-        if (this.blockContextURL.length() != 0 && this.blockContextURL.charAt(0) != '/')
-            throw new MalformedURLException("The blockContextURL must be empty or start with '/' "
-                    + this.blockContextURL);
         
-        // prefix the path with the block context resolve and resolve in the embeding
-        // servlet context
-        path = this.blockContextURL + path;
-        
-        return super.getResource(path);
+        // HACK: allow file:/ URLs for reloading of sitemaps during development
+        if (this.blockContextURL.startsWith("file:")) {
+            return new URL(this.blockContextURL + path);
+        } else {
+            if (this.blockContextURL.length() != 0 && this.blockContextURL.charAt(0) != '/')
+                throw new MalformedURLException("The blockContextURL must be empty or start with '/' "
+                        + this.blockContextURL);
+            
+            // prefix the path with the block context resolve and resolve in the embeding
+            // servlet context
+            return super.getResource(this.blockContextURL + path);
+        }
     }
 
     /*
