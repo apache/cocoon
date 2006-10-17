@@ -34,8 +34,12 @@ import org.apache.excalibur.source.impl.AbstractSource;
 public class BlockSource extends AbstractSource {
     
     private BlockConnection blockConnection;
-
+    
     public BlockSource(String location, Logger logger) throws IOException {
+        // the systemId (returned by getURI()) is by default null
+        // using the block uri is a little bit questionable as it only is valid
+        // whithin the current block, not globally
+        setSystemId(location);
         this.blockConnection = new BlockConnection(location, logger);
         this.blockConnection.connect();
     }
