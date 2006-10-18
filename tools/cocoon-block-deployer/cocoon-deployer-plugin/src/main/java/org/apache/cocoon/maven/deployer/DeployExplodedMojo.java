@@ -19,6 +19,7 @@ package org.apache.cocoon.maven.deployer;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentBlock;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Create a web application that makes use of Cocoon blocks. In the case of a web application module, 
@@ -57,7 +58,7 @@ public class DeployExplodedMojo extends AbstractDeployMojo {
      */
     private DevelopmentProperty[] properties = new DevelopmentProperty[0];
 	
-	public void execute() throws MojoExecutionException {
+	public void execute() throws MojoExecutionException, MojoFailureException {
 		if(this.serverVersion.equals("2.2")) {
             if(this.getProject().getPackaging().equals("war")) {
                 this.deployMonolithicCocoonAppAsWebapp(this.blocksdir);

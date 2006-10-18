@@ -23,6 +23,7 @@ import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.ManifestException;
 import org.codehaus.plexus.archiver.war.WarArchiver;
@@ -75,7 +76,7 @@ public class DeployWarMojo extends AbstractDeployMojo {
      */
     private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
 
-    public void execute() throws MojoExecutionException {
+    public void execute() throws MojoExecutionException, MojoFailureException {
         File warFile = new File(outputDirectory, warName + ".war");
         this.deployMonolithicCocoonAppAsWebapp(this.blocksdir);
 
