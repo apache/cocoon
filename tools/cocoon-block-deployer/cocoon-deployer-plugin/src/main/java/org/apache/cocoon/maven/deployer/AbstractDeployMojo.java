@@ -41,6 +41,7 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.war.AbstractWarMojo;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.MavenMetadataSource;
@@ -175,7 +176,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * Deploy a monolithic Cocoon web application. This means it doesn't use the
      * features that the blocks-fw offers.
      */
-    protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir) throws MojoExecutionException {
+    protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir) throws MojoExecutionException, MojoFailureException {
         this.buildExplodedWebapp(getWebappDirectory());
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
         deployer.deploy(getBlockArtifactsAsMap(null), getWebappDirectory(), blocksdir);
@@ -183,7 +184,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         // make sure that all configuration files available in the webapp
         // override block configuration files
         try {
-            copyResources(getWarSourceDirectory(), getWebappDirectory(), getWebXml());
+            //super.copyResources(getWarSourceDirectory(), getWebappDirectory(), getWebXml());
+            super.copyResources(getWarSourceDirectory(), getWebappDirectory());
         } catch (IOException e) {
             throw new MojoExecutionException("A problem occurred while copying webapp resources.", e);
         }
@@ -200,7 +202,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * Deploy a particular block at development time.
      */
     protected void blockDeploymentMonolithicCocoon(final String blocksdir, final DevelopmentBlock[] blocks,
-            final DevelopmentProperty[] properties) throws MojoExecutionException {
+            final DevelopmentProperty[] properties) throws MojoExecutionException, MojoFailureException {
         this.buildExplodedWebapp(getWebappDirectory());
         // remove WEB-INF/classes as they are loaded by ReloadingClassloader
         // from a dirrerent location
@@ -309,9 +311,12 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     private void shieldCocoonWebapp() throws MojoExecutionException {
         String webInfSlashWebXml = "WEB-INF" + File.separatorChar + "web.xml";
 
-        String webXmlLocation = this.getWebXml();
-        if (webXmlLocation == null) {
+        File webXmlLocationFile = super.getWebXml();
+        String webXmlLocation = null;
+        if (webXmlLocationFile == null) {
             webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + webInfSlashWebXml;
+        } else {
+            webXmlLocation = webXmlLocationFile.getAbsolutePath();
         }
 
         String targetWebXmlLocation = getWebappDirectory().getAbsolutePath() + File.separatorChar + webInfSlashWebXml;
