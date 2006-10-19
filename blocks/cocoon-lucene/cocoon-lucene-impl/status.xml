@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <!DOCTYPE status [
-<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT status (developers?, todo?, changes)>
 <!ELEMENT developers (person+)>
 <!ELEMENT person EMPTY>
 <!ATTLIST person
@@ -66,8 +66,10 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1936" due-to="Jeroen Reijn" due-to-email="j.reijn@hippo.nl">
+      Add <code>analyzer</code> parameter to <code>SearchGenerator</code> as stated by the docs.
+    </action>
   </release>
  </changes>
-
 </status>
 
