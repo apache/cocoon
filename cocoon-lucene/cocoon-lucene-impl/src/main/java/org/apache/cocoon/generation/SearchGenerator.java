@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -89,9 +88,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class SearchGenerator extends ServiceableGenerator
-    implements Disposable
-{
+public class SearchGenerator extends ServiceableGenerator {
 
     /**
      * The XML namespace for the output document.
@@ -122,7 +119,6 @@ public class SearchGenerator extends ServiceableGenerator
      * Qualified name of root element of generated xml content, ie <code>search:results</code>.
      */
     protected final static String Q_RESULTS_ELEMENT = PREFIX + ":" + RESULTS_ELEMENT;
-
 
     /**
      * Attribute <code>date</code> of <code>results</code> element.
@@ -212,8 +208,6 @@ public class SearchGenerator extends ServiceableGenerator
     /**
      * Child element <code>field</code> of the <code>hit</code> element.
      * This element contains value of the stored field of a hit.
-     *
-     * @since 2.0.4
      */
     protected final static String FIELD_ELEMENT = "field";
 
@@ -280,6 +274,16 @@ public class SearchGenerator extends ServiceableGenerator
     protected final static String INDEX_PARAM_DEFAULT = "index";
 
     /**
+     * Setup parameter name of analyzer name, ie <code>analyzer</code>.
+     */
+    protected final static String ANALYZER_PARAM = "analyzer";
+
+    /**
+     * Default value of analyzer parameter <code>analyzer</code>, ie <code>org.apache.lucene.analysis.standard.StandardAnalyzer</code>.
+     */
+    protected final static String ANALYZER_PARAM_DEFAULT = "org.apache.lucene.analysis.standard.StandardAnalyzer";
+    
+    /**
      * Setup the actual query from generator parameter,
      * ie <code>query</code>.
      */
@@ -329,11 +333,6 @@ public class SearchGenerator extends ServiceableGenerator
      */
     protected final static String START_INDEX_PREVIOUS_PARAM_DEFAULT = "startPreviousIndex";
 
-    /**
-     *Description of the Field
-     *
-     * @since
-     */
     protected final static int START_INDEX_DEFAULT = 0;
 
     /**
@@ -342,21 +341,9 @@ public class SearchGenerator extends ServiceableGenerator
      */
     protected final static String PAGE_LENGTH_PARAM = "page-length";
 
-    /**
-     *Description of the Field
-     *
-     * @since
-     */
     protected final static String PAGE_LENGTH_PARAM_DEFAULT = "pageLength";
 
-    /**
-     *Description of the Field
-     *
-     * @since
-     */
     protected final static int PAGE_LENGTH_DEFAULT = 10;
-
-
 
     /**
      * Default home directory of index directories.
@@ -374,6 +361,11 @@ public class SearchGenerator extends ServiceableGenerator
      * The avalon component to use for searching.
      */
     private LuceneCocoonSearcher lcs;
+    
+    /**
+     * Analyzer used for searching
+     */
+    private String analyzer = null;
 
     /**
      * Absolute filesystem directory of lucene index directory
@@ -400,9 +392,6 @@ public class SearchGenerator extends ServiceableGenerator
      */
     private Integer pageLength = null;
 
-
-    // TODO: parameterize()
-
     /**
      * Set the current <code>ServiceManager</code> instance used by this
      * <code>Serviceable</code>.
@@ -416,10 +405,10 @@ public class SearchGenerator extends ServiceableGenerator
         this.manager.release(settings);
     }
 
+    // TODO: parameterize()
+
     /**
      * setup all members of this generator.
-     *
-     * @since
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
              throws ProcessingException, SAXException, IOException {
@@ -444,7 +433,13 @@ public class SearchGenerator extends ServiceableGenerator
         if (!index.isAbsolute()) {
             index = new File(workDir, index.toString());
         }
-
+        
+        // try to get the analyzer from the sitemap parameter
+        this.analyzer = par.getParameter(ANALYZER_PARAM, ANALYZER_PARAM_DEFAULT);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Analyzer is set to: " + this.analyzer);
+        }
+        
         // try getting the queryString from the generator sitemap params
 
         queryString = par.getParameter(QUERY_PARAM, "");
@@ -456,6 +451,10 @@ public class SearchGenerator extends ServiceableGenerator
                 queryString = request.getParameter(param_name);
             }
         }
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Search index with query: " + queryString);
+        }
+        
         // always try lookup the start index from the request params
         // get startIndex
         startIndex = null;
@@ -489,9 +488,7 @@ public class SearchGenerator extends ServiceableGenerator
      * Entry point of the ComposerGenerator.
      * The xml content is generated from the hits object.
      *
-     *
      * @exception  IOException       when there is a problem reading the from file system.
-     * @since
      * @throws  SAXException         when there is a problem creating the output SAX events.
      * @throws  ProcessingException  when there is a problem obtaining the hits
      */
@@ -517,7 +514,6 @@ public class SearchGenerator extends ServiceableGenerator
         this.contentHandler.endDocument();
     }
 
-
     /**
      * Create an Integer.
      * <p>
@@ -526,7 +522,6 @@ public class SearchGenerator extends ServiceableGenerator
      *
      * @param  s  Converting s to an Integer
      * @return    Integer converted value originating from s, or null
-     * @since
      */
     private Integer createInteger(String s) {
         Integer i = null;
@@ -541,7 +536,6 @@ public class SearchGenerator extends ServiceableGenerator
         return i;
     }
 
-
     /**
      * Build and generate the search results.
      * <p>
@@ -549,12 +543,10 @@ public class SearchGenerator extends ServiceableGenerator
      *  taking page index, and length into account.
      * </p>
      *
-     * @since
      * @throws  SAXException         when there is a problem creating the output SAX events.
      * @throws  ProcessingException  when there is a problem obtaining the hits
      */
-    private void generateResults() throws SAXException, ProcessingException {
-
+    private void generateResults() throws SAXException, ProcessingException, IOException {
         // Make the hits
         LuceneCocoonPager pager = buildHits();
 
@@ -578,12 +570,10 @@ public class SearchGenerator extends ServiceableGenerator
         contentHandler.endElement(NAMESPACE, RESULTS_ELEMENT, Q_RESULTS_ELEMENT);
     }
 
-
     /**
      * Generate the xml content of all hits
      *
      * @param  pager                 the LuceneContentPager with the search results
-     * @since
      * @throws  SAXException         when there is a problem creating the output SAX events.
      */
     private void generateHits(LuceneCocoonPager pager) throws SAXException {
@@ -599,12 +589,10 @@ public class SearchGenerator extends ServiceableGenerator
         }
     }
 
-
     /**
      * Generate the xml content for each hit.
      *
      * @param  pager                 the LuceneCocoonPager with the search results.
-     * @since
      * @throws  SAXException         when there is a problem creating the output SAX events.
      */
     private void generateHit(LuceneCocoonPager pager) throws SAXException {
@@ -647,16 +635,13 @@ public class SearchGenerator extends ServiceableGenerator
         }
     }
 
-
     /**
      * Generate the navigation element.
      *
      * @param  pager                    Description of Parameter
      * @exception  SAXException         Description of Exception
-     * @since
      */
     private void generateNavigation(LuceneCocoonPager pager) throws SAXException {
-
         if (pager != null) {
             // generate navigation element
             atts.clear();
@@ -688,28 +673,21 @@ public class SearchGenerator extends ServiceableGenerator
         }
     }
 
-
     /**
      * Build hits from a query input, and setup paging object.
      *
-     * @since
      * @throws  ProcessingException  if an error occurs
      */
-    private LuceneCocoonPager buildHits() throws ProcessingException {
-
+    private LuceneCocoonPager buildHits() throws ProcessingException, IOException {
         if (queryString != null && queryString.length() != 0) {
             Hits hits = null;
 
-            try {
-                Analyzer analyzer = LuceneCocoonHelper.getAnalyzer("org.apache.lucene.analysis.standard.StandardAnalyzer");
-                lcs.setAnalyzer(analyzer);
-                // get the directory where the index resides
-                Directory directory = LuceneCocoonHelper.getDirectory(index, false);
-                lcs.setDirectory(directory);
-                hits = lcs.search(queryString, LuceneXMLIndexer.BODY_FIELD);
-            } catch (IOException ioe) {
-                throw new ProcessingException("IOException in search", ioe);
-            }
+            Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(this.analyzer);
+            lcs.setAnalyzer(analyzer);
+            // get the directory where the index resides
+            Directory directory = LuceneCocoonHelper.getDirectory(index, false);
+            lcs.setDirectory(directory);
+            hits = lcs.search(queryString, LuceneXMLIndexer.BODY_FIELD);
 
             // wrap the hits by an pager help object for accessing only a range of hits
             LuceneCocoonPager pager = new LuceneCocoonPager(hits);
@@ -750,10 +728,7 @@ public class SearchGenerator extends ServiceableGenerator
         this.startIndex = null;
         this.pageLength = null;
         this.index = null;
+        this.analyzer = null;
     }
 
-    public void dispose() {
-        super.dispose();
-    }
 }
-
