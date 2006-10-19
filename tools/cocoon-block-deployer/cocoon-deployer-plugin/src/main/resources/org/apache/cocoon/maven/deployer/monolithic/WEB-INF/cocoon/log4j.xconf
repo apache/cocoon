@@ -31,7 +31,7 @@
     </appender>
 
     <root>
-      <priority value="error"/>
+      <priority value="${org.apache.cocoon.log4j.loglevel}"/>
       <appender-ref ref="COCOON_DEFAULT" />
     </root>
 </log4j:configuration>
