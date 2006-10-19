@@ -37,6 +37,7 @@ public class DevelopmentBlock {
     public String sitemapAdditionsConfPath;
     public String targetClassesPath;
     public String cobInfPath;
+    public String propsPath;
     public String xPatchPath;
 
     public void setLocalPath(String localPath) throws FileNotFoundException {
@@ -51,6 +52,7 @@ public class DevelopmentBlock {
         xPatchPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/xpatch"));
         targetClassesPath = checkDir(new File(localPath, "target/classes"));
         cobInfPath = checkDir(new File(localPath, RESOURCES_DIR + "COB-INF"));
+        propsPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/properties"));
     }
 
     private String checkDir(File dir) {
