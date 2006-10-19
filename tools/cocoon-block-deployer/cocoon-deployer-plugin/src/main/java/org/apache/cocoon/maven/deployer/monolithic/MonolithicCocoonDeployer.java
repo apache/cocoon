@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.apache.cocoon.maven.deployer.utils.CopyUtils;
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Deploy blocks to a monolithic Cocoon web application. The files contained by
@@ -61,6 +63,7 @@ public class MonolithicCocoonDeployer {
             final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
             throws DeploymentException {
 
+        
         xwebPatcher.setLogger( logger );
         // iterate over all blocks that need to be installed into a J2EE web
         // application
@@ -138,6 +141,23 @@ public class MonolithicCocoonDeployer {
                             throw new DeploymentException("Can't process patch file '" + currentFile.getAbsolutePath()
                                     + "'.", e);
                         }
+                    }
+                }
+                if( currentBlock.propsPath != null ) {
+                    URI uri = null;
+                    try {
+                        uri = new URI(currentBlock.propsPath);
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException("should not happen", e);
+                    }
+
+                    final File sourceDir = new File(uri);
+                    final File destDir = new File(basedir, "WEB-INF/cocoon/properties");
+                    this.logger.info( "Copying properties from '" + sourceDir.getPath() + "' ('"+currentBlock.propsPath+"') to '" + destDir.getPath() + "'" );
+                    try {
+                        org.apache.commons.io.FileUtils.copyDirectory( sourceDir, destDir);
+                    } catch (IOException e) {
+                        throw new DeploymentException("Cannot copy properties from '" + sourceDir.getPath() + "'", e);
                     }
                 }
             }
