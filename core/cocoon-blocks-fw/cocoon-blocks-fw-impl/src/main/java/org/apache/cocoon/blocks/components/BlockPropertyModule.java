@@ -35,7 +35,7 @@ public class BlockPropertyModule implements InputModule, ThreadSafe {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        return BlockCallStack.getCurrentBlockContext().getInitParameter(name);
+        return BlockCallStack.getBaseBlockContext().getInitParameter(name);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
