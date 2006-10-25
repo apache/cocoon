@@ -378,22 +378,22 @@ public class BlockContext extends ServletContextWrapper {
             RequestDispatcher dispatcher =
                 this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
             if (dispatcher != null) {
-                if (!this.superCall) {
-                    try {
+                try {
+                    if (!this.superCall) {
                         // It is important to set the current block each time
                         // a new block is entered, this is used for the block
                         // protocol
                         BlockCallStack.enterBlock(this.context);
-                        dispatcher.forward(request, response);
-                    } finally {
-                        BlockCallStack.leaveBlock();
-                    }
-                } else {
-                    // A super block should be called in the context of
-                    // the called block to get polymorphic calls resolved
-                    // in the right way. Therefore no new current block is
-                    // set.
+                    } else {
+                        // A super block should be called in the context of
+                        // the called block to get polymorphic calls resolved
+                        // in the right way. We still need to register the
+                        // current context for resolving super calls relative it.
+                        BlockCallStack.enterSuperBlock(this.context);
+                    }                        
                     dispatcher.forward(request, response);
+                } finally {
+                    BlockCallStack.leaveBlock();
                 }
             } else {
                 // Cannot happen
