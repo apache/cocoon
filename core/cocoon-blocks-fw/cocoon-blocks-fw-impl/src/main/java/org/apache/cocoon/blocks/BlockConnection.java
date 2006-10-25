@@ -130,8 +130,8 @@ public final class BlockConnection
         String scheme = uri.getScheme();
 
         this.logger.debug("BlockSource: resolving " + uri.toString() + " with scheme " +
-                uri.getScheme() + " and ssp " + uri.getSchemeSpecificPart());
-        uri = new URI(uri.getSchemeSpecificPart());
+                uri.getScheme() + " and ssp " + uri.getRawSchemeSpecificPart());
+        uri = new URI(uri.getRawSchemeSpecificPart());
         this.logger.debug("BlockSource: resolved to " + uri.toString());
         
         this.blockName = uri.getScheme();
