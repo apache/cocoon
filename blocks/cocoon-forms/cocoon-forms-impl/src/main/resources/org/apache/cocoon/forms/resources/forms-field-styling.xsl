@@ -735,9 +735,27 @@
 
   <!--+
       | fi:group - has no visual representation by default
+      | If the fi:group contains an id and has only one child that is not in the fi: namespace,
+      | then copy the id to the child. This is needed for ajax when grouping is just used to group
+      | widgets. 
       +-->
+  <xsl:template match="fi:group[@id and count(*) = 1 and not(fi:*)]">
+    <xsl:apply-templates mode="copy-parent-id"/>
+  </xsl:template>
+
   <xsl:template match="fi:group">
     <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="*" mode="copy-parent-id">
+    <xsl:copy>
+      <!-- do not override id if already specified, else use parent id -->
+      <xsl:if test="not(@id)">
+        <xsl:attribute name="id"><xsl:value-of select="../@id"/></xsl:attribute>
+      </xsl:if>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates/>
+    </xsl:copy>
   </xsl:template>
 
   <xsl:template match="@*|node()" priority="-1">
