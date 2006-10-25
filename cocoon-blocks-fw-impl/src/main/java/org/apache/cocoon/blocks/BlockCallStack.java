@@ -31,6 +31,16 @@ public class BlockCallStack {
 
     /** The block stack */
     private static final ThreadLocal blockStack = new ThreadLocal();
+    
+    /** Keep track on if it is an ordinary or a super call */
+    private static class BlockCallStackInfo {
+        public BlockCallStackInfo(ServletContext servletContext, boolean superCall) {
+            this.servletContext = servletContext;
+            this.superCall = superCall;
+        }
+        public ServletContext servletContext;
+        public boolean superCall;
+    };
 
     /**
      * This hook must be called each time a block is entered.
@@ -42,6 +52,24 @@ public class BlockCallStack {
      */
     public static void enterBlock(ServletContext context)
     throws ServletException {
+        enterBlock(context, false);
+    }
+
+    /**
+     * This hook must be called each time a super block is entered.
+     *
+     * <p>This method should never raise an exception, except when the
+     * parameters are not set!</p>
+     *
+     * @throws ServletException if block is null
+     */
+    public static void enterSuperBlock(ServletContext context)
+    throws ServletException {
+        enterBlock(context, true);
+    }
+
+    private static void enterBlock(ServletContext context, boolean superCall)
+    throws ServletException {
         if (null == context) {
             throw new ServletException("Block is not set.");
         }
@@ -51,7 +79,8 @@ public class BlockCallStack {
             stack = new Stack();
             blockStack.set(stack);
         }
-        stack.push(context);
+        BlockCallStackInfo info = new BlockCallStackInfo(context, superCall);
+        stack.push(info);
     }
 
     /**
@@ -65,10 +94,32 @@ public class BlockCallStack {
         stack.pop();
     }
 
+    /**
+     * Use this method for getting the context that should be used for
+     * resolving a polymorphic block protocol call 
+     * @return a servlet context
+     */
+    public static ServletContext getBaseBlockContext() {
+        final Stack stack = (Stack)blockStack.get();
+        if (stack != null) {
+            for(int i = stack.size() - 1; i >= 0; i--) {
+                BlockCallStackInfo info = (BlockCallStackInfo) stack.elementAt(i);
+                if (!info.superCall)
+                    return info.servletContext;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Use this method for getting the context that should be used for
+     * resolving a block protocol call to a super block 
+     * @return a servlet context
+     */
     public static ServletContext getCurrentBlockContext() {
         final Stack stack = (Stack)blockStack.get();
         if (stack != null && !stack.isEmpty()) {
-                return (ServletContext)stack.peek();
+            return ((BlockCallStackInfo)stack.peek()).servletContext;
         }
         return null;
     }
