@@ -68,10 +68,6 @@ public final class BlockConnection
 
         this.logger = logger;
         
-        this.context = BlockCallStack.getCurrentBlockContext();
-        if (this.context == null)
-            throw new MalformedURLException("Must be used in a block context " + url);
-
         URI blockURI = null;
         try {
             blockURI = parseBlockURI(new URI(url.toString()));
@@ -79,6 +75,16 @@ public final class BlockConnection
             throw new MalformedURLException("Malformed URI in block source " +
                                             e.getMessage());
         }
+
+        // Super calls are resolved relative the current context and ordinary
+        // calls relative the last non super call in the call chain
+        if (BlockContext.SUPER.equals(this.blockName))
+            this.context = BlockCallStack.getCurrentBlockContext();
+        else
+            this.context = BlockCallStack.getBaseBlockContext();
+        
+        if (this.context == null)
+            throw new MalformedURLException("Must be used in a block context " + url);
 
         this.request = new BlockCallHttpServletRequest(blockURI);
         this.response = new BlockCallHttpServletResponse();
