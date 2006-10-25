@@ -41,7 +41,7 @@ public class BlockPathModule implements InputModule, ThreadSafe {
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
         Environment env = EnvironmentHelper.getCurrentEnvironment();
-        BlockContext blockContext = (BlockContext) BlockCallStack.getCurrentBlockContext();
+        BlockContext blockContext = (BlockContext) BlockCallStack.getBaseBlockContext();
         String absoluteURI = null;
         /* No relative block paths yet
         String baseURI = env.getURIPrefix();
