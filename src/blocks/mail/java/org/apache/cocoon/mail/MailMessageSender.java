@@ -68,14 +68,14 @@ import java.util.Properties;
  * <tr><th>smtp-password</th><td>Password for authentication</td><td>opt</td><td>String</td></tr>
  * </tbody></table>
  *
+ * @since 2.1
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @since 2.1
- * @version CVS $Id$
+ * @version $Id$
  */
-public class MailMessageSender
-        extends AbstractLogEnabled
-        implements MailSender, Configurable, Serviceable, Initializable, Component {
+public class MailMessageSender extends AbstractLogEnabled
+                               implements MailSender, Configurable, Serviceable,
+                                          Initializable, Component {
 
     private ServiceManager manager;
 
@@ -104,10 +104,10 @@ public class MailMessageSender
      * @since 2.1
      */
     private static class Attachment {
-        private Object obj = null;
-        private String type = null;
-        private String name = null;
-        protected boolean isURL = false;
+        private Object obj;
+        private String type;
+        private String name;
+        protected boolean isURL;
 
         /**
          * Create a new attachment object encapsulating obj.
@@ -139,10 +139,12 @@ public class MailMessageSender
             this.type = type;
             this.name = name;
             this.isURL = isURI;
-            if (isNullOrEmpty(this.type))
+            if (isNullOrEmpty(this.type)) {
                 this.type = null;
-            if (isNullOrEmpty(this.name))
+            }
+            if (isNullOrEmpty(this.name)) {
                 this.name = null;
+            }
         }
 
         /**
@@ -151,7 +153,7 @@ public class MailMessageSender
          * @return true if str is null, empty string, or equals "null"
          */
         private boolean isNullOrEmpty(String str) {
-            return (str == null || "".equals(str) || "null".equals(str));
+            return str == null || "".equals(str) || "null".equals(str);
         }
 
         /**
@@ -188,6 +190,7 @@ public class MailMessageSender
         }
     }
 
+
     public MailMessageSender() {
     }
 
@@ -209,7 +212,7 @@ public class MailMessageSender
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     * @see Parameterizable#parameterize(Parameters)
      */
     public void configure(Configuration config) throws ConfigurationException {
         this.smtpHost = config.getChild("smtp-host").getValue(null);
@@ -218,7 +221,7 @@ public class MailMessageSender
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     * @see Initializable#initialize()
      */
     public void initialize() {
         initSession();
@@ -259,7 +262,6 @@ public class MailMessageSender
         setSmtpHost(hostname);
     }
 
-
     /**
      * Assemble the message from the defined fields and send it.
      * @throws AddressException when problems with email addresses are found
@@ -270,7 +272,7 @@ public class MailMessageSender
         try {
             resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
             doSend(resolver);
-        } catch(ServiceException se) {
+        } catch (ServiceException se) {
             throw new CascadingRuntimeException("Cannot get Source Resolver to send mail", se);
         } finally {
             this.manager.release(resolver);
@@ -357,18 +359,15 @@ public class MailMessageSender
         try {
             if (this.attachments.isEmpty()) {
                 if (this.src != null) {
-                    DataSource ds = null;
+                    SourceDataSource ds = null;
 
                     Source source = resolver.resolveURI(this.src);
                     sourcesList.add(source);
                     if (source.exists()) {
-                        ds =
-                            new SourceDataSource(
-                                source,
-                                (this.srcMimeType == null
-                                    ? source.getMimeType()
-                                    : this.srcMimeType),
-                                this.src.substring(this.src.lastIndexOf('/') + 1));
+                        ds = new SourceDataSource(source,
+                                                  this.srcMimeType == null? source.getMimeType(): this.srcMimeType,
+                                                  this.src.substring(this.src.lastIndexOf('/') + 1));
+                        ds.enableLogging(getLogger());
                     }
 
                     message.setDataHandler(new DataHandler(ds));
@@ -387,18 +386,15 @@ public class MailMessageSender
                 message.setContent(multipart);
 
                 if (this.src != null) {
-                    DataSource ds = null;
+                    SourceDataSource ds = null;
 
                     Source source = resolver.resolveURI(this.src);
                     sourcesList.add(source);
                     if (source.exists()) {
-                        ds =
-                            new SourceDataSource(
-                                source,
-                                (this.srcMimeType == null
-                                    ? source.getMimeType()
-                                    : this.srcMimeType),
-                                this.src.substring(this.src.lastIndexOf('/') + 1));
+                        ds = new SourceDataSource(source,
+                                                  this.srcMimeType == null? source.getMimeType(): this.srcMimeType,
+                                                  this.src.substring(this.src.lastIndexOf('/') + 1));
+                        ds.enableLogging(getLogger());
                     }
 
                     bodypart.setDataHandler(new DataHandler(ds));
@@ -411,25 +407,23 @@ public class MailMessageSender
                 for (Iterator i = this.attachments.iterator(); i.hasNext();) {
                     a = (Attachment) i.next();
                     DataSource ds = null;
+
                     if (a.isURL) {
                         String name = (String) a.getObject();
                         Source src = resolver.resolveURI(name);
                         sourcesList.add(src);
                         if (src.exists()) {
-                            ds =
-                                new SourceDataSource(
-                                    src,
-                                    a.getType(src.getMimeType()),
-                                    a.getName(name.substring(name.lastIndexOf('/') + 1)));
+                            ds = new SourceDataSource(src,
+                                                      a.getType(src.getMimeType()),
+                                                      a.getName(name.substring(name.lastIndexOf('/') + 1)));
+                            ((SourceDataSource) ds).enableLogging(getLogger());
                         }
                     } else {
                         if (a.getObject() instanceof Part) {
                             Part part = (Part) a.getObject();
-                            ds =
-                                new FilePartDataSource(
-                                    part,
-                                    a.getType(part.getMimeType()),
-                                    a.getName(part.getUploadName()));
+                            ds = new FilePartDataSource(part,
+                                                        a.getType(part.getMimeType()),
+                                                        a.getName(part.getUploadName()));
                         } else {
                             // TODO: other classes?
                             throw new AddressException("Not yet supported: " + a.getObject());

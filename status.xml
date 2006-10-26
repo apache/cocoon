@@ -184,6 +184,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="fix">
+      Mail: Log exceptions from mail attachments - JavaMail does not preserve
+      cause exception.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1936" due-to="Jeroen Reijn" due-to-email="j.reijn@hippo.nl">
       Lucene: Add <code>analyzer</code> parameter to <code>SearchGenerator</code>
       as stated by the docs.
@@ -196,7 +200,7 @@
       <code>javax.xml.XMLConstants</code>, which are not in the official API.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1692" due-to="Suzan Foster" due-to-email="suzan.foster@nerocmediaware.nl">
-      Cforms: Tree widget not handling on-selection-change events correctly.
+      CForms: Tree widget not handling on-selection-change events correctly.
     </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1883" due-to="Fabian Linz" due-to-email="f.linz@gmx.de">
       XSP: SOAPHelper does no longer accept only replies with an XML declaration.
@@ -205,19 +209,22 @@
       Updated commons-lang to 2.2 and bsf to 2.4.0.
     </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1900" due-to="Gabriele Columbro" due-to-email="columbro@gmail.com">
-      CForms: Add a <code>name</code> attribute to a booleanfield in output mode to make it easily accessible in JavaScript.
+      CForms: Add a <code>name</code> attribute to a booleanfield in output mode to
+      make it easily accessible in JavaScript.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1867" due-to="Gabriele Columbro" due-to-email="columbro@gmail.com">
-      Cforms: BeanConvertor uses a WeakHashMap in the wrong way.
+      CForms: BeanConvertor uses a WeakHashMap in the wrong way.
     </action>
     <action dev="AG" type="fix" due-to="Christofer Dutz" due-to-email="christofer.dutz@univativ.de">
       AJAX: Fix cocoon suggest sample.
     </action>
     <action dev="AG" type="update">
-      Deprecate method org.apache.cocoon.components.flow.FlowHelper.unwrap(Object). This method will be removed in 2.2 release. Use org.apache.cocoon.components.flow.util.PipelineUtil.unwrap(Object) instead.
+      Deprecate method org.apache.cocoon.components.flow.FlowHelper.unwrap(Object).
+      This method will be removed in 2.2 release. Use org.apache.cocoon.components.flow.util.PipelineUtil.unwrap(Object) instead.
     </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1196">
-      XSP: Use namespace-uri and not the namespace-prefix to select parameters in logicsheet-util.xsl.
+      XSP: Use namespace-uri and not the namespace-prefix to select parameters
+      in logicsheet-util.xsl.
     </action>
     <action dev="VG" type="fix" fixes-bug="COCOON-1462">
       Databases: Check for null LOBs.

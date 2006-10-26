@@ -19,9 +19,9 @@ package org.apache.cocoon.mail.datasource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import javax.activation.DataSource;
 
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
 
 /**
@@ -33,9 +33,10 @@ import org.apache.excalibur.source.Source;
  * @see javax.activation.DataSource
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class SourceDataSource implements DataSource {
+public class SourceDataSource extends AbstractLogEnabled
+                              implements DataSource {
     private Source src;
     private String contentType;
     private String name;
@@ -56,8 +57,12 @@ public class SourceDataSource implements DataSource {
         this.src = src;
         this.contentType = type;
         this.name = name;
-        if (isNullOrEmpty(this.name)) this.name = null;
-        if (isNullOrEmpty(this.contentType)) this.contentType = null;
+        if (isNullOrEmpty(this.name)) {
+            this.name = null;
+        }
+        if (isNullOrEmpty(this.contentType)) {
+            this.contentType = null;
+        }
     }
 
     /**
@@ -66,7 +71,7 @@ public class SourceDataSource implements DataSource {
      * @return true if str is null, empty string, or equals "null"
      */
      private boolean isNullOrEmpty(String str) {
-         return (str == null || "".equals(str) || "null".equals(str));
+         return str == null || "".equals(str) || "null".equals(str);
      }
 
     /**
@@ -81,10 +86,12 @@ public class SourceDataSource implements DataSource {
         if (this.contentType != null) {
             return this.contentType;
         }
+
         String mimeType = src.getMimeType();
         if (isNullOrEmpty(mimeType)) {
             mimeType = "application/octet-stream";
         }
+
         return mimeType;
     }
 
@@ -96,7 +103,15 @@ public class SourceDataSource implements DataSource {
      * @see org.apache.excalibur.source.Source#getInputStream()
      */
     public InputStream getInputStream() throws IOException {
-        return src.getInputStream();
+        try {
+            return src.getInputStream();
+        } catch (IOException e) {
+            // Sun's SMTPTransport looses cause exception. Log it now.
+            if (getLogger() != null) {
+                getLogger().warn("Unable to obtain input stream for '" + src.getURI() + "'", e);
+            }
+            throw e;
+        }
     }
 
     /**
@@ -111,9 +126,10 @@ public class SourceDataSource implements DataSource {
         if (this.name != null){
             return this.name;
         }
+
         String name = src.getURI();
         name = name.substring(name.lastIndexOf('/') + 1);
-        return ("".equals(name)? "attachment" : name);
+        return "".equals(name)? "attachment" : name;
     }
 
     /**
