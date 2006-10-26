@@ -383,7 +383,7 @@
             <collections>
               <collection>
                 <name>cdocs-site-main</name>
-                <path>/</path>
+                <path></path>
               </collection>
               <collection>
                 <name>cdocs-site-blocks</name>
