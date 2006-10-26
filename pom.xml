@@ -375,7 +375,7 @@
           <artifactId>daisy-maven-plugin</artifactId>
           <version>1.0.0-SNAPSHOT</version>
           <configuration>
-            <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
+            <repoUrl>http://localhost:9263</repoUrl>
             <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
             <daisyServerId>cocoon-daisy</daisyServerId>
             <cleanSiteXml>true</cleanSiteXml>
@@ -449,7 +449,7 @@
                 <name>cdocs-template</name>
                 <path>blocks/template/1.0/</path>
               </collection>
-			<collection>
+			        <collection>
                 <name>cdocs-fop</name>
                 <path>blocks/fop/1.0/</path>
               </collection>
