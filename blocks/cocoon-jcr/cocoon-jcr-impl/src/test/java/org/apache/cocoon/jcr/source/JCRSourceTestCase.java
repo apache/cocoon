@@ -35,7 +35,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * @version $Id$
@@ -46,6 +45,9 @@ public class JCRSourceTestCase extends ContainerTestCase {
 
     private File tempDir;
 
+    /**
+     * @see org.apache.cocoon.core.container.ContainerTestCase#addContext(org.apache.avalon.framework.context.DefaultContext)
+     */
     protected void addContext(DefaultContext context) {
         super.addContext(context);
         // Create a temp file
@@ -67,6 +69,9 @@ public class JCRSourceTestCase extends ContainerTestCase {
         context.put("object-model", Collections.EMPTY_MAP);
     }
 
+    /**
+     * @see org.apache.cocoon.core.container.ContainerTestCase#setUp()
+     */
     protected void setUp() throws Exception {
         super.setUp();
         resolver = (SourceResolver)getManager().lookup(SourceResolver.ROLE);
@@ -97,6 +102,9 @@ public class JCRSourceTestCase extends ContainerTestCase {
         file.delete();
     }
 
+    /**
+     * @see org.apache.cocoon.core.container.ContainerTestCase#tearDown()
+     */
     protected void tearDown() throws Exception {
         super.tearDown();
         deleteFile(tempDir);
