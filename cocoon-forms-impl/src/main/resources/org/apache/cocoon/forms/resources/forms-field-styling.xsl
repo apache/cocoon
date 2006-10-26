@@ -749,10 +749,7 @@
 
   <xsl:template match="*" mode="copy-parent-id">
     <xsl:copy>
-      <!-- do not override id if already specified, else use parent id -->
-      <xsl:if test="not(@id)">
-        <xsl:attribute name="id"><xsl:value-of select="../@id"/></xsl:attribute>
-      </xsl:if>
+      <xsl:attribute name="id"><xsl:value-of select="../@id"/></xsl:attribute>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates/>
     </xsl:copy>
