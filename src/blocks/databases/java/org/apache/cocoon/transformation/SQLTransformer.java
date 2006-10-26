@@ -17,6 +17,7 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -28,13 +29,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -44,15 +45,17 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.TextRecorder;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -1205,7 +1208,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
                 while (i.hasNext()) {
                     Integer counter = (Integer) i.next();
                     String type = (String) outParameters.get(counter);
-    
+
                     int index = type.lastIndexOf(".");
                     String className, fieldName;
                     if (index == -1) {
@@ -1214,7 +1217,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
                     }
                     className = type.substring(0, index);
                     fieldName = type.substring(index + 1, type.length());
-    
+
                     try {
                         Class clss = Class.forName(className);
                         Field fld = clss.getField(fieldName);
@@ -1659,21 +1662,14 @@ public class SQLTransformer extends AbstractSAXTransformer {
             if (object instanceof Clob && this.clobEncoding != null) {
                 Clob clob = (Clob) object;
                 StringBuffer buffer = new StringBuffer();
+                InputStream is = clob.getAsciiStream();
                 try {
-                   int blocksize = BUFFER_SIZE;
-                   long length = clob.length();
-                   long nMax = length / blocksize;
-                   for (int n = 0; n < nMax; n++) {
-                       String sText = clob.getSubString(n*blocksize+1, blocksize);
-                       buffer.append( sText);
-                   }
-                   //Read the last block
-                   int lastblocksize = (int)length%blocksize;
-                   if (lastblocksize > 0) {
-                       String sText = clob.getSubString(nMax*blocksize+1, lastblocksize);
-                       buffer.append( sText);
-                   }
-                } catch (Exception e) {
+                    byte[] bytes = new byte[BUFFER_SIZE];
+                    int n;
+                    while ((n = is.read(bytes)) > -1) {
+                        buffer.append(new String(bytes, 0, n, this.clobEncoding));
+                    }
+                } catch (IOException e) {
                     throw new SQLException("Error reading stream from CLOB");
                 }
                 return buffer.toString();
