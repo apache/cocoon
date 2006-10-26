@@ -35,10 +35,6 @@
   <version>2-SNAPSHOT</version>
   <name>Cocoon Distributions [modules]</name>
 
-  <modules>
-    <module>cocoon-dist-samples</module>
-  </modules>
-
   <profiles>
     <profile>
       <id>alldists</id>
@@ -49,6 +45,7 @@
       </activation>
       <modules>
         <module>cocoon-dist-publishing</module>
+        <module>cocoon-dist-samples</module>
       </modules>
     </profile>
   </profiles>
