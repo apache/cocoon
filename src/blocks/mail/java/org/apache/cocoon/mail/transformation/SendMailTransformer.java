@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *     &lt;from&gt;sender@localhost&lt;/from&gt;
  *  &lt;/map:transformer&gt;
  *  </pre>
- * 
+ *
  * where
  *  <ul>
  *   <li>
@@ -117,7 +117,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   </li>
  *  </ul>
  * </p>
- * 
+ *
  * <p>
  *   More configurations can be made in a specific configuration file, which
  *   can be retrieved with a
@@ -151,7 +151,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   </li>
  *  </ul>
  * </p>
- * 
+ *
  * <p>
  *  Input document sample:
  *  <pre>
@@ -590,20 +590,17 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         multipart.addBodyPart(messageBodyPart);
 
         // process attachments
-        Iterator iterAtt = this.attachments.iterator();
-
-        while (iterAtt.hasNext()) {
-            AttachmentDescriptor aD = (AttachmentDescriptor) iterAtt.next();
+        Iterator i = this.attachments.iterator();
+        while (i.hasNext()) {
+            AttachmentDescriptor aD = (AttachmentDescriptor) i.next();
             messageBodyPart = new MimeBodyPart();
 
             if (!aD.isTextContent()) {
-                Source inputSource = null;
-                DataSource dataSource = null;
-
-                inputSource = resolver.resolveURI(aD.isURLSource() ? aD.strAttrSrc : aD.strAttrFile);
+                Source inputSource = resolver.resolveURI(aD.isURLSource() ? aD.strAttrSrc : aD.strAttrFile);
                 this.usedSources.add(inputSource);
 
-                dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
+                DataSource dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
+                ((SourceDataSource) dataSource).enableLogging(getLogger());
 
                 messageBodyPart.setDataHandler(new DataHandler(dataSource));
             } else {
