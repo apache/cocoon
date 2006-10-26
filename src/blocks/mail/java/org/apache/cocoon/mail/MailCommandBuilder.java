@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  *
  * @author Bernhard Huber
  * @since 28. Dezember 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MailCommandBuilder extends AbstractLogEnabled {
 
@@ -94,7 +94,7 @@ public class MailCommandBuilder extends AbstractLogEnabled {
         Class clazz = (Class)cmdMap.get( cmd );
         return clazz;
     }
-    
+
     /**
      * test if command is mapped to a Command class
      *
@@ -104,11 +104,11 @@ public class MailCommandBuilder extends AbstractLogEnabled {
     public boolean isCommandMapped( String cmd ) {
         return cmdMap.containsKey( cmd );
     }
-    
+
     /**
      *  configure the cmd to mail command class mapping.
      *  <p>
-     *    New commands are registered here. A command name is associated with 
+     *    New commands are registered here. A command name is associated with
      *    each command class.
      *  </p>
      */
@@ -125,4 +125,3 @@ public class MailCommandBuilder extends AbstractLogEnabled {
     }
 
 }
-

@@ -100,8 +100,6 @@ public class MailMessageSender extends AbstractLogEnabled
 
     /**
      * Helper class for attachment data.
-     * @author haul
-     * @since 2.1
      */
     private static class Attachment {
         private Object obj;
