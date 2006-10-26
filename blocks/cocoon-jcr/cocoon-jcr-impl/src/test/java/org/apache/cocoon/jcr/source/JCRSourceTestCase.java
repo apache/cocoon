@@ -17,6 +17,7 @@
 package org.apache.cocoon.jcr.source;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceSelector;
 
 import org.apache.cocoon.core.container.ContainerTestCase;
@@ -45,7 +46,7 @@ public class JCRSourceTestCase extends ContainerTestCase {
 
     private File tempDir;
 
-    protected void addContext(Map context) {
+    protected void addContext(DefaultContext context) {
         super.addContext(context);
         // Create a temp file
         try {
