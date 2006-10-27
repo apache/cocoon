@@ -16,13 +16,29 @@
  */
 package org.apache.cocoon.portal.event.aspect;
 
+import org.apache.cocoon.portal.event.EventManager;
+
 /**
+ * An event aspect can be used to extend the functionality of an {@link EventManager}
+ * without the need to change the current implementation of the event manager.
+ *
+ * Each event manager implementation can be configured with a set of event aspects.
+ * The aspects are lined up in a chain and the event manager invokes the first event
+ * aspect for each call to {@link EventManager#processEvents()}.
+ * As the aspects are chained up, it's the responsibility of an event aspect to
+ * invoke the next aspect in the chain. However, depending on the functionality
+ * and implementation of the aspect, it's up to the aspect to decide whether it's
+ * appropriate to invoke the next aspect in the chain. To invoke the next aspect,
+ * {@link EventAspectContext#invokeNext()} has to be called.
  *
  * @version $Id$
  */
 public interface EventAspect {
 
-    String ROLE = EventAspect.class.getName();
-
+    /**
+     * Process the current event phase.
+     * @param context The event aspect context to access environment information and invoke
+     *                the next event aspect in the chain.
+     */
     void process(EventAspectContext context);
 }

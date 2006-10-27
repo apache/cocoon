@@ -132,6 +132,7 @@ public class DefaultEventManager
             }
             this.configuration = null;
         }
+        // now process event aspects
         DefaultEventAspectContext eventContext = new DefaultEventAspectContext(this.portalService, this.chain);
         eventContext.invokeNext();
     }
