@@ -50,14 +50,12 @@ public class LinkEventAspect extends AbstractContentEventAspect {
      * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(PortalService, org.apache.cocoon.portal.om.Layout, java.lang.String[])
      */
     protected void publish(PortalService service,
-                           Layout layout,
-                           String[] values)
+                           Layout        layout,
+                           String[]      values)
     throws LayoutException {
         LayoutFeatures.checkLayoutClass(layout, LinkLayout.class, true);
-        final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
-        if ( instance == null ) {
-            final Event e = new LayoutInstanceChangeAttributeEvent(instance, LinkLayout.ATTRIBUTE_LAYOUT_ID, values[2], true);
-            service.getEventManager().send(e);                    
-        }
+        final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, true);
+        final Event e = new LayoutInstanceChangeAttributeEvent(instance, LinkLayout.ATTRIBUTE_LAYOUT_ID, values[2], true);
+        service.getEventManager().send(e);                    
     }
 }

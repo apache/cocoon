@@ -51,7 +51,7 @@ public class FrameAspect extends AbstractCIncludeAspect {
         String source = null;
         final LayoutInstance instance = LayoutFeatures.getLayoutInstance(rendererContext.getPortalService(), layout, false);
         if ( instance != null ) {
-            source = (String)instance.getTemporaryAttribute("frame");
+            source = (String)instance.getTemporaryAttribute(FrameLayout.ATTRIBUTE_SOURCE_ID);
         }
         if (source == null) {
             source = ((FrameLayout) layout).getSource();
