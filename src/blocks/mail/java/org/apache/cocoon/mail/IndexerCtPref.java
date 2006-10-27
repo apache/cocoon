@@ -20,19 +20,12 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimePart;
 
 /**
- *  Description of the Class
- *
  * @author Bernhard Huber
  * @since 26 October 2002
  * @version $Id$
  */
 public class IndexerCtPref implements ContentTypePreference {
-    /**
-     *  Description of the Method
-     *
-     *@param  part  Description of the Parameter
-     *@return       Description of the Return Value
-     */
+
     public int preference(MimePart part) {
         try {
             if (part.isMimeType("text/html")) {

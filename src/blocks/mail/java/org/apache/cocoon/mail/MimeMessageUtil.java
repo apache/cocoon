@@ -36,10 +36,12 @@ import javax.mail.internet.MimePart;
  * @version $Id$
  */
 public class MimeMessageUtil {
+
     /**
      *  Description of the Field
      */
     public final static String SENDER_NOT_AVAILABLE = "-not available-";
+
     /**
      *  Description of the Field
      */

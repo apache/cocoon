@@ -37,6 +37,7 @@ import org.apache.excalibur.source.Source;
  */
 public class SourceDataSource extends AbstractLogEnabled
                               implements DataSource {
+
     private Source src;
     private String contentType;
     private String name;

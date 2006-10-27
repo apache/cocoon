@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author Bernhard Huber
- * @since 24. Oktober 2002
+ * @since 24 October 2002
  * @version $Id$
  */
 
@@ -122,12 +122,12 @@ import org.xml.sax.helpers.AttributesImpl;
 public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
     /**
-     *  URI of the generated XML elements
+     * URI of the generated XML elements
      */
     public final static String URI = "http://apache.org/cocoon/mail/1.0";
 
     /**
-     *  PREFIX of the generated XML elements
+     * PREFIX of the generated XML elements
      */
     public final static String PREFIX = "mail";
 
@@ -138,8 +138,8 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
     private ContentHandler contentHandler;
 
     /**
-     *  use this attributes for startElement attributes invocation, reusing
-     *  attributes object for all elements
+     * use this attributes for startElement attributes invocation, reusing
+     * attributes object for all elements
      */
     private AttributesImpl attributes = null;
 
@@ -149,9 +149,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Constructor for the MailContentHandler object
+     * Constructor for the MailContentHandler object
      *
-     *@param  contentHandler  Description of Parameter
+     * @param  contentHandler  Description of Parameter
      */
     public MailContentHandlerDelegate(ContentHandler contentHandler) {
         this.contentHandler = contentHandler;
@@ -159,9 +159,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Sets the simpleDateFormatter attribute of the MailContentHandlerDelegate object
+     * Sets the simpleDateFormatter attribute of the MailContentHandlerDelegate object
      *
-     *@param  sdf  The new simpleDateFormat value
+     * @param  sdf  The new simpleDateFormat value
      */
     public void setSimpleDateFormat(SimpleDateFormat sdf) {
         this.sdf = sdf;
@@ -169,9 +169,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Gets the simpleDateFormat attribute of the MailContentHandlerDelegate object
+     * Gets the simpleDateFormat attribute of the MailContentHandlerDelegate object
      *
-     *@return    The simpleDateFormat value
+     * @return    The simpleDateFormat value
      */
     public SimpleDateFormat getSimpleDateFormat() {
         return sdf;
@@ -179,9 +179,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit starting SAX events sequence, including SAX startDocument event
+     * Emit starting SAX events sequence, including SAX startDocument event
      *
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     public void startDocument() throws SAXException {
         startDocumentInternal(true);
@@ -189,9 +189,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit starting SAX events sequence, excluding SAX startDocument event
+     * Emit starting SAX events sequence, excluding SAX startDocument event
      *
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     public void startDocumentXMLizer() throws SAXException {
         startDocumentInternal(false);
@@ -199,9 +199,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit starting SAX events sequence, including SAX endDocument event
+     * Emit starting SAX events sequence, including SAX endDocument event
      *
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     public void endDocument() throws SAXException {
         endDocumentInternal(true);
@@ -209,9 +209,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit starting SAX events sequence, excluding SAX endDocument event
+     * Emit starting SAX events sequence, excluding SAX endDocument event
      *
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     public void endDocumentXMLizer() throws SAXException {
         endDocumentInternal(false);
@@ -219,9 +219,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit a folder  as a sequence of SAX events
+     * Emit a folder  as a sequence of SAX events
      *
-     *@param  folder  emit this folder
+     * @param  folder  emit this folder
      */
     public void marshalFolderToSAX(Folder folder) {
         try {
@@ -233,9 +233,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit folders as a sequence of SAX events
+     * Emit folders as a sequence of SAX events
      *
-     *@param  folders  emit these folders
+     * @param  folders  emit these folders
      */
     public void marshalFolderToSAX(Folder[] folders) {
         try {
@@ -249,9 +249,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit a message envelope as a sequence of SAX events
+     * Emit a message envelope as a sequence of SAX events
      *
-     *@param  message  emit envelope of this message
+     * @param  message  emit envelope of this message
      */
     public void marshalMessageEnvelopeToSAX(Message message) {
         try {
@@ -263,9 +263,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit a message envelope, and message content as a sequence of SAX events
+     * Emit a message envelope, and message content as a sequence of SAX events
      *
-     *@param  message  emit envelope, and content of this message
+     * @param  message  emit envelope, and content of this message
      */
     public void marshalMessageToSAX(Message message) {
         try {
@@ -278,9 +278,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit a message content as a sequence of SAX events
+     * Emit a message content as a sequence of SAX events
      *
-     *@param  part  Description of the Parameter
+     * @param  part  Description of the Parameter
      */
     public void marshalPartToSAX(Part part) {
         try {
@@ -292,10 +292,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit start document sequence
+     * Emit start document sequence
      *
-     *@param  emitStartDocument  flag controlling invocation of SAX startDocument
-     *@exception  SAXException   thrown iff generating SAX events fails
+     * @param  emitStartDocument  flag controlling invocation of SAX startDocument
+     * @exception  SAXException   thrown iff generating SAX events fails
      */
     protected void startDocumentInternal(boolean emitStartDocument) throws SAXException {
         if (emitStartDocument) {
@@ -310,10 +310,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit end document sequence
+     * Emit end document sequence
      *
-     *@param  emitEndDocument   flag controlling invocation of SAX endDocument
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @param  emitEndDocument   flag controlling invocation of SAX endDocument
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     protected void endDocumentInternal(boolean emitEndDocument) throws SAXException {
         endElement("mail");
@@ -326,12 +326,12 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit folder as sequence of SAX events
+     * Emit folder as sequence of SAX events
      *
-     *@param  folder                  emit this folder
-     *@param  contentHandler          specifies sink of SAX events
-     *@exception  MessagingException  thrown iff accessing javamail data fails
-     *@exception  SAXException        thrown iff generating SAX events fails
+     * @param  folder                  emit this folder
+     * @param  contentHandler          specifies sink of SAX events
+     * @exception  MessagingException  thrown iff accessing javamail data fails
+     * @exception  SAXException        thrown iff generating SAX events fails
      */
     protected void folderToSAX(ContentHandler contentHandler, Folder folder) throws MessagingException, SAXException {
         attributes.clear();
@@ -356,12 +356,12 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit message envelope as sequence of SAX events
+     * Emit message envelope as sequence of SAX events
      *
-     *@param  message                 emit envelope of this message
-     *@param  contentHandler          specifies sink of SAX events
-     *@exception  MessagingException  thrown iff accessing javamail data fails
-     *@exception  SAXException        thrown iff generating SAX events fails
+     * @param  message                 emit envelope of this message
+     * @param  contentHandler          specifies sink of SAX events
+     * @exception  MessagingException  thrown iff accessing javamail data fails
+     * @exception  SAXException        thrown iff generating SAX events fails
      */
     protected void messageEnvelopeToSAX(ContentHandler contentHandler, Message message) throws MessagingException, SAXException {
         attributes.clear();
@@ -485,14 +485,14 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit part as sequence of SAX events
+     * Emit part as sequence of SAX events
      *
-     *@param  part                    Description of the Parameter
-     *@param  contentHandler          specifies sink of SAX events
-     *@param  i                       Description of the Parameter
-     *@exception  MessagingException  thrown iff accessing javamail data fails
-     *@exception  IOException         thrown iff accessing content fails
-     *@exception  SAXException        thrown iff generating SAX events fails
+     * @param  part                    Description of the Parameter
+     * @param  contentHandler          specifies sink of SAX events
+     * @param  i                       Description of the Parameter
+     * @exception  MessagingException  thrown iff accessing javamail data fails
+     * @exception  IOException         thrown iff accessing content fails
+     * @exception  SAXException        thrown iff generating SAX events fails
      */
     protected void partToSAX(ContentHandler contentHandler, Part part, int i) throws MessagingException, IOException, SAXException {
         attributes.clear();
@@ -568,23 +568,23 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Emit content of message part as sequence of SAX events
+     * Emit content of message part as sequence of SAX events
      *
-     *@param  contentHandler          specifies sink of SAX events
-     *@param  part                    emit this part as sequence of SAX events
-     *@exception  SAXException        thrown iff generating SAX events fails
-     *@exception  MessagingException  thrown iff accessing javamail data fails
-     *@exception  IOException         thrown iff accessing content fails
+     * @param  contentHandler          specifies sink of SAX events
+     * @param  part                    emit this part as sequence of SAX events
+     * @exception  SAXException        thrown iff generating SAX events fails
+     * @exception  MessagingException  thrown iff accessing javamail data fails
+     * @exception  IOException         thrown iff accessing content fails
      */
     protected void contentToSAX(ContentHandler contentHandler, Part part) throws MessagingException, IOException, SAXException {
         attributes.clear();
         startElement("content", attributes);
 
         /*
-         *  Using isMimeType to determine the content type avoids
-         *  fetching the actual content data until we need it.
+         * Using isMimeType to determine the content type avoids
+         * fetching the actual content data until we need it.
          *
-         *  todo: recheck this code for all circumstances.........
+         * todo: recheck this code for all circumstances.........
          */
         if (part.getContent() instanceof String && (part.isMimeType("text/plain"))) {
             characters((String) part.getContent());
@@ -614,8 +614,8 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
             partToSAX(contentHandler, (Part) part.getContent(), 0);
         } else {
             /*
-             *  If we actually want to see the data, and it's not a
-             *  MIME type we know, fetch it and check its Java type.
+             * If we actually want to see the data, and it's not a
+             * MIME type we know, fetch it and check its Java type.
             Object o = part.getContent();
             if (o instanceof String) {
                 characters((String) o);
@@ -633,11 +633,11 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Helper method emitting SAX events representing an internet address
+     * Helper method emitting SAX events representing an internet address
      *
-     *@param  nodeName          emitted element node name
-     *@param  address           emitted address data
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @param  nodeName          emitted element node name
+     * @param  address           emitted address data
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     protected void emitAddress(String nodeName, Address address) throws SAXException {
 
@@ -663,11 +663,11 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Helper method emitting SAX events representing a date
+     * Helper method emitting SAX events representing a date
      *
-     *@param  nodeName          emitted element node name
-     *@param  d                 Description of the Parameter
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @param  nodeName          emitted element node name
+     * @param  d                 Description of the Parameter
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     protected void emitDate(String nodeName, Date d) throws SAXException {
         attributes.clear();
@@ -685,11 +685,11 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Helper method emitting SAX startElement event
+     * Helper method emitting SAX startElement event
      *
-     *@param  nodeName          Description of the Parameter
-     *@param  attributes        Description of the Parameter
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @param  nodeName          Description of the Parameter
+     * @param  attributes        Description of the Parameter
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     private void startElement(String nodeName, Attributes attributes) throws SAXException {
         this.contentHandler.startElement(URI, nodeName, PREFIX + ":" + nodeName, attributes);
@@ -697,10 +697,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Helper method emitting SAX characters event
+     * Helper method emitting SAX characters event
      *
-     *@param  s                 Description of the Parameter
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @param  s                 Description of the Parameter
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     private void characters(String s) throws SAXException {
         if (s != null) {
@@ -721,10 +721,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Helper method emitting SAX endElement event
+     * Helper method emitting SAX endElement event
      *
-     *@param  nodeName          Description of the Parameter
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @param  nodeName          Description of the Parameter
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     private void endElement(String nodeName) throws SAXException {
         this.contentHandler.endElement(URI, nodeName, PREFIX + ":" + nodeName);
@@ -732,10 +732,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  Helper method adding an attribute name-value pair
+     * Helper method adding an attribute name-value pair
      *
-     *@param  nodeName   The feature to be added to the Attribute attribute
-     *@param  nodeValue  The feature to be added to the Attribute attribute
+     * @param  nodeName   The feature to be added to the Attribute attribute
+     * @param  nodeValue  The feature to be added to the Attribute attribute
      */
     private void addAttribute(String nodeName, String nodeValue) {
         attributes.addAttribute("", nodeName, nodeName, "CDATA", nodeValue);
@@ -743,11 +743,11 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /*
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  is                Description of Parameter
-     *@exception  IOException   Description of Exception
-     *@exception  SAXException  thrown iff generating SAX events fails
+     * @param  is                Description of Parameter
+     * @exception  IOException   Description of Exception
+     * @exception  SAXException  thrown iff generating SAX events fails
      */
     /* FIXME (SM) This method doesn't appear to be used
      private void encodeInputStreamForXML(InputStream is) throws IOException, SAXException {
@@ -769,12 +769,12 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /*
-     *  A simple byte as hex encodeing
+     * A simple byte as hex encodeing
      *
-     *@param  bytes   Description of Parameter
-     *@param  offset  Description of Parameter
-     *@param  length  Description of Parameter
-     *@return         Description of the Returned Value
+     * @param  bytes   Description of Parameter
+     * @param  offset  Description of Parameter
+     * @param  length  Description of Parameter
+     * @return         Description of the Returned Value
      */
     /* FIXME (SM) This method doesn't appear to be used
     private String encodeBytes(final byte[] bytes, final int offset, final int length) {
@@ -797,7 +797,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  XMLizable Wrapper for one or more folders, saxing folders.
+     * XMLizable Wrapper for one or more folders, saxing folders.
      *
      */
     static class FolderXMLizer extends AbstractLogEnabled
@@ -809,7 +809,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
         /**
          *Constructor for the FolderSAX object
          *
-         *@param  folder  Description of the Parameter
+         * @param  folder  Description of the Parameter
          */
         FolderXMLizer(Folder folder) {
             this.folders = new Folder[]{folder};
@@ -819,7 +819,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
         /**
          *Constructor for the FolderXMLizer object
          *
-         *@param  folders  Description of the Parameter
+         * @param  folders  Description of the Parameter
          */
         FolderXMLizer(Folder[] folders) {
             this.folders = folders;
@@ -827,10 +827,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
         /**
-         *  Generate SAX events from one or more folders
+         * Generate SAX events from one or more folders
          *
-         *@param  handler           Description of the Parameter
-         *@exception  SAXException  thrown iff generating SAX events fails
+         * @param  handler           Description of the Parameter
+         * @exception  SAXException  thrown iff generating SAX events fails
          */
         public void toSAX(ContentHandler handler) throws SAXException {
             MailContentHandlerDelegate mailContentHandlerDelegate = new MailContentHandlerDelegate(handler);
@@ -845,7 +845,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  XMLizable Wrapper for one or more messages, saxing envelope only of messages.
+     * XMLizable Wrapper for one or more messages, saxing envelope only of messages.
      */
     static class MessageEnvelopeXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -857,7 +857,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
         /**
          *Constructor for the MessageEnvelopeXMLizer object
          *
-         *@param  message  Description of the Parameter
+         * @param  message  Description of the Parameter
          */
         public MessageEnvelopeXMLizer(Message message) {
             this.messages = new Message[1];
@@ -868,7 +868,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
         /**
          *Constructor for the MessageEnvelopeXMLize object
          *
-         *@param  messages  Description of the Parameter
+         * @param  messages  Description of the Parameter
          */
         public MessageEnvelopeXMLizer(Message[] messages) {
             this.messages = messages;
@@ -876,9 +876,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
         /**
-         *  Sets the simpleDateFormat attribute of the MessageEnvelopeXMLizer object
+         * Sets the simpleDateFormat attribute of the MessageEnvelopeXMLizer object
          *
-         *@param  sdf  The new simpleDateFormat value
+         * @param  sdf  The new simpleDateFormat value
          */
         public void setSimpleDateFormat(SimpleDateFormat sdf) {
             this.sdf = sdf;
@@ -886,9 +886,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
         /**
-         *  Gets the simpleDateFormat attribute of the MessageEnvelopeXMLizer object
+         * Gets the simpleDateFormat attribute of the MessageEnvelopeXMLizer object
          *
-         *@param  sdf  Description of the Parameter
+         * @param  sdf  Description of the Parameter
          */
         public void getSimpleDateFormat(SimpleDateFormat sdf) {
             this.sdf = sdf;
@@ -896,10 +896,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
         /**
-         *  Generate SAX events from one or more messages
+         * Generate SAX events from one or more messages
          *
-         *@param  handler           Description of the Parameter
-         *@exception  SAXException  thrown iff generating SAX events fails
+         * @param  handler           Description of the Parameter
+         * @exception  SAXException  thrown iff generating SAX events fails
          */
         public void toSAX(ContentHandler handler) throws SAXException {
             MailContentHandlerDelegate mailContentHandlerDelegate = new MailContentHandlerDelegate(handler);
@@ -917,7 +917,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
     /**
-     *  XMLizable Wrapper for a message, saxing a message envelope, plus content.
+     * XMLizable Wrapper for a message, saxing a message envelope, plus content.
      */
     static class MessageXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -929,7 +929,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
         /**
          *Constructor for the MessageXMLizer object
          *
-         *@param  message  Description of the Parameter
+         * @param  message  Description of the Parameter
          */
         public MessageXMLizer(Message message) {
             this.message = message;
@@ -937,9 +937,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
         /**
-         *  Sets the simpleDateFormat attribute of the MessageXMLizer object
+         * Sets the simpleDateFormat attribute of the MessageXMLizer object
          *
-         *@param  sdf  The new simpleDateFormat value
+         * @param  sdf  The new simpleDateFormat value
          */
         public void setSimpleDateFormat(SimpleDateFormat sdf) {
             this.sdf = sdf;
@@ -947,9 +947,9 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
         /**
-         *  Gets the simpleDateFormat attribute of the MessageXMLizer object
+         * Gets the simpleDateFormat attribute of the MessageXMLizer object
          *
-         *@param  sdf  Description of the Parameter
+         * @param  sdf  Description of the Parameter
          */
         public void getSimpleDateFormat(SimpleDateFormat sdf) {
             this.sdf = sdf;
@@ -957,10 +957,10 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
 
         /**
-         *  Generate SAX events from a message
+         * Generate SAX events from a message
          *
-         *@param  handler           Description of the Parameter
-         *@exception  SAXException  thrown iff generating SAX events fails
+         * @param  handler           Description of the Parameter
+         * @exception  SAXException  thrown iff generating SAX events fails
          */
         public void toSAX(ContentHandler handler) throws SAXException {
             MailContentHandlerDelegate mailContentHandlerDelegate = new MailContentHandlerDelegate(handler);
@@ -972,4 +972,3 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
         }
     }
 }
-

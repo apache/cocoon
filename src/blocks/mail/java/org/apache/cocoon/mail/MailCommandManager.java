@@ -60,22 +60,27 @@ public class MailCommandManager extends AbstractLogEnabled {
      *  Context key specifying the foldername.
      */
     public final static String CONTEXT_FOLDER_ENTRY = "folder";
+
     /**
      *  Description of the Field
      */
     public final static String CONTEXT_UID_ENTRY = "uid";
+
     /**
      *  Description of the Field
      */
     public final static String CONTEXT_ID_ENTRY = "id";
+
     /**
      *  Description of the Field
      */
     public final static String CONTEXT_PARTID_ENTRY = "part-id";
+
     /**
      *  Description of the Field
      */
     public final static String CONTEXT_FOLDER_PATTERN_ENTRY = "folder-pattern";
+
     /**
      *  Description of the Field
      */
@@ -83,17 +88,17 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Creates a new instance of MailHeaderList
+     * Creates a new instance of MailHeaderList
      */
     public MailCommandManager() { }
 
 
     /**
-     *  Open a javamail folder
+     * Open a javamail folder
      *
-     *@param  f                       Description of the Parameter
-     *@param  mode                    folder opening mode, use Folder.READ_WRITE, or Folder.READ_ONLY
-     *@exception  MessagingException  Description of the Exception
+     * @param  f                       Description of the Parameter
+     * @param  mode                    folder opening mode, use Folder.READ_WRITE, or Folder.READ_ONLY
+     * @exception  MessagingException  Description of the Exception
      */
     public static void openFolder(Folder f, int mode) throws MessagingException {
         if (!f.isOpen()) {
@@ -103,10 +108,10 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Close a javamail folder
+     * Close a javamail folder
      *
-     *@param  f                       Description of the Parameter
-     *@exception  MessagingException  Description of the Exception
+     * @param  f                       Description of the Parameter
+     * @exception  MessagingException  Description of the Exception
      */
     public static void closeFolder(Folder f) throws MessagingException {
         if (f != null && f.isOpen()) {
@@ -117,10 +122,10 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Open a javamail store
+     * Open a javamail store
      *
-     *@param  s                       Description of the Parameter
-     *@exception  MessagingException  Description of the Exception
+     * @param  s                       Description of the Parameter
+     * @exception  MessagingException  Description of the Exception
      */
     public static void openStore(Store s) throws MessagingException {
         if (!s.isConnected()) {
@@ -130,10 +135,10 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Close a javamail store
+     * Close a javamail store
      *
-     *@param  s                       Description of the Parameter
-     *@exception  MessagingException  Description of the Exception
+     * @param  s                       Description of the Parameter
+     * @exception  MessagingException  Description of the Exception
      */
     public static void closeStore(Store s) throws MessagingException {
         if (s != null && s.isConnected()) {
@@ -143,10 +148,10 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  aList  Description of the Parameter
-     *@return        Description of the Return Value
+     * @param  aList  Description of the Parameter
+     * @return        Description of the Return Value
      */
     public List execute(List aList) {
         MailCommands folderCommands = new MailCommands(aList);
@@ -161,10 +166,10 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Description of the Method
+     * Description of the Method
      *
-     *@param  amfa  Description of the Parameter
-     *@return       Description of the Return Value
+     * @param  amfa  Description of the Parameter
+     * @return       Description of the Return Value
      */
     public List execute(AbstractMailCommand amfa) {
         try {
@@ -178,25 +183,25 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Retrieve folder, and put it as command result.
-     *
+     * Retrieve folder, and put it as command result.
      */
-    public static class MailFolderCatCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailFolderCatCommand extends AbstractMailCommand
+                                             implements Contextualizable {
 
         private Folder aFolder;
 
 
         /**
-         *Constructor for the MailFolderCommand object
+         * Constructor for the MailFolderCommand object
          */
         public MailFolderCatCommand() { }
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             MailContext mctx = (MailContext) ctx;
@@ -205,9 +210,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             MailCommandManager.openFolder(aFolder, Folder.READ_ONLY);
@@ -217,25 +222,25 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Retrieve folder, and put it as command result.
-     *
+     * Retrieve folder, and put it as command result.
      */
-    public static class MailRefreshFolderCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailRefreshFolderCommand extends AbstractMailCommand
+                                                 implements Contextualizable {
 
         private Folder aFolder;
 
 
         /**
-         *Constructor for the MailFolderCommand object
+         * Constructor for the MailFolderCommand object
          */
         public MailRefreshFolderCommand() { }
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             MailContext mctx = (MailContext) ctx;
@@ -244,9 +249,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             MailCommandManager.closeFolder(aFolder);
@@ -257,26 +262,26 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Retrieved headers of all messages of a folder, put
-     *   retrieved messages as command result.
-     *
+     * Retrieved headers of all messages of a folder, put
+     * retrieved messages as command result.
      */
-    public static class MailListMessagesCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailListMessagesCommand extends AbstractMailCommand
+                                                implements Contextualizable {
 
         private Folder aFolder;
 
 
         /**
-         *Constructor for the MailAllHeadersCommand object
+         * Constructor for the MailAllHeadersCommand object
          */
         public MailListMessagesCommand() { }
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             // try to get the folder object
@@ -286,9 +291,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             MailCommandManager.openFolder(aFolder, Folder.READ_ONLY);
@@ -313,26 +318,26 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  List all subfolders of a folder, put
-     *  all retrieved folders as command result.
-     *
+     * List all subfolders of a folder, put
+     * all retrieved folders as command result.
      */
-    public static class MailListFolderCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailListFolderCommand extends AbstractMailCommand
+                                              implements Contextualizable {
 
         private Folder aFolder;
         private String folderPattern = MailCommandManager.DEFAULT_FOLDER_PATTERN;
 
 
         /**
-         *Constructor for the MailFoldersCommand object
+         * Constructor for the MailFoldersCommand object
          */
         public MailListFolderCommand() { }
 
 
         /**
-         *   Gets the folderPattern attribute of the ListFolderCommand object
+         * Gets the folderPattern attribute of the ListFolderCommand object
          *
-         *@return    The folderPattern value
+         * @return    The folderPattern value
          */
         public String getFolderPattern() {
             return this.folderPattern;
@@ -340,10 +345,10 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             MailContext mctx = (MailContext) ctx;
@@ -359,9 +364,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             // spec say: folder list can be invoked on closed folder MailCommandManager.openFolder(aFolder,Folder.READ_ONLY);
@@ -377,27 +382,27 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Retrieved a message (envelope plus content) of a folder by its uid, put
-     *   retrieved message as command result.
-     *
+     * Retrieved a message (envelope plus content) of a folder by its uid, put
+     * retrieved message as command result.
      */
-    public static class MailCatMessageByUIDCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailCatMessageByUIDCommand extends AbstractMailCommand
+                                                   implements Contextualizable {
 
         private int msgUID = 1;
         private Folder aFolder;
 
 
         /**
-         *Constructor for the MailMessageByUIDCommand object
+         * Constructor for the MailMessageByUIDCommand object
          */
         public MailCatMessageByUIDCommand() { }
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             MailContext mctx = (MailContext) ctx;
@@ -413,9 +418,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             UIDFolder uidFolder = (UIDFolder) aFolder;
@@ -431,27 +436,27 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Retrieved a message (envelope plus content) of a folder by its id, put
-     *   retrieved message as command result.
-     *
+     * Retrieved a message (envelope plus content) of a folder by its id, put
+     * retrieved message as command result.
      */
-    public static class MailCatMessageByIdCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailCatMessageByIdCommand extends AbstractMailCommand
+                                                  implements Contextualizable {
 
         private int msgId = 1;
         private Folder aFolder;
 
 
         /**
-         *Constructor for the MailMessageByIdCommand object
+         * Constructor for the MailMessageByIdCommand object
          */
         public MailCatMessageByIdCommand() { }
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             MailContext mctx = (MailContext) ctx;
@@ -468,9 +473,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             MailCommandManager.openFolder(aFolder, Folder.READ_ONLY);
@@ -485,11 +490,11 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Retrieved a message part by its part id, specifying the message by id, put
-     *   retrieved part as command result.
-     *
+     * Retrieved a message part by its part id, specifying the message by id, put
+     * retrieved part as command result.
      */
-    public static class MailCatAttachmentMessageByIdCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailCatAttachmentMessageByIdCommand extends AbstractMailCommand
+                                                            implements Contextualizable {
 
         private int msgId = -1;
         private int partId = -1;
@@ -497,16 +502,16 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *Constructor for the MailCatAttachmentMessageByIdCommand object
+         * Constructor for the MailCatAttachmentMessageByIdCommand object
          */
         public MailCatAttachmentMessageByIdCommand() { }
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             MailContext mctx = (MailContext) ctx;
@@ -529,9 +534,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             MailCommandManager.openFolder(aFolder, Folder.READ_ONLY);
@@ -575,19 +580,20 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
     /**
-     *  Description of the Class
-     *
+     * Description of the Class
      */
-    public static class MailSearchMessagesCommand extends AbstractMailCommand implements Contextualizable {
+    public static class MailSearchMessagesCommand extends AbstractMailCommand
+                                                  implements Contextualizable {
+
         private Folder aFolder;
         private SearchTerm searchTerm;
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@param  ctx                   Description of the Parameter
-         *@exception  ContextException  Description of the Exception
+         * @param  ctx                   Description of the Parameter
+         * @exception  ContextException  Description of the Exception
          */
         public void contextualize(Context ctx) throws ContextException {
             MailContext mctx = (MailContext) ctx;
@@ -621,9 +627,9 @@ public class MailCommandManager extends AbstractLogEnabled {
 
 
         /**
-         *  Description of the Method
+         * Description of the Method
          *
-         *@exception  MessagingException  Description of the Exception
+         * @exception  MessagingException  Description of the Exception
          */
         public void execute() throws MessagingException {
             MailCommandManager.openFolder(aFolder, Folder.READ_ONLY);
