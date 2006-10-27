@@ -32,6 +32,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
@@ -287,8 +288,19 @@ public abstract class ContainerTestCase extends TestCase {
             }
         }
         defaultContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new MockContext());
-        this.addContext( defaultContext );
+        final MapBasedDefaultContext avalonConfig = new MapBasedDefaultContext(defaultContext);
+        this.addContext( avalonConfig );
+        this.addContext(defaultContext);
         return defaultContext ;
+    }
+
+    /**
+     * This method may be overwritten by subclasses to put additional objects
+     * into the context programmatically.
+     * @deprecated Use {@link #addContext(Map)} instead.
+     */
+    protected void addContext( DefaultContext defaultContext ) {
+        // nothing to add here
     }
 
     /**
@@ -457,5 +469,39 @@ public abstract class ContainerTestCase extends TestCase {
         public boolean isSingleton() {
             return true;
         }
+    }
+
+    protected final static class MapBasedDefaultContext extends DefaultContext {
+
+        private final Map map;
+
+        public MapBasedDefaultContext(Map aMap) {
+            this.map = aMap;
+        }
+
+        /**
+         * @see org.apache.avalon.framework.context.DefaultContext#put(java.lang.Object, java.lang.Object)
+         */
+        public void put(Object arg0, Object arg1) throws IllegalStateException {
+            super.put(arg0, arg1);
+            this.map.put(arg0, arg1);
+        }
+
+        /**
+         * @see org.apache.avalon.framework.context.DefaultContext#get(java.lang.Object)
+         */
+        public Object get(Object arg0) throws ContextException {
+            Object result;
+            try {
+                result = super.get(arg0);                
+            } catch (ContextException e) {
+                result = this.map.get(arg0);
+                if ( result == null ) {
+                    throw e;
+                }
+            }
+            return result;
+        }
+
     }
 }
