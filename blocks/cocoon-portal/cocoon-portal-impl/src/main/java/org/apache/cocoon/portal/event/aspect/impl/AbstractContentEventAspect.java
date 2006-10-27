@@ -50,7 +50,7 @@ public abstract class AbstractContentEventAspect
         this.manager = aManager;
     }
 
-    protected abstract String getRequestParameterName();
+    protected abstract String getRequestParameterName(EventAspectContext context);
 
     protected abstract int getRequiredValueCount();
 
@@ -86,7 +86,7 @@ public abstract class AbstractContentEventAspect
      */
     public void process(EventAspectContext context) {
         final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
-        String[] values = request.getParameterValues(this.getRequestParameterName());
+        String[] values = request.getParameterValues(this.getRequestParameterName(context));
         if (values != null) {
             final EventManager publisher = context.getPortalService().getEventManager();
             for (int i = 0; i < values.length; i++) {
