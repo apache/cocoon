@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,7 @@ import org.apache.cocoon.environment.Request;
  * @version $Id$
  */
 public class MailContext extends DefaultContext implements LogEnabled {
+
     /**
      * attribute name of MailContext object in an application session, eg http-session
      */
@@ -55,6 +56,7 @@ public class MailContext extends DefaultContext implements LogEnabled {
      *  Description of the Field
      */
     public final static String MAIL_CURRENT_WORKING_FOLDER_ENTRY = "mail-current-working-folder";
+
     /**
      *  Description of the Field
      */
@@ -65,9 +67,9 @@ public class MailContext extends DefaultContext implements LogEnabled {
 
 
     /**
-     *Constructor for the MailContext object
+     * Constructor for the MailContext object
      *
-     *@param  parent  Description of the Parameter
+     * @param  parent  Description of the Parameter
      */
     MailContext(Context parent) {
         super(parent);
@@ -77,7 +79,7 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  Sets the request attribute of the MailContext object
      *
-     *@param  request  The new request value
+     * @param  request  The new request value
      */
     public void setRequest(Request request) {
         this.request = request;
@@ -101,9 +103,9 @@ public class MailContext extends DefaultContext implements LogEnabled {
      *    </li>
      *  </ul>
      *
-     *@param  key                   Description of the Parameter
-     *@return                       Description of the Return Value
-     *@exception  ContextException  Description of the Exception
+     * @param  key                   Description of the Parameter
+     * @return                       Description of the Return Value
+     * @exception  ContextException  Description of the Exception
      */
     public Object get(Object key) throws ContextException {
         String keyString = (String) key;
@@ -123,8 +125,7 @@ public class MailContext extends DefaultContext implements LogEnabled {
         } else if (keyString.startsWith(PARAM_INTEGER_PREFIX_ENTRY)) {
             String paramName = keyString.substring(PARAM_INTEGER_PREFIX_ENTRY.length());
             try {
-                Integer paramValue = getParameterAsInteger(paramName);
-                return paramValue;
+                return getParameterAsInteger(paramName);
             } catch (NumberFormatException nfe) {
                 String message = "Cannot create Integer for parameter " + String.valueOf(keyString);
                 throw new ContextException(message, nfe);
@@ -146,7 +147,7 @@ public class MailContext extends DefaultContext implements LogEnabled {
             }
 
             // get folder object, folderName is okay
-            Folder folder = null;
+            Folder folder;
             try {
                 folder = (Folder) getFolder(folderName);
             } catch (ContextException ce) {
@@ -184,9 +185,9 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  Gets the theFolder attribute of the MailContext object
      *
-     *@param  entry                 Description of the Parameter
-     *@return                       The theFolder value
-     *@exception  ContextException  Description of the Exception
+     * @param  entry                 Description of the Parameter
+     * @return                       The theFolder value
+     * @exception  ContextException  Description of the Exception
      */
     public Folder getTheFolder(String entry) throws ContextException {
         Folder f;
@@ -203,9 +204,9 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  Gets the folder attribute of the MailContext object
      *
-     *@param  folderName            Description of the Parameter
-     *@return                       The folder value
-     *@exception  ContextException  Description of the Exception
+     * @param  folderName            Description of the Parameter
+     * @return                       The folder value
+     * @exception  ContextException  Description of the Exception
      */
     public Object getFolder(String folderName) throws ContextException {
         // canonicalize folder name
@@ -269,8 +270,8 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  put a folder in this MailContext object map
      *
-     *@param  folder                Description of the Parameter
-     *@exception  ContextException  Description of the Exception
+     * @param  folder                Description of the Parameter
+     * @exception  ContextException  Description of the Exception
      */
     public void putFolder(Folder folder) throws ContextException {
         String folderName = folder.getFullName();
@@ -308,8 +309,8 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  Description of the Method
      *
-     *@param  folders               Description of the Parameter
-     *@exception  ContextException  Description of the Exception
+     * @param  folders               Description of the Parameter
+     * @exception  ContextException  Description of the Exception
      */
     public void putFolder(Folder[] folders) throws ContextException {
         for (int i = 0; i < folders.length; i++) {
@@ -321,7 +322,7 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  Description of the Method
      *
-     *@param  logger  Description of the Parameter
+     * @param  logger  Description of the Parameter
      */
     public void enableLogging(Logger logger) {
         this.logger = logger;
@@ -332,32 +333,30 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  Gets the parameter attribute of the MailContext object
      *
-     *@param  key  Description of the Parameter
-     *@return      The parameter value
+     * @param  key  Description of the Parameter
+     * @return      The parameter value
      */
     protected String getParameter(String key) {
-        String value = request.getParameter(key);
-        return value;
+        return request.getParameter(key);
     }
 
 
     /**
      *  Gets the parameterAsInteger attribute of the MailContext object
      *
-     *@param  key  Description of the Parameter
-     *@return      The parameterAsInteger value
+     * @param  key  Description of the Parameter
+     * @return      The parameterAsInteger value
      */
     protected Integer getParameterAsInteger(String key) {
         String value = request.getParameter(key);
-        Integer i = new Integer(value);
-        return i;
+        return new Integer(value);
     }
 
 
     /**
      *  Gets the logger attribute of the MailContext object
      *
-     *@return    The logger value
+     * @return    The logger value
      */
     protected Logger getLogger() {
         return this.logger;
@@ -367,8 +366,8 @@ public class MailContext extends DefaultContext implements LogEnabled {
     /**
      *  Description of the Method
      *
-     *@param  fn  Description of the Parameter
-     *@return     Description of the Return Value
+     * @param  fn  Description of the Parameter
+     * @return     Description of the Return Value
      */
     protected String canoncializeFoldername(String fn) {
         //
@@ -376,4 +375,3 @@ public class MailContext extends DefaultContext implements LogEnabled {
     }
 
 }
-
