@@ -45,8 +45,8 @@ public class DefaultUserService
     /** The attribute prefix used to prefix attributes in the session and request. */
     protected String attributeName;
 
-    /** The default layout key. */
-    protected String defaultLayoutKey;
+    /** The default profile name. */
+    protected String defaultProfileName;
 
     /**
      * @see org.apache.cocoon.portal.impl.AbstractComponent#initialize()
@@ -54,7 +54,8 @@ public class DefaultUserService
     public void initialize() throws Exception {
         super.initialize();
         this.attributeName = DefaultUserService.class.getName() + '/' + this.portalService.getPortalName();
-        this.defaultLayoutKey = this.portalService.getConfiguration("default-layout-key", "portal");
+        // FIXME - We should use a better default than 'portal'
+        this.defaultProfileName = this.portalService.getConfiguration("default-profile-name", "portal");
     }
 
     /**
@@ -208,12 +209,12 @@ public class DefaultUserService
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.UserService#getDefaultLayoutKey()
+     * @see org.apache.cocoon.portal.services.UserService#getDefaultProfileName()
      */
-    public String getDefaultLayoutKey() {
-        String key = this.getUser().getDefaultLayoutKey();
+    public String getDefaultProfileName() {
+        String key = this.getUser().getDefaultProfileName();
         if ( key == null ) {
-            return this.defaultLayoutKey;
+            return this.defaultProfileName;
         }
         return key;
     }

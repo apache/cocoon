@@ -124,9 +124,9 @@ public abstract class AbstractPortalUser
     }
 
     /**
-     * @see org.apache.cocoon.portal.om.PortalUser#getDefaultLayoutKey()
+     * @see org.apache.cocoon.portal.om.PortalUser#getDefaultProfileName()
      */
-    public String getDefaultLayoutKey() {
+    public String getDefaultProfileName() {
         return null;
     }
 
