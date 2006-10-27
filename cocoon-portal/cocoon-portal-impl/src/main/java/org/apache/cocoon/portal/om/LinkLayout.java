@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.services.LayoutFactory;
 public class LinkLayout extends Layout {
 
     /** This is the name of the temporary attribute in the layout instance holding the current layout id. */
-    public static final String ATTRIBUTE_LAYOUT_ID = "link-layout-id";
+    public static final String ATTRIBUTE_LAYOUT_ID = LinkLayout.class.getName() + "/layout-id";
 
     protected String linkedProfileName;
     protected String linkedLayoutId;
@@ -49,6 +49,14 @@ public class LinkLayout extends Layout {
 
     public String getProfileName() {
         return linkedProfileName;
+    }
+
+    public void setLayoutId(String linkedLayoutId) {
+        this.linkedLayoutId = linkedLayoutId;
+    }
+
+    public void setProfileName(String linkedProfileName) {
+        this.linkedProfileName = linkedProfileName;
     }
 
     /**

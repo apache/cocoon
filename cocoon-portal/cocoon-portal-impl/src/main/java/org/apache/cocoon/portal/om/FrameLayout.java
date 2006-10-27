@@ -27,6 +27,9 @@ import org.apache.cocoon.portal.services.LayoutFactory;
  */
 public class FrameLayout extends Layout {
 
+    /** This is the name of the temporary attribute in the layout instance holding the current link. */
+    public static final String ATTRIBUTE_SOURCE_ID = FrameLayout.class.getName() + "/source";
+
     protected String source;
 
     /**
@@ -47,10 +50,6 @@ public class FrameLayout extends Layout {
         return source;
     }
 
-    /**
-     * Sets the source.
-     * @param source The source to set
-     */
     public void setSource(String source) {
         this.source = source;
     }
