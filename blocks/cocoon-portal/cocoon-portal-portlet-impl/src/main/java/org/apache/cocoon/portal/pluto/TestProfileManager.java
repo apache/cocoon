@@ -32,6 +32,7 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.PortalUser;
+import org.apache.cocoon.portal.profile.ProfileException;
 import org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager;
 import org.apache.cocoon.portal.scratchpad.Profile;
 import org.apache.cocoon.portal.scratchpad.ProfileImpl;
@@ -56,63 +57,68 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TestProfileManager extends GroupBasedProfileManager {
 
-    protected Profile loadProfile(final String layoutKey) 
-    throws Exception {
+    protected Profile loadProfile() 
+    throws ProfileException {
         final PortalUser info = this.portalService.getUserService().getUser();
+        final String layoutKey = this.portalService.getUserService().getDefaultProfileName();
         if ( info.getUserName().equals("test") ) {
-            // if the request parameter 'portletName' is available we only
-            // display the portlets specified with the parameter. Otherwise
-            // we show all portlets
-            final List portletNames = new ArrayList();
-            final HttpServletRequest r = this.portalService.getProcessInfoProvider().getRequest();
-            final String[] values = r.getParameterValues("portletName");
-            if ( values != null && values.length > 0 ) {
-                for(int i=0; i<values.length; i++) {
-                    portletNames.add(StringUtils.replaceChars(values[i], '/', '.'));
-                }
-            }
-            final ProfileImpl profile = new ProfileImpl(layoutKey);
-
-            // first "load" the global data
-            profile.setCopletTypes( this.getGlobalCopletTypes( layoutKey) );
-            profile.setCopletDefinitions( this.getGlobalDatas( info, profile, layoutKey) );
-
-            // create root layout
-            CompositeLayout rootLayout = new CompositeLayout("root", "row");
-
-            // create coplet instances and layouts
-            final List instances = new ArrayList();
-            final Iterator i = this.deployedCopletDefinitions.values().iterator();
-            while ( i.hasNext() ) {
-                final CopletDefinition cd = (CopletDefinition)i.next();
-                // check for portlets
-                if ( "portlet".equals(cd.getCopletType().getCopletAdapterName()) ) {
-                    final String id = StringUtils.replaceChars(cd.getId() + "-1", '_', '-');
-                    final CopletInstance cid = new CopletInstance(id);
-                    cid.setCopletDefinition(cd);
-                    instances.add(cid);
-                    if ( portletNames.size() == 0 || portletNames.contains(cd.getId())) {
-                        final CopletLayout copletLayout = new CopletLayout(null, "coplet");
-                        copletLayout.setCopletInstanceId(cid.getId());
-                        final Item item = new Item();
-                        item.setLayout(copletLayout);
-                        rootLayout.addItem(item);
+            try {
+                // if the request parameter 'portletName' is available we only
+                // display the portlets specified with the parameter. Otherwise
+                // we show all portlets
+                final List portletNames = new ArrayList();
+                final HttpServletRequest r = this.portalService.getProcessInfoProvider().getRequest();
+                final String[] values = r.getParameterValues("portletName");
+                if ( values != null && values.length > 0 ) {
+                    for(int i=0; i<values.length; i++) {
+                        portletNames.add(StringUtils.replaceChars(values[i], '/', '.'));
                     }
                 }
+                final ProfileImpl profile = new ProfileImpl();
+    
+                // first "load" the global data
+                profile.setCopletTypes( this.getGlobalCopletTypes( layoutKey) );
+                profile.setCopletDefinitions( this.getGlobalDatas( info, profile, layoutKey) );
+    
+                // create root layout
+                CompositeLayout rootLayout = new CompositeLayout("root", "row");
+    
+                // create coplet instances and layouts
+                final List instances = new ArrayList();
+                final Iterator i = this.deployedCopletDefinitions.values().iterator();
+                while ( i.hasNext() ) {
+                    final CopletDefinition cd = (CopletDefinition)i.next();
+                    // check for portlets
+                    if ( "portlet".equals(cd.getCopletType().getCopletAdapterName()) ) {
+                        final String id = StringUtils.replaceChars(cd.getId() + "-1", '_', '-');
+                        final CopletInstance cid = new CopletInstance(id);
+                        cid.setCopletDefinition(cd);
+                        instances.add(cid);
+                        if ( portletNames.size() == 0 || portletNames.contains(cd.getId())) {
+                            final CopletLayout copletLayout = new CopletLayout(null, "coplet");
+                            copletLayout.setCopletInstanceId(cid.getId());
+                            final Item item = new Item();
+                            item.setLayout(copletLayout);
+                            rootLayout.addItem(item);
+                        }
+                    }
+                }
+                profile.setCopletInstances(instances);
+                this.prepareObject(profile, instances);
+    
+                this.prepareObject(profile, rootLayout);
+                profile.setRootLayout(rootLayout);
+    
+                final Profile processedProfile = this.processProfile(profile);    
+                this.storeUserProfile(processedProfile);
+                return processedProfile;
+            } catch (ProfileException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ProfileException("Unable to load profile for '" + layoutKey + "'.", e);
             }
-            profile.setCopletInstances(instances);
-            this.prepareObject(profile, instances);
-
-            this.prepareObject(profile, rootLayout);
-            profile.setRootLayout(rootLayout);
-
-            final Profile processedProfile = this.processProfile(profile);
-            this.storeUserProfile(layoutKey, processedProfile);
-
-            this.storeUserProfile(layoutKey, processedProfile);
-            return processedProfile;
         }
-        return super.loadProfile(layoutKey);
+        return super.loadProfile();
     }
 
     /**
@@ -148,7 +154,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                             item.setLayout(copletLayout);
                             rootLayout.addItem(item);
                             try {
-                                 this.prepareObject(this.getUserProfile(null), copletLayout);
+                                 this.prepareObject(this.getUserProfile(), copletLayout);
                             } catch (LayoutException le) {
                                 // ignore this
                             }

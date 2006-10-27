@@ -62,7 +62,7 @@ public class StaticProfileManager
     public Layout getLayout(String layoutID) {
         ProfileLS adapter = null;
         try {
-            final String layoutKey = this.portalService.getUserService().getDefaultLayoutKey();
+            final String layoutKey = this.portalService.getUserService().getDefaultProfileName();
 
             String serviceKey = LAYOUTKEY_PREFIX + layoutKey;
             Object[] objects = (Object[]) this.portalService.getUserService().getAttribute(serviceKey);

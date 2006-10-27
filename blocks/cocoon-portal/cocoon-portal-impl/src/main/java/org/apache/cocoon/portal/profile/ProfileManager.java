@@ -65,12 +65,10 @@ public interface ProfileManager {
     CopletDefinition getCopletDefinition(String copletDataId);
 
     /**
-     * Save the profile. Usually this just calls {@link #saveUserCopletInstanceDatas(String)}
-     * and {@link #saveUserLayout(String)}, but implementations are free to
-     * implement this method in a different way.
-     * @param layoutKey
+     * Save the user profile.
+     * This saves the curent user profile. It usually saves the layout and coplet instances.
      */
-    void saveUserProfiles(String profileName);
+    void saveUserProfiles();
 
     /**
      * Get all coplet instances for the current user.

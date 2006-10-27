@@ -43,7 +43,7 @@ public final class SaveAction
             this.getLogger().debug("Portal Save Action called.");
         }
 
-        this.portalService.getProfileManager().saveUserProfiles(null);
+        this.portalService.getProfileManager().saveUserProfiles();
         return EMPTY_MAP;
     }
 

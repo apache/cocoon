@@ -87,7 +87,7 @@ public interface UserService {
     Collection getTemporaryAttributeNames();
 
     /**
-     * Return the default layout key for the specific user.
+     * Return the default profile name for the current user.
      */
-    String getDefaultLayoutKey();
+    String getDefaultProfileName();
 }
