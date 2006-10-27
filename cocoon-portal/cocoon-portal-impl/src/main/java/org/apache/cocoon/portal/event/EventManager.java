@@ -36,7 +36,7 @@ public interface EventManager {
     String ROLE = EventManager.class.getName(); 
 
     /**
-     * Process the events
+     * Process the events.
      */
     void processEvents()
     throws ProcessingException;

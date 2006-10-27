@@ -19,6 +19,9 @@ package org.apache.cocoon.portal.event.aspect;
 import org.apache.cocoon.portal.services.aspects.BasicAspectContext;
 
 /**
+ * The context for an event aspect.
+ * An event aspect can call the next aspect in the chain by calling {@link #invokeNext()}.
+ * @see BasicAspectContext
  *
  * @version $Id$
  */
@@ -26,7 +29,7 @@ public interface EventAspectContext
     extends BasicAspectContext {
 
     /**
-     * Invoke next aspect 
+     * Invoke next aspect in the chain. 
      */
     void invokeNext();
 }
