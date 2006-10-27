@@ -19,6 +19,7 @@ package org.apache.cocoon.portal.event.aspect.impl;
 import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
@@ -31,11 +32,16 @@ import org.apache.cocoon.portal.om.LinkLayout;
  */
 public class LinkEventAspect extends AbstractContentEventAspect {
 
-    protected String getRequestParameterName() {
-        // TODO - make this configurable
-        return "link";
+    /**
+     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#getRequestParameterName(org.apache.cocoon.portal.event.aspect.EventAspectContext)
+     */
+    protected String getRequestParameterName(EventAspectContext context) {
+        return context.getAspectProperties().getProperty("parameter-name", "link");
     }
 
+    /**
+     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#getRequiredValueCount()
+     */
     protected int getRequiredValueCount() {
         return 2;
     }
