@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.event.aspect.impl;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
 import org.apache.cocoon.portal.om.FrameLayout;
 import org.apache.cocoon.portal.om.Layout;
@@ -30,11 +31,16 @@ import org.apache.cocoon.portal.om.LayoutInstance;
  */
 public class FrameEventAspect extends AbstractContentEventAspect {
 
-    protected String getRequestParameterName() {
-        // TODO - make this configurable
-        return "frame";
+    /**
+     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#getRequestParameterName(org.apache.cocoon.portal.event.aspect.EventAspectContext)
+     */
+    protected String getRequestParameterName(EventAspectContext context) {
+        return context.getAspectProperties().getProperty("parameter-name", "frame");
     }
 
+    /**
+     * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#getRequiredValueCount()
+     */
     protected int getRequiredValueCount() {
         return 2;
     }
