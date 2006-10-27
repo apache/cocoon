@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
@@ -50,19 +51,11 @@ public class FrameEventAspect extends AbstractContentEventAspect {
      */
     protected void publish(PortalService service,
                            Layout        layout,
-                           String[]      values) {
-        if (layout instanceof FrameLayout) {
-            LayoutInstance instance;
-            instance = LayoutFeatures.getLayoutInstance(service, layout, false);
-            if ( instance == null ) {
-                final Event e = new LayoutInstanceChangeAttributeEvent(instance, "frame", values[2], true);
-                service.getEventManager().send(e);                    
-            }
-        } else {
-            this.getLogger().warn(
-                "The configured layout: "
-                    + layout.getType()
-                    + " is not a FrameLayout.");
-        }
+                           String[]      values)
+    throws LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, FrameLayout.class, true);
+        final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, true);
+        final Event e = new LayoutInstanceChangeAttributeEvent(instance, FrameLayout.ATTRIBUTE_SOURCE_ID, values[2], true);
+        service.getEventManager().send(e);                    
     }
 }
