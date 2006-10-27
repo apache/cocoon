@@ -48,7 +48,7 @@ public class DefaultLinkRenderer implements Renderer, ThreadSafe {
         String layoutId = null;
         final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
         if ( instance != null ) {
-            layoutId = (String)instance.getTemporaryAttribute("link-layout-id");                
+            layoutId = (String)instance.getTemporaryAttribute(LinkLayout.ATTRIBUTE_LAYOUT_ID);                
         }
         if ( layoutId == null){
             // get default values
