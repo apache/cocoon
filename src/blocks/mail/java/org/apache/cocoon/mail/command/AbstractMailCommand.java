@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,14 +23,14 @@ import javax.mail.MessagingException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
- *  An abstract MailCommand template
+ * An abstract MailCommand template
  *
  * @author Bernhard Huber
- * @since 23. Oktober 2002
- * @version CVS $Id$
+ * @since 23 October 2002
+ * @version $Id$
  */
 public abstract class AbstractMailCommand extends AbstractLogEnabled
-         implements MailCommand {
+                                          implements MailCommand {
 
     /**
      * List of result objects
@@ -93,5 +93,3 @@ public abstract class AbstractMailCommand extends AbstractLogEnabled
      */
     public abstract void execute() throws MessagingException;
 }
-
-

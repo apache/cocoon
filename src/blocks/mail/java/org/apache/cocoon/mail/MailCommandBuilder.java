@@ -32,7 +32,7 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  * </p>
  *
  * @author Bernhard Huber
- * @since 28. Dezember 2002
+ * @since 28 December 2002
  * @version $Id$
  */
 public class MailCommandBuilder extends AbstractLogEnabled {
@@ -41,7 +41,7 @@ public class MailCommandBuilder extends AbstractLogEnabled {
     private Map cmdMap;
 
     /**
-     *Constructor for the MailCommandBuilder object
+     * Constructor for the MailCommandBuilder object
      */
     public MailCommandBuilder() {
         configure();
@@ -49,10 +49,10 @@ public class MailCommandBuilder extends AbstractLogEnabled {
 
 
     /**
-     *  Build a mail command.
+     * Build a mail command.
      *
-     *@param  mailContext  Description of the Parameter
-     *@return              Description of the Return Value
+     * @param  mailContext  Description of the Parameter
+     * @return              Description of the Return Value
      */
     public AbstractMailCommand buildAbstractMailCommand(MailContext mailContext) {
         AbstractMailCommand ama = null;
@@ -85,18 +85,17 @@ public class MailCommandBuilder extends AbstractLogEnabled {
 
 
     /**
-     * get Class for a command
+     * Get Class for a command
      *
      * @param cmd the command
      * @return Class associated with cmd, or null iff cmd is not mapped to any class
      */
     protected Class getClassForCommand( String cmd ) {
-        Class clazz = (Class)cmdMap.get( cmd );
-        return clazz;
+        return (Class) cmdMap.get(cmd);
     }
 
     /**
-     * test if command is mapped to a Command class
+     * Test if command is mapped to a Command class
      *
      * @param cmd the command
      * @return true iff command is mapped to a Class, otherwise return false
@@ -106,11 +105,10 @@ public class MailCommandBuilder extends AbstractLogEnabled {
     }
 
     /**
-     *  configure the cmd to mail command class mapping.
-     *  <p>
-     *    New commands are registered here. A command name is associated with
-     *    each command class.
-     *  </p>
+     * Configure the cmd to mail command class mapping.
+     *
+     * <p>New commands are registered here. A command name is associated with
+     * each command class.</p>
      */
     public void configure() {
         cmdMap = new HashMap();

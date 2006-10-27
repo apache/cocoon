@@ -19,19 +19,11 @@ package org.apache.cocoon.mail;
 import javax.mail.internet.MimePart;
 
 /**
- *  Description of the Interface
- *
  * @author Bernhard Huber
  * @since 26 October 2002
  * @version $Id$
  */
 public interface ContentTypePreference {
 
-    /**
-     *  Description of the Method
-     *
-     *@param  mimepart  Description of the Parameter
-     *@return           Description of the Return Value
-     */
     int preference(MimePart mimepart);
 }
