@@ -32,8 +32,6 @@ import org.apache.cocoon.portal.om.LayoutInstance;
  */
 public interface Profile {
 
-    String getProfileName();
-
     Collection getCopletInstances();
     Collection getLayoutObjects();
 

@@ -79,8 +79,8 @@ public interface PortalUser {
     String getAuthType();
 
     /**
-     * Return the default layout key for this user.
-     * @return The default layout key or null if the portal wide default should be used.
+     * Return the default profile name for this user.
+     * @return The default profile name or null if the portal wide default should be used.
      */
-    String getDefaultLayoutKey();
+    String getDefaultProfileName();
 }

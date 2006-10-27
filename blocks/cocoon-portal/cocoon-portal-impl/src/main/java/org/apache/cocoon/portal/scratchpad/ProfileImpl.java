@@ -40,9 +40,6 @@ import org.apache.cocoon.portal.om.LayoutInstance;
  */
 public class ProfileImpl implements Profile {
 
-    /** The name (unique key) of this profile. */
-    protected final String profileName;
-
     /** A map of all coplet types. */
     protected Map copletTypes;
 
@@ -63,10 +60,6 @@ public class ProfileImpl implements Profile {
 
     /** The root element of the layout. */
     protected Layout rootLayout;
-
-    public ProfileImpl(String profileName) {
-        this.profileName = profileName;
-    }
 
     /**
      * Set the root layout for this profile.
@@ -126,13 +119,6 @@ public class ProfileImpl implements Profile {
      */
     public Collection getLayoutObjects() {
         return this.layouts;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getProfileName()
-     */
-    public String getProfileName() {
-        return this.profileName;
     }
 
     /**
