@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,19 +25,21 @@ import javax.activation.DataSource;
 
 import org.apache.cocoon.servlet.multipart.Part;
 
-/** The FilePartDataSource class provides an object, that wraps a
- * Cocoon {@link Part}
- * object in a DataSource interface.
- * @see javax.activation.DataSource
+/**
+ * The FilePartDataSource class provides an object, that wraps a
+ * Cocoon {@link Part} object in a DataSource interface.
  *
+ * @see javax.activation.DataSource
  * @version $Id$
  */
 public class FilePartDataSource implements DataSource {
+
     private Part part;
     private String contentType;
     private String name;
 
-    /** Creates a new instance of FilePartDataSource from an
+    /**
+     * Creates a new instance of FilePartDataSource from an
      * {@link Part} object.
      * @param part An {@link Part} object.
      */
@@ -45,7 +47,8 @@ public class FilePartDataSource implements DataSource {
         this(part,null,null);
     }
 
-    /** Creates a new instance of FilePartDataSource from an
+    /**
+     * Creates a new instance of FilePartDataSource from an
      * {@link Part} object.
      * @param part An {@link Part} object.
      */
@@ -58,22 +61,23 @@ public class FilePartDataSource implements DataSource {
     }
 
     /**
-      * Check String for null or empty. 
-      * @param str
-      * @return true if str is null, empty string, or equals "null"
-      */
+     * Check String for null or empty.
+     * @param str
+     * @return true if str is null, empty string, or equals "null"
+     */
      private boolean isNullOrEmpty(String str) {
          return (str == null || "".equals(str) || "null".equals(str));
      }
 
-    /** Return the content type (mime type) obtained from
+    /**
+     * Return the content type (mime type) obtained from
      * {@link Part#getMimeType()}.
      * Return <CODE>application/octet-stream</CODE> if <CODE>getMimeType()</CODE>
      * returns <CODE>null</CODE>.
      * @return The content type (mime type) for this <CODE>DataSource</CODE> object.
-     */    
+     */
     public String getContentType() {
-        if (this.contentType != null) { 
+        if (this.contentType != null) {
             return this.contentType;
         }
         String mimeType = part.getMimeType();
@@ -83,12 +87,13 @@ public class FilePartDataSource implements DataSource {
         return mimeType;
     }
 
-    /** The InputStream object obtained from
+    /**
+     * The InputStream object obtained from
      * {@link Part#getInputStream()}
      * object.
      * @throws java.io.IOException if an I/O error occurs.
      * @return The InputStream object for this <CODE>DataSource</CODE> object.
-     */    
+     */
     public InputStream getInputStream() throws IOException {
         InputStream inp;
         try {
@@ -99,21 +104,23 @@ public class FilePartDataSource implements DataSource {
         return inp;
     }
 
-    /** Returns the name for this <CODE>DataSource</CODE> object. This is
+    /**
+     * Returns the name for this <CODE>DataSource</CODE> object. This is
      * what is returned by
      * {@link Part#getFileName()}.
      * @return the name for this <CODE>DataSource</CODE> object.
-     */    
+     */
     public String getName() {
         String name = (this.name != null ? this.name : part.getFileName());
         if (isNullOrEmpty(name)) name="attachment";
         return name;
     }
 
-    /** Unimplemented. Directly throws <CODE>IOException</CODE>.
+    /**
+     * Unimplemented. Directly throws <CODE>IOException</CODE>.
      * @throws java.io.IOException since unimplemented
      * @return nothing
-     */    
+     */
     public OutputStream getOutputStream() throws IOException {
         throw new IOException("no data sink available");
     }
