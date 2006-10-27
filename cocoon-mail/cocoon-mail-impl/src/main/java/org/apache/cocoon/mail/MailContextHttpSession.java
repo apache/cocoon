@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,9 +23,9 @@ import org.apache.avalon.framework.context.Context;
 /**
  *  An extension of MailContext.
  *  <p>
- *    It implments HttpSessionBindingListener for manging MailContext 
+ *    It implments HttpSessionBindingListener for manging MailContext
  *    resources in case of valueUnbound - ie. session removal.
- *  </p> 
+ *  </p>
  *
  * @since 02 January 2003
  * @version $Id$
@@ -59,9 +59,8 @@ public class MailContextHttpSession extends MailContext implements HttpSessionBi
      */
     public void valueUnbound(HttpSessionBindingEvent event) {
         getLogger().info("value unbound " + String.valueOf(event));
-        
+
         // This should not happen, removeStore of this
         this.removeStore();
     }
 }
-

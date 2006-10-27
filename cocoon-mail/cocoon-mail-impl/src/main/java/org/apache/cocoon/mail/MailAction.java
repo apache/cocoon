@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,14 +61,17 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
      *  Request attribute name of a XMLizable folder
      */
     public final static String REQUEST_ATTRIBUTE_FOLDER = "folder";
+
     /**
      *  Request attribute name of a XMLizable folders object
      */
     public final static String REQUEST_ATTRIBUTE_FOLDERS = "folders";
+
     /**
      *  Request attribute name of a XMLizable message object
      */
     public final static String REQUEST_ATTRIBUTE_MESSAGE = "message";
+
     /**
      *  Request attribute name of a XMLizable messages object
      */
@@ -78,14 +81,15 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
     /**
      * Execute mail commands.
      *
-     *@param  redirector     Cocoon's redirector
-     *@param  resolver       Cocoon's source resolver, used for testing if a source is resolvable
-     *@param  source         the source, e.g.: index.html
-     *@param  objectModel    Description of the Parameter
-     *@param  par            Description of the Parameter
-     *@exception  Exception  Description of the Exception
+     * @param  redirector     Cocoon's redirector
+     * @param  resolver       Cocoon's source resolver, used for testing if a source is resolvable
+     * @param  source         the source, e.g.: index.html
+     * @param  objectModel    Description of the Parameter
+     * @param  par            Description of the Parameter
+     * @exception  Exception  Description of the Exception
      */
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters par) throws Exception {
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters par)
+    throws Exception {
         Map actionMap = new HashMap();
 
         Request request = ObjectModelHelper.getRequest(objectModel);
@@ -107,8 +111,8 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
         }
 
         // assert mailSession is available
-        javax.mail.Session mailSession = null;
-        Store mailStore = null;
+        javax.mail.Session mailSession;
+        Store mailStore;
         try {
             try {
                 mailSession = (javax.mail.Session) mailContext.get(MailContext.MAIL_SESSION_ENTRY);
@@ -194,12 +198,12 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
 
 
     /**
-     *  Gets the uRLNameExpanded attribute of the MailGenerator object
+     * Gets the uRLNameExpanded attribute of the MailGenerator object
      *
-     *@param  storeURLNameTemplate  Description of the Parameter
-     *@param  userid                Description of the Parameter
-     *@param  password              Description of the Parameter
-     *@return                       The uRLNameExpanded value
+     * @param  storeURLNameTemplate  Description of the Parameter
+     * @param  userid                Description of the Parameter
+     * @param  password              Description of the Parameter
+     * @return                       The uRLNameExpanded value
      */
     protected String getURLNameExpanded(String storeURLNameTemplate, String userid, String password) {
         String tokenStart = "''";
@@ -208,19 +212,18 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
         filters.put("mail-userid", userid);
         filters.put("mail-passwd", password);
 
-        String filteredURLName = filter(tokenStart, tokenEnd, storeURLNameTemplate, filters);
-        return filteredURLName;
+        return filter(tokenStart, tokenEnd, storeURLNameTemplate, filters);
     }
 
 
     /**
-     * replace occurences of <code>TOKEN_STARTxxxTOKEN_END</code> by value of entry xxx in tokens table.
+     * Replace occurences of <code>TOKEN_STARTxxxTOKEN_END</code> by value of entry xxx in tokens table.
      *
-     *@param  tokenStart  token start marker
-     *@param  tokenEnd    token end marker
-     *@param  s           the string examined
-     *@param  tokens      Description of the Parameter
-     *@return             String replaced all tokenized entries of original String s.
+     * @param  tokenStart  token start marker
+     * @param  tokenEnd    token end marker
+     * @param  s           the string examined
+     * @param  tokens      Description of the Parameter
+     * @return             String replaced all tokenized entries of original String s.
      */
     protected String filter(final String tokenStart, final String tokenEnd, String s, Properties tokens) {
         int index = s.indexOf(tokenStart);
@@ -229,8 +232,8 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
             try {
                 StringBuffer b = new StringBuffer();
                 int i = 0;
-                String token = null;
-                String value = null;
+                String token;
+                String value;
 
                 do {
                     int endIndex = s.indexOf(tokenEnd, index + tokenStart.length() + 1);
@@ -262,9 +265,9 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
 
 
     /**
-     *  Check that the provider need is available
+     * Check that the provider need is available
      *
-     *@param  session  The javamail Session used for checking its providers.
+     * @param  session  The javamail Session used for checking its providers.
      */
     protected void checkProviders(javax.mail.Session session) {
         Provider[] providers = session.getProviders();
@@ -276,15 +279,15 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
 
 
     /**
-     *  Populate request attribute map.
-     *  <p>
+     * Populate request attribute map.
+     * <p>
      *    Execute mail command, and populate request attribute map with
      *    XMLizable javamail objects, created by the mail command
-     *  </p>
+     * </p>
      *
-     *@param  request        triggering the creation of javamail objects
-     *@param  mailContext    javamail context, store, session, folders
-     *@exception  Exception  Description of the Exception
+     * @param  request        triggering the creation of javamail objects
+     * @param  mailContext    javamail context, store, session, folders
+     * @exception  Exception  Description of the Exception
      */
     protected void populateRequestAttribute(Request request, MailContext mailContext) throws Exception {
         String folderName = (String) mailContext.get(MailContext.MAIL_CURRENT_WORKING_FOLDER_ENTRY);
@@ -304,10 +307,10 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
 
 
     /**
-     *  Put XMLizable javamail objects into request attribute map
+     * Put XMLizable javamail objects into request attribute map
      *
-     *@param  request         holding the destination attribute map
-     *@param  resultIterator  Iterator of
+     * @param  request         holding the destination attribute map
+     * @param  resultIterator  Iterator of
      */
     protected void putXMLizerToRequestAttribute(Request request, Iterator resultIterator) {
         if (resultIterator != null) {
@@ -353,15 +356,15 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
 
 
     /**
-     *   Retrieve javamail objects
+     * Retrieve javamail objects
      *
-     *@param  mailContext              Description of the Parameter
-     *@return                          List of retrieved javamail objects
-     *@exception  ProcessingException  thrown iff retrieval fails
+     * @param  mailContext              Description of the Parameter
+     * @return                          List of retrieved javamail objects
+     * @exception  ProcessingException  thrown iff retrieval fails
      */
     protected List retrieveJavaMailObjects(MailContext mailContext) throws ProcessingException {
 
-        List result = null;
+        List result;
         try {
             // do we have a MailCommandManager ?
             MailCommandManager mam = new MailCommandManager();
@@ -386,4 +389,3 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
         }
     }
 }
-
