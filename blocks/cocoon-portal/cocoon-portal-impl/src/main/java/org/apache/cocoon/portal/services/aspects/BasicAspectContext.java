@@ -22,6 +22,8 @@ import org.apache.cocoon.portal.PortalService;
 
 /**
  * The base interface for all aspect contexts.
+ * This interface provides basic access to some environment information like
+ * the current {@link PortalService} and the configuration for the aspect.
  *
  * @since 2.2
  * @version $Id$
