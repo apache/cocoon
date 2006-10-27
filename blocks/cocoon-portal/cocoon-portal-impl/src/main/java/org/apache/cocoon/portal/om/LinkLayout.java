@@ -20,13 +20,16 @@ import org.apache.cocoon.portal.services.LayoutFactory;
 
 /**
  * A link layout references another layout to be used instead. The reference
- * can be changed using events.
+ * can be changed at runtime using {@link LayoutInstance}.
  *
  * @version $Id$
  */
 public class LinkLayout extends Layout {
 
-    protected String linkedLayoutKey;
+    /** This is the name of the temporary attribute in the layout instance holding the current layout id. */
+    public static final String ATTRIBUTE_LAYOUT_ID = "link-layout-id";
+
+    protected String linkedProfileName;
     protected String linkedLayoutId;
 
     /**
@@ -34,26 +37,18 @@ public class LinkLayout extends Layout {
      * Never create a layout object directly. Use the
      * {@link LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param name The name of the layout.
+     * @param name The name of the profile.
      */
     public LinkLayout(String id, String name) {
         super(id, name);
-    }
-
-    public void setLayoutId(String layoutId) {
-        this.linkedLayoutId = layoutId;
     }
 
     public String getLayoutId() {
         return this.linkedLayoutId;
     }
 
-    public String getLayoutKey() {
-        return linkedLayoutKey;
-    }
-
-    public void setLayoutKey(String key) {
-        linkedLayoutKey = key;
+    public String getProfileName() {
+        return linkedProfileName;
     }
 
     /**
@@ -63,7 +58,7 @@ public class LinkLayout extends Layout {
         LinkLayout clone = (LinkLayout)super.clone();
 
         clone.linkedLayoutId = this.linkedLayoutId;
-        clone.linkedLayoutKey = this.linkedLayoutKey;
+        clone.linkedProfileName = this.linkedProfileName;
 
         return clone;
     }

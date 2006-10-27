@@ -24,6 +24,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -60,7 +61,8 @@ public abstract class AbstractContentEventAspect
      * @param layout  The corresponding layout
      * @param values  The values contained in the request
      */
-    protected abstract void publish(PortalService service, Layout layout, String[] values);
+    protected abstract void publish(PortalService service, Layout layout, String[] values)
+    throws LayoutException;
 
     /**
      * Publish the event.
@@ -69,9 +71,13 @@ public abstract class AbstractContentEventAspect
      * @param values The values contained in the request
      */
     protected void publish( PortalService service, String[] values) {
-        Layout layout = service.getProfileManager().getLayout(values[0] );
+        final Layout layout = service.getProfileManager().getLayout(values[0] );
         if ( layout != null ) {
-            this.publish( service, layout, values);
+            try {
+                this.publish( service, layout, values);
+            } catch (Exception e) {
+                this.getLogger().warn("Unable to publish event. Ignoring exception.", e);
+            }
         }
     }
 
