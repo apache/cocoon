@@ -314,42 +314,61 @@ public class GroupBasedProfileManager
      */
     protected Profile loadProfile() 
     throws ProfileException {
-        final String layoutKey = this.portalService.getUserService().getDefaultProfileName();
+        final String defaultProfileName = this.portalService.getUserService().getDefaultProfileName();
         final PortalUser user = this.portalService.getUserService().getUser();
         ProfileImpl profile = new ProfileImpl();
 
         try {
             // first "load" the global data
-            profile.setCopletTypes( this.getGlobalCopletTypes(layoutKey) );
-            profile.setCopletDefinitions( this.getGlobalDatas(user, profile, layoutKey) );
+            profile.setCopletTypes( this.getGlobalCopletTypes() );
+            // FIXME - We should be able to merge definitions from various locations
+            //         This could also be handled by aspects?
+            profile.setCopletDefinitions( this.getGlobalCopletDefinitions(user, profile) );
     
             // now load the user/group specific data
-            if ( !this.getCopletInstanceDatas(profile, user, CATEGORY_USER, layoutKey) ) {
-                if ( user.getGroups().size() == 0 || !this.getCopletInstanceDatas(profile, user, CATEGORY_GROUP, layoutKey)) {
-                    if ( !this.getCopletInstanceDatas(profile, user, CATEGORY_GLOBAL, layoutKey) ) {
-                        throw new ProcessingException("No profile for copletinstancedatas found.");
-                    }
-                }
-            }
-
-            if ( !this.getLayout(profile, user, CATEGORY_USER, layoutKey) ) {
-                if ( user.getGroups().size() == 0 || !this.getLayout(profile, user, CATEGORY_GROUP, layoutKey)) {
-                    if ( !this.getLayout(profile, user, CATEGORY_GLOBAL, layoutKey) ) {
-                        throw new ProcessingException("No profile for layout found.");
-                    }
-                }
-            }
+            this.loadProfile(profile, user, defaultProfileName);
+            // FIXME - Traverse the layout tree for link layouts
         } catch (ProfileException e) {
             throw e;
         } catch (Exception e) {
-            throw new ProfileException("Unable to load profile '" + layoutKey + "' for user " + user + ".", e);
+            throw new ProfileException("Unable to load profile '" + defaultProfileName + "' for user " + user + ".", e);
         }
         final Profile processedProfile = this.processProfile(profile);
         this.storeUserProfile(processedProfile);
         return processedProfile;
     }
 
-    protected Map getGlobalCopletTypes(final String profileName)
+    protected void loadProfile(ProfileImpl profile, PortalUser user, String profileName)
+    throws ProfileException {
+        try {
+            if ( !this.getCopletInstanceDatas(profile, user, CATEGORY_USER, profileName) ) {
+                if ( user.getGroups().size() == 0 || !this.getCopletInstanceDatas(profile, user, CATEGORY_GROUP, profileName)) {
+                    if ( !this.getCopletInstanceDatas(profile, user, CATEGORY_GLOBAL, profileName) ) {
+                        throw new ProcessingException("No profile for copletinstancedatas found.");
+                    }
+                }
+            }
+    
+            if ( !this.getLayout(profile, user, CATEGORY_USER, profileName) ) {
+                if ( user.getGroups().size() == 0 || !this.getLayout(profile, user, CATEGORY_GROUP, profileName)) {
+                    if ( !this.getLayout(profile, user, CATEGORY_GLOBAL, profileName) ) {
+                        throw new ProcessingException("No profile for layout found.");
+                    }
+                }
+            }        
+        } catch (ProfileException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ProfileException("Unable to load profile '" + profileName + "' for user " + user + ".", e);
+        }
+    }
+
+    /**
+     * Return the current set of global coplet types.
+     * @return
+     * @throws Exception
+     */
+    protected Map getGlobalCopletTypes()
     throws Exception {
         // if we already have loaded the profile and don't check
         // for changes, just return the profile
@@ -357,11 +376,12 @@ public class GroupBasedProfileManager
             return this.copletTypes.objects;
         }
 
+        // build key for loading the profile
         final Map key = this.buildKey(CATEGORY_GLOBAL,
                 ProfileLS.PROFILETYPE_COPLETTYPE,
                 null,
                 true,
-                profileName);
+                null);
 
         SourceValidity newValidity = null;
         // if we have a profile, check for reloading
@@ -392,6 +412,7 @@ public class GroupBasedProfileManager
                 newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETTYPE);
             }
             this.copletTypes.validity = newValidity;
+            // now invalidate coplet definitions
             this.copletDefinitions.objects = null;
             this.copletDefinitions.validity = null;
             this.prepareObject(null, this.copletTypes.objects);
@@ -399,9 +420,8 @@ public class GroupBasedProfileManager
         }
     }
 
-    protected Map getGlobalDatas(final PortalUser  info,
-                                 final ProfileImpl profile,
-                                 final String      layoutKey)
+    protected Map getGlobalCopletDefinitions(final PortalUser  info,
+                                             final ProfileImpl profile)
     throws Exception {
         // if we already have loaded the profile and don't check
         // for changes, just return the profile
@@ -413,7 +433,7 @@ public class GroupBasedProfileManager
                 ProfileLS.PROFILETYPE_COPLETDEFINITION,
                 info,
                 true,
-                layoutKey);
+                null);
         SourceValidity newValidity = null;
         // if we have a profile, check for reloading
         if ( this.copletDefinitions.validity != null ) {
@@ -608,9 +628,11 @@ public class GroupBasedProfileManager
         if ( this.copletTypes.objects == null ) {
             try {
                 // first "load" the global data
-                this.getGlobalCopletTypes(this.portalService.getUserService().getDefaultProfileName());
+                this.getGlobalCopletTypes();
+            } catch (ProfileException e) {
+                throw e;
             } catch (Exception e) {
-                throw new ProfileException("Unable to load global base datas.", e);
+                throw new ProfileException("Unable to load global coplet types.", e);
             }            
         }
         return this.copletTypes.objects.values();

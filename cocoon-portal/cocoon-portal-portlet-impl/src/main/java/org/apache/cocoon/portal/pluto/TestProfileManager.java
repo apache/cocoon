@@ -59,9 +59,8 @@ public class TestProfileManager extends GroupBasedProfileManager {
 
     protected Profile loadProfile() 
     throws ProfileException {
-        final PortalUser info = this.portalService.getUserService().getUser();
-        final String layoutKey = this.portalService.getUserService().getDefaultProfileName();
-        if ( info.getUserName().equals("test") ) {
+        final PortalUser user = this.portalService.getUserService().getUser();
+        if ( user.getUserName().equals("test") ) {
             try {
                 // if the request parameter 'portletName' is available we only
                 // display the portlets specified with the parameter. Otherwise
@@ -76,9 +75,9 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 }
                 final ProfileImpl profile = new ProfileImpl();
     
-                // first "load" the global data
-                profile.setCopletTypes( this.getGlobalCopletTypes( layoutKey) );
-                profile.setCopletDefinitions( this.getGlobalDatas( info, profile, layoutKey) );
+                // first "load" the global coplet types
+                profile.setCopletTypes( this.getGlobalCopletTypes() );
+                profile.setCopletDefinitions( this.getGlobalCopletDefinitions( user, profile ) );
     
                 // create root layout
                 CompositeLayout rootLayout = new CompositeLayout("root", "row");
@@ -105,7 +104,6 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 }
                 profile.setCopletInstances(instances);
                 this.prepareObject(profile, instances);
-    
                 this.prepareObject(profile, rootLayout);
                 profile.setRootLayout(rootLayout);
     
@@ -115,7 +113,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
             } catch (ProfileException e) {
                 throw e;
             } catch (Exception e) {
-                throw new ProfileException("Unable to load profile for '" + layoutKey + "'.", e);
+                throw new ProfileException("Unable to load profile '" + this.portalService.getUserService().getDefaultProfileName() + "' for user" + user + ".", e);
             }
         }
         return super.loadProfile();

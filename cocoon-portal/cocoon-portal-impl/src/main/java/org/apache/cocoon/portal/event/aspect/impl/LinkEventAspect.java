@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
+import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
@@ -36,7 +37,7 @@ public class LinkEventAspect extends AbstractContentEventAspect {
     }
 
     protected int getRequiredValueCount() {
-        return 3;
+        return 2;
     }
 
     /**
@@ -44,21 +45,13 @@ public class LinkEventAspect extends AbstractContentEventAspect {
      */
     protected void publish(PortalService service,
                            Layout layout,
-                           String[] values) {
-        if (layout instanceof LinkLayout) {
-            LayoutInstance instance;
-            instance = LayoutFeatures.getLayoutInstance(service, layout, false);
-            if ( instance == null ) {
-                Event e = new LayoutInstanceChangeAttributeEvent(instance, "link-layout-key", values[2], true);
-                service.getEventManager().send(e);                    
-                e = new LayoutInstanceChangeAttributeEvent(instance, "llink-layout-id", values[3], true);
-                service.getEventManager().send(e);                    
-            }
-        } else {
-            this.getLogger().warn(
-                "the configured layout: "
-                    + layout.getType()
-                    + " is not a LinkLayout.");
+                           String[] values)
+    throws LayoutException {
+        LayoutFeatures.checkLayoutClass(layout, LinkLayout.class, true);
+        final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
+        if ( instance == null ) {
+            final Event e = new LayoutInstanceChangeAttributeEvent(instance, LinkLayout.ATTRIBUTE_LAYOUT_ID, values[2], true);
+            service.getEventManager().send(e);                    
         }
     }
 }
