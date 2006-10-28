@@ -119,7 +119,7 @@ public final class BlockConnection
             
             return new ByteArrayInputStream(out);
         } catch (ServletException e) {
-            throw new CascadingIOException("BlockConnection " + e.getMessage());
+            throw new CascadingIOException("BlockConnection " + e.getMessage(), e);
         }
     }
 
