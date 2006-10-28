@@ -30,6 +30,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.blocks.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.blocks.util.BlockCallHttpServletResponse;
 
@@ -118,7 +119,7 @@ public final class BlockConnection
             
             return new ByteArrayInputStream(out);
         } catch (ServletException e) {
-            throw new IOException("BlockConnection " + e.getMessage());
+            throw new CascadingIOException("BlockConnection " + e.getMessage());
         }
     }
 
