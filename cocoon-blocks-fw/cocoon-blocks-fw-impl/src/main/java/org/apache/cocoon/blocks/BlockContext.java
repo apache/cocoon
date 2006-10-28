@@ -433,7 +433,12 @@ public class BlockContext extends ServletContextWrapper {
          */
         public void forward(ServletRequest request, ServletResponse response)
         throws ServletException, IOException {
-            BlockContext.this.servlet.service(request, response);
+            try {
+                BlockCallStack.enterBlock(BlockContext.this);
+                BlockContext.this.servlet.service(request, response);
+            } finally {
+                BlockCallStack.leaveBlock();
+            }
         }
 
         /* (non-Javadoc)

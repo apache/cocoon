@@ -120,12 +120,7 @@ public class BlockServlet extends HttpServlet
     throws ServletException, IOException {
         RequestDispatcher dispatcher =
             this.blockContext.getRequestDispatcher(request.getPathInfo());
-        try {
-            BlockCallStack.enterBlock(this.blockContext);
-            dispatcher.forward(request, response);
-        } finally {
-            BlockCallStack.leaveBlock();
-        }
+        dispatcher.forward(request, response);
     }
 
     /**
