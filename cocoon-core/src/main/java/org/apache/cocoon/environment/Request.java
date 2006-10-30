@@ -39,7 +39,7 @@ import java.util.Map;
  * 
  * @version $Id$
  */
-public interface Request {
+public interface Request extends ValueHolder {
 
     /**
      * This constant defines an request wide scope for the request attribute.
