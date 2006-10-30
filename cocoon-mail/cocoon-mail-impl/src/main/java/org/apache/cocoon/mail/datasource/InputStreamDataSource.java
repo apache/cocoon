@@ -14,42 +14,67 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.mail.datasource;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.cocoon.servlet.multipart.Part;
+import org.apache.excalibur.source.SourceUtil;
 
 /**
- * The FilePartDataSource class provides an object, that wraps a
- * Cocoon {@link Part} object in a DataSource interface.
+ * The InputStreamDataSource class provides an object, that wraps an
+ * {@link InputStream} object in a DataSource interface.
  *
  * @see javax.activation.DataSource
  * @version $Id$
  */
-public class FilePartDataSource extends AbstractDataSource {
+public class InputStreamDataSource extends AbstractDataSource {
 
-    private Part part;
+    private byte[] data;
 
     /**
      * Creates a new instance of FilePartDataSource from an
-     * {@link Part} object.
-     * @param part An {@link Part} object.
+     * {@link InputStream} object.
+     *
+     * @param in An {@link InputStream} object.
      */
-    public FilePartDataSource(Part part) {
-        this(part,null,null);
+    public InputStreamDataSource(InputStream in) throws IOException {
+        this(in, null, null);
+    }
+
+    /**
+     * Creates a new instance of FilePartDataSource from a byte array.
+     */
+    public InputStreamDataSource(byte[] data, String type, String name) {
+        super(getName(name), getType(type));
+
+        if (data == null) {
+            this.data = new byte[0];
+        } else {
+            this.data = data;
+        }
     }
 
     /**
      * Creates a new instance of FilePartDataSource from an
-     * {@link Part} object.
-     * @param part An {@link Part} object.
+     * {@link InputStream} object.
+     *
+     * @param in An {@link InputStream} object.
      */
-    public FilePartDataSource(Part part, String type, String name) {
-        super(getName(name, part), getType(type, part));
-        this.part = part;
+    public InputStreamDataSource(InputStream in, String type, String name) throws IOException {
+        super(getName(name), getType(type));
+
+        // Need to copy contents of InputStream into byte array since getInputStream
+        // method is called more than once by JavaMail API.
+        if (in == null) {
+            data = new byte[0];
+        } else {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            SourceUtil.copy(in, out);
+            data = out.toByteArray();
+        }
     }
 
     /**
@@ -57,18 +82,14 @@ public class FilePartDataSource extends AbstractDataSource {
      * It is first non empty value from the list:
      * <ul>
      * <li>The value of <code>name</code> argument.
-     * <li>The value returned by the {@link Part#getFileName()}.
      * <li>"attachment".
      * </ul>
      *
      * @return the name for this <code>DataSource</code>
      */
-    private static String getName(String name, Part part) {
+    private static String getName(String name) {
         if (isNullOrEmpty(name)) {
-            name = part.getFileName();
-            if (isNullOrEmpty(name)) {
-                name = "attachment";
-            }
+            name = "attachment";
         }
 
         return name;
@@ -79,39 +100,25 @@ public class FilePartDataSource extends AbstractDataSource {
      * It is first non empty value from the list:
      * <ul>
      * <li>The value of <code>type</code> argument.
-     * <li>The value returned by {@link Part#getMimeType()}.
      * <li>"application/octet-stream".
      * </ul>
      *
      * @return The content type (mime type) of this <code>DataSource</code> object.
      */
-    private static String getType(String type, Part part) {
+    private static String getType(String type) {
         if (isNullOrEmpty(type)) {
-            type = part.getMimeType();
-            if (isNullOrEmpty(type)) {
-                type = "application/octet-stream";
-            }
+            type = "application/octet-stream";
         }
 
         return type;
     }
 
     /**
-     * The InputStream object obtained from {@link Part#getInputStream()}
-     * object.
+     * The InputStream object passed into contructor.
      *
-     * @throws java.io.IOException if an I/O error occurs.
      * @return The InputStream object for this <code>DataSource</code> object.
      */
-    public InputStream getInputStream() throws IOException {
-        try {
-            return part.getInputStream();
-        } catch (IOException e) {
-            // Sun's SMTPTransport looses cause exception. Log it now.
-            if (getLogger() != null) {
-                getLogger().warn("Unable to obtain input stream for '" + part.getUploadName() + "'", e);
-            }
-            throw e;
-        }
+    public InputStream getInputStream() {
+        return new ByteArrayInputStream(data);
     }
 }
