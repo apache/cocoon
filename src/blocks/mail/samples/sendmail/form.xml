@@ -127,6 +127,7 @@
         <tr>
           <td>Choose the frontend:</td>
           <td>Send mail using
+            <input type="submit" name="use-flow" value="Flow"/>
             <input type="submit" name="use-action" value="Action"/>
             <input type="submit" name="use-oldaction" value="Deprecated Action"/>
             <input type="submit" name="use-logicsheet" value="Logicsheet"/>

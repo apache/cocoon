@@ -18,10 +18,7 @@ package org.apache.cocoon.mail.datasource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import javax.activation.DataSource;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
 
 /**
@@ -31,19 +28,15 @@ import org.apache.excalibur.source.Source;
  *
  * @see org.apache.excalibur.source.Source
  * @see javax.activation.DataSource
- * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
-public class SourceDataSource extends AbstractLogEnabled
-                              implements DataSource {
+public class SourceDataSource extends AbstractDataSource {
 
     private Source src;
-    private String contentType;
-    private String name;
 
     /**
-     * Creates a new instance of SourceDataSource
+     * Creates a new instance of SourceDataSource.
+     *
      * @param src A <code>org.apache.excalibur.source.Source</code> Object.
      */
     public SourceDataSource(Source src) {
@@ -51,54 +44,70 @@ public class SourceDataSource extends AbstractLogEnabled
     }
 
     /**
-     * Creates a new instance of SourceDataSource
+     * Creates a new instance of SourceDataSource.
+     *
      * @param src A <code>org.apache.excalibur.source.Source</code> Object.
      */
     public SourceDataSource(Source src, String type, String name) {
+        super(getName(name, src), getType(type, src));
         this.src = src;
-        this.contentType = type;
-        this.name = name;
-        if (isNullOrEmpty(this.name)) {
-            this.name = null;
-        }
-        if (isNullOrEmpty(this.contentType)) {
-            this.contentType = null;
-        }
     }
 
     /**
-     * Check String for null or empty.
-     * @param str
-     * @return true if str is null, empty string, or equals "null"
+     * Determines the name for this <code>DataSource</code> object.
+     * It is first non empty value from the list:
+     * <ul>
+     * <li>The value of <code>name</code> argument.
+     * <li>The last path component (after the last '/') from the value
+     * returned by the {@link Source#getURI()}.
+     * <li>"attachment".
+     * </ul>
+     *
+     * @return the name for this <code>DataSource</code>
      */
-     private boolean isNullOrEmpty(String str) {
-         return str == null || "".equals(str) || "null".equals(str);
-     }
+    private static String getName(String name, Source src) {
+        if (isNullOrEmpty(name)) {
+            name = src.getURI();
+            name = name.substring(name.lastIndexOf('/') + 1);
+            int idx = name.indexOf('?');
+            if (idx > -1) {
+                name = name.substring(0, idx);
+            }
+
+            if (isNullOrEmpty(name)) {
+                name = "attachment";
+            }
+        }
+
+        return name;
+    }
 
     /**
-     * Returns the result of a call to the <code>Source</code>
-     * objects <code>getMimeType()</code> method. Returns
-     * "application/octet-stream", if <code>getMimeType()</code>
-     * returns <code>null</code>.
+     * Determines the mime type for this <code>DataSource</code> object.
+     * It is first non empty value from the list:
+     * <ul>
+     * <li>The value of <code>type</code> argument.
+     * <li>The value returned by {@link Source#getMimeType()}.
+     * <li>"application/octet-stream".
+     * </ul>
+     *
      * @return The content type (mime type) of this <code>DataSource</code> object.
-     * @see org.apache.excalibur.source.Source#getMimeType()
      */
-    public String getContentType() {
-        if (this.contentType != null) {
-            return this.contentType;
+    private static String getType(String type, Source src) {
+        if (isNullOrEmpty(type)) {
+            type = src.getMimeType();
+            if (isNullOrEmpty(type)) {
+                type = "application/octet-stream";
+            }
         }
 
-        String mimeType = src.getMimeType();
-        if (isNullOrEmpty(mimeType)) {
-            mimeType = "application/octet-stream";
-        }
-
-        return mimeType;
+        return type;
     }
 
     /**
      * Get the <code>InputStream</code> object from the
      * <code>Source</code> object.
+     *
      * @throws java.io.IOException if an I/O error occurs.
      * @return The InputStream object from the <code>Source</code> object.
      * @see org.apache.excalibur.source.Source#getInputStream()
@@ -113,32 +122,5 @@ public class SourceDataSource extends AbstractLogEnabled
             }
             throw e;
         }
-    }
-
-    /**
-     * Returns the name for this <code>DataSource</code> object. This is
-     * actually the last path component (after the last '/') from the value
-     * returned by the <code>getURI()</code> method of the <code>Source</code>
-     * object.
-     * @return the name for this <code>DataSource</code>
-     * @see org.apache.excalibur.source.Source#getURI()
-     */
-    public String getName() {
-        if (this.name != null){
-            return this.name;
-        }
-
-        String name = src.getURI();
-        name = name.substring(name.lastIndexOf('/') + 1);
-        return "".equals(name)? "attachment" : name;
-    }
-
-    /**
-     * Unimplemented. Directly throws <code>IOException</code>.
-     * @throws java.io.IOException since unimplemented
-     * @return nothing
-     */
-    public OutputStream getOutputStream() throws IOException {
-        throw new IOException("no data sink available");
     }
 }

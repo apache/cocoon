@@ -73,13 +73,25 @@
     </map:resource>
   </map:resources>
 
+  <map:flow language="javascript">
+    <map:script src="mail.js"/>
+  </map:flow>
+
 <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
     <map:pipeline>
 
+      <map:match pattern="view/page">
+        <map:call resource="show-page">
+          <map:parameter name="target" value="done.xml"/>
+          <map:parameter name="remove" value="ignored"/>
+        </map:call>
+      </map:match>
+
       <map:match pattern="*">
         <map:match type="host-matcher" pattern="localhost">
+
           <!--+
               | To avoid creating an open SPAM relay in default
               | deployments, only allow "localhost" as server name.
@@ -87,11 +99,28 @@
               +-->
 
           <map:act type="req-params">
-            <map:parameter name="parameters" value="use-action"/>
-              <!--+
-                  | Use action to send mail
-                  +-->
+            <map:parameter name="parameters" value="use-flow"/>
+            <!--+
+                | Use flow to send mail
+                +-->
+            <map:call function="mail">
+              <map:parameter name="host"     value="{request-param:smtphost}"/>
+              <map:parameter name="user"     value="{request-param:smtpuser}"/>
+              <map:parameter name="password" value="{request-param:smtppassword}"/>
+              <map:parameter name="from"     value="{request-param:from}"/>
+              <map:parameter name="to"       value="{request-param:to}"/>
+              <map:parameter name="subject"  value="{request-param:subject}"/>
+              <map:parameter name="body"     value="{request-param:body}"/>
+              <map:parameter name="cc"       value="{request-param:cc}"/>
+              <map:parameter name="bcc"      value="{request-param:bcc}"/>
+            </map:call>
+          </map:act>
 
+          <map:act type="req-params">
+            <map:parameter name="parameters" value="use-action"/>
+            <!--+
+                | Use action to send mail
+                +-->
             <map:act type="sendmail">
               <!--+
                   | New sendmail action extends the deprecated action with options
@@ -120,10 +149,9 @@
 
           <map:act type="req-params">
             <map:parameter name="parameters" value="use-oldaction"/>
-              <!--+
-                  | Use (deprecated) action to send mail
-                  +-->
-
+            <!--+
+                | Use (deprecated) action to send mail
+                +-->
             <map:act type="old-sendmail">
               <map:parameter name="smtp-host"    value="{request-param:mail.smtphost}"/>
               <map:parameter name="smtp-user"   value="{request-param:smtpuser}"/>
@@ -149,15 +177,17 @@
 
           <map:act type="req-params">
             <map:parameter name="parameters" value="use-logicsheet"/>
-              <!--+
-                  | Use logicsheet from XSP to send mail
-                  +-->
+            <!--+
+                | Use logicsheet from XSP to send mail
+                +-->
             <map:call resource="show-page">
               <map:parameter name="target" value="sendmail_xsp.xml"/>
               <map:parameter name="remove" value="{0}"/>
             </map:call>
           </map:act>
+
         </map:match> <!-- type="host-matcher" pattern="localhost" -->
+
 
         <!-- default page -->
         <map:call resource="show-page">
