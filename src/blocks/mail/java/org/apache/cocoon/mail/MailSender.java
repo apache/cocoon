@@ -16,16 +16,20 @@
  */
 package org.apache.cocoon.mail;
 
-import org.apache.cocoon.environment.SourceResolver;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
+import org.apache.cocoon.environment.SourceResolver;
+
 /**
  * A helper component used by the {@link org.apache.cocoon.acting.Sendmail}
- * and the <code>sendmail.xsl</code> logicsheet for sending an email message.
+ * action and the <code>sendmail.xsl</code> logicsheet for sending email messages.
+ *
+ * <p>Please note that this component is not (and can not) be
+ * {@link org.apache.avalon.framework.thread.ThreadSafe}, so you need to lookup
+ * new instance in each processing thread.
  *
  * @since 2.1.5
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public interface MailSender {
@@ -52,6 +56,7 @@ public interface MailSender {
 
     /**
      * Set the <code>from</code> address of the message.
+     *
      * @param from The address the message appears to be from.
      */
     void setFrom(String from);
@@ -61,6 +66,7 @@ public interface MailSender {
      * is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param to the destination address(es)
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
@@ -71,6 +77,7 @@ public interface MailSender {
      * is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param replyTo the address(es) that replies should be sent to
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
@@ -81,6 +88,7 @@ public interface MailSender {
      * message. The address is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param cc the address(es), which should receive a carbon copy.
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
@@ -91,17 +99,11 @@ public interface MailSender {
      * the message. The address is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param bcc the address(es), which should receive a black carbon copy.
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
     void setBcc(String bcc);
-
-    /**
-     * Sets the character set for encoding the message. This has no effect,
-     * if any attachments are send in the message.
-     * @param charset the character set to be used for enbcoding the message
-     */
-    void setCharset(String charset);
 
     /**
      * Sets the subject line of the message.
@@ -109,11 +111,26 @@ public interface MailSender {
      */
     void setSubject(String subject);
 
+    //
+    // Set the Body
+    //
+
+    /**
+     * Sets the character set for encoding the message. This has effect
+     * only on text set via {@link #setBody(String)}.
+     *
+     * @param charset the character set to be used for encoding the message
+     * @deprecated Since 2.1.10. Use {@link #setBody(Object, String)}
+     */
+    void setCharset(String charset);
+
     /**
      * Sets the body text of the email message.
      * If both a text body and a body read from a source are set,
      * only the latter will be used.
+     *
      * @param body The body text of the email message
+     * @deprecated Since 2.1.10. Use {@link #setBody(Object)}
      */
     void setBody(String body);
 
@@ -121,53 +138,99 @@ public interface MailSender {
      * Sets the body source URL of the email message.
      * If both a text body and a body read from a source are set,
      * only the latter will be used.
+     *
      * @param src The body source URL of the email message
+     * @deprecated Since 2.1.10. Use {@link #setBodyURL(String)}
      */
     void setBodyFromSrc(String src);
 
     /**
      * Sets the optional body source Mime Type of the email message.
+     *
      * @param srcMimeType The optional body source Mime Type of the email message
+     * @deprecated Since 2.1.10. Use {@link #setBodyURL(String, String)}
      */
     void setBodyFromSrcMimeType(String srcMimeType);
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
-     * @param attachment to be send with the message
+     * Sets the body content of the email message.
+     *
+     * <p>The body can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
+     * @param body The body text of the email message
+     */
+    void setBody(Object body);
+
+    /**
+     * Sets the body content of the email message.
+     *
+     * <p>The body can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
+     * @param body The body text of the email message
+     * @param type mime type (optional)
+     */
+    void setBody(Object body, String type);
+
+    /**
+     * Sets the body content of the email message.
+     *
+     * @param url URL to use as message body
      * @see org.apache.excalibur.source.Source
+     */
+    void setBodyURL(String url);
+
+    /**
+     * Sets the body content of the email message.
+     *
+     * @param url URL to use as message body
+     * @param type mime type (optional)
+     * @see org.apache.excalibur.source.Source
+     */
+    void setBodyURL(String url, String type);
+
+    //
+    // Add Attachments
+    //
+
+    /**
+     * Add an attachement to the message to be send.
+     *
+     * <p>The attachment can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
+     * @param attachment to be send with the message
      */
     void addAttachment(Object attachment);
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
+     * Add an attachement to the message to be send.
+     *
+     * <p>The attachment can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
      * @param attachment to be send with the message
      * @param type mime type (optional)
      * @param name attachment name (optional)
-     * @see org.apache.excalibur.source.Source
      */
     void addAttachment(Object attachment, String type, String name);
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
+     * Add an attachement to the message to be send.
+     *
      * @param url URL to attach to the message
      * @see org.apache.excalibur.source.Source
      */
     void addAttachmentURL(String url);
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
+     * Add an attachement to the message to be send.
+     *
      * @param url URL to attach to the message
      * @param type mime type (optional)
      * @param name attachment name (optional)

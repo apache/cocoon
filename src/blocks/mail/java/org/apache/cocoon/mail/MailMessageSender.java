@@ -16,28 +16,17 @@
  */
 package org.apache.cocoon.mail;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-
-import org.apache.cocoon.mail.datasource.FilePartDataSource;
-import org.apache.cocoon.mail.datasource.SourceDataSource;
-import org.apache.cocoon.servlet.multipart.Part;
-
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Authenticator;
-import javax.mail.BodyPart;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -49,13 +38,27 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import javax.mail.internet.MimePart;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+
+import org.apache.cocoon.mail.datasource.AbstractDataSource;
+import org.apache.cocoon.mail.datasource.FilePartDataSource;
+import org.apache.cocoon.mail.datasource.InputStreamDataSource;
+import org.apache.cocoon.mail.datasource.SourceDataSource;
+import org.apache.cocoon.servlet.multipart.Part;
 
 /**
  * A helper class used by the {@link org.apache.cocoon.acting.Sendmail}
@@ -91,17 +94,33 @@ public class MailMessageSender extends AbstractLogEnabled
     private String cc;
     private String bcc;
     private String subject;
-    private String charset;
-    private String src;
-    private String srcMimeType;
-    private String body;
+
+    private Attachment body;
+    private String bodyType;
+    private String bodySrcType;
     private List attachments;
+
     private Exception exception;
+
+
+    /** Java 1.3 Accessor */
+    private Logger getMyLogger() {
+        return getLogger();
+    }
+
+    /**
+     * Check string for null, empty, and "null".
+     * @param str
+     * @return true if str is null, empty string, or equals "null"
+     */
+    private boolean isNullOrEmpty(String str) {
+        return str == null || "".equals(str) || "null".equals(str);
+    }
 
     /**
      * Helper class for attachment data.
      */
-    private static class Attachment {
+    private class Attachment {
         private Object obj;
         private String type;
         private String name;
@@ -137,21 +156,14 @@ public class MailMessageSender extends AbstractLogEnabled
             this.type = type;
             this.name = name;
             this.isURL = isURI;
+
             if (isNullOrEmpty(this.type)) {
                 this.type = null;
             }
+
             if (isNullOrEmpty(this.name)) {
                 this.name = null;
             }
-        }
-
-        /**
-         * Check String for null or empty.
-         * @param str
-         * @return true if str is null, empty string, or equals "null"
-         */
-        private boolean isNullOrEmpty(String str) {
-            return str == null || "".equals(str) || "null".equals(str);
         }
 
         /**
@@ -163,21 +175,25 @@ public class MailMessageSender extends AbstractLogEnabled
         }
 
         /**
-         * Return attachment name. The argument overrides the stored name.
-         * @param name
-         * @return stored name or otherwise parameter
+         * Is the encapsulated object a text?
+         * @return true if text (String object)
          */
-        public String getName(String name) {
-            return (this.name == null ? name : this.name);
+        public boolean isText() {
+            return !isURL() && this.obj instanceof String;
         }
 
         /**
-         * Return attachment type. The argument overrides the stored type.
-         * @param type  attachment type
-         * @return stored type or otherwise parameter
+         * Return attachment name.
          */
-        public String getType(String type) {
-            return (this.type == null ? type : this.type);
+        public String getName() {
+            return this.name;
+        }
+
+        /**
+         * Return attachment type.
+         */
+        public String getType() {
+            return this.type;
         }
 
         /**
@@ -186,6 +202,94 @@ public class MailMessageSender extends AbstractLogEnabled
         public Object getObject() {
             return this.obj;
         }
+
+        public String getText() {
+            return (String) this.obj;
+        }
+
+        public DataSource getDataSource(SourceResolver resolver, List sources)
+        throws IOException, MessagingException {
+            AbstractDataSource ds = null;
+
+            if (isURL) {
+                String url = (String) getObject();
+                Source src = resolver.resolveURI(url);
+                sources.add(src);
+                if (src.exists()) {
+                    ds = new SourceDataSource(src, getType(), getName());
+                }
+            } else if (getObject() instanceof Part) {
+                Part part = (Part) getObject();
+                ds = new FilePartDataSource(part, getType(), getName());
+            } else if (getObject() instanceof InputStream) {
+                InputStream in = (InputStream) getObject();
+                ds = new InputStreamDataSource(in, getType(), getName());
+            } else if (getObject() instanceof byte[]) {
+                byte[] data = (byte[]) getObject();
+                ds = new InputStreamDataSource(data, getType(), getName());
+            } else {
+                // TODO: other classes?
+                throw new MessagingException("Not yet supported: " + getObject());
+            }
+
+            if (ds != null) {
+                ds.enableLogging(getMyLogger());
+            }
+            return ds;
+        }
+
+        public void setContentTo(SourceResolver resolver, List sources, MimePart part)
+        throws IOException, MessagingException {
+            if (isText()) {
+                // Set text
+                if (type != null) {
+                    part.setContent(getText(), type);
+                } else {
+                    // Let JavaMail decide on character encoding.
+                    part.setText(getText());
+                }
+                if (name != null) {
+                    part.setFileName(name);
+                }
+            } else {
+                // Set data
+                DataSource ds = getDataSource(resolver, sources);
+                part.setDataHandler(new DataHandler(ds));
+                String name = ds.getName();
+                if (name != null) {
+                    part.setFileName(name);
+                }
+            }
+        }
+
+        public MimeBodyPart getBodyPart(SourceResolver resolver, List sources)
+        throws IOException, MessagingException {
+            MimeBodyPart part = new MimeBodyPart();
+            setContentTo(resolver, sources, part);
+            return part;
+        }
+    }
+
+    private class Body extends Attachment {
+        public Body(Object obj) {
+            super(obj);
+        }
+
+        public Body(Object obj, String type) {
+            super(obj, type, null);
+        }
+
+        public Body(Object obj, String type, boolean isURI) {
+            super(obj, type, null, isURI);
+        }
+
+        // Override to set name to null: body can not have name.
+        public DataSource getDataSource(SourceResolver resolver, List sources)
+        throws IOException, MessagingException {
+            AbstractDataSource ds = (AbstractDataSource) super.getDataSource(resolver, sources);
+            ds.setName(null);
+            return ds;
+        }
     }
 
 
@@ -193,8 +297,9 @@ public class MailMessageSender extends AbstractLogEnabled
     }
 
     /**
-     * Creates a new instance of MailMessageSender
+     * Creates a new instance of MailMessageSender.
      * Keep constructor for backwards compatibility.
+     *
      * @param smtpHost The host name or ip-address of a host to accept
      *                 the email for delivery.
      * @deprecated Since 2.1.5. Please use {@link MailSender} component instead.
@@ -209,18 +314,12 @@ public class MailMessageSender extends AbstractLogEnabled
         this.manager = manager;
     }
 
-    /* (non-Javadoc)
-     * @see Parameterizable#parameterize(Parameters)
-     */
     public void configure(Configuration config) throws ConfigurationException {
         this.smtpHost = config.getChild("smtp-host").getValue(null);
         this.smtpUser = config.getChild("smtp-user").getValue(null);
         this.smtpPswd = config.getChild("smtp-password").getValue(null);
     }
 
-    /* (non-Javadoc)
-     * @see Initializable#initialize()
-     */
     public void initialize() {
         initSession();
         this.attachments = new ArrayList();
@@ -262,6 +361,7 @@ public class MailMessageSender extends AbstractLogEnabled
 
     /**
      * Assemble the message from the defined fields and send it.
+     *
      * @throws AddressException when problems with email addresses are found
      * @throws MessagingException when message could not be send.
      */
@@ -279,6 +379,7 @@ public class MailMessageSender extends AbstractLogEnabled
 
     /**
      * Assemble the message from the defined fields and send it.
+     *
      * @throws AddressException when problems with email addresses are found
      * @throws MessagingException when message could not be send.
      * @deprecated Since 2.1.5. Use {@link #send()} which doesn't require passing the source resolver
@@ -291,7 +392,6 @@ public class MailMessageSender extends AbstractLogEnabled
 
     private void doSend(SourceResolver resolver)
     throws AddressException, MessagingException {
-        final List sourcesList = new ArrayList();
 
         final MimeMessage message = new MimeMessage(this.session);
 
@@ -354,100 +454,43 @@ public class MailMessageSender extends AbstractLogEnabled
         message.setSentDate(new Date());
 
         Attachment a = null;
+        final List sources = new ArrayList();
         try {
             if (this.attachments.isEmpty()) {
-                if (this.src != null) {
-                    SourceDataSource ds = null;
-
-                    Source source = resolver.resolveURI(this.src);
-                    sourcesList.add(source);
-                    if (source.exists()) {
-                        ds = new SourceDataSource(source,
-                                                  this.srcMimeType == null? source.getMimeType(): this.srcMimeType,
-                                                  this.src.substring(this.src.lastIndexOf('/') + 1));
-                        ds.enableLogging(getLogger());
-                    }
-
-                    message.setDataHandler(new DataHandler(ds));
-
-                } else if (this.body != null) {
-                    if (this.charset != null) {
-                        message.setText(this.body, this.charset);
-                    } else {
-                        message.setText(this.body);
-                    }
+                // Message consists of single part
+                if (this.body != null) {
+                    a = this.body;
+                    a.setContentTo(resolver, sources, message);
                 }
             } else {
+                // Message consists of multiple parts
                 Multipart multipart = new MimeMultipart();
-                BodyPart bodypart = new MimeBodyPart();
-                multipart.addBodyPart(bodypart);
                 message.setContent(multipart);
 
-                if (this.src != null) {
-                    SourceDataSource ds = null;
-
-                    Source source = resolver.resolveURI(this.src);
-                    sourcesList.add(source);
-                    if (source.exists()) {
-                        ds = new SourceDataSource(source,
-                                                  this.srcMimeType == null? source.getMimeType(): this.srcMimeType,
-                                                  this.src.substring(this.src.lastIndexOf('/') + 1));
-                        ds.enableLogging(getLogger());
-                    }
-
-                    bodypart.setDataHandler(new DataHandler(ds));
-                    bodypart.setFileName(ds.getName());
-
-                } else if (this.body != null) {
-                    bodypart.setText(this.body);
+                // Body part
+                if (this.body != null) {
+                    a = this.body;
+                    multipart.addBodyPart(a.getBodyPart(resolver, sources));
                 }
 
+                // Attachment parts
                 for (Iterator i = this.attachments.iterator(); i.hasNext();) {
                     a = (Attachment) i.next();
-                    DataSource ds = null;
-
-                    if (a.isURL) {
-                        String name = (String) a.getObject();
-                        Source src = resolver.resolveURI(name);
-                        sourcesList.add(src);
-                        if (src.exists()) {
-                            ds = new SourceDataSource(src,
-                                                      a.getType(src.getMimeType()),
-                                                      a.getName(name.substring(name.lastIndexOf('/') + 1)));
-                            ((SourceDataSource) ds).enableLogging(getLogger());
-                        }
-                    } else {
-                        if (a.getObject() instanceof Part) {
-                            Part part = (Part) a.getObject();
-                            ds = new FilePartDataSource(part,
-                                                        a.getType(part.getMimeType()),
-                                                        a.getName(part.getUploadName()));
-                        } else {
-                            // TODO: other classes?
-                            throw new AddressException("Not yet supported: " + a.getObject());
-                        }
-                    }
-
-                    bodypart = new MimeBodyPart();
-                    bodypart.setDataHandler(new DataHandler(ds));
-                    bodypart.setFileName(ds.getName());
-                    multipart.addBodyPart(bodypart);
+                    multipart.addBodyPart(a.getBodyPart(resolver, sources));
                 }
             }
 
             message.saveChanges();
             Transport.send(message);
         } catch (MalformedURLException e) {
-            throw new AddressException("Malformed attachment URL: " +
-                                       a.getObject() + " error " + e.getMessage());
+            throw new MessagingException("Malformed attachment URL: " +
+                                         a.getObject() + " error " + e.getMessage());
         } catch (IOException e) {
-            throw new AddressException("IOException accessing attachment URL: " +
-                                       a.getObject() + " error " + e.getMessage());
+            throw new MessagingException("IOException accessing attachment URL: " +
+                                         a.getObject() + " error " + e.getMessage());
         } finally {
-            if (sourcesList != null) {
-                for (Iterator j = sourcesList.iterator(); j.hasNext();) {
-                    resolver.release((Source) j.next());
-                }
+            for (Iterator j = sources.iterator(); j.hasNext();) {
+                resolver.release((Source) j.next());
             }
         }
     }
@@ -455,6 +498,7 @@ public class MailMessageSender extends AbstractLogEnabled
     /**
      * Invokes the {@link #send()} method but catches any exception thrown. This
      * method is intended to be used from the sendmail logicsheet.
+     *
      * @return true when successful
      */
     public boolean sendIt() {
@@ -497,11 +541,12 @@ public class MailMessageSender extends AbstractLogEnabled
 
 
     /**
-     * Set the <CODE>from</CODE> address of the message.
+     * Set the <code>from</code> address of the message.
+     *
      * @param from The address the message appears to be from.
      */
     public void setFrom(String from) {
-        if (!("".equals(from) || "null".equals(from))) {
+        if (!isNullOrEmpty(from)) {
             this.from = from.trim();
         }
     }
@@ -511,11 +556,12 @@ public class MailMessageSender extends AbstractLogEnabled
      * is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param to the destination address(es)
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
     public void setTo(String to) {
-        if (!("".equals(to) || "null".equals(to))) {
+        if (!isNullOrEmpty(to)) {
             this.to = to.trim();
         }
     }
@@ -525,11 +571,12 @@ public class MailMessageSender extends AbstractLogEnabled
      * is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param replyTo the address(es) that replies should be sent to
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
     public void setReplyTo(String replyTo) {
-        if (!("".equals(replyTo) || "null".equals(replyTo))) {
+        if (!isNullOrEmpty(replyTo)) {
             this.replyTo = replyTo.trim();
         }
     }
@@ -539,11 +586,12 @@ public class MailMessageSender extends AbstractLogEnabled
      * message. The address is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param cc the address(es), which should receive a carbon copy.
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
     public void setCc(String cc) {
-        if (!("".equals(cc) || "null".equals(cc))) {
+        if (!isNullOrEmpty(cc)) {
             this.cc = cc.trim();
         }
     }
@@ -553,33 +601,39 @@ public class MailMessageSender extends AbstractLogEnabled
      * the message. The address is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
+     *
      * @param bcc the address(es), which should receive a black carbon copy.
      * @see javax.mail.internet.InternetAddress#parse(String)
      */
     public void setBcc(String bcc) {
-        if (!("".equals(bcc) || "null".equals(bcc))) {
+        if (!isNullOrEmpty(bcc)) {
             this.bcc = bcc.trim();
+        }
+    }
+
+    /**
+     * Sets the subject line of the message.
+     *
+     * @param subject the subject line of the message
+     */
+    public void setSubject(String subject) {
+        if (!isNullOrEmpty(subject)) {
+            this.subject = subject;
         }
     }
 
     /**
      * Sets the character set for encoding the message. This has no effect,
      * if any attachments are send in the message.
+     *
      * @param charset the character set to be used for enbcoding the message
      */
     public void setCharset(String charset) {
-        if (!("".equals(charset) || "null".equals(charset))) {
-            this.charset = charset.trim();
-        }
-    }
-
-    /**
-     * Sets the subject line of the message.
-     * @param subject the subject line of the message
-     */
-    public void setSubject(String subject) {
-        if (!("".equals(subject) || "null".equals(subject))) {
-            this.subject = subject;
+        if (!isNullOrEmpty(charset)) {
+            this.bodyType = "text/plain; charset=" + charset.trim();
+            if (this.body != null && this.body.isText() && this.body.type == null) {
+                this.body.type = this.bodyType;
+            }
         }
     }
 
@@ -589,10 +643,11 @@ public class MailMessageSender extends AbstractLogEnabled
      * only the latter will be used.
      *
      * @param body The body text of the email message
+     * @deprecated Since 2.1.10. Use {@link #setBody(Object)}
      */
     public void setBody(String body) {
-        if (!("".equals(body) || "null".equals(body))) {
-            this.body = body;
+        if (!isNullOrEmpty(body)) {
+            setBody(body, bodyType);
         }
     }
 
@@ -602,30 +657,90 @@ public class MailMessageSender extends AbstractLogEnabled
      * only the latter will be used.
      *
      * @param src The body source URL of the email message
+     * @deprecated Since 2.1.10. Use {@link #setBodyURL(String)}
      */
     public void setBodyFromSrc(String src) {
-        if (!("".equals(src) || "null".equals(src))) {
-            this.src = src;
+        if (!isNullOrEmpty(src)) {
+           setBodyURL(src, bodySrcType);
         }
     }
 
     /**
      * Sets the optional body source Mime Type of the email message.
+     *
      * @param srcMimeType The optional body source Mime Type of the email message
+     * @deprecated Since 2.1.10. Use {@link #setBodyURL(String, String)}
      */
     public void setBodyFromSrcMimeType(String srcMimeType) {
-        if (!("".equals(srcMimeType) || "null".equals(srcMimeType))) {
-            this.srcMimeType = srcMimeType;
+        if (!isNullOrEmpty(srcMimeType)) {
+            this.bodySrcType = srcMimeType;
+            // Pass into this.body if it was set.
+            if (this.body != null && this.body.isURL() && this.body.type == null) {
+                this.body.type = srcMimeType;
+            }
         }
     }
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
-     * @param attachment to be send with the message
+     * Sets the body content of the email message.
+     *
+     * <p>The body can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
+     * @param body The body text of the email message
+     */
+    public void setBody(Object body) {
+        setBody(body, null);
+    }
+
+    /**
+     * Sets the body content of the email message.
+     *
+     * <p>The body can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
+     * @param body The body text of the email message
+     * @param type mime type (optional)
+     */
+    public void setBody(Object body, String type) {
+        if (body != null) {
+            this.body = new Body(body, type);
+        }
+    }
+
+    /**
+     * Sets the body content of the email message.
+     *
+     * @param url URL to use as message body
      * @see org.apache.excalibur.source.Source
+     */
+    public void setBodyURL(String url) {
+        setBodyURL(url, null);
+    }
+
+    /**
+     * Sets the body content of the email message.
+     *
+     * @param url URL to use as message body
+     * @param type mime type (optional)
+     * @see org.apache.excalibur.source.Source
+     */
+    public void setBodyURL(String url, String type) {
+        if (body != null) {
+            this.body = new Body(url, type, true);
+        }
+    }
+
+    /**
+     * Add an attachement to the message to be send.
+     *
+     * <p>The attachment can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
+     * @param attachment to be send with the message
      */
     public void addAttachment(Object attachment) {
         if (attachment != null) {
@@ -634,14 +749,15 @@ public class MailMessageSender extends AbstractLogEnabled
     }
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
+     * Add an attachement to the message to be send.
+     *
+     * <p>The attachment can be any of: {@link org.apache.excalibur.source.Source},
+     * {@link org.apache.cocoon.servlet.multipart.Part}, {@link java.io.InputStream},
+     * <code>byte[]</code>, {@link String}, or a subclass.
+     *
      * @param attachment to be send with the message
      * @param type mime type (optional)
      * @param name attachment name (optional)
-     * @see org.apache.excalibur.source.Source
      */
     public void addAttachment(Object attachment, String type, String name) {
         if (attachment != null) {
@@ -650,10 +766,8 @@ public class MailMessageSender extends AbstractLogEnabled
     }
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
+     * Add an attachement to the message to be send.
+     *
      * @param url URL to attach to the message
      * @see org.apache.excalibur.source.Source
      */
@@ -664,10 +778,8 @@ public class MailMessageSender extends AbstractLogEnabled
     }
 
     /**
-     * Add an attachement to the message to be send. The attachment can
-     * be of type <CODE>org.apache.excalibur.source.Source</CODE> or
-     * {@link org.apache.cocoon.servlet.multipart.Part} or its
-     * subclasses.
+     * Add an attachement to the message to be send.
+     *
      * @param url URL to attach to the message
      * @param type mime type (optional)
      * @param name attachment name (optional)

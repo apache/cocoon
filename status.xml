@@ -184,6 +184,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="update">
+      Mail: Improve MailSender interface: added setBody(Object), setBodyURL
+      methods, deprecated setCharset, setBody(String), setBodyFromSrc,
+      setBodyFromSrcMimeType methods. Support byte[], InputStream as body and
+      attachment objects.
+    </action>
     <action dev="VG" type="fix">
       Mail: Log exceptions from mail attachments - JavaMail does not preserve
       cause exception.

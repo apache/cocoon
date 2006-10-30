@@ -19,27 +19,19 @@ package org.apache.cocoon.mail.datasource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.activation.DataSource;
 
 import org.apache.cocoon.servlet.multipart.Part;
 
 /**
  * The FilePartDataSource class provides an object, that wraps a
- * Cocoon {@link Part}
- * object in a DataSource interface.
- * @see javax.activation.DataSource
+ * Cocoon {@link Part} object in a DataSource interface.
  *
- * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @see javax.activation.DataSource
  * @version $Id$
  */
-public class FilePartDataSource implements DataSource {
+public class FilePartDataSource extends AbstractDataSource {
 
     private Part part;
-    private String contentType;
-    private String name;
 
     /**
      * Creates a new instance of FilePartDataSource from an
@@ -56,75 +48,70 @@ public class FilePartDataSource implements DataSource {
      * @param part An {@link Part} object.
      */
     public FilePartDataSource(Part part, String type, String name) {
+        super(getName(name, part), getType(type, part));
         this.part = part;
-        this.contentType = type;
-        this.name = name;
-        if (isNullOrEmpty(this.name)) this.name = null;
-        if (isNullOrEmpty(this.contentType)) this.contentType = null;
     }
 
     /**
-     * Check String for null or empty.
-     * @param str
-     * @return true if str is null, empty string, or equals "null"
+     * Determines the name for this <code>DataSource</code> object.
+     * It is first non empty value from the list:
+     * <ul>
+     * <li>The value of <code>name</code> argument.
+     * <li>The value returned by the {@link Part#getFileName()}.
+     * <li>"attachment".
+     * </ul>
+     *
+     * @return the name for this <code>DataSource</code>
      */
-     private boolean isNullOrEmpty(String str) {
-         return (str == null || "".equals(str) || "null".equals(str));
-     }
-
-    /**
-     * Return the content type (mime type) obtained from
-     * {@link Part#getMimeType()}.
-     * Return <CODE>application/octet-stream</CODE> if <CODE>getMimeType()</CODE>
-     * returns <CODE>null</CODE>.
-     * @return The content type (mime type) for this <CODE>DataSource</CODE> object.
-     */
-    public String getContentType() {
-        if (this.contentType != null) {
-            return this.contentType;
+    private static String getName(String name, Part part) {
+        if (isNullOrEmpty(name)) {
+            name = part.getFileName();
+            if (isNullOrEmpty(name)) {
+                name = "attachment";
+            }
         }
-        String mimeType = part.getMimeType();
-        if (isNullOrEmpty(mimeType)) {
-            mimeType = "application/octet-stream";
-        }
-        return mimeType;
-    }
 
-    /**
-     * The InputStream object obtained from
-     * {@link Part#getInputStream()}
-     * object.
-     * @throws java.io.IOException if an I/O error occurs.
-     * @return The InputStream object for this <CODE>DataSource</CODE> object.
-     */
-    public InputStream getInputStream() throws IOException {
-        InputStream inp;
-        try {
-            inp = part.getInputStream();
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
-        return inp;
-    }
-
-    /**
-     * Returns the name for this <CODE>DataSource</CODE> object. This is
-     * what is returned by
-     * {@link Part#getFileName()}.
-     * @return the name for this <CODE>DataSource</CODE> object.
-     */
-    public String getName() {
-        String name = (this.name != null ? this.name : part.getFileName());
-        if (isNullOrEmpty(name)) name="attachment";
         return name;
     }
 
     /**
-     * Unimplemented. Directly throws <CODE>IOException</CODE>.
-     * @throws java.io.IOException since unimplemented
-     * @return nothing
+     * Determines the mime type for this <code>DataSource</code> object.
+     * It is first non empty value from the list:
+     * <ul>
+     * <li>The value of <code>type</code> argument.
+     * <li>The value returned by {@link Part#getMimeType()}.
+     * <li>"application/octet-stream".
+     * </ul>
+     *
+     * @return The content type (mime type) of this <code>DataSource</code> object.
      */
-    public OutputStream getOutputStream() throws IOException {
-        throw new IOException("no data sink available");
+    private static String getType(String type, Part part) {
+        if (isNullOrEmpty(type)) {
+            type = part.getMimeType();
+            if (isNullOrEmpty(type)) {
+                type = "application/octet-stream";
+            }
+        }
+
+        return type;
+    }
+
+    /**
+     * The InputStream object obtained from {@link Part#getInputStream()}
+     * object.
+     *
+     * @throws java.io.IOException if an I/O error occurs.
+     * @return The InputStream object for this <code>DataSource</code> object.
+     */
+    public InputStream getInputStream() throws IOException {
+        try {
+            return part.getInputStream();
+        } catch (IOException e) {
+            // Sun's SMTPTransport looses cause exception. Log it now.
+            if (getLogger() != null) {
+                getLogger().warn("Unable to obtain input stream for '" + part.getUploadName() + "'", e);
+            }
+            throw e;
+        }
     }
 }

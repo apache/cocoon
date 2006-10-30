@@ -209,18 +209,22 @@ public class Sendmail extends ServiceableAction
             if (parameters.isParameter("subject")) {
                 mms.setSubject(parameters.getParameter("subject", null));
             }
-            if (parameters.isParameter("charset")) {
-                mms.setCharset(parameters.getParameter("charset", null));
-            }
 
-            if (parameters.isParameter("src")) {
-                mms.setBodyFromSrc(parameters.getParameter("src", null));
+            String bodyURL = parameters.getParameter("src", "");
+            String body = parameters.getParameter("body", "");
+            if (bodyURL.length() > 0) {
+                String type = null;
                 if (parameters.isParameter("srcMimeType")) {
-                    mms.setBodyFromSrcMimeType(
-                        parameters.getParameter("srcMimeType", null));
+                    type = parameters.getParameter("srcMimeType", null);
                 }
-            } else if (parameters.isParameter("body")) {
-                mms.setBody(parameters.getParameter("body", null));
+                mms.setBodyURL(bodyURL, type);
+            } else if (body.length() > 0) {
+                String type = null;
+                String charset = parameters.getParameter("charset", "");
+                if (charset.length() > 0) {
+                    type = "text/plain; charset=" + charset;
+                }
+                mms.setBody(body, type);
             }
 
             if (parameters.isParameter("attachments")) {
@@ -235,9 +239,7 @@ public class Sendmail extends ServiceableAction
                             getLogger().debug("request-attachment: " + obj);
                         }
                     } else {
-                        mms.addAttachmentURL(srcName,
-                                             null,
-                                             srcName.substring(srcName.lastIndexOf('/') + 1));
+                        mms.addAttachmentURL(srcName);
                         if (getLogger().isDebugEnabled()) {
                             getLogger().debug("sitemap-attachment: " + srcName);
                         }
