@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.ValueHolder;
 import org.apache.cocoon.environment.impl.AbstractRequest;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.commons.collections.IteratorUtils;
@@ -79,8 +80,8 @@ public final class HttpRequest extends AbstractRequest {
      */
     public Object get(String name) {
         // if the request has been wrapped then access its method
-        if (req instanceof MultipartHttpServletRequest) {
-            return ((MultipartHttpServletRequest) req).get(name);
+        if (req instanceof ValueHolder) {
+            return ((ValueHolder) req).get(name);
         }
         String[] values = req.getParameterValues(name);
         if (values == null) {
