@@ -64,9 +64,9 @@ public class AvalonElementParser extends AbstractElementParser {
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
-        // read avalon style configuration
-        // the schema ensures that location is never null
-        final String location = element.getAttribute("location");
+        // read avalon style configuration - it's optional for this element.
+        // the schema for the sitemap element ensures that location is never null.
+        final String location = this.getAttributeValue(element, "location", "resource://org/apache/cocoon/cocoon.xconf");
         try {
             final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
     
