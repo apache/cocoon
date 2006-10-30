@@ -24,12 +24,14 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.cocoon.environment.ValueHolder;
+
 /**
  * Servlet request wrapper for multipart parser.
  *
  * @version $Id$
  */
-public class MultipartHttpServletRequest extends HttpServletRequestWrapper {
+public class MultipartHttpServletRequest extends HttpServletRequestWrapper implements ValueHolder {
 
     /** The submitted parts */
     private Hashtable values;
@@ -60,10 +62,7 @@ public class MultipartHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     /**
-     * Method get
-     *
-     * @param name
-     *
+     * @see org.apache.cocoon.environment.ValueHolder#get(java.lang.String)
      */
     public Object get(String name) {
         Object result = null;
