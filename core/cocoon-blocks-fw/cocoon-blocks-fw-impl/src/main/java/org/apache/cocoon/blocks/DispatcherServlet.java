@@ -17,9 +17,15 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -94,33 +100,41 @@ public class DispatcherServlet
         if (servlet == null) {
             throw new ServletException("No block for " + req.getPathInfo());
         }
-
-        // Move the mount path from the start of the path info to the end of the
-        // servlet path to get reasonable values in the called servlet
-        final String mountPath = path;
-        HttpServletRequest request =
-            new HttpServletRequestWrapper(req) {
-
-                /* (non-Javadoc)
-                 * @see javax.servlet.http.HttpServletRequestWrapper#getServletPath()
-                 */
-                public String getServletPath() {
-                    return super.getServletPath() + mountPath;
-                }
-
-                /* (non-Javadoc)
-                 * @see javax.servlet.http.HttpServletRequestWrapper#getPathInfo()
-                 */
-                public String getPathInfo() {
-                    String pathInfo = super.getPathInfo().substring(mountPath.length()); 
-                    return pathInfo.length() == 0 ? null : pathInfo;
-                }
-            
-        };
+        // Create a dynamic proxy class that overwrites the getServletPath and
+        // getPathInfo methods to privide reasonable values in the called servlet
+        // the dynamic proxy implements all interfaces of the original request
+        HttpServletRequest request = (HttpServletRequest) Proxy.newProxyInstance(
+        		req.getClass().getClassLoader(), 
+        		getInterfaces(req.getClass()), 
+        		new DynamicProxyRequestHandler(req, path));
+        
         this.log("DispatcherServlet: service servlet=" + servlet +
-                " mountPath=" + mountPath +
+                " mountPath=" + path +
                 " servletPath=" + request.getServletPath() +
                 " pathInfo=" + request.getPathInfo());
         servlet.service(request, res);
     }
+    
+    private void getInterfaces(Set interfaces, Class clazz) {
+		Class[] clazzInterfaces = clazz.getInterfaces();
+		for (int i = 0; i < clazzInterfaces.length; i++) {
+			//add all interfaces extended by this interface or directly
+			//implemented by this class
+			getInterfaces(interfaces, clazzInterfaces[i]);
+		}
+		//the superclazz is null if class is instanceof Object, is
+		//an interface, a primitive type or void
+		Class superclazz = clazz.getSuperclass();
+		if (superclazz!=null) {
+			//add all interfaces of the superclass to the list
+			getInterfaces(interfaces, superclazz);
+		}
+		interfaces.addAll(Arrays.asList(clazzInterfaces));
+	}
+
+	private Class[] getInterfaces(final Class clazz) {
+		Set interfaces = new LinkedHashSet();
+		getInterfaces(interfaces, clazz);
+		return (Class[]) interfaces.toArray(new Class[interfaces.size()]);
+	}
 }
