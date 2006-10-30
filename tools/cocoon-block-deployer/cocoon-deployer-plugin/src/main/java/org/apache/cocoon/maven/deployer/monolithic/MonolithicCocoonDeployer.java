@@ -74,7 +74,6 @@ public class MonolithicCocoonDeployer {
             try {
                 this.logger.info("Deploying " + id);
                 RuleBasedZipExtractor zipExtractor = new RuleBasedZipExtractor(basedir, logger);
-                zipExtractor.addRule("META-INF/legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));
                 zipExtractor.addRule("META-INF/legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
                 zipExtractor.addRule("META-INF/legacy/sitemap-additions/**", new SingleFileDeployer(
                         "WEB-INF/cocoon/sitemap-additions"));

@@ -15,7 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: cocoon.xconf 408907 2006-05-23 14:32:34Z reinhard $ -->
+<!--+ 
+    | This is the default cocoon.xconf which is used if no one configuration file is used. 
+    | $Id$
+    +-->
 <cocoon version="2.2">
 
   <!--+
