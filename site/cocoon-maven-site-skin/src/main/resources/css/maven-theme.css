@@ -323,3 +323,11 @@ li {
 .bodyTable {
   margin-top: 1.5em;
 }
+
+.news-footer {
+  font-size: 75%;
+}
+
+.news ul li {
+  margin-bottom: 10px;
+}
