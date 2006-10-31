@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
  * Helper class for deploying resources and configuration files from the
@@ -37,36 +37,37 @@ public class DeploymentUtil {
     protected static final String CONFIGURATION_PATH = "META-INF/cocoon";
 
     protected void deploy(JarFile jarFile, String prefix, String destination) {
+        // FIXME - We should check if a deploy is required
         final Enumeration entries = jarFile.entries();
         while (entries.hasMoreElements()) {
-            final JarEntry entry = (JarEntry)entries.nextElement();
+            final ZipEntry entry = (ZipEntry)entries.nextElement();
             if ( entry.getName().startsWith(prefix) ) {
-                System.out.println(".." + entry.getName());                
+                final String relativeFileName = destination + entry.getName().substring(prefix.length());
+                System.out.println(".." + entry.getName() + " -> " + relativeFileName);
+                // FIXME - copy entry to relativeFileName in webapp directory
             }
         }        
     }
 
     public void deploy()
     throws IOException {
-        try {
-            // find out all artifacts containing Cocoon specific configuration files
-            final Enumeration jarUrls = this.getClass().getClassLoader().getResources(DeploymentUtil.CONFIGURATION_PATH);
-            while ( jarUrls.hasMoreElements() ) {
-                final URL resourceUrl = (URL)jarUrls.nextElement();
-                // we only handle jar files!
-                if ( "jar".equals(resourceUrl.getProtocol()) ) {
-                    // if this is a jar url, it has this form "jar:{url-to-jar}!/{resource-path}
-                    // to open the jar, we can simply remove everything after "!/"
-                    String url = resourceUrl.toExternalForm();
-                    int pos = url.indexOf('!');
-                    url = url.substring(0, pos+2); // +2 as we include "!/"
-                    final URL jarUrl = new URL(url);
-                    final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
-                    this.deploy(connection.getJarFile(), DeploymentUtil.CONFIGURATION_PATH, "WEB-INF/cocoon");
-                }
+        // FIXME - First check if we run unexpanded!
+        // find out all artifacts containing Cocoon specific configuration files
+        final Enumeration jarUrls = this.getClass().getClassLoader().getResources(DeploymentUtil.CONFIGURATION_PATH);
+        while ( jarUrls.hasMoreElements() ) {
+            final URL resourceUrl = (URL)jarUrls.nextElement();
+            // we only handle jar files!
+            // TODO - Should we throw an exception if it's not a jar file? (or log?)
+            if ( "jar".equals(resourceUrl.getProtocol()) ) {
+                // if this is a jar url, it has this form "jar:{url-to-jar}!/{resource-path}
+                // to open the jar, we can simply remove everything after "!/"
+                String url = resourceUrl.toExternalForm();
+                int pos = url.indexOf('!');
+                url = url.substring(0, pos+2); // +2 as we include "!/"
+                final URL jarUrl = new URL(url);
+                final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
+                this.deploy(connection.getJarFile(), DeploymentUtil.CONFIGURATION_PATH, "WEB-INF/cocoon");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
