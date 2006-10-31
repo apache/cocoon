@@ -19,9 +19,11 @@
 package org.apache.cocoon.core.deployment;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Helper class for deploying resources and configuration files from the
@@ -32,23 +34,36 @@ import java.util.Enumeration;
  */
 public class DeploymentUtil {
 
+    protected static final String CONFIGURATION_PATH = "META-INF/cocoon";
+
+    protected void deploy(JarFile jarFile, String prefix, String destination) {
+        final Enumeration entries = jarFile.entries();
+        while (entries.hasMoreElements()) {
+            final JarEntry entry = (JarEntry)entries.nextElement();
+            if ( entry.getName().startsWith(prefix) ) {
+                System.out.println(".." + entry.getName());                
+            }
+        }        
+    }
+
     public void deploy()
     throws IOException {
         try {
             // find out all artifacts containing Cocoon specific configuration files
-            final Enumeration artifactUrls = this.getClass().getClassLoader().getResources("META-INF/cocoon");
-            while ( artifactUrls.hasMoreElements() ) {
-                final URL url = (URL)artifactUrls.nextElement();
-                String artifactUrl = url.toString();
-                int pos = artifactUrl.indexOf('!');
-                // url starts with "jar:"
-                artifactUrl = artifactUrl.substring(4, pos);
-                System.out.println("Trying to open " + artifactUrl);
-                final URL archiveUrl = new URL(artifactUrl);
-                final InputStream is = archiveUrl.openStream();
-                final byte[] b = new byte[2];
-                is.read(b);
-                System.out.println("..first two bytes: " + new String(b));
+            final Enumeration jarUrls = this.getClass().getClassLoader().getResources(DeploymentUtil.CONFIGURATION_PATH);
+            while ( jarUrls.hasMoreElements() ) {
+                final URL resourceUrl = (URL)jarUrls.nextElement();
+                // we only handle jar files!
+                if ( "jar".equals(resourceUrl.getProtocol()) ) {
+                    // if this is a jar url, it has this form "jar:{url-to-jar}!/{resource-path}
+                    // to open the jar, we can simply remove everything after "!/"
+                    String url = resourceUrl.toExternalForm();
+                    int pos = url.indexOf('!');
+                    url = url.substring(0, pos+2); // +2 as we include "!/"
+                    final URL jarUrl = new URL(url);
+                    final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
+                    this.deploy(connection.getJarFile(), DeploymentUtil.CONFIGURATION_PATH, "WEB-INF/cocoon");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
