@@ -31,6 +31,7 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
+import org.apache.cocoon.core.deployment.DeploymentUtil;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -58,6 +59,10 @@ public class SettingsBeanFactoryPostProcessor
      */
     public void init()
     throws Exception {
+        // first deploy block artifacts!
+        final DeploymentUtil deployer = new DeploymentUtil();
+        deployer.deploy();
+
         this.settings = this.createSettings();
 
         this.doInit();
