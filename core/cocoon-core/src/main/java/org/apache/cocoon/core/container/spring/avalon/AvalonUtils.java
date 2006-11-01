@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import java.net.URL;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -24,6 +25,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
+import org.apache.commons.jci.stores.ResourceStore;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -98,7 +100,11 @@ public class AvalonUtils {
                 Source src = null;
                 try {
                     src = resolver.resolveURI(child.getAttribute("src"));
+                    if (!src.exists()) {
+                        throw new ConfigurationException(src.getURI() + " doesn't exist");
+                    }
                     configBean.addClassDirectory(src.getURI());
+                    configureStore(configBean,src.getURI(),child.getChild("store",false));
                 } finally {
                     resolver.release(src);
                 }
@@ -132,5 +138,18 @@ public class AvalonUtils {
             }
         }
         return configBean;
+    }
+    
+    /**
+     * If a store node is configured in the class-dir/src-dir configuration, 
+     * let's configure the store; the default one is the JCI MemoryStore
+     */
+    private static void configureStore(ClassLoaderConfiguration configBean, String dirUri, Configuration storeConfig) throws Exception {
+        if (storeConfig != null) {
+            final String storeClassName = storeConfig.getAttribute("class","org.apache.commons.jci.stores.MemoryResourceStore");
+            final ResourceStore store = (ResourceStore)Class.forName(storeClassName).newInstance();
+            final URL url = new URL(dirUri);
+            configBean.addStore(url.getFile(),store);
+        }
     }
 }

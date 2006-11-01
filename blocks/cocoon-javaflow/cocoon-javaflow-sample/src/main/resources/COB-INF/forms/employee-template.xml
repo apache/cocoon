@@ -30,7 +30,7 @@
  <body>
   <row>
    <column title="OJB example">
-    <ft:form-template action="#{$continuation/id}.cont" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.cont" method="POST">
      <fi:group>
       <fi:styling type="fieldset" layout="columns"/>
       <fi:label>Employee</fi:label>

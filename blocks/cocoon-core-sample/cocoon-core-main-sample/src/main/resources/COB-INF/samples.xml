@@ -58,4 +58,14 @@
       Display Cocoon status, clear the Cocoon cache, etc.
     </sample>
   </group>
+
+  <group name="Reloading classes">
+    <note>
+      Trivial sample of class reloading
+    </note>      
+    <sample name="Reloading" href="reloading/">
+      Class Reloading sample.
+    </sample>
+  </group>  
+
 </samples>

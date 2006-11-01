@@ -68,9 +68,14 @@
       <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>commons-javaflow</groupId>
-      <artifactId>commons-javaflow</artifactId>
-      <version>r306555</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>javaflow</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-jci-fam</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

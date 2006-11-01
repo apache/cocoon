@@ -64,6 +64,8 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
             this.baseUrl = url + '/';
         }
         this.classLoader = (classloader != null ? classloader : ClassUtils.getDefaultClassLoader());
+        //TODO : is there a cleaner way to set the new classLoader to the spring context?
+        Thread.currentThread().setContextClassLoader(this.classLoader);
         this.beanDefinition = rootDefinition;
         this.refresh();
     }

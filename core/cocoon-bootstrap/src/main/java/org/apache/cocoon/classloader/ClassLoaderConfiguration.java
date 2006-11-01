@@ -17,7 +17,13 @@
 package org.apache.cocoon.classloader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.cocoon.classloader.fam.SitemapMonitor;
+import org.apache.commons.jci.listeners.NotificationListener;
+import org.apache.commons.jci.stores.ResourceStore;
 
 /**
  * The configuration for a {@link ClassLoaderFactory}.
@@ -28,8 +34,12 @@ public class ClassLoaderConfiguration {
 
     protected final List includes = new ArrayList();
     protected final List excludes = new ArrayList();
+    protected final List sourceDirectories = new ArrayList();
     protected final List classDirectories = new ArrayList();
     protected final List libDirectories = new ArrayList();
+    protected final Map storeDirectories = new HashMap();
+    private SitemapMonitor sitemapMonitor;
+    private NotificationListener notificationListener;
 
     public void addInclude(String include) {
         this.includes.add(include);
@@ -39,12 +49,20 @@ public class ClassLoaderConfiguration {
         this.excludes.add(include);
     }
 
+    public void addSourceDirectory(String sourceDir) {
+        this.sourceDirectories.add(sourceDir);
+    }
+
     public void addClassDirectory(String include) {
         this.classDirectories.add(include);
     }
 
     public void addLibDirectory(String include) {
         this.libDirectories.add(include);
+    }
+
+    public List getSourceDirectories() {
+        return sourceDirectories;
     }
 
     public List getClassDirectories() {
@@ -63,4 +81,28 @@ public class ClassLoaderConfiguration {
         return includes;
     }
 
+    public void addStore(String dir, ResourceStore store) {
+        this.storeDirectories.put(dir, store);
+    }
+
+    public ResourceStore getStore(String dir) {
+        return (ResourceStore)this.storeDirectories.get(dir);
+    }
+
+    public void setSitemapMonitor(SitemapMonitor sitemapMonitor) {
+        this.sitemapMonitor = sitemapMonitor;
+        
+    }
+
+    public SitemapMonitor getSitemapMonitor() {
+        return sitemapMonitor;
+    }
+
+    public void setNotificationListener(NotificationListener notificationListener) {
+        this.notificationListener = notificationListener;        
+    }
+
+    public NotificationListener getNotificationListener() {
+        return this.notificationListener;
+    }
 }

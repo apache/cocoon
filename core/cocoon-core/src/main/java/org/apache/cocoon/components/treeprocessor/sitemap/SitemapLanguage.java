@@ -45,6 +45,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.classloader.fam.SitemapMonitor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
@@ -334,9 +335,12 @@ public class SitemapLanguage
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree, String location) throws Exception {
+        final SitemapMonitor fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
+        fam.setSitemapNotifier(this.processor.getWrappingProcessor());
         this.itsContainer = SitemapHelper.createContainer(
                                                tree,
                                                location,
+                                               fam,
                                                (ServletContext)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
         final Context itsContext = (Context)this.itsContainer.getBeanFactory().getBean(ProcessingUtil.CONTEXT_ROLE);
         // The namespace used in the whole sitemap is the one of the root

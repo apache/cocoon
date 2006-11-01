@@ -35,9 +35,9 @@
   <name>Cocoon Bootstrap Implementation</name>
   <dependencies>
     <dependency>
-      <groupId>commons-jci</groupId>
-      <artifactId>commons-jci</artifactId>
-      <version>r306555</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-jci-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
