@@ -19,6 +19,11 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
  <map:components>
+ 
+  <map:generators default="file">
+   <map:generator name="mygenerator" src="org.apache.cocoon.samples.reloading.MyGenerator"/>
+  </map:generators>
+
   <map:transformers default="xslt">
    <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
     <catalogues default="other">
@@ -28,6 +33,27 @@
     <cache-at-startup>true</cache-at-startup>
    </map:transformer>
   </map:transformers>
+  
+  <map:classloader factory-role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading">
+    <class-dir src="../../../../../../blocks/cocoon-javaflow/cocoon-javaflow-sample/target/classes">
+      <store class="org.apache.cocoon.components.flow.java.JavaflowResourceStore"/>
+    </class-dir>
+    <class-dir src="../../../../../../blocks/cocoon-javaflow/cocoon-javaflow-impl/target/classes">
+      <store class="org.apache.cocoon.components.flow.java.JavaflowResourceStore"/>
+    </class-dir>
+    <include-classes pattern="org.apache.cocoon.forms.flow.java.FormInstance"/>
+    <include-classes pattern="org.apache.cocoon.samples.flow.java.**"/>
+    <include-classes pattern="org.apache.cocoon.components.flow.java.AbstractContinuable"/>
+  </map:classloader>
+
+  <!--map:classloader factory-role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading">
+    <class-dir src="/home/mau/workspace/cocoon2.2/blocks/cocoon-javaflow/cocoon-javaflow-sample/target/classes">
+      <store class="org.apache.commons.jci.stores.MemoryResourceStore"/>
+    </class-dir>
+    <include-classes pattern="org.apache.cocoon.samples.reloading.java.**"/>
+  </map:classloader-->
+
+  
  </map:components>
 
  <!-- indicates what flow classes to attach to this sitemap -->
@@ -70,6 +96,12 @@
   </map:pipeline>
 
   <map:pipeline>
+   <map:match pattern="reloading">
+    <map:generate type="mygenerator"/>
+    <map:serialize type="html"/>
+  </map:match>
+
+
    <map:match pattern="">
     <map:generate src="samples.xml"/>
     <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">

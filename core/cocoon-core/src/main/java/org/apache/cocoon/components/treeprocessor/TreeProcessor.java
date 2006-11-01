@@ -42,6 +42,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
+import org.apache.commons.jci.listeners.NotificationListener;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
@@ -55,7 +56,7 @@ import org.xml.sax.SAXException;
 public class TreeProcessor extends AbstractLogEnabled
                            implements ThreadSafe, Processor, Serviceable,
                                       Configurable,
-                                      Disposable, Initializable {
+                                      Disposable, Initializable,NotificationListener {
 
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;
@@ -80,6 +81,9 @@ public class TreeProcessor extends AbstractLogEnabled
 
     /** Check for reload? */
     protected boolean checkReload;
+    
+    /** Need component classes to be reloaded, due to jci notification? */
+    protected boolean classReload;
     
     /** The source resolver */
     protected SourceResolver resolver;
@@ -315,8 +319,9 @@ public class TreeProcessor extends AbstractLogEnabled
         }
 
         if (this.concreteProcessor == null ||
-                (this.checkReload && this.source.getLastModified() != this.lastModified)) {
+                (this.checkReload && (this.classReload || (this.source.getLastModified() != this.lastModified)))) {
             buildConcreteProcessor(env);
+            this.classReload = false;
         }
     }
     
@@ -336,7 +341,7 @@ public class TreeProcessor extends AbstractLogEnabled
 
         // Now that we entered the synchronized area, recheck what's already
         // been checked in process().
-        if (this.concreteProcessor != null && source.getLastModified() == this.lastModified) {
+        if (this.concreteProcessor != null && !this.classReload && source.getLastModified() == this.lastModified) {
             // Nothing changed
             return;
         }
@@ -381,7 +386,6 @@ public class TreeProcessor extends AbstractLogEnabled
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
             try {
                 treeBuilder.setProcessor(newProcessor);
-
                 ProcessingNode root = treeBuilder.build(sitemapProgram, this.source.getURI());
                 newProcessor.setProcessorData(
                         treeBuilder.getContainer(),
@@ -477,5 +481,9 @@ public class TreeProcessor extends AbstractLogEnabled
      */
     public Processor getParent() {
         return this.parent;
+    }
+
+    public void handleNotification() {
+        this.classReload = true;
     }
 }

@@ -42,7 +42,7 @@
     <p>If you're running the bean-binding demo, then after successful submit
       you'll be shown a page that uses the JXTemplateGenerator to extract
       data from the bean (to show that the bean really has been updated).</p>
-    <ft:form-template action="#{$continuation/id}.cont" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.cont" method="POST">
       <table border="1">
         <tr>
           <td valign="top"><ft:widget-label id="email"/></td>
