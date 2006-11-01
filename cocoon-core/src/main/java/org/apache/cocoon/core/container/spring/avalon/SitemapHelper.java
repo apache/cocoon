@@ -27,6 +27,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderFactory;
+import org.apache.cocoon.classloader.fam.SitemapMonitor;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
 import org.apache.cocoon.core.container.spring.Container;
@@ -141,6 +142,7 @@ public class SitemapHelper {
 
     public static Container createContainer(Configuration  config,
                                             String         sitemapLocation,
+                                            SitemapMonitor fam,
                                             ServletContext servletContext)
     throws Exception {
         // let's get the root container first
@@ -164,7 +166,7 @@ public class SitemapHelper {
         final WebApplicationContext parentContext = (WebApplicationContext)container.getBeanFactory();
 
         // get classloader
-        final ClassLoader classloader = createClassLoader(parentContext, config, servletContext, sitemapResolver);
+        final ClassLoader classloader = createClassLoader(parentContext, config, fam, servletContext, sitemapResolver);
         // create root bean definition
         final String definition = createDefinition(request.getSitemapURIPrefix(),
                                                    sitemapLocation.substring(pos+1));
@@ -182,9 +184,11 @@ public class SitemapHelper {
 
     /**
      * Build a processing tree from a <code>Configuration</code>.
+     * @param processor 
      */
     protected static ClassLoader createClassLoader(BeanFactory    parentFactory,
                                                    Configuration  config,
+                                                   SitemapMonitor fam,
                                                    ServletContext servletContext,
                                                    SourceResolver sitemapResolver)
     throws Exception {
@@ -199,10 +203,11 @@ public class SitemapHelper {
         if ( classPathConfig == null ) {
             return Thread.currentThread().getContextClassLoader();            
         }
-        final String factoryRole = config.getAttribute("factory-role", ClassLoaderFactory.ROLE);
+        final String factoryRole = classPathConfig.getAttribute("factory-role", ClassLoaderFactory.ROLE);
 
         // Create a new classloader
         ClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, classPathConfig);
+        configBean.setSitemapMonitor(fam);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
                                            configBean,

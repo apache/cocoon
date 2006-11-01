@@ -16,8 +16,17 @@
 */
 package org.apache.cocoon.classloader;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+
+import org.apache.cocoon.classloader.fam.SitemapMonitor;
+import org.apache.commons.jci.listeners.ReloadingListener;
+import org.apache.commons.jci.stores.ResourceStore;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @see AbstractClassLoaderFactory
@@ -26,7 +35,57 @@ import java.util.List;
  */
 public class ReloadingClassLoaderFactory extends AbstractClassLoaderFactory {
 
-    protected ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent) {
-        return new ReloadingClassLoader(urls, includePatterns, excludePatterns, parent);
+    protected ClassLoaderConfiguration config;
+    private final static Log log = LogFactory.getLog(ReloadingListener.class);
+    
+    public ClassLoader createClassLoader(ClassLoader parent,
+            ClassLoaderConfiguration config, ServletContext servletContext)
+            throws Exception {
+        this.config = config;
+        return super.createClassLoader(parent, config, servletContext);
+         }
+
+    protected ClassLoader createClassLoader(URL[] urls, List includePatterns,
+            List excludePatterns, ClassLoader parent) {
+
+        org.apache.commons.jci.ReloadingClassLoader jciClassLoader = new org.apache.commons.jci.ReloadingClassLoader(
+                new DefaultClassLoader(urls, includePatterns,
+                        excludePatterns, Thread.currentThread()
+                                .getContextClassLoader()));
+
+
+        SitemapMonitor fam = this.config.getSitemapMonitor();
+        
+        for (int i = 0; i < urls.length; i++) {
+            URL url = urls[i];
+            final ResourceStore store = (ResourceStore)this.config.getStore(url.getFile());
+
+            final ReloadingListener listener = createReloadingListener(url,
+                    store, this.config);
+            jciClassLoader.addListener(listener);
+            fam.subscribe(listener);
+            try {
+                listener.waitForFirstCheck();
+            } catch (Exception e) {
+                log.error("Timeout error configuring JCI Listener for url "
+                        + url + " having store " + store);
+            }
+            log.debug("ReloadingClassLoaderFactory - Subscriber SitemapMonitor listener for url "
+                            + url + " having store " + store);
+        }
+        return jciClassLoader;
+    }
+
+
+    private ReloadingListener createReloadingListener(final URL dir,
+            final ResourceStore store, ClassLoaderConfiguration configuration) {
+        final File repository = new File(dir.getFile());
+
+        if (store instanceof PatternMatcherResourceStore) {
+            PatternMatcherResourceStore mstore = (PatternMatcherResourceStore) store;
+            mstore.setExcludes(configuration.getExcludes());
+            mstore.setIncludes(configuration.getIncludes());
+        }
+        return new ReloadingListener(repository, store);
     }
 }

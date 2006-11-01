@@ -22,6 +22,10 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.classloader.SitemapNotifierStore;
+import org.apache.cocoon.classloader.fam.SitemapMonitor;
+import org.apache.commons.jci.listeners.NotificationListener;
+import org.apache.commons.jci.listeners.ReloadingListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 
@@ -33,6 +37,7 @@ public final class SitemapMonitorImpl
     implements SitemapMonitor, ThreadSafe, Initializable, Disposable {
 
     private FilesystemAlterationMonitor monitor;
+    private NotificationListener sitemapNotifier;
 
     /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
@@ -53,10 +58,11 @@ public final class SitemapMonitorImpl
     }
 
     /**
-     * @see org.apache.cocoon.components.fam.SitemapMonitor#subscribe(org.apache.commons.jci.monitor.FilesystemAlterationListener)
+     * @see org.apache.cocoon.classloader.fam.SitemapMonitor#subscribe(org.apache.commons.jci.monitor.FilesystemAlterationListener)
      */
     public void subscribe(final FilesystemAlterationListener listener) {
         this.monitor.addListener(listener);
+        this.monitor.addListener(new ReloadingListener(listener.getRepository(),new SitemapNotifierStore(this.sitemapNotifier)));
     }
 
     /**
@@ -64,5 +70,10 @@ public final class SitemapMonitorImpl
      */
     public void unsubscribe(final FilesystemAlterationListener listener) {
         this.monitor.removeListener(listener);
+        this.monitor.removeListener(new ReloadingListener(listener.getRepository(),new SitemapNotifierStore(this.sitemapNotifier)));
     }
+    
+    public void setSitemapNotifier(NotificationListener sitemapNotifier) {
+        this.sitemapNotifier = sitemapNotifier;
+    }    
 }

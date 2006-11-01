@@ -182,11 +182,10 @@
         model="non-thread-safe-pooled"/>
 	
   <!--=========================================================================-->
-  <!--
-  <role name="org.apache.cocoon.components.fam.SitemapMonitor"
+  <role name="org.apache.cocoon.classloader.fam.SitemapMonitor"
         shorthand="fam"
         default-class="org.apache.cocoon.components.fam.SitemapMonitorImpl"/>
-  -->      
+
   <role name="org.apache.excalibur.xmlizer.XMLizer"
         shorthand="xmlizer"
         default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
