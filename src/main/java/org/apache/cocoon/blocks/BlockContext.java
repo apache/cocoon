@@ -377,24 +377,8 @@ public class BlockContext extends ServletContextWrapper {
             BlockContext.this.log("Enter processing in block " + this.blockName);
             RequestDispatcher dispatcher =
                 this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
-            if (dispatcher != null) {
-                try {
-                    if (!this.superCall) {
-                        // It is important to set the current block each time
-                        // a new block is entered, this is used for the block
-                        // protocol
-                        BlockCallStack.enterBlock(this.context);
-                    } else {
-                        // A super block should be called in the context of
-                        // the called block to get polymorphic calls resolved
-                        // in the right way. We still need to register the
-                        // current context for resolving super calls relative it.
-                        BlockCallStack.enterSuperBlock(this.context);
-                    }                        
-                    dispatcher.forward(request, response);
-                } finally {
-                    BlockCallStack.leaveBlock();
-                }
+            if (dispatcher != null && dispatcher instanceof PathDispatcher) {
+                ((PathDispatcher)dispatcher).forward(request, response, this.superCall);
             } else {
                 // Cannot happen
                 throw new IllegalStateException();
@@ -433,8 +417,24 @@ public class BlockContext extends ServletContextWrapper {
          */
         public void forward(ServletRequest request, ServletResponse response)
         throws ServletException, IOException {
+            this.forward(request, response, false);
+        }
+
+        protected void forward(ServletRequest request, ServletResponse response, boolean superCall)
+        throws ServletException, IOException {
             try {
-                BlockCallStack.enterBlock(BlockContext.this);
+                if (!superCall) {
+                    // It is important to set the current block each time
+                    // a new block is entered, this is used for the block
+                    // protocol
+                    BlockCallStack.enterBlock(BlockContext.this);
+                } else {
+                    // A super block should be called in the context of
+                    // the called block to get polymorphic calls resolved
+                    // in the right way. We still need to register the
+                    // current context for resolving super calls relative it.
+                    BlockCallStack.enterSuperBlock(BlockContext.this);
+                }                        
                 BlockContext.this.servlet.service(request, response);
             } finally {
                 BlockCallStack.leaveBlock();
