@@ -47,7 +47,8 @@ public class CalculatorFlow extends AbstractContinuable {
 
     private float getNumber(String name, float a, float b) {
         String uri = "page/calculator-" + name.toLowerCase();
-        sendPageAndWait(uri, new VarMap().add("a", a).add("b", b).add("count", count));
+        String hello = "hello world";
+        sendPageAndWait(uri, new VarMap().add("a", a).add("b", b).add("count", count).add("hello", hello));
 
         float value = 0f;
         try {

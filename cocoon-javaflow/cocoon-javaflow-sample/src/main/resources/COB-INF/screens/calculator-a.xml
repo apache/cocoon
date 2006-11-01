@@ -24,7 +24,8 @@
   <row>
    <column title="Calculator example">
 
-    <form action="#{$continuation/id}.cont" method="post">
+    <form action="#{$cocoon/continuation/id}.cont" method="post">
+     <p>${hello}</p>
      <p>Enter value of <strong>a</strong>: <input type="text" name="a"/></p>
      <input type="submit" name="submit" value="Enter"/>
     </form>
