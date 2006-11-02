@@ -321,32 +321,30 @@ public class ResourceReader extends AbstractReader
     /**
      * Generates the requested resource.
      */
-    public void generate()
-    throws IOException, ProcessingException {
+    public void generate() throws IOException, ProcessingException {
+        InputStream inputStream;
         try {
-            InputStream inputStream;
-            try {
-                inputStream = inputSource.getInputStream();
-            } catch (SourceException e) {
-                throw SourceUtil.handle("Error during resolving of the input stream", e);
-            }
+            inputStream = inputSource.getInputStream();
+        } catch (SourceException e) {
+            throw SourceUtil.handle(
+                    "Error during resolving of the input stream", e);
+        }
 
-            // Bugzilla Bug #25069: Close inputStream in finally block.
-            try {
-                processStream(inputStream);
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
+        // Bugzilla Bug #25069: Close inputStream in finally block.
+        try {
+            processStream(inputStream);
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
             }
+        }
 
-            if (!quickTest) {
-                // if everything is ok, add this to the list of generated documents
-                // (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
-                documents.put(request.getRequestURI(), inputSource.getURI());
-            }
-        } catch (IOException e) {
-            getLogger().debug("Received an IOException, assuming client severed connection on purpose");
+        if (!quickTest) {
+            // if everything is ok, add this to the list of generated documents
+            // (see
+            // http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915
+            // )
+            documents.put(request.getRequestURI(), inputSource.getURI());
         }
     }
 
