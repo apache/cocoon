@@ -60,7 +60,7 @@ public class SettingsBeanFactoryPostProcessor
     public void init()
     throws Exception {
         // first deploy block artifacts!
-        final DeploymentUtil deployer = new DeploymentUtil();
+        final DeploymentUtil deployer = new DeploymentUtil(this.servletContext);
         deployer.deploy();
 
         this.settings = this.createSettings();
