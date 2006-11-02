@@ -18,12 +18,18 @@
  */
 package org.apache.cocoon.core.deployment;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * Helper class for deploying resources and configuration files from the
@@ -35,25 +41,40 @@ import java.util.zip.ZipEntry;
 public class DeploymentUtil {
 
     protected static final String CONFIGURATION_PATH = "META-INF/cocoon";
+    protected static final String RESOURCES_PATH = "COB-INF";
 
-    protected void deploy(JarFile jarFile, String prefix, String destination) {
+    protected final String destinationDirectory;
+
+    public DeploymentUtil(ServletContext servletContext) {
+        final String pathToWebInf = servletContext.getRealPath("/WEB-INF");
+        if ( pathToWebInf == null ) {
+            // we run unexpanded
+            this.destinationDirectory = null;
+        } else {
+            this.destinationDirectory = pathToWebInf.substring(0, pathToWebInf.length() - "/WEB-INF".length());
+        }
+        System.out.println("Deploying to " + this.destinationDirectory);
+    }
+
+    protected void deploy(JarFile jarFile, String prefix, String destination)
+    throws IOException {
         // FIXME - We should check if a deploy is required
         final Enumeration entries = jarFile.entries();
         while (entries.hasMoreElements()) {
             final ZipEntry entry = (ZipEntry)entries.nextElement();
             if ( entry.getName().startsWith(prefix) ) {
-                final String relativeFileName = destination + entry.getName().substring(prefix.length());
-                System.out.println(".." + entry.getName() + " -> " + relativeFileName);
-                // FIXME - copy entry to relativeFileName in webapp directory
+                final String fileName = destination + entry.getName().substring(prefix.length());
+                final File out = new File(fileName);
+                // create directory
+                out.getParentFile().mkdirs();
+                IOUtils.copy(jarFile.getInputStream(entry), new FileOutputStream(out));
             }
         }        
     }
 
-    public void deploy()
+    protected void deploy(String resourcePattern, String relativeDirectory)
     throws IOException {
-        // FIXME - First check if we run unexpanded!
-        // find out all artifacts containing Cocoon specific configuration files
-        final Enumeration jarUrls = this.getClass().getClassLoader().getResources(DeploymentUtil.CONFIGURATION_PATH);
+        final Enumeration jarUrls = this.getClass().getClassLoader().getResources(resourcePattern);
         while ( jarUrls.hasMoreElements() ) {
             final URL resourceUrl = (URL)jarUrls.nextElement();
             // we only handle jar files!
@@ -66,8 +87,29 @@ public class DeploymentUtil {
                 url = url.substring(0, pos+2); // +2 as we include "!/"
                 final URL jarUrl = new URL(url);
                 final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
-                this.deploy(connection.getJarFile(), DeploymentUtil.CONFIGURATION_PATH, "WEB-INF/cocoon");
+                this.deploy(connection.getJarFile(), resourcePattern, this.destinationDirectory + File.separator + relativeDirectory);
             }
+        }        
+    }
+
+    protected void deployConfigFiles()
+    throws IOException {
+        // deploy all artifacts containing Cocoon specific configuration files
+        this.deploy(DeploymentUtil.CONFIGURATION_PATH, "WEB-INF" + File.separator + "cocoon");
+    }
+
+    protected void deployResources()
+    throws IOException {
+        // deploy all artifacts containing block resources
+        this.deploy(DeploymentUtil.RESOURCES_PATH, "blocks");
+    }
+    
+    public void deploy()
+    throws IOException {
+        // Check if we run unexpanded
+        if ( this.destinationDirectory != null ) {
+            this.deployConfigFiles();
+            //this.deployResources();
         }
     }
 }
