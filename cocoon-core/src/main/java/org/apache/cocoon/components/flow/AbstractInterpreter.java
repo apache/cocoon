@@ -198,4 +198,11 @@ public abstract class AbstractInterpreter
             throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }
     }
+
+    /**
+     * @see org.apache.cocoon.components.flow.Interpreter#getScriptExtension()
+     */
+    public String getScriptExtension() {
+        return null;
+    }
 }
