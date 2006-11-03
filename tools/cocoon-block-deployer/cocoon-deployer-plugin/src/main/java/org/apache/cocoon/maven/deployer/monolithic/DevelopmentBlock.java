@@ -45,12 +45,12 @@ public class DevelopmentBlock {
             throw new FileNotFoundException("Directory '" + localPath + "' does not exist!");
         }
 
-        springConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/spring"));
-        xconfConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/legacy/xconf"));
+        springConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/cocoon/spring"));
+        xconfConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/cocoon/avalon"));
         xPatchPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/xpatch"));
         targetClassesPath = checkDir(new File(localPath, "target/classes"));
         cobInfPath = checkDir(new File(localPath, RESOURCES_DIR + "COB-INF"));
-        propsPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/properties"));
+        propsPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/cocoon/properties"));
     }
 
     private String checkDir(File dir) {
