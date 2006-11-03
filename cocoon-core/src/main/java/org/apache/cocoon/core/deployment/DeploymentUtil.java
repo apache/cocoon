@@ -32,15 +32,13 @@ import javax.servlet.ServletContext;
 import org.apache.commons.io.IOUtils;
 
 /**
- * Helper class for deploying resources and configuration files from the
- * block artifacts.
+ * Helper class for deploying resources from the block artifacts.
  *
  * @version $Id$
  * @since 2.2
  */
 public class DeploymentUtil {
 
-    protected static final String CONFIGURATION_PATH = "META-INF/cocoon";
     protected static final String RESOURCES_PATH = "COB-INF";
 
     protected final String destinationDirectory;
@@ -72,7 +70,7 @@ public class DeploymentUtil {
         }        
     }
 
-    protected void deploy(String resourcePattern, String relativeDirectory)
+    protected void deployBlockResources(String resourcePattern, String relativeDirectory)
     throws IOException {
         final Enumeration jarUrls = this.getClass().getClassLoader().getResources(resourcePattern);
         while ( jarUrls.hasMoreElements() ) {
@@ -87,29 +85,24 @@ public class DeploymentUtil {
                 url = url.substring(0, pos+2); // +2 as we include "!/"
                 final URL jarUrl = new URL(url);
                 final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
-                this.deploy(connection.getJarFile(), resourcePattern, this.destinationDirectory + File.separator + relativeDirectory);
+                final JarFile jarFile = connection.getJarFile();
+                final StringBuffer buffer = new StringBuffer(this.destinationDirectory);
+                buffer.append(File.separator);
+                buffer.append(relativeDirectory);
+                buffer.append(File.separator);
+                // TODO Add block name
+                buffer.append("BLOCKNAME");
+                this.deploy(jarFile, resourcePattern, buffer.toString());
             }
         }        
     }
 
-    protected void deployConfigFiles()
-    throws IOException {
-        // deploy all artifacts containing Cocoon specific configuration files
-        this.deploy(DeploymentUtil.CONFIGURATION_PATH, "WEB-INF" + File.separator + "cocoon");
-    }
-
-    protected void deployResources()
-    throws IOException {
-        // deploy all artifacts containing block resources
-        this.deploy(DeploymentUtil.RESOURCES_PATH, "blocks");
-    }
-    
     public void deploy()
     throws IOException {
         // Check if we run unexpanded
         if ( this.destinationDirectory != null ) {
-            this.deployConfigFiles();
-            //this.deployResources();
+            // deploy all artifacts containing block resources
+            //this.deployBlockResources(DeploymentUtil.RESOURCES_PATH, "blocks");
         }
     }
 }
