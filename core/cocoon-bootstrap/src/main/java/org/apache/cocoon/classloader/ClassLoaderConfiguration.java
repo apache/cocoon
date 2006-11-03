@@ -17,16 +17,11 @@
 package org.apache.cocoon.classloader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.cocoon.classloader.fam.Monitor;
-import org.apache.commons.jci.listeners.NotificationListener;
-import org.apache.commons.jci.stores.ResourceStore;
 
 /**
  * The configuration for a {@link ClassLoaderFactory}.
+ *
  * @version $Id$
  * @since 2.2
  */
@@ -37,9 +32,6 @@ public class ClassLoaderConfiguration {
     protected final List sourceDirectories = new ArrayList();
     protected final List classDirectories = new ArrayList();
     protected final List libDirectories = new ArrayList();
-    protected final Map storeDirectories = new HashMap();
-    private Monitor monitor;
-    private NotificationListener notificationListener;
 
     public void addInclude(String include) {
         this.includes.add(include);
@@ -79,30 +71,5 @@ public class ClassLoaderConfiguration {
     
     public List getIncludes() {
         return includes;
-    }
-
-    public void addStore(String dir, ResourceStore store) {
-        this.storeDirectories.put(dir, store);
-    }
-
-    public ResourceStore getStore(String dir) {
-        return (ResourceStore)this.storeDirectories.get(dir);
-    }
-
-    public void setMonitor(Monitor monitor) {
-        this.monitor = monitor;
-        
-    }
-
-    public Monitor getMonitor() {
-        return monitor;
-    }
-
-    public void setNotificationListener(NotificationListener notificationListener) {
-        this.notificationListener = notificationListener;        
-    }
-
-    public NotificationListener getNotificationListener() {
-        return this.notificationListener;
     }
 }
