@@ -74,16 +74,15 @@ public class MonolithicCocoonDeployer {
             try {
                 this.logger.info("Deploying " + id);
                 RuleBasedZipExtractor zipExtractor = new RuleBasedZipExtractor(basedir, logger);
-                zipExtractor.addRule("META-INF/legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
 
                 // TODO clearly a hack, there should be a parameter what part of
                 // source path should be removed, the rest should stay
                 // preserving directory structure (currently only filename
                 // stays)
-                zipExtractor.addRule("WEB-INF/classes/**", new SingleFileDeployer("WEB-INF/classes"));
-                zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));
+                zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
                 zipExtractor.addRule("META-INF/xpatch/*.xweb", xwebPatcher);
+
                 // extract all configurations files
                 zipExtractor.extract(lib);
             } catch (IOException e) {
