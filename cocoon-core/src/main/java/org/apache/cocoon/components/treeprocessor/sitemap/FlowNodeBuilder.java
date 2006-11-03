@@ -63,7 +63,11 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
                 final Resource[] resources = resolver.getResources(scriptLocation + "/*");
                 if ( resources != null ) {
                     for(int i=0; i < resources.length; i++) {
-                        node.getInterpreter().register(ResourceUtils.getUri(resources[i]));
+                        // exclude everything starting with "." (like .cvs, .svn)
+                        // TODO - We need a better exclusion filtering here!
+                        if ( !resources[i].getFilename().startsWith(".") ) {
+                            node.getInterpreter().register(ResourceUtils.getUri(resources[i]));
+                        }
                     }
                 }
             }
