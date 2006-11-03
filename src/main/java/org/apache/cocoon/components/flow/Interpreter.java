@@ -189,4 +189,14 @@ public interface Interpreter {
      *
      */
     void register(String source);
+
+    /**
+     * Return the default extension of script files associated with this
+     * interpreter.
+     * The extension is used by the sitemap to automount all scripts
+     * from the "flow" directory. If this method returns null, no
+     * scripts are mounted automatically.
+     * @return The script extension, like ".js", or null.
+     */
+    String getScriptExtension();
 }
