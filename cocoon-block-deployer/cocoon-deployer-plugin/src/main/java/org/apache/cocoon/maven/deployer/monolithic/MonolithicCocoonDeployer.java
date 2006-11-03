@@ -79,7 +79,6 @@ public class MonolithicCocoonDeployer {
                 // source path should be removed, the rest should stay
                 // preserving directory structure (currently only filename
                 // stays)
-                zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));
                 zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
                 zipExtractor.addRule("META-INF/xpatch/*.xweb", xwebPatcher);
 
