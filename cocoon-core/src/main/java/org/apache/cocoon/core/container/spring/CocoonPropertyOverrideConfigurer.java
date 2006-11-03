@@ -35,6 +35,7 @@ import org.springframework.core.io.ResourceLoader;
  * 
  * @version $Id: CocoonPropertyOverrideConfigurer.java 470754 2006-11-03
  *          10:47:52Z lgawron $
+ * @since 2.2
  */
 public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
 
@@ -50,6 +51,11 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
      * context.
      */
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+    /**
+     * Should we scan the classpath for properties?
+     */
+    protected boolean scanClassPath = true;
 
     /**
      * The settings object.
@@ -69,6 +75,13 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
     /** Set the settings. */
     public void setSettings(Settings object) {
         this.settings = object;
+    }
+
+    /**
+     * Set if we scan the class path.
+     */
+    public void setScanClassPath(boolean value) {
+        this.scanClassPath = value;
     }
 
     /**
@@ -93,12 +106,13 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         }
         final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         final Properties mergedProps = new Properties();
-        
-        //TODO change when location of files change
-        ResourceUtils.readProperties("classpath*:META-INF/cocoon/spring", mergedProps, this.resourceLoader,
-                this.logger);
-        ResourceUtils.readProperties("classpath*:META-INF/cocoon/spring/" + mode, mergedProps,
-                this.resourceLoader, this.logger);
+
+        if ( this.scanClassPath ) {
+            ResourceUtils.readProperties("classpath*:META-INF/cocoon/spring", mergedProps, this.resourceLoader,
+                    this.logger);
+            ResourceUtils.readProperties("classpath*:META-INF/cocoon/spring/" + mode, mergedProps,
+                    this.resourceLoader, this.logger);
+        }
 
         ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
         // read properties from running-mode dependent directory

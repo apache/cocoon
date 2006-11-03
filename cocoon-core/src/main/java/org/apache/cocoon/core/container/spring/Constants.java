@@ -29,4 +29,7 @@ public class Constants {
 
     /** The default location of spring related per sitemap configuration files. */
     public static final String DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES = "config/spring";
+
+    /** The default location of spring related configuration files inside a block. */
+    public static final String DEFAULT_SPRING_BLOCK_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
 }

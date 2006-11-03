@@ -127,7 +127,7 @@ public class SitemapElementParser extends AbstractElementParser {
 
             // register a PropertyPlaceholderConfigurer
             if ( useDefaultIncludes ) {
-                this.registerPropertyOverrideConfigurer(parserContext, Constants.DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES);
+                this.registerPropertyOverrideConfigurer(parserContext, Constants.DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES, false);
             }
             
             RootBeanDefinition def =  this.createBeanDefinition(SubSettingsBeanFactoryPostProcessor.class.getName(),
