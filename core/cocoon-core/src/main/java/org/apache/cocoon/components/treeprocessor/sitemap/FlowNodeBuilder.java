@@ -55,19 +55,15 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
         // since 2.2 we add by default all flow scripts located in the ./flow directory
         // The default location can be overwritten by specifying the location attribute.
         final BeanFactory beanFactory = this.treeBuilder.getContainer().getBeanFactory();
-        if ( beanFactory instanceof ApplicationContext ) {
+        if ( beanFactory instanceof ApplicationContext && node.getInterpreter().getScriptExtension() != null ) {
             final ResourceLoader resourceLoader = (ApplicationContext)beanFactory;
             final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
             if ( resourceLoader.getResource(scriptLocation).exists() ) {
                 final ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
-                final Resource[] resources = resolver.getResources(scriptLocation + "/*");
+                final Resource[] resources = resolver.getResources(scriptLocation + "/*" + node.getInterpreter().getScriptExtension());
                 if ( resources != null ) {
                     for(int i=0; i < resources.length; i++) {
-                        // exclude everything starting with "." (like .cvs, .svn)
-                        // TODO - We need a better exclusion filtering here!
-                        if ( !resources[i].getFilename().startsWith(".") ) {
-                            node.getInterpreter().register(ResourceUtils.getUri(resources[i]));
-                        }
+                        node.getInterpreter().register(ResourceUtils.getUri(resources[i]));
                     }
                 }
             }

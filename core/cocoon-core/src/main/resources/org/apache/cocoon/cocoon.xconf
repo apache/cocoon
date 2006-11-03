@@ -31,8 +31,8 @@
 
   <!--+
       | Include all configuration files (for core and blocks) from within the jars.
-  <include dir="resource://META-INF/cocoon/avalon" pattern="*.xconf"/>
       +-->
+  <include dir="classpath*:META-INF/cocoon/avalon" pattern="*.xconf"/>
 
   <!--+
       | Include all configuration files ending with ".xconf"
