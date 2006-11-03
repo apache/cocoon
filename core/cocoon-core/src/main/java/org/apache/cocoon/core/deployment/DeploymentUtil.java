@@ -30,6 +30,8 @@ import java.util.zip.ZipEntry;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Helper class for deploying resources from the block artifacts.
@@ -38,6 +40,8 @@ import org.apache.commons.io.IOUtils;
  * @since 2.2
  */
 public class DeploymentUtil {
+
+    protected static final Log logger = LogFactory.getLog(DeploymentUtil.class);
 
     protected static final String RESOURCES_PATH = "COB-INF";
 
@@ -51,16 +55,18 @@ public class DeploymentUtil {
         } else {
             this.destinationDirectory = pathToWebInf.substring(0, pathToWebInf.length() - "/WEB-INF".length());
         }
-        System.out.println("Deploying to " + this.destinationDirectory);
     }
 
     protected void deploy(JarFile jarFile, String prefix, String destination)
     throws IOException {
+        if ( logger.isDebugEnabled() ) {
+            logger.debug("Deploying jar " + jarFile + " to " + destination);
+        }
         // FIXME - We should check if a deploy is required
         final Enumeration entries = jarFile.entries();
         while (entries.hasMoreElements()) {
             final ZipEntry entry = (ZipEntry)entries.nextElement();
-            if ( entry.getName().startsWith(prefix) ) {
+            if ( !entry.isDirectory() && entry.getName().startsWith(prefix) ) {
                 final String fileName = destination + entry.getName().substring(prefix.length());
                 final File out = new File(fileName);
                 // create directory
@@ -86,12 +92,15 @@ public class DeploymentUtil {
                 final URL jarUrl = new URL(url);
                 final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
                 final JarFile jarFile = connection.getJarFile();
+                String blockName = jarFile.getManifest().getMainAttributes().getValue("Implementation-Title");
+                if ( blockName == null ) {
+                    blockName = jarFile.getName();
+                }
                 final StringBuffer buffer = new StringBuffer(this.destinationDirectory);
                 buffer.append(File.separator);
                 buffer.append(relativeDirectory);
                 buffer.append(File.separator);
-                // TODO Add block name
-                buffer.append("BLOCKNAME");
+                buffer.append(blockName);
                 this.deploy(jarFile, resourcePattern, buffer.toString());
             }
         }        
@@ -102,7 +111,7 @@ public class DeploymentUtil {
         // Check if we run unexpanded
         if ( this.destinationDirectory != null ) {
             // deploy all artifacts containing block resources
-            //this.deployBlockResources(DeploymentUtil.RESOURCES_PATH, "blocks");
+            this.deployBlockResources(DeploymentUtil.RESOURCES_PATH, "blocks");
         }
     }
 }
