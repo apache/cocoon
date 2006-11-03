@@ -206,6 +206,7 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>Committer</role>
+        <role>PMC member</role>      
       </roles>
       <timezone>+1</timezone>
     </developer>
