@@ -14,20 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.classloader;
+package org.apache.cocoon.classloader.fam;
 
-import java.net.URL;
-import java.util.List;
+import org.apache.commons.jci.listeners.NotificationListener;
+import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 
 /**
- * @see AbstractClassLoaderFactory
+ * 
  * @version $Id$
- * @since 2.2
  */
-public class DefaultClassLoaderFactory
-    extends AbstractClassLoaderFactory {
+public interface Monitor {
 
-    protected ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent) {
-        return new DefaultClassLoader(urls, includePatterns, excludePatterns, parent);
-    }
+    String ROLE = Monitor.class.getName();
+
+    void subscribe(final FilesystemAlterationListener listener);    
+    void unsubscribe(final FilesystemAlterationListener listener);
+    void setSitemapNotifier(NotificationListener sitemapNotifier);
+
 }
