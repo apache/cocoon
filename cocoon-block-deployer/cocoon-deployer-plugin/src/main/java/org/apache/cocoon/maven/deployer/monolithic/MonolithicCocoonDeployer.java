@@ -42,7 +42,7 @@ import org.apache.maven.project.MavenProject;
 /**
  * Deploy blocks to a monolithic Cocoon web application. The files contained by
  * a block are copied to the right places. based on rules.
- * 
+ *
  * @version $Id: MonolithicCocoonDeployer.java 438198 2006-08-29 20:38:09Z
  *          lgawron $
  */
@@ -63,7 +63,7 @@ public class MonolithicCocoonDeployer {
             final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
             throws DeploymentException {
 
-        
+
         xwebPatcher.setLogger( logger );
         // iterate over all blocks that need to be installed into a J2EE web
         // application
@@ -75,13 +75,11 @@ public class MonolithicCocoonDeployer {
                 this.logger.info("Deploying " + id);
                 RuleBasedZipExtractor zipExtractor = new RuleBasedZipExtractor(basedir, logger);
                 zipExtractor.addRule("META-INF/legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
-                zipExtractor.addRule("META-INF/spring/**", new SingleFileDeployer("WEB-INF/cocoon/spring"));
 
                 // TODO clearly a hack, there should be a parameter what part of
                 // source path should be removed, the rest should stay
                 // preserving directory structure (currently only filename
                 // stays)
-                zipExtractor.addRule("META-INF/properties/**", new SingleFileDeployer("WEB-INF/cocoon/", true));
                 zipExtractor.addRule("WEB-INF/classes/**", new SingleFileDeployer("WEB-INF/classes"));
                 zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));
