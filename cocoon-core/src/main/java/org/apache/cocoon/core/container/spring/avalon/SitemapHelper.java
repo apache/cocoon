@@ -27,7 +27,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderFactory;
-import org.apache.cocoon.classloader.fam.SitemapMonitor;
+import org.apache.cocoon.classloader.fam.Monitor;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
 import org.apache.cocoon.core.container.spring.Container;
@@ -142,7 +142,7 @@ public class SitemapHelper {
 
     public static Container createContainer(Configuration  config,
                                             String         sitemapLocation,
-                                            SitemapMonitor fam,
+                                            Monitor fam,
                                             ServletContext servletContext)
     throws Exception {
         // let's get the root container first
@@ -188,7 +188,7 @@ public class SitemapHelper {
      */
     protected static ClassLoader createClassLoader(BeanFactory    parentFactory,
                                                    Configuration  config,
-                                                   SitemapMonitor fam,
+                                                   Monitor fam,
                                                    ServletContext servletContext,
                                                    SourceResolver sitemapResolver)
     throws Exception {
@@ -207,7 +207,7 @@ public class SitemapHelper {
 
         // Create a new classloader
         ClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, classPathConfig);
-        configBean.setSitemapMonitor(fam);
+        configBean.setMonitor(fam);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
                                            configBean,
