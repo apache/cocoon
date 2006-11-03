@@ -95,9 +95,9 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         final Properties mergedProps = new Properties();
         
         //TODO change when location of files change
-        ResourceUtils.readProperties("classpath*:META-INF/properties", mergedProps, this.resourceLoader,
+        ResourceUtils.readProperties("classpath*:META-INF/spring", mergedProps, this.resourceLoader,
                 this.logger);
-        ResourceUtils.readProperties("classpath*:META-INF/properties/" + mode, mergedProps,
+        ResourceUtils.readProperties("classpath*:META-INF/spring/" + mode, mergedProps,
                 this.resourceLoader, this.logger);
 
         ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
