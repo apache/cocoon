@@ -21,8 +21,8 @@
       | Include the default cocoon.xconf. The default configuration
       | includes:
       | - resource://org/apache/cocoon/cocoon.roles
+      | - classpath*:/META-INF/cocoon/xconf/*.xconf
       | - context://WEB-INF/cocoon/xconf/*.xconf
-      | - context://WEB-INF/cocoon/sitemap-additions/*.xmap
       +-->
   <include src="resource://org/apache/cocoon/cocoon.xconf"/>
 

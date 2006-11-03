@@ -75,8 +75,6 @@ public class MonolithicCocoonDeployer {
                 this.logger.info("Deploying " + id);
                 RuleBasedZipExtractor zipExtractor = new RuleBasedZipExtractor(basedir, logger);
                 zipExtractor.addRule("META-INF/legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
-                zipExtractor.addRule("META-INF/legacy/sitemap-additions/**", new SingleFileDeployer(
-                        "WEB-INF/cocoon/sitemap-additions"));
                 zipExtractor.addRule("META-INF/spring/**", new SingleFileDeployer("WEB-INF/cocoon/spring"));
 
                 // TODO clearly a hack, there should be a parameter what part of
