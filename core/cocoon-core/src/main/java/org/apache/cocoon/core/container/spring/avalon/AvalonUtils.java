@@ -22,7 +22,7 @@ import java.util.Iterator;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.classloader.ClassLoaderConfiguration;
+import org.apache.cocoon.classloader.reloading.ReloadingClassLoaderConfiguration;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.apache.commons.jci.stores.ResourceStore;
@@ -88,10 +88,10 @@ public class AvalonUtils {
      * @return           A class loader configuration object.
      * @throws Exception
      */
-    public static ClassLoaderConfiguration createConfiguration(SourceResolver resolver,
-                                                               Configuration  config)
+    public static ReloadingClassLoaderConfiguration createConfiguration(SourceResolver resolver,
+                                                                        Configuration  config)
     throws Exception {
-        final ClassLoaderConfiguration configBean = new ClassLoaderConfiguration();
+        final ReloadingClassLoaderConfiguration configBean = new ReloadingClassLoaderConfiguration();
         final Configuration[] children = config.getChildren();
         for (int i = 0; i < children.length; i++) {
             final Configuration child = children[i];
@@ -144,7 +144,10 @@ public class AvalonUtils {
      * If a store node is configured in the class-dir/src-dir configuration, 
      * let's configure the store; the default one is the JCI MemoryStore
      */
-    private static void configureStore(ClassLoaderConfiguration configBean, String dirUri, Configuration storeConfig) throws Exception {
+    private static void configureStore(ReloadingClassLoaderConfiguration configBean,
+                                       String                            dirUri,
+                                       Configuration                     storeConfig)
+    throws Exception {
         if (storeConfig != null) {
             final String storeClassName = storeConfig.getAttribute("class","org.apache.commons.jci.stores.MemoryResourceStore");
             final ResourceStore store = (ResourceStore)Class.forName(storeClassName).newInstance();

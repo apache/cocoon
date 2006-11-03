@@ -15,15 +15,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
+<!-- @version $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
 <components>
 
   <!--+
       | Reloading classloader
       +-->
   <component logger="core.classloader"
-    role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading"
-    class="org.apache.cocoon.classloader.ReloadingClassLoaderFactory">
+             role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading"
+             class="org.apache.cocoon.classloader.reloading.ReloadingClassLoaderFactory">
   </component>
 
 </components>

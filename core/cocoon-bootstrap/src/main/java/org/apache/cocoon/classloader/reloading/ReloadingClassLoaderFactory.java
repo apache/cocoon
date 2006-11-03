@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.classloader;
+package org.apache.cocoon.classloader.reloading;
 
 import java.io.File;
 import java.net.URL;
@@ -22,7 +22,9 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.apache.cocoon.classloader.fam.Monitor;
+import org.apache.cocoon.classloader.AbstractClassLoaderFactory;
+import org.apache.cocoon.classloader.ClassLoaderConfiguration;
+import org.apache.cocoon.classloader.DefaultClassLoader;
 import org.apache.commons.jci.listeners.ReloadingListener;
 import org.apache.commons.jci.stores.ResourceStore;
 import org.apache.commons.logging.Log;
@@ -58,25 +60,28 @@ public class ReloadingClassLoaderFactory extends AbstractClassLoaderFactory {
                 new DefaultClassLoader(urls, includePatterns,
                         excludePatterns, Thread.currentThread()
                                 .getContextClassLoader()));
-
-        Monitor fam = this.config.getMonitor();
-        
-        for (int i = 0; i < urls.length; i++) {
-            URL url = urls[i];
-            final ResourceStore store = this.config.getStore(url.getFile());
-
-            final ReloadingListener listener = createReloadingListener(url,
-                    store, this.config);
-            jciClassLoader.addListener(listener);
-            fam.subscribe(listener);
-            try {
-                listener.waitForFirstCheck();
-            } catch (Exception e) {
-                log.error("Timeout error configuring JCI Listener for url "
-                        + url + " having store " + store);
-            }
-            log.debug("ReloadingClassLoaderFactory - Subscriber SitemapMonitor listener for url "
+        Monitor fam = null;
+        if ( this.config instanceof ReloadingClassLoaderConfiguration ) {
+            fam = ((ReloadingClassLoaderConfiguration)this.config).getMonitor();
+        }
+        if ( fam != null ) {
+            for (int i = 0; i < urls.length; i++) {
+                URL url = urls[i];
+                final ResourceStore store = ((ReloadingClassLoaderConfiguration)this.config).getStore(url.getFile());
+    
+                final ReloadingListener listener = createReloadingListener(url,
+                        store, this.config);
+                jciClassLoader.addListener(listener);
+                fam.subscribe(listener);
+                try {
+                    listener.waitForFirstCheck();
+                } catch (Exception e) {
+                    log.error("Timeout error configuring JCI Listener for url "
                             + url + " having store " + store);
+                }
+                log.debug("ReloadingClassLoaderFactory - Subscriber SitemapMonitor listener for url "
+                                + url + " having store " + store);
+            }
         }
         return jciClassLoader;
     }

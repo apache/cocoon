@@ -182,7 +182,7 @@
         model="non-thread-safe-pooled"/>
 	
   <!--=========================================================================-->
-  <role name="org.apache.cocoon.classloader.fam.Monitor"
+  <role name="org.apache.cocoon.classloader.reloading.Monitor"
         shorthand="fam"
         default-class="org.apache.cocoon.components.fam.MonitorImpl"/>
 
