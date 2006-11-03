@@ -796,4 +796,10 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         }
     }
 
+    /**
+     * @see org.apache.cocoon.components.flow.AbstractInterpreter#getScriptExtension()
+     */
+    public String getScriptExtension() {
+        return ".js";
+    }
 }
