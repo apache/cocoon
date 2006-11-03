@@ -91,7 +91,7 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Processing bean factory: " + beanFactory);
         }
-        final String mode = this.settings.getRunningMode();
+        final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         final Properties mergedProps = new Properties();
         ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties", mergedProps, this.resourceLoader,
                 this.logger);
