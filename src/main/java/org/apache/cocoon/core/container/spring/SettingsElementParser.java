@@ -76,7 +76,7 @@ public class SettingsElementParser extends AbstractElementParser {
 
         // handle includes
         // TODO change when location of files change
-        String classPathLocation = "classpath*:META-INF/spring";
+        String classPathLocation = "classpath*:META-INF/cocoon/spring";
         try {
             this.handleBeanInclude(parserContext, null, classPathLocation, "*.xml", true);
         } catch (Exception e) {

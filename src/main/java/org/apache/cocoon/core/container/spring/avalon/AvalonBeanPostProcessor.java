@@ -64,7 +64,7 @@ public class AvalonBeanPostProcessor
     protected ConfigurationInfo configurationInfo;
     protected Settings settings = new MutableSettings("test");
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
-    protected String location = "WEB-INF/cocoon/xconf";
+    protected String location = "WEB-INF/cocoon/avalon";
 
     public void setSettings(Settings settings) {
         this.settings = settings;
