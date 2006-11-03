@@ -34,21 +34,22 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
 
 /**
  * Utility class for Spring resource handling
+ * 
  * @version $Id$
  */
 public class ResourceUtils {
 
     /**
-     * Get the uri of a resource.
-     * This method corrects the uri in the case of the file protocol
-     * on windows.
-     * @param resource The resource.
+     * Get the uri of a resource. This method corrects the uri in the case of
+     * the file protocol on windows.
+     * 
+     * @param resource
+     *            The resource.
      * @return The uri.
      * @throws IOException
      */
-    public static String getUri(Resource resource)
-    throws IOException {
-        if ( resource == null ) {
+    public static String getUri(Resource resource) throws IOException {
+        if (resource == null) {
             return null;
         }
         return correctUri(resource.getURL().toExternalForm());
@@ -59,7 +60,7 @@ public class ResourceUtils {
         // otherwise we get problems under windows with some file
         // references starting with "/DRIVELETTER" and some
         // just with "DRIVELETTER"
-        if ( uri.startsWith("file:") ) {
+        if (uri.startsWith("file:")) {
             final File f = new File(uri.substring(5));
             return "file://" + f.getAbsolutePath();
         }
@@ -67,59 +68,60 @@ public class ResourceUtils {
     }
 
     /**
-     * Read all property files from the given directory and apply them to the supplied properties.
+     * Read all property files from the given directory and apply them to the
+     * supplied properties.
      */
-    public static void readProperties(String          directoryName,
-                                      Properties      properties,
-                                      ResourceLoader  resourceLoader,
-                                      Log             logger) {
-        if ( logger != null && logger.isDebugEnabled() ) {
-            logger.debug("Reading properties from directory: " + directoryName);
+    public static void readProperties(String propertiesPath, Properties properties, ResourceLoader resourceLoader,
+            Log logger) {
+        if (logger != null && logger.isDebugEnabled()) {
+            logger.debug("Reading properties from directory: " + propertiesPath);
         }
-        // check if directory exists
-        Resource directoryResource = resourceLoader.getResource(directoryName);
-        if ( directoryResource.exists() ) {
-            final String pattern = directoryName + "/*.properties";
+        final ResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
 
-            final ResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
-            Resource[] resources = null;
-            try {
-                resources = resolver.getResources(pattern);
-            } catch (IOException ignore) {
-                if ( logger != null && logger.isDebugEnabled() ) {
-                    logger.debug("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.", ignore);
-                }
+        Resource[] resources = null;
+
+        try {
+            resources = resolver.getResources(propertiesPath + "/*.properties");
+            if (logger != null && logger.isDebugEnabled())
+                logger.debug("found " + resources.length + " matching resources in " + propertiesPath
+                                + "/*.properties");
+        } catch (IOException ignore) {
+            if (logger != null && logger.isDebugEnabled()) {
+                logger.debug("Unable to read properties from directory '" + propertiesPath
+                        + "' - Continuing initialization.", ignore);
             }
-            if ( resources != null ) {
-                // we process the resources in alphabetical order, so we put
-                // them first into a list, sort them and then read the properties.
-                final List propertyUris = new ArrayList();
-                for(int i=0; i<resources.length; i++ ) {
-                    propertyUris.add(resources[i]);
-                }
-                // sort
-                Collections.sort(propertyUris, getResourceComparator());
-                // now process
-                final Iterator i = propertyUris.iterator();
-                while ( i.hasNext() ) {
-                    final Resource src = (Resource)i.next();
-                    try {
-                        if ( logger != null && logger.isDebugEnabled() ) {
-                            logger.debug("Reading settings from '" + src.getURL() + "'.");
-                        }
-                        final InputStream propsIS = src.getInputStream();
-                        properties.load(propsIS);
-                        propsIS.close();
-                    } catch (IOException ignore) {
-                        if ( logger != null && logger.isDebugEnabled() ) {
-                            logger.info("Unable to read properties from file '" + src.getDescription() + "' - Continuing initialization.", ignore);
-                        }
+        }
+
+        if (resources != null) {
+            // we process the resources in alphabetical order, so we put
+            // them first into a list, sort them and then read the properties.
+            final List propertyUris = new ArrayList();
+            for (int i = 0; i < resources.length; i++) {
+                propertyUris.add(resources[i]);
+            }
+            // sort
+            Collections.sort(propertyUris, getResourceComparator());
+            // now process
+            final Iterator i = propertyUris.iterator();
+            while (i.hasNext()) {
+                final Resource src = (Resource) i.next();
+                try {
+                    if (logger != null && logger.isDebugEnabled()) {
+                        logger.debug("Reading settings from '" + src.getURL() + "'.");
+                    }
+                    final InputStream propsIS = src.getInputStream();
+                    properties.load(propsIS);
+                    propsIS.close();
+                } catch (IOException ignore) {
+                    if (logger != null && logger.isDebugEnabled()) {
+                        logger.info("Unable to read properties from file '" + src.getDescription()
+                                + "' - Continuing initialization.", ignore);
                     }
                 }
             }
         } else {
-            if ( logger != null && logger.isDebugEnabled() ) {
-                logger.debug("Directory '" + directoryName + "' does not exist - Continuing initialization.");
+            if (logger != null && logger.isDebugEnabled()) {
+                logger.debug("Directory '" + propertiesPath + "' does not exist - Continuing initialization.");
             }
         }
     }
@@ -137,10 +139,10 @@ public class ResourceUtils {
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         public int compare(Object o1, Object o2) {
-            if ( !(o1 instanceof Resource) || !(o2 instanceof Resource)) {
+            if (!(o1 instanceof Resource) || !(o2 instanceof Resource)) {
                 return 0;
             }
-            return ((Resource)o1).getFilename().compareTo(((Resource)o2).getFilename());
+            return ((Resource) o1).getFilename().compareTo(((Resource) o2).getFilename());
         }
     }
 }
