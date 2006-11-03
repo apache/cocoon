@@ -34,6 +34,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.w3c.dom.Element;
 
@@ -202,8 +203,12 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
     /**
      * Handle include for spring bean configurations.
      */
-    protected void handleBeanInclude(ParserContext parserContext, String src, String path, String pattern,
-            boolean optional) throws Exception {
+    protected void handleBeanInclude(final ParserContext parserContext,
+                                     final String        src,
+                                     final String        path,
+                                     final String        pattern,
+                                     final boolean       optional)
+    throws Exception {
         // TODO 'optional' parameter is ignored now 
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
@@ -219,23 +224,38 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         }
 
         if (includeURI != null) {
-            Resource rsrc = null;
-            try {
-                rsrc = resourceLoader.getResource(includeURI);
-                this.handleImport(parserContext, rsrc.getURL().toExternalForm());
-            } catch (Exception e) {
-                throw new Exception("Cannot load '" + includeURI + "'.", e);
-            }
-
-        } else {
-            try {
-                Resource[] resources = resolver.getResources(pathURI + '/' + pattern);
-                Arrays.sort(resources, ResourceUtils.getResourceComparator());
-                for (int i = 0; i < resources.length; i++) {
-                    this.handleImport(parserContext, resources[i].getURL().toExternalForm());
+            Resource rsrc = resourceLoader.getResource(includeURI);
+            if ( rsrc.exists() ) {
+                try {
+                    this.handleImport(parserContext, rsrc.getURL().toExternalForm());
+                } catch (Exception e) {
+                    throw new Exception("Cannot load bean configuration '" + includeURI + "'.", e);
                 }
-            } catch (IOException ioe) {
-                throw new Exception("Unable to read configurations from " + pathURI);
+            } else if ( !optional ) {
+                throw new Exception("Unable to find bean configuration '" + includeURI + "'.");    
+            }
+        } else {
+            // check if the directory to read from exists
+            // we only check if optional is set to true
+            boolean load = true;
+            if ( optional
+                 && !pathURI.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
+                 && !pathURI.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ) {
+                final Resource rsrc = resolver.getResource(pathURI);
+                if ( !rsrc.exists()) {
+                    load = false;
+                }
+            }
+            if ( load ) {
+                try {
+                    Resource[] resources = resolver.getResources(pathURI + '/' + pattern);
+                    Arrays.sort(resources, ResourceUtils.getResourceComparator());
+                    for (int i = 0; i < resources.length; i++) {
+                        this.handleImport(parserContext, resources[i].getURL().toExternalForm());
+                    }
+                } catch (IOException ioe) {
+                    throw new Exception("Unable to read configurations from " + pathURI, ioe);
+                }
             }
         }
     }
