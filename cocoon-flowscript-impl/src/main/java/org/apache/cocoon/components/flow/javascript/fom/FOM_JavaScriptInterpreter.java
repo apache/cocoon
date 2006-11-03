@@ -759,4 +759,11 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             FOM_JavaScriptFlowHelper.setFOM_WebContinuation(objectModel, kont);
         }
     }
+
+    /**
+     * @see org.apache.cocoon.components.flow.AbstractInterpreter#getScriptExtension()
+     */
+    public String getScriptExtension() {
+        return ".js";
+    }
 }
