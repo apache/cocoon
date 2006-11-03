@@ -45,7 +45,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
-import org.apache.cocoon.classloader.fam.SitemapMonitor;
+import org.apache.cocoon.classloader.fam.Monitor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
@@ -335,7 +335,7 @@ public class SitemapLanguage
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree, String location) throws Exception {
-        final SitemapMonitor fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
+        final Monitor fam = (Monitor) this.manager.lookup(Monitor.ROLE);
         fam.setSitemapNotifier(this.processor.getWrappingProcessor());
         this.itsContainer = SitemapHelper.createContainer(
                                                tree,
