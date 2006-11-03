@@ -34,7 +34,6 @@ public class DevelopmentBlock {
 
     public String springConfPath;
     public String xconfConfPath;
-    public String sitemapAdditionsConfPath;
     public String targetClassesPath;
     public String cobInfPath;
     public String propsPath;
@@ -48,7 +47,6 @@ public class DevelopmentBlock {
 
         springConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/spring"));
         xconfConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/legacy/xconf"));
-        sitemapAdditionsConfPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/legacy/sitemap-additions"));
         xPatchPath = checkDir(new File(localPath, RESOURCES_DIR + "META-INF/xpatch"));
         targetClassesPath = checkDir(new File(localPath, "target/classes"));
         cobInfPath = checkDir(new File(localPath, RESOURCES_DIR + "COB-INF"));
