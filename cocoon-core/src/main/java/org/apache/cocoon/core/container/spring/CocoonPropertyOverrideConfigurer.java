@@ -40,7 +40,7 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
     /** The location of the directory where the different property files are located. */
     protected String location = Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION;
 
-    /** The resource loader used to load the property files. 
+    /** The resource loader used to load the property files.
      * This loader is either resolving relative to the current sitemap or the
      * root of the context.
      */
@@ -83,17 +83,17 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         }
         final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         final Properties mergedProps = new Properties();
-        ResourceUtils.readProperties("classpath:*/META-INF/cocoon/spring", mergedProps, this.resourceLoader, this.logger);
-        ResourceUtils.readProperties("classpath:*/META-INF/cocoon/spring/" + mode, mergedProps, this.resourceLoader, this.logger);
+        ResourceUtils.readProperties("classpath*:/META-INF/cocoon/spring", mergedProps, this.resourceLoader, this.logger);
+        ResourceUtils.readProperties("classpath*:/META-INF/cocoon/spring/" + mode, mergedProps, this.resourceLoader, this.logger);
 
         ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
         // read properties from running-mode dependent directory
         ResourceUtils.readProperties(this.location + '/' + mode, mergedProps, this.resourceLoader, this.logger);
-        
+
         if ( mergedProps.size() > 0 ) {
             // Convert the merged properties, if necessary.
             convertProperties(mergedProps);
-    
+
             // Let the subclass process the properties.
             processProperties(beanFactory, mergedProps);
         }
