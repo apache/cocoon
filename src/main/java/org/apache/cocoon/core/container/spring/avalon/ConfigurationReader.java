@@ -506,7 +506,7 @@ public class ConfigurationReader {
 
             // what is it?
             final String includeKind = includeConfig.getName();
-            if (includeKind.equals("components")) {
+            if (includeKind.equals("components") || includeKind.equals("cocoon")) {
                 // more components
                 this.parseConfiguration(includeConfig, uri, loadedURIs);
             } else if (includeKind.equals("role-list")) {
