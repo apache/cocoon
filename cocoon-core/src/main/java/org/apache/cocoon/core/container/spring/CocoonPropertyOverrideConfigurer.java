@@ -93,9 +93,11 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         }
         final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         final Properties mergedProps = new Properties();
-        ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties", mergedProps, this.resourceLoader,
+        
+        //TODO change when location of files change
+        ResourceUtils.readProperties("classpath*:META-INF/properties", mergedProps, this.resourceLoader,
                 this.logger);
-        ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties/" + mode, mergedProps,
+        ResourceUtils.readProperties("classpath*:META-INF/properties/" + mode, mergedProps,
                 this.resourceLoader, this.logger);
 
         ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
