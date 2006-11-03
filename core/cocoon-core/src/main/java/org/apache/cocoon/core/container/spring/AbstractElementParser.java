@@ -201,8 +201,6 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Handle include for spring bean configurations.
-     * 
-     * @throws ConfigurationException
      */
     protected void handleBeanInclude(ParserContext parserContext, String src, String path, String pattern,
             boolean optional) throws Exception {
@@ -254,7 +252,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      * @param parserContext
      * @param springConfigLocation
      */
-    protected void registerPropertyPlaceholderConfigurer(final ParserContext parserContext, final String location) {
+    protected void registerPropertyOverrideConfigurer(final ParserContext parserContext, final String location) {
         final RootBeanDefinition beanDef = this.createBeanDefinition(CocoonPropertyOverrideConfigurer.class.getName(),
                 null, true);
         beanDef.getPropertyValues().addPropertyValue("location", location);
