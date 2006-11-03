@@ -146,16 +146,21 @@ public class SettingsBeanFactoryPostProcessor
      * This method reads several property files and merges the result. If there
      * is more than one definition for a property, the last one wins.
      * The property files are read in the following order:
-     * 1) context://WEB-INF/cocoon/properties/*.properties
-     *    Default values for the core and each block - the order in which the files are read is not guaranteed.
-     * 2) context://WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
-     *    Default values for the running mode - the order in which the files are read is not guaranteed.
-     * 3) Working directory from servlet context (if not already set)
-     * 4) Optional property file which is stored under ".cocoon/settings.properties" in the user
+     * 1) classpath*:/META-INF/cocoon/properties/*.properties
+     *    Default values for the core and each block - the files are read in alphabetical order.
+     * 2) classpath*:/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties
+     *    Default values for the core and each block for a specific running mode - the files are
+     *    read in alphabetical order.
+     * 3) context://WEB-INF/cocoon/properties/*.properties
+     *    User specific properties - the files are read in alphabetical order.
+     * 4) context://WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
+     *    User specific properties for the running mode - the files are read in alphabetical order.
+     * 5) Working directory from servlet context (if not already set)
+     * 6) Optional property file which is stored under ".cocoon/settings.properties" in the user
      *    directory.
-     * 5) Additional property file specified by the "org.apache.cocoon.settings" property.
-     * 6) Property provider (if configured in the bean factory)
-     * 7) System properties
+     * 7) Additional property file specified by the "org.apache.cocoon.settings" property.
+     * 8) Property provider (if configured in the bean factory)
+     * 9) System properties
      *
      * This means that system properties (provided on startup of the web application) override all
      * others etc.
@@ -179,6 +184,11 @@ public class SettingsBeanFactoryPostProcessor
         final MutableSettings s = new MutableSettings(mode);
         // create an empty properties object
         final Properties properties = new Properties();
+
+        // now read all properties from the properties directory
+        ResourceUtils.readProperties("classpath*:/META-INF/cocoon/properties", properties, this.getResourceLoader(), this.logger);
+        // read all properties from the mode dependent directory
+        ResourceUtils.readProperties("classpath*:/META-INF/cocoon/properties/" + mode, properties, this.getResourceLoader(), this.logger);
 
         // now read all properties from the properties directory
         ResourceUtils.readProperties("/WEB-INF/cocoon/properties", properties, this.getResourceLoader(), this.logger);

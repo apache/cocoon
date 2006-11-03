@@ -68,6 +68,7 @@ public class SettingsElementParser extends AbstractElementParser {
 
         // handle includes
         try {
+            this.handleBeanInclude(parserContext, null, "classpath*:/META-INF/cocoon/spring", "*.xml", true);
             this.handleBeanInclude(parserContext, null, springConfigLocation, "*.xml", true);
         } catch (Exception e) {
             throw new BeanDefinitionStoreException("Unable to read spring configurations from " + springConfigLocation, e);

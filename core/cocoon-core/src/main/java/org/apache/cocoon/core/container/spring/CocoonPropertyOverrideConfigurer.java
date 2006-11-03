@@ -81,10 +81,13 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug("Processing bean factory: " + beanFactory);
         }
+        final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         final Properties mergedProps = new Properties();
+        ResourceUtils.readProperties("classpath:*/META-INF/cocoon/spring", mergedProps, this.resourceLoader, this.logger);
+        ResourceUtils.readProperties("classpath:*/META-INF/cocoon/spring/" + mode, mergedProps, this.resourceLoader, this.logger);
+
         ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
         // read properties from running-mode dependent directory
-        final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         ResourceUtils.readProperties(this.location + '/' + mode, mergedProps, this.resourceLoader, this.logger);
         
         if ( mergedProps.size() > 0 ) {
