@@ -39,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.xml.sax.InputSource;
 
@@ -461,9 +462,19 @@ public class ConfigurationReader {
             }
             
         } else {
-            // test if directory exists
-            Resource dirResource = this.resolver.getResource(this.getUrl(directoryURI, contextURI));
-            if ( dirResource.exists() ) {
+            boolean load = true;
+            // test if directory exists (only if not classpath protocol is used)
+            if ( !directoryURI.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
+                 && !directoryURI.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ) {
+                Resource dirResource = this.resolver.getResource(this.getUrl(directoryURI, contextURI));
+                if ( !dirResource.exists() ) {
+                    if ( !includeStatement.getAttributeAsBoolean("optional", false) ) {
+                        throw new ConfigurationException("Directory '" + directoryURI + "' does not exist (" + includeStatement.getLocation() + ").");
+                    }
+                    load = false;
+                }
+            }
+            if ( load ) {
                 final String pattern = includeStatement.getAttribute("pattern", null);
                 try {
                     Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
@@ -475,10 +486,6 @@ public class ConfigurationReader {
                     }
                 } catch (Exception e) {
                     throw new ConfigurationException("Cannot load from directory '" + directoryURI + "' at " + includeStatement.getLocation(), e);
-                }
-            } else {
-                if ( !includeStatement.getAttributeAsBoolean("optional", false) ) {
-                    throw new ConfigurationException("Directory '" + directoryURI + "' does not exist (" + includeStatement.getLocation() + ").");
                 }
             }
         }
