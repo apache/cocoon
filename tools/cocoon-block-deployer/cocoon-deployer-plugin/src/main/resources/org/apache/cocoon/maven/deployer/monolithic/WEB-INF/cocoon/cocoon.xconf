@@ -21,8 +21,8 @@
       | Include the default cocoon.xconf. The default configuration
       | includes:
       | - resource://org/apache/cocoon/cocoon.roles
-      | - classpath*:/META-INF/cocoon/xconf/*.xconf
-      | - context://WEB-INF/cocoon/xconf/*.xconf
+      | - classpath*:/META-INF/cocoon/avalon/*.xconf
+      | - context://WEB-INF/cocoon/avalon/*.xconf
       +-->
   <include src="resource://org/apache/cocoon/cocoon.xconf"/>
 
@@ -30,11 +30,11 @@
     $if(devblock.springConfPath)$
     <include-beans dir="$devblock.springConfPath$" pattern="*.xml"/>
     $endif$
-    
+
     $if(devblock.xconfConfPath)$
     <include dir="$devblock.xconfConfPath$" pattern="*.xconf"/>
     $endif$
-    
+
     $if(devblock.sitemapAdditionsConfPath)$
     <include dir="$devblock.sitemapAdditionsConfPath$" pattern="*.xmap"/>
     $endif$
