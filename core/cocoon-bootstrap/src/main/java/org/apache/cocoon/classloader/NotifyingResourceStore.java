@@ -16,18 +16,32 @@
  */
 package org.apache.cocoon.classloader;
 
-import java.net.URL;
-import java.util.List;
+import org.apache.commons.jci.listeners.NotificationListener;
+import org.apache.commons.jci.stores.ResourceStore;
 
 /**
- * @see AbstractClassLoaderFactory
+ * Wraps all the stores configured into the sitemap classloaders, in order to dispatch 
+ * the notification event to the treeprocessor and force the component reloading in cocoon
+ * TODO Extend TransactionalResourceStore, if store is not private.
+ *
  * @version $Id$
- * @since 2.2
  */
-public class DefaultClassLoaderFactory
-    extends AbstractClassLoaderFactory {
+public class NotifyingResourceStore implements ResourceStore {
 
-    protected ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent) {
-        return new DefaultClassLoader(urls, includePatterns, excludePatterns, parent);
+    private NotificationListener listener;
+
+    public NotifyingResourceStore(NotificationListener l) {
+        this.listener = l;
+    }
+    
+    public byte[] read(String pResourceName) {
+        return null;
+    }
+
+    public void remove(String pResourceName) {
+    }
+
+    public void write(String pResourceName, byte[] pResourceData) {
+        this.listener.handleNotification();
     }
 }

@@ -1,19 +1,19 @@
 /*
-* Licensed to the Apache Software Foundation (ASF) under one or more
-* contributor license agreements.  See the NOTICE file distributed with
-* this work for additional information regarding copyright ownership.
-* The ASF licenses this file to You under the Apache License, Version 2.0
-* (the "License"); you may not use this file except in compliance with
-* the License.  You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.cocoon.classloader;
 
 import java.io.File;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.apache.cocoon.classloader.fam.SitemapMonitor;
+import org.apache.cocoon.classloader.fam.Monitor;
 import org.apache.commons.jci.listeners.ReloadingListener;
 import org.apache.commons.jci.stores.ResourceStore;
 import org.apache.commons.logging.Log;
@@ -38,27 +38,32 @@ public class ReloadingClassLoaderFactory extends AbstractClassLoaderFactory {
     protected ClassLoaderConfiguration config;
     private final static Log log = LogFactory.getLog(ReloadingListener.class);
     
-    public ClassLoader createClassLoader(ClassLoader parent,
-            ClassLoaderConfiguration config, ServletContext servletContext)
-            throws Exception {
-        this.config = config;
+    /**
+     * @see org.apache.cocoon.classloader.AbstractClassLoaderFactory#createClassLoader(java.lang.ClassLoader, org.apache.cocoon.classloader.ClassLoaderConfiguration, javax.servlet.ServletContext)
+     */
+    public ClassLoader createClassLoader(ClassLoader              parent,
+                                         ClassLoaderConfiguration configuration,
+                                         ServletContext           servletContext)
+    throws Exception {
+        this.config = configuration;
         return super.createClassLoader(parent, config, servletContext);
-         }
+    }
 
-    protected ClassLoader createClassLoader(URL[] urls, List includePatterns,
-            List excludePatterns, ClassLoader parent) {
+    protected ClassLoader createClassLoader(URL[] urls,
+                                            List  includePatterns,
+                                            List excludePatterns,
+                                            ClassLoader parent) {
 
         org.apache.commons.jci.ReloadingClassLoader jciClassLoader = new org.apache.commons.jci.ReloadingClassLoader(
                 new DefaultClassLoader(urls, includePatterns,
                         excludePatterns, Thread.currentThread()
                                 .getContextClassLoader()));
 
-
-        SitemapMonitor fam = this.config.getSitemapMonitor();
+        Monitor fam = this.config.getMonitor();
         
         for (int i = 0; i < urls.length; i++) {
             URL url = urls[i];
-            final ResourceStore store = (ResourceStore)this.config.getStore(url.getFile());
+            final ResourceStore store = this.config.getStore(url.getFile());
 
             final ReloadingListener listener = createReloadingListener(url,
                     store, this.config);
