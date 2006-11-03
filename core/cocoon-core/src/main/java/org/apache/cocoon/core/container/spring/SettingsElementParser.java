@@ -68,19 +68,17 @@ public class SettingsElementParser extends AbstractElementParser {
         this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
 
         // register a PropertyPlaceholderConfigurer
-        this.registerPropertyOverrideConfigurer(parserContext, springConfigLocation);
+        this.registerPropertyOverrideConfigurer(parserContext, springConfigLocation, true);
 
         // add the servlet context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false,
                 parserContext.getRegistry());
 
         // handle includes
-        // TODO change when location of files change
-        String classPathLocation = "classpath*:META-INF/cocoon/spring";
         try {
-            this.handleBeanInclude(parserContext, null, classPathLocation, "*.xml", true);
+            this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SPRING_BLOCK_CONFIGURATION_LOCATION, "*.xml", true);
         } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + classPathLocation, e);
+            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.DEFAULT_SPRING_BLOCK_CONFIGURATION_LOCATION, e);
         }
 
         try {
