@@ -39,7 +39,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.xml.sax.InputSource;
 
@@ -464,8 +463,7 @@ public class ConfigurationReader {
         } else {
             boolean load = true;
             // test if directory exists (only if not classpath protocol is used)
-            if ( !directoryURI.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
-                 && !directoryURI.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ) {
+            if ( !ResourceUtils.isClasspathUri(directoryURI) ) {
                 Resource dirResource = this.resolver.getResource(this.getUrl(directoryURI, contextURI));
                 if ( !dirResource.exists() ) {
                     if ( !includeStatement.getAttributeAsBoolean("optional", false) ) {
