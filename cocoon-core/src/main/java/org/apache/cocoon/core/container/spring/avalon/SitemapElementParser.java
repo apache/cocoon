@@ -70,6 +70,6 @@ public class SitemapElementParser extends AvalonElementParser {
     }
 
     protected String getPropertyLocation() {
-        return "config/xconf";
+        return "config/avalon";
     }
 }

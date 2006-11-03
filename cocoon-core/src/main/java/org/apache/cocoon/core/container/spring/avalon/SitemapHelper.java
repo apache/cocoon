@@ -52,7 +52,7 @@ public class SitemapHelper {
 
     private static final String CLASSLOADER_CONFIG_NAME = "classloader";
 
-    private static final String DEFAULT_CONFIG_XCONF  = "config/xconf";
+    private static final String DEFAULT_CONFIG_XCONF  = "config/avalon";
 
     protected static String createDefinition(String     uriPrefix,
                                              String     sitemapLocation) {
