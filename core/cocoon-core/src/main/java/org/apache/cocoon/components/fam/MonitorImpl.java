@@ -22,8 +22,8 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.classloader.SitemapNotifierStore;
-import org.apache.cocoon.classloader.fam.SitemapMonitor;
+import org.apache.cocoon.classloader.NotifyingResourceStore;
+import org.apache.cocoon.classloader.fam.Monitor;
 import org.apache.commons.jci.listeners.NotificationListener;
 import org.apache.commons.jci.listeners.ReloadingListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
@@ -32,9 +32,9 @@ import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 /**
  * @version $Id$
  */
-public final class SitemapMonitorImpl 
+public final class MonitorImpl 
     extends AbstractLogEnabled 
-    implements SitemapMonitor, ThreadSafe, Initializable, Disposable {
+    implements Monitor, ThreadSafe, Initializable, Disposable {
 
     private FilesystemAlterationMonitor monitor;
     private NotificationListener sitemapNotifier;
@@ -58,19 +58,19 @@ public final class SitemapMonitorImpl
     }
 
     /**
-     * @see org.apache.cocoon.classloader.fam.SitemapMonitor#subscribe(org.apache.commons.jci.monitor.FilesystemAlterationListener)
+     * @see org.apache.cocoon.classloader.fam.Monitor#subscribe(org.apache.commons.jci.monitor.FilesystemAlterationListener)
      */
     public void subscribe(final FilesystemAlterationListener listener) {
         this.monitor.addListener(listener);
-        this.monitor.addListener(new ReloadingListener(listener.getRepository(),new SitemapNotifierStore(this.sitemapNotifier)));
+        this.monitor.addListener(new ReloadingListener(listener.getRepository(),new NotifyingResourceStore(this.sitemapNotifier)));
     }
 
     /**
-     * @see org.apache.cocoon.components.fam.SitemapMonitor#unsubscribe(org.apache.commons.jci.monitor.FilesystemAlterationListener)
+     * @see org.apache.cocoon.components.fam.Monitor#unsubscribe(org.apache.commons.jci.monitor.FilesystemAlterationListener)
      */
     public void unsubscribe(final FilesystemAlterationListener listener) {
         this.monitor.removeListener(listener);
-        this.monitor.removeListener(new ReloadingListener(listener.getRepository(),new SitemapNotifierStore(this.sitemapNotifier)));
+        this.monitor.removeListener(new ReloadingListener(listener.getRepository(),new NotifyingResourceStore(this.sitemapNotifier)));
     }
     
     public void setSitemapNotifier(NotificationListener sitemapNotifier) {
