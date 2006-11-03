@@ -67,12 +67,22 @@ public class ResourceUtils {
         return uri;
     }
 
+    public static boolean isClasspathUri(String uri) {
+        if ( uri.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
+             || uri.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Read all property files from the given directory and apply them to the
      * supplied properties.
      */
-    public static void readProperties(String propertiesPath, Properties properties, ResourceLoader resourceLoader,
-            Log logger) {
+    public static void readProperties(String         propertiesPath,
+                                      Properties     properties,
+                                      ResourceLoader resourceLoader,
+                                      Log            logger) {
         if (logger != null && logger.isDebugEnabled()) {
             logger.debug("Reading properties from directory: " + propertiesPath);
         }
@@ -80,15 +90,25 @@ public class ResourceUtils {
 
         Resource[] resources = null;
 
-        try {
-            resources = resolver.getResources(propertiesPath + "/*.properties");
-            if (logger != null && logger.isDebugEnabled())
-                logger.debug("found " + resources.length + " matching resources in " + propertiesPath
-                                + "/*.properties");
-        } catch (IOException ignore) {
-            if (logger != null && logger.isDebugEnabled()) {
-                logger.debug("Unable to read properties from directory '" + propertiesPath
-                        + "' - Continuing initialization.", ignore);
+        // check if directory exists
+        boolean load = true;
+        if ( !ResourceUtils.isClasspathUri(propertiesPath) ) {
+            final Resource resource = resolver.getResource(propertiesPath);
+            if (!resource.exists() ) {
+                load = false;
+            }
+        }
+        if ( load ) {
+            try {
+                resources = resolver.getResources(propertiesPath + "/*.properties");
+                if (logger != null && logger.isDebugEnabled())
+                    logger.debug("Found " + resources.length + " matching resources in " + propertiesPath
+                                    + "/*.properties");
+            } catch (IOException ignore) {
+                if (logger != null && logger.isDebugEnabled()) {
+                    logger.debug("Unable to read properties from directory '" + propertiesPath
+                            + "' - Continuing initialization.", ignore);
+                }
             }
         }
 

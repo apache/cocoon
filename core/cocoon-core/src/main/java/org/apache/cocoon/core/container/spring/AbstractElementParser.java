@@ -34,7 +34,6 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.w3c.dom.Element;
 
@@ -239,8 +238,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
             // we only check if optional is set to true
             boolean load = true;
             if ( optional
-                 && !pathURI.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
-                 && !pathURI.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ) {
+                 && !ResourceUtils.isClasspathUri(pathURI) ) {
                 final Resource rsrc = resolver.getResource(pathURI);
                 if ( !rsrc.exists()) {
                     load = false;
