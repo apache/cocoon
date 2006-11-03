@@ -29,20 +29,25 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
 /**
- * Our version of the property override configurer which reads properties
- * from the Cocoon spring configuration directory.
- * A property should have the following format: {bean name}/{property name}={value}.
- *
- * @version $Id$
+ * Our version of the property override configurer which reads properties from
+ * the Cocoon spring configuration directory. A property should have the
+ * following format: {bean name}/{property name}={value}.
+ * 
+ * @version $Id: CocoonPropertyOverrideConfigurer.java 470754 2006-11-03
+ *          10:47:52Z lgawron $
  */
 public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
 
-    /** The location of the directory where the different property files are located. */
+    /**
+     * The location of the directory where the different property files are
+     * located.
+     */
     protected String location = Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION;
 
-    /** The resource loader used to load the property files.
-     * This loader is either resolving relative to the current sitemap or the
-     * root of the context.
+    /**
+     * The resource loader used to load the property files. This loader is
+     * either resolving relative to the current sitemap or the root of the
+     * context.
      */
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
 
@@ -53,7 +58,9 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
 
     /**
      * Set the directory to search in.
-     * @param object New value.
+     * 
+     * @param object
+     *            New value.
      */
     public void setLocation(final String object) {
         this.location = object;
@@ -66,31 +73,36 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
 
     /**
      * Set the resource loader.
-     * @param loader The new resource loader.
+     * 
+     * @param loader
+     *            The new resource loader.
      */
     public void setResourceLoader(final ResourceLoader loader) {
         this.resourceLoader = loader;
     }
 
     /**
-     * Read all property files from the specified location and apply the changes.
+     * Read all property files from the specified location and apply the
+     * changes.
+     * 
      * @see org.springframework.beans.factory.config.PropertyResourceConfigurer#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)
      */
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
-    throws BeansException {
-        if ( this.logger.isDebugEnabled() ) {
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        if (this.logger.isDebugEnabled()) {
             this.logger.debug("Processing bean factory: " + beanFactory);
         }
-        final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
+        final String mode = this.settings.getRunningMode();
         final Properties mergedProps = new Properties();
-        ResourceUtils.readProperties("classpath*:/META-INF/cocoon/spring", mergedProps, this.resourceLoader, this.logger);
-        ResourceUtils.readProperties("classpath*:/META-INF/cocoon/spring/" + mode, mergedProps, this.resourceLoader, this.logger);
+        ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties", mergedProps, this.resourceLoader,
+                this.logger);
+        ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties/" + mode, mergedProps,
+                this.resourceLoader, this.logger);
 
         ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
         // read properties from running-mode dependent directory
         ResourceUtils.readProperties(this.location + '/' + mode, mergedProps, this.resourceLoader, this.logger);
 
-        if ( mergedProps.size() > 0 ) {
+        if (mergedProps.size() > 0) {
             // Convert the merged properties, if necessary.
             convertProperties(mergedProps);
 
