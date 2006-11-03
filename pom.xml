@@ -278,6 +278,17 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>asavory</id>
+      <name>Andrew Savory</name>
+      <email>asavory@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+0</timezone>
+    </developer>
   </developers>
 
   <issueManagement>
