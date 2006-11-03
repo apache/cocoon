@@ -29,32 +29,39 @@ import org.w3c.dom.Element;
 
 /**
  * Add a bean definition for the settings object to the bean factory.
- *
+ * 
  * @see CocoonNamespaceHandler
  * @see SettingsBeanFactoryPostProcessor
- * @version $Id$
+ * @version $Id: SettingsElementParser.java 470732 2006-11-03 09:10:13Z
+ *          cziegeler $
  * @since 2.2
  */
 public class SettingsElementParser extends AbstractElementParser {
 
-    /** The name of the configuration attribute to use a different processor class. */
+    /**
+     * The name of the configuration attribute to use a different processor
+     * class.
+     */
     public static final String PROCESSOR_CLASS_NAME_ATTR = "processorClassName";
 
     /** The name of the configuration attribute to specify the running mode. */
     public static final String RUNNING_MODE_ATTR = "runningMode";
 
     /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element,
+     *      org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        final String springConfigLocation = this.getAttributeValue(element, "location", Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION);
+        final String springConfigLocation = this.getAttributeValue(element, "location",
+                Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION);
 
         // create bean definition for settings object
-        final String componentClassName = this.getAttributeValue(element, PROCESSOR_CLASS_NAME_ATTR, SettingsBeanFactoryPostProcessor.class.getName());
+        final String componentClassName = this.getAttributeValue(element, PROCESSOR_CLASS_NAME_ATTR,
+                SettingsBeanFactoryPostProcessor.class.getName());
         final RootBeanDefinition beanDef = this.createBeanDefinition(componentClassName, "init", false);
         // if running mode is specified add it as a property
         final String runningMode = this.getAttributeValue(element, RUNNING_MODE_ATTR, null);
-        if ( runningMode != null ) {
+        if (runningMode != null) {
             beanDef.getPropertyValues().addPropertyValue("runningMode", runningMode);
         }
         // register settings bean
@@ -64,14 +71,21 @@ public class SettingsElementParser extends AbstractElementParser {
         this.registerPropertyPlaceholderConfigurer(parserContext, springConfigLocation);
 
         // add the servlet context as a bean
-        this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false, parserContext.getRegistry());
+        this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false,
+                parserContext.getRegistry());
 
         // handle includes
+        String classPathLocation = "classpath*:META-INF/cocoon/spring";
         try {
-            this.handleBeanInclude(parserContext, null, "classpath*:/META-INF/cocoon/spring", "*.xml", true);
+            this.handleBeanInclude(parserContext, null, classPathLocation, "*.xml", true);
+        } catch (Exception e) {
+            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + classPathLocation, e);
+        }
+        try {
             this.handleBeanInclude(parserContext, null, springConfigLocation, "*.xml", true);
         } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + springConfigLocation, e);
+            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + springConfigLocation,
+                    e);
         }
         return null;
     }
