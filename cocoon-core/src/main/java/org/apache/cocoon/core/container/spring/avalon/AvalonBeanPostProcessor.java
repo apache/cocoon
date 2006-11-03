@@ -64,6 +64,8 @@ public class AvalonBeanPostProcessor
     protected ConfigurationInfo configurationInfo;
     protected Settings settings = new MutableSettings("test");
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
+    
+    // TODO properties need to be loaded directly from classpath*:META-INF/cocoon/avalon
     protected String location = "WEB-INF/cocoon/avalon";
 
     public void setSettings(Settings settings) {
