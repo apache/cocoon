@@ -1,19 +1,19 @@
 /*
-* Licensed to the Apache Software Foundation (ASF) under one or more
-* contributor license agreements.  See the NOTICE file distributed with
-* this work for additional information regarding copyright ownership.
-* The ASF licenses this file to You under the Apache License, Version 2.0
-* (the "License"); you may not use this file except in compliance with
-* the License.  You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.cocoon.core.container.spring.avalon;
 
 import java.io.IOException;
@@ -48,13 +48,14 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 
 /**
- * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle interfaces.
- *
- * @version $Id$
+ * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle
+ * interfaces.
+ * 
+ * @version $Id: AvalonBeanPostProcessor.java 470890 2006-11-03 16:41:24Z
+ *          lgawron $
  * @since 2.2
  */
-public class AvalonBeanPostProcessor
-    implements DestructionAwareBeanPostProcessor, BeanFactoryAware {
+public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcessor, BeanFactoryAware {
 
     protected static final Configuration EMPTY_CONFIG = new DefaultConfiguration("empty");
 
@@ -64,9 +65,9 @@ public class AvalonBeanPostProcessor
     protected ConfigurationInfo configurationInfo;
     protected Settings settings = new MutableSettings("test");
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
-    
-    // TODO properties need to be loaded directly from classpath*:META-INF/cocoon/avalon
-    protected String location = "WEB-INF/cocoon/avalon";
+
+    // TODO should we also load from WEB-INF/cocoon/avalon?
+    protected String location = "classpath*:META-INF/cocoon/avalon";
 
     public void setSettings(Settings settings) {
         this.settings = settings;
@@ -100,11 +101,11 @@ public class AvalonBeanPostProcessor
     }
 
     public void init() {
-        if ( true ) {
+        if (true) {
             return;
         }
         // replace properties in configuration objects
-        if ( this.logger.isDebugEnabled() ) {
+        if (this.logger.isDebugEnabled()) {
             this.logger.debug("Processing component configurations.");
             this.logger.debug("Trying to read properties from directory: " + this.location);
         }
@@ -112,42 +113,38 @@ public class AvalonBeanPostProcessor
         final ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
         final Resource dirResource = resourceLoader.getResource(this.location);
 
-        if ( dirResource.exists() ) {
-            if ( this.logger.isDebugEnabled() ) {
-                this.logger.debug("Scanning directory: " + dirResource);
-            }
-            try {
-                Resource[] resources = resolver.getResources(this.location + "/*.properties");
-                if ( resources != null ) {
-                    Arrays.sort(resources, ResourceUtils.getResourceComparator());
-                    for(int i=0; i < resources.length; i++) {
-                        if ( this.logger.isDebugEnabled() ) {
-                            this.logger.debug("Reading property file: " + resources[i]);
-                        }
-                        final Properties p = new Properties();
-                        p.load(resources[i].getInputStream());
-                        mergedProps.putAll(p);
+        try {
+            Resource[] resources = resolver.getResources(this.location + "/*.properties");
+            if (resources != null) {
+                Arrays.sort(resources, ResourceUtils.getResourceComparator());
+                for (int i = 0; i < resources.length; i++) {
+                    if (this.logger.isDebugEnabled()) {
+                        this.logger.debug("Reading property file: " + resources[i]);
                     }
+                    final Properties p = new Properties();
+                    p.load(resources[i].getInputStream());
+                    mergedProps.putAll(p);
                 }
-            } catch (IOException ioe) {
-                throw new BeanDefinitionStoreException("Unable to read property configurations from " + this.location, ioe);
             }
+        } catch (IOException ioe) {
+            throw new BeanDefinitionStoreException("Unable to read property configurations from " + this.location, ioe);
         }
-        if ( mergedProps.size() > 0 ) {
+        
+        if (mergedProps.size() > 0) {
             final Iterator i = this.configurationInfo.getComponents().values().iterator();
-            while ( i.hasNext() ) {
+            while (i.hasNext()) {
                 final ComponentInfo info = (ComponentInfo) i.next();
-                if ( info.getConfiguration() != null ) {
+                if (info.getConfiguration() != null) {
                     final List names = this.getKeys(mergedProps, info.getRole());
-                    if ( info.getAlias() != null ) {
+                    if (info.getAlias() != null) {
                         names.addAll(this.getKeys(mergedProps, info.getAlias()));
                     }
                     final Iterator namesIter = names.iterator();
-                    while ( namesIter.hasNext() ) {
-                        final String name = (String)namesIter.next();
+                    while (namesIter.hasNext()) {
+                        final String name = (String) namesIter.next();
                         final String value = mergedProps.getProperty(name);
                         String propName;
-                        if ( name.startsWith(info.getRole()) ) {
+                        if (name.startsWith(info.getRole())) {
                             propName = name.substring(info.getRole().length() + 1);
                         } else {
                             propName = name.substring(info.getAlias().length() + 1);
@@ -156,19 +153,19 @@ public class AvalonBeanPostProcessor
                         int pos;
                         do {
                             pos = propName.indexOf('.');
-                            if ( pos != - 1 ) {
+                            if (pos != -1) {
                                 config = this.getAndCreateConfiguration(config, propName.substring(0, pos));
-                                propName = propName.substring(pos+1);
+                                propName = propName.substring(pos + 1);
                             }
-                        } while ( pos != -1 );
-                        if ( propName.startsWith("@") ) {
-                            ((DefaultConfiguration)config).setAttribute(propName.substring(1), value);
+                        } while (pos != -1);
+                        if (propName.startsWith("@")) {
+                            ((DefaultConfiguration) config).setAttribute(propName.substring(1), value);
                         } else {
                             config = this.getAndCreateConfiguration(config, propName);
-                            ((DefaultConfiguration)config).setValue(value);
+                            ((DefaultConfiguration) config).setValue(value);
                         }
                     }
-                 }
+                }
             }
         }
     }
@@ -177,9 +174,9 @@ public class AvalonBeanPostProcessor
         final String prefix = role + '/';
         final List l = new ArrayList();
         final Iterator i = mergedProps.keySet().iterator();
-        while ( i.hasNext() ) {
-            final String key = (String)i.next();
-            if ( key.startsWith(prefix) ) {
+        while (i.hasNext()) {
+            final String key = (String) i.next();
+            if (key.startsWith(prefix)) {
                 l.add(key);
             }
         }
@@ -187,17 +184,18 @@ public class AvalonBeanPostProcessor
     }
 
     protected Configuration getAndCreateConfiguration(Configuration config, String name) {
-        if ( config.getChild(name, false) == null ) {
+        if (config.getChild(name, false) == null) {
             final DefaultConfiguration newConfig = new DefaultConfiguration(name, config.getLocation());
-            ((DefaultConfiguration)config).addChild(newConfig);
+            ((DefaultConfiguration) config).addChild(newConfig);
         }
         return config.getChild(name, false);
     }
+
     /**
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
+     *      java.lang.String)
      */
-    public Object postProcessAfterInitialization(Object bean, String beanName)
-    throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         try {
             ContainerUtil.start(bean);
         } catch (Exception e) {
@@ -207,37 +205,38 @@ public class AvalonBeanPostProcessor
     }
 
     /**
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
+     *      java.lang.String)
      */
-    public Object postProcessBeforeInitialization(Object bean, String beanName)
-    throws BeansException {
-        final ComponentInfo info = (ComponentInfo)this.configurationInfo.getComponents().get(beanName);
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        final ComponentInfo info = (ComponentInfo) this.configurationInfo.getComponents().get(beanName);
         try {
-            if ( info == null ) {
-                // no info so we just return the bean and don't apply any lifecycle interfaces
+            if (info == null) {
+                // no info so we just return the bean and don't apply any
+                // lifecycle interfaces
                 return bean;
             }
-            if ( info.getLoggerCategory() != null ) {
+            if (info.getLoggerCategory() != null) {
                 ContainerUtil.enableLogging(bean, this.logger.getChildLogger(info.getLoggerCategory()));
             } else {
                 ContainerUtil.enableLogging(bean, this.logger);
             }
             ContainerUtil.contextualize(bean, this.context);
-            ContainerUtil.service(bean, (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName()));
+            ContainerUtil.service(bean, (ServiceManager) this.beanFactory.getBean(ServiceManager.class.getName()));
             Configuration config = info.getProcessedConfiguration();
-            if ( config == null ) {
+            if (config == null) {
                 config = info.getConfiguration();
-                if ( config == null ) {
+                if (config == null) {
                     config = EMPTY_CONFIG;
                 }
                 config = AvalonUtils.replaceProperties(config, this.settings);
                 info.setProcessedConfiguration(config);
             }
-            if ( bean instanceof Configurable ) {
+            if (bean instanceof Configurable) {
                 ContainerUtil.configure(bean, config);
-            } else if ( bean instanceof Parameterizable ) {
+            } else if (bean instanceof Parameterizable) {
                 Parameters p = info.getParameters();
-                if ( p == null ) {
+                if (p == null) {
                     p = Parameters.fromConfiguration(config);
                     info.setParameters(p);
                 }
@@ -251,10 +250,10 @@ public class AvalonBeanPostProcessor
     }
 
     /**
-     * @see org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor#postProcessBeforeDestruction(java.lang.Object, java.lang.String)
+     * @see org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor#postProcessBeforeDestruction(java.lang.Object,
+     *      java.lang.String)
      */
-    public void postProcessBeforeDestruction(Object bean, String beanName)
-    throws BeansException {
+    public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
         try {
             ContainerUtil.stop(bean);
         } catch (Exception e) {
