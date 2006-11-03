@@ -266,6 +266,17 @@
       </roles>
       <timezone>-5</timezone>
     </developer>
+    <developer>
+      <id>ugo</id>
+      <name>Ugo Cei</name>
+      <email>ugo@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
 
   <issueManagement>
