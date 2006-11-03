@@ -185,7 +185,6 @@ public class SettingsBeanFactoryPostProcessor
         // create an empty properties object
         final Properties properties = new Properties();
 
-        // TODO change this when properties location changes
         // now read all properties from the properties directory
         ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties", properties, this.getResourceLoader(), this.logger);
         // read all properties from the mode dependent directory
