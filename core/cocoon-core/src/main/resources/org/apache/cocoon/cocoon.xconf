@@ -15,8 +15,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+ 
-    | This is the default cocoon.xconf which is used if no one configuration file is used. 
+<!--+
+    | This is the default cocoon.xconf which is used if no one configuration file is used.
     | $Id$
     +-->
 <cocoon version="2.2">
@@ -25,19 +25,19 @@
       | Include the core roles definitions. This is for the sake of clarity,
       | as they are implicitely loaded at startup, but we may want to remove
       | this implicit behaviour in the future now that we have the include
-      | mechanism. 
+      | mechanism.
       +-->
   <include src="resource://org/apache/cocoon/cocoon.roles"/>
 
   <!--+
       | Include all configuration files (for core and blocks) from within the jars.
-  <include dir="resource://META-INF/cocoon/xconf" pattern="*.xconf"/>
+  <include dir="resource://META-INF/cocoon/avalon" pattern="*.xconf"/>
       +-->
 
   <!--+
-      | Include all configuration files ending with ".xconf" 
+      | Include all configuration files ending with ".xconf"
       | from the xconf directory.
       +-->
-  <include dir="context://WEB-INF/cocoon/xconf" pattern="*.xconf"/>
+  <include dir="context://WEB-INF/cocoon/avalon" pattern="*.xconf"/>
 
 </cocoon>
