@@ -206,6 +206,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      */
     protected void handleBeanInclude(ParserContext parserContext, String src, String path, String pattern,
             boolean optional) throws Exception {
+        // TODO 'optional' parameter is ignored now 
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
 
