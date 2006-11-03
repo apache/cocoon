@@ -38,9 +38,6 @@ public class MonolithicCocoonDeployer {
         	File lib = (File) libraries.get(id);  	
         	try {
         		MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
-                zipExtractor.addRule("**legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));        		
-                zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
-                zipExtractor.addRule("**spring/**.xml", new SingleFileDeployer("WEB-INF/cocoon/spring"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
         		// extract all configurations files
 				zipExtractor.extract(lib);
