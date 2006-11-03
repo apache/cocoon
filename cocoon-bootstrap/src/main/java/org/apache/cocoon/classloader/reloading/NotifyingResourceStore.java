@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.classloader;
+package org.apache.cocoon.classloader.reloading;
 
 import org.apache.commons.jci.listeners.NotificationListener;
 import org.apache.commons.jci.stores.ResourceStore;

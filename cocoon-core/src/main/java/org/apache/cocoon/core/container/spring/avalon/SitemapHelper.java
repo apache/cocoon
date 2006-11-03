@@ -25,9 +25,9 @@ import javax.servlet.ServletContext;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderFactory;
-import org.apache.cocoon.classloader.fam.Monitor;
+import org.apache.cocoon.classloader.reloading.Monitor;
+import org.apache.cocoon.classloader.reloading.ReloadingClassLoaderConfiguration;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
 import org.apache.cocoon.core.container.spring.Container;
@@ -206,7 +206,7 @@ public class SitemapHelper {
         final String factoryRole = classPathConfig.getAttribute("factory-role", ClassLoaderFactory.ROLE);
 
         // Create a new classloader
-        ClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, classPathConfig);
+        ReloadingClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, classPathConfig);
         configBean.setMonitor(fam);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
