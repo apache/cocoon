@@ -216,6 +216,8 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
+        <role>PMC chair</role>
+        <role>PMC member</role>      
         <role>Committer</role>
       </roles>
       <timezone>+1</timezone>
