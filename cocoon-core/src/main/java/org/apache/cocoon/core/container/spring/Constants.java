@@ -20,16 +20,15 @@ package org.apache.cocoon.core.container.spring;
 
 /**
  * Some constants for the spring integration.
+ * 
  * @version $Id$
  */
 public class Constants {
-
     /** The default location of spring related configuration files. */
-    public static final String DEFAULT_SPRING_CONFIGURATION_LOCATION = "/WEB-INF/cocoon/spring";
+    public static final String DEFAULT_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
+    public static final String DEFAULT_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
+    public static final String DEFAULT_BEAN_OVERRIDE_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/spring";
 
     /** The default location of spring related per sitemap configuration files. */
     public static final String DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES = "config/spring";
-
-    /** The default location of spring related configuration files inside a block. */
-    public static final String DEFAULT_SPRING_BLOCK_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
 }

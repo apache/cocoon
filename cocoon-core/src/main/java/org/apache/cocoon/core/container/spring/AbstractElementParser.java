@@ -271,15 +271,13 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      * @param springConfigLocation
      */
     protected void registerPropertyOverrideConfigurer(final ParserContext parserContext,
-                                                      final String        location,
-                                                      final boolean       scanClassPath) {
+                                                      final String        location) {
         final RootBeanDefinition beanDef = this.createBeanDefinition(CocoonPropertyOverrideConfigurer.class.getName(),
                 null, true);
         beanDef.getPropertyValues().addPropertyValue("location", location);
         beanDef.getPropertyValues().addPropertyValue("resourceLoader",
                 parserContext.getReaderContext().getReader().getResourceLoader());
         beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");
-        beanDef.getPropertyValues().addPropertyValue("scanClassPath", Boolean.valueOf(scanClassPath));
         this.register(beanDef, CocoonPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
     }
 
