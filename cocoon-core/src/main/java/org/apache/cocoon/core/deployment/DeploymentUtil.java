@@ -100,6 +100,7 @@ public class DeploymentUtil {
                     String jarName = jarPath.substring(jarPath.lastIndexOf(File.separatorChar) + 1);
                     // drop file extension
                     blockName = jarName.substring(0, jarName.lastIndexOf('.'));
+                    // TODO how do we strip version from blockName?
                 }
                 final StringBuffer buffer = new StringBuffer(this.destinationDirectory);
                 buffer.append(File.separatorChar);
