@@ -29,6 +29,7 @@ import java.util.zip.ZipEntry;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -94,12 +95,16 @@ public class DeploymentUtil {
                 final JarFile jarFile = connection.getJarFile();
                 String blockName = jarFile.getManifest().getMainAttributes().getValue("Implementation-Title");
                 if ( blockName == null ) {
-                    blockName = jarFile.getName();
+                    String jarPath = jarFile.getName();
+                    // extract jar name
+                    String jarName = jarPath.substring(jarPath.lastIndexOf(File.separatorChar) + 1);
+                    // drop file extension
+                    blockName = jarName.substring(0, jarName.lastIndexOf('.'));
                 }
                 final StringBuffer buffer = new StringBuffer(this.destinationDirectory);
-                buffer.append(File.separator);
+                buffer.append(File.separatorChar);
                 buffer.append(relativeDirectory);
-                buffer.append(File.separator);
+                buffer.append(File.separatorChar);
                 buffer.append(blockName);
                 this.deploy(jarFile, resourcePattern, buffer.toString());
             }
