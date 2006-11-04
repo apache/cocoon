@@ -29,7 +29,6 @@ import java.util.zip.ZipEntry;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,6 +48,12 @@ public class DeploymentUtil {
     protected final String destinationDirectory;
 
     public DeploymentUtil(ServletContext servletContext) {
+        // TODO how do we handle non servlet container environment?
+        if ( servletContext == null ) {
+            this.destinationDirectory = null;
+            return;
+        }
+        
         final String pathToWebInf = servletContext.getRealPath("/WEB-INF");
         if ( pathToWebInf == null ) {
             // we run unexpanded
