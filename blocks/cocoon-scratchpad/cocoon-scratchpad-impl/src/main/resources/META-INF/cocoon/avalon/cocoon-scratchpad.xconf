@@ -22,6 +22,6 @@
     +-->
 <components>
   <!-- Include different scratchpad projects -->
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad-groovyflow.xconf"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad-intercepted-flow.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-scratchpad-groovyflow.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-scratchpad-intercepted-flow.xconf"/>
 </components>
