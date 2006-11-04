@@ -30,14 +30,7 @@
   <include src="resource://org/apache/cocoon/cocoon.roles"/>
 
   <!--+
-      | Include all configuration files (for core and blocks) from within the jars.
+      | Include all configuration files (for core and blocks) from within the classpath.
       +-->
   <include dir="classpath*:META-INF/cocoon/avalon" pattern="*.xconf"/>
-
-  <!--+
-      | Include all configuration files ending with ".xconf"
-      | from the xconf directory.
-      +-->
-  <include dir="context://WEB-INF/cocoon/avalon" pattern="*.xconf"/>
-
 </cocoon>

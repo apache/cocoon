@@ -66,7 +66,6 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
     protected Settings settings = new MutableSettings("test");
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-    // TODO should we also load from WEB-INF/cocoon/avalon?
     protected String location = "classpath*:META-INF/cocoon/avalon";
 
     public void setSettings(Settings settings) {

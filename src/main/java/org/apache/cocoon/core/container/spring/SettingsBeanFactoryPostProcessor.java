@@ -186,14 +186,11 @@ public class SettingsBeanFactoryPostProcessor
         final Properties properties = new Properties();
 
         // now read all properties from the properties directory
-        ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties", properties, this.getResourceLoader(), this.logger);
+        ResourceUtils.readProperties(org.apache.cocoon.core.container.spring.Constants.DEFAULT_PROPERTIES_LOCATION,
+                properties, this.getResourceLoader(), this.logger);
         // read all properties from the mode dependent directory
-        ResourceUtils.readProperties("classpath*:META-INF/cocoon/properties/" + mode, properties, this.getResourceLoader(), this.logger);
-
-        // now read all properties from the properties directory
-        ResourceUtils.readProperties("/WEB-INF/cocoon/properties", properties, this.getResourceLoader(), this.logger);
-        // read all properties from the mode dependent directory
-        ResourceUtils.readProperties("/WEB-INF/cocoon/properties/" + mode, properties, this.getResourceLoader(), this.logger);
+        ResourceUtils.readProperties(org.apache.cocoon.core.container.spring.Constants.DEFAULT_PROPERTIES_LOCATION
+                + "/" + mode, properties, this.getResourceLoader(), this.logger);
 
         // fill from the servlet context
         if ( s.getWorkDirectory() == null ) {

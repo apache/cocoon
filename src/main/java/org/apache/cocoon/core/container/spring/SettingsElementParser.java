@@ -68,7 +68,7 @@ public class SettingsElementParser extends AbstractElementParser {
         this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
 
         // register a PropertyPlaceholderConfigurer
-        this.registerPropertyOverrideConfigurer(parserContext, springConfigLocation, true);
+        this.registerPropertyOverrideConfigurer(parserContext, springConfigLocation);
 
         // add the servlet context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false,
@@ -76,16 +76,9 @@ public class SettingsElementParser extends AbstractElementParser {
 
         // handle includes
         try {
-            this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SPRING_BLOCK_CONFIGURATION_LOCATION, "*.xml", true);
+            this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION, "*.xml", true);
         } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.DEFAULT_SPRING_BLOCK_CONFIGURATION_LOCATION, e);
-        }
-
-        try {
-            this.handleBeanInclude(parserContext, null, springConfigLocation, "*.xml", true);
-        } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + springConfigLocation,
-                    e);
+            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION, e);
         }
         return null;
     }
