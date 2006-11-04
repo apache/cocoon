@@ -127,7 +127,7 @@ public class SitemapElementParser extends AbstractElementParser {
 
             // register a PropertyPlaceholderConfigurer
             if ( useDefaultIncludes ) {
-                this.registerPropertyOverrideConfigurer(parserContext, Constants.DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES);
+                this.registerPropertyOverrideConfigurer(parserContext, Constants.DEFAULT_SITEMAP_SPRING_CONFIGURATION_LOCATION);
             }
             
             RootBeanDefinition def =  this.createBeanDefinition(SubSettingsBeanFactoryPostProcessor.class.getName(),
@@ -147,7 +147,7 @@ public class SitemapElementParser extends AbstractElementParser {
             }
 
             if ( useDefaultIncludes ) {
-                this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES, "*.xml", true);
+                this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SITEMAP_SPRING_CONFIGURATION_LOCATION, "*.xml", true);
             }
             // search for includes
             if ( componentsElement != null ) {
