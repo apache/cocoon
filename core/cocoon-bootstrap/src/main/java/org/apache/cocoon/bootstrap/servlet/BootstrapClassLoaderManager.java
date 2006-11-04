@@ -33,6 +33,22 @@ import org.apache.cocoon.classloader.DefaultClassLoaderFactory;
 /**
  * This class creates a singleton instance of the bootstrap class loader used
  * by Cocoon.
+ * 
+ * It can be configured through context paramters:
+ * <ul>
+ * <li><code>bootstrap-classpath-file</code> expects the name of a text file that
+ * can contain lines begining with
+ * <code>class-dir:<code> (directory containing classes),
+ *      <code>lib-dir:<code> (directory containing JAR or ZIP libraries) and <code>#</code>
+ *      (for comments). <br/>
+ *      All other lines are considered as URLs.
+ *      <br/>
+ *      It is also possible to use the pseudo protocol prefix<code>context:/<code> which 
+ *      is resolved to the basedir of the servlet context.
+ * </li>
+ * <li><code>bootstrap-classloader-factory</code> The classloader factory.</li>
+ * <li><code>bootstrap-classloader-debug</code> Can be used to turn debug messages on.</li>
+ * </ul>
  *
  * @version $Id$
  * @since 2.2

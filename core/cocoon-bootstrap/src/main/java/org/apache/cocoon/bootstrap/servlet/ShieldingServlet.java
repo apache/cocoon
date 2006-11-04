@@ -32,20 +32,9 @@ import javax.servlet.http.HttpServlet;
  * in the system, such as Xerces and Xalan versions included in JDK 1.4.
  * <p>
  * This servlet propagates all initialisation parameters to the sandboxed
- * servlet, and accepts the parameters <code>servlet-class</code> and
- * <code>paranoid-classpath</code>.
+ * servlet, and requires the parameter <code>servlet-class</code>.
  * <ul>
- * <li><code>servlet-class</code> defines the sandboxed servlet class, the
- * default is "org.apache.cocoon.servlet.CocoonServlet".
- * <li><code>paranoid-classpath</code> expects the name of a text file that
- * can contain lines begining with
- * <code>class-dir:<code> (directory containing classes),
- *      <code>lib-dir:<code> (directory containing JAR or ZIP libraries) and <code>#</code>
- *      (for comments). <br/>
- *      All other lines are considered as URLs.
- *      <br/>
- *      It is also possible to use a the pseudo protocol prefix<code>context:/<code> which 
- *      is resolved to the basedir of the servlet context.
+ * <li><code>servlet-class</code> defines the sandboxed servlet class.</li>
  * </ul>
  *
  * @version $Id$
