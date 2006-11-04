@@ -30,5 +30,6 @@ public class Constants {
     public static final String DEFAULT_BEAN_OVERRIDE_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/spring";
 
     /** The default location of spring related per sitemap configuration files. */
-    public static final String DEFAULT_SPRING_SITEMAP_CONFIGURATION_FILES = "config/spring";
+    public static final String DEFAULT_SITEMAP_SPRING_CONFIGURATION_LOCATION = "config/spring";
+    public static final String DEFAULT_SITEMAP_PROPERTIES_LOCATION = "config/properties";
 }

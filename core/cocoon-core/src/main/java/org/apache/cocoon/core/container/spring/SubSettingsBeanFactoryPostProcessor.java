@@ -39,8 +39,6 @@ import org.springframework.core.io.Resource;
 public class SubSettingsBeanFactoryPostProcessor
     extends AbstractSettingsBeanFactoryPostProcessor {
 
-    private static final String DEFAULT_CONFIG_PROPERTIES = "config/properties";
-
     protected String location;
 
     protected List directories;
@@ -106,9 +104,9 @@ public class SubSettingsBeanFactoryPostProcessor
 
         // read properties from default includes
         if ( this.useDefaultIncludes ) {
-            ResourceUtils.readProperties(DEFAULT_CONFIG_PROPERTIES, properties, this.getResourceLoader(), this.logger);
+            ResourceUtils.readProperties(Constants.DEFAULT_SITEMAP_PROPERTIES_LOCATION, properties, this.getResourceLoader(), this.logger);
             // read all properties from the mode dependent directory
-            ResourceUtils.readProperties(DEFAULT_CONFIG_PROPERTIES + '/' + mode, properties, this.getResourceLoader(), this.logger);    
+            ResourceUtils.readProperties(Constants.DEFAULT_SITEMAP_PROPERTIES_LOCATION + '/' + mode, properties, this.getResourceLoader(), this.logger);    
         }
 
         if ( this.directories != null ) {
