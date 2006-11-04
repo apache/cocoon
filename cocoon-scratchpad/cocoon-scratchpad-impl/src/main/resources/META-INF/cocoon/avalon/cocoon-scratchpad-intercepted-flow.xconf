@@ -22,7 +22,7 @@
     +-->
 <components>
   <!-- Include dependencies -->
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-scratchpad.xconf"/>
 
   <flow-interpreters>
 
@@ -32,7 +32,7 @@
       <reload-scripts>true</reload-scripts>
       <check-time>40</check-time>
       <!--  <debugger>enabled</debugger> --> <!-- JavaScript Debugger support -->
-      
+
       <!-- ************* interception support ***************** -->
         <!-- on/off switch -->
         <enable-interception>true</enable-interception>
@@ -41,17 +41,17 @@
           <function>cocoon.sendPageAndWait()</function>
           <function>woody.send()</function>
         </cont-creating-functions>
-        <!-- the result script is copied in the same directory as the basescript 
-             if the file protocol is used to resolve the script 
-             
+        <!-- the result script is copied in the same directory as the basescript
+             if the file protocol is used to resolve the script
+
              WARNING:
              the result script is streamed into the same directory as the basescript
              with the only difference that "_intercepted.js" is appended. So make
-             sure that you don't create any files with the name 
+             sure that you don't create any files with the name
              [yourPath]/[yourBasescript-name]_intercepted.js which will be overwritten
-             
+
          -->
         <serialize-result-script>false</serialize-result-script>
-    </component-instance>   
+    </component-instance>
   </flow-interpreters>
 </components>
