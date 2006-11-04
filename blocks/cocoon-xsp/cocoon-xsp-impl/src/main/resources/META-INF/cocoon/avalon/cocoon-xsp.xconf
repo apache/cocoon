@@ -21,10 +21,10 @@
     +-->
 <components>
   <include src="resource://org/apache/cocoon/components/xsp.roles"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-markup.xconf"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-program-generator.xconf"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-program-language.xconf"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-xscript.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-xsp-markup.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-xsp-program-generator.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-xsp-program-language.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-xsp-xscript.xconf"/>
 
   <!--+
       | The core classloader implementation

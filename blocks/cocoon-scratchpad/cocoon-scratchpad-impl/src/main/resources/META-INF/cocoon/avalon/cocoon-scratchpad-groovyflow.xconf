@@ -22,7 +22,7 @@
     +-->
 <components>
   <!-- Include dependencies -->
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad.xconf"/>
+  <include src="resource://META-INF/cocoon/avalon/cocoon-scratchpad.xconf"/>
 
 <!--
   <flow-interpreters>
