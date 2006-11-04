@@ -29,7 +29,6 @@ public class ClassLoaderConfiguration {
 
     protected final List includes = new ArrayList();
     protected final List excludes = new ArrayList();
-    protected final List sourceDirectories = new ArrayList();
     protected final List classDirectories = new ArrayList();
     protected final List libDirectories = new ArrayList();
 
@@ -41,20 +40,12 @@ public class ClassLoaderConfiguration {
         this.excludes.add(include);
     }
 
-    public void addSourceDirectory(String sourceDir) {
-        this.sourceDirectories.add(sourceDir);
-    }
-
     public void addClassDirectory(String include) {
         this.classDirectories.add(include);
     }
 
     public void addLibDirectory(String include) {
         this.libDirectories.add(include);
-    }
-
-    public List getSourceDirectories() {
-        return sourceDirectories;
     }
 
     public List getClassDirectories() {

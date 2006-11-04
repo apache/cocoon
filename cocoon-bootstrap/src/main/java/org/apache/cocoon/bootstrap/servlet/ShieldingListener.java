@@ -36,7 +36,7 @@ import javax.servlet.http.HttpSessionListener;
 
 /**
  * This listener can be used as a wrapper around "real" listeners to
- * support the paranoid class loader.
+ * support the shielded class loader.
  *
  * @version $Id$
  */

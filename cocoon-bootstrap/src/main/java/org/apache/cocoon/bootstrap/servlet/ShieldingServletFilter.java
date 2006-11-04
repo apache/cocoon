@@ -27,7 +27,7 @@ import javax.servlet.ServletResponse;
 
 /**
  * This filter can be used as a wrapper around a "real" filter to
- * support the paranoid class loader.
+ * support the shielded class loader.
  *
  * @version $Id$
  */
