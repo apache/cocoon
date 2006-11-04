@@ -58,7 +58,8 @@ import org.w3c.dom.Element;
  * @since 2.2
  */
 public class AvalonElementParser extends AbstractElementParser {
-
+    public static final String DEFAULT_COCOON_XCONF_LOCATION = "resource://org/apache/cocoon/cocoon.xconf";
+    
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
@@ -66,10 +67,10 @@ public class AvalonElementParser extends AbstractElementParser {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         // read avalon style configuration - it's optional for this element.
         // the schema for the sitemap element ensures that location is never null.
-        final String location = this.getAttributeValue(element, "location", "resource://org/apache/cocoon/cocoon.xconf");
+        final String location = this.getAttributeValue(element, "location", DEFAULT_COCOON_XCONF_LOCATION);
         try {
             final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
-    
+
             this.createComponents(element,
                                   info,
                                   parserContext.getRegistry(),
