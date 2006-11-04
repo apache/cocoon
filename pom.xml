@@ -289,6 +289,17 @@
       </roles>
       <timezone>+0</timezone>
     </developer>
+    <developer>
+      <id>ltrieloff</id>
+      <name>Lars Trieloff</name>
+      <email>lars@trieloff.net</email>
+      <organization>Mindquarry GmbH</organization>
+      <organizationUrl>http://www.mindquarry.com</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
 
   <issueManagement>
