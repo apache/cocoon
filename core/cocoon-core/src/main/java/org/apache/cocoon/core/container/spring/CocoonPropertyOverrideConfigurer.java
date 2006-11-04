@@ -107,10 +107,10 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         final Properties mergedProps = new Properties();
 
-        if ( this.scanClassPath ) {
-            ResourceUtils.readProperties("classpath*:META-INF/cocoon/spring", mergedProps, this.resourceLoader,
-                    this.logger);
-            ResourceUtils.readProperties("classpath*:META-INF/cocoon/spring/" + mode, mergedProps,
+        if (this.scanClassPath) {
+            ResourceUtils.readProperties(Constants.DEFAULT_BEAN_OVERRIDE_PROPERTIES_LOCATION, mergedProps,
+                    this.resourceLoader, this.logger);
+            ResourceUtils.readProperties(Constants.DEFAULT_BEAN_OVERRIDE_PROPERTIES_LOCATION + "/" + mode, mergedProps,
                     this.resourceLoader, this.logger);
         }
 
