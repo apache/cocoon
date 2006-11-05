@@ -98,7 +98,7 @@ public class DeploymentUtil {
                 final URL jarUrl = new URL(url);
                 final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
                 final JarFile jarFile = connection.getJarFile();
-                String blockName = jarFile.getManifest().getMainAttributes().getValue("Implementation-Title");
+                String blockName = jarFile.getManifest().getMainAttributes().getValue("Cocoon-Block-Name");
                 if ( blockName == null ) {
                     String jarPath = jarFile.getName();
                     // extract jar name
