@@ -28,6 +28,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderFactory;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.classloader.reloading.ReloadingClassLoaderConfiguration;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
 import org.apache.cocoon.core.container.spring.Container;
@@ -55,12 +56,15 @@ public class SitemapHelper {
     private static final String DEFAULT_CONFIG_XCONF  = "config/avalon";
 
     protected static String createDefinition(String     uriPrefix,
-                                             String     sitemapLocation) {
+                                             String     sitemapLocation,
+                                             String     runningMode) {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
         // Settings
         buffer.append("  <cocoon:sitemap location=\"");
         buffer.append(sitemapLocation);
+        buffer.append("\" runningMode=\"");
+        buffer.append(runningMode);
         buffer.append("\"/>\n");
         // Avalon
         buffer.append("  <avalon:sitemap location=\"");
@@ -142,7 +146,7 @@ public class SitemapHelper {
 
     public static Container createContainer(Configuration  config,
                                             String         sitemapLocation,
-                                            Monitor fam,
+                                            Monitor        fam,
                                             ServletContext servletContext)
     throws Exception {
         // let's get the root container first
@@ -169,7 +173,8 @@ public class SitemapHelper {
         final ClassLoader classloader = createClassLoader(parentContext, config, fam, servletContext, sitemapResolver);
         // create root bean definition
         final String definition = createDefinition(request.getSitemapURIPrefix(),
-                                                   sitemapLocation.substring(pos+1));
+                                                   sitemapLocation.substring(pos+1),
+                                                   ((Settings)parentContext.getBean(Settings.ROLE)).getRunningMode());
         PARENT_CONTEXT.set(parentContext);
         try {
             final CocoonWebApplicationContext context = new CocoonWebApplicationContext(classloader,
