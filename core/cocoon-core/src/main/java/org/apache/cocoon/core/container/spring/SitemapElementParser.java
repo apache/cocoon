@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.xml.dom.DomHelper;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -118,6 +119,7 @@ public class SitemapElementParser extends AbstractElementParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
+        final String runningMode = this.getAttributeValue(element, SettingsElementParser.RUNNING_MODE_ATTR, SettingsDefaults.DEFAULT_RUNNING_MODE);
         final String location = element.getAttribute("location");
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         try {
