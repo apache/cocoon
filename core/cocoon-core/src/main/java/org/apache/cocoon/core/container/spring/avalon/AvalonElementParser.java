@@ -69,7 +69,7 @@ public class AvalonElementParser extends AbstractElementParser {
         // the schema for the sitemap element ensures that location is never null.
         final String location = this.getAttributeValue(element, "location", DEFAULT_COCOON_XCONF_LOCATION);
         try {
-            final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
+            final ConfigurationInfo info = ConfigurationReader.readConfiguration(location, resourceLoader);
 
             this.createComponents(element,
                                   info,
@@ -134,11 +134,6 @@ public class AvalonElementParser extends AbstractElementParser {
         beanDef.getPropertyValues().addPropertyValue("location", this.getConfigurationLocation());
 
         this.register(beanDef, AvalonBeanPostProcessor.class.getName(), registry);
-    }
-
-    protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
-    throws Exception {
-        return ConfigurationReader.readConfiguration(location, resourceLoader);
     }
 
     protected void addContext(Element element, BeanDefinitionRegistry registry) {
