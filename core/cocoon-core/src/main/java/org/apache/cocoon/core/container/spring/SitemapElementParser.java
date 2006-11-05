@@ -150,6 +150,7 @@ public class SitemapElementParser extends AbstractElementParser {
 
             if ( useDefaultIncludes ) {
                 this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SITEMAP_SPRING_CONFIGURATION_LOCATION, "*.xml", true);
+                this.handleBeanInclude(parserContext, null, Constants.DEFAULT_SITEMAP_SPRING_CONFIGURATION_LOCATION + "/" + runningMode, "*.xml", true);
             }
             // search for includes
             if ( componentsElement != null ) {
@@ -160,7 +161,14 @@ public class SitemapElementParser extends AbstractElementParser {
                         final String dir = DomHelper.getAttribute(includeElements[i], "dir", null);
                         final String pattern = DomHelper.getAttribute(includeElements[i], "pattern", "*.xml");
                         final boolean optional = DomHelper.getAttributeAsBoolean(includeElements[i], "optional", false);
+
                         this.handleBeanInclude(parserContext, src, dir, pattern, optional);
+                        
+                        // TODO do we really need both src/dir attributes? The
+                        // quiet precedence of 'src' over 'dir' attribute is at
+                        // least unclear.
+                        if (src == null && dir != null)
+                            this.handleBeanInclude(parserContext, null, dir + "/" + runningMode, pattern, optional);
                     }
                 }
             }
