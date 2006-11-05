@@ -313,6 +313,18 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>ahochsteger</id>
+      <name>Andreas Hochsteger</name>
+      <email>ahochsteger@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+        <role>PMC member</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
 
   <issueManagement>
