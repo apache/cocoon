@@ -131,7 +131,7 @@ public class AvalonElementParser extends AbstractElementParser {
         beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
         beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
         beanDef.getPropertyValues().addPropertyValue("resourceLoader", resourceLoader);
-        beanDef.getPropertyValues().addPropertyValue("location", this.getPropertyLocation());
+        beanDef.getPropertyValues().addPropertyValue("location", this.getConfigurationLocation());
 
         this.register(beanDef, AvalonBeanPostProcessor.class.getName(), registry);
     }
@@ -320,7 +320,7 @@ public class AvalonElementParser extends AbstractElementParser {
         }
     }
 
-    protected String getPropertyLocation() {
+    protected String getConfigurationLocation() {
         return "WEB-INF/cocoon/xconf";
     }
 }
