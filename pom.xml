@@ -456,7 +456,7 @@
           <artifactId>daisy-maven-plugin</artifactId>
           <version>1.0.0-SNAPSHOT</version>
           <configuration>
-            <repoUrl>http://localhost:9263</repoUrl>
+            <repoUrl>${docs.repoUrl}</repoUrl>
             <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
             <daisyServerId>cocoon-daisy</daisyServerId>
             <cleanSiteXml>true</cleanSiteXml>
@@ -627,6 +627,7 @@
   <properties>
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
+    <docs.repoUrl>http:/cocoon.zones.apache.org:9263</docs.repoUrl>
   </properties>
 
   <profiles>
