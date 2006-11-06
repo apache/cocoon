@@ -325,6 +325,18 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>tcurdt</id>
+      <name>Torsten Curdt</name>
+      <email>tcurdt at apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+        <role>PMC member</role>      
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
 
   <issueManagement>
