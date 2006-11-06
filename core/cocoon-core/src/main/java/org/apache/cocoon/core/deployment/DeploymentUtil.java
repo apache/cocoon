@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -46,6 +48,8 @@ public class DeploymentUtil {
     protected static final String RESOURCES_PATH = "COB-INF";
 
     protected final String destinationDirectory;
+    
+    protected static final Map blockContexts = new HashMap(); 
 
     public DeploymentUtil(ServletContext servletContext) {
         // TODO how do we handle non servlet container environment?
@@ -112,7 +116,10 @@ public class DeploymentUtil {
                 buffer.append(relativeDirectory);
                 buffer.append(File.separatorChar);
                 buffer.append(blockName);
-                this.deploy(jarFile, resourcePattern, buffer.toString());
+                String destination = buffer.toString();
+                this.deploy(jarFile, resourcePattern, destination);
+                // register the root URL for the block resources
+                DeploymentUtil.blockContexts.put(blockName, destination);
             }
         }        
     }
@@ -125,4 +132,15 @@ public class DeploymentUtil {
             this.deployBlockResources(DeploymentUtil.RESOURCES_PATH, "blocks");
         }
     }
+
+    /**
+     * Get a map that associates a block name with the root URL of the blocks resources
+     *  
+     * @return the blockContexts
+     */
+    // FIXME: It would be better to make the block contexts mapping available as a
+    // component instead of as a static method
+    public static Map getBlockContexts() {
+        return blockContexts;
+    }    
 }
