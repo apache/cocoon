@@ -161,6 +161,7 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
+        <role>PMC member</role>
         <role>Committer</role>
       </roles>
       <timezone>+1</timezone>
@@ -207,7 +208,7 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>Committer</role>
-        <role>PMC member</role>      
+        <role>PMC member</role>
       </roles>
       <timezone>+1</timezone>
     </developer>
@@ -219,7 +220,7 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>PMC chair</role>
-        <role>PMC member</role>      
+        <role>PMC member</role>
         <role>Committer</role>
       </roles>
       <timezone>+1</timezone>
