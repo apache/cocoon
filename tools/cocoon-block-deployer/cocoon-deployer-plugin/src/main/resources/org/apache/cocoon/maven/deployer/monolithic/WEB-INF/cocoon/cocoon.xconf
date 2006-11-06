@@ -34,10 +34,6 @@
     $if(devblock.xconfConfPath)$
     <include dir="$devblock.xconfConfPath$" pattern="*.xconf"/>
     $endif$
-
-    $if(devblock.sitemapAdditionsConfPath)$
-    <include dir="$devblock.sitemapAdditionsConfPath$" pattern="*.xmap"/>
-    $endif$
   }$
 
 </cocoon>
