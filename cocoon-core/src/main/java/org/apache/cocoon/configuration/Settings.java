@@ -32,9 +32,6 @@ public interface Settings {
     /** Name of the property specifying a custom user properties file. */
     String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
 
-    /** Name of the property specifying the running mode. */
-    String PROPERTY_RUNNING_MODE = "org.apache.cocoon.mode";
-
     /**
      * This parameter is used to list classes that should be loaded at
      * initialization time of the servlet. For example, JDBC Drivers used need to
