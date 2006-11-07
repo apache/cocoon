@@ -53,11 +53,6 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     /**
-     * Should we scan the classpath for properties?
-     */
-    protected boolean scanClassPath = true;
-
-    /**
      * The settings object.
      */
     protected Settings settings;
@@ -75,13 +70,6 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
     /** Set the settings. */
     public void setSettings(Settings object) {
         this.settings = object;
-    }
-
-    /**
-     * Set if we scan the class path.
-     */
-    public void setScanClassPath(boolean value) {
-        this.scanClassPath = value;
     }
 
     /**
@@ -106,13 +94,6 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         }
         final String mode = (this.settings != null ? this.settings.getRunningMode() : SettingsDefaults.DEFAULT_RUNNING_MODE);
         final Properties mergedProps = new Properties();
-
-        if (this.scanClassPath) {
-            ResourceUtils.readProperties(Constants.DEFAULT_BEAN_OVERRIDE_PROPERTIES_LOCATION, mergedProps,
-                    this.resourceLoader, this.logger);
-            ResourceUtils.readProperties(Constants.DEFAULT_BEAN_OVERRIDE_PROPERTIES_LOCATION + "/" + mode, mergedProps,
-                    this.resourceLoader, this.logger);
-        }
 
         ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
         // read properties from running-mode dependent directory
