@@ -34,7 +34,6 @@
        add a bean conforming to the Avalon Logger interface to this definition
        and leave out the loggingConfiguration attribute.
    -->
-  <avalon:avalon location="/WEB-INF/cocoon/cocoon.xconf"
-                 loggingConfiguration="/WEB-INF/cocoon/log4j.xconf"/>
+  <avalon:avalon loggingConfiguration="/WEB-INF/cocoon/log4j.xconf"/>
 
 </beans>
