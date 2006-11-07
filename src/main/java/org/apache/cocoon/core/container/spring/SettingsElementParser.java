@@ -60,7 +60,7 @@ public class SettingsElementParser extends AbstractElementParser {
                 SettingsBeanFactoryPostProcessor.class.getName());
         final RootBeanDefinition beanDef = this.createBeanDefinition(componentClassName, "init", false);
         // if running mode is specified add it as a property
-        final String runningMode = this.getAttributeValue(element, RUNNING_MODE_ATTR, null);
+        final String runningMode = RunningModeHelper.determineRunningMode( this.getAttributeValue(element, RUNNING_MODE_ATTR, null) );
         if (runningMode != null) {
             beanDef.getPropertyValues().addPropertyValue("runningMode", runningMode);
         }
