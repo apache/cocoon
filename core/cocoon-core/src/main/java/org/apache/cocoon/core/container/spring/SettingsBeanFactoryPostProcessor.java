@@ -169,7 +169,7 @@ public class SettingsBeanFactoryPostProcessor
      */
     protected MutableSettings createSettings() {
         // get the running mode
-        final String mode = getSystemProperty(Settings.PROPERTY_RUNNING_MODE, this.runningMode);
+        final String mode = RunningModeHelper.determineRunningMode( this.runningMode );
         
         /*
         if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {

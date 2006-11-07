@@ -280,5 +280,4 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");
         this.register(beanDef, CocoonPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
     }
-
 }
