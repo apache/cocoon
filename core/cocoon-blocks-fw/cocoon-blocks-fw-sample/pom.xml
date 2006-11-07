@@ -32,6 +32,22 @@
   <packaging>jar</packaging>
   <version>1.0.0-SNAPSHOT</version>
   <name>Blocks Framework Sample Blocks</name>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Cocoon-Block-Name>${pom.artifactId}</Cocoon-Block-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
