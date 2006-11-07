@@ -142,17 +142,18 @@ public class AvalonUtils {
     
     /**
      * If a store node is configured in the class-dir/src-dir configuration, 
-     * let's configure the store; the default one is the JCI MemoryStore
+     * let's configure the store; if no store node is configured add a default;
+     * the default one is the JCI MemoryStore
      */
     private static void configureStore(ReloadingClassLoaderConfiguration configBean,
                                        String                            dirUri,
                                        Configuration                     storeConfig)
     throws Exception {
-        if (storeConfig != null) {
-            final String storeClassName = storeConfig.getAttribute("class","org.apache.commons.jci.stores.MemoryResourceStore");
-            final ResourceStore store = (ResourceStore)Class.forName(storeClassName).newInstance();
-            final URL url = new URL(dirUri);
-            configBean.addStore(url.getFile(),store);
-        }
+        final String storeClassName = (storeConfig != null 
+            ? storeConfig.getAttribute("class","org.apache.commons.jci.stores.MemoryResourceStore")
+                : "org.apache.commons.jci.stores.MemoryResourceStore");
+        final ResourceStore store = (ResourceStore)Class.forName(storeClassName).newInstance();
+        final URL url = new URL(dirUri);
+        configBean.addStore(url.getFile(),store);
     }
 }
