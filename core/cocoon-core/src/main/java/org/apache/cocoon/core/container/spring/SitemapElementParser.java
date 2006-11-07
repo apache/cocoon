@@ -119,7 +119,7 @@ public class SitemapElementParser extends AbstractElementParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        final String runningMode = this.getAttributeValue(element, SettingsElementParser.RUNNING_MODE_ATTR, SettingsDefaults.DEFAULT_RUNNING_MODE);
+        final String runningMode = RunningModeHelper.determineRunningMode( this.getAttributeValue(element, SettingsElementParser.RUNNING_MODE_ATTR, null) );
         final String location = element.getAttribute("location");
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         try {
