@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cocoon.ProcessingUtil;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -113,6 +114,8 @@ public class DispatcherServlet
                 " servletPath=" + request.getServletPath() +
                 " pathInfo=" + request.getPathInfo());
         servlet.service(request, res);
+
+        ProcessingUtil.cleanup();
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {

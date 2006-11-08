@@ -117,6 +117,8 @@ public final class BlockConnection
             
             byte[] out = os.toByteArray();
             
+            os.close();
+            
             return new ByteArrayInputStream(out);
         } catch (ServletException e) {
             throw new CascadingIOException("BlockConnection " + e.getMessage(), e);
