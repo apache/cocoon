@@ -144,6 +144,12 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
 
         if (this.servletStream == null) {
             this.servletStream = new ServletOutputStream() {
+                /* (non-Javadoc)
+                 * @see java.io.OutputStream#flush()
+                 */
+                public void flush() throws IOException {
+                    BlockCallHttpServletResponse.this.outputStream.flush();
+                }
 
                 /* (non-Javadoc)
                  * @see java.io.OutputStream#write(int)
@@ -151,6 +157,19 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
                 public void write(int b) throws IOException {
                     BlockCallHttpServletResponse.this.outputStream.write(b);
                 }
+
+                /* (non-Javadoc)
+                 * @see java.io.OutputStream#close()
+                 * 
+                 * This method is probably never called, the close will be
+                 * initiated directly on this.outputStream by the one who set
+                 * it via BlockCallHttpServletResponse.setOutputStream()
+                 */
+                public void close() throws IOException {
+                    BlockCallHttpServletResponse.this.outputStream.close();
+                }
+                
+                
             };
         }
  
@@ -271,7 +290,8 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     public void setOutputStream(OutputStream outputStream) {
-        this.outputStream = outputStream;        }
+        this.outputStream = outputStream;
+    }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#setStatus(int)
