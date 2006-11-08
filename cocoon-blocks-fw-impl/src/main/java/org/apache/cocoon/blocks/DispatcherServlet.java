@@ -22,8 +22,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +29,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.ProcessingUtil;
@@ -95,7 +92,7 @@ public class DispatcherServlet
         Servlet servlet = null;
         while (servlet == null && index != -1) {
             path = path.substring(0, index);
-            servlet = (Servlet) mountableServlets.get(path);
+            servlet = (Servlet)this.mountableServlets.get(path);
             index = path.lastIndexOf('/');
         }
         if (servlet == null) {
@@ -113,9 +110,12 @@ public class DispatcherServlet
                 " mountPath=" + path +
                 " servletPath=" + request.getServletPath() +
                 " pathInfo=" + request.getPathInfo());
-        servlet.service(request, res);
-
-        ProcessingUtil.cleanup();
+        
+        try {
+            servlet.service(request, res);
+        } finally {
+            ProcessingUtil.cleanup();
+        }
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {
