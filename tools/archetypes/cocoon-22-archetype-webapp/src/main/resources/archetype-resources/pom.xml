@@ -57,12 +57,11 @@
               <maxIdleTime>30000</maxIdleTime>
             </connector>
           </connectors>
-          <webAppSourceDirectory>./target/cocoon-webapp</webAppSourceDirectory>
+          <webAppSourceDirectory>${project.build.directory}/${pom.artifactId}-${pom.version}</webAppSourceDirectory>
           <contextPath>/</contextPath>
         </configuration>
       </plugin>
     </plugins>
-    <finalName>cocoon-webapp</finalName>
   </build>
   <dependencies>
     <dependency>
