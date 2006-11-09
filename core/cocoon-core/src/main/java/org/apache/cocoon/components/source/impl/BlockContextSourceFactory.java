@@ -63,7 +63,7 @@ public class BlockContextSourceFactory extends AbstractLogEnabled implements
         
         // Remove the protocol and the first '/'
         int pos = location.indexOf(":/");
-        String path = location.substring(pos+1);
+        String path = location.substring(pos+2);
         
         pos = path.indexOf('/');
         if (pos != -1) {
