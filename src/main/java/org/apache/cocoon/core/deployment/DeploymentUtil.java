@@ -58,13 +58,8 @@ public class DeploymentUtil {
             return;
         }
         
-        final String pathToWebInf = servletContext.getRealPath("/WEB-INF");
-        if ( pathToWebInf == null ) {
-            // we run unexpanded
-            this.destinationDirectory = null;
-        } else {
-            this.destinationDirectory = pathToWebInf.substring(0, pathToWebInf.length() - "/WEB-INF".length());
-        }
+        this.destinationDirectory =
+            ((File) servletContext.getAttribute("javax.servlet.context.tempdir")).getPath();
     }
 
     protected void deploy(JarFile jarFile, String prefix, String destination)
