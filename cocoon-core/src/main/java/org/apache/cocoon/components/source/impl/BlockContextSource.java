@@ -115,8 +115,7 @@ public class BlockContextSource extends AbstractSource implements
      * @see org.apache.excalibur.source.TraversableSource#getName()
      */
     public String getName() {
-        // FIXME: what name is the root directory supposed to have?
-        return null;
+        return ".";
     }
 
     /* (non-Javadoc)

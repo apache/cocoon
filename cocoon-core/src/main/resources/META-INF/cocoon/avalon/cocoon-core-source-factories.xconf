@@ -27,6 +27,7 @@
     <component-instance name="resource" class="org.apache.excalibur.source.impl.ResourceSourceFactory"/>
     <component-instance name="context" class="org.apache.cocoon.components.source.impl.ContextSourceFactory"/>
     <component-instance name="cocoon" class="org.apache.cocoon.components.source.impl.SitemapSourceFactory"/>
+    <component-instance name="blockcontext" class="org.apache.cocoon.components.source.impl.BlockContextSourceFactory"/>
     <!--component-instance name="block" class="org.apache.cocoon.components.source.impl.BlockSourceFactory"/-->
     
     <!--+
