@@ -17,8 +17,6 @@
 package org.apache.cocoon.acting;
 
 import java.util.Map;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -82,12 +80,6 @@ public class CopySourceAction
                 }
             }
         }
-
-        ModifiableSource wdest = (ModifiableSource)dest;
-
-        // Get streams
-        InputStream is = src.getInputStream();
-        OutputStream os = wdest.getOutputStream();
 
         // And transfer all content.
         try {
