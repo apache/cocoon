@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.xml.dom.DomHelper;
 import org.springframework.beans.factory.BeanDefinitionStoreException;

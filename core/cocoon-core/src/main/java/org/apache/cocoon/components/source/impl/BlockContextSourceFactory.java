@@ -59,7 +59,7 @@ public class BlockContextSourceFactory extends AbstractLogEnabled implements
 
         // the root "directory" of the blocks
         if (location.endsWith(":/"))
-            return new BlockContextSource(location, blockContexts, this.serviceManager, this.getLogger());
+            return new BlockContextSource(location, blockContexts, this.serviceManager);
         
         // Remove the protocol and the first '/'
         int pos = location.indexOf(":/");

@@ -26,8 +26,7 @@ import org.apache.cocoon.configuration.SettingsDefaults;
  * @since 2.2
  * @version $Id$
  */
-public class RunningModeHelper
-{
+public class RunningModeHelper {
 
     public final static String PROPERTY_RUNNING_MODE = "org.apache.cocoon.mode";
     
@@ -44,8 +43,7 @@ public class RunningModeHelper
     }
 
     /** Name of the property specifying the running mode. */
-    private RunningModeHelper()
-    {
+    private RunningModeHelper() {
         // never initiate
     }
 
@@ -55,10 +53,10 @@ public class RunningModeHelper
      * The system default running mode will be used if the passed parameter mode is null.
      */
     public static String determineRunningMode(String mode) {
-        if(SYSTEM_RUNNING_MODE != null) {
+        if (SYSTEM_RUNNING_MODE != null) {
             return SYSTEM_RUNNING_MODE;
         }
-        if(mode == null) {
+        if (mode == null) {
             return SettingsDefaults.DEFAULT_RUNNING_MODE;
         }
         return mode;

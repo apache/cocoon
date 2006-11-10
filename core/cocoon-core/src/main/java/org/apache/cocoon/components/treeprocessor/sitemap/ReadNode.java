@@ -23,7 +23,6 @@ import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.SitemapExecutor;
-import org.apache.cocoon.ProcessingException;
 
 import java.util.Map;
 
