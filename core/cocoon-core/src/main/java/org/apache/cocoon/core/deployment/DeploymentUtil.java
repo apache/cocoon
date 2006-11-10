@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,15 +49,11 @@ public class DeploymentUtil {
     
     protected static final Map blockContexts = new HashMap(); 
 
-    public DeploymentUtil(ServletContext servletContext) {
-        // TODO how do we handle non servlet container environment?
-        if ( servletContext == null ) {
-            this.destinationDirectory = null;
-            return;
+    public DeploymentUtil(String destination) {
+        if ( destination == null ) {
+            throw new IllegalArgumentException("Destination must not be null.");
         }
-        
-        this.destinationDirectory =
-            ((File) servletContext.getAttribute("javax.servlet.context.tempdir")).getPath();
+        this.destinationDirectory = destination;
     }
 
     protected void deploy(JarFile jarFile, String prefix, String destination)
