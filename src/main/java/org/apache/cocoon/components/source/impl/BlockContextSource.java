@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
@@ -37,22 +36,21 @@ import org.apache.excalibur.source.impl.AbstractSource;
  * 
  * @version $Id$
  */
-public class BlockContextSource extends AbstractSource implements
-        TraversableSource {
+public class BlockContextSource
+    extends AbstractSource
+    implements TraversableSource {
     
     private Map blockContexts;
     private ServiceManager manager;
-    private Logger logger;
 
     /**
      * 
      */
-    public BlockContextSource(String location, Map blockContexts, ServiceManager manager, Logger logger) {
+    public BlockContextSource(String location, Map blockContexts, ServiceManager manager) {
         this.setScheme(location.substring(0, location.indexOf(":/")));
         this.setSystemId(location);
         this.blockContexts = blockContexts;
         this.manager = manager;
-        this.logger = logger;
     }
 
     /* (non-Javadoc)

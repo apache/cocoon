@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.sax;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.cocoon.xml.DefaultLexicalHandler;

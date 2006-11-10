@@ -36,7 +36,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.ValueHolder;
 import org.apache.cocoon.environment.impl.AbstractRequest;
-import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.commons.collections.IteratorUtils;
 
 /**
