@@ -59,10 +59,6 @@ public class SettingsBeanFactoryPostProcessor
      */
     public void init()
     throws Exception {
-        // first deploy block artifacts!
-        final DeploymentUtil deployer = new DeploymentUtil(this.servletContext);
-        deployer.deploy();
-
         this.settings = this.createSettings();
 
         this.doInit();
@@ -74,6 +70,10 @@ public class SettingsBeanFactoryPostProcessor
         this.dumpSystemProperties();
         this.dumpSettings();
         this.forceLoad();
+
+        // finally deploy block artifacts!
+        final DeploymentUtil deployer = new DeploymentUtil(this.settings.getWorkDirectory());
+        deployer.deploy();
     }
 
     /**
