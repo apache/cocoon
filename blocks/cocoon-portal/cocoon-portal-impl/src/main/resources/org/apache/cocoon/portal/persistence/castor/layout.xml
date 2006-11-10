@@ -134,11 +134,11 @@
 
   <class name="org.exolab.castor.mapping.MapItem">
     <field name="key" type="java.lang.String">
-      <bind-xml name="name"/>
+      <bind-xml name="name" node="attribute"/>
     </field>
 
     <field name="value" type="java.lang.String">
-      <bind-xml name="value"/>
+      <bind-xml name="value" node="attribute"/>
     </field>
   </class>
 
