@@ -36,6 +36,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.blocks.util.ServletContextWrapper;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * @version $Id$
@@ -103,7 +107,26 @@ public class BlockContext extends ServletContextWrapper {
     public URL getResource(String path) throws MalformedURLException {
         if (path.length() == 0 || path.charAt(0) != '/')
             throw new MalformedURLException("The path must start with '/' " + path);
-        
+
+        // hack for getting a file protocol or other protocols that can be used as context
+        // path in the getResource method in the servlet context
+        if (!(blockContextURL.startsWith("file:") || blockContextURL.startsWith("/")
+                || blockContextURL.indexOf(':') == -1)) {
+            SourceResolver resolver = null;
+            Source source = null;
+            try {
+                BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(this);
+                resolver = (SourceResolver) factory.getBean(SourceResolver.ROLE);
+                source = resolver.resolveURI(blockContextURL);
+                blockContextURL = source.getURI();
+            } catch (IOException e) {
+                throw new MalformedURLException("Could not resolve " + blockContextURL);
+            } finally {
+                if (resolver != null)
+                    resolver.release(source);
+            }
+        }
+
         // HACK: allow file:/ URLs for reloading of sitemaps during development
         if (this.blockContextURL.startsWith("file:")) {
             return new URL(this.blockContextURL + path);
