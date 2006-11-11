@@ -23,7 +23,7 @@
 	<bean id="org.apache.cocoon.blocks.sample.block3" class="org.apache.cocoon.blocks.BlockServlet">
 		<property name="mountPath" value="/cocoon-blocks-fw-sample3"/>
 		<property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
-		<property name="blockContextURL" value="/blocks/cocoon-blocks-fw-sample/test3"/>
+		<property name="blockContextURL" value="blockcontext:/cocoon-blocks-fw-sample/test3"/>
 		<property name="properties">
 			<map>
 				<entry key="bar" value="gazonk"/>
