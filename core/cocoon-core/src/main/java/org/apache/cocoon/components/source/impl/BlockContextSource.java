@@ -17,18 +17,25 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.CascadingIOException;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.AbstractSource;
+import org.springframework.util.ClassUtils;
 
 /**
  * This source makes the immediate children to the blockcontext:/ uri
@@ -42,15 +49,22 @@ public class BlockContextSource
     
     private Map blockContexts;
     private ServiceManager manager;
+    private Map children;
 
     /**
+     * @throws IOException 
+     * @throws MalformedURLException 
+     * @throws IOException 
+     * @throws MalformedURLException 
      * 
      */
-    public BlockContextSource(String location, Map blockContexts, ServiceManager manager) {
+    public BlockContextSource(String location, Map blockContexts, ServiceManager manager)
+    throws MalformedURLException, IOException {
         this.setScheme(location.substring(0, location.indexOf(":/")));
         this.setSystemId(location);
         this.blockContexts = blockContexts;
         this.manager = manager;
+        this.children = this.createChildren();
     }
 
     /* (non-Javadoc)
@@ -64,49 +78,62 @@ public class BlockContextSource
      * @see org.apache.excalibur.source.TraversableSource#getChild(java.lang.String)
      */
     public Source getChild(String name) throws SourceException {
-        String blockContext = (String) this.blockContexts.get(name);
-        if (blockContext == null)
+        Source child = (Source) this.children.get(name);
+        if (child == null)
             throw new SourceException("The block named " + name + "doesn't exist");
-
-        SourceResolver resolver = null;
-        try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            return resolver.resolveURI(blockContext);
-        } catch (ServiceException se) {
-            throw new SourceException("SourceResolver is not available.", se);
-        } catch (IOException e) {
-            throw new SourceException("The source for block " + name +
-                    " could not be resolved ", e);
-        } finally {
-            this.manager.release(resolver);
-        }
+        return child;
     }
 
     /* (non-Javadoc)
      * @see org.apache.excalibur.source.TraversableSource#getChildren()
      */
     public Collection getChildren() throws SourceException {
-        Collection contextPaths = this.blockContexts.values();
-        ArrayList children = new ArrayList(contextPaths.size());
+        return this.children.values();
+    }
+
+    private Map createChildren() throws MalformedURLException, IOException  {
+        Map children = new HashedMap(this.blockContexts.size());
         SourceResolver resolver = null;
-        String contextPath = null;
         try {
             resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            Iterator i = contextPaths.iterator();
+            Iterator i = this.blockContexts.entrySet().iterator();
             while (i.hasNext()) {
-                contextPath = (String) i.next();
+                Entry entry = (Entry) i.next();
+                String blockName = (String) entry.getKey();
+                String contextPath = (String) entry.getValue();
                 Source child = resolver.resolveURI(contextPath);
-                children.add(child);
+                if (child instanceof TraversableSource)
+                    child = adjustName((TraversableSource) child, blockName);
+                children.put(blockName, child);
             }
             return children;
         } catch (ServiceException se) {
-            throw new SourceException("SourceResolver is not available.", se);
-        } catch (IOException e) {
-            throw new SourceException("The block context path " + contextPath +
-                    " could not be resolved ", e);
+            throw new CascadingIOException("SourceResolver is not available.", se);
         } finally {
             this.manager.release(resolver);
         }
+    }
+    
+    /*
+     * Adjust the traversable source so that it use the block name as name instead of
+     * e.g. the directory name from the source that the block name was resolved to.
+     */
+    private static Source adjustName(final TraversableSource source, final String blockName) {
+        TraversableSource adjustedSource =
+            (TraversableSource) Proxy.newProxyInstance(source.getClass().getClassLoader(), ClassUtils.getAllInterfaces(source),
+                new InvocationHandler() {
+
+                    /* (non-Javadoc)
+                     * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
+                     */
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if (method.equals(TraversableSource.class.getMethod("getName", new Class[]{})))
+                            return blockName;
+                        else
+                            return method.invoke(source, args);
+                    }
+        });
+        return adjustedSource;
     }
 
     /* (non-Javadoc)
