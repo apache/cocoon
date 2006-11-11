@@ -23,6 +23,6 @@
 	<bean id="org.apache.cocoon.forms.block" class="org.apache.cocoon.blocks.BlockServlet">
 		<property name="mountPath" value="/cocoon-forms-sample"/>
 		<property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
-		<property name="blockContextURL" value="/blocks/cocoon-forms-sample"/>
+		<property name="blockContextURL" value="blockcontext:/cocoon-forms-sample/"/>
 	</bean>
 </beans>
