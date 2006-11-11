@@ -54,8 +54,6 @@ public class BlockContextSource
     /**
      * @throws IOException 
      * @throws MalformedURLException 
-     * @throws IOException 
-     * @throws MalformedURLException 
      * 
      */
     public BlockContextSource(String location, Map blockContexts, ServiceManager manager)
