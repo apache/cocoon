@@ -173,13 +173,20 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     private boolean useShieldingRepository = true;
 
     /**
+     * Use console appender
+     * 
+     * @parameter expression="${maven.war.log4j.useConsoleAppender}"
+     */
+    private boolean useConsoleAppender = false;
+
+    /**
      * Deploy a monolithic Cocoon web application. This means it doesn't use the
      * features that the blocks-fw offers.
      */
     protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir) throws MojoExecutionException, MojoFailureException {
         this.buildExplodedWebapp(getWebappDirectory());
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
-        deployer.deploy(getBlockArtifactsAsMap(null), getWebappDirectory(), blocksdir);
+        deployer.deploy(getBlockArtifactsAsMap(null), getWebappDirectory(), blocksdir, useConsoleAppender);
 
         // make sure that all configuration files available in the webapp
         // override block configuration files
@@ -229,7 +236,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
         // deploy all blocks
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
-        deployer.deploy(getBlockArtifactsAsMap(blocks), getWebappDirectory(), blocksdir, extBlocks, properties);
+        deployer.deploy(getBlockArtifactsAsMap(blocks), getWebappDirectory(), blocksdir, extBlocks, properties, useConsoleAppender);
 
         if (useShieldingClassloader)
             shieldCocoonWebapp();

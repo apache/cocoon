@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,12 +54,12 @@ public class MonolithicCocoonDeployer {
         this.logger = logger;
     }
 
-    public void deploy(final Map libraries, final File basedir, final String blocksdir) throws DeploymentException {
-        deploy(libraries, basedir, blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0]);
+    public void deploy(final Map libraries, final File basedir, final String blocksdir, final boolean useConsoleAppender) throws DeploymentException {
+        deploy(libraries, basedir, blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0], useConsoleAppender);
     }
 
     public void deploy(final Map libraries, final File basedir, final String blocksdir,
-            final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties)
+            final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties, final boolean useConsoleAppender)
             throws DeploymentException {
 
 
@@ -98,11 +97,15 @@ public class MonolithicCocoonDeployer {
             Map templateObjects = new HashMap();
             templateObjects.put("devblocks", developmentBlocks);
             templateObjects.put("curblock", developmentBlocks[developmentBlocks.length - 1]);
+            if (useConsoleAppender) {
+                templateObjects.put("useConsoleAppender", "useConsoleAppender" );
+            }
             writeStringTemplateToFile(basedir, "sitemap.xmap", templateObjects);
             writeStringTemplateToFile(basedir, "WEB-INF/cocoon/cocoon.xconf", templateObjects);
 
             copyFile(basedir, "blocks/sitemap.xmap");
-            copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
+            //copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
+            writeStringTemplateToFile(basedir, "WEB-INF/cocoon/log4j.xconf", templateObjects);
             // copyFile(basedir, "WEB-INF/web.xml");
 
             for (int i = 0; i < developmentBlocks.length; ++i) {
