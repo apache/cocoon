@@ -130,7 +130,7 @@
       </map:match>
       
       <map:match pattern="resources/*/**">
-        <map:read src="resource://org/apache/cocoon/{1}/{2}"/>
+        <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
       </map:match>
       
       
