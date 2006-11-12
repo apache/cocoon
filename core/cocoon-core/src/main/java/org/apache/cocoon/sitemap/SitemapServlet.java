@@ -17,10 +17,9 @@
 package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,20 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpContext;
-import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.beans.factory.BeanCreationException;
 
 /**
  * Use this servlet as entry point to Cocoon. It wraps the @link {@link TreeProcessor} and delegates
@@ -51,118 +42,109 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class SitemapServlet extends HttpServlet {
 
-    private static final String DEFAULT_CONTAINER_ENCODING = "ISO-8859-1";
-	private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap";	
-	private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
-
-	private Logger logger;
-    protected Context cocoonContext;
-	private Processor processor;	
-	private Settings settings;
-
+    protected RequestProcessor processor;
     /**
      * Initialize the servlet. The main purpose of this method is creating a configured @link {@link TreeProcessor}.
      */
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+    public void init() throws ServletException {
+        super.init();
         
-        // Get a bean factory from the servlet context
-        WebApplicationContext container =
-            WebApplicationContextUtils.getRequiredWebApplicationContext(config.getServletContext());
-        
-        // get components from the beanFactory
-        this.logger = (Logger) container.getBean(ProcessingUtil.LOGGER_ROLE);
-        this.settings = (Settings) container.getBean(Settings.ROLE);
-        ServiceManager serviceManager = (ServiceManager) 
-        container.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);     
-        
-        // create the Cocoon context out of the Servlet context
-        this.cocoonContext = new HttpContext(config.getServletContext());
-
-        // get the uri to the sitemap location and resolve it in the curent servlet context,
-        // observere that it is very important that the Treeprocessor get a resolved uri,
-        // just providing a relative uri relative to the current context is not enough
-        // and doesn't work
-        String sitemapPath = this.getServletContext().getInitParameter(SITEMAP_PATH_PROPERTY);
-        if (sitemapPath== null)
-            sitemapPath= DEFAULT_SITEMAP_PATH;
-
-        String sitemapURI;
-        try {
-            URL uri = this.getServletContext().getResource(sitemapPath);
-            if (uri == null)
-                throw new ServletException("Couldn't find the sitemap " + sitemapPath);
-            sitemapURI = uri.toExternalForm();
-        } catch (MalformedURLException e) {
-            throw new ServletException(e);
-        }
-
-        // create the tree processor
-        try {
-            TreeProcessor treeProcessor =  new TreeProcessor();
-            // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all. 
-            this.processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
-                    this.logger,
-                    null,
-                    serviceManager,
-                    createTreeProcessorConfiguration(sitemapURI));
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
+        this.processor = new RequestProcessor(this.getServletContext());
     }
-    
-	/**
+
+    /**
      * Process the incoming request using the Cocoon tree processor.
      */
-	protected void service(HttpServletRequest request, HttpServletResponse response) 
-		throws ServletException, IOException {
-		
-		Environment environment = createCocoonEnvironment(request, response);
-		try {
-	        EnvironmentHelper.enterProcessor(this.processor, environment);			
-			this.processor.process(environment);
-            environment.commitResponse();
-		} catch (Exception e) {
-            environment.tryResetResponse();
-			throw new ServletException(e);
-		} finally { 
-            EnvironmentHelper.leaveProcessor();
-            environment.finishingProcessing();
-	    } 
-	}    
-	
-	/**
-	 * This method takes the servlet request and response and creates a Cocoon 
-	 * environment (@link {@link Environment}) out of it.
-	 */
-    protected Environment createCocoonEnvironment(HttpServletRequest req, 
-    		HttpServletResponse res) throws IOException  {
-    	
-		String uri = req.getPathInfo();
-		if(uri != null) {
-			uri = uri.substring(1);
-		} else {
-			uri = "";
-		}
+    protected void service(HttpServletRequest request, HttpServletResponse response) 
+    	throws ServletException, IOException {
 
-		String formEncoding = req.getParameter("cocoon-form-encoding");
-		if (formEncoding == null) {
-			formEncoding = this.settings.getFormEncoding();
-		}
-		HttpEnvironment env = new HttpEnvironment(uri, req, res, this.getServletContext(),
-				this.cocoonContext, DEFAULT_CONTAINER_ENCODING, formEncoding);
-		
-		env.enableLogging(this.logger);
-		return env;
-	}
+        this.processor.service(request, response);
+    }
     
-    /**
-     * Create an Avalon Configuration @link {@link Configuration} that configures the tree processor.
-     */
-	private Configuration createTreeProcessorConfiguration(String sitemapURI) {
-		DefaultConfiguration treeProcessorConf = new DefaultConfiguration("treeProcessorConfiguration");
-        treeProcessorConf.setAttribute("check-reload", true);
-        treeProcessorConf.setAttribute("file", sitemapURI);
-		return treeProcessorConf;
-	}	    
+    protected class RequestProcessor extends org.apache.cocoon.servlet.RequestProcessor {
+        private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap"; 
+        private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
+
+        private Configuration treeProcessorConfiguration;
+
+        public RequestProcessor(ServletContext servletContext) {
+            super(servletContext);
+        }
+
+        protected Processor getProcessor() {
+            ServiceManager serviceManager =
+                (ServiceManager) this.cocoonBeanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+            try {
+                this.treeProcessorConfiguration =
+                    this.createTreeProcessorConfiguration(this.servletContext);
+            } catch (IOException e) {
+                throw new BeanCreationException("Could not create configuration for TreeProcesoor", e);
+            }
+
+            Processor processor;
+            // create the tree processor
+            try {
+                TreeProcessor treeProcessor =  new TreeProcessor();
+                // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all. 
+                processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
+                        this.log,
+                        null,
+                        serviceManager,
+                        this.treeProcessorConfiguration);
+            } catch (Exception e) {
+                throw new BeanCreationException("Could not create TreeProcessor", e);
+            }
+            return processor;
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.servlet.RequestProcessor#getURI(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+         */
+        // The original implementation prepend the servlet context path which doesn't work
+        // in the tree processor if there actually is a servlet context path
+        protected String getURI(HttpServletRequest request, HttpServletResponse res) throws IOException {
+            String uri = request.getPathInfo();
+            if (uri == null)
+                return "";
+            else if (uri.length() > 0 && uri.charAt(0) == '/')
+                return uri.substring(1);
+            else
+                return uri;
+        }
+
+        /**
+         * Create an Avalon Configuration @link {@link Configuration} that configures the tree processor.
+         * @throws IOException 
+         */
+        private Configuration createTreeProcessorConfiguration(ServletContext servletContext)
+        throws IOException {
+            // get the uri to the sitemap location and resolve it in the curent servlet context,
+            // observere that it is very important that the Treeprocessor get a resolved uri,
+            // just providing a relative uri relative to the current context is not enough
+            // and doesn't work
+            String sitemapPath = servletContext.getInitParameter(SITEMAP_PATH_PROPERTY);
+            if (sitemapPath== null)
+                sitemapPath= DEFAULT_SITEMAP_PATH;
+            
+            String sitemapURI;
+            URL uri = servletContext.getResource(sitemapPath);
+            if (uri == null)
+                throw new IOException("Couldn't find the sitemap " + sitemapPath);
+            sitemapURI = uri.toExternalForm();
+
+            DefaultConfiguration treeProcessorConf = new DefaultConfiguration("treeProcessorConfiguration");
+            treeProcessorConf.setAttribute("check-reload", true);
+            treeProcessorConf.setAttribute("file", sitemapURI);
+            return treeProcessorConf;
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.servlet.RequestProcessor#cleanup()
+         */
+        // The cleanup should be done in the end of the request processing. In the
+        // block servlet context this is not certain to happen in this servlet as
+        // it can have been called from a block protocol.
+        protected void cleanup() {
+        }        
+    }
 }
