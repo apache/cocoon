@@ -191,6 +191,18 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
+      <id>jjohnston</id>
+      <name>Jason Johnston</name>
+      <email>jjohnston@apache.org</email>
+      <url>http://lojjic.net</url>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>-7</timezone>
+    </developer>
+    <developer>
       <id>anathaniel</id>
       <name>Alfred Nathaniel</name>
       <email>anathaniel@apache.org</email>
