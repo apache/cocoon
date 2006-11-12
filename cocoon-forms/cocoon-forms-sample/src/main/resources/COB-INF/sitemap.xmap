@@ -238,8 +238,21 @@
        </map:transform>
        <map:select type="ajax-request">
          <map:when test="true">
-           <map:serialize type="xml"/>
+         		<map:select type="request-parameter">
+  						<map:parameter name="parameter-name" value="dojo.transport"/>
+         			<map:when test="iframe">
+         				<map:transform src="resource://org/apache/cocoon/forms/resources/IframeTransport-bu-styling.xsl"/><!---->
+         				<map:serialize type="xhtml"/><!-- this is REALLY important -->
+         			</map:when>
+         			<map:otherwise>
+								<map:serialize type="xml"/>
+         			</map:otherwise>
+         		</map:select>
          </map:when>
+       <!--<map:select type="ajax-request">
+         <map:when test="true">
+           <map:serialize type="xml"/>
+         </map:when>-->
          <map:otherwise>
            <map:serialize type="html"/>
          </map:otherwise>
