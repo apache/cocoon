@@ -55,9 +55,9 @@ import org.w3c.dom.Document;
  */
 abstract class AbstractDeployMojo extends AbstractWarMojo {
 
-    private static final String COCOON_CLASSES = "cocoon" + File.separator + "classes";
+    private static final String COCOON_CLASSES = "shielded" + File.separator + "classes";
 
-    private static final String COCOON_LIB = "cocoon" + File.separator + "lib";
+    private static final String COCOON_LIB = "shielded" + File.separator + "lib";
 
     /**
      * Artifact factory, needed to download source jars for inclusion in
