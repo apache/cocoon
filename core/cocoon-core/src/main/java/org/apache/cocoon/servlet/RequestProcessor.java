@@ -96,12 +96,16 @@ public class RequestProcessor {
             this.containerEncoding = encoding;
         }
         this.log = (Logger) this.cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
-        this.processor = (Processor)this.cocoonBeanFactory.getBean(Processor.ROLE);
+        this.processor = this.getProcessor();
         this.environmentContext = new HttpContext(this.servletContext);
         // get the optional request listener
         if (this.cocoonBeanFactory.containsBean(RequestListener.ROLE)) {
             this.requestListener = (RequestListener) this.cocoonBeanFactory.getBean(RequestListener.ROLE);
         }
+    }
+
+    protected Processor getProcessor() {
+        return (Processor)this.cocoonBeanFactory.getBean(Processor.ROLE);
     }
 
     public void setProcessor(Processor processor) {
@@ -124,7 +128,7 @@ public class RequestProcessor {
         }
 
         // We got it... Process the request
-        final String uri = RequestUtil.getCompleteUri(request, res);
+        final String uri = getURI(request, res);
         if ( uri == null ) {
             // a redirect occured, so we are finished
             return;
@@ -247,6 +251,10 @@ public class RequestProcessor {
          * Due to the above, out.flush() and out.close() are not necessary, and sometimes
          * (if sendError or sendRedirect were used) request may be already closed.
          */
+    }
+
+    protected String getURI(HttpServletRequest request, HttpServletResponse res) throws IOException {
+        return RequestUtil.getCompleteUri(request, res);
     }
 
     protected void manageException(HttpServletRequest req, HttpServletResponse res, Environment env,
@@ -395,9 +403,13 @@ public class RequestProcessor {
         } finally {
             EnvironmentHelper.leaveProcessor();
             environment.finishingProcessing();
-            ProcessingUtil.cleanup();
+            this.cleanup();
 
             EnvironmentHelper.checkEnvironment(environmentDepth, this.getLogger());
         }
+    }
+
+    protected void cleanup() {
+        ProcessingUtil.cleanup();
     }
 }
