@@ -38,66 +38,71 @@ cocoon.ajax.BUHandler.fade = function(node) {
 
 dojo.lang.extend(cocoon.ajax.BUHandler, {
     // Default highlight effect
-    highlight: null,
+	highlight: null,
     
-    processResponse: function(doc, request) {
-	    var nodes = doc.documentElement.childNodes;
-	    for (var i = 0; i < nodes.length; i++) {
-	        var node = nodes[i];
-	        if (node.nodeType == dojo.dom.ELEMENT_NODE) {
-	            var handler;
-	            if (node.localName) {
-	                handler = node.localName;
-	            } else {
-	                // No DOM2 support (IE6)
-	                handler = node.nodeName.replace(/.*:/, "");
-	            }
-	            var handlerFunc = this.handlers[handler];
-	            if (handlerFunc) {
-	                handlerFunc(node);
-	            } else {
-	                this.handleError("No handler found for element " + handler, request);
-	            }
-	        }
-	    }
+  processResponse: function(doc, request) {
+		var base = doc.documentElement;
+		
+		var nodes = [];
+		if (base.nodeName.toLowerCase() == "bu:document") {
+			nodes = base.childNodes;
+			dojo.debug("got response using: XMLHTTPTransport");
+		} else {
+			nodes = dojo.byId("browser-update", doc).childNodes;
+			dojo.debug("got response using: IframeTransport");
+		}
+		for (var i = 0; i < nodes.length; i++) {
+			var node = nodes[i];
+			if (node.nodeType == dojo.dom.ELEMENT_NODE) {
+				var handler = node.nodeName.replace(/.*:/, "").toLowerCase();
+				if (handler == "textarea") handler = node.getAttribute("name");
+				var handlerFunc = this.handlers[handler];
+				if (handlerFunc) {
+					handlerFunc(node);
+				} else {
+					this.handleError("No handler found for element " + handler, request);
+				}
+			}
+		}
 	},
 	
 	handleError: function(message, request) {
-	    if (confirm(message + "\nShow server response?")) {
-	        var w = window.open(undefined, "Cocoon Error", "location=no,resizable=yes,scrollbars=yes");
-	        if (w == undefined) {
-	            alert("You must allow popups from this server to display the response.");
-	        } else {
-		        var doc = w.document;
-		        doc.open();
-		        doc.write(request.responseText);
-		        doc.close();
-		    }
+		if (confirm(message + "\nShow server response?")) {
+			var w = window.open(undefined, "Cocoon Error", "location=no,resizable=yes,scrollbars=yes");
+			if (w == undefined) {
+				alert("You must allow popups from this server to display the response.");
+			} else {
+				var doc = w.document;
+				doc.open();
+				doc.write(request.responseText);
+				doc.close();
+			}
 		}
-    },
+	},
 
-    handlers: {
-        replace: function(element) {
-	        var id = element.getAttribute("id");
-	        if (!id) {
-	           alert("no id found on update element");
-	           return;
-	        }    
-	        // Get the first child element (the first child may be some text!)
-	        var firstChild = dojo.dom.getFirstChildElement(element);
-	    
-	        var oldElement = document.getElementById(id);
-	        
-	        if (!oldElement) {
-	            alert("no element '" + id + "' in source document");
-	            return;
-	        }
-	        
-	        var newElement = cocoon.ajax.insertion.replace(oldElement, firstChild);
-	        
-	        if (this.highlight) {
-	           this.highlight(newElement);
-	        }
+	handlers: {
+		replace: function(element) {
+			var id = element.getAttribute("id");
+			if (!id) {
+				alert("no id found on update element");
+				return;
+			}    
+			// Get the first child element (the first child may be some text!)
+			var firstChild = dojo.dom.getFirstChildElement(element);
+			if (!firstChild && element.nodeName.toLowerCase() == "textarea") 
+				firstChild = dojo.dom.createDocumentFromText(element.value).documentElement;
+
+			var oldElement = document.getElementById(id);
+			
+			if (!oldElement) {
+				alert("no element '" + id + "' in source document");
+				return;
+			}
+			var newElement = cocoon.ajax.insertion.replace(oldElement, firstChild);
+
+			if (this.highlight) {
+				this.highlight(newElement);
+			}
 		}
-    }
+	}
 });
