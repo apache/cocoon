@@ -33,7 +33,7 @@ if (dojo) {
  * Get the form of an element
  */
 cocoon.forms.getForm = function(element) {
-    while(element != null && element.tagName != "FORM") {
+    while(element != null && element.tagName != null && element.tagName.toLowerCase() != "form") {
         element = element.parentNode;
     }
     return element;
