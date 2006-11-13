@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
@@ -36,11 +37,19 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
 
     protected void setupDefinition(Element widgetElement, FieldDefinition definition) throws Exception {
         super.setupDefinition(widgetElement, definition);
-        
+
         // parse "@required"
         if(widgetElement.hasAttribute("required"))
             definition.setRequired(DomHelper.getAttributeAsBoolean(widgetElement, "required", false));
-        
+
+        // parse "@whitespace"
+        Whitespace whitespace = Whitespace.getEnum(DomHelper.getAttribute(widgetElement, "whitespace", "trim"));
+        if(whitespace == null) {
+            throw new FormsException("Unknown value for 'whitespace' attribute; valid values are 'trim', 'trim-start', 'trim-end', and 'preserve'.",
+                    DomHelper.getLocationObject(widgetElement));
+        }
+        definition.setWhitespaceTrim(whitespace);
+
         SelectionList list = buildSelectionList(widgetElement, definition, "suggestion-list");
         if (list != null) {
             definition.setSuggestionList(list);
