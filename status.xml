@@ -184,6 +184,11 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JJ" type="add" fixes-bug="COCOON-1879">
+      CForms: Added @whitespace attribute to fd:field widget, to control how leading
+      and trailing whitespace characters are handled when reading submitted values.
+      Accepted values are: "trim" (default), "trim-start", "trim-end", and "preserve".
+    </action>
     <action dev="VG" type="update">
       Mail: Improve MailSender interface: added setBody(Object), setBodyURL
       methods, deprecated setCharset, setBody(String), setBodyFromSrc,
