@@ -43,31 +43,31 @@ cocoon.forms.getForm = function(element) {
  * Submits a form. If ajax mode is on and the browser is ajax-aware, the page isn't reloaded
  */
 cocoon.forms.submitForm = function(element, name) {
-	var form = this.getForm(element);
-	if (form == null) {
-			alert("Cannot find form for " + element);
-			return;
-	}
+    var form = this.getForm(element);
+    if (form == null) {
+        alert("Cannot find form for " + element);
+        return;
+    }
 
-	if (!name) name = element.name;
+    if (!name) name = element.name;
 
-	var dojoId = form.getAttribute("dojoWidgetId");
-	if (dojoId) {
-		// Delegate to the CFormsForm widget
-		dojo.widget.byId(dojoId).submit(name);
-	} else {
-			// Regular submit. How old-fashioned :-)
-			
-			// Send the identifier of the widget that triggered the submit
-			form["forms_submit_id"].value = name;
+    var dojoId = form.getAttribute("dojoWidgetId");
+    if (dojoId) {
+        // Delegate to the CFormsForm widget
+        dojo.widget.byId(dojoId).submit(name);
+    } else {
+				// Regular submit. How old-fashioned :-)
+				
+				// Send the identifier of the widget that triggered the submit
+				form["forms_submit_id"].value = name;
 
-			// A form's onsubmit is only called when submit is triggered by user action, but not when
-			// called by a script. So don't forget to call it, cancelling the submit if (and only if)
-			// it returns false
-		if (!form.onsubmit || form.onsubmit() != false) {
-				form.submit();
-		}
-	}
+				// A form's onsubmit is only called when submit is triggered by user action, but not when
+				// called by a script. So don't forget to call it, cancelling the submit if (and only if)
+				// it returns false
+        if (!form.onsubmit || form.onsubmit() != false) {
+            form.submit();
+        }
+    }
 }
 
 // Override the default forms_submitForm

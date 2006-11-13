@@ -19,7 +19,7 @@ cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 function upload() {
     
     var form = new Form("forms/upload_model.xml");
-    var k = form.showForm("upload-display-pipeline");
+    var k = form.showForm("upload-display-pipeline.jx");
 
     k.invalidate();
 
