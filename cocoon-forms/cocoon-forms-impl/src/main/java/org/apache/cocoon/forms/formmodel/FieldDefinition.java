@@ -27,6 +27,7 @@ import org.apache.cocoon.forms.datatype.SelectionList;
 public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
 
     private boolean required;
+    private Whitespace whitespaceTrim = Whitespace.TRIM;
     private SelectionList suggestionList;
 
 
@@ -48,6 +49,7 @@ public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
         FieldDefinition other = (FieldDefinition)definition;
 
         this.required = other.required;
+        this.whitespaceTrim = other.whitespaceTrim;
 
         if (suggestionList == null) {
             suggestionList = other.getSuggestionList();
@@ -61,6 +63,15 @@ public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
     public void setRequired(boolean required) {
         checkMutable();
         this.required = required;
+    }
+
+    public Whitespace getWhitespaceTrim() {
+        return whitespaceTrim;
+    }
+
+    public void setWhitespaceTrim(Whitespace whitespaceTrim) {
+        checkMutable();
+        this.whitespaceTrim = whitespaceTrim;
     }
 
     public SelectionList getSuggestionList() {
