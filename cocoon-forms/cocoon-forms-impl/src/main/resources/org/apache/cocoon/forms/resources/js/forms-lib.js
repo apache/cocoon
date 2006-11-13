@@ -80,7 +80,7 @@ function oldforms_submitForm(element, name) {
  * Crawl the parents of an element up to finding a form.
  */
 function forms_getForm(element) {
-    while(element != null && element.tagName != "FORM") {
+    while(element != null && element.tagName != null && element.tagName.toLowerCase() != "form") {
         element = element.parentNode;
     }
     return element;
