@@ -319,13 +319,7 @@ public class Field extends AbstractWidget
 
     protected void readFromRequest(String newEnteredValue) {
         // whitespace & empty field handling
-        if (newEnteredValue != null) {
-            // TODO make whitespace behaviour configurable !!
-            newEnteredValue = newEnteredValue.trim();
-            if (newEnteredValue.length() == 0) {
-                newEnteredValue = null;
-            }
-        }
+        newEnteredValue = applyWhitespaceTrim(newEnteredValue);
 
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
@@ -361,6 +355,27 @@ public class Field extends AbstractWidget
                 getForm().addWidgetUpdate(this);
             }
         }
+    }
+
+    protected String applyWhitespaceTrim(String value) {
+        if (value != null) {
+            Whitespace trim = this.definition.getWhitespaceTrim();
+            if(trim == null || trim == Whitespace.TRIM) {
+            	value = value.trim();
+            } else if(trim == Whitespace.PRESERVE) {
+                // do nothing.
+            } else if(trim == Whitespace.TRIM_START) {
+                value = StringUtils.stripStart(value, null);
+            } else if(trim == Whitespace.TRIM_END) {
+                value = StringUtils.stripEnd(value, null);
+            }
+
+            // treat empty strings as null
+            if (value.length() == 0) {
+                value = null;
+            }
+        }
+        return value;
     }
 
     /**
