@@ -19,8 +19,8 @@
     <Arg>
       <New class="org.mortbay.http.SocketListener">
         <Set name="Port"><SystemProperty name="jetty.port" default="8888"/></Set>
-        <Set name="MinThreads">5</Set>
-        <Set name="MaxThreads">100</Set>
+        <Set name="MinThreads"><SystemProperty name="jetty.min.threads" default="5"/></Set>
+        <Set name="MaxThreads"><SystemProperty name="jetty.max.threads" default="100"/></Set>
         <Set name="MaxIdleTimeMs">30000</Set>
         <Set name="LowResourcePersistTimeMs">5000</Set>
       </New>
