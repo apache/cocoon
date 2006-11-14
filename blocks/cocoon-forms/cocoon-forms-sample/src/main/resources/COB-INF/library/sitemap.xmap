@@ -26,7 +26,6 @@
           <catalogue id="other" name="OtherMessages" location="messages"/>
           <catalogue id="forms" name="messages" location="resource://org/apache/cocoon/forms/system/i18n"/>
         </catalogues>
-        <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
     
