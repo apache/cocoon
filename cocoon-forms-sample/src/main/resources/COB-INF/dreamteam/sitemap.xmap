@@ -23,7 +23,6 @@
           <catalogue id="forms" name="messages" location="resource://org/apache/cocoon/forms/system/i18n"/>
           <catalogue id="dreamteam" name="DreamTeamMessages" location="messages"/>
         </catalogues>
-        <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
     <!-- map:selectors default="browser">
@@ -32,6 +31,7 @@
       </map:selectors -->
     <map:pipes default="caching"/>
   </map:components>
+
   <map:views>
     <map:view name="content" from-label="content">
       <map:serialize type="xml"/>
@@ -44,6 +44,7 @@
       <map:serialize type="links"/>
     </map:view>
   </map:views>
+
   <!-- ========================================= -->
   <!-- flow scripts                              -->
   <!-- ========================================= -->
