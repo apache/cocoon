@@ -31,7 +31,6 @@
           <catalogue id="other" name="OtherMessages" location="messages"/>
           <catalogue id="forms" name="FormsMessages" location="messages"/>
         </catalogues>
-        <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
   </map:components>

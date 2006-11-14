@@ -25,7 +25,6 @@
         <catalogues default="portalTools" new="no">
           <catalogue id="portalTools" name="portalTools" location="cocoon:/i18n"/>
         </catalogues>
-        <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
     <map:generators default="file">

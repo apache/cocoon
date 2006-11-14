@@ -27,7 +27,6 @@
 					<catalogue id="local" name="messages" location="i18n"/>
 					<catalogue id="forms" name="FormsMessages" location="context://samples/blocks/forms/messages"/>
 				</catalogues>
-				<cache-at-startup>true</cache-at-startup>
 			</map:transformer>
      <map:transformer name="lucene-indexer" src="org.apache.cocoon.transformation.LuceneIndexTransformer"/>
 		</map:transformers>
