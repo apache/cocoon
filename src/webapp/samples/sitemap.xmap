@@ -32,7 +32,6 @@
         <catalogues default="messages">
           <catalogue id="messages" name="messages" location="common/i18n"/>
         </catalogues>
-        <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
   </map:components>

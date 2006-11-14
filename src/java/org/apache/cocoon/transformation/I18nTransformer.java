@@ -70,11 +70,11 @@ import java.util.StringTokenizer;
  * @cocoon.sitemap.component.documentation.caching TBD
  * @cocoon.sitemap.component.logger sitemap.transformer.i18n
  *
- * <h3>i18n transformer</h3>
+ * <h3>I18n Transformer</h3>
  * <p>The i18n transformer works by finding a translation for the user's locale
- * in the configured catalogues. Locale is determined based on the request,
- * session, or a cookie data. See {@link org.apache.cocoon.acting.LocaleAction}
- * for details.</p>
+ * in the configured catalogues. Locale is passed as parameter to the transformer,
+ * and it can be determined based on the request, session, or a cookie data by
+ * the {@link org.apache.cocoon.acting.LocaleAction}.</p>
  *
  * <p>For the passed local it then attempts to find a message catalogue that
  * satisifies the locale, and uses it for for processing text replacement
@@ -156,7 +156,7 @@ import java.util.StringTokenizer;
  * The value of this attribute should be the id of the catalogue to use
  * (see sitemap configuration).
  *
- * <h3>Sitemap configuration</h3>
+ * <h3>Sitemap Configuration</h3>
  * <pre>
  * &lt;map:transformer name="i18n"
  *     src="org.apache.cocoon.transformation.I18nTransformer"&gt;
@@ -169,7 +169,8 @@ import java.util.StringTokenizer;
  *       ...
  *     &lt;/catalogues&gt;
  *     &lt;untranslated-text&gt;untranslated&lt;/untranslated-text&gt;
- *     &lt;cache-at-startup&gt;true&lt;/cache-at-startup&gt;
+ *     &lt;preload&gt;en_US&lt;/preload&gt;
+ *     &lt;preload catalogue="someId"&gt;fr_CA&lt;/preload&gt;
  * &lt;/map:transformer&gt;
  * </pre>
  * Where:
@@ -193,8 +194,10 @@ import java.util.StringTokenizer;
  *      cocoon:/test/messages_en.xml and cocoon:/test/messages.xml.
  *  <li><strong>untranslated-text</strong>: text used for
  *      untranslated keys (default is to output the key name).
- *  <li><strong>cache-at-startup</strong>: flag whether to cache
- *      messages at startup (false by default).
+ *  <li><strong>preload</strong>: locale of the catalogue to preload. Will attempt
+ *      to resolve all configured catalogues for specified locale. If optional
+ *      <code>catalogue</code> attribute is present, will preload only specified
+ *      catalogue. Multiple <code>preload</code> elements can be specified.
  * </ul>
  *
  * <h3>Pipeline Usage</h3>
@@ -266,7 +269,7 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class I18nTransformer extends AbstractTransformer
                              implements CacheableProcessingComponent,
@@ -275,14 +278,12 @@ public class I18nTransformer extends AbstractTransformer
     /**
      * The namespace for i18n is "http://apache.org/cocoon/i18n/2.1".
      */
-    public static final String I18N_NAMESPACE_URI =
-            "http://apache.org/cocoon/i18n/2.1";
+    public static final String I18N_NAMESPACE_URI = I18nUtils.NAMESPACE_URI;
 
     /**
      * The old namespace for i18n is "http://apache.org/cocoon/i18n/2.0".
      */
-    public static final String I18N_OLD_NAMESPACE_URI =
-            "http://apache.org/cocoon/i18n/2.0";
+    public static final String I18N_OLD_NAMESPACE_URI = I18nUtils.OLD_NAMESPACE_URI;
 
     //
     // i18n elements
@@ -718,10 +719,10 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_UNTRANSLATED        = "untranslated-text";
 
     /**
-     * This configuration parameter specifies if the message catalog should be
-     * cached at startup.
+     * This configuration parameter specifies locale for which catalogues should
+     * be preloaded.
      */
-    public static final String I18N_CACHE_STARTUP       = "cache-at-startup";
+    public static final String I18N_PRELOAD             = "preload";
 
     /**
      * <code>fraction-digits</code> attribute is used with
@@ -967,8 +968,8 @@ public class I18nTransformer extends AbstractTransformer
         // Read in the config options from the transformer definition
         Configuration cataloguesConf = conf.getChild("catalogues", false);
         if (cataloguesConf == null) {
-            throw new ConfigurationException("I18nTransformer requires <catalogues> configuration at " +
-                                             conf.getLocation());
+            throw new ConfigurationException("Required <catalogues> configuration is missing.",
+                                             conf);
         }
 
         // new configuration style
@@ -980,14 +981,13 @@ public class I18nTransformer extends AbstractTransformer
 
             String[] locations;
             String location = catalogueConfs[i].getAttribute("location", null);
-            Configuration[] locationConf =
-                catalogueConfs[i].getChildren("location");
+            Configuration[] locationConf = catalogueConfs[i].getChildren("location");
             if (location != null) {
                 if (locationConf.length > 0) {
-                    String msg = "I18nTransformer: Location attribute cannot be " +
+                    String msg = "Location attribute cannot be " +
                                  "specified with location elements";
                     getLogger().error(msg);
-                    throw new ConfigurationException(msg);
+                    throw new ConfigurationException(msg, catalogueConfs[i]);
                 }
 
                 if (getLogger().isDebugEnabled()) {
@@ -998,10 +998,10 @@ public class I18nTransformer extends AbstractTransformer
                 locations[0] = location;
             } else {
                 if (locationConf.length == 0) {
-                    String msg = "I18nTransformer: A location attribute or location " +
+                    String msg = "A location attribute or location " +
                                  "elements must be specified";
                     getLogger().error(msg);
-                    throw new ConfigurationException(msg);
+                    throw new ConfigurationException(msg, catalogueConfs[i]);
                 }
 
                 locations = new String[locationConf.length];
@@ -1018,8 +1018,8 @@ public class I18nTransformer extends AbstractTransformer
             try {
                 catalogueInfo = new CatalogueInfo(name, locations);
             } catch (PatternException e) {
-                throw new ConfigurationException("I18nTransformer: Error in name or location " +
-                                                 "attribute on catalogue element with id " + id, e);
+                throw new ConfigurationException("Error in name or location attribute on catalogue " +
+                                                 "element with id " + id, catalogueConfs[i], e);
             }
             catalogues.put(id, catalogueInfo);
         }
@@ -1027,8 +1027,8 @@ public class I18nTransformer extends AbstractTransformer
         String defaultCatalogueId = cataloguesConf.getAttribute("default");
         defaultCatalogue = (CatalogueInfo) catalogues.get(defaultCatalogueId);
         if (defaultCatalogue == null) {
-            throw new ConfigurationException("I18nTransformer: Default catalogue id '" +
-                                             defaultCatalogueId + "' denotes a nonexisting catalogue");
+            throw new ConfigurationException("Default catalogue id '" + defaultCatalogueId +
+                                             "' denotes a nonexisting catalogue", cataloguesConf);
         }
 
         // Obtain default text to use for untranslated messages
@@ -1036,6 +1036,38 @@ public class I18nTransformer extends AbstractTransformer
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Default untranslated text is '" + defaultUntranslated + "'");
         }
+
+        // Preload specified catalogues (if any)
+        Configuration[] preloadConfs = conf.getChildren(I18N_PRELOAD);
+        for (int i = 0; i < preloadConfs.length; i++) {
+            String localeStr = preloadConfs[i].getValue();
+            this.locale = I18nUtils.parseLocale(localeStr);
+
+            String id = preloadConfs[i].getAttribute("catalogue", null);
+            if (id != null) {
+                CatalogueInfo catalogueInfo = (CatalogueInfo) catalogues.get(id);
+                if (catalogueInfo == null) {
+                    throw new ConfigurationException("Invalid catalogue id '" + id +
+                                                     "' in preload element.", preloadConfs[i]);
+                }
+
+                try {
+                    catalogueInfo.getCatalogue();
+                } finally {
+                    catalogueInfo.releaseCatalog();
+                }
+            } else {
+                for (Iterator j = catalogues.values().iterator(); j.hasNext(); ) {
+                    CatalogueInfo catalogueInfo = (CatalogueInfo) j.next();
+                    try {
+                        catalogueInfo.getCatalogue();
+                    } finally {
+                        catalogueInfo.releaseCatalog();
+                    }
+                }
+            }
+        }
+        this.locale = null;
     }
 
     /**
