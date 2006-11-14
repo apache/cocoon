@@ -30,15 +30,21 @@
       <!--+
           | Redefine generators to remove their labels (otherwise aggregated parts also go through views)
           +-->
-      <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator" logger="sitemap.generator.file"/>
-      <map:generator name="serverpages" src="org.apache.cocoon.generation.ServerPagesGenerator" logger="sitemap.generator.serverpages"/>
+      <map:generator name="file"
+                     logger="sitemap.generator.file"
+                     src="org.apache.cocoon.generation.FileGenerator"/>
+      <map:generator name="serverpages"
+                     logger="sitemap.generator.serverpages"
+                     src="org.apache.cocoon.generation.ServerPagesGenerator"/>
     </map:generators>
 
     <map:transformers default="xslt">
       <!--+
           | Configure i18n transformer with message catalogues
           +-->
-      <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+      <map:transformer name="i18n"
+                       logger="sitemap.transformer.i18n"
+                       src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="messages">
           <catalogue id="messages" name="messages" location="translations"/>
           <catalogue id="menu" name="menu" location="translations"/>
@@ -47,7 +53,6 @@
             <location>translations</location>
           </catalogue>
         </catalogues>
-        <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
 
