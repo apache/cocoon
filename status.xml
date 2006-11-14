@@ -184,6 +184,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="add">
+      Core: Add ability to pre-load i18n catalogues in I18nTransformer.
+      Removed references to defunct cache-on-startup configuration.
+    </action>
     <action dev="JJ" type="add" fixes-bug="COCOON-1879">
       CForms: Added @whitespace attribute to fd:field widget, to control how leading
       and trailing whitespace characters are handled when reading submitted values.

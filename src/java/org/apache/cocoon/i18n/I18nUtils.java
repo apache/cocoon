@@ -23,7 +23,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.util.Deprecation;
 
 import java.util.Enumeration;
@@ -40,7 +39,9 @@ import java.util.StringTokenizer;
  */
 public class I18nUtils {
 
-    // Locale string delimiter
+    /**
+     * Locale string delimiter
+     */
     private static final String LOCALE_DELIMITER = "_-@.";
 
     /**
@@ -48,6 +49,19 @@ public class I18nUtils {
      * that the associated message will be logged only once.
      */
     private static boolean deprecationFound = false;
+
+    /**
+     * The namespace for i18n is "http://apache.org/cocoon/i18n/2.1".
+     */
+    public static final String NAMESPACE_URI =
+            "http://apache.org/cocoon/i18n/2.1";
+
+    /**
+     * The old namespace for i18n is "http://apache.org/cocoon/i18n/2.0".
+     */
+    public static final String OLD_NAMESPACE_URI =
+            "http://apache.org/cocoon/i18n/2.0";
+
 
     private I18nUtils() {
         // Disable instantiation
@@ -251,13 +265,13 @@ public class I18nUtils {
     }
 
     public static boolean matchesI18nNamespace(String uri) {
-        if (I18nTransformer.I18N_NAMESPACE_URI.equals(uri)) {
+        if (NAMESPACE_URI.equals(uri)) {
             return true;
-        } else if (I18nTransformer.I18N_OLD_NAMESPACE_URI.equals(uri)) {
+        } else if (OLD_NAMESPACE_URI.equals(uri)) {
             if (!deprecationFound) {
                 deprecationFound = true;
-                Deprecation.logger.warn("The namespace <" + I18nTransformer.I18N_OLD_NAMESPACE_URI +
-                                        "> is deprecated, use: <" + I18nTransformer.I18N_NAMESPACE_URI + ">");
+                Deprecation.logger.warn("The namespace <" + OLD_NAMESPACE_URI +
+                                        "> is deprecated, use: <" + NAMESPACE_URI + ">");
             }
             return true;
         }
