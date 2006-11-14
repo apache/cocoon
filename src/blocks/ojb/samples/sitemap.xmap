@@ -26,7 +26,6 @@
         <catalogue id="other" name="OtherMessages" location="context://samples/blocks/forms/messages"/>
         <catalogue id="forms" name="FormsMessages" location="context://samples/blocks/forms/messages"/>
       </catalogues>
-      <cache-at-startup>true</cache-at-startup>
     </map:transformer>
   </map:transformers>
 
