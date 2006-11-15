@@ -20,6 +20,7 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+  <!-- This listener sets up the spring container on startup of the web application. -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
@@ -30,19 +31,6 @@
     <description>Cocoon servlet - ${artifactId}</description>
 
     <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
-    <!-- If you don't want to use the ParanoidClassLoader, that reverses
-         the classloading hierarchy and loads the jars and classes of the
-         web application _first_, and want to rely on the normal web application
-         classloading, remove the "classloader-class" parameter. -->
-    <init-param>
-      <param-name>classloader-class</param-name>
-      <param-value>org.apache.cocoon.servlet.ParanoidClassLoader</param-value>
-    </init-param>
-
-    <init-param>
-      <param-name>container-encoding</param-name>
-      <param-value>ISO-8859-1</param-value>
-    </init-param>
 
     <load-on-startup>1</load-on-startup>
   </servlet>
