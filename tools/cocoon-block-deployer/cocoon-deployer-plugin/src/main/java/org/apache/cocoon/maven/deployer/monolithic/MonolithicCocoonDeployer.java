@@ -101,7 +101,6 @@ public class MonolithicCocoonDeployer {
                 templateObjects.put("useConsoleAppender", "useConsoleAppender" );
             }
             writeStringTemplateToFile(basedir, "sitemap.xmap", templateObjects);
-            writeStringTemplateToFile(basedir, "WEB-INF/cocoon/cocoon.xconf", templateObjects);
 
             copyFile(basedir, "blocks/sitemap.xmap");
             //copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
