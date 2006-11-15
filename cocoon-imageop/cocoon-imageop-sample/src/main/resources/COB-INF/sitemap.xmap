@@ -71,6 +71,12 @@
       <map:match pattern="*/grayscale">
         <map:read type="image-op-grayscale" src="{1}" />
       </map:match>
+      
+      <map:match pattern="*/crop-*">
+        <map:read type="image-op-crop" src="{1}">
+          <map:parameter name="crop-ratio" value="{2}" />
+        </map:read>
+      </map:match>
 
       <map:match pattern="*/color-*-*-*-*-*-*">
         <map:read type="image-op-color" src="{1}" >
