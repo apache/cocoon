@@ -41,6 +41,15 @@
     <sample href="logo2.png/resize-50-100" name="Image 50x100">
       Image scaled along x-axis only.
     </sample>
+    <sample href="logo2.png/crop-2" name="Image Crop 50x100">
+      Image cropped along x-axis only.
+    </sample>
+    <sample href="logo2.png/crop-0.5" name="Image Crop 50x100">
+      Image cropped along y-axis only.
+    </sample>
+    <sample href="logo2.png/crop-1" name="Image Crop 50x50">
+      Image cropped quadratic.
+    </sample>
   </group>
 
   <group name="ImageReader - Color Manipulation">

@@ -64,6 +64,12 @@
         <op type="color" prefix="color-" />
       </effects>
     </map:reader>
+    
+    <map:reader logger="imageop" name="image-op-crop" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="crop" prefix="crop-" />
+      </effects>
+    </map:reader>
 
     <map:reader logger="imageop" name="image-op-complex" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
       <effects>
