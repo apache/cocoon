@@ -1,37 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Licensed to the Apache Software Foundation (ASF) under one
-  or more contributor license agreements.  See the NOTICE file
-  distributed with this work for additional information
-  regarding copyright ownership.  The ASF licenses this file
-  to you under the Apache License, Version 2.0 (the
-  "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied.  See the License for the
-  specific language governing permissions and limitations
-  under the License.
--->
-<!--+
-    | @version $Id$
-    |
-    +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?><project>
   <parent>
-    <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-forms</artifactId>
+    <groupId>org.apache.cocoon</groupId>
     <version>2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-forms-impl</artifactId>
-  <version>1.0.0-M2-SNAPSHOT</version>
-  <packaging>jar</packaging>
   <name>Forms Block Implementation</name>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
@@ -41,10 +17,6 @@
             <include>**/*TestCase.class</include>
             <include>**/*Test.class</include>
           </includes>
-          <!-- + 
-               | These test cases doesn't work currently as the Avalon context
-               | in the ContainerTestCase doesn't contain the environmen-context key.
-               + -->
           <excludes>
             <exclude>**/DynamicSelectionListTestCase*</exclude>
             <exclude>**/EnumSelectionListTestCase*</exclude>
@@ -55,30 +27,19 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
+        <configuration>
           <navDocId>1255</navDocId>
-          <collection>cdocs-forms</collection>          
+          <collection>cdocs-forms</collection>
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin>         
+      </plugin>
     </plugins>
   </build>
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/blocks/forms/${docs.version}/</url>
-    </site>
-  </distributionManagement>
-  <properties>
-    <docs.name>Cocoon Forms</docs.name>    
-    <docs.version>1.0</docs.version>
-  </properties>    
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -139,5 +100,20 @@
       <version>0.8</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
+      <artifactId>excalibur-sourceresolve</artifactId>
+      <version>2.1</version>
+    </dependency>
   </dependencies>
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/blocks/forms/${docs.version}/</url>
+    </site>
+  </distributionManagement>
+  <properties>
+    <docs.name>Cocoon Forms</docs.name>
+    <docs.version>1.0</docs.version>
+  </properties>
 </project>
