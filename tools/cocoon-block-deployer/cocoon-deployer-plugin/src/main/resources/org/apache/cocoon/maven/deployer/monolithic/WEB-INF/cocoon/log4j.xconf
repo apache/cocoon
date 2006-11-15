@@ -41,6 +41,8 @@
     <root>
       <priority value="\${org.apache.cocoon.log4j.loglevel}"/>
       <appender-ref ref="COCOON_DEFAULT" />
+    $if(useConsoleAppender)$
       <appender-ref ref="COCOON_DEFAULT_CONSOLE" />
+    $endif$
     </root>
 </log4j:configuration>
