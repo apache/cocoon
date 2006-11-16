@@ -167,16 +167,19 @@ public class Form extends AbstractContainerWidget
      */
     private void fireEvents() {
         if (this.events != null) {
-            CursorableLinkedList.Cursor cursor = this.events.cursor();
-            while(cursor.hasNext()) {
-                WidgetEvent event = (WidgetEvent)cursor.next();
-                event.getSourceWidget().broadcastEvent(event);
-                if (formHandler != null)
-                    formHandler.handleEvent(event);
+            try {
+                CursorableLinkedList.Cursor cursor = this.events.cursor();
+                while (cursor.hasNext()) {
+                    WidgetEvent event = (WidgetEvent) cursor.next();
+                    event.getSourceWidget().broadcastEvent(event);
+                    if (formHandler != null) {
+                        formHandler.handleEvent(event);
+                    }
+                }
+                cursor.close();
+            } finally {
+                this.events.clear();
             }
-            cursor.close();
-
-            this.events.clear();
         }
     }
 
