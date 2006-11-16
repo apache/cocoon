@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 // FIXME: This class should be merged with the o.a.c.sitemap.SitemapServlet
-// that is used in the OSGi mode.
+// that is used as block dispatcher.
 public class SitemapServlet extends HttpServlet {
 
     /** The Cocoon request processor. */
