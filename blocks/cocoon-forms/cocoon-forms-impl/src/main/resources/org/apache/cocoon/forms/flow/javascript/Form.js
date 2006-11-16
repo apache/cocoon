@@ -108,6 +108,13 @@ Form.prototype.showForm = function(uri, viewdata, ttl) {
     return this.sendFormAndWait(uri, viewdata, ttl);
 }
 
+/**
+ * Show form statelessly, without creating a continuation.
+ *
+ * @parameter uri the page uri (like in cocoon.sendPageAndWait())
+ * @parameter viewdata some data for the view (like in cocoon.sendPageAndWait()).
+ *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
+ */
 Form.prototype.sendForm = function(uri, viewdata) {
     viewdata = this.buildViewData(viewdata)
     cocoon.sendPage(uri, viewdata);
@@ -120,19 +127,58 @@ Form.prototype.sendForm = function(uri, viewdata) {
     FOM_Cocoon.suicide();
 }
 
+/**
+ * Process stateless form submit.
+ *
+ * @parameter viewdata some data for the view (like in cocoon.sendPageAndWait()).
+ *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
+ */
+Form.prototype.processForm = function(viewdata) {
+    viewdata = this.buildViewData(viewdata)
+
+    var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
+
+    // Prematurely add the viewdata as in the object model so that event listeners can use it
+    // (the same is done by cocoon.sendPage())
+    // FIXME : hack needed because FOM doesn't provide access to the object model
+    var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
+    org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata);
+
+    if (this.restoreHook) {
+        this.restoreHook(this);
+    }
+
+    var finished = this.form.process(formContext);
+
+    if (finished) {
+        this.isValid = this.form.isValid();
+        var widget = this.form.getSubmitWidget();
+        // Can be null on "normal" submit
+        this.submitId = widget == null ? null : widget.getId();
+    }
+
+    return finished;
+}
+
 Form.prototype.buildViewData = function(viewdata) {
-    if (! viewdata)
+    if (!viewdata) {
         viewdata = new Object();
+    }
 
     viewdata[Packages.org.apache.cocoon.forms.transformation.FormsPipelineConfig.CFORMSKEY] = this.form;
 
-    if (this.locale == null)
+    if (this.locale == null) {
         this.locale = java.util.Locale.getDefault();
+    }
+
     viewdata["locale"] = this.locale;
 
     return viewdata
 }
 
+/**
+ * Same as showForm
+ */
 Form.prototype.sendFormAndWait = function(uri, viewdata, ttl) {
     var finished = false;
 
@@ -370,30 +416,4 @@ function handleForm() {
 
     // call the function
     func.apply(this, [form]);
-}
-
-function processForm(viewdata) {
-    viewdata = this.buildViewData(viewdata)
-
-    var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
-
-    // Prematurely add the viewdata as in the object model so that event listeners can use it
-    // (the same is done by cocoon.sendPage())
-    // FIXME : hack needed because FOM doesn't provide access to the object model
-    var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
-    org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata);
-
-    if (this.restoreHook) {
-        this.restoreHook(this);
-    }
-
-    var finished = this.form.process(formContext);
-
-    if (finished) {
-        this.isValid = this.form.isValid();
-        var widget = this.form.getSubmitWidget();
-        // Can be null on "normal" submit
-        this.submitId = widget == null ? null : widget.getId();
-    }
-    return finished;
 }
