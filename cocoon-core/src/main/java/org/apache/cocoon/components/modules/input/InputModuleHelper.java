@@ -18,7 +18,6 @@ package org.apache.cocoon.components.modules.input;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,8 +30,6 @@ public class InputModuleHelper {
     
     // TODO consolidate code with AbstractMetaModule to use this class as delegate
 
-    protected final static String INPUT_MODULE_SELECTOR = InputModule.ROLE+"Selector";
-
     /* Operation codes */
     private final static int OP_GET = 0;
     private final static int OP_VALUES = 1;
@@ -41,7 +38,6 @@ public class InputModuleHelper {
     
     private Map inputModules;
     private ServiceManager serviceManager;
-    private ServiceSelector serviceInputSelector;
     
     /**
      * Get the input module
@@ -53,9 +49,10 @@ public class InputModuleHelper {
         }
         InputModule module = (InputModule) this.inputModules.get(name);
         if ( module == null ) {
+            final String role = InputModule.ROLE + '/' + name;
             try {
-                if (this.serviceInputSelector.isSelectable(name)) {
-                    module = (InputModule) this.serviceInputSelector.select(name);
+                if (this.serviceManager.hasService(role) ) {
+                    module = (InputModule) this.serviceManager.lookup(role);
                 }
             } catch (Exception e) {
                 throw new InputModuleNotFoundException("Unable to lookup input module " + name, e);
@@ -127,14 +124,8 @@ public class InputModuleHelper {
      * @throws InputModuleException if an error occurs
      */
     public void setup(ServiceManager manager) throws InputModuleException {
-
         this.inputModules = new HashMap();
         this.serviceManager = manager;
-        try {
-            this.serviceInputSelector = (ServiceSelector) this.serviceManager.lookup(INPUT_MODULE_SELECTOR); 
-        } catch (Exception e) {
-            throw new InputModuleInitializationException("Could not obtain selector for InputModule.",e);
-        }
     }
 
 
@@ -226,23 +217,20 @@ public class InputModuleHelper {
      * @throws InputModuleException if an error occurs
      */
     public void releaseAll() throws InputModuleException {
-
         if ( this.inputModules != null ) {
             if ( this.serviceManager != null ) {
                 try {
-                    Iterator iter = this.inputModules.keySet().iterator();
+                    final Iterator iter = this.inputModules.keySet().iterator();
                     while (iter.hasNext()) {
-                        this.serviceInputSelector.release(this.inputModules.get(iter.next()));
+                        this.serviceManager.release(this.inputModules.get(iter.next()));
                     }
-                    this.inputModules = null;
-                    this.serviceManager.release(this.serviceInputSelector);
                     this.serviceManager = null;
-                    this.inputModules = null;
                 } catch (Exception e) {
                     throw new InputModuleDestructionException("Could not release InputModules.",e);
                 }
                 
             }
+            this.inputModules = null;
         }
     }
     
