@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -56,18 +57,29 @@ public class DispatcherServlet
     /** All registered mountable servlets. */
     private Map mountableServlets = new HashMap();
 
+    /**
+     * The Spring bean factory.
+     */
     private ListableBeanFactory beanFactory;
     
-    /* (non-Javadoc)
-     * @see javax.servlet.GenericServlet#init()
+    /**
+     * The logger.
      */
+    private Logger log;    
+    
     public void init() throws ServletException {
+    	// get the beanFactory from the web application context
         this.beanFactory =
             WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-        this.log("DispatcherServlet: initializing");
+        
+        // setup logger
+        this.log = (Logger) this.beanFactory.getBean(ProcessingUtil.LOGGER_ROLE);        
+        this.log.info("DispatcherServlet is initializing");
+        
         // the returned map contains the bean names as key and the beans as values
         final Map servlets = 
             BeanFactoryUtils.beansOfTypeIncludingAncestors(this.beanFactory, Servlet.class);
+        
         // register and initialize the servlets that has a mount path property
         final Iterator i = servlets.values().iterator();
         while ( i.hasNext() ) {
@@ -75,15 +87,13 @@ public class DispatcherServlet
             BeanWrapperImpl wrapper = new BeanWrapperImpl(servlet);
             if (wrapper.isReadableProperty(MOUNT_PATH)) {
                 String mountPath = (String) wrapper.getPropertyValue(MOUNT_PATH);
-                this.log("DispatcherServlet: initializing servlet " + servlet + " at " + mountPath);
+                this.log.debug("DispatcherServlet: initializing servlet " + servlet + " at " + mountPath);
                 this.mountableServlets.put(mountPath, servlet);
             }
         }
+        this.log("Block dispatcher was initialized successfully.");        
     }
 
-    /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String path = req.getPathInfo();
         path = path == null ? "" : path;
@@ -106,10 +116,12 @@ public class DispatcherServlet
         		getInterfaces(req.getClass()), 
         		new DynamicProxyRequestHandler(req, path));
         
-        this.log("DispatcherServlet: service servlet=" + servlet +
-                " mountPath=" + path +
-                " servletPath=" + request.getServletPath() +
-                " pathInfo=" + request.getPathInfo());
+        if(this.log.isDebugEnabled()) {
+	        this.log.debug("DispatcherServlet: service servlet=" + servlet +
+	                " mountPath=" + path +
+	                " servletPath=" + request.getServletPath() +
+	                " pathInfo=" + request.getPathInfo());
+        }
         
         try {
             servlet.service(request, res);
