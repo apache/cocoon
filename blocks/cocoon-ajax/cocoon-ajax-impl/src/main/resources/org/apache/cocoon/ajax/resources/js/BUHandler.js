@@ -48,8 +48,13 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 			nodes = base.childNodes;
 			dojo.debug("got response using: XMLHTTPTransport");
 		} else {
-			nodes = dojo.byId("browser-update", doc).childNodes;
-			dojo.debug("got response using: IframeTransport");
+			base = dojo.byId("browser-update", doc);
+			if (base) {
+				nodes = base.childNodes;
+				dojo.debug("got response using: IframeTransport");
+			} else {
+				this.handleError("No response data found", request);
+			}
 		}
 		for (var i = 0; i < nodes.length; i++) {
 			var node = nodes[i];
