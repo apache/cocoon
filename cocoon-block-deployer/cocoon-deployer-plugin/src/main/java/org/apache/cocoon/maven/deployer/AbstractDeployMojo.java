@@ -16,13 +16,9 @@
  */
 package org.apache.cocoon.maven.deployer;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,10 +27,6 @@ import java.util.Map;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentBlock;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.cocoon.maven.deployer.monolithic.MonolithicCocoonDeployer;
-import org.apache.cocoon.maven.deployer.utils.CopyUtils;
-import org.apache.cocoon.maven.deployer.utils.WebApplicationRewriter;
-import org.apache.cocoon.maven.deployer.utils.XMLUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -46,7 +38,6 @@ import org.apache.maven.plugin.war.AbstractWarMojo;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.MavenMetadataSource;
 import org.codehaus.plexus.util.FileUtils;
-import org.w3c.dom.Document;
 
 /**
  * Create a Cocoon web application based on a block deployment descriptor.
@@ -54,10 +45,6 @@ import org.w3c.dom.Document;
  * @version $Id$
  */
 abstract class AbstractDeployMojo extends AbstractWarMojo {
-
-    private static final String COCOON_CLASSES = "shielded" + File.separator + "classes";
-
-    private static final String COCOON_LIB = "shielded" + File.separator + "lib";
 
     /**
      * Artifact factory, needed to download source jars for inclusion in
@@ -163,7 +150,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * 
      * @parameter expression="${maven.war.shieldingclassloader}"
      */
-    private boolean useShieldingClassloader = true;
+    private boolean useShieldingClassLoader = true;
 
     /**
      * Move jars for shielded classloading
@@ -199,9 +186,9 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
         // TODO XPatch web.xml here!
 
-        // take care of paranoid classloading
-        if (this.useShieldingClassloader) {
-            shieldCocoonWebapp();
+        // take care of shielded classloading
+        if (this.useShieldingClassLoader) {
+            WebApplicationRewriter.shieldWebapp(new File(getWebappDirectory(), "WEB-INF"), getLog(), this.useShieldingRepository);
         }
     }
 
@@ -238,8 +225,10 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
         deployer.deploy(getBlockArtifactsAsMap(blocks), getWebappDirectory(), blocksdir, extBlocks, properties, useConsoleAppender);
 
-        if (useShieldingClassloader)
-            shieldCocoonWebapp();
+        // take care of shielded classloading
+        if (this.useShieldingClassLoader) {
+            WebApplicationRewriter.shieldWebapp(new File(getWebappDirectory(), "WEB-INF"), getLog(), this.useShieldingRepository);
+        }
     }
 
     /**
@@ -307,116 +296,5 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             }
         }
         return false;
-    }
-
-    // ~~~~~~~~~~ utility methods ~~~~~~~~~~~
-    /**
-     * Make a Cocoon webapp using the ShieldingClassloader. This method rewrites
-     * the web.xml and moves all libs from WEB-INF/lib to WEB-INF/cocoon/lib,
-     * except cocoon-bootstrap which remains in WEB-INF/lib.
-     */
-    private void shieldCocoonWebapp() throws MojoExecutionException {
-        String webInfSlashWebXml = "WEB-INF" + File.separatorChar + "web.xml";
-
-        File webXmlLocationFile = super.getWebXml();
-        String webXmlLocation = null;
-        if (webXmlLocationFile == null) {
-            webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + webInfSlashWebXml;
-        } else {
-            webXmlLocation = webXmlLocationFile.getAbsolutePath();
-        }
-
-        String targetWebXmlLocation = getWebappDirectory().getAbsolutePath() + File.separatorChar + webInfSlashWebXml;
-        if (!new File(webXmlLocation).exists()) {
-            getLog().debug("no web.xml in source location. checking for generated web.xml in target location.");
-            if (!new File(targetWebXmlLocation).exists()) {
-                this.getLog().info("No web.xml supplied. Will install default web.xml");
-                File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createPath(new File(
-                        getWebappDirectory(), webInfSlashWebXml));
-
-                try {
-                    CopyUtils.copy(readResourceFromClassloader("WEB-INF/web.xml"), new FileOutputStream(outFile));
-                } catch (IOException ioex) {
-                    throw new MojoExecutionException("cannot copy resource " + webXml, ioex);
-                }
-            }
-            webXmlLocation = targetWebXmlLocation;
-        } else {
-            this.getLog().info("web.xml present");
-        }
-        this.getLog().info("Adding shielded classloader configuration to webapp configuration.");
-        this.getLog().debug("Reading web.xml: " + webXmlLocation);
-
-        InputStream is = null;
-        final Document webAppDoc;
-        try {
-            is = new BufferedInputStream(new FileInputStream(new File(webXmlLocation)));
-            webAppDoc = XMLUtils.parseXml(is);
-        } catch (Exception e) {
-            throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
-        } finally {
-            IOUtils.closeQuietly(is);
-        }
-
-        WebApplicationRewriter.rewrite(webAppDoc);
-        this.getLog().debug("Writing web.xml: " + targetWebXmlLocation);
-
-        try {
-            XMLUtils.write(webAppDoc, new FileOutputStream(targetWebXmlLocation));
-        } catch (Exception e) {
-            throw new MojoExecutionException("Unable to write web.xml to " + targetWebXmlLocation, e);
-        }
-
-        if (this.useShieldingRepository) {
-            this.getLog().info("Moving classes and libs to shielded location.");
-            final String webInfDir = getWebappDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF";
-            try {
-                this.move(webInfDir, "lib", COCOON_LIB);
-                this.move(webInfDir, "classes", COCOON_CLASSES);
-            } catch (IOException e) {
-                throw new MojoExecutionException("unable to shield classes/libs", e);
-            }
-        }
-    }
-
-    private InputStream readResourceFromClassloader(String fileName) {
-        return MonolithicCocoonDeployer.class.getClassLoader().getResourceAsStream(
-                "org/apache/cocoon/maven/deployer/monolithic/" + fileName);
-    }
-
-    private void move(String parentDir, String srcDir, String destDir) throws IOException {
-        final File srcDirectory = new File(parentDir, srcDir);
-        if (srcDirectory.exists() && srcDirectory.isDirectory()) {
-            File destDirectory = new File(parentDir, destDir);
-            if (this.getLog().isDebugEnabled()) {
-                this.getLog().debug("Deleting directory " + destDirectory);
-            }
-            FileUtils.deleteDirectory(destDirectory);
-            destDirectory = new File(parentDir, destDir);
-            if (this.getLog().isDebugEnabled()) {
-                this.getLog().debug("Recreating directory " + destDirectory);
-            }
-            destDirectory.mkdirs();
-            final File[] files = srcDirectory.listFiles();
-            if (files != null && files.length > 0) {
-                for (int i = 0; i < files.length; i++) {
-                    // TODO - replace this hard-coded exlclude with something
-                    // configurable
-                    boolean exclude = false;
-                    if ("lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap")) {
-                        exclude = true;
-                        if (this.getLog().isDebugEnabled()) {
-                            this.getLog().debug("Excluding " + files[i] + " from moving.");
-                        }
-                    }
-                    if (!exclude) {
-                        if (this.getLog().isDebugEnabled()) {
-                            this.getLog().debug("Moving " + files[i] + " to " + destDirectory);
-                        }
-                        files[i].renameTo(new File(destDirectory, files[i].getName()));
-                    }
-                }
-            }
-        }
     }
 }
