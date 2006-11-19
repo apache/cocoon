@@ -123,6 +123,18 @@ public class ClobHelper implements Clob{
         System.out.println("ClobHelper ** NOT IMPLEMENTED ** truncate");
     }
 
+    /**
+     * Not implemented (Java6 extension).
+     */
+    public void free() {
+        System.out.println("BlobHelper ** NOT IMPLEMENTED ** free");
+    }
 
+    /**
+     * Not implemented (Java6 extension).
+     */
+    public Reader getCharacterStream(long pos, long length) {
+        System.out.println("BlobHelper ** NOT IMPLEMENTED ** getCharacterStream(long,long");
+        return null;
+    }
 }
-

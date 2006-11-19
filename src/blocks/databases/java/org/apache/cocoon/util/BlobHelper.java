@@ -107,6 +107,18 @@ public class BlobHelper implements Blob{
         System.out.println("BlobHelper ** NOT IMPLEMENTED ** truncate");
     }
 
+    /**
+     * Not implemented (Java6 extension).
+     */
+    public void free() {
+        System.out.println("BlobHelper ** NOT IMPLEMENTED ** free");
+    }
 
+    /**
+     * Not implemented (Java6 extension).
+     */
+    public InputStream getBinaryStream(long pos, long length) {
+        System.out.println("BlobHelper ** NOT IMPLEMENTED ** getBinaryStream(long,long");
+        return null;
+    }
 }
-
