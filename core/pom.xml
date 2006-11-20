@@ -36,7 +36,6 @@
   <name>Cocoon Core [modules]</name>
   <modules>
     <module>cocoon-blocks-fw</module>
-    <module>cocoon-bootstrap</module>
     <module>cocoon-core</module>
     <module>cocoon-webapp</module>
   </modules>
