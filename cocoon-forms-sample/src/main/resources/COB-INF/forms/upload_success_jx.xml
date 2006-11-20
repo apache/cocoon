@@ -15,15 +15,28 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<page>
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <h4 class="samplesGroup">Upload widget</h4>
   <title>Sample form result</title>
   <content>
-    User '${username}' uploaded file '${filename}' whose content is :
-    <br/>
-    <pre>
+    User '${username}' uploaded 
+    <jx:formatNumber pattern="##" value="${files.length}" />
+    <jx:choose>
+        <jx:when test="${files.length} == 1">file</jx:when>
+        <jx:otherwise>files</jx:otherwise>
+    </jx:choose>
+    :<br/>
+    <jx:forEach var="file" items="${files}">
+            --&gt; ${file.filename} (${file.bytes} bytes)<br/>
+    </jx:forEach>
+    <jx:if test="${uploadContent}">
+        <br/>
+        whose content is :
+        <br/>
+        <pre>
 ${uploadContent}
-    </pre>
+        </pre>
+    </jx:if>
     <p>
       <a href="./">Back to Forms samples</a>
     </p>

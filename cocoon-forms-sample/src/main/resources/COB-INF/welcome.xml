@@ -125,17 +125,18 @@
  
  <group name="Advanced Ajax samples using Dojo widgets">
    <sample name="Drag and drop reordering, in-place editing" href="do-dojoRepeater.flow">
-	 (Ajax) The dynamic repeater sample revisited, featuring drag and drop reordering of rows,
-	 selecting rows by clicking anywhere in the row, and in-place editing of values.
+     (Ajax) The dynamic repeater sample revisited, featuring drag and drop reordering of rows,
+     selecting rows by clicking anywhere in the row, and in-place editing of values.
    </sample>
    <sample name="Cocoon suggests" href="do-suggest.flow">
      (Ajax) Very simple demo of the &lt;fd:suggestion-list&gt; feature.
    </sample>
    <sample name="In place editing" href="do-inplace.flow">
-	 (Ajax) Various ways to use in place editing.
+     (Ajax) Various ways to use in place editing.
    </sample>
+   <sample name="Upload Progress" href="uploadprogress">Shows upload widgets in a repeater with a progress bar</sample>
    <sample name="Other Ajax samples" href="../ajax/">
-	 (Ajax) Don't forget to look at the samples in the Ajax block!
+     (Ajax) Don't forget to look at the samples in the Ajax block!
    </sample>
  </group>
  
