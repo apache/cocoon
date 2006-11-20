@@ -253,7 +253,6 @@ public class MultipartParser {
         byte[] buf = new byte[FILE_BUFFER_SIZE];
         OutputStream out;
         File file = null;
-        boolean canceled = false;
 
         if (oversized) {
             out = new NullOutputStream();
@@ -327,7 +326,7 @@ public class MultipartParser {
         }
         
         String name = (String)headers.get("name");
-        if (oversized || canceled) {
+        if (oversized) {
             this.parts.put(name, new RejectedPart(headers, length, this.contentLength, this.maxUploadSize));
         } else if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
