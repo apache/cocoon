@@ -70,6 +70,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -743,11 +744,17 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                         parameters.put(arg.name, parameters, arg.value);
                     }
                     cocoon.setParameters(parameters);
-
-                    Object fun = ScriptableObject.getProperty(thrScope, funName);
-                    if (fun == Scriptable.NOT_FOUND) {
-                        throw new ResourceNotFoundException("Function \"javascript:" + funName + "()\" not found");
-                    }
+                    
+                    Object fun;
+                    try {
+                        fun = context.compileReader (
+                                    thrScope, new StringReader(funName), null, 1, null
+                                ).exec (context, thrScope);
+                    } catch (EcmaError ee) {
+                       throw new ResourceNotFoundException (
+                            "Function \"javascript:" + funName + "()\" not found"
+                        );
+                     }
 
                     // Check count of arguments
                     if (fun instanceof BaseFunction) {
