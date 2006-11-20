@@ -587,20 +587,36 @@
         | The absolute path for these resources is "{request:contextPath}/_cocoon/resources"
         +-->
     <map:match pattern="_cocoon/resources/*/**">
-	  <map:select type="resource-exists">
-		<map:when test="resources/{1}/{2}">
-		  <map:read src="resources/{1}/{2}"/>
-		</map:when>
-		<!-- For Cocoon development, read directly from source directories
+      <map:select type="resource-exists">
+        <map:when test="resources/{1}/{2}">
+          <map:read src="resources/{1}/{2}"/>
+        </map:when>
+        <!-- For Cocoon development, read directly from source directories
           <map:when test="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}">
               <map:read src="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}"/>
-	        </map:when>
-		-->
-		<map:otherwise>
-		  <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
-		</map:otherwise>
-	  </map:select>
-	</map:match>
+            </map:when>
+        -->
+        <map:otherwise>
+          <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
+        </map:otherwise>
+      </map:select>
+    </map:match>
+    <!-- mount Cocoon system pipelines (you may apply similar overides to those above) -->
+    <map:match pattern="_cocoon/system/*/**">
+      <map:select type="resource-exists">
+        <map:when test="system/{1}/sitemap.xmap">
+          <map:mount src="system/{1}/sitemap.xmap" uri-prefix="_cocoon/system/"/>
+        </map:when>
+        <!-- For Cocoon development, read directly from source directories
+          <map:when test="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/system/sitemap.xmap">
+              <map:mount src="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/system/sitemap.xmap" uri-prefix="_cocoon/system/{1}/"/>
+          </map:when>
+        -->
+        <map:otherwise>
+          <map:mount src="resource://org/apache/cocoon/{1}/system/sitemap.xmap" uri-prefix="_cocoon/system/{1}/"/>
+        </map:otherwise>
+      </map:select>
+    </map:match>
 
     <!--+
         | The default matching is also capable of matching more than a
