@@ -167,13 +167,22 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     private boolean useConsoleAppender = false;
 
     /**
+     * Use custom log4j.xconf
+     * 
+     * @parameter expression="${maven.war.log4j.useCustomXconf}"
+     */
+    private String customLog4jXconf;
+
+    /**
      * Deploy a monolithic Cocoon web application. This means it doesn't use the
      * features that the blocks-fw offers.
      */
-    protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir) throws MojoExecutionException, MojoFailureException {
+    protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir) 
+    throws MojoExecutionException, MojoFailureException {
         this.buildExplodedWebapp(getWebappDirectory());
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
-        deployer.deploy(getBlockArtifactsAsMap(null), getWebappDirectory(), blocksdir, useConsoleAppender);
+        deployer.deploy(getBlockArtifactsAsMap(null), getWebappDirectory(), blocksdir, 
+                        useConsoleAppender, customLog4jXconf);
 
         // make sure that all configuration files available in the webapp
         // override block configuration files
@@ -223,7 +232,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
         // deploy all blocks
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
-        deployer.deploy(getBlockArtifactsAsMap(blocks), getWebappDirectory(), blocksdir, extBlocks, properties, useConsoleAppender);
+        deployer.deploy(getBlockArtifactsAsMap(blocks), getWebappDirectory(), blocksdir, extBlocks, 
+                        properties, useConsoleAppender, customLog4jXconf);
 
         // take care of shielded classloading
         if (this.useShieldingClassLoader) {

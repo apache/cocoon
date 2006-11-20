@@ -16,9 +16,11 @@
  */
 package org.apache.cocoon.maven.deployer.monolithic;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +38,6 @@ import org.apache.cocoon.maven.deployer.utils.CopyUtils;
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 
 /**
  * Deploy blocks to a monolithic Cocoon web application. The files contained by
@@ -54,13 +55,18 @@ public class MonolithicCocoonDeployer {
         this.logger = logger;
     }
 
-    public void deploy(final Map libraries, final File basedir, final String blocksdir, final boolean useConsoleAppender) throws DeploymentException {
-        deploy(libraries, basedir, blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0], useConsoleAppender);
+    public void deploy(final Map libraries, final File basedir, final String blocksdir, 
+                       final boolean useConsoleAppender, final String customLog4jXconf) 
+    throws DeploymentException {
+        deploy(libraries, basedir, blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0], 
+               useConsoleAppender, customLog4jXconf);
     }
 
-    public void deploy(final Map libraries, final File basedir, final String blocksdir,
-            final DevelopmentBlock[] developmentBlocks, DevelopmentProperty[] developmentProperties, final boolean useConsoleAppender)
-            throws DeploymentException {
+    public void deploy(final Map libraries, final File basedir, final String blocksdir, 
+                       final DevelopmentBlock[] developmentBlocks, 
+                       final DevelopmentProperty[] developmentProperties, 
+                       final boolean useConsoleAppender, final String customLog4jXconf)
+    throws DeploymentException {
 
 
         xwebPatcher.setLogger( logger );
@@ -98,13 +104,14 @@ public class MonolithicCocoonDeployer {
             templateObjects.put("devblocks", developmentBlocks);
             templateObjects.put("curblock", developmentBlocks[developmentBlocks.length - 1]);
             if (useConsoleAppender) {
+                this.logger.info("Using ConsoleAppender");
                 templateObjects.put("useConsoleAppender", "useConsoleAppender" );
             }
-            writeStringTemplateToFile(basedir, "sitemap.xmap", templateObjects);
+            writeStringTemplateToFile(basedir, "sitemap.xmap", null, templateObjects);
 
             copyFile(basedir, "blocks/sitemap.xmap");
             //copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
-            writeStringTemplateToFile(basedir, "WEB-INF/cocoon/log4j.xconf", templateObjects);
+            writeStringTemplateToFile(basedir, "WEB-INF/cocoon/log4j.xconf", customLog4jXconf, templateObjects);
             // copyFile(basedir, "WEB-INF/web.xml");
 
             for (int i = 0; i < developmentBlocks.length; ++i) {
@@ -203,12 +210,22 @@ public class MonolithicCocoonDeployer {
         }
     }
 
-    private void writeStringTemplateToFile(final File basedir, final String fileName, final Map templateObjects) {
+    private void writeStringTemplateToFile(final File basedir, final String fileName, final String customFile, final Map templateObjects) {
         OutputStream fos = null;
         try {
             File outFile = FileUtils.createPath(new File(basedir, fileName));
             fos = new BufferedOutputStream(new FileOutputStream(outFile));
-            InputStream fileIs = readResourceFromClassloader(fileName);
+            InputStream fileIs = null;
+            if (customFile != null) {
+                if (new File(customFile).exists()) {
+                    fileIs = new BufferedInputStream(new FileInputStream(customFile));
+                } else {
+                    this.logger.info("supplied custom file " + customFile + " doesn't exist. Fallback to default: " + fileName);
+                    fileIs = readResourceFromClassloader(fileName);
+                }
+            } else {
+                fileIs = readResourceFromClassloader(fileName);
+            }
             StringTemplate stringTemplate = new StringTemplate(IOUtils.toString(fileIs));
             for (Iterator templateObjectsIt = templateObjects.keySet().iterator(); templateObjectsIt.hasNext();) {
                 Object key = templateObjectsIt.next();
@@ -217,7 +234,7 @@ public class MonolithicCocoonDeployer {
             this.logger.info("Deploying string-template to " + fileName);
             IOUtils.write(stringTemplate.toString(), fos);
         } catch (FileNotFoundException e) {
-            throw new DeploymentException(fileName + " not found.", e);
+            throw new DeploymentException((customFile == null ? fileName : customFile) + " not found.", e);
         } catch (IOException e) {
             throw new DeploymentException("Error while reading or writing.", e);
         } finally {
