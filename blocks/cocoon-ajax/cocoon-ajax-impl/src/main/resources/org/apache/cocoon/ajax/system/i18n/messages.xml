@@ -15,30 +15,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-  <h4 class="samplesGroup">Upload widget</h4>
-  <title>Sample form result</title>
-  <content>
-    User '${username}' uploaded 
-    <jx:formatNumber pattern="##" value="${files.length}" />
-    <jx:choose>
-        <jx:when test="${files.length} == 1">file</jx:when>
-        <jx:otherwise>files</jx:otherwise>
-    </jx:choose>
-    :<br/>
-    <jx:forEach var="file" items="${files}">
-            --&gt; ${file.filename} (${file.bytes} bytes)<br/>
-    </jx:forEach>
-    <jx:if test="${uploadContent}">
-        <br/>
-        whose content is :
-        <br/>
-        <pre>
-${uploadContent}
-        </pre>
-    </jx:if>
-    <p>
-      <a href="./">Back to Forms samples</a>
-    </p>
-  </content>
-</page>
+
+<!--
+
+    This catalogue file contains translations for built-in Ajax messages.
+
+	@version $Id$
+
+-->
+<catalogue>
+   
+   <message key="progress.finished">Upload Completed. Files: {0}. Data sent: {1} bytes.</message>
+   <message key="progress.sent">Sent: {0}% ({1} of {2} bytes). Filename: {3}.</message>
+   <message key="progress.ready">Ready.</message>
+   <message key="progress.connecting">Connecting ...</message>
+   <message key="progress.title">Upload Progress:</message>
+   
+</catalogue>
