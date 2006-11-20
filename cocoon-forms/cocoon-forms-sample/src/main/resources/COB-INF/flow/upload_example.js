@@ -23,11 +23,17 @@ function upload() {
 
     k.invalidate();
 
+    var widget = form.lookupWidget("upload");
     cocoon.sendPage("upload-success-pipeline.jx",
         {
             uploadContent: handleUpload(form), 
             username: form.lookupWidget("user").getValue(),
-            filename: form.lookupWidget("upload").getValue().getHeaders().get("filename")
+            files: [
+                {
+                    filename: widget.getValue().getUploadName(),
+                    bytes: widget.getValue().getSize()
+                }
+            ]
         }
     );
 }
@@ -49,4 +55,29 @@ function handleUpload(form) {
   }
   
   return buf.toString();
+}
+
+function uploadprogress() {
+    
+    var form = new Form("forms/uploadprogress_model.xml");
+    form.setAttribute("counter", new java.lang.Integer(0));
+    var k = form.showForm("uploadprogress-display-pipeline.jx");
+
+    k.invalidate(); // do not allow return to the form
+
+        var files = [];
+        var repeater = form.getChild("uploads");
+        for (var i = 0; i < repeater.getSize(); i++) {
+            var upload = repeater.getRow(i).getChild("upload");
+            files[i] = {
+                filename: upload.value.fileName,
+                bytes: upload.value.size
+            };
+        }
+    cocoon.sendPage("upload-success-pipeline.jx",
+        {
+            username: form.lookupWidget("user").getValue(),
+            files: files
+        }
+    );
 }
