@@ -54,8 +54,8 @@ System.Upload.status = function(){
     if (status instanceof Map && status.size() > 0) {
         var tempMap = new HashMap();
         tempMap.putAll(status);
-        var sent = status.get("sent").intValue();
-        var total = status.get("total").intValue();
+        var sent = Math.ceil(status.get("sent").intValue()/1024);
+        var total = Math.ceil(status.get("total").intValue()/1024);
         var catalogue;
         try {
             i18n = cocoon.getComponent(BundleFactory.ROLE);
