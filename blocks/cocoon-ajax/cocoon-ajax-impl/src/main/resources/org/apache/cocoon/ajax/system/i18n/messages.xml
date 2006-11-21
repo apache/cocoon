@@ -25,8 +25,8 @@
 -->
 <catalogue>
    
-   <message key="progress.finished">Upload Completed. Files: {0}. Data sent: {1} bytes.</message>
-   <message key="progress.sent">Sent: {0}% ({1} of {2} bytes). Filename: {3}.</message>
+   <message key="progress.finished">Upload Completed. Files: {0}. Data sent: {1} KB.</message>
+   <message key="progress.sent">Sent: {0}% ({1} of {2} KB). Filename: {3}.</message>
    <message key="progress.ready">Ready.</message>
    <message key="progress.connecting">Connecting ...</message>
    <message key="progress.title">Upload Progress:</message>
