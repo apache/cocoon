@@ -184,6 +184,17 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JQ" type="add">
+      Ajax: upload progress bar widget.<br/>
+      <ul>
+        <li>A new dojo widget to display file upload progress for forms (and cforms).</li>
+        <li>Ajax-enabled cforms can now submit file-upload fields in the background.</li>
+        <li>New system pipelines for Blocks (/_cocoon/system/[blockname]/**).</li>
+        <li>Sitemaps can now call flowscripts written in a static namespaced style.</li>
+        <li>Added JSON Serialization utilities for flowscript.</li>
+        <li>You can now get i18n translations from Stings in flowscript.</li>
+        </ul>
+    </action>
     <action dev="VG" type="add">
       Core: Add ability to pre-load i18n catalogues in I18nTransformer.
       Removed references to defunct cache-on-startup configuration.
