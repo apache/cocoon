@@ -193,8 +193,6 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             throw new MojoExecutionException("A problem occurred while copying webapp resources.", e);
         }
 
-        // TODO XPatch web.xml here!
-
         // take care of shielded classloading
         if (this.useShieldingClassLoader) {
             WebApplicationRewriter.shieldWebapp(new File(getWebappDirectory(), "WEB-INF"), getLog(), this.useShieldingRepository);
@@ -206,14 +204,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      */
     protected void blockDeploymentMonolithicCocoon(final String blocksdir, final DevelopmentBlock[] blocks,
             final DevelopmentProperty[] properties) throws MojoExecutionException, MojoFailureException {
+
         this.buildExplodedWebapp(getWebappDirectory());
-        // remove WEB-INF/classes as they are loaded by ReloadingClassloader
-        // from a dirrerent location
-        try {
-            FileUtils.deleteDirectory(new File(webappDirectory, "WEB-INF/classes"));
-        } catch (IOException e) {
-            throw new MojoExecutionException("unable to delete WEB-INF/classes directory", e);
-        }
 
         // add current block to the development blocks
         // it is important that the current block is put at the end of the array
@@ -230,15 +222,45 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         System.arraycopy(blocks, 0, extBlocks, 0, blocks.length);
         extBlocks[blocks.length] = curBlock;
 
+        // get all blocks to be deployed
+        Map allBlocks = getBlockArtifactsAsMap(blocks);
+
+        // deploying the artifact of the current project as jar too. Making the
+        // DeploymentUtil of cocoon-core support deploying blocks from WEB-INF/classes 
+        // would be difficult (e.g. What would be the name of the block as it is usually 
+        // injected into the META-INF/manifest.mf when the jar is packaged.)
+        File currentArtifact = this.getProject().getArtifact().getFile();
+        if (currentArtifact == null) {
+            throw new MojoExecutionException("The current artifact is null. The problem is that this mojo must"
+                    + "be executed after with the packaging mojo.");
+        }
+        try {
+            File classesDir = new File(getWebappDirectory(), "WEB-INF/classes");
+            FileUtils.deleteDirectory(classesDir);
+            this.getLog().debug("Removed " + classesDir.getAbsolutePath());
+        } catch (IOException e) {
+            throw new MojoExecutionException("unable to delete WEB-INF/classes directory", e);
+        }
+        File libDir = new File(getWebappDirectory(), "WEB-INF/lib");
+        try {
+            FileUtils.copyFileToDirectory(currentArtifact, libDir);
+            this.getLog().debug("Copy current artifact (" + currentArtifact + ") to " + libDir.getAbsolutePath());
+        } catch (IOException e) {
+            throw new MojoExecutionException("Unable to copy " + currentArtifact + " to " + libDir, e);
+        }
+        allBlocks.put(this.getProject().getArtifactId(), currentArtifact);
+
         // deploy all blocks
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
-        deployer.deploy(getBlockArtifactsAsMap(blocks), getWebappDirectory(), blocksdir, extBlocks, 
-                        properties, useConsoleAppender, customLog4jXconf);
+        deployer.deploy(allBlocks, getWebappDirectory(), blocksdir, extBlocks, properties, useConsoleAppender,
+                customLog4jXconf);
 
         // take care of shielded classloading
         if (this.useShieldingClassLoader) {
-            WebApplicationRewriter.shieldWebapp(new File(getWebappDirectory(), "WEB-INF"), getLog(), this.useShieldingRepository);
+            WebApplicationRewriter.shieldWebapp(new File(getWebappDirectory(), "WEB-INF"), getLog(),
+                    this.useShieldingRepository);
         }
+
     }
 
     /**
