@@ -15,37 +15,31 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!--+
     | This is the Cocoon web-app configurations file
-    +-->
-    
+    +-->    
     <!DOCTYPE web-app
     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     "http://java.sun.com/dtd/web-app_2_3.dtd">
     
     <web-app>
-      
       <!-- Context Configuration ========================================== -->
-      
       <!--+
-      | Set a context property useful to allow you to ProxyPass your
-      | web application mounted to a different URI without losing the
-      | ability to do cookie-based sessions.
-      | WARNING: this is Jetty specific!
-      +-->
+          | Set a context property useful to allow you to ProxyPass your
+          | web application mounted to a different URI without losing the
+          | ability to do cookie-based sessions.
+          | WARNING: this is Jetty specific!
+          +-->
       <!--context-param>
-    <param-name>org.mortbay.jetty.servlet.SessionPath</param-name>
-    <param-value>/some/path/to/your/webapp</param-value>
-    <description>An override of the session cookie path</description>
-   </context-param-->
+        <param-name>org.mortbay.jetty.servlet.SessionPath</param-name>
+        <param-value>/some/path/to/your/webapp</param-value>
+        <description>An override of the session cookie path</description>
+       </context-param-->
       
       <!-- Servlet Filters ================================================ -->
-      
       <!--+
-      | Declare a filter for multipart MIME handling
-      +-->
-      
+          | Declare a filter for multipart MIME handling
+          +-->
       <filter>
         <filter-name>CocoonMultipartFilter</filter-name>
         <display-name>Cocoon multipart filter</display-name>
@@ -54,9 +48,8 @@
       </filter>
       
       <!--+
-      | Declare a filter for debugging incomming request
-      +-->
-      
+          | Declare a filter for debugging incomming request
+          +-->
       <filter>
         <filter-name>CocoonDebugFilter</filter-name>
         <display-name>Cocoon debug filter</display-name>
@@ -65,106 +58,51 @@
       </filter>
       
       <!-- Filter mappings ================================================ -->
-      
       <!--+
-      | Use the Cocoon multipart filter together with the Cocoon demo webapp
-      +-->
-      
-      <filter-mapping>
+          | Use the Cocoon multipart filter together with the Cocoon demo webapp
+          +-->
+      <!--filter-mapping>
         <filter-name>CocoonMultipartFilter</filter-name>
         <servlet-name>Cocoon</servlet-name>
-      </filter-mapping>
+      </filter-mapping-->
       
       <!--+
-      | Use the Cocoon debug filter together with the Cocoon demo webapp
-
-  <filter-mapping>
-    <filter-name>CocoonDebugFilter</filter-name>
-    <servlet-name>Cocoon</servlet-name>
-  </filter-mapping>
-      +-->
+          | Use the Cocoon debug filter together with the Cocoon demo webapp
+      <filter-mapping>
+        <filter-name>CocoonDebugFilter</filter-name>
+        <servlet-name>Cocoon</servlet-name>
+      </filter-mapping>
+          +-->
       
       <!-- Servlet Context Listener ======================================= -->
       
       <!--+
-      | Declare Spring context listener which sets up the Spring Application Context
-      | containing all Cocoon components (and user defined as well).
-      +-->
+          | Declare Spring context listener which sets up the Spring Application Context
+          | containing all Cocoon components (and user defined as well).
+          +-->
       <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
       </listener>
       
       <!-- Servlet Configuration ========================================== -->
-      
-      <servlet>
-        <servlet-name>Cocoon</servlet-name>
-        <display-name>Cocoon</display-name>
-        <description>Cocoon demo web application</description>
-        
-        <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
-        
-        <!--
-      This parameter allows you to startup Cocoon2 immediately after startup
-      of your servlet engine.
-    -->
-        <load-on-startup>1</load-on-startup>
-      </servlet>
-      
-      <!-- Experimental servlet that dispatch to Spring managed block servlets -->
+      <!--+ 
+          | Cocoon blocks servlet that dispatch to Spring managed block servlets 
+          +-->
       <servlet>
         <servlet-name>DispatcherServlet</servlet-name>
         <display-name>DispatcherServlet</display-name>
         <description>Cocoon blocks dispatcher</description>
-        
         <servlet-class>org.apache.cocoon.blocks.DispatcherServlet</servlet-class>
-        
-        <!--
-      This parameter allows you to startup immediately after startup
-      of your servlet engine.
-    -->
         <load-on-startup>1</load-on-startup>
       </servlet>
       
       <!-- URL space mappings ============================================= -->
-      
-      <!--
-    Cocoon handles all the URL space assigned to the webapp using its sitemap.
-    It is recommended to leave it unchanged. Under some circumstances though
-    (like integration with proprietary webapps or servlets) you might have
-    to change this parameter.
-  -->
       <servlet-mapping>
-        <servlet-name>Cocoon</servlet-name>
+        <servlet-name>DispatcherServlet</servlet-name>
         <url-pattern>/*</url-pattern>
       </servlet-mapping>
       
-      <!--
-    Some servlet engines (Tomcat) have defaults which are not overriden
-    by '/' mapping, but must be overriden explicitly.
-  -->
-      <servlet-mapping>
-        <servlet-name>Cocoon</servlet-name>
-        <url-pattern>*.jsp</url-pattern>
-      </servlet-mapping>
-      <!--
-    Some servlet engines (WebLogic) have defaults which are not overriden
-    by '/' mapping, but must be overriden explicitly.
-  -->
-      <servlet-mapping>
-        <servlet-name>Cocoon</servlet-name>
-        <url-pattern>*.html</url-pattern>
-      </servlet-mapping>
-      
-      <!--
-    Mount the experimental blocks dispatcher.
-  -->
-      <servlet-mapping>
-        <servlet-name>DispatcherServlet</servlet-name>
-        <url-pattern>/blocks-test/*</url-pattern>
-      </servlet-mapping>
-      
       <!-- various MIME type mappings ====================================== -->
-      
       <mime-mapping>
         <extension>css</extension>
         <mime-type>text/css</mime-type>
