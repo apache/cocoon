@@ -46,9 +46,9 @@ dojo.widget.defineWidget(
         isContainer: true,
         templateString: '<div class="FormUpload">' +
                             '<div class="FormUploadUser" dojoAttachPoint="containerNode"></div>' + 
-                            '<div class="FormUploadProgress" style="border:1px solid #336699;margin:2px;height: 16px">' +
-                                '<div style="width:0px;background:#BFCCDF;position:relative;" class="bar" dojoAttachPoint="barNode">&nbsp;</div>' + 
-                                '<div style="color:#336699;position:relative;left:0px;top:-16px;background: none;padding: 2px;font-size:10px;" class="data" dojoAttachPoint="msgNode">&nbsp;</div>' + 
+                            '<div class="FormUploadProgress" style="border:1px solid #336699;margin:2px;height: 16px;position:relative;">' +
+                                '<div style="width:0px;background:#BFCCDF;position:absolute;top:0;left:0;width:0;right:0;" class="bar" dojoAttachPoint="barNode">&nbsp;</div>' + 
+                                '<div style="color:#336699;position:absolute;top:0;left:0;bottom:0;right:0;background:none;padding:2px;font-size:10px;overflow:hidden;" class="data" dojoAttachPoint="msgNode">&nbsp;</div>' + 
                             '</div>' +
                          '</div>',
                         
