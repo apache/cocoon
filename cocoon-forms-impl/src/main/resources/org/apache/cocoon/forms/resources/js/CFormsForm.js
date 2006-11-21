@@ -130,13 +130,13 @@ dojo.widget.defineWidget(
         if (type == "load") {
             // Handle browser update directives
             if (!data) {
-                cocoon.ajax.BUHandler.handleError("No xml answer", evt);
+                cocoon.ajax.BUHandler.handleError("No xml answer", data);
                 return;
             }
             updater.handlers['continue'] = function() { widget._continue(); }
             updater.processResponse(data, evt);
         } else if (type == "error") {
-            updater.handleError("Request failed", evt);
+            updater.handleError("Request failed", data);
         } else {
             // umm, how did we get here ?
         }
