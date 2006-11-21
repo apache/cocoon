@@ -94,7 +94,7 @@ System.Upload.clear = function(){
             json = success;
         }
     }
-    cocoon.sendPage("send-json", {json: status});
+    cocoon.sendPage("send-json", {json: json});
 };
 
 
