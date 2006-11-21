@@ -53,7 +53,7 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 				nodes = base.childNodes;
 				dojo.debug("got response using: IframeTransport");
 			} else {
-				this.handleError("No response data found", request);
+				this.handleError("No response data found", doc);
 			}
 		}
 		for (var i = 0; i < nodes.length; i++) {
@@ -65,22 +65,26 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 				if (handlerFunc) {
 					handlerFunc(node);
 				} else {
-					this.handleError("No handler found for element " + handler, request);
+					this.handleError("No handler found for element " + handler, doc);
 				}
 			}
 		}
 	},
 	
-	handleError: function(message, request) {
+	handleError: function(message, response) {
 		if (confirm(message + "\nShow server response?")) {
 			var w = window.open(undefined, "Cocoon Error", "location=no,resizable=yes,scrollbars=yes");
 			if (w == undefined) {
 				alert("You must allow popups from this server to display the response.");
 			} else {
 				var doc = w.document;
-				doc.open();
-				doc.write(request.responseText);
-				doc.close();
+				if (response.responseText) {
+					doc.open();
+					doc.write(response.responseText);
+					doc.close();
+				} else if (response.childNodes) {
+					dojo.dom.copyChildren(doc,response);
+				}
 			}
 		}
 	},
