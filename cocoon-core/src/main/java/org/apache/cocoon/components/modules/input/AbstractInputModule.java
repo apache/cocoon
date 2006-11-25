@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.components.modules.input;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -28,6 +26,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 import org.apache.cocoon.util.HashMap;
+import org.apache.commons.collections.iterators.EmptyIterator;
 
 /**
  * AbstractInputModule gives you the infrastructure for easily
@@ -36,27 +35,15 @@ import org.apache.cocoon.util.HashMap;
  *
  * @version $Id$
  */
-public abstract class AbstractInputModule extends AbstractLogEnabled
+public abstract class AbstractInputModule
+    extends AbstractLogEnabled
     implements InputModule, Configurable, Disposable {
-
-    /**
-     * For those modules that access only one attribute, have a 
-     * fixed collection we can return an iterator for.
-     */
-    final static Vector returnNames;
-    static {
-        Vector tmp = new Vector();
-        tmp.add("attribute");
-        returnNames = tmp;
-    }
-
-
 
     /**
      * Stores (global) configuration parameters as <code>key</code> /
      * <code>value</code> pairs.
      */
-    protected HashMap settings = null;
+    protected HashMap settings;
 
     /**
      * Configures the database access helper.
@@ -79,7 +66,7 @@ public abstract class AbstractInputModule extends AbstractLogEnabled
     }
 
     /**
-     *  dispose
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         // Purposely empty so that we don't need to implement it in every
@@ -91,7 +78,7 @@ public abstract class AbstractInputModule extends AbstractLogEnabled
     // since the ones below have a cyclic dependency!
     // 
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
      */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
@@ -99,7 +86,7 @@ public abstract class AbstractInputModule extends AbstractLogEnabled
         return (result == null ? null : result[0]);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
      */
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
@@ -109,10 +96,10 @@ public abstract class AbstractInputModule extends AbstractLogEnabled
     }
 
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
      */
     public Iterator getAttributeNames(Configuration modeConf, Map objectModel) throws ConfigurationException {
-        return AbstractInputModule.returnNames.iterator();
+        return EmptyIterator.INSTANCE;
     }
 }

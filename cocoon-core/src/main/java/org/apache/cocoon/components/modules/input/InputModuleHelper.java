@@ -186,7 +186,6 @@ public class InputModuleHelper {
         return getAttributeValues(objectModel, null, module, name, deflt);
     }
 
-
     /**
      * Get an iterator to a collection of attribute names from a
      * module.
@@ -208,8 +207,6 @@ public class InputModuleHelper {
     public Iterator getAttributeNames(Map objectModel, String module) throws InputModuleException {
         return getAttributeNames(objectModel, (Configuration)null, module);
     }
-
-
 
     /**
      * Releases all obtained module references.
