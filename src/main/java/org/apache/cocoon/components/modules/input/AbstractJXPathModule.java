@@ -89,14 +89,15 @@ public abstract class AbstractJXPathModule extends AbstractInputModule {
      * @exception ConfigurationException if an error occurs
      */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.configuration = JXPathHelper.setup(config);
     }
 
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name);
@@ -105,17 +106,21 @@ public abstract class AbstractJXPathModule extends AbstractInputModule {
     }
 
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames(Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-
         Object contextObj = getContextObject(modeConf, objectModel);
         return JXPathHelper.getAttributeNames(this.configuration, contextObj);
     }
 
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name);
