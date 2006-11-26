@@ -76,7 +76,7 @@ public class EnhancedRepeaterJXPathBinding extends RepeaterJXPathBinding {
         // iterate updated rows. note: we don't iterate over the whole context
         for (Iterator iter = collection.getUpdatedRows().iterator(); iter.hasNext();) {
             RepeaterItem item = (RepeaterItem) iter.next();
-            getRowBinding().saveFormToModel((RepeaterRow)item.getRow(), item.getContext());
+            getRowBinding().saveFormToModel(item.getRow(), item.getContext());
         }
 
         for (Iterator iter = collection.getDeletedRows().iterator(); iter.hasNext();) {
