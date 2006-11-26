@@ -189,7 +189,7 @@ public class JavaScriptHelper {
                 scope = ctx.newObject(parentScope);
             } catch (Exception e) {
                 // Should normally not happen
-                throw new CascadingRuntimeException("Cannont create script scope", e);
+                throw new CascadingRuntimeException("Cannot create script scope", e);
             }
             scope.setParentScope(parentScope);
 
