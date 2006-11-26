@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.forms.samples;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -42,9 +43,9 @@ public class CustomBirthDateValidator
             getLogger().debug("Validating date " + birthDate);
         }
         GregorianCalendar cal = new GregorianCalendar();
-        cal.add(GregorianCalendar.YEAR, -5);
+        cal.add(Calendar.YEAR, -5);
         Date maxDate = cal.getTime();
-        cal.add(GregorianCalendar.YEAR, -95);
+        cal.add(Calendar.YEAR, -95);
         Date minDate = cal.getTime();
         if (birthDate.after(maxDate) || birthDate.before(minDate)) {
             if (widget instanceof ValidationErrorAware) {
