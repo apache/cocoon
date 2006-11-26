@@ -17,11 +17,9 @@
 package org.apache.cocoon.auth.impl;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
@@ -43,7 +41,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.cocoon.auth.Application;
 import org.apache.cocoon.auth.ApplicationManager;
 import org.apache.cocoon.auth.ApplicationUtil;
-import org.apache.cocoon.auth.SecurityHandler;
 import org.apache.cocoon.auth.User;
 
 /**
