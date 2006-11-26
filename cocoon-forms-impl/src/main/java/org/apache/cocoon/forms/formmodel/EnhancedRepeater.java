@@ -36,7 +36,7 @@ public class EnhancedRepeater extends Repeater {
 			RepeaterItem item = (RepeaterItem) iter.next();
 	        if (item == null) break;
             if (item.getRow() != null) {
-            	addRow((RepeaterRow) item.getRow());
+            	addRow(item.getRow());
             } else {
                 RepeaterRow thisRow = addRow();
                 item.setRow(thisRow);
