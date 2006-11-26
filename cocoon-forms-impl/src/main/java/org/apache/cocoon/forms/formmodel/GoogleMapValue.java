@@ -1,6 +1,5 @@
 package org.apache.cocoon.forms.formmodel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GoogleMapValue {

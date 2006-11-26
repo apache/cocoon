@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.formmodel.tree.builder;
 
-import org.apache.cocoon.forms.formmodel.tree.TreeModel;
 import org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition;
 import org.w3c.dom.Element;
 

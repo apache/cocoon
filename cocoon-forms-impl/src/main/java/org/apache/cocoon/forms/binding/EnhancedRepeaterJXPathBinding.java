@@ -7,7 +7,6 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.forms.binding.JXPathBindingBuilderBase.CommonAttributes;
 import org.apache.cocoon.forms.formmodel.EnhancedRepeater;
 import org.apache.cocoon.forms.formmodel.Repeater;
-import org.apache.cocoon.forms.formmodel.Repeater.RepeaterRow;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
