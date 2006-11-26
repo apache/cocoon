@@ -105,7 +105,7 @@ public class RepeaterJXPathCollection {
     public List getItems(int start, int length) {
     	List ret = new ArrayList();
     	int rlength = length;
-    	int rstart = getStartIndex(start);;
+    	int rstart = getStartIndex(start);
     	RepeaterItem startItem = null;
     	if (rstart > 0) {
     		// Try to fetch one element before, so that we can distinguish
