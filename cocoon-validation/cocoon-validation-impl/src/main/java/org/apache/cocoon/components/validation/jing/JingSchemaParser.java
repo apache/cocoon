@@ -20,12 +20,10 @@ import java.io.IOException;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.validation.Schema;
-import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
 import org.apache.cocoon.components.validation.impl.AbstractSchemaParser;
 import org.apache.cocoon.components.validation.impl.DraconianErrorHandler;
 import org.apache.excalibur.source.Source;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

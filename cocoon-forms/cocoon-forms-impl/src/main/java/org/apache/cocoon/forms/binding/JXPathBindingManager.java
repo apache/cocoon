@@ -130,6 +130,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
 
         if (binding == null) {
             try {
+                // Retrieve the input source of the binding file
                 InputSource is = new InputSource(source.getInputStream());
                 is.setSystemId(source.getURI());
 

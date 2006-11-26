@@ -66,6 +66,7 @@ public class FormattingDecimalConvertor implements Convertor {
         // Some locales (e.g. "fr") produce non-breaking spaces sent back as space by the browser
         value = value.replace(' ', (char)160);
         DecimalFormat decimalFormat = getDecimalFormat(locale, formatCache);
+
         Number decimalValue;
         try {
             decimalValue = decimalFormat.parse(value);
