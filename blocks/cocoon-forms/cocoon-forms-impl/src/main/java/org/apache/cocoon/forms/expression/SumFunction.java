@@ -56,7 +56,7 @@ public class SumFunction extends AbstractExpression {
                    } else if (p instanceof Double) {
                        db = new BigDecimal(((Double)p).doubleValue());
                    } else if (p instanceof Float) {
-                       db = new BigDecimal(((Float)p).floatValue());;
+                       db = new BigDecimal(((Float)p).floatValue());
                    } else if (p instanceof BigInteger) {
                        db = new BigDecimal((BigInteger)p);
                    } else if (p instanceof Number) {
