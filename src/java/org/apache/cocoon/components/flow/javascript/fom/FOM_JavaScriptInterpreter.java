@@ -861,17 +861,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
     }
 
-    private Throwable unwrap(JavaScriptException e) {
-        Object value = e.getValue();
-        while (value instanceof Wrapper) {
-            value = ((Wrapper)value).unwrap();
-        }
-        if (value instanceof Throwable) {
-            return (Throwable)value;
-        }
-        return e;
-    }
-
     public void forwardTo(Scriptable scope, FOM_Cocoon cocoon, String uri,
                           Object bizData, FOM_WebContinuation fom_wk,
                           Redirector redirector)
