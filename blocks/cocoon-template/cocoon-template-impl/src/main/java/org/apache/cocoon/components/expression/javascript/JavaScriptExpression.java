@@ -25,7 +25,6 @@ import org.apache.cocoon.components.expression.AbstractExpression;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
-import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
 import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 import org.apache.commons.jexl.util.introspection.Info;
