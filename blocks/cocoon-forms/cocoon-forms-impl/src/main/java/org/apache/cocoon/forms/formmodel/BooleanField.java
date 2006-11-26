@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.FormsConstants;
-import org.apache.cocoon.forms.FormsRuntimeException;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;

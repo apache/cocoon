@@ -17,7 +17,6 @@ package org.apache.cocoon.forms.formmodel;
 
 import java.util.ArrayList;
 
-import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.excalibur.xml.sax.XMLizable;

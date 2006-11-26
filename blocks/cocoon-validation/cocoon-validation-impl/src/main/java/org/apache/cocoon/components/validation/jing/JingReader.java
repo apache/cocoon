@@ -17,7 +17,6 @@
 package org.apache.cocoon.components.validation.jing;
 
 import java.io.IOException;
-import java.util.Stack;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
