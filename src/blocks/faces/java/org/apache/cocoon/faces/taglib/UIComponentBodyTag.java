@@ -18,6 +18,7 @@ package org.apache.cocoon.faces.taglib;
 
 import org.apache.cocoon.taglib.BodyContent;
 import org.apache.cocoon.taglib.BodyTag;
+import org.apache.cocoon.taglib.Tag;
 
 import org.xml.sax.SAXException;
 
@@ -33,7 +34,7 @@ public abstract class UIComponentBodyTag extends UIComponentTag implements BodyT
     }
 
     public int getDoAfterBody() {
-        return BodyTag.SKIP_BODY;
+        return Tag.SKIP_BODY;
     }
 
     public void doInitBody() throws SAXException {
