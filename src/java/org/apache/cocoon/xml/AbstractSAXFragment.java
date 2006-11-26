@@ -18,7 +18,6 @@ package org.apache.cocoon.xml;
 
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
 
 /**
  * Abstract implementation of {@link XMLFragment} for objects that are more
