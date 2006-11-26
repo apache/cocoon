@@ -142,9 +142,7 @@ public class MapRenderer extends BaseRenderer {
 
     }
 
-
     // --------------------------------------------------------- Private Methods
-
 
     /**
      * <p>Return the calculated name for the hidden input field.</p>
@@ -155,23 +153,4 @@ public class MapRenderer extends BaseRenderer {
     private String getName(FacesContext context, UIComponent component) {
         return (component.getId() + "_current");
     }
-
-
-    /**
-     * <p>Return the context-relative path for the current page.</p>
-     *
-     * @param context Context for the current request
-     */
-    private String getURI(FacesContext context) {
-
-        StringBuffer sb = new StringBuffer();
-        sb.append(context.getExternalContext().getRequestContextPath());
-        // PENDING(craigmcc) - will need to change if this is generalized
-        sb.append("/faces");
-        sb.append(context.getViewRoot().getViewId());
-        return (sb.toString());
-
-    }
-
-
 }
