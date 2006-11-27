@@ -34,9 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
-import org.apache.commons.collections.map.AbstractHashedMap;
-
-
 /**
  * Create a HttpServletRequest from an URL, that is used while calling e.g. a block.
  * 
@@ -314,14 +311,16 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.ServletRequest#getServerName()
      */
     public String getServerName() {
-        return this.getServerName();
+        // TODO implement this
+        return "";
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.ServletRequest#getServerPort()
      */
     public int getServerPort() {
-        return this.getServerPort();
+        // TODO implement this
+        return 80;
     }
 
     /* (non-Javadoc)
