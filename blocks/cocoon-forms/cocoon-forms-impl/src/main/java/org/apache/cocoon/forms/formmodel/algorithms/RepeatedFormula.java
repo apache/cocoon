@@ -107,7 +107,7 @@ public class RepeatedFormula extends SimpleFormula {
         }
     }
     
-    class ResultExpressionContext extends ExpressionContextImpl {
+    static class ResultExpressionContext extends ExpressionContextImpl {
         Object result = null;
         Widget current = null;
         public ResultExpressionContext(Widget widget, Object result) {

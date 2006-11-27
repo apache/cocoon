@@ -150,7 +150,7 @@ public class RepeaterJXPathAdapter implements RepeaterAdapter {
 
 	}
 
-	class RepeaterJXPathSorter implements RepeaterSorter {
+	static class RepeaterJXPathSorter implements RepeaterSorter {
 
 		private String path;
 		private String field;
@@ -186,7 +186,7 @@ public class RepeaterJXPathAdapter implements RepeaterAdapter {
 
 	}
 
-	class NormalOrderJXPathSorter implements RepeaterSorter {
+	static class NormalOrderJXPathSorter implements RepeaterSorter {
 
 		public void setCollection(Collection c) {
 		}
