@@ -679,8 +679,8 @@
     <title>Continuations-based JavaScript engine</title>
     <description>Rhino is an implementation of JavaScript in Java.</description>
     <used-by>Control flow</used-by>
-    <lib>core/rhino1.5r4-continuations-R26.jar</lib>
-    <homepage>http://svn.cocoondev.org/repos/rhino+cont/</homepage>
+    <lib>core/js-1.6R5.jar</lib>
+    <homepage>http://www.mozilla.org/rhino/</homepage>
   </file>
 
   <file>
