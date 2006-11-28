@@ -184,6 +184,14 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="BRD" type="update">
+      Updated Rhino (Javascript engine) to version 1.6R5.
+      This version is licensed under MPL, while previous versions were licensed under NPL,
+      which was a problem since software licensed under NPL cannot be included in Apache products.
+      The new version should be compatible with the previous version, though it does
+      not support the constructs "catch (continue|break|return)" which were available
+      in Cocoon's Rhino fork.
+    </action> 
     <action dev="AG" type="update">
       Updated xercesImpl to 2.9.0 and xml-apis to 1.3.04.
     </action> 
