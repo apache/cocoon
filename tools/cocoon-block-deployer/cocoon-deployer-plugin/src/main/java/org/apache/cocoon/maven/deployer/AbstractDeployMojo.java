@@ -150,7 +150,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * 
      * @parameter expression="${maven.war.shieldingclassloader}"
      */
-    private boolean useShieldingClassLoader = true;
+    private boolean useShieldingClassLoader = false;
 
     /**
      * Move jars for shielded classloading
