@@ -90,7 +90,7 @@ public class BlockContextSource
     }
 
     private Map createChildren() throws MalformedURLException, IOException  {
-        Map children = new HashedMap(this.blockContexts.size());
+        Map children = new HashedMap(this.blockContexts.size() * 2 + 1);
         SourceResolver resolver = null;
         try {
             resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
