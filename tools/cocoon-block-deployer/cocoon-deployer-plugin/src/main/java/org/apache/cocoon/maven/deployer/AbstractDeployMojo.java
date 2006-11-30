@@ -157,7 +157,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * 
      * @parameter expression="${maven.war.shieldingrepository}"
      */
-    private boolean useShieldingRepository = true;
+    private boolean useShieldingRepository = false;
 
     /**
      * Use console appender
