@@ -54,7 +54,7 @@
   </filter>
 
   <!--+
-      | Declare a filter for debugging incomming request
+      | Declare a filter for debugging incoming request
       +-->
 
   <filter>
