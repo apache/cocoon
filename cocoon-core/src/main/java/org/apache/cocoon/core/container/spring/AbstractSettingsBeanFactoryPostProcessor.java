@@ -18,9 +18,11 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 
@@ -141,13 +143,14 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         extends BeanDefinitionVisitor {
 
         protected final Properties props;
+        protected final Set visitedPlaceholders = new HashSet();
 
         public CocoonSettingsResolvingBeanDefinitionVisitor(Settings settings) {
             this.props = new SettingsProperties(settings);
         }
 
         protected String resolveStringValue(String strVal) {
-            return parseStringValue(strVal, this.props, null);
+            return parseStringValue(strVal, this.props, visitedPlaceholders);
         }
     }
 
