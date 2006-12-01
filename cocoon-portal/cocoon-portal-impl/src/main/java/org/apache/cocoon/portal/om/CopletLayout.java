@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.portal.om;
 
-import org.apache.cocoon.portal.services.LayoutFactory;
-
 /**
  * A coplet layout holds a coplet.
  *
@@ -31,7 +29,7 @@ public final class CopletLayout extends Layout {
     /**
      * Create a new coplet layout object.
      * Never create a layout object directly. Use the
-     * {@link LayoutFactory} instead.
+     * {@link org.apache.cocoon.portal.services.LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
      * @param name The name of the layout.
      */

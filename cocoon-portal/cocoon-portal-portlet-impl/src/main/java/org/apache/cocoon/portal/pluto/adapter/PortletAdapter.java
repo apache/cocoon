@@ -31,9 +31,9 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.Constants;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
@@ -295,7 +295,7 @@ public class PortletAdapter
                 //        should try to provide an object
                 portletContainer.init(uniqueContainerName, null, this.portletContainerEnvironment, properties);
             } catch (PortletContainerException exc) {
-                throw new ProcessingException("Initialization of the portlet container failed.", exc);
+                throw new PortalException("Initialization of the portlet container failed.", exc);
             }
         } else {
             this.getLogger().debug("PortletContainer already initialized.");
@@ -365,7 +365,7 @@ public class PortletAdapter
      * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
      */
     public void prepare(PortalManagerAspectPrepareContext aspectContext)
-    throws ProcessingException {
+    throws PortalException {
         // process the events
         aspectContext.invokeNext();
 

@@ -23,7 +23,6 @@ import java.util.Properties;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -74,7 +73,7 @@ public class PortalManagerImpl
      * @see org.apache.cocoon.portal.PortalManager#process()
      */
     public void process()
-    throws ProcessingException {
+    throws PortalException {
         PortalManagerAspectContextImpl aspectContext =
             new PortalManagerAspectContextImpl(this.portalService, this.chain);
         aspectContext.invokeNext();
@@ -106,7 +105,7 @@ public class PortalManagerImpl
     /**
      * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
      */
-    public void prepare(PortalManagerAspectPrepareContext renderContext) throws ProcessingException {
+    public void prepare(PortalManagerAspectPrepareContext renderContext) throws PortalException {
         EventManager eventManager = this.portalService.getEventManager();
         eventManager.processEvents();
     }

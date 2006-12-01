@@ -28,7 +28,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
@@ -120,15 +119,13 @@ public class DefaultEventManager
      * @see org.apache.cocoon.portal.event.EventManager#processEvents()
      */
     public void processEvents()
-    throws ProcessingException {
+    throws PortalException {
         if ( this.configuration != null ) {
             try {
                 this.chain = new AspectChain(EventAspect.class);
                 this.chain.configure(this.manager, this.configuration);
-            } catch (PortalException ce) {
-                throw new ProcessingException("Unable configure component.", ce);
             } catch (ConfigurationException ce) {
-                throw new ProcessingException("Unable configure component.", ce);
+                throw new PortalException("Unable configure component.", ce);
             }
             this.configuration = null;
         }
