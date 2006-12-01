@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
@@ -50,7 +50,7 @@ public class PreloadPortalManagerAspect
      * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
      */
     public void prepare(PortalManagerAspectPrepareContext context)
-    throws ProcessingException {
+    throws PortalException {
         // let's just invoke the next
         context.invokeNext();
     }

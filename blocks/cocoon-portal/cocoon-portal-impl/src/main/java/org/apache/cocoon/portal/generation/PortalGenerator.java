@@ -25,6 +25,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.SAXException;
@@ -72,8 +73,12 @@ extends ServiceableGenerator {
         // start the portal rendering
         // 1. event processing
         // 2. rendering
-        PortalManager pm = this.portalService.getPortalManager();
-        pm.process();
+        final PortalManager pm = this.portalService.getPortalManager();
+        try {
+            pm.process();
+        } catch (PortalException pe) {
+            throw new ProcessingException(pe);
+        }
         pm.showPortal(this.xmlConsumer, Parameters.toProperties(this.parameters));
 	}
 

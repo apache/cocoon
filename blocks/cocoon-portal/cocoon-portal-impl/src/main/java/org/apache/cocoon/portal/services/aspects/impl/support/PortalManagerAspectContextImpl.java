@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.services.aspects.impl.support;
 
 import java.util.Properties;
 
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
@@ -47,7 +47,7 @@ public final class PortalManagerAspectContextImpl
 	 * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext#invokeNext()
 	 */
 	public void invokeNext() 
-    throws ProcessingException {
+    throws PortalException {
         final PortalManagerAspect aspect = (PortalManagerAspect)this.getNext();
         if ( aspect != null ) {
             aspect.prepare(this);

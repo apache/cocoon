@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.services.aspects;
 
 import java.util.Properties;
 
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
 public interface PortalManagerAspect {
 
     void prepare(PortalManagerAspectPrepareContext context)
-    throws ProcessingException;
+    throws PortalException;
 
     void render(PortalManagerAspectRenderContext context,
                 ContentHandler                   ch,

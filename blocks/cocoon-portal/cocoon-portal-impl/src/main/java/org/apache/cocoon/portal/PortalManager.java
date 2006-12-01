@@ -18,7 +18,6 @@ package org.apache.cocoon.portal;
 
 import java.util.Properties;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -50,10 +49,10 @@ public interface PortalManager {
     /**
      * Start the first phase of the request handling.
      * In this phase all events are fired and processed.
-     * @throws ProcessingException
+     * @throws PortalException
      */
     void process()
-    throws ProcessingException;
+    throws PortalException;
 
     /**
      * Render the portal.

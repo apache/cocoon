@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.portal.om;
 
-import org.apache.cocoon.portal.services.LayoutFactory;
-
 /**
  * A link layout references another layout to be used instead. The reference
  * can be changed at runtime using {@link LayoutInstance}.
@@ -35,7 +33,7 @@ public class LinkLayout extends Layout {
     /**
      * Create a new link layout object.
      * Never create a layout object directly. Use the
-     * {@link LayoutFactory} instead.
+     * {@link org.apache.cocoon.portal.services.LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
      * @param name The name of the profile.
      */
