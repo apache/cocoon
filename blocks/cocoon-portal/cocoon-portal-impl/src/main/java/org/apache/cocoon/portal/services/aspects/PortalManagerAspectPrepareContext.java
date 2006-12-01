@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalException;
 
 /**
  * @since 2.1.8
@@ -29,5 +29,5 @@ public interface PortalManagerAspectPrepareContext
      * Invoke next aspect 
      */
     void invokeNext()
-    throws ProcessingException;
+    throws PortalException;
 }
