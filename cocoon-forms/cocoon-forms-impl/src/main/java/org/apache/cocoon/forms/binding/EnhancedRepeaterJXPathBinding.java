@@ -68,10 +68,10 @@ public class EnhancedRepeaterJXPathBinding extends RepeaterJXPathBinding {
 		}
 
         EnhancedRepeater rep = (EnhancedRepeater) repeater;
+		rep.doPageSave();
 		Pointer ptr = jxpc.getPointer(super.getRepeaterPath());
 		JXPathContext repeaterContext = jxpc.getRelativeContext(ptr);
 		RepeaterJXPathCollection collection = rep.getCollection();
-
         // iterate updated rows. note: we don't iterate over the whole context
         for (Iterator iter = collection.getUpdatedRows().iterator(); iter.hasNext();) {
             RepeaterItem item = (RepeaterItem) iter.next();
