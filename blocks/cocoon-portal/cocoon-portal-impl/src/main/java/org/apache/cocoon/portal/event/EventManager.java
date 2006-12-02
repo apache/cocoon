@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalException;
 
 /**
  * This component manages the event handling mechanism in the portal.
@@ -39,7 +39,7 @@ public interface EventManager {
      * Process the events.
      */
     void processEvents()
-    throws ProcessingException;
+    throws PortalException;
 
     /**
      * Publish an event. All registered receivers get notified.
