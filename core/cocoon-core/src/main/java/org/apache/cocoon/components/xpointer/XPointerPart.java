@@ -54,6 +54,7 @@ public class XPointerPart implements PointerPart {
                 consumer.setDocumentLocator(locator);
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     DOMStreamer streamer = new DOMStreamer();
+                    streamer.setNormalizeNamespaces(true);
                     streamer.setConsumer(consumer);
                     streamer.stream(nodeList.item(i));
                 }
