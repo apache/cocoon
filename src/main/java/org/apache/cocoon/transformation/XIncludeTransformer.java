@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.Serializable; 
+import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingException;
@@ -32,9 +34,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.caching.CacheableProcessingComponent; 
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.source.impl.MultiSourceValidity; 
+import org.apache.cocoon.components.source.impl.MultiSourceValidity;
 import org.apache.cocoon.components.xpointer.XPointer;
 import org.apache.cocoon.components.xpointer.XPointerContext;
 import org.apache.cocoon.components.xpointer.parser.ParseException;
@@ -48,7 +50,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
-import org.apache.excalibur.source.SourceValidity; 
+import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -151,6 +153,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
 
         /** The nesting level of xi:fallback elements that have been encountered. */
         private int fallbackElementLevel;
+        
+        /** 
+         * Keep a map of namespaces prefix in the source document to pass it
+         * to the XPointerContext for correct namespace identification. 
+         */
+        private Map namespaces = new HashMap();
 
         /**
          * In case {@link #useFallbackLevel} > 0, then this should contain the 
@@ -281,12 +289,14 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
             if (isEvaluatingContent()) {
                 super.startPrefixMapping(prefix, uri);
+                namespaces.put(prefix, uri);
             }
         }
 
         public void endPrefixMapping(String prefix) throws SAXException {
             if (isEvaluatingContent()) {
                 super.endPrefixMapping(prefix);
+                namespaces.remove(prefix);
             }
         }
 
@@ -462,6 +472,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                             XPointer xptr;
                             xptr = XPointerFrameworkParser.parse(NetUtils.decodePath(xpointer));
                             XPointerContext context = new XPointerContext(xpointer, url, subPipe, getLogger(), manager);
+                            for (Iterator iter = namespaces.keySet().iterator(); iter.hasNext();) {
+                                String prefix = (String) iter.next();
+                                context.addPrefix(prefix, (String) namespaces.get(prefix));
+                            }
                             xptr.process(context);
                         } else {
                             SourceUtil.toSAX(url, new IncludeXMLConsumer(subPipe));
