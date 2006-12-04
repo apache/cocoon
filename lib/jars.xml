@@ -1189,17 +1189,7 @@
       Jackrabbit JCR implementation
     </description>
     <used-by>JCR block</used-by>
-    <lib>optional/jackrabbit-commons-1.0-dev-r292737.jar</lib>
-    <homepage>http://jackrabbit.apache.org/</homepage>
-  </file>
-
-  <file>
-    <title>Jackrabbit</title>
-    <description>
-      Jackrabbit JCR implementation
-    </description>
-    <used-by>JCR block</used-by>
-    <lib>optional/jackrabbit-1.0-dev-r292737.jar</lib>
+    <lib>optional/jackrabbit-core-1.0.1.jar</lib>
     <homepage>http://jackrabbit.apache.org/</homepage>
   </file>
 
