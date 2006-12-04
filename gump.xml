@@ -1887,7 +1887,7 @@
   <project name="jackrabbit">
     <url href="http://incubator.apache.org/jackrabbit"/>
     <package>org.apache.jackrabbit</package>
-    <jar name="lib/optional/jackrabbit-20050422T153417.jar"/>
+    <jar name="lib/optional/jackrabbit-core-1.0.1.jar"/>
   </project>
 
   <project name="wsrp4j">
