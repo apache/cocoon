@@ -1,3 +1,0 @@
-
-REM C:\Programme\j2sdk1.4.2_06\bin\java 
-C:\Programme\Java\jdk1.5.0_09\bin\java -classpath start.jar;lib\jetty-6.0.1.jar;lib\jetty-util-6.0.1.jar;lib\servlet-api-2.5-6.0.1.jar -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n  -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog -Dorg.apache.cocoon.mode=dev -Djava.io.tmpdir=F:\os\cocoon\trunk\tools\cocoon-rcl\cocoon-rcl-plugin-demo\container\jetty-6.0.1\work org.mortbay.start.Main etc\cocoon.xml
