@@ -215,14 +215,18 @@ function do_sampleTree() {
 
 function do_suggest() {
     var form = new Form("forms/ajax_suggest_form.xml");
-    var path = form.getChild("path");
 
     form.showForm("ajax_suggest-display-pipeline.jx");
-    
+
+    var path = form.getChild("path");
+    var person = form.getChild("personId");
+
     cocoon.sendPage("textresult-display-pipeline.jx",
         {title: "Suggest results", text: "path value = " + path.value +
-              "\npath suggested label = " +  
-              (path.suggested ? path.suggestionLabel : "(none)") });
+             "\npath suggested label = " +  
+             (path.suggested ? path.suggestionLabel : "(none)") +
+             "\n\n\npersonId = " + person.value + 
+             "\npersonName = " + (person.suggested ? person.suggestionLabel : "(none)")});
 }
 
 function do_inplace() {

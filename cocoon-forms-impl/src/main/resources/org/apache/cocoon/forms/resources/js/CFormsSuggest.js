@@ -54,9 +54,35 @@ dojo.lang.extend(cocoon.forms.CFormsSuggest, {
                 "&continuation-id=" + contId + "&filter=%{searchString}";
         }
         dojo.widget.html.ComboBox.prototype.fillInTemplate.apply(this, arguments);
-        // Restore the initial value and the associated suggestion text, if any
-        this.setValue(node.getAttribute("suggestion") ? node.getAttribute("suggestion") : node.value);
-        this.setSelectedValue(node.value);
+        if (node.value) {
+            // Get the suggestion text from the server
+            this.getData(this, "_cocoon/forms/suggest?widget=" + node.getAttribute("name") + 
+                    "&continuation-id=" + contId + "&filter=" + node.value + "&phase=init", node);
+        } else {
+            // Restore the initial value and the associated suggestion text, if any
+            this.setValue(node.getAttribute("suggestion") ? node.getAttribute("suggestion") : node.value);
+            this.setSelectedValue(node.value);
+        }
+    },
+
+    getData: function(widget, url, node) {
+        dojo.io.bind({
+            url: url,
+            load: dojo.lang.hitch(this, function(type, data, evt){ 
+                if(!dojo.lang.isArray(data)){
+                    var arrData = [];
+                    for(var key in data){
+                        arrData.push([data[key], key]);
+                    }
+                    data = arrData;
+                }
+                // suggestion text
+                widget.setValue(data[0][0]);
+                // numeric value
+                widget.setSelectedValue(node.value);
+            }),
+            mimetype: "text/json"
+        });
     }
 })
 
