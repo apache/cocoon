@@ -311,9 +311,11 @@
     <table border="0" summary="{fi:hint}">
       <xsl:apply-templates select="." mode="css"/>
       <tbody>
+        <xsl:if test="fi:items/*[fi:label]">
         <tr>
           <xsl:apply-templates select="fi:items/*" mode="group-rows-labels"/>
         </tr>
+        </xsl:if>
         <tr>
           <xsl:apply-templates select="fi:items/*" mode="group-rows-content"/>
         </tr>
