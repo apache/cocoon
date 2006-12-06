@@ -66,6 +66,83 @@
 	  ]]>
 	  </fd:suggestion-list>
 	</fd:field>
+  <fd:field id="personId">
+      <fd:datatype base="integer"/>
+      <fd:initial-value>16</fd:initial-value>
+      <fd:suggestion-list type="javascript">
+      <![CDATA[
+        function addSuggestion(bean) {
+            suggestions.push({value: bean.value, label: bean.label});
+        }
+
+        function personList() {
+          return [
+                  {value: 1, label: "Donald Ball"},
+                  {value: 2, label: "Sylvain Wallez"},
+                  {value: 3, label: "Carsten Ziegeler"},
+                  {value: 4, label: "Torsten Curdt"},
+                  {value: 5, label: "Marcus Crafter"},
+                  {value: 6, label: "Ovidiu Predescu"},
+                  {value: 7, label: "Christian Haul"},
+                  {value: 8, label: "Jeremy Quinn"},
+                  {value: 9, label: "Stefano Mazzocchi"},
+                  {value: 10, label: "Pierpaolo Fumagalli"},
+                  {value: 11, label: "Davanum Srinivas"},
+                  {value: 12, label: "Antonio Gallardo"},
+                  {value: 13, label: "Ugo Cei"},
+                  {value: 14, label: "David Crossley"},
+                  {value: 15, label: "Bertrand Delacr&#233;taz"},
+                  {value: 16, label: "Bruno Dumon"},
+                  {value: 17, label: "Daniel Fagerstrom"},
+                  {value: 18, label: "Leszek Gawron"},
+                  {value: 19, label: "Ralph Goers"},
+                  {value: 20, label: "Vadim Gritsenko"},
+                  {value: 21, label: "Jorg Heymans"},
+                  {value: 22, label: "J&#246;rg Heinicke"},
+                  {value: 23, label: "Jean-Baptiste Quenot"}
+                ];
+        }
+
+        function startsWith(string1, string2) {
+          return (new java.lang.String(string1)).startsWith(string2);
+        }
+        
+        function searchByString() {
+          for (var i = 0; i < list.length; i++) {
+            if (startsWith(list[i].label, filter)) {
+              addSuggestion(list[i]);
+            }
+          }
+        }
+        
+        function searchById() {
+          for (var i = 0; i < list.length; i++) {
+            if (list[i].value == parseInt(filter)) {
+              addSuggestion(list[i]);
+            }
+          }
+        }
+        
+        var suggestions = [];
+        var list = personList();
+        if (filter) {
+          var phase = cocoon.request.getParameter("phase");
+          if (phase && phase.equals("init")) {
+            if (!isNaN(parseInt(filter))) {
+              searchById();
+            } else {
+              cocoon.log.error("The filter: '" + filter + "' must be a number.");
+            }
+          } else {              
+            searchByString();
+          }          
+        } else {
+          suggestions = list;
+        }
+        return suggestions;
+      ]]>
+      </fd:suggestion-list>
+    </fd:field>
     <fd:submit id="ok"><fd:label>OK</fd:label></fd:submit>
   </fd:widgets>
 </fd:form>
