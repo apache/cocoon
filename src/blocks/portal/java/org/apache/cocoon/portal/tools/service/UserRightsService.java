@@ -24,11 +24,11 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.tools.helper.MultipleRoleMatcher;
 import org.apache.cocoon.portal.tools.helper.RoleMatcher;
 import org.apache.cocoon.portal.tools.helper.SingleRoleMatcher;
+import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.excalibur.source.Source;
 
 /**
@@ -136,17 +136,14 @@ public class UserRightsService {
         boolean isAllowed = true;
 
         // Iterate all userrights
-        Iterator iterator = this.userrights.entrySet().iterator();
-        Map.Entry entry;
-        int[] pattern;
-        RoleMatcher[] matcher;
+        final Iterator iterator = this.userrights.entrySet().iterator();
         while (iterator.hasNext() && isAllowed) {
-            entry = (Map.Entry)iterator.next();
-            pattern = (int[])entry.getKey();
+            final Map.Entry entry = (Map.Entry)iterator.next();
+            final String pattern = (String)entry.getKey();
 
             // If userright matches try to find a matching role
-            if (WildcardHelper.match(new HashMap(), url, pattern)) {
-                matcher = (RoleMatcher[])entry.getValue();
+            if (WildcardMatcherHelper.match(pattern, url) != null ) {
+                final RoleMatcher[] matcher = (RoleMatcher[])entry.getValue();
 
                 isAllowed = false;
 
@@ -168,17 +165,14 @@ public class UserRightsService {
         boolean isAllowed = true;
 
         // Iterate all userrights
-        Iterator iterator = this.userrights.entrySet().iterator();
-        Map.Entry entry;
-        int[] pattern;
-        RoleMatcher[] matcher;
+        final Iterator iterator = this.userrights.entrySet().iterator();
         while (iterator.hasNext() && isAllowed) {
-            entry = (Map.Entry)iterator.next();
-            pattern = (int[])entry.getKey();
+            final Map.Entry entry = (Map.Entry)iterator.next();
+            final String pattern = (String)entry.getKey();
 
             // If userright matches try to find a matching role
-            if (WildcardHelper.match(new HashMap(), id, pattern)) {
-                matcher = (RoleMatcher[])entry.getValue();
+            if (WildcardMatcherHelper.match(pattern, id) != null ) {
+                final RoleMatcher[] matcher = (RoleMatcher[])entry.getValue();
 
                 isAllowed = false;
 
@@ -198,18 +192,17 @@ public class UserRightsService {
      * Parse the properties.
      */
     private void parseProperties() {
-        Map userrights = new HashMap();
+        final Map ur = new HashMap();
 
-        Iterator iterator = this.properties.entrySet().iterator();
-        Map.Entry entry;
+        final Iterator iterator = this.properties.entrySet().iterator();
         while (iterator.hasNext()) {
-            entry = (Map.Entry)iterator.next();
-            userrights.put(
-                WildcardHelper.compilePattern((String)entry.getKey()),
+            final Map.Entry entry = (Map.Entry)iterator.next();
+            ur.put(
+                (String)entry.getKey(),
                 this.buildRoles((String)entry.getValue()));
         }
 
-        this.userrights = userrights;
+        this.userrights = ur;
     }
 
     /**
