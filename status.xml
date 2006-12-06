@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+   <action dev="AG" type="fix" fixes-bug="COCOON-1962" due-to="Carlos Chávez" due-to-email="cchavez@agssa.net">
+      CForms: Numeric based suggestion list should initialzate to the corresponding suggested text.
+    </action>
     <action dev="BRD" type="update">
       Updated Rhino (Javascript engine) to version 1.6R5.
       This version is licensed under MPL, while previous versions were licensed under NPL,
