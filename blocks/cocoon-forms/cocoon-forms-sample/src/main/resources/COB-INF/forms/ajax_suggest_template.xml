@@ -43,6 +43,12 @@
       use the up/down arrow and press space. Hitting escape hides the suggestion list.</small>
       <br/>
       <br/>
+      Choose a person.
+      <br/>
+      <ft:widget id="personId" type="suggest"/>
+      <small>Initial value of the widget is 16, the widget must show "Bruno Dumon".</small>
+      <br/>
+      <br/>
       <ft:widget id="ok"/>
     </ft:form-template>
 
