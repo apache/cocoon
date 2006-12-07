@@ -29,7 +29,7 @@
     <version>2</version>
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>2</version>
   <name>Cocoon Blocks [modules]</name>
   <build>
     <plugins>
@@ -126,6 +126,8 @@
     </profile>
   </profiles>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-modules-2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-modules-2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-modules-2</url>
   </scm>
 </project>
