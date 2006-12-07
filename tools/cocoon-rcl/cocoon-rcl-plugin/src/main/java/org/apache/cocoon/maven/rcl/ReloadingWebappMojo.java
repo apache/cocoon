@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
@@ -195,7 +196,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
         RwmProperties props = null;
         try {
             props  = new RwmProperties(this.rclPropertiesFile);
-        } catch (IOException e) {
+        } catch (ConfigurationException e) {
             throw new MojoExecutionException("Can't read " + this.rclPropertiesFile.getAbsolutePath(), e);
         }
         return props;
