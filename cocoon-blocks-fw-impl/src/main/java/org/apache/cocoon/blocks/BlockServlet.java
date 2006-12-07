@@ -155,7 +155,7 @@ public class BlockServlet extends HttpServlet
     }
     
     /**
-     * The path to the blocks resolurces relative to the servlet context URL,
+     * The path to the blocks resources relative to the servlet context URL,
      * must start with an '/'.
      * @param blockContextURL
      */
