@@ -17,36 +17,27 @@
 package org.apache.cocoon.maven.rcl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public class RwmProperties {
 
     private static final String COB_INF_DIR = "/COB-INF";
     private static final String BLOCK_CONTEXT_URL_PARAM = "/blockContextURL";
-    private static final String ARTIFACT = "%artifact";
     private static final String CLASSES_DIR = "%classes-dir";    
     
-    private Properties rclProps = new Properties();
+    private Configuration props;
 
-    public RwmProperties(InputStream propsIs) throws IOException {
-        this.rclProps.load(propsIs);
-    }
-    
-    public RwmProperties(File propsFile) throws IOException {
-        this(new FileInputStream(propsFile));
-    }
-
-    public Set getArtifacts() {
-        return getFilteredPropertiesValuesAsSet(ARTIFACT);
+    public RwmProperties(File propsFile) throws ConfigurationException {
+        props = new PropertiesConfiguration(propsFile);
     }
     
     public Set getClassesDirs() {
@@ -55,14 +46,14 @@ public class RwmProperties {
     
     public Properties getSpringProperties() throws MojoExecutionException {
         Properties springProps = new Properties();
-        for(Enumeration rclEnum = rclProps.keys(); rclEnum.hasMoreElements();) {
-            String key = (String) rclEnum.nextElement();
-            if(!key.endsWith(ARTIFACT) && !key.endsWith(CLASSES_DIR)) {
-                springProps.put(key, this.rclProps.getProperty(key));
+        for(Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+            if(!key.endsWith(CLASSES_DIR)) {
+                springProps.put(key, this.props.getString(key));
             }
-            if(key.endsWith(CLASSES_DIR)) {
+            if(key.endsWith(CLASSES_DIR) && !CLASSES_DIR.equals(key)) {
                 String newKey = key.substring(0, key.length() - CLASSES_DIR.length()) + BLOCK_CONTEXT_URL_PARAM;
-                File blockContext = new File(this.rclProps.getProperty(key) + COB_INF_DIR);
+                File blockContext = new File(this.props.getString(key) + COB_INF_DIR);
                 try {
                     springProps.put(newKey, blockContext.toURL().toExternalForm());
                 } catch (MalformedURLException e) {
@@ -75,10 +66,13 @@ public class RwmProperties {
     
     private Set getFilteredPropertiesValuesAsSet(String filter) {
         Set returnSet = new HashSet();
-        for(Enumeration rclEnum = rclProps.keys(); rclEnum.hasMoreElements();) {
-            String key = (String) rclEnum.nextElement();
-            if(key.endsWith(filter)) {
-                returnSet.add(this.rclProps.getProperty(key));
+        for (Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+            if (key.endsWith(filter)) {
+                String[] values = this.props.getStringArray(key);
+                for (int i = 0; i < values.length; i++) {
+                    returnSet.add(values[i]);
+                }
             }
         }        
         return returnSet;
