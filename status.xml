@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+   <action dev="AS" type="fix" fixes-bug="COCOON-1965" due-to="Jeroen Reijn">
+      CForms: The filterfield widget was not defined for the forms manager.
+   </action>
    <action dev="AG" type="fix" fixes-bug="COCOON-1962" due-to="Carlos Chávez" due-to-email="cchavez@agssa.net">
       CForms: Numeric based suggestion list should initialzate to the corresponding suggested text.
     </action>
