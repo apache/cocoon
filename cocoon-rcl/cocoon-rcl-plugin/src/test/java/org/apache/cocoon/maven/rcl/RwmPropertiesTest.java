@@ -16,41 +16,51 @@
  */
 package org.apache.cocoon.maven.rcl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
-public class RwmPropertiesTest extends TestCase {
+import org.apache.commons.io.IOUtils;
 
+public class RwmPropertiesTest extends TestCase {
+    
     public void testLoadingSpringProps() throws Exception {
         RwmProperties p = createTestProperties();
         Properties springProps = p.getSpringProperties();
-        assertEquals(5, springProps.size());
+        assertEquals(7, springProps.size());
+        // test variable interpolation
+        assertEquals("interpolatedValue:A", springProps.getProperty("b"));
+        // test setting the correct context URL if a *%classes-dir property was set
         assertTrue(springProps.containsKey("org.apache.cocoon.cocoon-rcl-plugin-demo.block/blockContextURL"));
         assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/blockContextURL")
                 .indexOf("target/classes/COB-INF") > 0);
     }
-    
-    public void testLoadingArtifactValues() throws Exception {
-        RwmProperties p = createTestProperties();
-        Set as = p.getArtifacts();
-        assertEquals(2, as.size());
-        assertTrue(as.contains("org.apache.cocoon:cocoon-myBlock"));
-        assertTrue(as.contains("org.apache.cocoon:cocoon-myBlock1"));    
-    }   
 
     public void testLoadingBasedirs() throws Exception {
         RwmProperties p = createTestProperties();
         Set as = p.getClassesDirs();
-        assertEquals(3, as.size());
+        assertEquals(5, as.size());
         assertTrue(as.contains("file:/F:/blocks/myBlock/target/classes"));
-        assertTrue(as.contains("file:/F:/blocks/myBlock1/target/classes"));        
+        assertTrue(as.contains("file:/F:/blocks/myBlock1/target/classes"));      
     }      
     
     protected RwmProperties createTestProperties() throws Exception {    
-        return new RwmProperties(readResourceFromClassloader("rcl.properties"));
+        return new RwmProperties(getResourcesFromClassLoaderAsFile("rcl.properties"));
+    }
+    
+    protected File getResourcesFromClassLoaderAsFile(String fileName) throws IOException {
+        File tempFile = File.createTempFile(
+                fileName, ".conf");
+        FileOutputStream tempFileFos = new FileOutputStream(tempFile);
+        IOUtils.copy(readResourceFromClassloader(fileName), tempFileFos);
+        tempFileFos.close();
+        tempFile.deleteOnExit();
+        return tempFile;
     }
     
     protected InputStream readResourceFromClassloader(String fileName) {
