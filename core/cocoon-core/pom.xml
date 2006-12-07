@@ -46,17 +46,6 @@
           </execution>
         </executions>
       </plugin>
-      <!-- uncommeent the cocoon-maven-eclipse-plugin plugin to create the Eclipse project files
-           with PDE support. Note that you have to run 'mvn install'
-           in cocoon/trunk/tools/cocoon-maven-eclipse-plugin first -->
-      <!--plugin>
-        <groupId>org.apache.cocoon</groupId>
-        <artifactId>cocoon-maven-eclipse-plugin</artifactId>
-        <version>2.3-SNAPSHOT</version>
-        <configuration>
-          <pde>true</pde>
-        </configuration>
-      </plugin-->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
