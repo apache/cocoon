@@ -82,7 +82,7 @@
   </repositories>
 
   <pluginRepositories>
-    <pluginRepository>
+    <!--pluginRepository>
       <id>reinhard-m2-snapshot-repository</id>
       <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
       <releases>
@@ -91,7 +91,7 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-    </pluginRepository>
+    </pluginRepository-->
     <!-- Activate this element if you want to use snapshot versions of plugins
     <pluginRepository>
       <id>apache.snapshot</id>
@@ -443,7 +443,8 @@
     <repository>
       <id>cocoon-staging-repo</id>
       <name>staging release repository</name>
-      <url>scpexe://people.apache.org/home/jheymans/public_html/cocoon-staging-repository</url>
+      <!-- available via http: http://people.apache.org/builds/cocoon -->
+      <url>scpexe://people.apache.org/www/people.apache.org/builds/cocoon</url>
     </repository>
     <snapshotRepository>
       <id>apache-maven-snapshot</id>
@@ -474,7 +475,7 @@
           <artifactId>maven-war-plugin</artifactId>
           <version>2.0.1</version>
         </plugin>
-        <plugin>
+        <!--plugin>
           <groupId>org.daisycms</groupId>
           <artifactId>daisy-maven-plugin</artifactId>
           <version>1.0.0-SNAPSHOT</version>
@@ -567,7 +568,6 @@
 								    <version>1.0.0-SNAPSHOT</version>
 								  </skin>
 								  <body>
-								    <!-- @daisy-start@ --><!-- @daisy-end@ -->
 								    <menu ref="reports"/>
 								  </body>
 								</project>
@@ -582,7 +582,7 @@
               </goals>
             </execution>
           </executions>
-        </plugin>
+        </plugin-->
       </plugins>
     </pluginManagement>
     <extensions>
@@ -729,7 +729,7 @@
         </plugins>
       </reporting>
     </profile>
-    <profile>
+    <!--profile>
       <id>simian-report</id>
       <reporting>
         <plugins>
@@ -740,6 +740,6 @@
           </plugin>
         </plugins>
       </reporting>
-    </profile>
+    </profile-->
   </profiles>
 </project>
