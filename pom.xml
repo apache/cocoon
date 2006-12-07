@@ -25,10 +25,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>2</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-blocks-fw</artifactId>
+  <version>1</version>
   <packaging>pom</packaging>
   <name>Blocks Framework</name>
   <modules>
@@ -37,4 +38,10 @@
     <module>cocoon-blocks-fw-demo2</module>
     <module>cocoon-blocks-fw-sample</module>
   </modules>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-fw-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-fw-1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-fw-1</url>
+  </scm>
 </project>
