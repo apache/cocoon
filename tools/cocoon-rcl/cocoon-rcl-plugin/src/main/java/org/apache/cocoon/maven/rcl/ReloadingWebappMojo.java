@@ -58,7 +58,8 @@ import org.apache.maven.project.artifact.MavenMetadataSource;
  * @goal webapp
  * @requiresProject true
  * @requiresDependencyResolution runtime
- * @phase package
+ * @execute phase="process-classes"
+ * @version $Id$ 
  */
 public class ReloadingWebappMojo extends AbstractMojo {
 
@@ -183,7 +184,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
         createUrlClassLoaderConf(webAppBaseDir, props);   
         
         // create a file that contains the URLs of all classes directories (config for the ReloadingClassLoader)
-        createReloadingClassLoaderconf(webAppBaseDir, props);
+        createReloadingClassLoaderConf(webAppBaseDir, props);
         
         // based on the RCL configuration file, create a Spring properties file
         createSpringProperties(webAppBaseDir, props);
@@ -200,13 +201,13 @@ public class ReloadingWebappMojo extends AbstractMojo {
         return props;
     }
 
-    protected void createReloadingClassLoaderconf(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
+    protected void createReloadingClassLoaderConf(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
         File urlClConfFile = createPath(new File(webAppBaseDir, WEB_INF_RCLWRAPPER_RCL_CONF));
         try {
             FileWriter fw = new FileWriter(urlClConfFile);
             for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
-                fw.write(dir + "\n");            
+                fw.write(new File(dir).getCanonicalPath() + "\n");            
                 this.getLog().debug("Adding classes-dir to RCLClassLoader configuration: " + dir);
             }
             fw.close();

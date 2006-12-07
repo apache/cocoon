@@ -20,10 +20,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+
+import org.apache.maven.plugin.MojoExecutionException;
 
 public class RwmProperties {
 
@@ -50,7 +53,7 @@ public class RwmProperties {
         return getFilteredPropertiesValuesAsSet(CLASSES_DIR);
     }
     
-    public Properties getSpringProperties() {
+    public Properties getSpringProperties() throws MojoExecutionException {
         Properties springProps = new Properties();
         for(Enumeration rclEnum = rclProps.keys(); rclEnum.hasMoreElements();) {
             String key = (String) rclEnum.nextElement();
@@ -59,7 +62,12 @@ public class RwmProperties {
             }
             if(key.endsWith(CLASSES_DIR)) {
                 String newKey = key.substring(0, key.length() - CLASSES_DIR.length()) + BLOCK_CONTEXT_URL_PARAM;
-                springProps.put(newKey, this.rclProps.getProperty(key) + COB_INF_DIR);
+                File blockContext = new File(this.rclProps.getProperty(key) + COB_INF_DIR);
+                try {
+                    springProps.put(newKey, blockContext.toURL().toExternalForm());
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException("Can't create URL to  " + blockContext, e);
+                }
             }
         } 
         return springProps;

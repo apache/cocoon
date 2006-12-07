@@ -29,8 +29,8 @@ public class RwmPropertiesTest extends TestCase {
         Properties springProps = p.getSpringProperties();
         assertEquals(5, springProps.size());
         assertTrue(springProps.containsKey("org.apache.cocoon.cocoon-rcl-plugin-demo.block/blockContextURL"));
-        assertEquals("file:/F:/blocks/myBlock1/target/classes/COB-INF", 
-            springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/blockContextURL"));
+        assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/blockContextURL")
+                .indexOf("target/classes/COB-INF") > 0);
     }
     
     public void testLoadingArtifactValues() throws Exception {
