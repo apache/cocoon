@@ -335,8 +335,10 @@ public class SitemapLanguage
      * Build a processing tree from a <code>Configuration</code>.
      */
     public ProcessingNode build(Configuration tree, String location) throws Exception {
-        final Monitor fam = (Monitor) this.manager.lookup(Monitor.ROLE);
-        fam.setSitemapNotifier(this.processor.getWrappingProcessor());
+// TODO rcl
+//        final Monitor fam = (Monitor) this.manager.lookup(Monitor.ROLE);
+//        fam.setSitemapNotifier(this.processor.getWrappingProcessor());
+        final Monitor fam = null;
         this.itsContainer = SitemapHelper.createContainer(
                                                tree,
                                                location,

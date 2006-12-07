@@ -16,46 +16,48 @@
  */
 package org.apache.cocoon.classloader.reloading;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.cocoon.classloader.ClassLoaderConfiguration;
-import org.apache.cocoon.classloader.reloading.Monitor;
-import org.apache.commons.jci.listeners.NotificationListener;
-import org.apache.commons.jci.stores.ResourceStore;
+// TODO rcl
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//import org.apache.cocoon.classloader.ClassLoaderConfiguration;
+//import org.apache.cocoon.classloader.reloading.Monitor;
+//import org.apache.commons.jci.listeners.NotificationListener;
+//import org.apache.commons.jci.stores.ResourceStore;
 
 /**
  * @version $Id$
  * @since 2.2
  */
-public class ReloadingClassLoaderConfiguration extends ClassLoaderConfiguration {
+public class ReloadingClassLoaderConfiguration { // extends ClassLoaderConfiguration {
 
-    protected final Map storeDirectories = new HashMap();
-    protected Monitor monitor;
-    protected NotificationListener notificationListener;
-
-    public void addStore(String dir, ResourceStore store) {
-        this.storeDirectories.put(dir, store);
-    }
-
-    public ResourceStore getStore(String dir) {
-        return (ResourceStore)this.storeDirectories.get(dir);
-    }
-
-    public void setMonitor(Monitor monitor) {
-        this.monitor = monitor;
-        
-    }
-
-    public Monitor getMonitor() {
-        return monitor;
-    }
-
-    public void setNotificationListener(NotificationListener notificationListener) {
-        this.notificationListener = notificationListener;        
-    }
-
-    public NotificationListener getNotificationListener() {
-        return this.notificationListener;
-    }
+//  TODO rcl    
+//    protected final Map storeDirectories = new HashMap();
+//    protected Monitor monitor;
+//    protected NotificationListener notificationListener;
+//
+//    public void addStore(String dir, ResourceStore store) {
+//        this.storeDirectories.put(dir, store);
+//    }
+//
+//    public ResourceStore getStore(String dir) {
+//        return (ResourceStore)this.storeDirectories.get(dir);
+//    }
+//
+//    public void setMonitor(Monitor monitor) {
+//        this.monitor = monitor;
+//        
+//    }
+//
+//    public Monitor getMonitor() {
+//        return monitor;
+//    }
+//
+//    public void setNotificationListener(NotificationListener notificationListener) {
+//        this.notificationListener = notificationListener;        
+//    }
+//
+//    public NotificationListener getNotificationListener() {
+//        return this.notificationListener;
+//    }
 }
