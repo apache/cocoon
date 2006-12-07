@@ -30,7 +30,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-archetypes</artifactId>
-  <version>2</version>
+  <version>3-SNAPSHOT</version>
   <name>Cocoon Archetypes [modules]</name>
   <packaging>pom</packaging>
   <modules>
@@ -38,8 +38,8 @@
     <module>cocoon-22-archetype-webapp</module>
   </modules>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-archetypes-2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-archetypes-2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-archetypes-2</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/archetypes</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-2/cocoon-archetypes</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-2/cocoon-archetypes</url>
   </scm>
 </project>
