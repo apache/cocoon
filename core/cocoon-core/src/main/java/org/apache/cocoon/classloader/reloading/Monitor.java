@@ -16,8 +16,9 @@
  */
 package org.apache.cocoon.classloader.reloading;
 
-import org.apache.commons.jci.listeners.NotificationListener;
-import org.apache.commons.jci.monitor.FilesystemAlterationListener;
+// TODO rcl
+//import org.apache.commons.jci.listeners.NotificationListener;
+//import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 
 /**
  * 
@@ -27,8 +28,9 @@ public interface Monitor {
 
     String ROLE = Monitor.class.getName();
 
-    void subscribe(final FilesystemAlterationListener listener);    
-    void unsubscribe(final FilesystemAlterationListener listener);
-    void setSitemapNotifier(NotificationListener sitemapNotifier);
+//    TODO rcl    
+//    void subscribe(final FilesystemAlterationListener listener);    
+//    void unsubscribe(final FilesystemAlterationListener listener);
+//    void setSitemapNotifier(NotificationListener sitemapNotifier);
 
 }

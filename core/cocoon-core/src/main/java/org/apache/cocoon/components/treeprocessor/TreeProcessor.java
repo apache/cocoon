@@ -42,7 +42,8 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
-import org.apache.commons.jci.listeners.NotificationListener;
+//TODO rcl
+//import org.apache.commons.jci.listeners.NotificationListener;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
@@ -56,7 +57,7 @@ import org.xml.sax.SAXException;
 public class TreeProcessor extends AbstractLogEnabled
                            implements ThreadSafe, Processor, Serviceable,
                                       Configurable,
-                                      Disposable, Initializable,NotificationListener {
+                                      Disposable, Initializable { // TODO rcl ,NotificationListener {
 
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;

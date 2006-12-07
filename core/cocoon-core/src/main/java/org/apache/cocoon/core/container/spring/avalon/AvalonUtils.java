@@ -25,7 +25,8 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.reloading.ReloadingClassLoaderConfiguration;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
-import org.apache.commons.jci.stores.ResourceStore;
+//TODO rcl    
+// import org.apache.commons.jci.stores.ResourceStore;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -78,82 +79,84 @@ public class AvalonUtils {
         }
     }
 
-    /**
-     * Read the configuration for a class loader from an Avalon configuration.
-     * This method is used by the sitemap to determine the classpath for the sitemap.
-     * If a lib-directory is configured this method scans the directory and adds
-     * all found jar/zip files to the classpath.
-     * @param resolver   The source resolver for the current sitemap.
-     * @param config     The configuration for the class loader
-     * @return           A class loader configuration object.
-     * @throws Exception
-     */
-    public static ReloadingClassLoaderConfiguration createConfiguration(SourceResolver resolver,
-                                                                        Configuration  config)
-    throws Exception {
-        final ReloadingClassLoaderConfiguration configBean = new ReloadingClassLoaderConfiguration();
-        final Configuration[] children = config.getChildren();
-        for (int i = 0; i < children.length; i++) {
-            final Configuration child = children[i];
-            final String name = child.getName();
-            if ("class-dir".equals(name)) {
-                Source src = null;
-                try {
-                    src = resolver.resolveURI(child.getAttribute("src"));
-                    if (!src.exists()) {
-                        throw new ConfigurationException(src.getURI() + " doesn't exist");
-                    }
-                    configBean.addClassDirectory(src.getURI());
-                    configureStore(configBean,src.getURI(),child.getChild("store",false));
-                } finally {
-                    resolver.release(src);
-                }
-            } else if ("lib-dir".equals(name)) {
-                Source src = null;
-                try {
-                    src = resolver.resolveURI(child.getAttribute("src"));
-                    if (!src.exists()) {
-                        throw new Exception(src.getURI() + " doesn't exist");
-                    } else if (!(src instanceof TraversableSource) || !((TraversableSource)src).isCollection()) {
-                        throw new Exception(src.getURI() + " is not a directory");
-                    }
-                    Iterator iter = ((TraversableSource)src).getChildren().iterator();
-                    while (iter.hasNext()) {
-                        final Source childSrc = (Source)iter.next();
-                        String childURI = childSrc.getURI();
-                        resolver.release(childSrc);
-                        if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
-                            configBean.addClassDirectory(childURI);
-                        }
-                    }
-                } finally {
-                    resolver.release(src);
-                }
-            } else if ("include-classes".equals(name)) {
-                configBean.addInclude(child.getAttribute("pattern"));
-            } else if ("exclude-classes".equals(name)) {
-                configBean.addExclude(child.getAttribute("pattern"));
-            } else {
-                throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
-            }
-        }
-        return configBean;
-    }
-    
-    /**
-     * If a store node is configured in the class-dir/src-dir configuration, 
-     * let's configure the store; if no store node is configured add a default;
-     * the default one is the JCI MemoryStore
-     */
-    private static void configureStore(ReloadingClassLoaderConfiguration configBean,
-                                       String                            dirUri,
-                                       Configuration                     storeConfig)
-    throws Exception {
-        final String storeClassName = (storeConfig != null 
-            ? storeConfig.getAttribute("class","org.apache.commons.jci.stores.MemoryResourceStore")
-                : "org.apache.commons.jci.stores.MemoryResourceStore");
-        final ResourceStore store = (ResourceStore)Class.forName(storeClassName).newInstance();
-        final URL url = new URL(dirUri);
-        configBean.addStore(url.getFile(),store);
-    }
+//  TODO rcl    
+//    /**
+//     * Read the configuration for a class loader from an Avalon configuration.
+//     * This method is used by the sitemap to determine the classpath for the sitemap.
+//     * If a lib-directory is configured this method scans the directory and adds
+//     * all found jar/zip files to the classpath.
+//     * @param resolver   The source resolver for the current sitemap.
+//     * @param config     The configuration for the class loader
+//     * @return           A class loader configuration object.
+//     * @throws Exception
+//     */
+
+//    public static ReloadingClassLoaderConfiguration createConfiguration(SourceResolver resolver,
+//                                                                        Configuration  config)
+//    throws Exception {
+//        final ReloadingClassLoaderConfiguration configBean = new ReloadingClassLoaderConfiguration();
+//        final Configuration[] children = config.getChildren();
+//        for (int i = 0; i < children.length; i++) {
+//            final Configuration child = children[i];
+//            final String name = child.getName();
+//            if ("class-dir".equals(name)) {
+//                Source src = null;
+//                try {
+//                    src = resolver.resolveURI(child.getAttribute("src"));
+//                    if (!src.exists()) {
+//                        throw new ConfigurationException(src.getURI() + " doesn't exist");
+//                    }
+//                    configBean.addClassDirectory(src.getURI());
+//                    configureStore(configBean,src.getURI(),child.getChild("store",false));
+//                } finally {
+//                    resolver.release(src);
+//                }
+//            } else if ("lib-dir".equals(name)) {
+//                Source src = null;
+//                try {
+//                    src = resolver.resolveURI(child.getAttribute("src"));
+//                    if (!src.exists()) {
+//                        throw new Exception(src.getURI() + " doesn't exist");
+//                    } else if (!(src instanceof TraversableSource) || !((TraversableSource)src).isCollection()) {
+//                        throw new Exception(src.getURI() + " is not a directory");
+//                    }
+//                    Iterator iter = ((TraversableSource)src).getChildren().iterator();
+//                    while (iter.hasNext()) {
+//                        final Source childSrc = (Source)iter.next();
+//                        String childURI = childSrc.getURI();
+//                        resolver.release(childSrc);
+//                        if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
+//                            configBean.addClassDirectory(childURI);
+//                        }
+//                    }
+//                } finally {
+//                    resolver.release(src);
+//                }
+//            } else if ("include-classes".equals(name)) {
+//                configBean.addInclude(child.getAttribute("pattern"));
+//            } else if ("exclude-classes".equals(name)) {
+//                configBean.addExclude(child.getAttribute("pattern"));
+//            } else {
+//                throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
+//            }
+//        }
+//        return configBean;
+//    }
+//    
+//    /**
+//     * If a store node is configured in the class-dir/src-dir configuration, 
+//     * let's configure the store; if no store node is configured add a default;
+//     * the default one is the JCI MemoryStore
+//     */
+//    private static void configureStore(ReloadingClassLoaderConfiguration configBean,
+//                                       String                            dirUri,
+//                                       Configuration                     storeConfig)
+//    throws Exception {
+//        final String storeClassName = (storeConfig != null 
+//            ? storeConfig.getAttribute("class","org.apache.commons.jci.stores.MemoryResourceStore")
+//                : "org.apache.commons.jci.stores.MemoryResourceStore");
+//        final ResourceStore store = (ResourceStore)Class.forName(storeClassName).newInstance();
+//        final URL url = new URL(dirUri);
+//        configBean.addStore(url.getFile(),store);
+//    }
 }
