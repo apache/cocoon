@@ -32,15 +32,9 @@
   <artifactId>cocoon-template</artifactId>
   <packaging>pom</packaging>
   <name>Template framework [modules]</name>
-  <version>2</version>
+  <version>3-SNAPSHOT</version>
   <modules>
     <module>cocoon-template-impl</module>
     <module>cocoon-template-sample</module>
   </modules>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-2</url>
-  </scm>
 </project>
