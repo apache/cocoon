@@ -29,11 +29,17 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-flowscript</artifactId>
-  <version>1-SNAPSHOT</version>
+  <version>1</version>
   <packaging>pom</packaging>
   <name>Flowscript Block [modules]</name>
-  <description/>
+  <description />
   <modules>
     <module>cocoon-flowscript-impl</module>
   </modules>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-flowscript-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-flowscript-1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-flowscript-1</url>
+  </scm>
 </project>
