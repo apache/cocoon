@@ -170,7 +170,10 @@ public class SitemapHelper {
         final WebApplicationContext parentContext = (WebApplicationContext)container.getBeanFactory();
 
         // get classloader
-        final ClassLoader classloader = createClassLoader(parentContext, config, fam, servletContext, sitemapResolver);
+//      TODO rcl            
+//        final ClassLoader classloader = createClassLoader(parentContext, config, fam, servletContext, sitemapResolver);
+        final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        
         // create root bean definition
         final String definition = createDefinition(request.getSitemapURIPrefix(),
                                                    sitemapLocation.substring(pos+1),
@@ -187,36 +190,37 @@ public class SitemapHelper {
         }
     }
 
-    /**
-     * Build a processing tree from a <code>Configuration</code>.
-     * @param processor 
-     */
-    protected static ClassLoader createClassLoader(BeanFactory    parentFactory,
-                                                   Configuration  config,
-                                                   Monitor fam,
-                                                   ServletContext servletContext,
-                                                   SourceResolver sitemapResolver)
-    throws Exception {
-        final Configuration componentConfig = config.getChild("components", false);
-        Configuration classPathConfig = null;
-
-        if ( componentConfig != null ) {
-            classPathConfig = componentConfig.getChild(CLASSLOADER_CONFIG_NAME, false);
-        }
-        // Create class loader
-        // we don't create a new class loader if there is no new configuration
-        if ( classPathConfig == null ) {
-            return Thread.currentThread().getContextClassLoader();            
-        }
-        final String factoryRole = classPathConfig.getAttribute("factory-role", ClassLoaderFactory.ROLE);
-
-        // Create a new classloader
-        ReloadingClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, classPathConfig);
-        configBean.setMonitor(fam);
-        ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
-        return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
-                                           configBean,
-                                           servletContext);
-    }
+// TODO rcl    
+//    /**
+//     * Build a processing tree from a <code>Configuration</code>.
+//     * @param processor 
+//     */
+//    protected static ClassLoader createClassLoader(BeanFactory    parentFactory,
+//                                                   Configuration  config,
+//                                                   Monitor fam,
+//                                                   ServletContext servletContext,
+//                                                   SourceResolver sitemapResolver)
+//    throws Exception {
+//        final Configuration componentConfig = config.getChild("components", false);
+//        Configuration classPathConfig = null;
+//
+//        if ( componentConfig != null ) {
+//            classPathConfig = componentConfig.getChild(CLASSLOADER_CONFIG_NAME, false);
+//        }
+//        // Create class loader
+//        // we don't create a new class loader if there is no new configuration
+//        if ( classPathConfig == null ) {
+//            return Thread.currentThread().getContextClassLoader();            
+//        }
+//        final String factoryRole = classPathConfig.getAttribute("factory-role", ClassLoaderFactory.ROLE);
+//
+//        // Create a new classloader
+//        ReloadingClassLoaderConfiguration configBean = AvalonUtils.createConfiguration(sitemapResolver, classPathConfig);
+//        configBean.setMonitor(fam);
+//        ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
+//        return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
+//                                           configBean,
+//                                           servletContext);
+//    }
 
 }

@@ -16,8 +16,9 @@
  */
 package org.apache.cocoon.classloader.reloading;
 
-import org.apache.commons.jci.listeners.NotificationListener;
-import org.apache.commons.jci.stores.ResourceStore;
+// TODO rcl
+//import org.apache.commons.jci.listeners.NotificationListener;
+//import org.apache.commons.jci.stores.ResourceStore;
 
 /**
  * Wraps all the stores configured into the sitemap classloaders, in order to dispatch 
@@ -26,22 +27,23 @@ import org.apache.commons.jci.stores.ResourceStore;
  *
  * @version $Id$
  */
-public class NotifyingResourceStore implements ResourceStore {
+public class NotifyingResourceStore { // TODO rcl implements ResourceStore {
 
-    private NotificationListener listener;
-
-    public NotifyingResourceStore(NotificationListener l) {
-        this.listener = l;
-    }
-    
-    public byte[] read(String pResourceName) {
-        return null;
-    }
-
-    public void remove(String pResourceName) {
-    }
-
-    public void write(String pResourceName, byte[] pResourceData) {
-        this.listener.handleNotification();
-    }
+//    TODO rcl    
+//    private NotificationListener listener;
+//
+//    public NotifyingResourceStore(NotificationListener l) {
+//        this.listener = l;
+//    }
+//    
+//    public byte[] read(String pResourceName) {
+//        return null;
+//    }
+//
+//    public void remove(String pResourceName) {
+//    }
+//
+//    public void write(String pResourceName, byte[] pResourceData) {
+//        this.listener.handleNotification();
+//    }
 }
