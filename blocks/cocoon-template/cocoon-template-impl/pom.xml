@@ -49,7 +49,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-flowscript-impl</artifactId>
-      <version>1.0.0-M1</version>
+      <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
     <!--  
           Test dependencies
