@@ -883,7 +883,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-asciiart"/>
+    <depend project="cocoon-block-asciiart" type="samples"/>
     <depend project="geronimo-spec-activation"/>
     <depend project="geronimo-spec-javamail"/>
     <depend project="javamail"/>
@@ -1578,7 +1578,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-jcr" status="unstable" dir="src/blocks/jcr">
+  <project name="cocoon-block-jcr" status="unstable" dir="src/blocks/jcr" exclude="true">
     <package>org.apache.cocoon</package>
 
     <description>A "jcr:" protocol for Cocoon</description>
