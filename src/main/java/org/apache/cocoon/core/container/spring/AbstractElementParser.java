@@ -268,7 +268,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      * *.properties files from the specified location.
      * 
      * @param parserContext
-     * @param springConfigLocation
+     * @param location
      */
     protected void registerPropertyOverrideConfigurer(final ParserContext parserContext,
                                                       final String        location) {
