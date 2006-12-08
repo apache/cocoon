@@ -147,11 +147,12 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
      * The definition of a repeater action that adds a row to a sibling repeater.
      */
     public static class AddRowActionDefinition extends RepeaterActionDefinition {
-        private int insertRows = 1;
+        private int insertRows;
 
-        public AddRowActionDefinition(String repeaterName) {
+        public AddRowActionDefinition(String repeaterName, int insertRows) {
             super(repeaterName);
-            
+            this.insertRows = insertRows;
+
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
@@ -162,12 +163,13 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
 							throw new CascadingRuntimeException("Error switching page", e);
 						}
                     }
-                    for (int i=0; i < AddRowActionDefinition.this.insertRows; i++) {
-                        repeater.addRow();
+                    for (int i=0; i<AddRowActionDefinition.this.insertRows; i++) {
+                        repeater.addRow(); 
                     }
                 }
             });
         }
+        
     }
 
     //---------------------------------------------------------------------------------------------
