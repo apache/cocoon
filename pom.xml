@@ -44,7 +44,7 @@
   </properties>
   <build>
     <plugins>
-      <!--plugin>
+      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -52,7 +52,7 @@
           <collection>cdocs-flowscript</collection>          
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin-->      
+      </plugin>      
     </plugins>
   </build>
   <dependencies>
