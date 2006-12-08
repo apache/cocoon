@@ -25,14 +25,14 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-blocks-modules</artifactId>
-    <version>2</version>
+    <version>3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-flowscript</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Flowscript Block [modules]</name>
-  <description />
+  <description/>
   <modules>
     <module>cocoon-flowscript-impl</module>
   </modules>
