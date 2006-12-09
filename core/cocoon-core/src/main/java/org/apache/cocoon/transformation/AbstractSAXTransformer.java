@@ -238,8 +238,8 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
     }
 
     /**
@@ -766,38 +766,38 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
      * End recording of parameters
      * If source is null a new parameters object is created, otherwise
      * the parameters are added to this object.
-     * @param source An optional parameters object.
+     * @param additionalParameters An optional parameters object.
      * @return The object containing all parameters.
      */
-    public SourceParameters endParametersRecording(Parameters source)
+    public SourceParameters endParametersRecording(Parameters additionalParameters)
     throws SAXException {
         sendEndPrefixMapping();
 
-        ParametersRecorder recorder = (ParametersRecorder) this.removeRecorder();
-        SourceParameters parameters = recorder.getParameters(source);
+        final ParametersRecorder recorder = (ParametersRecorder) this.removeRecorder();
+        final SourceParameters sourceParameters = recorder.getParameters(additionalParameters);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("End parameters recording. Parameters=" + parameters);
+            getLogger().debug("End parameters recording. Parameters=" + sourceParameters);
         }
-        return parameters;
+        return sourceParameters;
     }
 
     /**
      * End recording of parameters
      * If source is null a new parameters object is created, otherwise
      * the parameters are added to this object.
-     * @param source An optional parameters object.
+     * @param additionalParameters An optional parameters object.
      * @return The object containing all parameters.
      */
-    public SourceParameters endParametersRecording(SourceParameters source)
+    public SourceParameters endParametersRecording(SourceParameters additionalParameters)
     throws SAXException {
         sendEndPrefixMapping();
 
-        ParametersRecorder recorder = (ParametersRecorder) removeRecorder();
-        SourceParameters parameters = recorder.getParameters(source);
+        final ParametersRecorder recorder = (ParametersRecorder) removeRecorder();
+        final SourceParameters sourceParameters = recorder.getParameters(additionalParameters);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("End parameters recording. Parameters=" + parameters);
+            getLogger().debug("End parameters recording. Parameters=" + sourceParameters);
         }
-        return parameters;
+        return sourceParameters;
     }
 
     /**
