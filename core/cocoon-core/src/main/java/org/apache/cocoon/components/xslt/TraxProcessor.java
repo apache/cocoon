@@ -20,7 +20,6 @@ package org.apache.cocoon.components.xslt;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,16 +47,18 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.store.Store;
+import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
-import org.apache.excalibur.xmlizer.XMLizer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -99,7 +100,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
     /** Map of pairs of System ID's / validities of the included stylesheets */
     protected Map m_includesMap = new HashMap();
 
-    protected XMLizer m_xmlizer;
+    protected SAXParser saxParser;
 
     /** The ServiceManager */
     protected ServiceManager m_manager;
@@ -113,7 +114,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
      */
     public void service(final ServiceManager manager) throws ServiceException {
         m_manager = manager;
-        m_xmlizer = (XMLizer) m_manager.lookup(XMLizer.ROLE);
+        saxParser = (SAXParser) m_manager.lookup(SAXParser.ROLE);
         m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
 
         if (m_manager.hasService(Store.TRANSIENT_STORE)) {
@@ -122,7 +123,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
     }
 
     /**
-     * Initialize
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
         m_factory = getTransformerFactory(m_transformerFactory);
@@ -130,16 +131,15 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
     }
 
     /**
-     * Disposable
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         if (null != m_manager) {
             m_manager.release(m_store);
             m_manager.release(m_resolver);
-            m_manager.release(m_xmlizer);
             m_manager = null;
         }
-        m_xmlizer = null;
+        saxParser = null;
         m_store = null;
         m_resolver = null;
     }
@@ -301,14 +301,12 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         }
     }
 
-    private void sourceToSAX(Source source, ContentHandler handler) throws SAXException, IOException, SourceException {
+    private void sourceToSAX(Source source, ContentHandler handler)
+    throws SAXException, IOException, SourceException, ProcessingException {
         if (source instanceof XMLizable) {
             ((XMLizable) source).toSAX(handler);
         } else {
-            final InputStream inputStream = source.getInputStream();
-            final String mimeType = source.getMimeType();
-            final String systemId = source.getURI();
-            m_xmlizer.toSAX(inputStream, mimeType, systemId, handler);
+            this.saxParser.parse(SourceUtil.getInputSource(source), handler);
         }
     }
 

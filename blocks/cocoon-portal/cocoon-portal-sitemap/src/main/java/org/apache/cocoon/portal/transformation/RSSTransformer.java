@@ -16,25 +16,17 @@
  */
 package org.apache.cocoon.portal.transformation;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Map;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
-import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
-import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.apache.excalibur.xmlizer.XMLizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -48,9 +40,6 @@ import org.xml.sax.SAXException;
 public final class RSSTransformer
 extends AbstractSAXTransformer
 implements CacheableProcessingComponent {
-
-    /** The xmlizer for converting html to xml. */
-    protected XMLizer xmlizer;
 
     /** The filter */
     protected XMLConsumer filter;
@@ -75,28 +64,7 @@ implements CacheableProcessingComponent {
             final String text = this.endTextRecording();
             final String html = "<html><body>"+text+"</body></html>";
 
-            Object parsed = null;            
-            XMLByteStreamCompiler serializer = new XMLByteStreamCompiler(); 
-            try {
-                InputStream inputStream = new ByteArrayInputStream(html.getBytes());
-                this.xmlizer.toSAX(inputStream,
-                                    "text/html",
-                                    null,
-                                    serializer);
-                // if no exception occurs, everything is fine!
-                parsed = serializer.getSAXFragment();
-            } catch (Exception ignore) {
-                // just ignore all exceptions
-            } finally {
-                this.manager.release( serializer );
-            }
-            if ( parsed != null ) {
-                XMLByteStreamInterpreter deserializer = new XMLByteStreamInterpreter();
-                deserializer.setConsumer( this.filter );
-                deserializer.deserialize( parsed );
-            } else {
-                this.sendTextEvent(text);
-            }
+            HtmlSaxParser.parseString(html, this.filter);
         }
         super.endElement(uri,name,raw);
     }
@@ -105,29 +73,11 @@ implements CacheableProcessingComponent {
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
-        this.manager.release( this.xmlizer );
-        this.xmlizer = null;
         this.filter = null;
         super.recycle();
     }
 
-    /**
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void setup(SourceResolver resolver,
-                       Map objectModel,
-                       String src,
-                       Parameters par)
-    throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel, src, par);
-        try {
-            this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Unable to lookup component.", ce);
-        }
-    }
-
-   static class HTMLFilter extends IncludeXMLConsumer {
+    static class HTMLFilter extends IncludeXMLConsumer {
 
        int bodyCount = 0;
 
