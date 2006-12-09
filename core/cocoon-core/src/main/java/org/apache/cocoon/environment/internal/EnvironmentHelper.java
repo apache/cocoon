@@ -28,11 +28,11 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.Container;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -400,7 +400,7 @@ implements SourceResolver, Serviceable, Disposable {
             final Request request = ObjectModelHelper.getRequest(info.environment.getObjectModel());
             final Context context = ObjectModelHelper.getContext(info.environment.getObjectModel());
             final Container container = Container.getCurrentContainer(context, new CocoonRequestAttributes(request));
-            return (ServiceManager)container.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+            return (ServiceManager)container.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         }
         return null;
     }

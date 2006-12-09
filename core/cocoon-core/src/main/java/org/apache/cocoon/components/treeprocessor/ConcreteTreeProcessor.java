@@ -27,11 +27,11 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.Container;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -119,7 +119,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
         this.classLoader = container.getClassLoader();
         this.container = container;
-        this.manager = (ServiceManager)this.container.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+        this.manager = (ServiceManager)this.container.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;

@@ -22,8 +22,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
@@ -69,7 +69,18 @@ import java.util.Properties;
  */
 public final class SourceUtil {
 
-    private static REProgram uripattern = null;
+    /**
+     * Get the current sitemap component manager.
+     * This method returns the current sitemap component manager. This
+     * is the manager that holds all the components of the currently
+     * processed (sub)sitemap.
+     * @deprecated This method will be removed.
+     */
+    static private ServiceManager getSitemapServiceManager() {
+        return EnvironmentHelper.getSitemapServiceManager(); 
+    }
+
+    private static REProgram uripattern;
 
     static {
         try {
@@ -132,7 +143,7 @@ public final class SourceUtil {
     static public void toSAX(Source source,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(ProcessingUtil.getSitemapServiceManager(),
+        toSAX(getSitemapServiceManager(),
               source, null, handler);
     }
 
@@ -151,7 +162,7 @@ public final class SourceUtil {
                              String mimeTypeHint,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(ProcessingUtil.getSitemapServiceManager(),
+        toSAX(getSitemapServiceManager(),
               source, mimeTypeHint, handler);
     }
 
@@ -574,7 +585,7 @@ public final class SourceUtil {
                 frag.normalize();
 
                 if (null != serializerName) {
-                    ServiceManager manager = ProcessingUtil.getSitemapServiceManager();
+                    ServiceManager manager = getSitemapServiceManager();
 
                     ServiceSelector selector = null;
                     Serializer serializer = null;
@@ -616,7 +627,7 @@ public final class SourceUtil {
             } else {
                 String content;
                 if (null != serializerName) {
-                    ServiceManager manager = ProcessingUtil.getSitemapServiceManager();
+                    ServiceManager manager = getSitemapServiceManager();
 
                     ServiceSelector selector = null;
                     Serializer serializer = null;
