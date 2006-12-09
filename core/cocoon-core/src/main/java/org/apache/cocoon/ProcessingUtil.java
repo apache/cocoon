@@ -20,34 +20,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-
 /**
  * This is an utility class for processing Cocoon requests.
- *
- * TODO Remove the avalon specific stuff and move it into an avalon specific package
  *
  * $Id$
  * @since 2.2
  */
-public class ProcessingUtil {
-
-    /** Bean name for the Avalon context. */
-    public static final String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
-
-    /** Bean name for the logger. */
-    public static final String LOGGER_ROLE = "org.apache.avalon.framework.logger.Logger";
-
-    /** Bean name for the service manager. */
-    public static final String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";
-
-    /**
-     * Avoid construction.
-     */
-    private ProcessingUtil() {
-        // empty 
-    }
+public abstract class ProcessingUtil {
 
     /**
      * The cleanup threads that are invoked after the processing of a
@@ -97,16 +76,5 @@ public class ProcessingUtil {
          * This method should never raise any exception!
          */
         void invoke();
-    }
-
-    /**
-     * Get the current sitemap component manager.
-     * This method returns the current sitemap component manager. This
-     * is the manager that holds all the components of the currently
-     * processed (sub)sitemap.
-     * @deprecated This method will be removed.
-     */
-    static public ServiceManager getSitemapServiceManager() {
-        return EnvironmentHelper.getSitemapServiceManager(); 
     }
 }

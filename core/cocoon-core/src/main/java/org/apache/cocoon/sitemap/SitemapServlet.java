@@ -28,10 +28,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.springframework.beans.factory.BeanCreationException;
 
 /**
@@ -73,7 +73,7 @@ public class SitemapServlet extends HttpServlet {
 
         protected Processor getProcessor() {
             ServiceManager serviceManager =
-                (ServiceManager) this.cocoonBeanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+                (ServiceManager) this.cocoonBeanFactory.getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
             try {
                 this.treeProcessorConfiguration =
                     this.createTreeProcessorConfiguration(this.servletContext);

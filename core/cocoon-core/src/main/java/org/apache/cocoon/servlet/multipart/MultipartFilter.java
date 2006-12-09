@@ -31,11 +31,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -82,7 +82,7 @@ public class MultipartFilter implements Filter{
                                                  this.settings.isSilentlyRename(),
                                                  this.settings.getMaxUploadSize(),
                                                  containerEncoding);
-        this.log = (Logger) this.cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
+        this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
     }
 
     /**

@@ -41,11 +41,11 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.core.container.spring.avalon.AvalonBeanPostProcessor;
 import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationReader;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -351,7 +351,7 @@ public abstract class ContainerTestCase extends TestCase {
 
         ((DefaultListableBeanFactory)this.beanFactory).preInstantiateSingletons();
         this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
-        this.context = (Context)this.beanFactory.getBean(ProcessingUtil.CONTEXT_ROLE);
+        this.context = (Context)this.beanFactory.getBean(AvalonUtils.CONTEXT_ROLE);
     }
 
     protected final Object lookup( final String key )
@@ -418,14 +418,14 @@ public abstract class ContainerTestCase extends TestCase {
         protected void addContext(Element element, BeanDefinitionRegistry registry) {
             RootBeanDefinition def = this.createBeanDefinition(ContextFactoryBean.class, "init", false);
             def.getPropertyValues().addPropertyValue("properties", this.properties);
-            this.register(def, ProcessingUtil.CONTEXT_ROLE, registry);
+            this.register(def, AvalonUtils.CONTEXT_ROLE, registry);
         }
 
         /**
          * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#addLogger(java.lang.String, org.springframework.beans.factory.support.BeanDefinitionRegistry, java.lang.String)
          */
         protected void addLogger(String configuration, BeanDefinitionRegistry registry, String loggerCategory) {
-            this.addComponent(ConsoleLogger.class, ProcessingUtil.LOGGER_ROLE, null, false, registry);
+            this.addComponent(ConsoleLogger.class, AvalonUtils.LOGGER_ROLE, null, false, registry);
         }
     }
 
