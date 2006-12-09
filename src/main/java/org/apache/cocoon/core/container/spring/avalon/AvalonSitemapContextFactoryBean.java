@@ -19,7 +19,6 @@ package org.apache.cocoon.core.container.spring.avalon;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -64,7 +63,7 @@ public class AvalonSitemapContextFactoryBean
     throws Exception {
         final BeanFactory parentBeanFactory = ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory();
         // create new Avalon context
-        final DefaultContext appContext = new DefaultContext((Context)parentBeanFactory.getBean(ProcessingUtil.CONTEXT_ROLE));
+        final DefaultContext appContext = new DefaultContext((Context)parentBeanFactory.getBean(AvalonUtils.CONTEXT_ROLE));
         appContext.put(Constants.CONTEXT_ENV_PREFIX, this.uriPrefix);
 
         this.context = appContext;

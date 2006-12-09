@@ -36,6 +36,7 @@ import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
@@ -95,7 +96,7 @@ public class RequestProcessor {
         } else {
             this.containerEncoding = encoding;
         }
-        this.log = (Logger) this.cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
+        this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
         this.processor = this.getProcessor();
         this.environmentContext = new HttpContext(this.servletContext);
         // get the optional request listener

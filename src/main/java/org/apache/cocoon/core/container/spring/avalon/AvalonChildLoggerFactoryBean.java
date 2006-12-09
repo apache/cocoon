@@ -17,7 +17,6 @@
 package org.apache.cocoon.core.container.spring.avalon;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -57,7 +56,7 @@ public class AvalonChildLoggerFactoryBean
     throws Exception {
         // get parent factory
         final BeanFactory parentFactory = ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory();
-        final Logger parentLogger = (Logger)parentFactory.getBean(ProcessingUtil.LOGGER_ROLE);
+        final Logger parentLogger = (Logger)parentFactory.getBean(AvalonUtils.LOGGER_ROLE);
         if ( this.category == null ) {
             this.logger = parentLogger;
         } else {

@@ -16,20 +16,11 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
-import java.net.URL;
-import java.util.Iterator;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.classloader.reloading.ReloadingClassLoaderConfiguration;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
-//TODO rcl    
-// import org.apache.commons.jci.stores.ResourceStore;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
 
 /**
  * Some utility methods for handling Avalon stuff.
@@ -38,6 +29,13 @@ import org.apache.excalibur.source.TraversableSource;
  * @since 2.2
  */
 public class AvalonUtils {
+
+    /** Bean name for the Avalon context. */
+    public static final String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
+    /** Bean name for the logger. */
+    public static final String LOGGER_ROLE = "org.apache.avalon.framework.logger.Logger";
+    /** Bean name for the service manager. */
+    public static final String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";
 
     /**
      * Replace all properties in the configuration object.

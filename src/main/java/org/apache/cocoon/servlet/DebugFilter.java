@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -54,7 +54,7 @@ public class DebugFilter implements Filter{
      */
     public void init(FilterConfig config) throws ServletException {
         BeanFactory cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(config.getServletContext());
-        this.logger = (Logger) cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
+        this.logger = (Logger) cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
     }
 
     /**

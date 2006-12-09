@@ -44,7 +44,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -344,7 +343,7 @@ public class SitemapLanguage
                                                location,
                                                fam,
                                                (ServletContext)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
-        final Context itsContext = (Context)this.itsContainer.getBeanFactory().getBean(ProcessingUtil.CONTEXT_ROLE);
+        final Context itsContext = (Context)this.itsContainer.getBeanFactory().getBean(AvalonUtils.CONTEXT_ROLE);
         // The namespace used in the whole sitemap is the one of the root
         // element
         this.itsNamespace = tree.getNamespace();
@@ -354,7 +353,7 @@ public class SitemapLanguage
             tree = AvalonUtils.replaceProperties(tree, this.itsContainer.getSettings());
         }
 
-        this.itsManager = (ServiceManager) this.itsContainer.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+        this.itsManager = (ServiceManager) this.itsContainer.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         // register listeners
         this.registerListeners();
 
