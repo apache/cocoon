@@ -45,7 +45,10 @@ import org.apache.commons.lang.NotImplementedException;
  */
 public class BackgroundRequest extends AbstractRequest {
 
-    private class EmptyEnumeration implements Enumeration {
+    private static final class EmptyEnumeration implements Enumeration {
+        public EmptyEnumeration() {
+            // nothing to do};
+        }
         public boolean hasMoreElements() {
             return false;
         }
@@ -53,6 +56,8 @@ public class BackgroundRequest extends AbstractRequest {
             return null;
         }
     }
+
+    private static final EmptyEnumeration SHARED_EMPTY_ENUMERATION = new EmptyEnumeration();
 
     private Environment env;
     private String contextPath;
@@ -267,14 +272,14 @@ public class BackgroundRequest extends AbstractRequest {
 
     public Enumeration getHeaders(String name) {
         // FIXME
-        return new EmptyEnumeration();
+        return SHARED_EMPTY_ENUMERATION;
     }
 
     public Enumeration getHeaderNames() {
         if (headers != null) {
             return IteratorUtils.asEnumeration(headers.keySet().iterator());
         }
-        return new EmptyEnumeration();
+        return SHARED_EMPTY_ENUMERATION;
     }
 
     public String getCharacterEncoding() { return characterEncoding; }

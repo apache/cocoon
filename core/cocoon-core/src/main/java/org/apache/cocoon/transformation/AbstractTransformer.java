@@ -23,4 +23,6 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
  * @version $Id$
  */
 
-public abstract class AbstractTransformer extends AbstractXMLPipe implements Transformer {}
+public abstract class AbstractTransformer extends AbstractXMLPipe implements Transformer {
+    // nothing do add here
+}
