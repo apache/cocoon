@@ -87,7 +87,7 @@ public abstract class SourceUtil {
             uripattern = new RECompiler().compile("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$");
         } catch (RESyntaxException e) {
             // Should not happen
-            e.printStackTrace();
+            throw new RuntimeException("Error parsing regular expression.", e);
         }
     }
 
