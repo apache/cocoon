@@ -67,7 +67,7 @@ import java.util.Properties;
  *
  * @version $Id$
  */
-public final class SourceUtil {
+public abstract class SourceUtil {
 
     /**
      * Get the current sitemap component manager.
@@ -91,16 +91,12 @@ public final class SourceUtil {
         }
     }
 
-    /** Avoid instantiation */
-    private SourceUtil() {
-    }
-
     /**
      * Generates SAX events from the XMLizable and handle SAXException.
      *
      * @param  source    the data
      */
-    static public void toSAX(XMLizable source,
+    static public void toSAX(XMLizable      source,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         try {
@@ -140,7 +136,7 @@ public final class SourceUtil {
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX(Source source,
+    static public void toSAX(Source         source,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         toSAX(getSitemapServiceManager(),
@@ -158,8 +154,8 @@ public final class SourceUtil {
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX(Source source,
-                             String mimeTypeHint,
+    static public void toSAX(Source         source,
+                             String         mimeTypeHint,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         toSAX(getSitemapServiceManager(),
@@ -177,8 +173,8 @@ public final class SourceUtil {
      * @throws ProcessingException if no suitable converter is found
      */
     static public void toSAX(ServiceManager manager,
-                             Source source,
-                             String mimeTypeHint,
+                             Source         source,
+                             String         mimeTypeHint,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if (source instanceof XMLizable) {
