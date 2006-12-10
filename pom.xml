@@ -544,7 +544,8 @@
 								    <version>1.0.0-SNAPSHOT</version>
 								  </skin>
 								  <body>
-								    <menu ref="reports" />
+								    <!-- @daisy-start@ --><!-- @daisy-end@ -->
+								    <menu ref="reports"/>
 								  </body>
 								</project>
             	]]>
@@ -705,7 +706,7 @@
         </plugins>
       </reporting>
     </profile>
-    <!--profile>
+    <profile>
       <id>simian-report</id>
       <reporting>
         <plugins>
@@ -716,6 +717,6 @@
           </plugin>
         </plugins>
       </reporting>
-    </profile-->
+    </profile>
   </profiles>
 </project>
