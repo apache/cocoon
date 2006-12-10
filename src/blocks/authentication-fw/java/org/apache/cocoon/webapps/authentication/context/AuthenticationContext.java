@@ -31,9 +31,12 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
+import org.apache.cocoon.webapps.session.xml.XMLUtil;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
 
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
@@ -71,6 +74,47 @@ public class AuthenticationContext implements SessionContext {
     protected SourceResolver  resolver;
     /** A list of roles the user is in */
     protected List            roles;
+
+    /**
+     * Read a DOM Fragment from a source
+     *
+     * @param location URI of the Source
+     * @param typeParameters Type of Source query. Currently, only
+     *        <code>method</code> parameter (value typically <code>GET</code> or
+     *        <code>POST</code>) is recognized. May be <code>null</code>.
+     * @param parameters Parameters (e.g. URL params) of the source.
+     *        May be <code>null</code>
+     * @param resolver Resolver for the source.
+     *
+     * @return DOM <code>DocumentFragment</code> constructed from the specified
+     *         source.
+     * @throws ProcessingException
+     */
+    public static DocumentFragment readDOM(String location,
+                                           Parameters typeParameters,
+                                           SourceParameters parameters,
+                                           SourceResolver resolver)
+    throws ProcessingException {
+
+        Source source = null;
+        try {
+            source = SourceUtil.getSource(location, typeParameters, parameters, resolver);
+            Document doc = SourceUtil.toDOM(source);
+
+            DocumentFragment fragment = doc.createDocumentFragment();
+            fragment.appendChild(doc.getDocumentElement());
+
+            return fragment;
+        } catch (SourceException e) {
+            throw SourceUtil.handle(e);
+        } catch (IOException e) {
+            throw new ProcessingException(e);
+        } catch (SAXException e) {
+            throw new ProcessingException(e);
+        } finally {
+            resolver.release(source);
+        }
+    }
 
     /** Constructor */
     public AuthenticationContext(Context context, XPathProcessor processor, SourceResolver resolver) {
@@ -546,7 +590,7 @@ public class AuthenticationContext implements SessionContext {
             parameters = this.createParameters(parameters,
                                                path,
                                                false);
-            SourceUtil.writeDOM(authSaveResource,
+            XMLUtil.writeDOM(authSaveResource,
                                 null,
                                 parameters,
                                 fragment,
@@ -582,10 +626,7 @@ public class AuthenticationContext implements SessionContext {
                                                false);
             DocumentFragment frag;
 
-            frag = SourceUtil.readDOM(authLoadResource,
-                                      null,
-                                      parameters,
-                                      resolver);
+            frag = readDOM(authLoadResource, null, parameters, resolver);
 
             this.setXML(path, frag);
 
@@ -620,10 +661,7 @@ public class AuthenticationContext implements SessionContext {
                                                path,
                                                true);
             DocumentFragment fragment;
-            fragment = SourceUtil.readDOM(loadResource,
-                                          null,
-                                          parameters,
-                                          resolver);
+            fragment = readDOM(loadResource, null, parameters, resolver);
             this.authContext.setXML("/applications/" + applicationName + '/', fragment);
 
         } // end synchronized
@@ -663,7 +701,7 @@ public class AuthenticationContext implements SessionContext {
                 fragment = DOMUtil.createDocument().createDocumentFragment();
             }
 
-            SourceUtil.writeDOM(saveResource,
+            XMLUtil.writeDOM(saveResource,
                                 null,
                                 parameters,
                                 fragment,
@@ -800,10 +838,7 @@ public class AuthenticationContext implements SessionContext {
                                                    null,
                                                    true);
                 DocumentFragment fragment;
-                fragment = SourceUtil.readDOM(loadResource,
-                                              null,
-                                              parameters,
-                                              resolver);
+                fragment = readDOM(loadResource, null, parameters, resolver);
                 this.authContext.setXML("/applications/" + appConf.getName() + '/', fragment);
 
             } // end synchronized
