@@ -35,6 +35,7 @@
   <modules>
     <module>archetypes</module>
     <module>cocoon-block-deployer</module>
+    <module>cocoon-rcl</module>    
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
