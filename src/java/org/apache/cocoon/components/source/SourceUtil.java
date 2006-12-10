@@ -630,8 +630,8 @@ public final class SourceUtil {
      * @param frag DOM fragment to serialize to the Source
      * @param resolver Resolver for the source.
      * @param serializerName The serializer to use
-     *
      * @throws ProcessingException
+     * @deprecated This method will be removed in future versions.
      */
     public static void writeDOM(String location,
                                 Parameters typeParameters,
@@ -762,8 +762,8 @@ public final class SourceUtil {
      *
      * @return DOM <code>DocumentFragment</code> constructed from the specified
      *         source.
-     *
      * @throws ProcessingException
+     * @deprecated This method will be removed in future versions.
      */
     public static DocumentFragment readDOM(String location,
                                            Parameters typeParameters,
