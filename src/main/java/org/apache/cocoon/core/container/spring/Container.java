@@ -21,11 +21,13 @@ import java.util.Stack;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.servlet.ServletRequestHolder;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -48,6 +50,12 @@ public class Container {
     }
 
     protected static Container ROOT_CONTAINER;
+
+    public static Container getCurrentContainer() {
+        final ServletContext servletContext = ServletRequestHolder.currentServletContext();
+        final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+        return getCurrentContainer(servletContext, attributes);
+    }
 
     /**
      * Return the current web application context.
