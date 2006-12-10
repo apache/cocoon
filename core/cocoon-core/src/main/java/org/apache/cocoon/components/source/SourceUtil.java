@@ -16,22 +16,22 @@
  */
 package org.apache.cocoon.components.source;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
-import org.apache.cocoon.xml.dom.DOMStreamer;
-
-import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
@@ -45,22 +45,9 @@ import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.transform.OutputKeys;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * This class contains some utility methods for the source resolving.
@@ -542,183 +529,6 @@ public abstract class SourceUtil {
                                resourceParameters);
 
         return resolver.resolveURI(uri, null, resolverParameters);
-    }
-
-    /**
-     * Write a DOM Fragment to a source.
-     * If the source is a ModifiableSource the interface is used.
-     * If not, the source is invoked with an additional parameter named
-     * "content" containing the XML.
-     * The current sitemap service manager is used to lookup the serializer.
-     *
-     * @param location URI of the Source
-     * @param typeParameters Type of Source query.  Currently, only
-     * <code>method</code> parameter (value typically <code>GET</code> or
-     * <code>POST</code>) is recognized.  May be <code>null</code>.
-     * @param parameters Parameters (e.g. URL params) of the source.
-     * May be <code>null</code>
-     * @param frag DOM fragment to serialize to the Source
-     * @param resolver Resolver for the source.
-     * @param serializerName The serializer to use
-     *
-     * @throws ProcessingException
-     */
-    public static void writeDOM(String location,
-                                Parameters typeParameters,
-                                SourceParameters parameters,
-                                DocumentFragment frag,
-                                SourceResolver resolver,
-                                String serializerName)
-    throws ProcessingException {
-        Source source = null;
-
-        try {
-            source = SourceUtil.getSource(location, typeParameters,
-                                          parameters, resolver);
-            if (source instanceof ModifiableSource) {
-                ModifiableSource ws = (ModifiableSource) source;
-
-                frag.normalize();
-
-                if (null != serializerName) {
-                    ServiceManager manager = getSitemapServiceManager();
-
-                    ServiceSelector selector = null;
-                    Serializer serializer = null;
-                    OutputStream oStream = null;
-                    try {
-                        selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
-                        serializer = (Serializer)selector.select(serializerName);
-                        oStream = ws.getOutputStream();
-                        serializer.setOutputStream(oStream);
-                        serializer.startDocument();
-                        DOMStreamer streamer = new DOMStreamer(serializer);
-                        streamer.stream(frag);
-                        serializer.endDocument();
-                    } catch (ServiceException e) {
-                        throw new ProcessingException("Unable to lookup serializer.", e);
-                    } finally {
-                        if (oStream != null) {
-                            oStream.flush();
-                            try {
-                                oStream.close();
-                            } catch (Exception ignore) {
-                            }
-                        }
-                        if (selector != null) {
-                            selector.release(serializer);
-                            manager.release(selector);
-                        }
-                    }
-                } else {
-                    Properties props = XMLUtils.createPropertiesForXML(false);
-                    props.put(OutputKeys.ENCODING, "ISO-8859-1");
-                    final String content = XMLUtils.serializeNode(frag, props);
-                    OutputStream oStream = ws.getOutputStream();
-
-                    oStream.write(content.getBytes());
-                    oStream.flush();
-                    oStream.close();
-                }
-            } else {
-                String content;
-                if (null != serializerName) {
-                    ServiceManager manager = getSitemapServiceManager();
-
-                    ServiceSelector selector = null;
-                    Serializer serializer = null;
-                    ByteArrayOutputStream oStream = new ByteArrayOutputStream();
-                    try {
-                        selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
-                        serializer = (Serializer)selector.select(serializerName);
-                        serializer.setOutputStream(oStream);
-                        serializer.startDocument();
-                        DOMStreamer streamer = new DOMStreamer(serializer);
-                        streamer.stream(frag);
-                        serializer.endDocument();
-                    } catch (ServiceException e) {
-                        throw new ProcessingException("Unable to lookup serializer.", e);
-                    } finally {
-                        oStream.flush();
-                        try {
-                            oStream.close();
-                        } catch (Exception ignore) {
-                            // do nothing
-                        }
-                        if (selector != null) {
-                            selector.release(serializer);
-                            manager.release(selector);
-                        }
-                    }
-                    content = oStream.toString();
-                } else {
-                    Properties props = XMLUtils.createPropertiesForXML(false);
-                    props.put(OutputKeys.ENCODING, "ISO-8859-1");
-                    content = XMLUtils.serializeNode(frag, props);
-                }
-
-                if (parameters == null) {
-                    parameters = new SourceParameters();
-                } else {
-                    parameters = (SourceParameters) parameters.clone();
-                }
-                parameters.setSingleParameterValue("content", content);
-
-                source = SourceUtil.getSource(location, typeParameters,
-                                              parameters, resolver);
-                SourceUtil.toSAX(source, new DefaultHandler());
-            }
-        } catch (SourceException e) {
-            throw SourceUtil.handle(e);
-        } catch (IOException e) {
-            throw new ProcessingException(e);
-        } catch (SAXException e) {
-            throw new ProcessingException(e);
-        } finally {
-            resolver.release(source);
-        }
-    }
-
-    /**
-     * Read a DOM Fragment from a source
-     *
-     * @param location URI of the Source
-     * @param typeParameters Type of Source query. Currently, only
-     *        <code>method</code> parameter (value typically <code>GET</code> or
-     *        <code>POST</code>) is recognized. May be <code>null</code>.
-     * @param parameters Parameters (e.g. URL params) of the source.
-     *        May be <code>null</code>
-     * @param resolver Resolver for the source.
-     *
-     * @return DOM <code>DocumentFragment</code> constructed from the specified
-     *         source.
-     *
-     * @throws ProcessingException
-     */
-    public static DocumentFragment readDOM(String location,
-                                           Parameters typeParameters,
-                                           SourceParameters parameters,
-                                           SourceResolver resolver)
-    throws ProcessingException {
-
-        Source source = null;
-        try {
-            source = SourceUtil.getSource(location, typeParameters, parameters, resolver);
-            Document doc = SourceUtil.toDOM(source);
-
-            DocumentFragment fragment = doc.createDocumentFragment();
-            fragment.appendChild(doc.getDocumentElement());
-
-            return fragment;
-        } catch (SourceException e) {
-            throw SourceUtil.handle(e);
-        } catch (IOException e) {
-            throw new ProcessingException(e);
-        } catch (SAXException e) {
-            throw new ProcessingException(e);
-        } finally {
-            resolver.release(source);
-        }
     }
 
     /**

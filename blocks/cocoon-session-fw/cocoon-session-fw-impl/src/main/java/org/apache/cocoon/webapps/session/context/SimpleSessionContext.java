@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.webapps.session.xml.XMLUtil;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.Source;
@@ -443,7 +444,7 @@ implements SessionContext {
             frag = DOMUtil.createDocument().createDocumentFragment();
         }
 
-        SourceUtil.writeDOM(this.saveResource,
+        XMLUtil.writeDOM(this.saveResource,
                             null,
                             parameters,
                             frag,
