@@ -19,7 +19,6 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -30,6 +29,8 @@
   <version>${version}</version>
   <build>
     <plugins>
+      <!-- As the reloading classloader plugin hasn't been released yet, it is uncommented.
+           In order to use it, you have to build it yourself and activate the section below. -->
       <!--plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-rcl-plugin</artifactId>
@@ -74,29 +75,22 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-M3-SNAPSHOT</version>
+      <version>2.2.0-M2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-blocks-fw-impl</artifactId>
-      <version>1.0.0-M2-SNAPSHOT</version>
+      <version>1.0.0-M1</version>
     </dependency>      
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      <version>1.0.0-M2-SNAPSHOT</version>
+      <version>1.0.0-M2</version>
     </dependency>
     <!--dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-impl</artifactId>
-      <version>1.0.0-M2-SNAPSHOT</version>
+      <version>1.0.0-M2</version>
     </dependency-->    
   </dependencies>
-  <repositories>
-    <!--repository>
-      <id>apache.snapshot</id>
-      <name>Apache Snapshot Repository</name>
-      <url>http://svn.apache.org/maven-snapshot-repository</url>
-    </repository-->
-  </repositories>
 </project>
