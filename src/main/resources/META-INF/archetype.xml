@@ -18,10 +18,8 @@
 <archetype>
   <id>cocoon-22-archetype-webapp</id>
   <resources>
-    <resource>src/main/webapp/sitemap.xmap</resource>
-    <resource>src/main/webapp/welcome.xml</resource>
     <resource>src/main/webapp/WEB-INF/web.xml</resource>
-    <resource>src/main/webapp/WEB-INF/applicationContext.xml</resource>
-    <resource>src/main/webapp/WEB-INF/cocoon/log4j.xconf</resource>
+    <resource>src/main/webapp/WEB-INF/applicationContext.xml</resource>    
+    <resource>src/main/webapp/WEB-INF/log4j.xml</resource>        
   </resources>
 </archetype>

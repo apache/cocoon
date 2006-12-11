@@ -36,6 +36,6 @@
        If you have an own cocoon.xconf specify the location attribute,
        like location="/WEB-INF/cocoon/cocoon.xconf".
    -->
-  <avalon:avalon loggingConfiguration="/WEB-INF/cocoon/log4j.xconf"/>
+  <avalon:avalon loggingConfiguration="/WEB-INF/log4j.xml"/>
 
 </beans>
