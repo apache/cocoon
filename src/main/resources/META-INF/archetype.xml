@@ -18,6 +18,7 @@
 <archetype>
   <id>cocoon-archetype-block</id>
   <resources>
+    <resource>rcl.properties</resource>  
     <resource>src/main/java/demo/MyBean.java</resource>
     <resource>src/main/resources/COB-INF/sitemap.xmap</resource>
     <resource>src/main/resources/COB-INF/demo.js</resource>
