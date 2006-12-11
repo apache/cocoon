@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  *   <dd>The XHTML 1.0 Frameset document type.</dd>
  * </dl> 
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XHTMLSerializer extends XMLSerializer {
 

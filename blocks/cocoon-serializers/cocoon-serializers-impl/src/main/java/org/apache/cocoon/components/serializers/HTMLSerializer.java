@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
  *   <dd>The HTML 4.01 Frameset document type.</dd>
  * </dl> 
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class HTMLSerializer extends XHTMLSerializer {
 

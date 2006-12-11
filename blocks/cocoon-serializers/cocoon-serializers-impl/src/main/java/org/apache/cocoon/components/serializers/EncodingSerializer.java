@@ -21,16 +21,23 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.serializers.encoding.Charset;
 import org.apache.cocoon.components.serializers.encoding.CharsetFactory;
 import org.apache.cocoon.components.serializers.encoding.Encoder;
 import org.apache.cocoon.components.serializers.util.Namespaces;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -57,9 +64,10 @@ import org.xml.sax.SAXException;
  * <p>The value indicated by <i>myindenting</i> will control the indenting
  * level for each element.<p>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
-public abstract class EncodingSerializer implements Serializer, Locator, Recyclable, Configurable  {
+public abstract class EncodingSerializer
+    implements Serializer, SitemapModelComponent, Locator, Recyclable, Configurable  {
 
     /** The line separator string */
     private static final char S_EOL[] = SystemUtils.LINE_SEPARATOR.toCharArray();
@@ -84,13 +92,13 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
     /* ====================================================================== */
 
     /** Our <code>Encoder</code> instance. */
-    private Encoder encoder = null;
+    private final Encoder encoder;
     
     /** Our <code>Locator</code> instance. */
-    private Locator locator = null;
+    private Locator locator;
 
     /** Our <code>Writer</code> instance. */
-    private OutputStreamWriter out = null;
+    private OutputStreamWriter out;
 
     /** Flag indicating if the document prolog is being processed. */
     private boolean prolog = true;
@@ -102,36 +110,53 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
     private int level = 0;
 
     /** Whitespace buffer for indentation */
-    private char[] indentBuffer = null;
+    private char[] indentBuffer;
 
     /* ====================================================================== */
 
     /** The <code>Charset</code> associated with the character encoding. */
-    protected Charset charset = null;
+    protected Charset charset;
 
     /** The <code>Namespace</code> associated with this instance. */
-    protected Namespaces namespaces = new Namespaces();
+    protected Namespaces namespaces;
 
     /** Per level indent spaces */
     protected int indentPerLevel = 0;
     /* ====================================================================== */
 
+    protected Request request;
+
+    public static final String CONTENT_MAP_ATTRIBUTE = EncodingSerializer.class.getName() + "/ContentMap";
+
+    public static final String NAMESPACE = "http://apache.org/cocoon/serializers/include";
+
     /**
      * Create a new instance of this <code>EncodingSerializer</code>
      */
     protected EncodingSerializer(Encoder encoder) {
-        super();
         this.encoder = encoder;
         this.recycle();
     }
     
     /* ====================================================================== */
 
+
+    /**
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void setup(SourceResolver resolver,
+                      Map            objectModel,
+                      String         src,
+                      Parameters     par)
+    throws ProcessingException, SAXException, IOException {
+        this.request = ObjectModelHelper.getRequest(objectModel);
+    }
+
     /**
      * Test if the component wants to set the content length.
      */
     public boolean shouldSetContentLength() {
-        return(false);
+        return false;
     }
 
     /**
@@ -143,6 +168,7 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
         this.locator = null;
         this.out = null;
         this.prolog = true;
+        this.request = null;
     }
 
     /**
@@ -449,6 +475,19 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
     public void startElement(String nsuri, String local, String qual,
                                    Attributes attributes)
     throws SAXException {
+        if (NAMESPACE.equals(nsuri)) {
+            final String contentId = attributes.getValue("portlet");
+
+            String value = null;
+            final Map map = (Map)this.request.getAttribute(CONTENT_MAP_ATTRIBUTE);
+            if ( map != null ) {
+                value = (String)map.get(contentId);
+            }
+            if ( value != null ) {
+                this.write(value);
+            }
+            return;
+        }
         if (indentPerLevel > 0) {
             this.writeIndent(indentPerLevel*level);
             level++;
@@ -490,6 +529,9 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
      */
     public void endElement(String nsuri, String local, String qual)
     throws SAXException {
+        if (NAMESPACE.equals(nsuri)) {
+            return;
+        }
         if (indentPerLevel > 0) {
             level--;
             this.writeIndent(indentPerLevel*level);
