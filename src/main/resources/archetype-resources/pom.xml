@@ -87,11 +87,5 @@
       <artifactId>cocoon-template-impl</artifactId>
       <version>1.0.0-M2</version>
     </dependency>  
-  </dependencies>
-  <repositories>
-    <repository>
-      <id>cocoon.staging</id>
-      <url>http://people.apache.org/builds/cocoon</url>
-    </repository>
-  </repositories>   
+  </dependencies> 
 </project>
