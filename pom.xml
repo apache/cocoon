@@ -19,7 +19,6 @@
 -->
 <!--+
     | @version $Id: pom.xml 448825 2006-09-22 06:19:55Z reinhard $
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -27,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-flowscript</artifactId>
-  <version>1</version>
+    <version>1</version>
   </parent>
   <artifactId>cocoon-flowscript-impl</artifactId>
   <version>1.0.0-M1</version>
@@ -43,8 +42,8 @@
     <docs.version>1.0</docs.version>
   </properties>
   <build>
-    <plugins>
-      <!--plugin>
+    <!--plugins>
+      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -52,8 +51,8 @@
           <collection>cdocs-flowscript</collection>          
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin-->      
-    </plugins>
+      </plugin>      
+    </plugins-->
   </build>
   <dependencies>
     <dependency>
