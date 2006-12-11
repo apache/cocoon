@@ -33,43 +33,40 @@ import java.util.Enumeration;
  */
 public class EnvironmentInfo {
 
-  	HashMap requestParameters = new HashMap();
-	  HashMap sessionAttributes = new HashMap();
-  	String uri;
-	  String uriPrefix;
+  	protected Map requestParameters = new HashMap();
+    protected Map sessionAttributes = new HashMap();
+    protected String uri;
 
     public EnvironmentInfo(Environment environment)	{
+        final Map objectModel = environment.getObjectModel();
+        final Request request = ObjectModelHelper.getRequest(objectModel);
+        
+        // make a copy of the request parameters
+        final Enumeration requestParameterNames = request.getParameterNames();
+        while (requestParameterNames.hasMoreElements()) {
+            final String paramName = (String)requestParameterNames.nextElement();
+            final String rawValue = request.getParameter(paramName);
+            final String value = rawValue != null ? rawValue : "null";
+            this.requestParameters.put(paramName, value);
+        }
 
-		    Map objectModel = environment.getObjectModel();
-    		Request request = ObjectModelHelper.getRequest(objectModel);
+        // make a copy of the session contents
+        final Session session = request.getSession(false);
+        if (session != null) {
+            final Enumeration sessionAttributeNames = session.getAttributeNames();
+            while (sessionAttributeNames.hasMoreElements()) {
+                final String attrName = (String)sessionAttributeNames.nextElement();
+                final Object rawValue = session.getAttribute(attrName);
+                final String value = rawValue != null ? rawValue.toString() : "null";
+                this.sessionAttributes.put(attrName, value);
+            }
+        }
 
-		    // make a copy of the request parameters
-    		Enumeration requestParameterNames = request.getParameterNames();
-		    while (requestParameterNames.hasMoreElements()) {
-      			String paramName = (String)requestParameterNames.nextElement();
-      			String rawValue = request.getParameter(paramName);
-			      String value = rawValue != null ? rawValue : "null";
-      			requestParameters.put(paramName, value);
-		    }
-
-    		// make a copy of the session contents
-    		Session session = request.getSession(false);
-    		if (session != null) {
-      			Enumeration sessionAttributeNames = session.getAttributeNames();
-      			while (sessionAttributeNames.hasMoreElements()) {
-        				String attrName = (String)sessionAttributeNames.nextElement();
-        				Object rawValue = session.getAttribute(attrName);
-				        String value = rawValue != null ? rawValue.toString() : "null";
-        				sessionAttributes.put(attrName, value);
-			      }
-    		}
-
-    		uri = environment.getURI();
-		    uriPrefix = environment.getURIPrefix();
+        this.uri = environment.getURI();
     }
 
     public String getURI() {
-        return uri;
+        return this.uri;
     } 
 
     public Map getRequestParameters() {

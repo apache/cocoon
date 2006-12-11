@@ -48,26 +48,27 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
 
     private int index;
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+    /**
+     * @see org.apache.cocoon.components.pipeline.AbstractProcessingPipeline#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.profiler = (Profiler) manager.lookup(Profiler.ROLE);
     }
 
     /**
-     * Disposable
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if (this.profiler!=null) {
+        if (this.manager != null) {
             this.manager.release(this.profiler);
             this.profiler = null;
+            this.manager = null;
         }
     }
 
     /**
-     * Recyclable
+     * @see org.apache.cocoon.components.pipeline.AbstractProcessingPipeline#recycle()
      */
     public void recycle() {
         this.data = null;
@@ -185,7 +186,7 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
             Iterator transformerParamItt = this.transformerParams.iterator();
 
             // Setup transformers
-            int index = 1;
+            int localIndex = 1;
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer) transformerItt.next();
 
@@ -193,7 +194,7 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
                 trans.setup(this.processor.getSourceResolver(), environment.getObjectModel(),
                             (String) transformerSourceItt.next(),
                             (Parameters) transformerParamItt.next());
-                this.data.setSetupTime(index++,
+                this.data.setSetupTime(localIndex++,
                                        System.currentTimeMillis()-time);
             }
 
@@ -207,7 +208,7 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
                     serializerParam
                 );
             }
-            this.data.setSetupTime(index++, System.currentTimeMillis()-time);
+            this.data.setSetupTime(localIndex++, System.currentTimeMillis()-time);
 
             setMimeTypeForSerializer(environment);
         } catch (SAXException e) {

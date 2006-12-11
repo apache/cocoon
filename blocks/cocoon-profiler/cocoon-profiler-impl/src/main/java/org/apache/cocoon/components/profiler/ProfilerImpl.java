@@ -40,8 +40,7 @@ public class ProfilerImpl extends AbstractLogEnabled
 
     private Map results;
 
-    public ProfilerImpl()
-    {
+    public ProfilerImpl() {
         results = new HashMap();
     }
 
@@ -52,24 +51,21 @@ public class ProfilerImpl extends AbstractLogEnabled
      * @param configuration the class configurations.
      */
     public void configure(Configuration configuration)
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         this.results_count = configuration.getAttributeAsInteger("results", 10);
     }
 
     /**
      * Clear the results.
      */
-    public void clearResults()
-    {
+    public void clearResults() {
         results.clear();
     }
 
     /**
      * Remove the specified result.
      */
-    public void clearResult(Object key)
-    {
+    public void clearResult(Object key) {
         results.remove(key);
     }
 
@@ -78,8 +74,7 @@ public class ProfilerImpl extends AbstractLogEnabled
      *
      * @return Keys of all results.
      */
-    public Collection getResultKeys()
-    {
+    public Collection getResultKeys() {
         return results.keySet();
     }
 
@@ -88,8 +83,7 @@ public class ProfilerImpl extends AbstractLogEnabled
      *
      * @return Collection of results.
      */
-    public Collection getResults()
-    {
+    public Collection getResults() {
         return results.values();
     }
 
@@ -99,8 +93,7 @@ public class ProfilerImpl extends AbstractLogEnabled
      * @param key Key of the result.
      * @return Result of the profiling
      */
-    public ProfilerResult getResult(Object key)
-    {
+    public ProfilerResult getResult(Object key) {
         return (ProfilerResult)results.get(key);
     }
 
@@ -110,8 +103,7 @@ public class ProfilerImpl extends AbstractLogEnabled
      * @param uri URI of the request
      * @param data Result of the profiling
      */
-    public void addResult(String uri, ProfilerData data)
-    {
+    public void addResult(String uri, ProfilerData data) {
         Long key = new Long(data.getKey(uri));
         ProfilerResult result = (ProfilerResult)results.get(key);
         if(result == null){
