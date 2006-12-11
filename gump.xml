@@ -639,6 +639,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-auth"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
