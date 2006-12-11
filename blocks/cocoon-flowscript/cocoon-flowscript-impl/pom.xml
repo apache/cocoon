@@ -29,7 +29,7 @@
     <version>1</version>
   </parent>
   <artifactId>cocoon-flowscript-impl</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <name>Flowscript Block</name>
   <distributionManagement>
     <site>
@@ -72,10 +72,4 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-flowscript-impl-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-flowscript-impl-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-flowscript-impl-1.0.0-M1</url>
-  </scm>
 </project>
