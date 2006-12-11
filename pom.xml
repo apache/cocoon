@@ -32,7 +32,7 @@
   <artifactId>cocoon-template</artifactId>
   <packaging>pom</packaging>
   <name>Template framework [modules]</name>
-  <version>1.0.0-M3-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
   <modules>
     <module>cocoon-template-impl</module>
     <module>cocoon-template-sample</module>
