@@ -34,7 +34,8 @@ import org.xml.sax.SAXException;
 /**
  * @version $Id$
  */
-public class ProfilingCachingProcessingPipeline extends CachingProcessingPipeline {
+public class ProfilingCachingProcessingPipeline
+    extends CachingProcessingPipeline {
 
     private Profiler profiler;
 
@@ -43,18 +44,18 @@ public class ProfilingCachingProcessingPipeline extends CachingProcessingPipelin
     private int index;
 
     /**
-     * Composable
+     * @see org.apache.cocoon.components.pipeline.AbstractProcessingPipeline#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.profiler = (Profiler) manager.lookup(Profiler.ROLE);
     }
 
     /**
-     * Disposable
+     * @see org.apache.cocoon.components.pipeline.impl.BaseCachingProcessingPipeline#dispose()
      */
     public void dispose() {
-        if (this.profiler!=null) {
+        if (this.manager != null) {
             this.manager.release(this.profiler);
             this.profiler = null;
         }
@@ -62,7 +63,7 @@ public class ProfilingCachingProcessingPipeline extends CachingProcessingPipelin
     }
 
     /**
-     * Recyclable
+     * @see org.apache.cocoon.components.pipeline.impl.AbstractCachingProcessingPipeline#recycle()
      */
     public void recycle() {
         this.data = null;
@@ -179,7 +180,7 @@ public class ProfilingCachingProcessingPipeline extends CachingProcessingPipelin
             Iterator transformerParamItt = this.transformerParams.iterator();
 
             // Setup transformers
-            int index = 1;
+            int localIndex = 1;
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer) transformerItt.next();
 
@@ -187,7 +188,7 @@ public class ProfilingCachingProcessingPipeline extends CachingProcessingPipelin
                 trans.setup(this.processor.getSourceResolver(), environment.getObjectModel(),
                             (String) transformerSourceItt.next(),
                             (Parameters) transformerParamItt.next());
-                this.data.setSetupTime(index++, System.currentTimeMillis() - time);
+                this.data.setSetupTime(localIndex++, System.currentTimeMillis() - time);
             }
 
             // Setup serializer
@@ -200,7 +201,7 @@ public class ProfilingCachingProcessingPipeline extends CachingProcessingPipelin
                     serializerParam
                 );
             }
-            this.data.setSetupTime(index++, System.currentTimeMillis() - time);
+            this.data.setSetupTime(localIndex++, System.currentTimeMillis() - time);
 
             setMimeTypeForSerializer(environment);
         } catch (SAXException e) {

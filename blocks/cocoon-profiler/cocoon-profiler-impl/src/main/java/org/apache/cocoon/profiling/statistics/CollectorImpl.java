@@ -24,20 +24,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.auth.ApplicationUtil;
 import org.apache.cocoon.auth.User;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 
@@ -53,7 +50,7 @@ import org.apache.excalibur.store.StoreJanitor;
  */
 public class CollectorImpl
     extends AbstractLogEnabled
-    implements Collector, Store, ThreadSafe, Serviceable, Disposable, Contextualizable {
+    implements Collector, Store, ThreadSafe, Serviceable, Disposable {
 
     private static final String COUNT_ATTRIBUTE = CollectorImpl.class.getName();
 
@@ -72,15 +69,8 @@ public class CollectorImpl
     /** The service manager. */
     protected ServiceManager manager;
 
-    /** The component context. */
-    protected Context context;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context c) throws ContextException {
-        this.context = c;
-    }
+    /** The process info provider. */
+    protected ProcessInfoProvider provider;
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -89,6 +79,7 @@ public class CollectorImpl
         this.manager = aManager;
         this.janitor = (StoreJanitor)this.manager.lookup(StoreJanitor.ROLE);
         this.janitor.register(this);
+        this.provider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
     }
 
     /**
@@ -101,6 +92,8 @@ public class CollectorImpl
             }
             this.manager.release(this.janitor);
             this.janitor = null;
+            this.manager.release(this.provider);
+            this.provider = null;
             this.manager = null;
         }
     }
@@ -176,7 +169,7 @@ public class CollectorImpl
     }
 
     protected String getRequestKey() {
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
+        final Map objectModel = this.provider.getObjectModel();
         final User user = ApplicationUtil.getUser(objectModel);
         final Request request = ObjectModelHelper.getRequest(objectModel);
         final Session session = request.getSession();

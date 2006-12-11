@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ public class ProfilerData {
     /**
      * Entry, which stores the role and source of a component from a pipeline.
      */
-    public class Entry {
+    public static class Entry {
 
         public String role;
         public String source;
@@ -45,7 +45,7 @@ public class ProfilerData {
     }
 
     // List of all entries
-    private ArrayList entries = null;
+    private ArrayList entries;
 
     // Environment information
     private EnvironmentInfo environmentinfo;

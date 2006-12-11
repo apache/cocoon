@@ -128,8 +128,8 @@ public class ProfilingXMLPipe implements XMLPipe {
         this.serializer.ignorableWhitespace(c, start, len);
     }
 
-    public void processingInstruction(String target, String data) throws SAXException {
-        this.serializer.processingInstruction(target, data);
+    public void processingInstruction(String target, String d) throws SAXException {
+        this.serializer.processingInstruction(target, d);
     }
 
     public void skippedEntity(String name) throws SAXException {
