@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.profiler;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -30,7 +29,6 @@ import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.xml.sax.SAXException;
 
 /**
  * Special version of the NonCachingProcessingPipeline that supports capturing
@@ -91,7 +89,6 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
     public void setGenerator(String role, String source, Parameters param,
                              Parameters hintParam)
     throws ProcessingException {
-
         super.setGenerator(role, source, param, hintParam);
 
         if (this.data==null) {
@@ -115,7 +112,6 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
     public void addTransformer(String role, String source, Parameters param,
                                Parameters hintParam)
     throws ProcessingException {
-
         super.addTransformer(role, source, param, hintParam);
 
         if (this.data==null) {
@@ -138,7 +134,6 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
                               Parameters hintParam,
                               String mimeType)
     throws ProcessingException {
-
         super.setSerializer(role, source, param, hintParam, mimeType);
 
         if (this.data==null) {
@@ -158,7 +153,6 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
     public void setReader(String role, String source, Parameters param,
                           String mimeType)
     throws ProcessingException {
-
         super.setReader(role, source, param, mimeType);
 
         if (this.data==null) {
@@ -209,12 +203,8 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
                 );
             }
             this.data.setSetupTime(localIndex++, System.currentTimeMillis()-time);
-
-            setMimeTypeForSerializer(environment);
-        } catch (SAXException e) {
-            throw new ProcessingException("Could not setup pipeline.", e);
-        } catch (IOException e) {
-            throw new ProcessingException("Could not setup pipeline.", e);
+        } catch (Exception e) {
+            handleException(e);
         }
     }
 
@@ -226,8 +216,7 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
      * @return true on success
      */
     public boolean process(Environment environment)
-      throws ProcessingException {
-
+    throws ProcessingException {
         this.index = 0;
         if (this.data!=null) {
             // Capture environment info
@@ -253,7 +242,7 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
      */
     protected boolean processXMLPipeline(Environment environment) throws ProcessingException {
         this.index = 0;
-        if (this.data!=null) {
+        if (this.data != null) {
             // Capture environment info
             this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
 
@@ -277,22 +266,22 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
      */
     protected boolean processReader(Environment environment) throws ProcessingException {
         this.index = 0;
-         if (this.data!=null) {
-             // Capture environment info
-             this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
+        if (this.data != null) {
+            // Capture environment info
+            this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
 
-             // Execute pipeline
-             long time = System.currentTimeMillis();
-             boolean result = super.processReader(environment);
+            // Execute pipeline
+            long time = System.currentTimeMillis();
+            boolean result = super.processReader(environment);
 
-             this.data.setTotalTime(System.currentTimeMillis()-time);
+            this.data.setTotalTime(System.currentTimeMillis()-time);
 
-             // Report
-             profiler.addResult(environment.getURI(), this.data);
-             return result;
-         } else {
-             getLogger().warn("Profiler Data havn't any components to measure");
-             return super.processReader(environment);
+            // Report
+            profiler.addResult(environment.getURI(), this.data);
+            return result;
+        } else {
+            getLogger().warn("Profiler Data havn't any components to measure");
+            return super.processReader(environment);
          }
     }
 

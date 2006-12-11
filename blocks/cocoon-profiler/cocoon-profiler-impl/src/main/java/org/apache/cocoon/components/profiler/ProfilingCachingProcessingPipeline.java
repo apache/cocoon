@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.profiler;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -29,7 +28,6 @@ import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.xml.sax.SAXException;
 
 /**
  * @version $Id$
@@ -86,7 +84,6 @@ public class ProfilingCachingProcessingPipeline
     public void setGenerator(String role, String source, Parameters param,
                              Parameters hintParam)
     throws ProcessingException {
-
         super.setGenerator(role, source, param, hintParam);
 
         if (this.data==null) {
@@ -110,7 +107,6 @@ public class ProfilingCachingProcessingPipeline
     public void addTransformer(String role, String source, Parameters param,
                                Parameters hintParam)
     throws ProcessingException {
-
         super.addTransformer(role, source, param, hintParam);
 
         if (this.data==null) {
@@ -133,7 +129,6 @@ public class ProfilingCachingProcessingPipeline
                               Parameters hintParam,
                               String mimeType)
     throws ProcessingException {
-
         super.setSerializer(role, source, param, hintParam, mimeType);
 
         if (this.data==null) {
@@ -153,7 +148,6 @@ public class ProfilingCachingProcessingPipeline
     public void setReader(String role, String source, Parameters param,
                           String mimeType)
     throws ProcessingException {
-
         super.setReader(role, source, param, mimeType);
 
         if (this.data==null) {
@@ -202,12 +196,8 @@ public class ProfilingCachingProcessingPipeline
                 );
             }
             this.data.setSetupTime(localIndex++, System.currentTimeMillis() - time);
-
-            setMimeTypeForSerializer(environment);
-        } catch (SAXException e) {
-            throw new ProcessingException("Could not setup pipeline.", e);
-        } catch (IOException e) {
-            throw new ProcessingException("Could not setup pipeline.", e);
+        } catch (Exception e) {
+            handleException(e);
         }
 
         // Generate the key to fill the cache
