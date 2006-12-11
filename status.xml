@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+   <action dev="CZ" type="remove">
+     Core: Removed the buggy WildhardHelper. Use the new improved WildcardMatcherHelper.
+   </action>
    <action dev="CZ" type="add">
      Profiler block: Add statistics component.
    </action>
