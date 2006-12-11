@@ -26,7 +26,6 @@ import java.util.Map;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
@@ -100,7 +99,7 @@ public class AvalonElementParser extends AbstractElementParser {
 
         // add service manager
         this.addComponent(AvalonServiceManager.class,
-                ProcessingUtil.SERVICE_MANAGER_ROLE,
+                AvalonUtils.SERVICE_MANAGER_ROLE,
                 null,
                 false,
                 registry);
@@ -127,8 +126,8 @@ public class AvalonElementParser extends AbstractElementParser {
 
         // and finally add avalon bean post processor
         final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonBeanPostProcessor.class, "init", true);
-        beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(ProcessingUtil.LOGGER_ROLE));
-        beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(ProcessingUtil.CONTEXT_ROLE));
+        beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(AvalonUtils.LOGGER_ROLE));
+        beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(AvalonUtils.CONTEXT_ROLE));
         beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
         beanDef.getPropertyValues().addPropertyValue("resourceLoader", resourceLoader);
         beanDef.getPropertyValues().addPropertyValue("location", this.getConfigurationLocation());
@@ -143,7 +142,7 @@ public class AvalonElementParser extends AbstractElementParser {
 
     protected void addContext(Element element, BeanDefinitionRegistry registry) {
         this.addComponent(AvalonContextFactoryBean.class,
-                ProcessingUtil.CONTEXT_ROLE,
+                AvalonUtils.CONTEXT_ROLE,
                 "init",
                 true,
                 registry);        
@@ -165,7 +164,7 @@ public class AvalonElementParser extends AbstractElementParser {
             if ( loggerCategory != null ) {
                 beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
             }
-            this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
+            this.register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
         }
     }
 

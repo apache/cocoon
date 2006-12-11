@@ -14,15 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.transformation;
+package org.apache.cocoon.core.xml;
 
-import org.apache.cocoon.xml.AbstractXMLPipe;
+import java.io.IOException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
+ * The parser can be used to parse any XML document given
+ * by a {@link InputSource} object.
+ * It can create a DOM from the parsed document.
  *
  * @version $Id$
+ * @since 2.2
  */
+public interface DOMParser {
 
-public abstract class AbstractTransformer extends AbstractXMLPipe implements Transformer {
-    // nothing do add here
+    /**
+     * Parse the {@link InputSource} and create
+     * a DOM out of it.
+     */
+    Document parseDocument( InputSource in )
+        throws SAXException, IOException;
+
+    /**
+     * Return a new {@link Document}.
+     */
+    Document createDocument() throws SAXException;
 }

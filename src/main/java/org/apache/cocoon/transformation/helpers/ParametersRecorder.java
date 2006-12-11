@@ -51,15 +51,9 @@ extends NOPRecorder {
     public SourceParameters getParameters(Parameters source) {
         if (source != null) {
             String[] names = source.getNames();
-//            Iterator names = source.getParameterNames();
-            if (names != null) {
-                String currentParameterName;
-                for(int i=0; i<names.length; i++) {
-                    currentParameterName = names[i];
-//                while (names.hasNext() == true) {
-//                    currentParameterName = (String)names.next();
-                    this.parameters.setParameter(currentParameterName, source.getParameter(currentParameterName, ""));
-                }
+            for(int i=0; i<names.length; i++) {
+                final String currentParameterName = names[i];
+                this.parameters.setParameter(currentParameterName, source.getParameter(currentParameterName, ""));
             }
         }
         return parameters;

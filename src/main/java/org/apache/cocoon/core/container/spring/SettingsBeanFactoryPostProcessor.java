@@ -78,8 +78,6 @@ public class SettingsBeanFactoryPostProcessor
 
     /**
      * Init work, upload and cache directory
-     * @param settings 
-     * @param log 
      */
     protected void initSettingsFiles() {
         // first init the work-directory for the logger.

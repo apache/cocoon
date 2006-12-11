@@ -80,15 +80,14 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
 
 
     public AbstractDOMTransformer() {
-        super();
         this.builder = new DOMBuilder(this);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
     }
 
     /**

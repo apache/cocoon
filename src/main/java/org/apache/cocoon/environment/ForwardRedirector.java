@@ -149,9 +149,10 @@ implements Redirector, PermanentRedirector {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("redirect session mode: unable to get session object!");
                 }
-            }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
+            } else {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
+                }
             }
         }
         // redirect

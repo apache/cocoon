@@ -18,7 +18,6 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
-import org.apache.cocoon.ProcessingUtil;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.ResourceLoader;
@@ -41,7 +40,7 @@ public class SitemapElementParser extends AvalonElementParser {
                                                                       "init",
                                                                       false);
         beanDefinition.getPropertyValues().addPropertyValue("uriPrefix", uriPrefix);
-        this.register(beanDefinition, ProcessingUtil.CONTEXT_ROLE, registry);
+        this.register(beanDefinition, AvalonUtils.CONTEXT_ROLE, registry);
     }
 
     /**
@@ -57,7 +56,7 @@ public class SitemapElementParser extends AvalonElementParser {
         if ( loggerCategory != null ) {
             beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
         }
-        this.register(beanDef, ProcessingUtil.LOGGER_ROLE, registry);
+        this.register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
     }
 
     /**
