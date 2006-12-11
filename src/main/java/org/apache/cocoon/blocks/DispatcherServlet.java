@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -73,7 +74,7 @@ public class DispatcherServlet
             WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
         
         // setup logger
-        this.log = (Logger) this.beanFactory.getBean(ProcessingUtil.LOGGER_ROLE);        
+        this.log = (Logger) this.beanFactory.getBean(AvalonUtils.LOGGER_ROLE);        
         this.log.info("DispatcherServlet is initializing");
         
         // the returned map contains the bean names as key and the beans as values
