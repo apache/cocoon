@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-flowscript</artifactId>
-    <version>1.0.0-M1</version>
+    <version>1</version>
   </parent>
   <artifactId>cocoon-flowscript-impl</artifactId>
   <version>1.0.0-M2-SNAPSHOT</version>
