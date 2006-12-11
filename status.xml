@@ -184,6 +184,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+   <action dev="CZ" type="add">
+     Databases: Add support for iBatis to use configured Excalibur data sources in iBatis.
+   </action>
    <action dev="AS" type="fix" fixes-bug="COCOON-1965" due-to="Jeroen Reijn">
       CForms: The filterfield widget was not defined for the forms manager.
    </action>
