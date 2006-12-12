@@ -172,6 +172,14 @@ public class MonolithicCocoonDeployer {
             }
             copyFile(basedir, "WEB-INF/applicationContext.xml");
             copyFile(basedir, "WEB-INF/cocoon/properties/core.properties");
+        } else {
+            // At least apply the patches
+            InputStream sourceWebXmlFile = readResourceFromClassloader("WEB-INF/web.xml");
+            try {
+                xwebPatcher.applyPatches(sourceWebXmlFile, "WEB-INF/web.xml");
+            } finally {
+                IOUtils.closeQuietly(sourceWebXmlFile);
+            }
         }
 
         // write properties
