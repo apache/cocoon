@@ -1,9 +1,0 @@
-<src:write xmlns:src="http://apache.org/cocoon/source/1.0" serializer="xml">
-  <src:source>file.xml</src:source>
-  <src:fragment>
-    <!-- annoying comment -->
-    <node>
-      <anothernode/>
-    </node>
-  </src:fragment>
-</src:write>
