@@ -17,6 +17,7 @@
 package org.apache.cocoon.sitemap;
 
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.sitemap.ErrorHandlerHelper;
 import org.apache.cocoon.environment.Environment;
@@ -77,10 +78,13 @@ public class SitemapErrorHandler {
      * Build error handling pipeline.
      * @return error handling pipeline, or null if error was not handled.
      */
-    public Processor.InternalPipelineDescription prepareErrorPipeline(Exception e) throws Exception {
+    public ProcessingPipeline prepareErrorPipeline(Exception e) throws Exception {
         // Restore environment state
         this.environment.setURI(this.envPrefix, this.envURI);
+        
+        Processor.InternalPipelineDescription pipelineDescription = 
+            this.handler.prepareErrorHandler(e, this.environment, this.context);
 
-        return this.handler.prepareErrorHandler(e, this.environment, this.context);
+        return pipelineDescription != null ? pipelineDescription.processingPipeline : null; 
     }
 }
