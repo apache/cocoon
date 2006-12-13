@@ -29,17 +29,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-apples</artifactId>
-  <version>2-tagbase-experiment</version>
+  <version>2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Cocoon Apples Block [modules]</name>
   <modules>
     <module>cocoon-apples-impl</module>
     <module>cocoon-apples-sample</module>
   </modules>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-apples/cocoon-apples-2-tagbase-experiment</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-apples/cocoon-apples-2-tagbase-experiment</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-apples/cocoon-apples-2-tagbase-experiment</url>
-  </scm>
 </project>
