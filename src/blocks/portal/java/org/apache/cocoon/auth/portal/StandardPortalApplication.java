@@ -19,6 +19,7 @@ package org.apache.cocoon.auth.portal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
@@ -71,7 +72,7 @@ public class StandardPortalApplication
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             service.getComponentManager().getProfileManager().login();
         } catch (ServiceException ce) {
-            throw new RuntimeException("Unable to lookup portal service.", ce);
+            throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
         } finally {
             this.manager.release(service);
         }
@@ -86,7 +87,7 @@ public class StandardPortalApplication
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             service.getComponentManager().getProfileManager().logout();
         } catch (ServiceException ce) {
-            throw new RuntimeException("Unable to lookup portal service.", ce);
+            throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
         } finally {
             this.manager.release(service);
         }
