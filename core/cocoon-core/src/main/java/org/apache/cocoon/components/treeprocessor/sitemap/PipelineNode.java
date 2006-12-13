@@ -16,23 +16,22 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.components.treeprocessor.TreeProcessorSitemapErrorHandler;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.SitemapErrorHandler;
 import org.apache.cocoon.sitemap.SitemapExecutor;
-
-import java.util.Map;
 
 /**
  * Handles &lt;map:pipeline&gt;
@@ -143,7 +142,7 @@ public class PipelineNode extends AbstractParentProcessingNode
             if (this.errorHandlerHelper.isInternal()) {
                 // Set internal error handler in the pipeline
                 context.setErrorHandler(
-                        new SitemapErrorHandler(this.errorHandlerHelper, env, context));
+                        new TreeProcessorSitemapErrorHandler(this.errorHandlerHelper, env, context));
             } else {
                 // Reset internal error handler (previous pipeline might had set it)
                 context.setErrorHandler(null);
