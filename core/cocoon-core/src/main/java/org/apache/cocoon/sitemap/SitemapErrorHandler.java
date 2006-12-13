@@ -16,75 +16,26 @@
  */
 package org.apache.cocoon.sitemap;
 
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.components.treeprocessor.sitemap.ErrorHandlerHelper;
-import org.apache.cocoon.environment.Environment;
 
 /**
- * Class providing error handling capabilities to the pipeline
- * as configured in the sitemap.
+ * Interface providing error handling capabilities to the pipeline
  *
- * @since 2.1.7
+ * @since 2.2
  * @version $Id$
  */
-public class SitemapErrorHandler {
-    /**
-     * Error handler helper of the pipeline node
-     */
-    private ErrorHandlerHelper handler;
-
-    /**
-     * Environment of the pipeline node
-     */
-    private Environment environment;
-
-    /**
-     * Sitemap invocation context
-     */
-    private InvokeContext context;
-
-    // Environment state
-    private String envPrefix;
-    private String envURI;
-
-    /**
-     * Construct error handler with everything needed to handle an error.
-     */
-    public SitemapErrorHandler(ErrorHandlerHelper handler,
-                               Environment environment,
-                               InvokeContext context) {
-        this.handler = handler;
-        this.environment = environment;
-        this.context = context;
-
-        this.envPrefix = environment.getURIPrefix();
-        this.envURI = environment.getURI();
-    }
+public interface SitemapErrorHandler {
 
     /**
      * Handle an error.
      * @return true if error was handled.
      */
-    public boolean handleError(Exception e) throws Exception {
-        // Restore environment state
-        this.environment.setURI(this.envPrefix, this.envURI);
-
-        return this.handler.invokeErrorHandler(e, this.environment, this.context);
-    }
-
+    public boolean handleError(Exception e) throws Exception;
+    
     /**
      * Build error handling pipeline.
      * @return error handling pipeline, or null if error was not handled.
      */
-    public ProcessingPipeline prepareErrorPipeline(Exception e) throws Exception {
-        // Restore environment state
-        this.environment.setURI(this.envPrefix, this.envURI);
-        
-        Processor.InternalPipelineDescription pipelineDescription = 
-            this.handler.prepareErrorHandler(e, this.environment, this.context);
+    public ProcessingPipeline prepareErrorPipeline(Exception e) throws Exception;
 
-        return pipelineDescription != null ? pipelineDescription.processingPipeline : null; 
-    }
 }
