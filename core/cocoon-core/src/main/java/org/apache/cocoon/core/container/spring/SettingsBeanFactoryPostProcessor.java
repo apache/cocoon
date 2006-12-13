@@ -149,16 +149,12 @@ public class SettingsBeanFactoryPostProcessor
      * 2) classpath*:/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties
      *    Default values for the core and each block for a specific running mode - the files are
      *    read in alphabetical order.
-     * 3) context://WEB-INF/cocoon/properties/*.properties
-     *    User specific properties - the files are read in alphabetical order.
-     * 4) context://WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
-     *    User specific properties for the running mode - the files are read in alphabetical order.
-     * 5) Working directory from servlet context (if not already set)
-     * 6) Optional property file which is stored under ".cocoon/settings.properties" in the user
+     * 3) Working directory from servlet context (if not already set)
+     * 4) Optional property file which is stored under ".cocoon/settings.properties" in the user
      *    directory.
-     * 7) Additional property file specified by the "org.apache.cocoon.settings" property.
-     * 8) Property provider (if configured in the bean factory)
-     * 9) System properties
+     * 5) Additional property file specified by the "org.apache.cocoon.settings" property.
+     * 6) Property provider (if configured in the bean factory)
+     * 7) System properties
      *
      * This means that system properties (provided on startup of the web application) override all
      * others etc.
