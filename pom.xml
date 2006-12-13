@@ -627,7 +627,7 @@
   <properties>
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
-    <docs.repoUrl>http:/cocoon.zones.apache.org:9263</docs.repoUrl>
+    <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
   </properties>
 
   <profiles>
