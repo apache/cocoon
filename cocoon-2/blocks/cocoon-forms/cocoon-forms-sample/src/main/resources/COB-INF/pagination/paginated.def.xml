@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form id="form"
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+
+  <fd:widgets>
+    <fd:repeater id="players">
+      <fd:pages initial="1" size="20" page-field="topage" />
+
+      <fd:widgets>
+        <fd:booleanfield id="select" validate="false" />
+        <fd:field id="id" state="output">
+          <fd:label>ID</fd:label>
+          <fd:datatype base="string" />
+        </fd:field>
+        <fd:field id="name" required="true">
+          <fd:label>Name</fd:label>
+          <fd:datatype base="string" />
+        </fd:field>
+        <fd:field id="country" required="true">
+          <fd:label>Country</fd:label>
+          <fd:datatype base="string" />
+        </fd:field>
+        <fd:field id="position" required="true">
+          <fd:label>Position</fd:label>
+          <fd:datatype base="string" />
+        </fd:field>
+      </fd:widgets>
+    </fd:repeater>
+
+    <fd:repeater-action id="page-first" command="page-first"
+      repeater="players">
+      <fd:label>&lt;&lt;</fd:label>
+    </fd:repeater-action>
+    <fd:repeater-action id="page-prev" command="page-prev"
+      repeater="players">
+
+      <fd:label>&lt;</fd:label>
+    </fd:repeater-action>
+    <fd:repeater-action id="page-next" command="page-next"
+      repeater="players">
+      <fd:label>&gt;</fd:label>
+    </fd:repeater-action>
+    <fd:repeater-action id="page-last" command="page-last"
+      repeater="players">
+      <fd:label>&gt;&gt;</fd:label>
+    </fd:repeater-action>
+    <fd:field id="topage">
+      <fd:label>topage</fd:label>
+      <fd:datatype base="integer" />
+    </fd:field>
+    <fd:repeater-action id="page-custom" command="page-custom"
+      repeater="players">
+      <fd:label>go</fd:label>
+    </fd:repeater-action>
+    <fd:repeater-action id="remove" command="delete-rows"
+      repeater="players" select="select">
+      <fd:label>Remove selected players</fd:label>
+    </fd:repeater-action>
+
+    <fd:repeater-action id="sort-natural" command="sort-by"
+      repeater="players">
+      <fd:label>Natural</fd:label>
+    </fd:repeater-action>
+    <fd:repeater-action id="sort-by-name" command="sort-by"
+      repeater="players" field="name">
+      <fd:label>Sort by name</fd:label>
+    </fd:repeater-action>
+    <fd:repeater-action id="sort-by-surname" command="sort-by"
+      repeater="players" field="country">
+      <fd:label>Sort by country</fd:label>
+    </fd:repeater-action>
+
+    <fd:filterfield id="filter-name" repeater="players" field="name">
+      <fd:label>by name</fd:label>
+      <fd:datatype base="string" />
+    </fd:filterfield>
+    <fd:filterfield id="filter-country" repeater="players"
+      field="country">
+      <fd:label>by country</fd:label>
+      <fd:datatype base="string" />
+    </fd:filterfield>
+    <fd:filterfield id="filter-position" repeater="players"
+      field="position">
+      <fd:label>by position</fd:label>
+      <fd:datatype base="string" />
+    </fd:filterfield>
+    <fd:action id="filter-button">
+      <fd:label>Apply</fd:label>
+    </fd:action>
+
+    <fd:repeater-action id="add" command="add-row" repeater="players">
+      <fd:label>Add player</fd:label>
+      <fd:on-action>
+        <fd:javascript>
+          var form = event.source.form; var count = new
+          java.lang.Integer(form.getAttribute("counter").intValue() +
+          1); form.setAttribute("counter", count); var repeater =
+          form.getChild("players"); repeater.getRow(repeater.getSize() -
+          1).getChild("id").setValue(count+"");
+        </fd:javascript>
+      </fd:on-action>
+    </fd:repeater-action>
+
+
+    <fd:submit id="submit">
+      <fd:label>submit</fd:label>
+    </fd:submit>
+
+  </fd:widgets>
+</fd:form>

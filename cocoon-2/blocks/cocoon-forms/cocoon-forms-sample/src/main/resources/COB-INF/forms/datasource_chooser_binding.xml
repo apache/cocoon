@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id$
+-->
+
+<fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+    path="config/datasource">
+  
+  <fb:value id="name" path="@name"/>
+
+  <!-- important: bind the discriminant value first, so that fb:union
+       knows what case to choose --> 
+  <fb:value id="sourcetype" path="@type"/>
+  
+  <fb:union id="datasource" path=".">
+    <fb:case id="SQL" path=".">
+      <fb:group id="SQL" path=".">
+      <fb:value id="jdbc-url" path="URL"/>
+      <fb:value id="login" path="login"/>
+      <fb:value id="password" path="password"/>
+      </fb:group>
+    </fb:case>
+    <fb:case id="file" path=".">
+      <fb:group id="file" path=".">
+        <fb:value id="filename" path="file/@path"/>
+      </fb:group>
+    </fb:case>
+  </fb:union>
+</fb:context>

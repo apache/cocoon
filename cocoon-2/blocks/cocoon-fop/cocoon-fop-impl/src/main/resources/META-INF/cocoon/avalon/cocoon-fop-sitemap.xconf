@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    |
+    | $Id$
+    +-->
+<map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:serializers>
+    <map:serializer name="fo2pdf" logger="sitemap.serializer.fo2pdf" src="org.apache.cocoon.serialization.FOPSerializer" mime-type="application/pdf">
+      <!-- This element specifies URL to FOP user configuration file.
+           It can be absolute file URL or relative to the servlet context.
+           Examples:
+
+      <user-config>file:/C:/cocoon/fop-config.xml</user-config>
+      <user-config>WEB-INF/fop-config.xml</user-config>
+      -->
+
+      <!-- Should serializer set content length header or not?
+           Default is true.
+      <set-content-length>true</set-content-length>
+      -->
+    </map:serializer>
+
+    <map:serializer logger="sitemap.serializer.fo2ps" name="fo2ps" src="org.apache.cocoon.serialization.FOPSerializer" mime-type="application/postscript"/>
+
+    <map:serializer logger="sitemap.serializer.fo2pcl" name="fo2pcl" src="org.apache.cocoon.serialization.FOPSerializer" mime-type="vnd.hp-PCL"/>
+  </map:serializers>
+</map:components>

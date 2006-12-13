@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
+  xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+  xmlns:ft="http://apache.org/cocoon/forms/1.0#template">
+
+  <jx:import
+    uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml" />
+
+  <title>Sample enhanced repeater</title>
+  <content>
+
+    <ft:form-template action="#{$cocoon/continuation/id}.continue"
+      method="POST" ajax="false">
+
+      <ft:repeater id="players">
+
+        <p>
+          <b>
+            page
+            ${repeater.getDisplayableCurrentPage()}/${repeater.getDisplayableLastPage()}
+          </b>
+        </p>
+
+        <p>
+          <i>navigate</i>
+          <jx:if test="${!repeater.isFirstPage()}">
+            <ft:widget id="../page-first" />
+            <ft:widget id="../page-prev" />
+          </jx:if>
+          <jx:if test="${!repeater.isLastPage()}">
+            <ft:widget id="../page-next" />
+            <ft:widget id="../page-last" />
+          </jx:if>
+          <br />
+
+          <i>Jump to page</i>
+          <ft:widget id="../topage" />
+          <ft:widget id="../page-custom" />
+          <br />
+
+          <i>Sort</i>
+          <ft:widget id="../sort-natural" />
+          <ft:widget id="../sort-by-name" />
+          <ft:widget id="../sort-by-surname" />
+          <br />
+        </p>
+
+        <table>
+          <tbody>
+            <tr>
+              <th />
+
+              <th>
+                <ft:repeater-widget-label widget-id="id" />
+              </th>
+              <th>
+                <ft:repeater-widget-label widget-id="name" />
+              </th>
+              <th>
+                <ft:repeater-widget-label widget-id="country" />
+              </th>
+              <th>
+                <ft:repeater-widget-label widget-id="position" />
+              </th>
+            </tr>
+            <tr>
+              <th colspan="2">
+                <ft:widget id="../filter-button"/>
+              </th>
+              <th>
+                <ft:widget id="../filter-name" />
+              </th>
+              <th>
+                <ft:widget id="../filter-country" />
+              </th>
+              <th>
+                <ft:widget id="../filter-position" />
+              </th>
+            </tr>
+            <ft:repeater-rows>
+              <tr class="forms-row-${repeaterLoop.index % 2}">
+                <td>
+                  <ft:widget id="select" />
+                </td>
+                <td>
+                  <ft:widget id="id" />
+                </td>
+
+                <td>
+                  <ft:widget id="name" />
+                </td>
+                <td>
+                  <ft:widget id="country" />
+                </td>
+                <td>
+                  <ft:widget id="position" />
+                </td>
+              </tr>
+            </ft:repeater-rows>
+          </tbody>
+        </table>
+      </ft:repeater>
+      <p>
+        <ft:widget id="add" />
+        <ft:widget id="remove" />
+      </p>
+
+      <p>
+        <ft:widget id="submit" />
+      </p>
+    </ft:form-template>
+
+  </content>
+</page>
