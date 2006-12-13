@@ -74,7 +74,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
 
     // Error handler stuff
     private SitemapErrorHandler errorHandler;
-    private Processor.InternalPipelineDescription errorPipeline;
+    private ProcessingPipeline errorPipeline;
 
     /**
      * True when pipeline has been prepared.
@@ -357,7 +357,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
             try {
                 this.errorPipeline = this.errorHandler.prepareErrorPipeline(ex);
                 if (this.errorPipeline != null) {
-                    this.errorPipeline.processingPipeline.prepareInternal(environment);
+                    this.errorPipeline.prepareInternal(environment);
                     return;
                 }
             } catch (ProcessingException e) {
@@ -401,7 +401,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     throws ProcessingException {
         // Exception happened during setup and was handled
         if (this.errorPipeline != null) {
-            return this.errorPipeline.processingPipeline.process(environment, consumer);
+            return this.errorPipeline.process(environment, consumer);
         }
 
         // Have to buffer events if error handler is specified.
@@ -566,10 +566,11 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
 
         // Release error handler
         this.errorHandler = null;
-        if (this.errorPipeline != null) {
-            this.errorPipeline.release();
-            this.errorPipeline = null;
-        }
+
+        // Release error pipeline
+        // This is not done by using release in the creating container as release
+        // is a noop for the Avalon life style in the Spring container 
+        this.errorPipeline = null;
     }
 
     protected boolean processErrorHandler(Environment environment, ProcessingException e, XMLConsumer consumer)
@@ -578,8 +579,8 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
             try {
                 this.errorPipeline = this.errorHandler.prepareErrorPipeline(e);
                 if (this.errorPipeline != null) {
-                    this.errorPipeline.processingPipeline.prepareInternal(environment);
-                    return this.errorPipeline.processingPipeline.process(environment, consumer);
+                    this.errorPipeline.prepareInternal(environment);
+                    return this.errorPipeline.process(environment, consumer);
                 }
             } catch (Exception ignored) {
                 getLogger().debug("Exception in error handler", ignored);

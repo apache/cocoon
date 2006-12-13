@@ -34,11 +34,10 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
@@ -89,7 +88,7 @@ public abstract class AbstractProcessingPipeline
 
     // Error handler stuff
     private SitemapErrorHandler errorHandler;
-    private Processor.InternalPipelineDescription errorPipeline;
+    private ProcessingPipeline errorPipeline;
 
     /** True when pipeline has been prepared. */
     private boolean prepared;
@@ -124,8 +123,8 @@ public abstract class AbstractProcessingPipeline
     /** Output Buffer Size */
     protected int outputBufferSize;
 
-    /** The current Processor */
-    protected Processor processor;
+    /** The current SourceResolver */
+    protected SourceResolver sourceResolver;
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -339,7 +338,7 @@ public abstract class AbstractProcessingPipeline
         try {
             // setup the generator
             this.generator.setup(
-                this.processor.getSourceResolver(),
+                this.sourceResolver,
                 environment.getObjectModel(),
                 generatorSource,
                 generatorParam
@@ -351,7 +350,7 @@ public abstract class AbstractProcessingPipeline
 
             while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer)transformerItt.next();
-                trans.setup(this.processor.getSourceResolver(),
+                trans.setup(this.sourceResolver,
                             environment.getObjectModel(),
                             (String)transformerSourceItt.next(),
                             (Parameters)transformerParamItt.next()
@@ -360,7 +359,7 @@ public abstract class AbstractProcessingPipeline
 
             if (this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
-                    this.processor.getSourceResolver(),
+                    this.sourceResolver,
                     environment.getObjectModel(),
                     this.serializerSource,
                     this.serializerParam
@@ -443,8 +442,13 @@ public abstract class AbstractProcessingPipeline
      */
     protected void preparePipeline(Environment environment)
     throws ProcessingException {
-        // TODO (CZ) Get the processor set via IoC
-        this.processor = EnvironmentHelper.getCurrentProcessor();
+        // Look up the source resolver as late as possible as setProcessorManager might
+        // have changed the service manager
+        try {
+            this.sourceResolver = (SourceResolver) this.newManager.lookup(SourceResolver.ROLE);
+        } catch (ServiceException e) {
+            throw new ProcessingException("Couldn't find a source resolver", e);
+        }
         if (!checkPipeline()) {
             throw new ProcessingException("Attempted to process incomplete pipeline.");
         }
@@ -485,7 +489,7 @@ public abstract class AbstractProcessingPipeline
             try {
                 this.errorPipeline = this.errorHandler.prepareErrorPipeline(ex);
                 if (this.errorPipeline != null) {
-                    this.errorPipeline.processingPipeline.prepareInternal(environment);
+                    this.errorPipeline.prepareInternal(environment);
                     return;
                 }
             } catch (ProcessingException e) {
@@ -550,7 +554,7 @@ public abstract class AbstractProcessingPipeline
     protected void setupReader(Environment environment)
     throws ProcessingException {
         try {
-            this.reader.setup(this.processor.getSourceResolver(),environment.getObjectModel(),readerSource,readerParam);
+            this.reader.setup(this.sourceResolver,environment.getObjectModel(),readerSource,readerParam);
 
             // set the expires parameter on the pipeline if the reader is configured with one
             if (readerParam.isParameter("expires")) {
@@ -686,17 +690,23 @@ public abstract class AbstractProcessingPipeline
             this.newManager.release(this.serializer);
             this.serializerParam = null;
         }
+        
+        // Release source resolver
+        if (this.sourceResolver != null) {
+            this.newManager.release(this.sourceResolver);
+        }
         this.serializer = null;
         this.parameters = null;
-        this.processor = null;
+        this.sourceResolver = null;
         this.lastConsumer = null;
 
         // Release error handler
         this.errorHandler = null;
-        if (this.errorPipeline != null) {
-            this.errorPipeline.release();
-            this.errorPipeline = null;
-        }
+
+        // Release error pipeline
+        // This is not done by using release in the creating container as release
+        // is a noop for the Avalon life style in the Spring container 
+        this.errorPipeline = null;
     }
 
     /**
@@ -711,7 +721,7 @@ public abstract class AbstractProcessingPipeline
 
         // Exception happened during setup and was handled
         if (this.errorPipeline != null) {
-            return this.errorPipeline.processingPipeline.process(environment, consumer);
+            return this.errorPipeline.process(environment, consumer);
         }
 
         // Have to buffer events if error handler is specified.
@@ -740,8 +750,8 @@ public abstract class AbstractProcessingPipeline
             try {
                 this.errorPipeline = this.errorHandler.prepareErrorPipeline(e);
                 if (this.errorPipeline != null) {
-                    this.errorPipeline.processingPipeline.prepareInternal(environment);
-                    return this.errorPipeline.processingPipeline.process(environment, consumer);
+                    this.errorPipeline.prepareInternal(environment);
+                    return this.errorPipeline.process(environment, consumer);
                 }
             } catch (Exception ignored) {
                 getLogger().debug("Exception in error handler", ignored);
