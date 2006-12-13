@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id$
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <fd:widgets>
+  
+    <fd:repeater id="contacts" orderable="true">
+      <fd:widgets>
+        
+        <!-- The ID is here to keep track of row creation order, which can
+            have no relation with row index when the users used move up/down -->
+        <fd:output id="ID">
+          <fd:label>ID</fd:label>
+          <fd:datatype base="integer"/>
+        </fd:output>
+        
+        <fd:field id="firstname">
+          <fd:label>Firstname</fd:label>
+          <fd:hint>First name</fd:hint>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:field id="lastname">
+          <fd:label>Lastname</fd:label>
+          <fd:hint>Last name</fd:hint>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:row-action id="up" command="move-up"/>
+        
+        <fd:row-action id="down" command="move-down"/>
+        
+        <fd:booleanfield id="select">
+          <fd:label>Select</fd:label>
+        </fd:booleanfield>
+        
+      </fd:widgets>
+    </fd:repeater>
+  
+    <fd:repeater-action id="addcontact" command="add-row" repeater="contacts">
+      <fd:label>Add contact</fd:label>
+      <fd:on-action>
+        <fd:javascript>
+          // Increment the row creation ID counter (it has been initialized in
+          // the flowscript when the form was created).
+          // This shows how attributes can be used as a communication means between
+          // application logic and widget event handlers.
+          var form = event.source.form;
+          var count = new java.lang.Integer(form.getAttribute("counter").intValue() + 1);
+          form.setAttribute("counter", count);
+          var repeater = form.getChild("contacts");
+          repeater.getRow(repeater.getSize() - 1).getChild("ID").setValue(count);
+        </fd:javascript>
+      </fd:on-action>
+    </fd:repeater-action>
+  
+    <fd:repeater-action id="removecontacts" command="delete-rows" repeater="contacts" select="select">
+      <fd:label>Remove selected contacts</fd:label>
+    </fd:repeater-action>
+
+    <fd:submit id="ok">
+      <fd:label>Submit</fd:label>
+    </fd:submit>
+  </fd:widgets>
+
+</fd:form>

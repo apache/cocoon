@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+
+  <title>Tower of Hanoi Puzzle</title>
+
+  <content>
+
+    <para>For some background on the puzzle, see: 
+      <a href="http://www.cut-the-knot.org/recurrence/hanoi.shtml">http://www.cut-the-knot.org/recurrence/hanoi.shtml</a>
+    </para>
+
+    <para>To start the puzzle interaction you need to initilaize the number of discs: </para>
+
+    <form method="post" action="${cocoon.continuation.id}.continue">
+
+      <select name="size">
+        <option>3</option>
+        <option selected="selected">4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+      </select>
+      
+      <input type="submit" value="Start!"/>
+      
+    </form>          
+    
+  </content>
+
+</page>

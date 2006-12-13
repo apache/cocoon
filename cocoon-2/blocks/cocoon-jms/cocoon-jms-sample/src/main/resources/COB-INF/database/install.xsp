@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+    XSP event-based cache sample.
+
+    Cvs $Id$
+ -->
+
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+
+    <page>
+        <title>Install Database Triggers with HSQLDB</title>
+        <para>This page tries to install triggers with the demo database that
+              comes with Apache Cocoon.</para>
+
+        <para>Source for the triggers can be found in the eventcache block in your Cocoon
+              source distribution: src/blocks/eventcache/java/org/apache/cocoon/samples/eventcache/</para>
+
+        <esql:connection>
+            <esql:pool>personnel</esql:pool>
+        <xsp:logic>
+            String trigClass = <xsp-request:get-parameter name="what" default="http"/>;
+            if (trigClass.equals("http")){
+                trigClass = "org.apache.cocoon.samples.jms.HTTPTrigger";
+            } else {
+                trigClass = "org.apache.cocoon.samples.jms.JMSTrigger";
+            }
+            String what = null;
+            for (int i = 0; i &lt; 3; i++) {
+                switch(i) {
+                case 0: what="update"; break;
+                case 1: what="insert"; break;
+                case 2: what="delete"; break;
+                }
+
+                <para>Installing <xsp:expr>trigClass</xsp:expr> for <xsp:expr>what</xsp:expr> on table "user".</para>
+
+                <esql:execute-query>
+                    <esql:query>create trigger myTrigger<xsp:expr>i</xsp:expr>
+                                after <xsp:expr>what</xsp:expr> on user
+                                call \"<xsp:expr>trigClass</xsp:expr>\"</esql:query>
+                    <esql:error-results>
+                        <para>Failed installing myTrigger<xsp:expr>i</xsp:expr>: <esql:get-message/></para>
+                        <para>Trigger already installed?</para>
+                    </esql:error-results>
+                </esql:execute-query>
+            }
+         </xsp:logic>
+        </esql:connection>
+
+        <para><a href="remove">Uninstall triggers</a> or go back to <a href="eventcache">sample page.</a></para>
+    </page>
+
+</xsp:page>

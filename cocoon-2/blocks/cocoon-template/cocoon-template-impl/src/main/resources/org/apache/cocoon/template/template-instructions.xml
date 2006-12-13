@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<root>
+    <instructions targetNamespace="http://apache.org/cocoon/templates/jx/1.0">
+        <instruction name="template" class="org.apache.cocoon.template.instruction.Template"/>
+        <instruction name="forEach" class="org.apache.cocoon.template.instruction.ForEach"/>
+        <instruction name="if" class="org.apache.cocoon.template.instruction.If"/>
+        <instruction name="choose" class="org.apache.cocoon.template.instruction.Choose"/>
+        <instruction name="when" class="org.apache.cocoon.template.instruction.When"/>
+        <instruction name="otherwise" class="org.apache.cocoon.template.instruction.Otherwise"/>
+        <instruction name="out" class="org.apache.cocoon.template.instruction.Out"/>
+        <instruction name="import" class="org.apache.cocoon.template.instruction.Import"/>
+        <instruction name="set" class="org.apache.cocoon.template.instruction.Set"/>
+        <instruction name="macro" class="org.apache.cocoon.template.instruction.Define"/>
+        <instruction name="evalBody" class="org.apache.cocoon.template.instruction.EvalBody"/>
+        <instruction name="eval" class="org.apache.cocoon.template.instruction.Eval"/>
+        <instruction name="parameter" class="org.apache.cocoon.template.instruction.Parameter"/>
+        <instruction name="formatNumber" class="org.apache.cocoon.template.instruction.FormatNumber"/>
+        <instruction name="formatDate" class="org.apache.cocoon.template.instruction.FormatDate"/>
+        <instruction name="comment" class="org.apache.cocoon.template.instruction.Comment"/>
+        <instruction name="call" class="org.apache.cocoon.template.instruction.Call"/>
+        <instruction name="withParam" class="org.apache.cocoon.template.instruction.ParameterInstance"/>
+        <instruction name="attribute" class="org.apache.cocoon.template.instruction.Attribute"/>
+    </instructions>
+</root>

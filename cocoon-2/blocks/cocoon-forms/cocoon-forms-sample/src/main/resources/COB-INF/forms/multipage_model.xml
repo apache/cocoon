@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id$
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <fd:widgets>
+
+    <fd:group id="page1">
+      <fd:widgets>
+        <fd:field id="email" required="true">
+          <fd:datatype base="string"/>
+          <!-- new-style validation, outside of the datatype -->
+          <fd:validation>
+            <fd:email/>
+          </fd:validation>
+          <fd:label>Enter an <b>email</b> address:</fd:label>
+          <fd:help>
+            An email address must be in <i>[name]@[domain].[tld]</i> format.
+            <br/>
+            And if you do not know what <b>email</b> address is, then well, chances are
+            that you do not have it. However, if you have access to the Internet,
+            you can easily get yourself one!
+            <br/>
+            Choose one of the following options:
+            <ul>
+              <li><a href='http://mail.yahoo.com/'>Yahoo! Mail</a></li>
+              <li><a href='http://www.hotmail.com/'>Hotmail</a></li>
+            </ul>
+            <small>Anyway, the point of all this was to show a popup help with mixed html content.</small>
+          </fd:help>
+        </fd:field>
+  
+	    <fd:field id="fourchars" required="true">
+	      <fd:label>Select something that's 4 characters long:</fd:label>
+	      <fd:datatype base="string"/>
+	      <fd:validation>
+	        <fd:length exact='2*2'/>
+	      </fd:validation>
+	      <fd:selection-list src="forms/a-choices.xml"/>
+	    </fd:field>
+  
+	    <fd:field id="birthdate" required="true">
+	      <fd:label>Your birthdate (dd/MM/yyyy):</fd:label>
+	      <fd:datatype base="date">
+	        <fd:convertor>
+	          <fd:patterns>
+	            <fd:pattern>dd/MM/yyyy</fd:pattern>
+	            <!-- The above pattern is a non-locale-specific pattern. You can
+	            also add locale-specific patterns by adding more fd:pattern elements
+	            here, with a locale attribute on them. -->
+	          </fd:patterns>
+	        </fd:convertor>
+	      </fd:datatype>
+	      <fd:validation>
+	        <fd:range min="Date(1850, 1, 1)" max="Date(2150, 1, 1)">
+	          <fd:failmessage>Dead and not born yet should not bother filling this form</fd:failmessage>
+	        </fd:range>
+	      </fd:validation>
+	    </fd:field>
+	  
+      	<fd:action id="next">
+      	  <fd:label>Next</fd:label>
+      	  <fd:on-action>
+      	  	<fd:javascript>
+      	  	  var parent = event.source.parent;
+      	      if (parent.validate()) {
+      	          parent.setState(WidgetState.INVISIBLE);
+      	          parent.lookupWidget("../page2").setState(WidgetState.ACTIVE);
+      	      }
+      	  	</fd:javascript>
+      	  </fd:on-action>
+      	</fd:action>
+      </fd:widgets>
+    </fd:group>
+  	
+  	<fd:group id="page2" state="invisible">
+  	  <fd:widgets>
+	    <fd:field id="number1" required="true">
+	      <fd:label>Please enter a number<br/>
+	      <small>(will automatically set a correct value below if needed)</small>:</fd:label>
+	      <fd:datatype base="long"/>
+	      <fd:on-value-changed>
+	        <javascript>
+	          java.lang.System.err.println("Was here!");
+	          var newValue = event.source.value;
+	          if (newValue != null) {
+	            var number2 = event.source.parent.lookupWidget("number2");
+	            if (number2.value == null) {
+	              number2.setValue(new java.lang.Long(newValue.intValue() + 1));
+	            }
+	          }
+	        </javascript>
+	      </fd:on-value-changed>
+	    </fd:field>
+	  
+	    <fd:field id="number2" required="true">
+	      <fd:label>Enter another number, larger than the other number:</fd:label>
+	      <fd:datatype base="long"/>
+	      <fd:validation>
+	        <fd:range min="number1 + 1">
+	          <fd:failmessage>This number should be larger than the first number.</fd:failmessage>
+	        </fd:range>
+	      </fd:validation>
+	    </fd:field>
+ 
+	    <fd:field id="account" required="true">
+	      <fd:label>Indicate the size of your bank account (in m<sup>3</sup>):</fd:label>
+	      <fd:datatype base="long"/>
+	      <fd:selection-list>
+	        <fd:item value="1"/>
+	        <fd:item value="2"/>
+	        <fd:item value="3">
+	          <fd:label>three</fd:label>
+	        </fd:item>
+	        <fd:item value="4"/>
+	        <fd:item value="5"/>
+	      </fd:selection-list>
+	    </fd:field>
+	  
+	    <fd:field id="cowheight" required="true">
+	      <fd:label>Indicate your height (in cows):</fd:label>
+	      <fd:datatype base="long"/>
+	      <fd:selection-list>
+	        <fd:item value="1"/>
+	        <fd:item value="2"/>
+	        <fd:item value="3">
+	          <fd:label>three</fd:label>
+	        </fd:item>
+	        <fd:item value="4"/>
+	        <fd:item value="5"/>
+	      </fd:selection-list>
+	    </fd:field>
+  	  	
+      	<fd:action id="prev">
+      	  <fd:label>Previous</fd:label>
+      	  <fd:on-action>
+      	  	<fd:javascript>
+      	  	  // switch back to previous back with no validation
+      	  	  var parent = event.source.parent;
+      	      parent.setState(WidgetState.INVISIBLE);
+      	      parent.lookupWidget("../page1").setState(WidgetState.ACTIVE);
+      	  	</fd:javascript>
+      	  </fd:on-action>
+      	</fd:action>
+      	<fd:action id="next">
+      	  <fd:label>Next</fd:label>
+      	  <fd:on-action>
+      	  	<fd:javascript>
+      	  	  var parent = event.source.parent;
+      	      if (parent.validate()) {
+      	          parent.setState(WidgetState.INVISIBLE);
+      	          parent.lookupWidget("../page3").setState(WidgetState.ACTIVE);
+      	      }
+      	  	</fd:javascript>
+      	  </fd:on-action>
+      	</fd:action>
+  	  </fd:widgets>
+  	</fd:group>
+    
+  	<fd:group id="page3" state="invisible">
+  	  <fd:widgets>
+	    <fd:booleanfield id="somebool">
+	      <fd:label>Put me <em>on</em> or <em>off</em>.</fd:label>
+	    </fd:booleanfield>
+	  
+	  
+	    <fd:multivaluefield id="drinks" required="true">
+	      <fd:label>Indicate which 2 of the following drinks you'd like to receive:</fd:label>
+	      <fd:datatype base="string"/>
+	      <fd:validation>
+	        <fd:value-count exact="2"/>
+	      </fd:validation>
+	      <fd:selection-list>
+	        <fd:item value="Maes"/>
+	        <fd:item value="Jupiler"/>
+	        <fd:item value="Leffe"/>
+	        <fd:item value="Hoegaarden"/>
+	        <fd:item value="Coca Cola"/>
+	      </fd:selection-list>
+	    </fd:multivaluefield>
+
+      	<fd:action id="prev">
+      	  <fd:label>Previous</fd:label>
+      	  <fd:on-action>
+      	  	<fd:javascript>
+      	  	  // switch back to previous back with no validation
+      	  	  var parent = event.source.parent;
+      	      parent.setState(WidgetState.INVISIBLE);
+      	      parent.lookupWidget("../page2").setState(WidgetState.ACTIVE);
+      	  	</fd:javascript>
+      	  </fd:on-action>
+      	</fd:action>
+  	  	
+      	<fd:submit id="ok">
+      	  <fd:label>Finish</fd:label>
+      	</fd:submit>
+  	  </fd:widgets>
+  	</fd:group>
+
+  </fd:widgets>
+
+</fd:form>

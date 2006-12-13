@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:flow language="intercepted-javascript">
+    <map:script src="flow/image.js"/>
+  </map:flow>
+
+  <map:pipelines>
+
+    <map:pipeline>
+
+        <map:match pattern="">
+            <map:call function="main"/>
+        </map:match>
+
+
+
+        <map:match pattern="*.flow">
+            <map:call continuation="{1}"/> 
+        </map:match>
+
+
+
+        <map:match pattern="*.jxt">
+            <map:generate type="jx" src="documents/{1}.jxt"/>
+            <map:serialize type="xhtml"/>
+        </map:match>
+
+
+
+        <map:match pattern="auth-*.jpg">
+            <map:call continuation="{1}">
+                <map:parameter name="msg" value="image"/>
+            </map:call>
+        </map:match>
+
+    </map:pipeline>
+
+
+    <map:pipeline internal-only="true">
+        <map:match pattern="auth.jpg">
+            <map:generate type="jx" src="documents/auth-jxt.svg"/>
+            <map:serialize type="svg2jpeg"/>
+        </map:match>  
+    </map:pipeline>
+
+  </map:pipelines>
+
+</map:sitemap>

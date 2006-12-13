@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<p xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
+Add one (or more) coplets to your basket.
+<form method="POST" action="copletlist.list.flow">
+  <table>
+    <tr><th>&#160;</th><th>Title</th></tr>
+    <tr><td><input type="checkbox" name="sample1" value="sample1"/></td><td>Static Coplet</td></tr>
+    <tr><td><input type="checkbox" name="sample2" value="sample2"/></td><td>Coplet with Attribute</td></tr>
+    <tr><td><input type="checkbox" name="sample3" value="sample3"/></td><td>Coplet with Inline Processing</td></tr>
+    <tr><td><input type="checkbox" name="sample4" value="sample4"/></td><td>Coplet with Input Processing</td></tr>
+    <tr><td><input type="checkbox" name="sample5" value="sample5"/></td><td>Coplet with Application</td></tr>
+  </table>
+  <input type="submit" name="Add" value="Add"/>
+</form>
+</p>

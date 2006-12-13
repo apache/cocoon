@@ -1,0 +1,546 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  Model for the Swan xreport editor.
+
+  @version $Id$
+-->
+
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <fd:widgets>
+
+    <!--
+    TODO:
+      Add features to "items-class" (e.g. move-up, move-down, add-before, add-after).
+    -->
+
+    <fd:new id="id-class"/>
+    <fd:new id="name-class"/>
+    <fd:new id="description-class"/>
+    <fd:new id="req-ds-type-class"/>
+    <fd:new id="catalogs-class"/>
+    <fd:new id="flow-class"/>
+    <fd:new id="output-class"/>
+    <fd:new id="items-class"/>
+
+    <fd:class id="items-class">
+      <fd:widgets>
+        <fd:repeater id="items" initial-size="1">
+          <fd:label>Items</fd:label>
+          <fd:widgets>
+            <fd:new id="item-row-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addItem" action-command="add-row" repeater="items">
+          <fd:label>New</fd:label>
+        </fd:repeater-action>
+        <fd:repeater-action id="removeItems" action-command="delete-rows" repeater="items" select="select">
+          <fd:label>Del</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="select-class">
+      <fd:widgets>
+        <fd:booleanfield id="select"><fd:label>Select</fd:label></fd:booleanfield>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="view-selector-class">
+      <fd:widgets>
+        <fd:field id="view-selector" state="invisible">
+          <fd:label>View</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value="fold"><fd:label>Fold</fd:label></fd:item>
+            <fd:item value="view"><fd:label>View</fd:label></fd:item>
+            <fd:item value="edit"><fd:label>Edit</fd:label></fd:item>
+          </fd:selection-list>
+          <fd:on-value-changed>
+            <javascript>
+              var widget = event.getSourceWidget();
+              //var parent = widget.getParent();
+              //var union = parent.getChild("union");
+              //var type = parent.getChild("type-selector");
+              var union = widget.lookupWidget("../union");
+              var type = widget.lookupWidget("../type-selector");
+              if(widget.getValue().equals("edit")) {
+                union.state = WidgetState.ACTIVE;
+                type.state = WidgetState.ACTIVE;
+              } else {
+                union.state = WidgetState.DISABLED;
+                type.state = WidgetState.DISABLED;
+              }
+            </javascript>
+          </fd:on-value-changed>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="type-selector-class">
+      <fd:widgets>
+        <fd:field id="type-selector">
+          <fd:label>Widget Type</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value=""><fd:label>Nothing</fd:label></fd:item>
+            <fd:item value="database"><fd:label>Database</fd:label></fd:item>
+            <fd:item value="dialect"><fd:label>Dialect</fd:label></fd:item>
+            <fd:item value="flow"><fd:label>Flow</fd:label></fd:item>
+            <fd:item value="interaction"><fd:label>Interaction</fd:label></fd:item>
+            <fd:item value="literal"><fd:label>Literal</fd:label></fd:item>
+            <fd:item value="output"><fd:label>Output</fd:label></fd:item>
+            <fd:item value="parameter"><fd:label>Parameter</fd:label></fd:item>
+            <fd:item value="sql"><fd:label>Sql</fd:label></fd:item>
+            <fd:item value="step"><fd:label>Step</fd:label></fd:item>
+          </fd:selection-list>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="item-row-class">
+      <fd:widgets>
+        <fd:new id="select-class"/>
+        <fd:new id="view-selector-class"/>
+        <fd:new id="type-selector-class"/>
+        <fd:union id="union" default="" case="type-selector">
+          <fd:datatype base="string"/>
+          <fd:label>Type</fd:label>
+          <fd:widgets>
+
+            <fd:group id="column">
+              <fd:label>Column</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="field-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="columns">
+              <fd:label>Columns</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:new id="database-class"/>
+
+            <fd:group id="dialect">
+              <fd:label>Dialect</fd:label>
+              <fd:widgets>
+                <fd:new id="types-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:new id="flow-class"/>
+
+            <fd:group id="interaction">
+              <fd:label>Interaction</fd:label>
+              <fd:widgets>
+                <fd:new id="label-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="link">
+              <fd:label>link</fd:label>
+              <fd:widgets>
+                <fd:new id="title-class"/>
+                <fd:new id="report-id-elem-class"/>
+                <fd:new id="link-parameter-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="links">
+              <fd:label>Links</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:new id="output-class"/>
+
+            <fd:new id="step-parameter-class"/>
+
+            <fd:group id="sql">
+              <fd:label>Sql</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="step">
+              <fd:label>Step</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="subreport">
+              <fd:label>Subreport</fd:label>
+              <fd:widgets>
+                <fd:new id="id-class"/>
+                <fd:new id="report-id-class"/>
+                <fd:new id="datasource-id-class"/>
+                <fd:new id="name-class"/>
+                <fd:new id="description-class"/>
+                <fd:new id="subreport-parameter-class"/>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="subreports">
+              <fd:label>Subreports</fd:label>
+              <fd:widgets>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="title">
+              <fd:label>Title</fd:label>
+              <fd:widgets>
+                <fd:new id="title-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="type">
+              <fd:label>Type</fd:label>
+              <fd:widgets>
+                <fd:new id="base-class"/>
+              </fd:widgets>
+            </fd:group>
+
+          </fd:widgets>
+
+        </fd:union>
+      </fd:widgets>
+    </fd:class>
+ 
+    <fd:class id="base-class">
+      <fd:widgets>
+        <fd:field id="base">
+          <fd:label>Base</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="catalog-class">
+      <fd:widgets>
+        <fd:field id="catalog" required="true">
+          <fd:label>Catalog</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="catalogs-class">
+      <fd:widgets>
+        <fd:repeater id="catalogs" initial-size="0">
+          <fd:label>Catalogs</fd:label>
+          <fd:widgets>
+            <fd:new id="catalog-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addCatalog" action-command="add-row" repeater="catalogs">
+          <fd:label>New</fd:label>
+        </fd:repeater-action>
+        <fd:repeater-action id="removeCatalogs" action-command="delete-rows" repeater="catalogs" select="select">
+          <fd:label>Del</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="database-class">
+      <fd:widgets>
+        <fd:group id="database">
+          <fd:label>Database</fd:label>
+          <fd:widgets>
+            <fd:new id="sql-class"/>
+          </fd:widgets>
+        </fd:group>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="datasource-id-class">
+      <fd:widgets>
+        <fd:field id="datasource-id" required="true">
+          <fd:label>Datasource ID</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="datatype-id-class">
+      <fd:widgets>
+        <fd:field id="datatype-id" required="true">
+          <fd:label>Datatype ID</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="description-class">
+      <fd:widgets>
+        <fd:field id="description" required="true">
+          <fd:label>Description</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="dialect-class">
+      <fd:widgets>
+        <fd:repeater id="dialect" initial-size="0">
+          <fd:label>Flow</fd:label>
+          <fd:widgets>
+            <fd:field id="sql-type-selector">
+              <fd:label>Type</fd:label>
+              <fd:datatype base="string"/>
+            </fd:field>
+            <fd:union id="type" case="sql-type-selector">
+              <fd:widgets>
+                <fd:new id="literal-class"/>
+                <fd:new id="sql-parameter-class"/>
+              </fd:widgets>
+            </fd:union>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addItem" action-command="add-row" repeater="dialect">
+          <fd:label>New</fd:label>
+        </fd:repeater-action>
+        <fd:repeater-action id="removeItems" action-command="delete-rows" repeater="dialect" select="select">
+          <fd:label>Del</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="field-class">
+      <fd:widgets>
+        <fd:field id="field" required="true">
+          <fd:label>Field</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="flow-class">
+      <fd:widgets>
+        <fd:repeater id="flow" initial-size="0">
+          <fd:label>Flow</fd:label>
+          <fd:widgets>
+            <fd:new id="step-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addStep" action-command="add-row" repeater="flow">
+          <fd:label>New</fd:label>
+        </fd:repeater-action>
+        <fd:repeater-action id="removeStep" action-command="delete-rows" repeater="flow" select="select">
+          <fd:label>Del</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="id-class">
+      <fd:widgets>
+        <fd:field id="id" required="true">
+          <fd:label>Id</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="interaction-class">
+      <fd:widgets>
+        <fd:repeater id="interaction" initial-size="0">
+          <fd:label>Interaction</fd:label>
+          <fd:widgets>
+            <fd:new id="step-parameter-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addParameter" action-command="add-row" repeater="interaction">
+          <fd:label>New</fd:label>
+        </fd:repeater-action>
+        <fd:repeater-action id="removeParameters" action-command="delete-rows" repeater="interaction" select="select">
+          <fd:label>Del</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="label-class">
+      <fd:widgets>
+        <fd:field id="label">
+          <fd:label>Label</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="link-parameter-class">
+      <fd:widgets>
+        <fd:field id="link-parameter" required="true">
+          <fd:label>Parameter</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="literal-class">
+      <fd:widgets>
+        <fd:field id="literal">
+          <fd:label>Literal</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="name-class">
+      <fd:widgets>
+        <fd:field id="name" required="true">
+          <fd:label>Name</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="output-class">
+      <fd:widgets>
+        <fd:group id="output">
+          <fd:label>Output</fd:label>
+          <fd:widgets>
+            <fd:new id="database-class"/>
+          </fd:widgets>
+        </fd:group>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="report-id-class">
+      <fd:widgets>
+        <fd:field id="report-id" required="true">
+          <fd:label>Report ID</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="report-id-elem-class">
+      <fd:widgets>
+        <fd:field id="report-id-elem" required="true">
+          <fd:label>Report ID</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="req-ds-type-class">
+      <fd:widgets>
+        <fd:field id="req-ds-type" required="true">
+          <fd:label>Required Datasource Type</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="required-class">
+      <fd:widgets>
+        <fd:booleanfield id="required">
+          <fd:label>Required</fd:label>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="sql-class">
+      <fd:widgets>
+        <fd:group id="sql">
+          <fd:label>Sql</fd:label>
+          <fd:widgets>
+            <fd:new id="dialect-class"/>
+          </fd:widgets>
+        </fd:group>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="sql-parameter-class">
+      <fd:widgets>
+        <fd:field id="sql-parameter" required="true">
+          <fd:label>Parameter</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="step-class">
+      <fd:widgets>
+        <fd:group id="step">
+          <fd:label>Step</fd:label>
+          <fd:widgets>
+            <fd:new id="id-class"/>
+            <fd:new id="interaction-class"/>
+          </fd:widgets>
+        </fd:group>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="step-parameter-class">
+      <fd:widgets>
+        <fd:group id="step-parameter">
+          <fd:label>Parameter</fd:label>
+          <fd:widgets>
+            <fd:new id="id-class"/>
+            <fd:new id="required-class"/>
+            <fd:new id="datatype-id-class"/>
+          </fd:widgets>
+        </fd:group>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="subreport-parameter-class">
+      <fd:widgets>
+        <fd:field id="subreport-parameter" required="true">
+          <fd:label>Parameter</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="title-class">
+      <fd:widgets>
+        <fd:field id="title">
+          <fd:label>Title</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="types-class">
+      <fd:widgets>
+        <fd:field id="types" required="true">
+          <fd:label>Types</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+  </fd:widgets>
+</fd:form>
