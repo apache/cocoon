@@ -31,6 +31,8 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.serializers.EncodingSerializer;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalException;
@@ -50,12 +52,10 @@ import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
-import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
 import org.apache.pluto.PortletContainerImpl;
@@ -191,22 +191,15 @@ public class PortletAdapter
 
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
-            final String value = this.getResponse(coplet, res);
+            final String content = this.getResponse(coplet, res);
 
             final Boolean usePipeline = (Boolean)this.getConfiguration(coplet, "use-pipeline", Boolean.FALSE);
             if ( usePipeline.booleanValue() ) {
-                HtmlSaxParser.parseString(value, HtmlSaxParser.getContentFilter(contentHandler));
+                HtmlSaxParser.parseString(content, HtmlSaxParser.getContentFilter(contentHandler));
             } else {
                 // stream out the include for the serializer
-                IncludingHTMLSerializer.addPortlet(coplet.getId(), value);
-                contentHandler.startPrefixMapping("portal", IncludingHTMLSerializer.NAMESPACE);
-                final AttributesImpl attr = new AttributesImpl();
-                attr.addCDATAAttribute("portlet", coplet.getId());
-                contentHandler.startElement(IncludingHTMLSerializer.NAMESPACE, 
-                                            "include", "portal:include", attr);
-                contentHandler.endElement(IncludingHTMLSerializer.NAMESPACE, 
-                                          "include", "portal:include");
-                contentHandler.endPrefixMapping("portal");
+                final org.apache.cocoon.environment.Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
+                EncodingSerializer.include(content, request, contentHandler);
             }
         } catch (SAXException se) {
             throw se;

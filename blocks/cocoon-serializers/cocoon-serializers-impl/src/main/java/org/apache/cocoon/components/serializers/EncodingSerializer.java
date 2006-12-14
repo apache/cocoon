@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -38,8 +40,10 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
@@ -126,7 +130,7 @@ public abstract class EncodingSerializer
 
     protected Request request;
 
-    public static final String CONTENT_MAP_ATTRIBUTE = EncodingSerializer.class.getName() + "/ContentMap";
+    protected static final String CONTENT_LIST_ATTRIBUTE = EncodingSerializer.class.getName() + "/ContentList";
 
     public static final String NAMESPACE = "http://apache.org/cocoon/serializers/include";
 
@@ -150,6 +154,30 @@ public abstract class EncodingSerializer
                       Parameters     par)
     throws ProcessingException, SAXException, IOException {
         this.request = ObjectModelHelper.getRequest(objectModel);
+    }
+
+    /**
+     * Add the content to the output without sending it through the pipeline.
+     * @param content
+     * @param request
+     * @param handler
+     */
+    public static void include(String content, Request request, ContentHandler handler)
+    throws SAXException {
+        if ( content != null ) {
+            List values = (List)request.getAttribute(CONTENT_LIST_ATTRIBUTE);
+            if ( values == null ) {
+                values = new ArrayList();
+            }
+            values.add(content);
+            request.setAttribute(CONTENT_LIST_ATTRIBUTE, values);
+            handler.startPrefixMapping("encser", NAMESPACE);
+            final AttributesImpl attr = new AttributesImpl();
+            attr.addCDATAAttribute("index", String.valueOf(values.size() - 1));
+            handler.startElement(NAMESPACE, "include", "encser:include", attr);
+            handler.endElement(NAMESPACE, "include", "encser:include");
+            handler.endPrefixMapping("encser");
+        }
     }
 
     /**
@@ -476,12 +504,13 @@ public abstract class EncodingSerializer
                                    Attributes attributes)
     throws SAXException {
         if (NAMESPACE.equals(nsuri)) {
-            final String contentId = attributes.getValue("portlet");
+            final String contentId = attributes.getValue("index");
+            final int index = Integer.valueOf(contentId).intValue();
 
             String value = null;
-            final Map map = (Map)this.request.getAttribute(CONTENT_MAP_ATTRIBUTE);
-            if ( map != null ) {
-                value = (String)map.get(contentId);
+            final List values = (List)this.request.getAttribute(CONTENT_LIST_ATTRIBUTE);
+            if ( values != null ) {
+                value = (String)values.get(index);
             }
             if ( value != null ) {
                 this.write(value);
