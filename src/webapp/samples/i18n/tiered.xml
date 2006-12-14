@@ -16,6 +16,8 @@
   limitations under the License.
 -->
 
+<!-- $Id$ -->
+
 <document xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
           i18n:attr="language"
           language="language">
@@ -31,7 +33,7 @@
     <i18n:translate>
       <i18n:text key="doclink"/>
       <i18n:param>
-        <link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html">Cocoon 2 Web Site</link>
+        <link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18nTransformer.html">Cocoon 2 Web Site</link>
       </i18n:param>
     </i18n:translate>
   </annotation>
@@ -82,6 +84,6 @@
   </content>
 
   <bottom>
-     <copyright>Copyright 1999-2005 The Apache Software Foundation</copyright>
+     <copyright>Copyright 1999-2006 The Apache Software Foundation</copyright>
   </bottom>
 </document>
