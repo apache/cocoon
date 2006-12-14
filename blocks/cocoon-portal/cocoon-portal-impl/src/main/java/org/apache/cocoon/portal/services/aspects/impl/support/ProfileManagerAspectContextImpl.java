@@ -16,8 +16,10 @@
  */
 package org.apache.cocoon.portal.services.aspects.impl.support;
 
+import java.util.Collection;
+
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.scratchpad.Profile;
+import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
@@ -26,24 +28,46 @@ import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
 /**
  * The aspect context is passed to every aspect.
  * @since 2.2
+ *
  * @version $Id$
  */
 public final class ProfileManagerAspectContextImpl
     extends BasicAspectContextImpl
     implements ProfileManagerAspectContext {
 
+    public static final int PHASE_COPLET_TYPES = 0;
+    public static final int PHASE_COPLET_DEFINITIONS = 1;
+    public static final int PHASE_COPLET_INSTANCES =2;
+    public static final int PHASE_COPLET_LAYOUT = 3;
+
+    protected int phase;
+    protected Object result;
+
     public ProfileManagerAspectContextImpl(PortalService service,
-                                              AspectChain   chain) {
+                                           AspectChain   chain,
+                                           int           phase) {
         super(service, chain);
     }
 
-	/**
-	 * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext#invokeNext(org.apache.cocoon.portal.scratchpad.Profile)
-	 */
-	public void invokeNext(Profile portalProfile) {
+	public void invokeNext(Object object) {
         final ProfileManagerAspect aspect = (ProfileManagerAspect)this.getNext();
         if ( aspect != null ) {
-            aspect.prepare(this, portalProfile);
+            switch (phase) {
+                case PHASE_COPLET_TYPES : aspect.prepareCopletTypes(this, (Collection)object);
+                                          break;
+                case PHASE_COPLET_DEFINITIONS : aspect.prepareCopletDefinitions(this, (Collection)object);
+                                                break;
+                case PHASE_COPLET_INSTANCES : aspect.prepareCopletInstances(this, (Collection)object);
+                                              break;
+                case PHASE_COPLET_LAYOUT : aspect.prepareLayout(this, (Layout)object);
+                                           break;
+            }
+        } else {
+            this.result = object;
         }
+    }
+
+    public Object getResult() {
+        return this.result;
     }
 }

@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.portal.scratchpad.Profile;
-
 /**
  * The context for a {@link  ProfileManagerAspect}.
  *
@@ -29,5 +27,5 @@ public interface ProfileManagerAspectContext extends BasicAspectContext {
     /**
      * Invoke next aspect .
      */
-    void invokeNext(Profile profile);
+    void invokeNext(Object object);
 }

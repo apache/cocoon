@@ -102,14 +102,11 @@ public class TestProfileManager extends GroupBasedProfileManager {
                         }
                     }
                 }
-                profile.setCopletInstances(instances);
-                this.prepareObject(profile, instances);
-                this.prepareObject(profile, rootLayout);
-                profile.setRootLayout(rootLayout);
+                profile.setCopletInstances(this.processCopletInstances(profile, instances));
+                profile.setRootLayout(this.processLayout(profile, rootLayout));
     
-                final Profile processedProfile = this.processProfile(profile);    
-                this.storeUserProfile(processedProfile);
-                return processedProfile;
+                this.storeUserProfile(profile);
+                return profile;
             } catch (ProfileException e) {
                 throw e;
             } catch (Exception e) {
