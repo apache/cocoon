@@ -16,12 +16,13 @@
  */
 package org.apache.cocoon.portal.services.aspects.impl;
 
+import java.util.Collection;
+
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.NamedItem;
-import org.apache.cocoon.portal.scratchpad.Profile;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext;
 
@@ -32,17 +33,37 @@ public class PageLabelProfileManagerAspect
     implements ProfileManagerAspect, ThreadSafe {
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext, org.apache.cocoon.portal.scratchpad.Profile)
+     * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspect#prepareCopletDefinitions(org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext, java.util.Collection)
      */
-    public void prepare(ProfileManagerAspectContext context, Profile profile) {
-        final Layout rootLayout = profile.getRootLayout();
+    public void prepareCopletDefinitions(ProfileManagerAspectContext context, Collection copletDefinitions) {
+        context.invokeNext(copletDefinitions);
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspect#prepareCopletInstances(org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext, java.util.Collection)
+     */
+    public void prepareCopletInstances(ProfileManagerAspectContext context, Collection copletInstances) {
+        context.invokeNext(copletInstances);
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspect#prepareCopletTypes(org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext, java.util.Collection)
+     */
+    public void prepareCopletTypes(ProfileManagerAspectContext context, Collection copletTypes) {
+        context.invokeNext(copletTypes);
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspect#prepareLayout(org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext, org.apache.cocoon.portal.om.Layout)
+     */
+    public void prepareLayout(ProfileManagerAspectContext context, Layout rootLayout) {
         if ( rootLayout instanceof CompositeLayout ) {
             this.populate((CompositeLayout)rootLayout, "");
         }
-        context.invokeNext(profile);
+        context.invokeNext(rootLayout);
     }
 
-    private void populate(CompositeLayout layout, String name) {
+    protected void populate(CompositeLayout layout, String name) {
         for (int j = 0; j < layout.getSize(); j++) {
             final Item tab = layout.getItem(j);
             final StringBuffer label = new StringBuffer(name);

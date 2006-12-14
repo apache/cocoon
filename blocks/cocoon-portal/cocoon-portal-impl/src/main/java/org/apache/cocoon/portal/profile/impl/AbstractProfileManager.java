@@ -188,13 +188,71 @@ public abstract class AbstractProfileManager
     /**
      * Process a freshly loaded profile.
      */
-    protected Profile processProfile(Profile profile) {
-        // FIXME we should add the calls to prepareObject here as well
+    protected Collection processCopletTypes(Collection copletTypes)
+    throws LayoutException {
+        Collection result = copletTypes;
         if ( this.chain.hasAspects() ) {
-            ProfileManagerAspectContextImpl aspectContext = new ProfileManagerAspectContextImpl(this.portalService, this.chain);
-            aspectContext.invokeNext(profile);
+            final ProfileManagerAspectContextImpl aspectContext = new ProfileManagerAspectContextImpl(this.portalService,
+                                                                                                      this.chain,
+                                                                                                      ProfileManagerAspectContextImpl.PHASE_COPLET_TYPES);
+            aspectContext.invokeNext(copletTypes);
+            result = (Collection)aspectContext.getResult();
         }
-        return profile;
+        this.prepareObject(null, result);
+        return result;
+    }
+
+    /**
+     * Process a freshly loaded profile.
+     */
+    protected Collection processCopletDefinitions(Collection copletDefinitions)
+    throws LayoutException {
+        Collection result = copletDefinitions;
+        if ( this.chain.hasAspects() ) {
+            final ProfileManagerAspectContextImpl aspectContext = new ProfileManagerAspectContextImpl(this.portalService,
+                                                                                                      this.chain,
+                                                                                                      ProfileManagerAspectContextImpl.PHASE_COPLET_DEFINITIONS);
+            aspectContext.invokeNext(copletDefinitions);
+            result = (Collection)aspectContext.getResult();
+        }
+        this.prepareObject(null, result);
+        return result;
+    }
+
+    /**
+     * Process a freshly loaded profile.
+     * TODO Why do we need the profile?
+     */
+    protected Collection processCopletInstances(Profile profile, Collection copletInstances)
+    throws LayoutException {
+        Collection result = copletInstances;
+        if ( this.chain.hasAspects() ) {
+            final ProfileManagerAspectContextImpl aspectContext = new ProfileManagerAspectContextImpl(this.portalService,
+                                                                                                      this.chain,
+                                                                                                      ProfileManagerAspectContextImpl.PHASE_COPLET_INSTANCES);
+            aspectContext.invokeNext(copletInstances);
+            result = (Collection)aspectContext.getResult();
+        }
+        this.prepareObject(profile, result);
+        return result;
+    }
+
+    /**
+     * Process a freshly loaded profile.
+     * TODO Why do we need the profile?
+     */
+    protected Layout processLayout(Profile profile, Layout layout)
+    throws LayoutException {
+        Layout result = layout;
+        if ( this.chain.hasAspects() ) {
+            final ProfileManagerAspectContextImpl aspectContext = new ProfileManagerAspectContextImpl(this.portalService,
+                                                                                                      this.chain,
+                                                                                                      ProfileManagerAspectContextImpl.PHASE_COPLET_LAYOUT);
+            aspectContext.invokeNext(layout);
+            result = (Layout)aspectContext.getResult();
+        }
+        this.prepareObject(profile, result);
+        return result;
     }
 
     /**

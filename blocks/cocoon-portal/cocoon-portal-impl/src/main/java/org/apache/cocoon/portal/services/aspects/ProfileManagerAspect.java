@@ -16,7 +16,9 @@
  */
 package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.portal.scratchpad.Profile;
+import java.util.Collection;
+
+import org.apache.cocoon.portal.om.Layout;
 
 /**
  * The behaviour of the used profile manager can be extended by assigning one
@@ -27,6 +29,35 @@ import org.apache.cocoon.portal.scratchpad.Profile;
  */
 public interface ProfileManagerAspect {
 
-    void prepare(ProfileManagerAspectContext context,
-                 Profile profile);
+    /**
+     * Prepare the coplet types directly after loading.
+     * @param context
+     * @param copletTypes
+     */
+    void prepareCopletTypes(ProfileManagerAspectContext context,
+                            Collection copletTypes);
+                 
+    /**
+     * Prepare the coplet definitions directly after loading.
+     * @param context
+     * @param copletDefinitions
+     */
+    void prepareCopletDefinitions(ProfileManagerAspectContext context,
+                                  Collection copletDefinitions);
+
+    /**
+     * Prepare the coplet instances directly after loading.
+     * @param context
+     * @param copletInstances
+     */
+    void prepareCopletInstances(ProfileManagerAspectContext context,
+                                Collection copletInstances);
+
+    /**
+     * Prepare the layout directly after loading.
+     * @param context
+     * @param layout
+     */
+    void prepareLayout(ProfileManagerAspectContext context,
+                       Layout layout);
 }

@@ -333,17 +333,16 @@ public class GroupBasedProfileManager
         } catch (Exception e) {
             throw new ProfileException("Unable to load profile '" + defaultProfileName + "' for user " + user + ".", e);
         }
-        final Profile processedProfile = this.processProfile(profile);
-        this.storeUserProfile(processedProfile);
-        return processedProfile;
+        this.storeUserProfile(profile);
+        return profile;
     }
 
     protected void loadProfile(ProfileImpl profile, PortalUser user, String profileName)
     throws ProfileException {
         try {
-            if ( !this.getCopletInstanceDatas(profile, user, CATEGORY_USER, profileName) ) {
-                if ( user.getGroups().size() == 0 || !this.getCopletInstanceDatas(profile, user, CATEGORY_GROUP, profileName)) {
-                    if ( !this.getCopletInstanceDatas(profile, user, CATEGORY_GLOBAL, profileName) ) {
+            if ( !this.getCopletInstances(profile, user, CATEGORY_USER, profileName) ) {
+                if ( user.getGroups().size() == 0 || !this.getCopletInstances(profile, user, CATEGORY_GROUP, profileName)) {
+                    if ( !this.getCopletInstances(profile, user, CATEGORY_GLOBAL, profileName) ) {
                         throw new ProcessingException("No profile for copletinstancedatas found.");
                     }
                 }
@@ -401,8 +400,10 @@ public class GroupBasedProfileManager
 
         // we have to load/reload
         synchronized ( this ) {
+            Collection collection = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETTYPE, null);
+            collection = this.processCopletTypes(collection);
             final Map objects = new HashMap();
-            final Iterator i = ((Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETTYPE, null)).iterator();
+            final Iterator i = collection.iterator();
             while ( i.hasNext() ) {
                 final CopletType current = (CopletType)i.next();
                 objects.put(current.getId(), current);
@@ -415,7 +416,7 @@ public class GroupBasedProfileManager
             // now invalidate coplet definitions
             this.copletDefinitions.objects = null;
             this.copletDefinitions.validity = null;
-            this.prepareObject(null, this.copletTypes.objects);
+
             return this.copletTypes.objects;
         }
     }
@@ -451,8 +452,10 @@ public class GroupBasedProfileManager
         }
 
         synchronized ( this ) {
+            Collection collection = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETDEFINITION, profile.getCopletTypesMap());
+            collection = this.processCopletDefinitions(collection);
+            final Iterator i = collection.iterator();
             final Map objects = new HashMap();
-            final Iterator i = ((Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETDEFINITION, profile.getCopletTypesMap())).iterator();
             while ( i.hasNext() ) {
                 final CopletDefinition current = (CopletDefinition)i.next();
                 // only add coplet data if coplet base data has been found
@@ -469,7 +472,7 @@ public class GroupBasedProfileManager
                 newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETDEFINITION);
             }
             this.copletDefinitions.validity = newValidity;
-            this.prepareObject(profile, this.copletDefinitions.objects);
+
             return this.copletDefinitions.objects;
         }
     }
@@ -485,10 +488,10 @@ public class GroupBasedProfileManager
         return false;
     }
 
-    protected boolean getCopletInstanceDatas(final ProfileImpl profile,
-                                             final PortalUser  info,
-                                             final String      category,
-                                             final String      layoutKey)
+    protected boolean getCopletInstances(final ProfileImpl profile,
+                                         final PortalUser  info,
+                                         final String      category,
+                                         final String      layoutKey)
     throws Exception {
         Map key = this.buildKey(category,
                                 ProfileLS.PROFILETYPE_COPLETINSTANCE,
@@ -497,8 +500,8 @@ public class GroupBasedProfileManager
                                 layoutKey);
         try {
             Collection cidm = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETINSTANCE, profile.getCopletDefinitionsMap());
+            cidm = this.processCopletInstances(profile, cidm);
             profile.setCopletInstances(cidm);
-            this.prepareObject(profile, profile.getCopletInstancesMap());
 
             return true;
         } catch (Exception e) {
@@ -521,7 +524,7 @@ public class GroupBasedProfileManager
                                       layoutKey);
         try {
             Layout l = (Layout)loader.loadProfile(key, ProfileLS.PROFILETYPE_LAYOUT, profile.getCopletInstancesMap());
-            this.prepareObject(profile, l);
+            l = this.processLayout(profile, l);
             profile.setRootLayout(l);
 
             return true;
