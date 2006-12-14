@@ -16,6 +16,8 @@
   limitations under the License.
 -->
 
+<!-- $Id$ -->
+
 <xsp:page language="java" 
           xmlns:xsp="http://apache.org/xsp" 
           xmlns:xsp-request="http://apache.org/xsp/request/2.0" 
@@ -45,7 +47,7 @@
       <i18n:translate>
         <i18n:text key="doclink"/>
         <i18n:param>
-          <link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html">Cocoon 2 Web Site</link>
+          <link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18nTransformer.html">Cocoon 2 Web Site</link>
         </i18n:param>
       </i18n:translate>
     </annotation>
@@ -122,7 +124,7 @@
     </content>
 
     <bottom>
-      <copyright>Copyright 1999-2005 The Apache Software Foundation</copyright>
+      <copyright>Copyright 1999-2006 The Apache Software Foundation</copyright>
     </bottom>
   </document>
 </xsp:page>
