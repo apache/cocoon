@@ -128,7 +128,8 @@ public class PersistenceFlow extends AbstractContinuable {
     public void doShowEmployee() {
         // Query all objects
         ArrayList results = new ArrayList();
-        QueryByCriteria query = new QueryByCriteria(Employee.class, new Criteria());
+        // new Employee().getClass() is a fix for bug COCOON-1969
+        QueryByCriteria query = new QueryByCriteria(new Employee().getClass(), new Criteria());
         for(Iterator i=broker.getCollectionByQuery(query).iterator(); i.hasNext();) {
             results.add(i.next());
         }
