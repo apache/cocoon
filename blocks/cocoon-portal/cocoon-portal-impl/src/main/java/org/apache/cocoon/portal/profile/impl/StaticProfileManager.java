@@ -50,9 +50,9 @@ public class StaticProfileManager
 
     protected String profilesPath;
 
-    protected final StaticBucketMap copletInstanceDataManagers = new StaticBucketMap();
-    protected final StaticBucketMap copletDataManagers = new StaticBucketMap();
-    protected final StaticBucketMap copletBaseDataManagers = new StaticBucketMap();
+    protected final StaticBucketMap copletInstances = new StaticBucketMap();
+    protected final StaticBucketMap copletDefinitions = new StaticBucketMap();
+    protected final StaticBucketMap copletTypes = new StaticBucketMap();
 
     protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
@@ -80,13 +80,16 @@ public class StaticProfileManager
                     return layout;
             }
 
-            Collection c = getCopletInstanceDataManager();
+            // put instances into map
+            Collection c = this.loadCopletInstances();
             final Map objectMap = new HashMap();
             final Iterator i = c.iterator();
             while ( i.hasNext() ) {
                 CopletInstance current = (CopletInstance)i.next();
                 objectMap.put(current.getId(), current);
             }
+
+            // load layout
             final Map map = new LinkedMap();
             map.put("base", this.profilesPath);
             map.put("portalname", this.portalService.getPortalName());
@@ -103,7 +106,9 @@ public class StaticProfileManager
 
             // get Layout specified in the map
             Layout layout = (Layout) adapter.loadProfile(map, ProfileLS.PROFILETYPE_LAYOUT, objectMap);
-            Map layouts = new HashMap();
+            layout = this.processLayout(null, layout);
+
+            final Map layouts = new HashMap();
 
             layouts.put(null, layout); //save root with null as key
             cacheLayouts(layouts, layout);
@@ -148,17 +153,16 @@ public class StaticProfileManager
     throws Exception {
         final String portalName = this.portalService.getPortalName();
         // ensure that profile is loaded
-        this.getCopletInstanceDataManager();
-        return (Map)this.copletDataManagers.get(portalName);
+        this.loadCopletInstances();
+        return (Map)this.copletDefinitions.get(portalName);
     }
 
-    private Collection getCopletInstanceDataManager() 
+    private Collection loadCopletInstances() 
     throws Exception {
         String portalName = this.portalService.getPortalName();
-        Collection copletInstanceDataManager =
-            (Collection) this.copletInstanceDataManagers.get(portalName);
-        if (copletInstanceDataManager != null) {
-            return copletInstanceDataManager;
+        Collection instances = (Collection) this.copletInstances.get(portalName);
+        if (instances != null) {
+            return instances;
         }
 
         ProfileLS adapter = null;
@@ -171,40 +175,43 @@ public class StaticProfileManager
             map.put("profile", "coplet");
             map.put("name", "basedata");
             Collection cBase = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETTYPE, null);
-            final Map copletBaseDataManager = new HashMap();
+            cBase = this.processCopletTypes(cBase);
+            final Map types = new HashMap();
             Iterator i = cBase.iterator();
             while ( i.hasNext() ) {
                 final CopletDefinition current = (CopletDefinition)i.next();
-                copletBaseDataManager.put(current.getId(), current);
+                types.put(current.getId(), current);
             }
-            this.copletBaseDataManagers.put(portalName, copletBaseDataManager);
+            this.copletTypes.put(portalName, types);
 
-            //CopletDefinition
-
+            // CopletDefinition
             map.clear();
             map.put("base", this.profilesPath);
             map.put("portalname", this.portalService.getPortalName());
             map.put("profile", "coplet");
             map.put("name", "data");
-            Collection c = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, copletBaseDataManager);
-            final Map copletDataManager = new HashMap();
+            Collection c = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, types);
+            c = this.processCopletDefinitions(c);
+            final Map definitions = new HashMap();
             i = c.iterator();
             while ( i.hasNext() ) {
                 final CopletDefinition current = (CopletDefinition)i.next();
-                copletDataManager.put(current.getId(), current);
+                definitions.put(current.getId(), current);
             }
+            this.copletDefinitions.put(portalName, definitions);
+
             //CopletInstanceData
             map.clear();
             map.put("base", this.profilesPath);
             map.put("portalname", this.portalService.getPortalName());
             map.put("profile", "coplet");
             map.put("name", "instancedata");
-            copletInstanceDataManager = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETINSTANCE, copletDataManager);
+            instances = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETINSTANCE, definitions);
+            instances = this.processCopletInstances(null, instances);
 
             // store managers
-            this.copletInstanceDataManagers.put(portalName, copletInstanceDataManager);
-            this.copletDataManagers.put(portalName, copletDataManager);
-            return copletInstanceDataManager;
+            this.copletInstances.put(portalName, instances);
+            return instances;
         } finally {
             this.manager.release(adapter);
         }
@@ -217,7 +224,7 @@ public class StaticProfileManager
         // TODO - we should store a map in the static profile manager
         //        instead of going through the collection each time
         try {
-            final Iterator i = this.getCopletInstanceDataManager().iterator();
+            final Iterator i = this.loadCopletInstances().iterator();
             while ( i.hasNext() ) {
                 final CopletInstance current = (CopletInstance) i.next();
                 if ( current.getId().equals(copletID) ) {
@@ -235,7 +242,7 @@ public class StaticProfileManager
      */
     public CopletDefinition getCopletDefinition(String copletDataId) {
         try {
-            Iterator i = getCopletInstanceDataManager().iterator();
+            Iterator i = loadCopletInstances().iterator();
             boolean found = false;
             CopletInstance current = null;
             while ( !found && i.hasNext() ) {
@@ -259,7 +266,7 @@ public class StaticProfileManager
     public List getCopletInstances(CopletDefinition data) {
         List coplets = new ArrayList();
         try {
-            Iterator iter = getCopletInstanceDataManager().iterator();
+            Iterator iter = loadCopletInstances().iterator();
             while (iter.hasNext()){
                 CopletInstance current = (CopletInstance) iter.next();
                 if (current.getCopletDefinition().equals(data)) {
@@ -298,7 +305,7 @@ public class StaticProfileManager
      */
     public Collection getCopletInstances() {
         try {
-            return this.getCopletInstanceDataManager();
+            return this.loadCopletInstances();
         } catch (Exception e) {
             throw new ProfileException("Error in getCopletInstanceDatas.", e);
         }
@@ -308,14 +315,14 @@ public class StaticProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
      */
     public CopletType getCopletType(String id) {
-        return (CopletType)((Map)this.copletBaseDataManagers.get(this.portalService.getPortalName())).get(id);
+        return (CopletType)((Map)this.copletTypes.get(this.portalService.getPortalName())).get(id);
     }
 
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
      */
     public Collection getCopletTypes() {
-        return ((Map)this.copletBaseDataManagers.get(this.portalService.getPortalName())).values();
+        return ((Map)this.copletTypes.get(this.portalService.getPortalName())).values();
     }
 
     /**
