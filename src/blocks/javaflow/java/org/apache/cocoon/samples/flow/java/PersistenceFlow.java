@@ -46,10 +46,17 @@ public class PersistenceFlow extends AbstractContinuable {
     }
 
     public void doInsertEmployee() throws BindingException {
+    	
+    	int id = 1;
+        // Get id as parameter
+        if (getRequest().getParameter("id")!=null)
+            id = Integer.parseInt(getRequest().getParameter("id"));
+    	
         // Create a empty Bean
         Employee employee = new Employee();
         // Fill some initial data to the bean
-        employee.setId(1);
+
+        employee.setId(id);
         // Load form descriptor
         FormInstance form = new FormInstance("forms/employee.xml");
         // Load form binding
