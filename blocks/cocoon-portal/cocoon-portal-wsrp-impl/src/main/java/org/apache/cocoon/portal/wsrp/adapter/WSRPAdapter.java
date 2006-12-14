@@ -45,6 +45,8 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.serializers.EncodingSerializer;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
@@ -56,7 +58,6 @@ import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
-import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.cocoon.portal.wsrp.consumer.ConsumerEnvironmentImpl;
 import org.apache.cocoon.portal.wsrp.consumer.ProducerDescription;
@@ -366,18 +367,8 @@ public class WSRPAdapter
                 HtmlSaxParser.parseString(content, HtmlSaxParser.getContentFilter(handler));
             } else {
                 // stream out the include for the serializer
-                IncludingHTMLSerializer.addPortlet(portletInstanceKey, content);
-                contentHandler.startPrefixMapping("portal", IncludingHTMLSerializer.NAMESPACE);
-                final AttributesImpl attr = new AttributesImpl();
-                attr.addCDATAAttribute("portlet", portletInstanceKey);
-                contentHandler.startElement(IncludingHTMLSerializer.NAMESPACE,
-                                            "include",
-                                            "portal:include",
-                                            attr);
-                contentHandler.endElement(IncludingHTMLSerializer.NAMESPACE,
-                                          "include",
-                                          "portal:include");
-                contentHandler.endPrefixMapping("portal");
+                final org.apache.cocoon.environment.Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
+                EncodingSerializer.include(content, request, contentHandler);
             }
         } catch (WSRPException e) {
             throw new SAXException("Exception during getMarkup of wsrp coplet: " + coplet.getId(), e);
