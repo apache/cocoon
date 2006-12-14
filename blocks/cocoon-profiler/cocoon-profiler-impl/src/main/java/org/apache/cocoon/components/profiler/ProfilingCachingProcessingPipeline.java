@@ -165,7 +165,7 @@ public class ProfilingCachingProcessingPipeline
         try {
             // Setup the generator
             long time = System.currentTimeMillis();
-            this.generator.setup(this.processor.getSourceResolver(), environment.getObjectModel(),
+            this.generator.setup(this.sourceResolver, environment.getObjectModel(),
                                  generatorSource, generatorParam);
             this.data.setSetupTime(0, System.currentTimeMillis() - time);
 
@@ -179,7 +179,7 @@ public class ProfilingCachingProcessingPipeline
                 Transformer trans = (Transformer) transformerItt.next();
 
                 time = System.currentTimeMillis();
-                trans.setup(this.processor.getSourceResolver(), environment.getObjectModel(),
+                trans.setup(this.sourceResolver, environment.getObjectModel(),
                             (String) transformerSourceItt.next(),
                             (Parameters) transformerParamItt.next());
                 this.data.setSetupTime(localIndex++, System.currentTimeMillis() - time);
@@ -189,7 +189,7 @@ public class ProfilingCachingProcessingPipeline
             time = System.currentTimeMillis();
             if (this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
-                        this.processor.getSourceResolver(),
+                        this.sourceResolver,
                     environment.getObjectModel(),
                     serializerSource,
                     serializerParam
