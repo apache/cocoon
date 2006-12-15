@@ -51,7 +51,7 @@
   </menu>
 
   <menu label="Documentation">
-    <external label="Input Modules Docs" href="../../docs/userdocs/concepts/modules.html"/>
-    <external label="API Docs" href="../../api/java/org/apache/cocoon/components/modules/input/package-summary.html"/>
+    <external label="Input Modules Docs" href="http://cocoon.apache.org/2.1/userdocs/concepts/modules.html"/>
+    <external label="API Docs" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/components/modules/input/package-summary.html"/>
   </menu>
 </book>
