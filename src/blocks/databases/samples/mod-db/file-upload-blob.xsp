@@ -68,8 +68,8 @@
 	  *.jpg using the database reader (declared in the root database samples sitemap) which simply
 	  retrieves the binary data from the database and streams it to the browser.</p>
 
-      <p>The default installation of Apache Cocoon does not allow
-      uploads. This feature needs to be enabled in web.xml</p>
+      <p>For this sample uploads need to be enabled in web.xml. This happens by default
+      via the property <code>config.enable-uploads</code> in build.properties.</p>
 
 
       <table cellpadding="2" cellspacing="2" border="0">
