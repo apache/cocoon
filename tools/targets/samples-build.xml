@@ -48,9 +48,7 @@
         <exclude name="**/*.sxw"/>
         <!-- filtering breaks UTF-8 files -->
         <exclude name="i18n/**"/>
-        <!-- In Java 1.3, filtering breaks SWF samples (the next 2 lines are not needed in cocoon 2.2) -->
-        <exclude name="**/swf/*"/>
-        <exclude name="**/page2swf.xsl"/>
+        <exclude name="hello-world/style/**"/>
       </fileset>
     </copy>
 
@@ -61,6 +59,7 @@
         <include name="**/*.png"/>
         <include name="**/*.zip"/>
         <include name="**/*.sxw"/>
+        <!-- filtering breaks UTF-8 files -->
         <include name="i18n/**"/>
         <include name="hello-world/style/**"/>
       </fileset>
