@@ -22,9 +22,6 @@
 
   <group name="Back">
    <sample name="Back" href="../">to Cocoon Samples main page</sample>
-   <sample name="Back" href="../blocks/">
-     to Cocoon Blocks Samples main page
-   </sample>
    <note>
      Since the Cocoon Control Flow is a core technology you find more examples
      that make use of it e.g. Cocoon Forms block, Petstore block, and
