@@ -278,7 +278,7 @@ public class ScriptableWidget extends ScriptableObject {
         return delegate.getId();
     }
 
-    public Scriptable jsGet_parent() {
+    public Object jsGet_parent() {
         if (delegate != null) {
             return wrap(delegate.getParent());
         }
