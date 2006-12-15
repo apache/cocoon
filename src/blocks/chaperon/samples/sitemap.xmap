@@ -235,7 +235,7 @@
    </map:match>
 
    <map:match pattern="**/*.java.html">
-    <map:generate  type="text"    src="http://cvs.apache.org/viewcvs.cgi/*checkout*/cocoon-2.1/src/java/{1}/{2}.java"/>
+    <map:generate  type="text"    src="http://svn.apache.org/viewvc/cocoon/branches/BRANCH_2_1_X/src/java/{1}/{2}.java?view=co"/>
     <map:transform type="lexer"   src="grammars/java.xlex"/>
     <map:transform                src="stylesheets/text4javadoc.xsl"/>
     <map:transform type="lexer"   src="grammars/javadoc.xlex" label="ast"/>
@@ -250,7 +250,7 @@
    </map:match>
 
    <map:match pattern="**/*.class.html">
-    <map:generate  type="text"    src="http://cvs.apache.org/viewcvs.cgi/*checkout*/cocoon-2.1/src/java/{1}/{2}.java"/>
+    <map:generate  type="text"    src="http://svn.apache.org/viewvc/cocoon/branches/BRANCH_2_1_X/src/java/{1}/{2}.java?view=co"/>
     <map:transform type="lexer"   src="grammars/java.xlex"/>
     <map:transform                src="stylesheets/remove4class.xsl"/>
     <map:transform type="parser"  src="cocoon:/java.xgrm"/>
