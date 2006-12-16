@@ -34,13 +34,13 @@
     </sample>
   </group>
 
-  <group name="Avaliable Documentation">
+  <group name="Available Documentation">
     <sample name="Captcha Block Documentation"
-            href="http://cocoon.zones.apache.org/daisy/documentation/blocks/captcha.html">
+            href="http://cocoon.zones.apache.org/daisy/documentation/864/captcha.html">
       On-line documentation for the Captcha block.
     </sample>
     <sample name="CaptchaReader Documentation"
-            href="http://cocoon.zones.apache.org/daisy/documentation/components/readers/captchareader.html">
+            href="http://cocoon.zones.apache.org/daisy/documentation/components/1062/g2/687.html">
       On-line documentation for the CaptchaReader component.
     </sample>
   </group>
