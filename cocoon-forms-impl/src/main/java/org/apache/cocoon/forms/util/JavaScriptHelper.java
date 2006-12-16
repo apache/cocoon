@@ -44,7 +44,7 @@ public class JavaScriptHelper {
     /**
      * A shared root scope, avoiding to recreate a new one each time.
      */
-    private static Scriptable _rootScope = null;
+    private static Scriptable _rootScope;
 
     /**
      * Build a script with the content of a DOM element.
@@ -60,14 +60,10 @@ public class JavaScriptHelper {
         Context ctx = Context.enter();
         Script script;
         try {
-            // This version of compileReader is deprecated but must be left as is to avoid breaking 2.1
-            script = ctx.compileReader(
-                getRootScope(null), //scope
-                new StringReader(jsText), // in
-                sourceName == null ? "<unknown>" : sourceName, // sourceName
-                DomHelper.getLineLocation(element), // lineNo
-                null // securityDomain
-             );
+            script = ctx.compileReader(new StringReader(jsText), // in
+                                       sourceName == null ? "<unknown>" : sourceName, // sourceName
+                                       DomHelper.getLineLocation(element), // lineNo
+                                       null); // securityDomain
         } finally {
             Context.exit();
         }
@@ -222,20 +218,23 @@ public class JavaScriptHelper {
             Scriptable scope = getParentScope(objectModel);
 
             if (objectModel != null) {
-                Object viewData = FlowHelper.getContextObject(objectModel);
-                if (viewData != null) {
-                    // Create a new local scope to hold the view data
-                    Scriptable newScope;
-                    try {
-                        newScope = ctx.newObject(scope);
-                    } catch (Exception e) {
-                        // Should normally not happen
-                        throw new CascadingRuntimeException("Cannot create function scope", e);
-                    }
-                    newScope.setParentScope(scope);
-                    scope = newScope;
+                // we always add the viewData even it is null (see bug COCOON-1916)
+                final Object viewData = FlowHelper.getContextObject(objectModel);
+                // Create a new local scope to hold the view data
+                final Scriptable newScope;
+                try {
+                    newScope = ctx.newObject(scope);
+                } catch (Exception e) {
+                    // Should normally not happen
+                    throw new CascadingRuntimeException("Cannot create function scope", e);
+                }
+                newScope.setParentScope(scope);
+                scope = newScope;
             
+                if ( viewData != null ) {
                     scope.put("viewData", scope, Context.toObject(viewData, scope));
+                } else {
+                    scope.put("viewData", scope, null);
                 }
             }
             func.setParentScope(scope);
