@@ -15,6 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!-- $Id$ -->
+
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Chaperon Block Samples">
 
  <group name="Back">
@@ -66,13 +69,13 @@
 
  <group name="Documentation">
   <sample name="Lexical Transformer"
-          href="../../../docs/userdocs/transformers/lexer-transformer.html">
+          href="http://cocoon.apache.org/2.1/userdocs/lexer-transformer.html">
   </sample>
   <sample name="Parser Transformer"
-          href="../../../docs/userdocs/transformers/parser-transformer.html">
+          href="http://cocoon.apache.org/2.1/userdocs/parser-transformer.html">
   </sample>
   <sample name="Pattern Transformer"
-          href="../../../docs/userdocs/transformers/pattern-transformer.html">
+          href="http://cocoon.apache.org/2.1/userdocs/pattern-transformer.html">
   </sample>
   <sample name="Full Chaperon documentation"
           href="http://chaperon.sourceforge.net/">
