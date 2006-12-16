@@ -25,7 +25,7 @@
     <body>
       <h2><xsl:value-of select="head/title"/></h2>
       <ul>
-        <xsl:apply-templates select="//div[@class='content']/ul"/>
+        <xsl:apply-templates select="//div[@id='minitoc-area']/ul"/>
       </ul>
     </body>
   </html>
