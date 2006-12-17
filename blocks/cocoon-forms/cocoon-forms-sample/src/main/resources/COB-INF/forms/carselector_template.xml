@@ -36,30 +36,6 @@
     See "carselector_form.xml" and "carselector_template.xml" to see how this is done.
   </para>
   <content>
-    <script type="text/javascript">
-       var currentEffect = "fade";
-       cocoon.ajax.BrowserUpdater.highlight = cocoon.ajax.Fader.fade;
-       function setEffect(effect) {
-           if (effect == "none") {
-               cocoon.ajax.BrowserUpdater.highlight = null;
-           } else if (effect == "fade") {
-               cocoon.ajax.BrowserUpdater.highlight = cocoon.ajax.Fader.fade;
-           } else if (effect == "blink") {
-               cocoon.ajax.BrowserUpdater.highlight = cocoon.ajax.Blinker.blink;
-           }
-           
-           document.getElementById(currentEffect).style.fontWeight = "";
-           document.getElementById(effect).style.fontWeight = "bold";
-           currentEffect = effect;
-           return false;
-       }
-    </script>
-    <para>
-      Page update effect:
-      <a id="none" href="#" onclick="return setEffect('none')">None</a> - 
-      <a style="font-weight: bold" id="fade" href="#" onclick="return setEffect('fade')">Fade</a> - 
-      <a id="blink" href="#" onclick="return setEffect('blink')">Blink</a>
-    </para>
       
     <ft:form-template action="continue" method="POST" ajax="true">
       <ft:continuation-id/>
