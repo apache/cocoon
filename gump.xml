@@ -966,6 +966,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-ajax"/>
+    <depend project="cocoon-block-template" type="samples"/>
     <depend project="xreporter-expression"/>
     <depend project="jakarta-oro"/>
     <depend project="nekohtml"/>
@@ -1661,6 +1662,7 @@
     </ant>
     
     <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-template" type="samples"/>
     
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1681,11 +1683,11 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-template" type="samples"/>
     <depend project="dojo-rsrc"/>
 
     <library name="dojo-rsrc"/>
 
-    <work nested="build/cocoon-@@DATE@@/blocks/forms/ajax"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -1706,7 +1708,6 @@
 
     <depend project="cocoon" inherit="all"/>
 
-    <work nested="build/cocoon-@@DATE@@/blocks/forms/imageop"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
