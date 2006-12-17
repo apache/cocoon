@@ -23,6 +23,13 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+  <map:components>
+    <map:generators default="file">
+      <!-- use the new implementation of JX -->
+      <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator"/>
+    </map:generators>
+  </map:components>
+  
   <map:flow language="javascript">
     <map:script src="captcha.js"/>
   </map:flow>
