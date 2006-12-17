@@ -127,7 +127,7 @@ function edit(query) {
 	form.createBinding(cocoon.parameters["bindingURI"]);
 	form.load(query);
 	form.showForm(cocoon.parameters["form"]);
-	if ("submit".equals(form.submitId)) {
+	if ("_submit".equals(form.submitId)) {
 		form.save(query);
 		cocoon.log.debug("form submitted");
 		query.id = null; // this is no longer a favourite, now it has been edited

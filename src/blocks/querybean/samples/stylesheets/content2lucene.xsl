@@ -22,16 +22,9 @@
   xmlns:lucene="http://apache.org/cocoon/lucene/1.0" 
 >
 	<!-- store titles -->
-	<xsl:template match="page/title|header/title">
-		<title lucene:store="true"><xsl:apply-templates/></title>
-	</xsl:template>
-	
-	<xsl:template match="faqs[@title]|book[@title]">
-		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'title']"/>
-			<title lucene:store="true"><xsl:value-of select="@title"/></title>
-			<xsl:apply-templates/>
-		</xsl:copy>
+	<xsl:template match="samples">
+		<title lucene:store="true"><xsl:value-of select="@name"/></title>
+		<xsl:apply-templates/>
 	</xsl:template>
 		
   <xsl:template match="@*|node()" priority="-2"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>

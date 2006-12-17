@@ -23,24 +23,39 @@
 >
   <xsl:template match="lucene:index">
     <page>
-      <title>Lucene Index</title>
+      <h4 class="samplesGroup">Query Bean - Indexer</h4>
+      <title>Query Bean - Indexer</title>
       <content>
         <p>
           <small>
             <a href="welcome">Welcome</a>
           </small>
         </p>
+        <h3>What just happened?</h3>
+        <ul>
+            <li>A Flowscript made a collection of files to index by scanning samples/blocks for welcome.xml files.</li>
+            <li>It passed this list to a JX Template, that output each file as a call to CInclude it's content.</li>
+            <li>As the files were included, they were transformed by XSLT to define how they would be indexed.</li>
+            <li>This was then passed to the IndexTransformer.</li>
+        </ul>
+        
+        <p>You can now perform <a href="simple.html">searches</a></p>
+        
+        <h3>The following URLs were indexed :</h3>
+        
+        <table style="margin-left:20px;">
+          <tr><th>url</th><th>elapsed-time</th></tr>
+          <xsl:apply-templates/>
+        </table>
+        
+        <h3>The following parameters were supplied :</h3>
+        
         <ul>
           <li>merge-factor - <xsl:value-of select="@merge-factor"/></li>
           <li>create - <xsl:value-of select="@create"/></li>
           <li>directory - <xsl:value-of select="@directory"/></li>
           <li>analyzer - <xsl:value-of select="@analyzer"/></li>
         </ul>
-
-        <table>
-          <tr><th>url</th><th>elapsed-time</th></tr>
-          <xsl:apply-templates/>
-        </table>
       </content>
     </page>
   </xsl:template>
