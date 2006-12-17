@@ -184,6 +184,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+   <action context="build">
+    Release 2.1.10 is the last one to support JDK1.3.
+    Future releases will require JDK1.4 or later.
+    The Cocoon developer community feels that the effort to maintain compatibility
+    to an outdated Java version is no longer justified.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="COCOON-1916" due-to="Rob Berens">
     CForms: Always set viewData for flow script functions (if it's not available set it to null).
    </action>
