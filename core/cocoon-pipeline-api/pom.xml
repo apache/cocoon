@@ -95,10 +95,6 @@
       <exclusions>
         <exclusion>
           <groupId>org.apache.avalon.framework</groupId>
-          <artifactId>avalon-framework-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.avalon.framework</groupId>
           <artifactId>avalon-framework-impl</artifactId>
         </exclusion>
       </exclusions>
