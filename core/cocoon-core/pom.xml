@@ -105,6 +105,11 @@
     </site>
   </distributionManagement>  
   <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-pipeline-api</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
     <!--  excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components.pool</groupId>
@@ -114,17 +119,6 @@
         <exclusion>
           <groupId>org.apache.avalon.logkit</groupId>
           <artifactId>avalon-logkit</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
-      <artifactId>excalibur-sourceresolve</artifactId>
-      <version>2.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.avalon.framework</groupId>
-          <artifactId>avalon-framework-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -149,27 +143,9 @@
       <version>2.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.components.xmlutil</groupId>
-      <artifactId>excalibur-xmlutil</artifactId>
+      <groupId>org.apache.excalibur.containerkit.instrument</groupId>
+      <artifactId>excalibur-instrument-api</artifactId>
       <version>2.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.excalibur.testcase</groupId>
-          <artifactId>excalibur-testcase</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.components.pool</groupId>
-          <artifactId>excalibur-pool-instrumented</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.components.pool</groupId>
-          <artifactId>excalibur-pool-impl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.avalon.framework</groupId>
-          <artifactId>avalon-framework-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>
@@ -247,11 +223,6 @@
           <groupId>avalon-framework</groupId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.1</version>
     </dependency>
     <dependency>
       <groupId>commons-jexl</groupId>
