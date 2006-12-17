@@ -184,35 +184,38 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
-   <action context="build">
-    Release 2.1.10 is the last one to support JDK1.3.
-    Future releases will require JDK1.4 or later.
-    The Cocoon developer community feels that the effort to maintain compatibility
-    to an outdated Java version is no longer justified.
-   </action>
-   <action dev="CZ" type="fix" fixes-bug="COCOON-1916" due-to="Rob Berens">
-    CForms: Always set viewData for flow script functions (if it's not available set it to null).
-   </action>
-   <action dev="CZ" type="fix" fixes-bug="COCOON-1969" due-to="Jeroen Reijn">
+    <action context="build">
+      Release 2.1.10 is the last one to support JDK1.3.
+      Future releases will require JDK1.4 or later.
+      The Cocoon developer community feels that the effort to maintain compatibility
+      to an outdated Java version is no longer justified.
+    </action>
+    <action dev="JH" type="fix" fixes-bug="COCOON-1811" due-to="Rob Berens">
+      Core: Allow dynamic loading of JavaScript objects even when scope is locked.
+    </action>
+    <action dev="CZ" type="fix" fixes-bug="COCOON-1916" due-to="Rob Berens">
+      CForms: Always set viewData for flow script functions (if it's not available set it to null).
+    </action>
+    <action dev="CZ" type="fix" fixes-bug="COCOON-1969" due-to="Jeroen Reijn">
       Javaflow OJB Sample: Fix "No method 'showEmployee' found".
-   </action>
-   <action dev="CZ" type="fix" fixes-bug="COCOON-1970" due-to="Jeroen Reijn">
+    </action>
+    <action dev="CZ" type="fix" fixes-bug="COCOON-1970" due-to="Jeroen Reijn">
       The JavaFlow OJB sample overwrote the first entry on insert instead of adding a new entry.
       This has been fixed.
-   </action>
-   <action dev="CZ" type="remove">
-     Core: Removed the buggy WildhardHelper. Use the new improved WildcardMatcherHelper.
-   </action>
-   <action dev="CZ" type="add">
-     Profiler block: Add statistics component.
-   </action>
-   <action dev="CZ" type="add">
-     Databases block: Add support for iBatis to use configured Excalibur data sources in iBatis.
-   </action>
-   <action dev="AS" type="fix" fixes-bug="COCOON-1965" due-to="Jeroen Reijn">
+    </action>
+    <action dev="CZ" type="remove">
+      Core: Removed the buggy WildhardHelper. Use the new improved WildcardMatcherHelper.
+    </action>
+    <action dev="CZ" type="add">
+      Profiler block: Add statistics component.
+    </action>
+    <action dev="CZ" type="add">
+      Databases block: Add support for iBatis to use configured Excalibur data sources in iBatis.
+    </action>
+    <action dev="AS" type="fix" fixes-bug="COCOON-1965" due-to="Jeroen Reijn">
       CForms: The filterfield widget was not defined for the forms manager.
-   </action>
-   <action dev="AG" type="fix" fixes-bug="COCOON-1962" due-to="Carlos Chávez" due-to-email="cchavez@agssa.net">
+    </action>
+    <action dev="AG" type="fix" fixes-bug="COCOON-1962" due-to="Carlos Chávez" due-to-email="cchavez@agssa.net">
       CForms: Numeric based suggestion list should initialzate to the corresponding suggested text.
     </action>
     <action dev="BRD" type="update">
@@ -235,7 +238,7 @@
         <li>Sitemaps can now call flowscripts written in a static namespaced style.</li>
         <li>Added JSON Serialization utilities for flowscript.</li>
         <li>You can now get i18n translations from Stings in flowscript.</li>
-        </ul>
+      </ul>
     </action>
     <action dev="VG" type="add">
       Core: Add ability to pre-load i18n catalogues in I18nTransformer.
