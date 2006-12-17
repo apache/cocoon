@@ -19,7 +19,6 @@ package org.apache.cocoon.acting;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -37,7 +36,11 @@ import org.apache.cocoon.util.NetUtils;
  * @since 16 December 2002
  * @version $Id$
  */
-public class LinkTranslatorMapAction extends ServiceableAction implements ThreadSafe {
+public class LinkTranslatorMapAction
+    extends AbstractAction
+    implements ThreadSafe {
+
+    final static protected String LINK_MAP_PREFIX = "linkMap:";
 
     /**
      * Execute the LinkTranslatorMapAction.
@@ -49,53 +52,54 @@ public class LinkTranslatorMapAction extends ServiceableAction implements Thread
      * @param  objectModel    Description of the Parameter
      * @exception  Exception  Description of the Exception
      */
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
+    public Map act(Redirector     redirector,
+                   SourceResolver resolver,
+                   Map            objectModel,
+                   String         source,
+                   Parameters     parameters)
+    throws Exception {
         Map linkObjectMap = (Map) objectModel.get(Constants.LINK_OBJECT);
 
-        String[] parameterNames = parameters.getNames();
+        final String[] parameterNames = parameters.getNames();
         for (int i = 0; i < parameterNames.length; i++) {
             String parameterName = parameterNames[i];
-            final String LINK_MAP_PREFIX = "linkMap:";
             if (parameterName.startsWith(LINK_MAP_PREFIX)) {
-                String linkKey = parameterName.substring(LINK_MAP_PREFIX.length());
-                String linkValue = parameters.getParameter(parameterName, null);
+                final String linkKey = parameterName.substring(LINK_MAP_PREFIX.length());
+                final String linkValue = parameters.getParameter(parameterName, null);
 
                 if (linkValue != null) {
                     if (linkObjectMap == null) {
                         linkObjectMap = new HashMap();
                         objectModel.put(Constants.LINK_OBJECT, linkObjectMap);
                     }
-                    getLogger().debug("Add mapping from " +
-                            String.valueOf(linkKey) + " to " + String.valueOf(linkValue));
+                    getLogger().debug("Add mapping from " + linkKey + " to " + linkValue);
                     linkObjectMap.put(linkKey, linkValue);
                 }
             }
         }
 
-        /*
-         *  expect base = "/.."
-         */
-        String base = parameters.getParameter("url-base", "");
+        //
+        //  expect base = "/.."
+        //
+        final String base = parameters.getParameter("url-base", "");
         // get the extension with starting dot
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        String requestURI = request.getRequestURI();
+        final Request request = ObjectModelHelper.getRequest(objectModel);
+        final String requestURI = request.getRequestURI();
 
         String extension = NetUtils.getExtension(requestURI);
         String path = NetUtils.getPath(requestURI);
-        getLogger().debug("LinkMapTranslator 1 " + "path " + String.valueOf(path) );
+        getLogger().debug("LinkMapTranslator 1 " + "path " + path);
         path = path + base;
-        getLogger().debug("LinkMapTranslator 2 " + "path " + String.valueOf(path) );
+        getLogger().debug("LinkMapTranslator 2 " + "path " + path);
         path = NetUtils.normalize(path);
 
         getLogger().debug("LinkMapTranslator 3 " +
-                "path " + String.valueOf(path) + ", " +
-                "base " + String.valueOf(base) + ", " +
-                "ext " + String.valueOf(extension));
+                "path " + path + ", " +
+                "base " + base + ", " +
+                "ext " + extension);
 
         if (extension != null) {
-            LinkPatternHashMap lphm = new LinkPatternHashMap(path, extension);
-            lphm.setParent(linkObjectMap);
-            lphm.enableLogging(getLogger());
+            LinkPatternHashMap lphm = new LinkPatternHashMap(path, extension, linkObjectMap, this.getLogger());
 
             objectModel.put(Constants.LINK_OBJECT, lphm);
         }
@@ -107,12 +111,12 @@ public class LinkTranslatorMapAction extends ServiceableAction implements Thread
     /**
      * A special links map
      */
-    public static class LinkPatternHashMap extends HashMap implements LogEnabled {
-        Logger logger;
-        String pageExtension;
-        String path;
+    public static class LinkPatternHashMap extends HashMap {
 
-        Map parent;
+        protected final Logger logger;
+        protected final String pageExtension;
+        protected final String path;
+        protected final Map parent;
 
 
         /**
@@ -121,22 +125,15 @@ public class LinkTranslatorMapAction extends ServiceableAction implements Thread
          * @param  pageExtension  Description of the Parameter
          * @param  path           Description of the Parameter
          */
-        public LinkPatternHashMap(String path, String pageExtension) {
+        public LinkPatternHashMap(String path,
+                                  String pageExtension,
+                                  Map    parentMap,
+                                  Logger logger) {
             this.pageExtension = pageExtension;
             this.path = path;
-            this.parent = null;
+            this.parent = parentMap;
+            this.logger = logger;
         }
-
-
-        /**
-         * Sets the parent attribute of the LinkPatternHashMap object
-         *
-         * @param  parent  The new parent value
-         */
-        public void setParent(Map parent) {
-            this.parent = parent;
-        }
-
 
         /**
          * assume that LinkTranslator wants to check iff a href link
@@ -160,8 +157,8 @@ public class LinkTranslatorMapAction extends ServiceableAction implements Thread
                     // to-do: handle parameters!!, like page:index?a=b&c=d
                     newHref = strippedPageSchema + pageExtension;
 
-                    if (logger != null && logger.isDebugEnabled()) {
-                        logger.debug("href " + String.valueOf(keyString) + " mapped to " + String.valueOf(newHref));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("href " + keyString + " mapped to " + newHref);
                     }
                 }
 
@@ -179,7 +176,9 @@ public class LinkTranslatorMapAction extends ServiceableAction implements Thread
                 }
 
                 // strip path
-                logger.debug("newHref " + String.valueOf(newHref) + ", " + " path " + String.valueOf(path));
+                if (logger.isDebugEnabled()) {
+                    logger.debug("newHref " + newHref + ", " + " path " + path);
+                }
                 if (newHref.startsWith(this.path)) {
                     final int pathLength = path.length();
 
@@ -188,7 +187,9 @@ public class LinkTranslatorMapAction extends ServiceableAction implements Thread
                         newHref = newHref.substring(1);
                     }
                 }
-                logger.debug("newHref stripped " + String.valueOf(newHref));
+                if (logger.isDebugEnabled()) {
+                    logger.debug("newHref stripped " + newHref);
+                }
             }
 
             // now nearly finished
@@ -205,20 +206,10 @@ public class LinkTranslatorMapAction extends ServiceableAction implements Thread
                     result = parent.get(key);
                 }
             }
-            logger.debug("For key " + String.valueOf(key) +
-                    " result is " + String.valueOf(result));
-
+            if (logger.isDebugEnabled()) {
+                logger.debug("For key " + key + " result is " + result);
+            }
             return result;
-        }
-
-
-        /**
-         * Description of the Method
-         *
-         * @param  logger  Description of the Parameter
-         */
-        public void enableLogging(Logger logger) {
-            this.logger = logger;
         }
     }
 }
