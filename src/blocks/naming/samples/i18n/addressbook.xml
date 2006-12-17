@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<catalogue xml:lang="en">
+	<!-- titles -->
+	<message key="person.title">Addressbook : Person</message>
+	<message key="new.person.title">Addressbook : Edit Person</message>
+	<message key="new.person.note">Fill in this form to add or edit a person in the address book</message>
+	<message key="people.title">Addressbook : People</message>
+	<message key="departments.title">Addressbook : Departments</message>
+	<message key="more.departments.title">more departments</message>
+	<message key="department.title">Department</message>
+	<!-- fields -->
+	<message key="field.uid">ID</message>
+	<message key="field.fullname">Name</message>
+	<message key="field.firstname">First Name</message>
+	<message key="field.lastname">Last Name</message>
+	<message key="field.email">Email Address</message>
+	<message key="field.deptName">Department</message>
+	<message key="field.address">Postal Address</message>
+	<message key="field.address1">Address Line 1</message>
+	<message key="field.address2">Address Line 2</message>
+	<message key="field.address3">Address Line 3</message>
+	<message key="field.postcode">Post Code</message>
+	<message key="field.ophone">Office Phone</message>
+	<message key="field.fphone">Fax</message>
+	<message key="field.mphone">Mobile Phone</message>
+	<message key="field.hphone">Home Phone</message>
+	<message key="field.pager">Pager</message>
+	<!-- labels -->
+	<message key="person.name.label">Name</message>
+	<message key="person.address.label">Address</message>
+	<message key="person.phone.label">Phone Numbers</message>
+	<message key="required.note">This field is required</message>
+	<message key="error.note">This field has an error</message>
+	<message key="help.note">Help for this field</message>
+	<!-- actions -->
+	<message key="add.person.title">Add a new person to this department</message>
+	<message key="update.person.title">Edit this person's details</message>
+	<message key="delete.person.title">Delete this person</message>
+	<!-- departments -->
+	<message key="ou=muppets">Muppets</message>
+	<message key="ou=directors">Directors</message>
+
+</catalogue>
