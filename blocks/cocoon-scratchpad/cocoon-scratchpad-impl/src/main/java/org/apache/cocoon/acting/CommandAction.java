@@ -46,7 +46,7 @@ public class CommandAction extends AbstractAction implements ThreadSafe {
 		String command = param.getParameter(PARAM_COMMAND);
 		Source src = null;
 		
-		if ((param != null) && (command != null)) {
+		if ( command != null ) {
 			try {
 				src = resolver.resolveURI(command);
                 File file = SourceUtil.getFile(src);
@@ -61,8 +61,7 @@ public class CommandAction extends AbstractAction implements ThreadSafe {
 			} finally {
 				resolver.release(src);
 			}
-		}
-		else {
+		} else {
 			return null;
 		}
         return EMPTY_MAP;
