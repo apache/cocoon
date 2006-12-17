@@ -20,6 +20,8 @@
 
  <map:components>
   <map:generators default="file">
+    <!-- use the new implementation of JX -->
+    <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator"/>
     <map:generator name="suggestion-list" src="org.apache.cocoon.forms.generation.SuggestionListGenerator"/>
   </map:generators>
 
