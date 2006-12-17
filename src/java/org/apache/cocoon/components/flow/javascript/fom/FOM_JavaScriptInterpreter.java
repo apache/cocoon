@@ -51,7 +51,6 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaPackage;
-import org.mozilla.javascript.PropertyException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
@@ -415,13 +414,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             final Context context = Context.getCurrentContext();
 
             final String[] names = { "importClass" };
-            try {
-                defineFunctionProperties(names,
-                                         ThreadScope.class,
-                                         ScriptableObject.DONTENUM);
-            } catch (PropertyException e) {
-                throw new Error();  // should never happen
-            }
+            defineFunctionProperties(names,
+                                     ThreadScope.class,
+                                     ScriptableObject.DONTENUM);
 
             setPrototype(scope);
 
@@ -456,7 +451,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         public void put(String name, Scriptable start, Object value) {
             //Allow setting values to existing variables, or if this is a
             //java class (used by importClass & importPackage)
-            if (this.locked && !has(name, start) && !(value instanceof NativeJavaClass)) {
+            if (this.locked && !has(name, start) && !(value instanceof NativeJavaClass) && !(value instanceof Function)) {
                 // Need to wrap into a runtime exception as Scriptable.put has no throws clause...
                 throw new WrappedException (new JavaScriptException("Implicit declaration of global variable '" + name +
                   "' forbidden. Please ensure all variables are explicitely declared with the 'var' keyword"));
