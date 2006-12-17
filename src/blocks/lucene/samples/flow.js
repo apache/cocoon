@@ -18,24 +18,18 @@
 // @version $Id$
 //
 function create() {
-    var create;
-    var createParam = cocoon.request.getParameter("create");
-    if (createParam == null) {
-        create = false;
-    } else {
-        create = true;
-    }
-      
+    var create = cocoon.request.getParameter("create") ? true : false;
     var baseURL = cocoon.request.getParameter("baseURL");
+    
     if (baseURL != null && baseURL.length() > 0) {
         var util = cocoon.createObject("org.apache.cocoon.samples.LuceneUtil");
-        util.createIndex(baseURL, create );
+        util.createIndex(baseURL, create);
     }
     if (baseURL == null || baseURL.length() < 1) {
         baseURL = "http://" + cocoon.request.getServerName()
                             + ":" + cocoon.request.getServerPort()
                             + cocoon.request.getContextPath()
-                            + "/docs/index.html";
+                            + "/samples/";
     }
     cocoon.sendPage("create-index.jx", {"url" : baseURL, "create" : create});
 }
