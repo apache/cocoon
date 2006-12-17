@@ -34,7 +34,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.CompilingInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
@@ -61,7 +60,6 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaPackage;
-import org.mozilla.javascript.PropertyException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
@@ -70,7 +68,6 @@ import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.debugger.Main;
 import org.mozilla.javascript.tools.shell.Global;
-
 
 /**
  * Interface with the JavaScript interpreter.
@@ -267,13 +264,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             final Context context = Context.getCurrentContext();
 
             final String[] names = { "importClass" };
-            try {
-                defineFunctionProperties(names,
-                                         ThreadScope.class,
-                                         ScriptableObject.DONTENUM);
-            } catch (PropertyException e) {
-                throw new Error();  // should never happen
-            }
+            defineFunctionProperties(names,
+                                     ThreadScope.class,
+                                     ScriptableObject.DONTENUM);
 
             setPrototype(scope);
 
