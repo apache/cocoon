@@ -21,6 +21,7 @@
 	xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
 	>
+	<h4 class="samplesGroup">Query Bean - History</h4>
 	<title><i18n:text i18n:catalogue="local">history.page.title</i18n:text></title>
 	<content>
 		<p class="links"> 

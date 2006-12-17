@@ -19,10 +19,12 @@
 <!-- $Id: error.xml 30942 2004-07-29 20:16:54Z vgritsenko $ -->
 <page xmlns:t="http://apache.org/cocoon/templates/jx/1.0"
   xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+	<h4 class="samplesGroup">Query Bean - Error</h4>
 	<title>Error</title>
 	<content>
 		<p><i18n:text i18n:catalogue="local">#{message}</i18n:text></p>
 		<hr/>
 		<p>An error has occurred, please try again. <!--Contact <a href="mailto:">administrator</a> if this problem persists.--></p>
+		<p><a href="welcome">Welcome</a></p>
 	</content>
 </page>

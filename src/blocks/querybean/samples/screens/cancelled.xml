@@ -17,8 +17,10 @@
 -->
 <page xmlns:t="http://apache.org/cocoon/templates/jx/1.0"
   xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+	<h4 class="samplesGroup">Query Bean - Cancelled</h4>
 	<title>Cancelled</title>
 	<content>
 		<p><i18n:text i18n:catalogue="local">#{message}</i18n:text></p>
+		<p><a href="welcome">Welcome</a></p>
 	</content>
 </page>

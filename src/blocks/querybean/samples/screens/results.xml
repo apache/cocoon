@@ -21,9 +21,11 @@
 	xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
 	>
+    <h4 class="samplesGroup">Query Bean - Results</h4>
 	<title><i18n:text i18n:catalogue="local">${result.query.type}.page.title</i18n:text>: ${result.query.name}</title>
 	<content>
 		<!-- description of the query -->
+        <title>Your Query</title>
 		<p class="query-description">
 			<i18n:text i18n:catalogue="local">search.subject.title</i18n:text>
 			<span class="query-bool" title="local:query.bool.hint" i18n:attr="title">

@@ -98,7 +98,7 @@ function indexCollection () {
 		cocoon.log.error(error);
 		cocoon.sendPage("screen/error", {message: error});	
 	} finally {
-		resolver.release(source);
+		if (source) resolver.release(source);
 		cocoon.releaseComponent(resolver);
 	}
 }
@@ -129,7 +129,6 @@ function Converter (base, rdir, rsuffix) {
 	this._rdir = rdir;
 	this._rsuffix = rsuffix;
 	if ("undefined".equals(this._rdir)) this._rdir = "";
-	if ("undefined".equals(this._rsuffix)) this._rsuffix = "";
 }
 
 Converter.prototype.convert = function(file) {
@@ -137,7 +136,7 @@ Converter.prototype.convert = function(file) {
 	// remove the absolute base path
 	path = path.substring(this._base.length());
 	// replace the suffix, if a replacement was provided
-	if (!"".equals(this._rsuffix)) path = path.substring(0, path.lastIndexOf(".")) + this._rsuffix;
+	if (!"undefined".equals(this._rsuffix)) path = path.substring(0, path.lastIndexOf(".")) + this._rsuffix;
 	// prefix with the results path
 	path = this._rdir + path;
 	// replace windows path delimiters with http ones

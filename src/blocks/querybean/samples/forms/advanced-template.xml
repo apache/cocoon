@@ -23,6 +23,7 @@
 	xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
 	xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
 >
+    <h4 class="samplesGroup">Query Bean - Search Form</h4>
 	<title><i18n:text i18n:catalogue="local">search.page.title</i18n:text> : <i18n:text i18n:catalogue="local">advanced.page.title</i18n:text></title>
 	<content>
 		<p><i18n:text i18n:catalogue="local">advanced.page.note</i18n:text></p>
@@ -55,7 +56,7 @@
 			</fi:group>
 			<i18n:text i18n:catalogue="local">required.note</i18n:text>
 			<ft:widget id="cancel"/>
-			<ft:widget id="submit"/>
+			<ft:widget id="_submit"/>
 		</ft:form-template>
 	</content>
 </page>
