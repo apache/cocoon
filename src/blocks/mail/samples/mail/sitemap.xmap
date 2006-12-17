@@ -48,8 +48,10 @@
   <!-- ===== actions =====
   -->
   <map:actions>
+  <!--
     <map:action name="link-translator-map" src="org.apache.cocoon.acting.LinkTranslatorMapAction"
       logger="sitemap.action.link-translator-map"/>
+  -->
     <map:action name="mail" src="org.apache.cocoon.mail.MailAction"
       logger="sitemap.action.mail"/>
   </map:actions>
@@ -409,8 +411,8 @@
       <map:parameter name="map-default:3" value="1"/>
 
       <!-- setup link rewriting mapping
-      -->
       <map:act type="link-translator-map" src="{1}.html"/>
+      -->
 
       <map:call resource="show-page">
         <map:parameter name="page" value="{1}"/>
@@ -431,7 +433,6 @@
       <map:parameter name="map-default:3" value="1"/>
 
       <!-- setup link rewriting mapping
-      -->
       <map:act type="link-translator-map">
         <map:parameter name="url-base" value=""/>
         <map:parameter name="linkMap:main.css" value="../main.css"/>
@@ -439,6 +440,7 @@
         <map:parameter name="linkMap:powered-by-cocoon.png" value="../powered-by-cocoon.png"/>
         <map:parameter name="linkMap:favicon.ico" value="../favicon.ico"/>
       </map:act>
+      -->
 
       <!-- create javamail objects
       -->
