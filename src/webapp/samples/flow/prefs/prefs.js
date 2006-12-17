@@ -136,6 +136,8 @@ function login()
   var errorMsg = cocoon.parameters["errorMsg"];
   var login = "";
   var password = "";
+  var attempts = 0;
+  var maxattempts = 3;
 
   while (true) {
     cocoon.sendPageAndWait("page/login",
@@ -154,9 +156,14 @@ function login()
     user = userRegistry.getUserWithLogin(login, password);
 
     if (user != undefined) {
+      attempts = 0;
       break;
     } else {
       errorMsg = "No such user or bad password";
+      attempts++;
+      if (attempts > maxattempts) {
+        cocoon.redirectTo("register");
+      }
     }
   }
 
