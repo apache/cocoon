@@ -1,0 +1,66 @@
+# sample data to fill the addressbook
+
+dn: cn=Joe Bloggs, ou=directors, ou=addressbook, dc=ldap, dc=cocoongt, dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Joe Bloggs
+gn: Joe
+sn: Bloggs
+mail: joe@bloggs.net
+physicalDeliveryOfficeName: Cocoon GetTogether LDAP, Directors Department
+postalAddress: PO BOX 88888
+l: Castle Blogg
+st: Bloggtown
+postalCode: 000000
+telephoneNumber: 1234
+mobile: 56789012
+homePhone: 34567890
+ou: directors
+
+
+dn: cn=Rossputin McDonald, ou=muppets, ou=addressbook, dc=ldap, dc=cocoongt, dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Rossputin McDonald
+gn: Rossputin
+sn: McDonald
+mail: rossputin@example.org
+physicalDeliveryOfficeName: Cocoon GetTogether LDAP, Muppet Department
+postalAddress: PO BOX 55555
+l: Newbury
+st: Berkshire
+postalCode: JX23 88W
+telephoneNumber: 666
+facsimileTelephoneNumber: 666
+pager: 666
+mobile: 666
+homePhone: 666
+ou: muppets
+
+
+dn: cn=Jeremy Quinn, ou=muppets, ou=addressbook, dc=ldap, dc=cocoongt, dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Jeremy Quinn
+gn: Jeremy
+sn: Quinn
+mail: jeremy@example.org
+physicalDeliveryOfficeName: Cocoon GetTogether LDAP, Muppet Department
+postalAddress: PO BOX 115
+l: Brixton
+st: London
+postalCode: FW3 NN6
+telephoneNumber: 1234567
+facsimileTelephoneNumber: 8901234
+pager: 56789
+mobile: 012345678
+homePhone: 90123456
+ou: muppets
+
+
