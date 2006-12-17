@@ -301,7 +301,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         public void put(String name, Scriptable start, Object value) {
             //Allow setting values to existing variables, or if this is a
             //java class (used by importClass & importPackage)
-            if (this.locked && !has(name, start) && !(value instanceof NativeJavaClass)) {
+            if (this.locked && !has(name, start) && !(value instanceof NativeJavaClass) && !(value instanceof Function)) {
                 // Need to wrap into a runtime exception as Scriptable.put has no throws clause...
                 throw new WrappedException (new JavaScriptException("Implicit declaration of global variable '" + name +
                   "' forbidden. Please ensure all variables are explicitely declared with the 'var' keyword"));
