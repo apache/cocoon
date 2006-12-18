@@ -183,7 +183,7 @@
 <!-- FIXME: is this needed for anything else? Replaced with hard-coded values
   <release version="@version@" date="@date@">
 -->
-  <release version="2.1.10" date="TBD">
+  <release version="2.1.10" date="December 21 2006">
     <action context="build">
       Release 2.1.10 is the last one to support JDK1.3.
       Future releases will require JDK1.4 or later.
