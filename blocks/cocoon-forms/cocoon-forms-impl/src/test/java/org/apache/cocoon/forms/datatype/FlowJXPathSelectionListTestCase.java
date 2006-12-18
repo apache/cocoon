@@ -17,32 +17,28 @@
 
 package org.apache.cocoon.forms.datatype;
 
-import java.io.Writer;
+import java.io.FileWriter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
+
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.xml.dom.DOMBuilder;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.ResourceSource;
-import org.custommonkey.xmlunit.Diff;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -50,32 +46,8 @@ import org.w3c.dom.Element;
  * Test case for CForms's FlowModelSelectionList datatype.
  * @version $Id$
  */
-public class FlowJXPathSelectionListTestCase extends ContainerTestCase {
+public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCase {
 
-    protected DatatypeManager datatypeManager;
-    protected DocumentBuilder parser;
-
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        super.setUp();
-        datatypeManager = (DatatypeManager) this.lookup(DatatypeManager.ROLE);
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        parser = factory.newDocumentBuilder();
-    }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        if (datatypeManager != null) {
-            this.release(datatypeManager);
-        }
-        super.tearDown();
-    }
-    
     /**
      * Test the generateSaxFragment method.
      */
@@ -93,17 +65,20 @@ public class FlowJXPathSelectionListTestCase extends ContainerTestCase {
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
         Context context = new DefaultContext(contextObjectModel);
         Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
-        Document sample = parser.parse(sampleSource.getInputStream());
+        Document sample = this.parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
+        Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList
             (context, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
-        Document expected = parser.parse(expectedSource.getInputStream());
+        Document expected = this.parser.parse(expectedSource.getInputStream());
+        Document destDocument = dest.getDocument();
+        print(destDocument, new FileWriter("D:/jx.xml"));
+        print(expected, new FileWriter("D:/jx.exp.xml"));
         assertEqual("Test if generated list matches expected",
-            expected, dest.getDocument());
+            expected, destDocument);
     }
     
     /**
@@ -124,54 +99,20 @@ public class FlowJXPathSelectionListTestCase extends ContainerTestCase {
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
         Context context = new DefaultContext(contextObjectModel);
         Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
-        Document sample = parser.parse(sampleSource.getInputStream());
+        Document sample = this.parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
+        Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList
             (context, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
-        Document expected = parser.parse(expectedSource.getInputStream());
+        Document expected = this.parser.parse(expectedSource.getInputStream());
+        Document destDocument = dest.getDocument();
+        print(destDocument, new FileWriter("D:/jxNull.xml"));
+        print(expected, new FileWriter("D:/jxNull.exp.xml"));
         assertEqual("Test if generated list matches expected",
-                expected, dest.getDocument());
-    }
-    
-    /**
-     * Check is the source document is equal to the one produced by the method under test.
-     * @param message A message to print in case of failure.
-     * @param expected The expected (source) document.
-     * @param actual The actual (output) document.
-     */
-    private void assertEqual(String message, Document expected, Document actual) {
-        expected.getDocumentElement().normalize();
-        actual.getDocumentElement().normalize();
-        // DIRTY HACK WARNING: we add the "xmlns:wi" attribute reported
-        // by DOM, as expected, but not generated by the method under test,
-        // otherwise the comparison would fail. 
-        actual.getDocumentElement().setAttribute(FormsConstants.INSTANCE_PREFIX,
-                FormsConstants.INSTANCE_NS);
-        Diff diff =  new Diff(expected, actual);
-        assertTrue(message + ", " + diff.toString(), diff.similar());
-    }
-
-    /**
-     * Print a document to a writer for debugging purposes.
-     * @param document The document to print.
-     * @param out The writer to write to.
-     */
-    public final void print(Document document, Writer out) {
-        TransformerFactory factory = TransformerFactory.newInstance();
-        try {
-            javax.xml.transform.Transformer serializer =
-                factory.newTransformer();
-            serializer.transform(
-                new DOMSource(document),
-                new StreamResult(out));
-            out.write('\n');
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                expected, destDocument);
     }
     
     public static class TestBean {
@@ -184,15 +125,15 @@ public class FlowJXPathSelectionListTestCase extends ContainerTestCase {
         }
         
         public String getKey() {
-            return key;
+            return this.key;
         }
         
         public String getValue() {
-            return value;
+            return this.value;
         }
         
         public String toString() {
-            return "{ " + key + " : " + value + " }";
+            return "{ " + this.key + " : " + this.value + " }";
         }
     }
 }
