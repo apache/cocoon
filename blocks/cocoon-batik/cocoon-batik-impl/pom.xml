@@ -112,6 +112,12 @@
       <groupId>batik</groupId>
       <artifactId>batik-squiggle</artifactId>
       <version>1.6-1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>batik</groupId>
@@ -137,6 +143,12 @@
       <groupId>batik</groupId>
       <artifactId>batik-transcoder</artifactId>
       <version>1.6-1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>batik</groupId>
