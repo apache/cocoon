@@ -117,6 +117,10 @@
           <groupId>avalon-framework</groupId>
           <artifactId>avalon-framework</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>batik</groupId>
+          <artifactId>batik-1.5-fop</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
