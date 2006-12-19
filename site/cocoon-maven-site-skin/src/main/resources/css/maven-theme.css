@@ -331,3 +331,37 @@ li {
 .news ul li {
   margin-bottom: 10px;
 }
+
+#table-homepage table {
+  width:65%;
+}
+
+#downloadbox {
+  float: right;
+  margin-left: 2em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 1em;
+  border: 1px solid #999;
+  background-color: #eee;
+  width: 17.5em;
+}
+
+#downloadbox h2 {
+  color: #000;
+  margin: 0;
+  border-bottom: 0px solid #aaaaaa;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0;
+  margin-top: 1em;
+}
+
+#downloadbox p {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+#downloadbox a {
+    white-space: nowrap;
+}
