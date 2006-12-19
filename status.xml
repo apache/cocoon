@@ -184,12 +184,6 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="December 21 2006">
-    <action context="build">
-      Release 2.1.10 is the last one to support JDK1.3.
-      Future releases will require JDK1.4 or later.
-      The Cocoon developer community feels that the effort to maintain compatibility
-      to an outdated Java version is no longer justified.
-    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1811" due-to="Rob Berens">
       Core: Allow dynamic loading of JavaScript objects even when scope is locked.
     </action>
