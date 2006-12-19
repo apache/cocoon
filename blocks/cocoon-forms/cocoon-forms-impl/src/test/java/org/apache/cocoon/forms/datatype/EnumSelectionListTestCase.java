@@ -53,8 +53,6 @@ public class EnumSelectionListTestCase extends AbstractSelectionListTestCase {
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest-no-null.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
-        print(destDocument, new FileWriter("D:/enum.xml"));
-        print(expected, new FileWriter("D:/enum.exp.xml"));
         assertEqual("Test if output is what is expected",
                 expected, destDocument);
     }
@@ -73,8 +71,6 @@ public class EnumSelectionListTestCase extends AbstractSelectionListTestCase {
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
-        print(destDocument, new FileWriter("D:/enumNullable.xml"));
-        print(expected, new FileWriter("D:/enumNullable.exp.xml"));
         assertEqual("Test if output is what is expected",
                 expected, destDocument);
     }
