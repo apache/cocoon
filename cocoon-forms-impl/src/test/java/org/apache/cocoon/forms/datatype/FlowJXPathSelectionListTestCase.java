@@ -75,8 +75,6 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
-        print(destDocument, new FileWriter("D:/jx.xml"));
-        print(expected, new FileWriter("D:/jx.exp.xml"));
         assertEqual("Test if generated list matches expected",
             expected, destDocument);
     }
@@ -109,8 +107,6 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
-        print(destDocument, new FileWriter("D:/jxNull.xml"));
-        print(expected, new FileWriter("D:/jxNull.exp.xml"));
         assertEqual("Test if generated list matches expected",
                 expected, destDocument);
     }
