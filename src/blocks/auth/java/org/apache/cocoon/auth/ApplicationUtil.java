@@ -82,7 +82,7 @@ public class ApplicationUtil
      * @param objectModel The Cocoon object model.
      * @return This returns true, if the user has the role; otherwise false is returned.
      */
-    public boolean isUserInRole(final User user, final String role, final Map objectModel) {
+    public static boolean isUserInRole(final User user, final String role, final Map objectModel) {
         boolean result = user.isUserInRole(role);
         if ( !result ) {
             final Request req = ObjectModelHelper.getRequest(objectModel);
