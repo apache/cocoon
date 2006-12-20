@@ -34,6 +34,10 @@
   <modules>
     <module>cocoon-blocks-fw</module>
     <module>cocoon-core</module>
+    <module>cocoon-common</module>
+    <module>cocoon-util</module>
+    <module>cocoon-configuration</module>
+    <module>cocoon-environment</module>
     <module>cocoon-pipeline-api</module>
     <module>cocoon-webapp</module>
   </modules>
