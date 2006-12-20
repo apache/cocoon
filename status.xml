@@ -180,6 +180,11 @@
   </todo>
 
   <changes>
+  <release version="2.1.11" date="TBD">
+    <action dev="CZ" type="fix">
+      Auth Block: Make isUserInRole a static method.
+    </action>
+  </release>
   <release version="2.1.10" date="TBD">
     <action dev="JH" type="fix" fixes-bug="COCOON-1811" due-to="Rob Berens">
       Core: Allow dynamic loading of JavaScript objects even when scope is locked.
