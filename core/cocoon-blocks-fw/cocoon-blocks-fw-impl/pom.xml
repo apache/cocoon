@@ -37,6 +37,23 @@
       <artifactId>cocoon-core</artifactId>
       <version>2.2.0-M3-SNAPSHOT</version>
     </dependency>
+    <!--  excalibur -->
+    <dependency>
+      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
+      <artifactId>excalibur-sourceresolve</artifactId>
+      <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.avalon.framework</groupId>
+          <artifactId>avalon-framework-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.avalon.logkit</groupId>
+          <artifactId>avalon-logkit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
