@@ -38,7 +38,7 @@
     <module>cocoon-util</module>
     <module>cocoon-configuration</module>
     <module>cocoon-environment</module>
-    <module>cocoon-pipeline-api</module>
+    <module>cocoon-pipeline</module>
     <module>cocoon-webapp</module>
   </modules>
   <scm>
