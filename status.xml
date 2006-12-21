@@ -185,7 +185,7 @@
       Auth Block: Make isUserInRole a static method.
     </action>
   </release>
-  <release version="2.1.10" date="TBD">
+  <release version="2.1.10" date="December 21 2006">
     <action dev="JH" type="fix" fixes-bug="COCOON-1811" due-to="Rob Berens">
       Core: Allow dynamic loading of JavaScript objects even when scope is locked.
     </action>
