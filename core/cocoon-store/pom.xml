@@ -33,7 +33,6 @@
   <packaging>pom</packaging>
   <name>Cocoon Store [modules]</name>
   <modules>
-    <module>cocoon-store-api</module>
     <module>cocoon-store-impl</module>
   </modules>
 </project>
