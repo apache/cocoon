@@ -19,42 +19,25 @@ package org.apache.cocoon;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
-import junit.framework.TestCase;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.configuration.PropertyProvider;
-import org.apache.cocoon.core.TestPropertyProvider;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;
-import org.apache.cocoon.environment.mock.MockRequest;
-import org.apache.cocoon.environment.mock.MockResponse;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * TODO - We need to find a way to setup the bean factory!
  * @version $Id$
  *
  */
-public class SitemapTestCase extends TestCase {
-
-    private MockRequest request = new MockRequest();
-    private MockResponse response = new MockResponse();
-    private MockContext environmentContext = new MockContext();
-    private Map objectmodel = new HashMap();
+public class SitemapTestCase extends AbstractTestCase {
 
     private Logger logger;
     private String classDir;
-    private ConfigurableBeanFactory container;
     private ServiceManager serviceManager;
     private Processor rootProcessor;
 
@@ -64,33 +47,16 @@ public class SitemapTestCase extends TestCase {
         String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_DEBUG);
         this.logger = new ConsoleLogger(Integer.parseInt(level));
 
-        objectmodel.clear();
-
-        request.reset();
-        objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
-
-        response.reset();
-        objectmodel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
-
-        environmentContext.reset();
-        objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, environmentContext);
-
         this.classDir = this.getClassDirURL().toExternalForm();
-        PropertyProvider env = new TestPropertyProvider();
-
-        this.container = null; //CoreUtil.createRootContainer(new MockContext(), env);
-        this.serviceManager = (ServiceManager)this.container.getBean(ServiceManager.class.getName());
-        this.rootProcessor = (Processor)this.container.getBean(Processor.ROLE);
     }
 
     /**
-     * @see junit.framework.TestCase#tearDown()
+     * @see org.apache.cocoon.AbstractTestCase#initBeanFactory()
      */
-    protected void tearDown() throws Exception {
-        if ( this.container != null ) {
-            this.container.destroySingletons();
-        }
-        super.tearDown();
+    protected void initBeanFactory() {
+        super.initBeanFactory();
+        this.serviceManager = (ServiceManager)this.getBeanFactory().getBean(ServiceManager.class.getName());
+        this.rootProcessor = (Processor)this.getBeanFactory().getBean(Processor.ROLE);
     }
 
     /** Return the logger */
@@ -118,19 +84,19 @@ public class SitemapTestCase extends TestCase {
     protected URL getClassDirURL() throws RuntimeException {
         String className = getClass().getName().replace( '.', '/' ) + ".class";
         String classURL = null;
-        String classDir = null;
+        String localClassDir = null;
         try {
             classURL =
                 getClass().getClassLoader().getResource( className ).toExternalForm();
             getLogger().debug("classURL=" + classURL);
-            classDir = classURL.substring(0, classURL.lastIndexOf('/') + 1);
-            getLogger().debug("classDir=" + classDir);
-            return new URL(classDir);
+            localClassDir = classURL.substring(0, classURL.lastIndexOf('/') + 1);
+            getLogger().debug("classDir=" + localClassDir);
+            return new URL(localClassDir);
         } catch (SecurityException e) {
             throw new RuntimeException("Not allowed to access classloader for " + className, e);
         } catch (MalformedURLException e) {
             throw new RuntimeException("Malformed URL for className=" + className +
-                                       " classURL=" + classURL + " classDir=" + classDir, e);
+                                       " classURL=" + classURL + " classDir=" + localClassDir, e);
         } catch (Exception e) {
             throw new RuntimeException("Couldn't create URL for " + className, e);
         }
@@ -194,8 +160,8 @@ public class SitemapTestCase extends TestCase {
     protected MockEnvironment getEnvironment(String uri) {
         MockEnvironment env = new MockEnvironment();
         env.setURI("", uri);
-        this.request.setEnvironment(env);
-        env.setObjectModel(this.objectmodel);
+        this.getRequest().setEnvironment(env);
+        env.setObjectModel(this.getObjectModel());
 
         return env;
     }
