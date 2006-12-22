@@ -24,24 +24,33 @@ import org.springframework.web.context.ServletContextAware;
 /**
  * Simple Spring factory bean which provides the servlet context as a bean.
  * This avoids a dependence to Springs ServletContextAware interface.
+ *
  * @version $Id$
+ * @since 2.2
  */
 public class ServletContextFactoryBean implements FactoryBean, ServletContextAware {
 
-    protected ServletContext servletContext;
+    protected static ServletContext servletContext;
+
+    public static ServletContext getServletContext() {
+        if ( servletContext == null ) {
+            throw new RuntimeException("ServletContext in ServletContextFactoryBean is not initialized yet. Check your configuration.");
+        }
+        return servletContext;
+    }
 
     /**
      * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
      */
     public void setServletContext(ServletContext context) {
-        this.servletContext = context;
+        servletContext = context;
     }
 
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
     public Object getObject() throws Exception {
-        return this.servletContext;
+        return servletContext;
     }
 
     /**

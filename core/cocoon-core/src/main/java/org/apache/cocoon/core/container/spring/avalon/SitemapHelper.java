@@ -25,20 +25,14 @@ import javax.servlet.ServletContext;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.classloader.ClassLoaderFactory;
 import org.apache.cocoon.classloader.reloading.Monitor;
-import org.apache.cocoon.classloader.reloading.ReloadingClassLoaderConfiguration;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
 import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
-import org.apache.excalibur.source.SourceResolver;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
@@ -153,7 +147,6 @@ public class SitemapHelper {
         final WebApplicationContext rootContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         final ProcessInfoProvider infoProvider = (ProcessInfoProvider) rootContext.getBean(ProcessInfoProvider.ROLE);
         final Request request = ObjectModelHelper.getRequest(infoProvider.getObjectModel());
-        final SourceResolver sitemapResolver = (SourceResolver)rootContext.getBean(SourceResolver.ROLE);
         // let's determine our context url
         int pos = sitemapLocation.lastIndexOf('/');
         if ( sitemapLocation.lastIndexOf(File.separatorChar) > pos ) {
@@ -161,8 +154,7 @@ public class SitemapHelper {
         }
         final String contextUrl = sitemapLocation.substring(0, pos + 1);
 
-        final RequestAttributes attr = new CocoonRequestAttributes(request);
-        final Container container = Container.getCurrentContainer(servletContext, attr);
+        final Container container = Container.getCurrentContainer();
         // for now we require that the parent container is a web application context (FIXME)
         if ( !(container.getBeanFactory() instanceof WebApplicationContext) ) {
             throw new Exception("Parent container is not a web application context: " + container.getBeanFactory());
