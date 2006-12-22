@@ -47,8 +47,6 @@ import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileException;
 import org.apache.cocoon.portal.profile.ProfileLS;
-import org.apache.cocoon.portal.scratchpad.Profile;
-import org.apache.cocoon.portal.scratchpad.ProfileImpl;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
@@ -130,15 +128,15 @@ public class GroupBasedProfileManager
         this.loader = (ProfileLS)this.manager.lookup(ProfileLS.ROLE);
     }
 
-    protected ProfileImpl getUserProfile() {
-        return (ProfileImpl)this.portalService.getUserService().getAttribute(KEY_PREFIX + "profile");
+    protected ProfileHolder getUserProfile() {
+        return (ProfileHolder)this.portalService.getUserService().getAttribute(KEY_PREFIX + "profile");
     }
 
     protected void removeUserProfiles() {
         this.portalService.getUserService().removeAttribute(KEY_PREFIX + "profile");
     }
 
-    protected void storeUserProfile(Profile profile) {
+    protected void storeUserProfile(ProfileHolder profile) {
         this.portalService.getUserService().setAttribute(KEY_PREFIX + "profile", profile);
     }
 
@@ -156,7 +154,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.impl.AbstractProfileManager#logout(org.apache.cocoon.portal.om.PortalUser)
      */
     protected void logout(PortalUser user) {
-        final Profile profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         if ( profile != null ) {
 
             Iterator iter = profile.getCopletInstances().iterator();
@@ -175,7 +173,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstance(java.lang.String)
      */
     public CopletInstance getCopletInstance(String copletID) {
-        final Profile profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         if ( profile != null ) {
             return profile.searchCopletInstance(copletID);
         }
@@ -186,7 +184,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinition(java.lang.String)
      */
     public CopletDefinition getCopletDefinition(String copletDataId) {
-        final ProfileImpl profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         if ( profile != null ) {
             return profile.searchCopletDefinition(copletDataId);
         }
@@ -197,7 +195,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public List getCopletInstances(CopletDefinition data) {
-        final Profile profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         if ( profile != null ) {
             final List coplets = new ArrayList();
             final Iterator iter = profile.getCopletInstances().iterator();
@@ -217,7 +215,7 @@ public class GroupBasedProfileManager
      * @see Receiver
      */
     public void inform(CopletInstanceAddedEvent event) {
-        final ProfileImpl profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         profile.add(event.getTarget());
     }
 
@@ -237,7 +235,7 @@ public class GroupBasedProfileManager
      * @see Receiver
      */
     public void inform(CopletInstanceRemovedEvent event) {
-        final ProfileImpl profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         profile.remove(event.getTarget());
     }
 
@@ -246,7 +244,7 @@ public class GroupBasedProfileManager
      * @see Receiver
      */
     public void inform(LayoutAddedEvent event) {
-        final ProfileImpl profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         profile.add(event.getTarget());
     }
 
@@ -255,7 +253,7 @@ public class GroupBasedProfileManager
      * @see Receiver
      */
     public void inform(LayoutInstanceAddedEvent event) {
-        final ProfileImpl profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         profile.add(event.getTarget());
     }
 
@@ -264,7 +262,7 @@ public class GroupBasedProfileManager
      * @see Receiver
      */
     public void inform(LayoutRemovedEvent event) {
-        final ProfileImpl profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         profile.remove(event.getTarget());
     }
 
@@ -272,7 +270,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getLayout(java.lang.String)
      */
     public Layout getLayout(String layoutId) {
-        Profile profile = this.getUserProfile();
+        ProfileHolder profile = this.getUserProfile();
         if ( profile == null ) {
             profile = this.loadProfile();
         }
@@ -289,7 +287,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinitions()
      */
     public Collection getCopletDefinitions() {
-        final ProfileImpl profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         if ( profile != null ) {
             return profile.getCopletDefinitions();
         }
@@ -300,7 +298,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances()
      */
     public Collection getCopletInstances() {
-        final Profile profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         if ( profile != null ) {
             return profile.getCopletInstances();
         }
@@ -312,11 +310,11 @@ public class GroupBasedProfileManager
      * This loads the profile for the current user. First the default profile is read. This might
      * contain links to other profiles which are then loaded recursively.
      */
-    protected Profile loadProfile() 
+    protected ProfileHolder loadProfile() 
     throws ProfileException {
         final String defaultProfileName = this.portalService.getUserService().getDefaultProfileName();
         final PortalUser user = this.portalService.getUserService().getUser();
-        ProfileImpl profile = new ProfileImpl();
+        ProfileHolder profile = new ProfileHolder();
 
         try {
             // first "load" the global data
@@ -337,7 +335,7 @@ public class GroupBasedProfileManager
         return profile;
     }
 
-    protected void loadProfile(ProfileImpl profile, PortalUser user, String profileName)
+    protected void loadProfile(ProfileHolder profile, PortalUser user, String profileName)
     throws ProfileException {
         try {
             if ( !this.getCopletInstances(profile, user, CATEGORY_USER, profileName) ) {
@@ -422,7 +420,7 @@ public class GroupBasedProfileManager
     }
 
     protected Map getGlobalCopletDefinitions(final PortalUser  info,
-                                             final ProfileImpl profile)
+                                             final ProfileHolder profile)
     throws Exception {
         // if we already have loaded the profile and don't check
         // for changes, just return the profile
@@ -488,7 +486,7 @@ public class GroupBasedProfileManager
         return false;
     }
 
-    protected boolean getCopletInstances(final ProfileImpl profile,
+    protected boolean getCopletInstances(final ProfileHolder profile,
                                          final PortalUser  info,
                                          final String      category,
                                          final String      layoutKey)
@@ -512,7 +510,7 @@ public class GroupBasedProfileManager
         }
     }
 
-    protected boolean getLayout(final ProfileImpl profile,
+    protected boolean getLayout(final ProfileHolder profile,
                                 final PortalUser  info,
                                 final String      category,
                                 final String      layoutKey)
@@ -583,7 +581,7 @@ public class GroupBasedProfileManager
 
     protected void saveCopletInstances() {
         try {
-            final ProfileImpl profile = this.getUserProfile();
+            final ProfileHolder profile = this.getUserProfile();
             final Map key = this.buildKey(CATEGORY_USER,
                                           ProfileLS.PROFILETYPE_COPLETINSTANCE,
                                           this.portalService.getUserService().getUser(),
@@ -601,7 +599,7 @@ public class GroupBasedProfileManager
      */
     public void saveLayoutInstances() {
         try {
-            final Profile profile = this.getUserProfile();
+            final ProfileHolder profile = this.getUserProfile();
             final Map key = this.buildKey(CATEGORY_USER,
                                           ProfileLS.PROFILETYPE_LAYOUTINSTANCE, 
                                           this.portalService.getUserService().getUser(),
@@ -646,7 +644,7 @@ public class GroupBasedProfileManager
      */
     public LayoutInstance getLayoutInstance(Layout layout) {
         LayoutInstance result = null;
-        final Profile profile = this.getUserProfile();
+        final ProfileHolder profile = this.getUserProfile();
         if ( profile != null ) {
             result = profile.searchLayoutInstance(layout);
         }

@@ -38,7 +38,6 @@ import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
-import org.apache.cocoon.portal.scratchpad.Profile;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
@@ -130,7 +129,7 @@ public abstract class AbstractProfileManager
     /**
      * Prepares the object by using the specified factory.
      */
-    protected void prepareObject(Profile profile, Object object)
+    protected void prepareObject(ProfileHolder profile, Object object)
     throws LayoutException {
         if ( object != null ) {
             Object preparableObject = object;
@@ -159,7 +158,7 @@ public abstract class AbstractProfileManager
         }
     }
 
-    protected Layout checkAvailability(Profile profile, Layout layout) {
+    protected Layout checkAvailability(ProfileHolder profile, Layout layout) {
         // is the coplet instance available?
         if ( layout instanceof CopletLayout ) {
             final CopletLayout cl = (CopletLayout)layout;
@@ -223,7 +222,7 @@ public abstract class AbstractProfileManager
      * Process a freshly loaded profile.
      * TODO Why do we need the profile?
      */
-    protected Collection processCopletInstances(Profile profile, Collection copletInstances)
+    protected Collection processCopletInstances(ProfileHolder profile, Collection copletInstances)
     throws LayoutException {
         Collection result = copletInstances;
         if ( this.chain.hasAspects() ) {
@@ -241,7 +240,7 @@ public abstract class AbstractProfileManager
      * Process a freshly loaded profile.
      * TODO Why do we need the profile?
      */
-    protected Layout processLayout(Profile profile, Layout layout)
+    protected Layout processLayout(ProfileHolder profile, Layout layout)
     throws LayoutException {
         Layout result = layout;
         if ( this.chain.hasAspects() ) {

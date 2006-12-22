@@ -34,8 +34,7 @@ import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileException;
 import org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager;
-import org.apache.cocoon.portal.scratchpad.Profile;
-import org.apache.cocoon.portal.scratchpad.ProfileImpl;
+import org.apache.cocoon.portal.profile.impl.ProfileHolder;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -57,7 +56,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TestProfileManager extends GroupBasedProfileManager {
 
-    protected Profile loadProfile() 
+    protected ProfileHolder loadProfile() 
     throws ProfileException {
         final PortalUser user = this.portalService.getUserService().getUser();
         if ( user.getUserName().equals("test") ) {
@@ -73,7 +72,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                         portletNames.add(StringUtils.replaceChars(values[i], '/', '.'));
                     }
                 }
-                final ProfileImpl profile = new ProfileImpl();
+                final ProfileHolder profile = new ProfileHolder();
     
                 // first "load" the global coplet types
                 profile.setCopletTypes( this.getGlobalCopletTypes() );
