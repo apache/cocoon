@@ -21,7 +21,6 @@ import java.util.Stack;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.servlet.ServletRequestHolder;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -52,9 +51,8 @@ public class Container {
     protected static Container ROOT_CONTAINER;
 
     public static Container getCurrentContainer() {
-        final ServletContext servletContext = ServletRequestHolder.currentServletContext();
         final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-        return getCurrentContainer(servletContext, attributes);
+        return getCurrentContainer(null, attributes);
     }
 
     /**
@@ -71,7 +69,7 @@ public class Container {
                         .getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
             }
         }
-        if ( ROOT_CONTAINER == null ) {
+        if ( ROOT_CONTAINER == null && servletContext != null ) {
             final WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
             ROOT_CONTAINER = new Container(parentContext, parentContext.getClassLoader());
         }
