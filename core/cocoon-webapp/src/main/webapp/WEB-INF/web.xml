@@ -15,16 +15,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!--+
     | This is the Cocoon web-app configurations file
     +-->
-
-<!DOCTYPE web-app
-    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-    "http://java.sun.com/dtd/web-app_2_3.dtd">
-
-<web-app>
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
   <!-- Context Configuration ========================================== -->
 
@@ -47,9 +44,9 @@
       +-->
 
   <filter>
-    <filter-name>CocoonMultipartFilter</filter-name>
-    <display-name>Cocoon multipart filter</display-name>
     <description>Multipart MIME handling filter for Cocoon</description>
+    <display-name>Cocoon multipart filter</display-name>
+    <filter-name>CocoonMultipartFilter</filter-name>
     <filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
   </filter>
 
@@ -58,9 +55,9 @@
       +-->
 
   <filter>
-    <filter-name>CocoonDebugFilter</filter-name>
-    <display-name>Cocoon debug filter</display-name>
     <description>Log debug information about each request</description>
+    <display-name>Cocoon debug filter</display-name>
+    <filter-name>CocoonDebugFilter</filter-name>
     <filter-class>org.apache.cocoon.servlet.DebugFilter</filter-class>
   </filter>
 
@@ -88,18 +85,27 @@
 
   <!--+
       | Declare Spring context listener which sets up the Spring Application Context
-      | containing all Cocoon components (and user defined as well).
+      | containing all Cocoon components (and user defined beans as well).
       +-->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
+  <!--+
+      | Declare Spring request listener which sets up the required RequestAttributes
+      | to support Springs and Cocoon custom bean scopes like the request scope or the
+      | session scope.
+      +-->
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+
   <!-- Servlet Configuration ========================================== -->
 
   <servlet>
-    <servlet-name>Cocoon</servlet-name>
-    <display-name>Cocoon</display-name>
     <description>Cocoon demo web application</description>
+    <display-name>Cocoon</display-name>
+    <servlet-name>Cocoon</servlet-name>
 
     <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
 
@@ -112,9 +118,9 @@
 
   <!-- Experimental servlet that dispatch to Spring managed block servlets -->
   <servlet>
-    <servlet-name>DispatcherServlet</servlet-name>
-    <display-name>DispatcherServlet</display-name>
     <description>Cocoon blocks dispatcher</description>
+    <display-name>DispatcherServlet</display-name>
+    <servlet-name>DispatcherServlet</servlet-name>
 
     <servlet-class>org.apache.cocoon.blocks.DispatcherServlet</servlet-class>
 
@@ -204,8 +210,8 @@
   <!-- Sample environment entry for the NamingInputModule -->
   <env-entry>
     <env-entry-name>greeting</env-entry-name>
-    <env-entry-value>Hello, World</env-entry-value>
     <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>Hello, World</env-entry-value>
   </env-entry>
 
 </web-app>
