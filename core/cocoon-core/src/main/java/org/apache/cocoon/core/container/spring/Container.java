@@ -51,25 +51,24 @@ public class Container {
     protected static Container ROOT_CONTAINER;
 
     public static Container getCurrentContainer() {
-        final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-        return getCurrentContainer(null, attributes);
+        final RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        return getCurrentContainer(attributes);
     }
 
     /**
      * Return the current web application context.
-     * @param servletContext The servlet context.
      * @param attributes     The request attributes.
      * @return The web application context.
      */
-    public static Container getCurrentContainer(ServletContext servletContext,
-                                                RequestAttributes attributes) {
+    public static Container getCurrentContainer(RequestAttributes attributes) {
         if ( attributes != null ) {
             if (attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
                 return (Container) attributes
                         .getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
             }
         }
-        if ( ROOT_CONTAINER == null && servletContext != null ) {
+        if ( ROOT_CONTAINER == null ) {
+            final ServletContext servletContext = ServletContextFactoryBean.getServletContext();
             final WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
             ROOT_CONTAINER = new Container(parentContext, parentContext.getClassLoader());
         }
@@ -78,10 +77,10 @@ public class Container {
 
     /**
      * Notify about entering this context.
-     * @param attributes The request attributes.
      * @return A handle which should be passed to {@link #leavingContext(RequestAttributes, Object)}.
      */
-    public Object enteringContext(RequestAttributes attributes) {
+    public Object enteringContext() {
+        final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         final Object oldContext = attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         if ( oldContext != null ) {
@@ -99,10 +98,10 @@ public class Container {
 
     /**
      * Notify about leaving this context.
-     * @param attributes The request attributes.
      * @param handle     The returned handle from {@link #enteringContext(RequestAttributes)}.
      */
-    public void leavingContext(RequestAttributes attributes, Object handle) {
+    public void leavingContext(Object handle) {
+        final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         Thread.currentThread().setContextClassLoader((ClassLoader)handle);
         final Stack stack = (Stack)attributes.getAttribute(CONTAINER_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         if ( stack == null ) {

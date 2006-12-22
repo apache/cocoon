@@ -27,7 +27,6 @@ import java.util.Set;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.Container;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
@@ -129,7 +128,7 @@ public class TemplateObjectModelHelper {
             cocoon.put("parameters", new ParametersMap(parameters));
         }
 
-        final Container container = Container.getCurrentContainer(context, new CocoonRequestAttributes(request));
+        final Container container = Container.getCurrentContainer();
         cocoon.put("settings", container.getSettings());
 
         final Map map = new HashMap();

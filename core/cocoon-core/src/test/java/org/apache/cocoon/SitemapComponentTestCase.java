@@ -40,8 +40,8 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.Container;
+import org.apache.cocoon.core.container.spring.ServletContextFactoryBean;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -65,7 +65,6 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -127,7 +126,10 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         //bean factory to get consistent bean resolution behaviour
         WebApplicationContext staticWebApplicationContext = new MockWebApplicationContext(this.getBeanFactory(), cont);
 		cont.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, staticWebApplicationContext);
-        Container container = Container.getCurrentContainer(cont, new CocoonRequestAttributes(request));
+        // now setup container stuff
+        ServletContextFactoryBean scfb = new ServletContextFactoryBean();
+        scfb.setServletContext(cont);
+        final Container container = Container.getCurrentContainer();
         request.setAttribute(Container.CONTAINER_REQUEST_ATTRIBUTE, container, Request.REQUEST_SCOPE);
         objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
 

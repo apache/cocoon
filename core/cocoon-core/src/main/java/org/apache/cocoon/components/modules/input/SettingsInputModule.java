@@ -28,10 +28,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.CocoonRequestAttributes;
 import org.apache.cocoon.core.container.spring.Container;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.commons.collections.IteratorUtils;
 
@@ -71,8 +68,7 @@ public final class SettingsInputModule
      */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        final Request request = ObjectModelHelper.getRequest(this.infoProvider.getObjectModel());
-        final Container container = Container.getCurrentContainer(this.infoProvider.getServletContext(), new CocoonRequestAttributes(request));
+        final Container container = Container.getCurrentContainer();
         final Settings settings = container.getSettings();
         return settings.getProperty(name);
     }
