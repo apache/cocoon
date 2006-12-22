@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.scratchpad;
+package org.apache.cocoon.portal.profile.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,13 +32,13 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
 
 /**
- * The profile for a single user.
- * WORK IN PROGRESS
+ * This class is an utility class holding all profile information of the
+ * current user.
  *
  * @version $Id$
  * @since 2.2
  */
-public class ProfileImpl implements Profile {
+public class ProfileHolder {
 
     /** A map of all coplet types. */
     protected Map copletTypes;
@@ -69,14 +69,26 @@ public class ProfileImpl implements Profile {
         this.createLayoutCollections();
     }
 
+    /**
+     * Set all coplet types.
+     * @param copletTypes An id based map of the types.
+     */
     public void setCopletTypes(Map copletTypes) {
         this.copletTypes = copletTypes;
     }
 
+    /**
+     * Set all coplet definitions.
+     * @param copletTypes An id based map of the definitions.
+     */
     public void setCopletDefinitions(Map copletDefinitions) {
         this.copletDefinitions = copletDefinitions;
     }
 
+    /**
+     * Set all coplet instances.
+     * @param copletTypes An id based map of the instances.
+     */
     public void setCopletInstances(Collection copletInstances) {
         this.copletInstances = new HashMap();
         final Iterator i = copletInstances.iterator();
@@ -87,56 +99,56 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getRootLayout()
+     * Return the root layout.
      */
     public Layout getRootLayout() {
         return this.rootLayout;
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletTypes()
+     * Return all coplet types of this profile.
      */
     public Collection getCopletTypes() {
         return this.copletTypes.values();
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletDefinitions()
+     * Return all coplet definitions.
      */
     public Collection getCopletDefinitions() {
         return this.copletDefinitions.values();
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletInstances()
+     * Return all coplet instances.
      */
     public Collection getCopletInstances() {
         return this.copletInstances.values();
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getLayoutObjects()
+     * Return all layouts.
      */
     public Collection getLayoutObjects() {
         return this.layouts;
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletType(java.lang.String)
+     * Search for a coplet type.
      */
     public CopletType searchCopletType(String copletTypeId) {
         return (CopletType) this.copletTypes.get(copletTypeId);
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinition(java.lang.String)
+     * Search for a coplet definition.
      */
     public CopletDefinition searchCopletDefinition(String copletDefinitionId) {
         return (CopletDefinition) this.copletDefinitions.get(copletDefinitionId);
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinitionObjects(org.apache.cocoon.portal.om.CopletType)
+     * Search for all coplet definitions of the coplet type.
      */
     public Collection searchCopletDefinitions(CopletType copletType) {
         final List list = new ArrayList();
@@ -151,7 +163,7 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinitionObjects(java.lang.String)
+     * Search for all coplet definitions of the coplet type.
      */
     public Collection searchCopletDefinitions(String copletTypeId) {
         final CopletType cbd = this.searchCopletType(copletTypeId);
@@ -162,14 +174,14 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstance(java.lang.String)
+     * Search for a coplet instance.
      */
     public CopletInstance searchCopletInstance(String copletId) {
         return (CopletInstance) this.copletInstances.get(copletId);
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
+     * Search for all coplet instances of the coplet definition.
      */
     public Collection searchCopletInstances(CopletDefinition copletDefinition) {
         final List list = new ArrayList();
@@ -184,7 +196,7 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstances(java.lang.String)
+     * Search for all coplet instances of the coplet definition.
      */
     public Collection searchCopletInstances(String copletDefinitionId) {
         final CopletDefinition copletDef = this.searchCopletDefinition(copletDefinitionId);
@@ -195,7 +207,7 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchLayout(java.lang.String)
+     * Search for a layout.
      */
     public Layout searchLayout(String layoutId) {
         return (Layout)this.keyedLayouts.get(layoutId);
@@ -225,18 +237,27 @@ public class ProfileImpl implements Profile {
         }        
     }
 
+    /**
+     * Add a coplet instance.
+     */
     public void add(CopletInstance cid) {
         if ( cid != null ) {
             this.copletInstances.put(cid.getId(), cid);
         }
     }
 
+    /**
+     * Remove a coplet instance.
+     */
     public void remove(CopletInstance cid) {
         if ( cid != null ) {
             this.copletInstances.remove(cid.getId());
         }
     }
 
+    /**
+     * Add a layout.
+     */
     public void add(Layout layout) {
         if ( layout != null ) {
             this.layouts.add(layout);
@@ -246,6 +267,9 @@ public class ProfileImpl implements Profile {
         }
     }
 
+    /**
+     * Add a layout instance.
+     */
     public void add(LayoutInstance instance) {
         if ( instance != null) {
             this.layoutInstances.put(instance.getLayout(), instance);
@@ -253,7 +277,9 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchLayoutInstance(org.apache.cocoon.portal.om.Layout)
+     * Search the layout instance for a layout object.
+     * @param layout
+     * @return
      */
     public LayoutInstance searchLayoutInstance(Layout layout) {
         if ( layout != null ) {
@@ -262,6 +288,9 @@ public class ProfileImpl implements Profile {
         return null;
     }
 
+    /**
+     * Remove a layout.
+     */
     public void remove(Layout layout) {
         if ( layout != null ) {
             if ( layout.getId() != null ) {
