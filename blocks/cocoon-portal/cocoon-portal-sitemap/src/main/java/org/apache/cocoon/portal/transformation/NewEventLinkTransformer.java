@@ -152,27 +152,28 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
 
             //form elements need hidden inputs to change request parameters
             if (formSpecialTreatment) {
-                int begin =
-                    eventLink.indexOf("cocoon-portal-action=")
-                        + "cocoon-portal-action=".length();
-                int end = eventLink.indexOf('&', begin);
-                if (end == -1) {
-                    end = eventLink.length();
+                int pos = eventLink.indexOf("cocoon-portal-action=");
+                if ( pos != -1 ) {
+                    int begin = pos + "cocoon-portal-action=".length();
+                    int end = eventLink.indexOf('&', begin);
+                    if (end == -1) {
+                        end = eventLink.length();
+                    }
+                    portalAction = eventLink.substring(begin, end);
                 }
-
-                portalAction = eventLink.substring(begin, end);
-
-                begin =
-                    eventLink.indexOf("cocoon-portal-event=")
-                        + "cocoon-portal-event=".length();
-                end = eventLink.indexOf('&', begin);
-                if (end == -1) {
-                    end = eventLink.length();
+                pos = eventLink.indexOf("cocoon-portal-event=");
+                if ( pos != -1 ) {
+                    int begin = pos + "cocoon-portal-event=".length();
+                    int end = eventLink.indexOf('&', begin);
+                    if (end == -1) {
+                        end = eventLink.length();
+                    }
+                    portalEvent = eventLink.substring(begin, end);
                 }
-                portalEvent = eventLink.substring(begin, end);
-
-                eventLink =
-                    eventLink.substring(0, eventLink.indexOf('?'));
+                pos = eventLink.indexOf('?');
+                if ( pos != -1 ) {
+                    eventLink = eventLink.substring(0, eventLink.indexOf('?'));
+                }
             }
 
             // insert event link
@@ -203,18 +204,21 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
                                   String portalAction,
                                   String portalEvent)
     throws SAXException {
-        AttributesImpl attributes = new AttributesImpl();
         if ( portalAction != null && portalAction.trim().length() > 0 ) {
+            final AttributesImpl attributes = new AttributesImpl();
             attributes.addCDATAAttribute("type", "hidden");
             attributes.addCDATAAttribute("name", "cocoon-portal-action");
             attributes.addCDATAAttribute("value", portalAction);
             XMLUtils.createElement(handler, "input", attributes);
-            attributes.clear();
         }
-        attributes.addCDATAAttribute("type", "hidden");
-        attributes.addCDATAAttribute("name", "cocoon-portal-event");
-        attributes.addCDATAAttribute("value", portalEvent);
-        XMLUtils.createElement(handler, "input", attributes);
+ 
+        if ( portalEvent != null && portalEvent.trim().length() > 0 ) {
+            final AttributesImpl attributes = new AttributesImpl();
+            attributes.addCDATAAttribute("type", "hidden");
+            attributes.addCDATAAttribute("name", "cocoon-portal-event");
+            attributes.addCDATAAttribute("value", portalEvent);
+            XMLUtils.createElement(handler, "input", attributes);
+        }
     }
 
     /**
