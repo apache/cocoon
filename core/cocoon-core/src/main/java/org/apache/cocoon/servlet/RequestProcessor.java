@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.RequestListener;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -404,13 +403,8 @@ public class RequestProcessor {
         } finally {
             EnvironmentHelper.leaveProcessor();
             environment.finishingProcessing();
-            this.cleanup();
 
             EnvironmentHelper.checkEnvironment(environmentDepth, this.getLogger());
         }
-    }
-
-    protected void cleanup() {
-        ProcessingUtil.cleanup();
     }
 }

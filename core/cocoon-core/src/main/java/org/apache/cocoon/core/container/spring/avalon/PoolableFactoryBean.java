@@ -28,13 +28,14 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * This factory bean adds simple pooling support to Spring.
@@ -324,7 +325,7 @@ public class PoolableFactoryBean
         }
     }
 
-    protected static final class ProxyHandler implements InvocationHandler, ProcessingUtil.CleanupTask {
+    protected static final class ProxyHandler implements InvocationHandler, Runnable {
 
         private final ThreadLocal componentHolder = new ThreadLocal();
         private final PoolableFactoryBean handler;
@@ -343,7 +344,7 @@ public class PoolableFactoryBean
             }
             if ( this.componentHolder.get() == null ) {
                 this.componentHolder.set(this.handler.getFromPool());
-                ProcessingUtil.addCleanupTask(this);
+                RequestContextHolder.getRequestAttributes().registerDestructionCallback(ProxyHandler.class.getName() + '/' + this.handler.hashCode(), this, RequestAttributes.SCOPE_REQUEST);
             }
             try {
                 return method.invoke(this.componentHolder.get(), args);
@@ -353,9 +354,9 @@ public class PoolableFactoryBean
         }
 
         /**
-         * @see ProcessingUtil.CleanupTask#invoke()
+         * @see java.lang.Runnable#run()
          */
-        public void invoke() {
+        public void run() {
             try {
                 final Object o = this.componentHolder.get();
                 this.handler.putIntoPool(o);

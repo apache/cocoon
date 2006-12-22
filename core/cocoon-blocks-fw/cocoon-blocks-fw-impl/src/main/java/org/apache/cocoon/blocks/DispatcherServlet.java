@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -124,11 +123,7 @@ public class DispatcherServlet
 	                " pathInfo=" + request.getPathInfo());
         }
         
-        try {
-            servlet.service(request, res);
-        } finally {
-            ProcessingUtil.cleanup();
-        }
+        servlet.service(request, res);
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {

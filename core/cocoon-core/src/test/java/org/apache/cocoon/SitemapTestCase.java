@@ -228,7 +228,6 @@ public class SitemapTestCase extends TestCase {
         } finally {
             EnvironmentHelper.leaveProcessor();
             environment.finishingProcessing();
-            ProcessingUtil.cleanup();
 
             EnvironmentHelper.checkEnvironment(environmentDepth, this.getLogger());
         }
