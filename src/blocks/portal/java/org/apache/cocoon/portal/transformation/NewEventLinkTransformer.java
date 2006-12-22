@@ -19,6 +19,7 @@ package org.apache.cocoon.portal.transformation;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -152,27 +153,28 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
 
             //form elements need hidden inputs to change request parameters
             if (formSpecialTreatment) {
-                int begin =
-                    eventLink.indexOf("cocoon-portal-action=")
-                        + "cocoon-portal-action=".length();
-                int end = eventLink.indexOf('&', begin);
-                if (end == -1) {
-                    end = eventLink.length();
+                int pos = eventLink.indexOf("cocoon-portal-action=");
+                if ( pos != -1 ) {
+                    int begin = pos + "cocoon-portal-action=".length();
+                    int end = eventLink.indexOf('&', begin);
+                    if (end == -1) {
+                        end = eventLink.length();
+                    }
+                    portalAction = eventLink.substring(begin, end);
                 }
-
-                portalAction = eventLink.substring(begin, end);
-
-                begin =
-                    eventLink.indexOf("cocoon-portal-event=")
-                        + "cocoon-portal-event=".length();
-                end = eventLink.indexOf('&', begin);
-                if (end == -1) {
-                    end = eventLink.length();
+                pos = eventLink.indexOf("cocoon-portal-event=");
+                if ( pos != -1 ) {
+                    int begin = pos + "cocoon-portal-event=".length();
+                    int end = eventLink.indexOf('&', begin);
+                    if (end == -1) {
+                        end = eventLink.length();
+                    }
+                    portalEvent = eventLink.substring(begin, end);
                 }
-                portalEvent = eventLink.substring(begin, end);
-
-                eventLink =
-                    eventLink.substring(0, eventLink.indexOf('?'));
+                pos = eventLink.indexOf('?');
+                if ( pos != -1 ) {
+                    eventLink = eventLink.substring(0, eventLink.indexOf('?'));
+                }
             }
 
             // insert event link
@@ -207,29 +209,21 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
                                   String portalAction,
                                   String portalEvent)
     throws SAXException {
-        AttributesImpl attributes = new AttributesImpl();
-        attributes.addAttribute("", "type", "type", "CDATA", "hidden");
-        attributes.addAttribute(
-            "",
-            "name",
-            "name",
-            "CDATA",
-            "cocoon-portal-action");
-        attributes.addAttribute("", "value", "value", "CDATA", portalAction);
-        contentHandler.startElement("", "input", "input", attributes);
-        contentHandler.endElement("", "input", "input");
-
-        attributes = new AttributesImpl();
-        attributes.addAttribute("", "type", "type", "CDATA", "hidden");
-        attributes.addAttribute(
-            "",
-            "name",
-            "name",
-            "CDATA",
-            "cocoon-portal-event");
-        attributes.addAttribute("", "value", "value", "CDATA", portalEvent);
-        contentHandler.startElement("", "input", "input", attributes);
-        contentHandler.endElement("", "input", "input");
+        if ( portalAction != null ) {
+            final AttributesImpl attributes = new AttributesImpl();
+            attributes.addCDATAAttribute("type", "hidden");
+            attributes.addCDATAAttribute("name", "cocoon-portal-action");
+            attributes.addCDATAAttribute("value", portalAction);
+            XMLUtils.createElement(contentHandler, "input", attributes);
+        }
+ 
+        if ( portalEvent != null ) {
+            final AttributesImpl attributes = new AttributesImpl();
+            attributes.addCDATAAttribute("type", "hidden");
+            attributes.addCDATAAttribute("name", "cocoon-portal-event");
+            attributes.addCDATAAttribute("value", portalEvent);
+            XMLUtils.createElement(contentHandler, "input", attributes);
+        }
     }
 
     /**

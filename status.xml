@@ -182,6 +182,9 @@
   <changes>
   <release version="2.1.11" date="TBD">
     <action dev="CZ" type="fix">
+      Portal Block: Fix handling of missing special parameters for forms in NewEventLinkTransformer.
+    </action>
+    <action dev="CZ" type="fix">
       Auth Block: Make isUserInRole a static method.
     </action>
   </release>
