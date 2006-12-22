@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -40,18 +39,11 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.cocoon.core.container.spring.Container;
-import org.apache.cocoon.core.container.spring.ServletContextFactoryBean;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.apache.cocoon.environment.mock.MockRedirector;
-import org.apache.cocoon.environment.mock.MockRequest;
-import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.serialization.Serializer;
@@ -64,7 +56,6 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
-import org.springframework.web.context.WebApplicationContext;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -78,37 +69,17 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
 
     public final static Parameters EMPTY_PARAMS = Parameters.EMPTY_PARAMETERS;
 
-    private MockRequest request = new MockRequest();
-    private MockResponse response = new MockResponse();
-    private MockContext context = new MockContext();
     private MockRedirector redirector = new MockRedirector();
-    private Map objectmodel = new HashMap();
-
-    public final MockRequest getRequest() {
-        return request;
-    }
-
-    public final MockResponse getResponse() {
-        return response;
-    }
-
-    public final MockContext getContext() {
-        return context;
-    }
 
     public final MockRedirector getRedirector() { 
         return redirector;
     }
 
-    public final Map getObjectModel() {
-        return objectmodel;
-    }
-    
     protected void addContext(DefaultContext context) {
-        context.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
-        context.put(ContextHelper.CONTEXT_RESPONSE_OBJECT, response);
-        context.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
-        context.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, getContext());
+        context.put(ContextHelper.CONTEXT_REQUEST_OBJECT, this.getRequest());
+        context.put(ContextHelper.CONTEXT_RESPONSE_OBJECT, this.getResponse());
+        context.put(ContextHelper.CONTEXT_OBJECT_MODEL, this.getObjectModel());
+        context.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, this.getContext());
     }
 
     /**
@@ -116,30 +87,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
      */
     public void setUp() throws Exception {
         super.setUp();
-        objectmodel.clear();
-
-        request.reset();
-        MockContext cont = this.getContext();
-       
-        //setting up an webapplicationcontext is neccesarry to make spring believe
-        //it runs in a servlet container. we initialize it with our current
-        //bean factory to get consistent bean resolution behaviour
-        WebApplicationContext staticWebApplicationContext = new MockWebApplicationContext(this.getBeanFactory(), cont);
-		cont.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, staticWebApplicationContext);
-        // now setup container stuff
-        ServletContextFactoryBean scfb = new ServletContextFactoryBean();
-        scfb.setServletContext(cont);
-        final Container container = Container.getCurrentContainer();
-        request.setAttribute(Container.CONTAINER_REQUEST_ATTRIBUTE, container, Request.REQUEST_SCOPE);
-        objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
-
-        response.reset();
-        objectmodel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
-
-        context.reset();
-        objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, context);
-
-        redirector.reset();
+        this.redirector.reset();
     }
 
     /**
@@ -206,7 +154,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             matcher = (Matcher) selector.select(type);
             assertNotNull("Test lookup of matcher", matcher);
 
-            result = matcher.match(pattern, objectmodel, parameters);
+            result = matcher.match(pattern, this.getObjectModel(), parameters);
 
         } catch (ServiceException ce) {
             getLogger().error("Could not retrieve matcher", ce);
@@ -248,7 +196,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             assertNotNull("Test lookup of selector", sel);
             
 
-            result = sel.select(expression, objectmodel, parameters);
+            result = sel.select(expression, this.getObjectModel(), parameters);
 
         } catch (ServiceException ce) {
             getLogger().error("Could not retrieve selector", ce);
@@ -292,7 +240,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             assertNotNull("Test lookup of action", action);
 
             result = action.act(redirector, new SourceResolverAdapter(resolver, this.getManager()),
-                                objectmodel, source, parameters);
+                    this.getObjectModel(), source, parameters);
 
         } catch (ServiceException ce) {
             getLogger().error("Could not retrieve action", ce);
@@ -340,7 +288,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             assertNotNull("Test lookup of generator", generator);
 
             generator.setup(new SourceResolverAdapter(resolver, getManager()),
-                            objectmodel, source, parameters);
+                    this.getObjectModel(), source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
             generator.setConsumer(new WhitespaceFilter(builder));
@@ -379,7 +327,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         // enter & leave environment, as a manager is looked up using
         // the processing context stack
         MockEnvironment env = new MockEnvironment();
-        env.setObjectModel(this.objectmodel);
+        env.setObjectModel(this.getObjectModel());
         Processor processor = new MockProcessor(this.getBeanFactory());
         
         EnvironmentHelper.enterProcessor(processor, env);
@@ -411,7 +359,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
                 assertNotNull("Test lookup of transformer", transformer);
     
                 transformer.setup(new SourceResolverAdapter(resolver, getManager()),
-                                      objectmodel, source, parameters);
+                        this.getObjectModel(), source, parameters);
     
                 DOMBuilder builder = new DOMBuilder();
                 transformer.setConsumer(new WhitespaceFilter(builder));

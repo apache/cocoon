@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -40,9 +38,8 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.AbstractTestCase;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.core.container.spring.avalon.AvalonBeanPostProcessor;
 import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
@@ -50,11 +47,7 @@ import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationReader;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.w3c.dom.Element;
@@ -139,7 +132,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public abstract class ContainerTestCase extends TestCase {
+public abstract class ContainerTestCase extends AbstractTestCase {
 
     /** The default logger */
     private Logger logger;
@@ -152,9 +145,6 @@ public abstract class ContainerTestCase extends TestCase {
     /** The context */
     private Context context;
 
-    /** The bean factory containing the avalon components. */
-    private ConfigurableListableBeanFactory beanFactory;
-
     /** Return the logger */
     protected Logger getLogger() {
         return logger;
@@ -165,20 +155,14 @@ public abstract class ContainerTestCase extends TestCase {
         return this.manager;
     }
 
-    /** Return the bean factory. */
-    protected ConfigurableListableBeanFactory getBeanFactory() {
-        return this.beanFactory;
-    }
-
     /**
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
-        super.setUp();
-
         String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_WARN);
         this.logger = new ConsoleLogger(Integer.parseInt(level));
-        this.prepare();
+
+        super.setUp();
     }
 
     /**
@@ -199,6 +183,15 @@ public abstract class ContainerTestCase extends TestCase {
             getLogger().debug( "Resource not found " + resourceName );
             this.prepare( null );
         }
+    }
+
+    /**
+     * @see org.apache.cocoon.AbstractTestCase#createBeanFactory()
+     */
+    protected void createBeanFactory()
+    throws Exception {
+        super.createBeanFactory();
+        this.prepare();
     }
 
     /**
@@ -250,10 +243,6 @@ public abstract class ContainerTestCase extends TestCase {
      * Disposes the <code>ComponentLocator</code>
      */
     final private void done() {
-        if( this.beanFactory != null ) {
-            this.beanFactory.destroySingletons();
-            this.beanFactory = null;
-        }
         this.manager = null;
         this.context = null;
         this.logger = null;
@@ -320,38 +309,31 @@ public abstract class ContainerTestCase extends TestCase {
         // subclasses can add components here
     }
 
-    protected void addSettings(BeanDefinitionRegistry registry) {
-        RootBeanDefinition def = new RootBeanDefinition();
-        def.setBeanClass(MutableSettings.class);
-        def.setSingleton(true);
-        def.setLazyInit(false);
-        def.getConstructorArgumentValues().addIndexedArgumentValue(0, "test");
-        BeanDefinitionHolder holder = new BeanDefinitionHolder(def, Settings.ROLE);
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
-    }
-
     final private void setupBeanFactory( final Configuration confCM,
                                          final Configuration confRM)
     throws Exception {
         // read roles and components
         ConfigurationInfo rolesInfo = ConfigurationReader.readConfiguration(confRM, confCM, null, null);
         this.addComponents( rolesInfo );
-        this.beanFactory = new DefaultListableBeanFactory();
-        this.addSettings((DefaultListableBeanFactory)this.beanFactory);
         
         final AvalonInstantiator aep = new AvalonInstantiator(this.contextProperties);
-        aep.createComponents(null, rolesInfo, (DefaultListableBeanFactory)this.beanFactory,  null, new DefaultResourceLoader());
+        aep.createComponents(null, rolesInfo, (BeanDefinitionRegistry) this.getBeanFactory(),  null, new DefaultResourceLoader());
         
         AvalonBeanPostProcessor postProcessor = new AvalonBeanPostProcessor();
         postProcessor.setLogger(new ConsoleLogger());
         postProcessor.setContext(this.context);
         postProcessor.setConfigurationInfo(rolesInfo);
-        postProcessor.setBeanFactory(this.beanFactory);
-        this.beanFactory.addBeanPostProcessor(postProcessor);
+        postProcessor.setBeanFactory(this.getBeanFactory());
+        this.getBeanFactory().addBeanPostProcessor(postProcessor);
+    }
 
-        ((DefaultListableBeanFactory)this.beanFactory).preInstantiateSingletons();
-        this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
-        this.context = (Context)this.beanFactory.getBean(AvalonUtils.CONTEXT_ROLE);
+    /**
+     * @see org.apache.cocoon.AbstractTestCase#initBeanFactory()
+     */
+    protected void initBeanFactory() {
+        super.initBeanFactory();
+        this.manager = (ServiceManager)this.getBeanFactory().getBean(ServiceManager.class.getName());
+        this.context = (Context)this.getBeanFactory().getBean(AvalonUtils.CONTEXT_ROLE);
     }
 
     protected final Object lookup( final String key )
