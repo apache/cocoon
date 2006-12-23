@@ -16,9 +16,9 @@
  */
 package org.apache.cocoon.core.xml.impl;
 
+import java.io.File;
 import java.io.IOException;
 
-import org.apache.cocoon.core.container.spring.ResourceUtils;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
@@ -37,12 +37,29 @@ import org.xml.sax.SAXException;
  * found at
  * http://xml.apache.org/cocoon/userdocs/concepts/catalog.html
  *
+ * TODO - This class contains two methods copied from core's resource utils!!
+ *
  * @version $Id$
  * @since 2.2
  */
 public class DefaultEntityResolver
     extends AbstractLogEnabled
     implements EntityResolver {
+
+    /**
+     * TODO - Copied from ResourceUtils
+     */
+    protected static String correctUri(String uri) {
+        // if it is a file we have to recreate the url,
+        // otherwise we get problems under windows with some file
+        // references starting with "/DRIVELETTER" and some
+        // just with "DRIVELETTER"
+        if (uri.startsWith("file:")) {
+            final File f = new File(uri.substring(5));
+            return "file://" + f.getAbsolutePath();
+        }
+        return uri;
+    }
 
     /** The catalog manager */
     protected CatalogManager catalogManager = new CatalogManager();
@@ -129,7 +146,7 @@ public class DefaultEntityResolver
 
         final Resource resource = this.resourceLoader.getResource(uri);
         try {
-            this.catalogResolver.getCatalog().parseCatalog(ResourceUtils.getUri(resource));
+            this.catalogResolver.getCatalog().parseCatalog(correctUri(resource.getURL().toExternalForm()));
         } catch (Exception e) {   
             this.getLogger().warn("Could not get Catalog file. Trying again: " + uri, e);
                         
