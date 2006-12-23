@@ -18,8 +18,6 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashSet;
@@ -34,8 +32,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * This factory bean adds simple pooling support to Spring.
@@ -131,6 +127,8 @@ public class PoolableFactoryBean
 
         // Get *all* interfaces
         this.guessWorkInterfaces( this.beanClass, workInterfaces );
+        // Add AvalonPoolable
+        workInterfaces.add(AvalonPoolable.class);
 
         this.interfaces = (Class[]) workInterfaces.toArray( new Class[workInterfaces.size()] );
 
@@ -277,7 +275,7 @@ public class PoolableFactoryBean
     public Object getObject() throws Exception {
         return Proxy.newProxyInstance(this.getClass().getClassLoader(),
                                       this.interfaces, 
-                                      new ProxyHandler(this));
+                                      new PoolableProxyHandler(this));
     }
 
     /**
@@ -322,48 +320,6 @@ public class PoolableFactoryBean
         for ( int i = 0; i < classInterfaces.length; i++ ) {
             workInterfaces.add( classInterfaces[i] );
             this.addInterfaces(classInterfaces[i].getInterfaces(), workInterfaces);
-        }
-    }
-
-    protected static final class ProxyHandler implements InvocationHandler, Runnable {
-
-        private final ThreadLocal componentHolder = new ThreadLocal();
-        private final PoolableFactoryBean handler;
-
-        public ProxyHandler(PoolableFactoryBean handler) {
-            this.handler = handler;
-        }
-
-        /**
-         * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
-         */
-        public Object invoke(Object proxy, Method method, Object[] args)
-        throws Throwable {
-            if ( method.getName().equals("hashCode") && args == null ) {
-                return new Integer(this.hashCode());
-            }
-            if ( this.componentHolder.get() == null ) {
-                this.componentHolder.set(this.handler.getFromPool());
-                RequestContextHolder.getRequestAttributes().registerDestructionCallback(ProxyHandler.class.getName() + '/' + this.handler.hashCode(), this, RequestAttributes.SCOPE_REQUEST);
-            }
-            try {
-                return method.invoke(this.componentHolder.get(), args);
-            } catch (InvocationTargetException ite) {
-                throw ite.getTargetException();
-            }
-        }
-
-        /**
-         * @see java.lang.Runnable#run()
-         */
-        public void run() {
-            try {
-                final Object o = this.componentHolder.get();
-                this.handler.putIntoPool(o);
-            } catch (Exception ignore) {
-                // we ignore this
-            }
-            this.componentHolder.set(null);
         }
     }
 }
