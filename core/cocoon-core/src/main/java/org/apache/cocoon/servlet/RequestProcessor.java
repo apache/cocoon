@@ -17,7 +17,6 @@
 package org.apache.cocoon.servlet;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -31,9 +30,6 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.RequestListener;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
-import org.apache.cocoon.components.notification.Notifier;
-import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Context;
@@ -144,9 +140,10 @@ public class RequestProcessor {
                 getLogger().error("Problem with Cocoon servlet", e);
             }
 
-            manageException(request, res, null, uri,
+            RequestUtil.manageException(request, res, null, uri,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Problem in creating the Environment", null, null, e);
+                            "Problem in creating the Environment", null, null, e,
+                            this.settings, this.getLogger(), this);
             return;
         }
 
@@ -157,12 +154,13 @@ public class RequestProcessor {
                 // We reach this when there is nothing in the processing change that matches
                 // the request. For example, no matcher matches.
                 getLogger().fatalError("The Cocoon engine failed to process the request.");
-                manageException(request, res, env, uri,
+                RequestUtil.manageException(request, res, env, uri,
                                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                 "Request Processing Failed",
-                                "Cocoon engine failed in process the request",
+                                "Cocoon engine failed in processing the request",
                                 "The processing engine failed to process the request. This could be due to lack of matching or bugs in the pipeline engine.",
-                                null);
+                                null,
+                                this.settings, this.getLogger(), this);
                 return;
             }
         } catch (ResourceNotFoundException e) {
@@ -172,12 +170,13 @@ public class RequestProcessor {
                 getLogger().warn(e.getMessage());
             }
 
-            manageException(request, res, env, uri,
+            RequestUtil.manageException(request, res, env, uri,
                             HttpServletResponse.SC_NOT_FOUND,
                             "Resource Not Found",
                             "Resource Not Found",
                             "The requested resource \"" + request.getRequestURI() + "\" could not be found",
-                            e);
+                            e,
+                            this.settings, this.getLogger(), this);
             return;
 
         } catch (ConnectionResetException e) {
@@ -200,9 +199,10 @@ public class RequestProcessor {
                 getLogger().error("Internal Cocoon Problem", e);
             }
 
-            manageException(request, res, env, uri,
+            RequestUtil.manageException(request, res, env, uri,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Internal Server Error", null, null, e);
+                            "Internal Server Error", null, null, e,
+                            this.settings, this.getLogger(), this);
             return;
         }
 
@@ -255,58 +255,6 @@ public class RequestProcessor {
 
     protected String getURI(HttpServletRequest request, HttpServletResponse res) throws IOException {
         return RequestUtil.getCompleteUri(request, res);
-    }
-
-    protected void manageException(HttpServletRequest req, HttpServletResponse res, Environment env,
-                                   String uri, int errorStatus,
-                                   String title, String message, String description,
-                                   Exception e)
-    throws IOException {
-        if (this.settings.isManageExceptions()) {
-            if (env != null) {
-                env.tryResetResponse();
-            } else {
-                res.reset();
-            }
-
-            String type = Notifying.FATAL_NOTIFICATION;
-            HashMap extraDescriptions = null;
-
-            if (errorStatus == HttpServletResponse.SC_NOT_FOUND) {
-                type = "resource-not-found";
-                // Do not show the exception stacktrace for such common errors.
-                e = null;
-            } else {
-                extraDescriptions = new HashMap(2);
-                extraDescriptions.put(Notifying.EXTRA_REQUESTURI, req.getRequestURI());
-                if (uri != null) {
-                     extraDescriptions.put("Request URI", uri);
-                }
-
-                // Do not show exception stack trace when log level is WARN or above. Show only message.
-                if (!getLogger().isInfoEnabled()) {
-                    Throwable t = DefaultNotifyingBuilder.getRootCause(e);
-                    if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
-                    e = null;
-                }
-            }
-
-            Notifying n = new DefaultNotifyingBuilder().build(this,
-                                                              e,
-                                                              type,
-                                                              title,
-                                                              "Cocoon Servlet",
-                                                              message,
-                                                              description,
-                                                              extraDescriptions);
-
-            res.setContentType("text/html");
-            res.setStatus(errorStatus);
-            Notifier.notify(n, res.getOutputStream(), "text/html");
-        } else {
-            res.sendError(errorStatus, title);
-            res.flushBuffer();
-        }
     }
 
     /**

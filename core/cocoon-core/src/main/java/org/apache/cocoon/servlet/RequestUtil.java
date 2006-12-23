@@ -17,9 +17,18 @@
 package org.apache.cocoon.servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
+import org.apache.cocoon.components.notification.Notifier;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * Some utility methods for request handling etc.
@@ -91,4 +100,65 @@ public class RequestUtil {
         }
         return new UriHttpServletRequestWrapper(request, newServletPath, newPathInfo);
     }
+
+    public static void manageException(HttpServletRequest  req,
+                                       HttpServletResponse res,
+                                       Environment         env,
+                                       String              uri,
+                                       int                 errorStatus,
+                                       String              title,
+                                       String              message,
+                                       String              description,
+                                       Exception           e,
+                                       Settings            settings,
+                                       Logger              logger,
+                                       Object              sender)
+    throws IOException {
+        if (settings.isManageExceptions()) {
+            if (env != null) {
+                env.tryResetResponse();
+            } else {
+                res.reset();
+            }
+
+            String type = Notifying.FATAL_NOTIFICATION;
+            Map extraDescriptions = null;
+
+            if (errorStatus == HttpServletResponse.SC_NOT_FOUND) {
+                type = "resource-not-found";
+                // Do not show the exception stacktrace for such common errors.
+                e = null;
+            } else {
+                extraDescriptions = new HashMap(2);
+                extraDescriptions.put(Notifying.EXTRA_REQUESTURI, req.getRequestURI());
+                if (uri != null) {
+                    extraDescriptions.put("Request URI", uri);
+                }
+
+                // Do not show exception stack trace when log level is WARN or above. Show only message.
+                if ( logger.isInfoEnabled()) {
+                    Throwable t = DefaultNotifyingBuilder.getRootCause(e);
+                    if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
+                    e = null;
+                }
+            }
+
+            Notifying n = new DefaultNotifyingBuilder().build(sender,
+                                                   e,
+                                                   type,
+                                                   title,
+                                                   "Cocoon Servlet",
+                                                   message,
+                                                   description,
+                                                   extraDescriptions);
+            
+            res.setContentType("text/html");
+            res.setStatus(errorStatus);
+            Notifier.notify(n, res.getOutputStream(), "text/html");
+        } else {
+            res.sendError(errorStatus, title);
+            res.flushBuffer();
+        }
+    }
+
 }
