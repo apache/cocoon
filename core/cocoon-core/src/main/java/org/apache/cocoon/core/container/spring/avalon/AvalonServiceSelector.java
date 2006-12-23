@@ -81,7 +81,9 @@ public class AvalonServiceSelector
      * @see org.apache.avalon.framework.service.ServiceSelector#release(java.lang.Object)
      */
     public void release(Object component) {
-        // nothing to do
+        if ( component instanceof AvalonPoolable ) {
+            ((AvalonPoolable)component).putBackIntoAvalonPool();
+        }
     }
 
     /**

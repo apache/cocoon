@@ -69,6 +69,8 @@ final public class AvalonServiceManager
      * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
      */
     public void release(Object component) {
-        // we never release
+        if ( component instanceof AvalonPoolable ) {
+            ((AvalonPoolable)component).putBackIntoAvalonPool();
+        }
     }
 }
