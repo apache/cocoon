@@ -18,6 +18,8 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import org.apache.cocoon.util.ClassUtils;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -39,6 +41,11 @@ public class CocoonNamespaceHandler extends NamespaceHandlerSupport {
      */
     public void init() {
         registerBeanDefinitionParser("settings", new SettingsElementParser());
-        registerBeanDefinitionParser("sitemap", new SitemapElementParser());
+        try {
+            registerBeanDefinitionParser("sitemap", (BeanDefinitionParser) ClassUtils.newInstance("org.apache.cocoon.core.container.spring.SitemapElementParser"));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
