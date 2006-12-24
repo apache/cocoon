@@ -27,7 +27,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -110,7 +109,7 @@ public class RequestUtil {
                                        String              message,
                                        String              description,
                                        Exception           e,
-                                       Settings            settings,
+                                       ServletSettings     settings,
                                        Logger              logger,
                                        Object              sender)
     throws IOException {

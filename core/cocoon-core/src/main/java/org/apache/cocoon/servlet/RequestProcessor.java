@@ -72,6 +72,9 @@ public class RequestProcessor {
     /** The root settings. */
     protected final Settings settings;
 
+    /** The special servlet settings. */
+    protected final ServletSettings servletSettings;
+
     /** The processor. */
     protected Processor processor;
 
@@ -85,6 +88,7 @@ public class RequestProcessor {
         this.servletContext = servletContext;
         this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
+        this.servletSettings = new ServletSettings(this.settings);
         final String encoding = this.settings.getContainerEncoding();
         if ( encoding == null ) {
             this.containerEncoding = "ISO-8859-1";
@@ -119,7 +123,7 @@ public class RequestProcessor {
         stopWatch.start();
 
         // add the cocoon header timestamp
-        if (this.settings.isShowVersion()) {
+        if (this.servletSettings.isShowVersion()) {
             res.addHeader("X-Cocoon-Version", Constants.VERSION);
         }
 
@@ -143,7 +147,7 @@ public class RequestProcessor {
             RequestUtil.manageException(request, res, null, uri,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                             "Problem in creating the Environment", null, null, e,
-                            this.settings, this.getLogger(), this);
+                            this.servletSettings, this.getLogger(), this);
             return;
         }
 
@@ -160,7 +164,7 @@ public class RequestProcessor {
                                 "Cocoon engine failed in processing the request",
                                 "The processing engine failed to process the request. This could be due to lack of matching or bugs in the pipeline engine.",
                                 null,
-                                this.settings, this.getLogger(), this);
+                                this.servletSettings, this.getLogger(), this);
                 return;
             }
         } catch (ResourceNotFoundException e) {
@@ -176,7 +180,7 @@ public class RequestProcessor {
                             "Resource Not Found",
                             "The requested resource \"" + request.getRequestURI() + "\" could not be found",
                             e,
-                            this.settings, this.getLogger(), this);
+                            this.servletSettings, this.getLogger(), this);
             return;
 
         } catch (ConnectionResetException e) {
@@ -202,7 +206,7 @@ public class RequestProcessor {
             RequestUtil.manageException(request, res, env, uri,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                             "Internal Server Error", null, null, e,
-                            this.settings, this.getLogger(), this);
+                            this.servletSettings, this.getLogger(), this);
             return;
         }
 
@@ -215,7 +219,7 @@ public class RequestProcessor {
 
         if (contentType != null && contentType.equals("text/html")) {
             String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
-            boolean show = this.settings.isShowTime();
+            boolean show = this.servletSettings.isShowTime();
             if (showTime != null) {
                 show = !showTime.equalsIgnoreCase("no");
             }
@@ -223,7 +227,7 @@ public class RequestProcessor {
                 if ( timeString == null ) {
                     timeString = processTime(stopWatch.getTime());
                 }
-                boolean hide = this.settings.isHideShowTime();
+                boolean hide = this.servletSettings.isHideShowTime();
                 if (showTime != null) {
                     hide = showTime.equalsIgnoreCase("hide");
                 }
