@@ -33,6 +33,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.servlet.RequestUtil;
+import org.apache.cocoon.servlet.ServletSettings;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -58,6 +59,9 @@ public class MultipartFilter implements Filter{
     /** The root settings. */
     protected Settings settings;
 
+    /** The special servlet settings. */
+    protected ServletSettings servletSettings;
+
     /** The servlet context. */
     protected ServletContext servletContext;
 
@@ -80,6 +84,7 @@ public class MultipartFilter implements Filter{
             this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
             this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
             this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
+            this.servletSettings = new ServletSettings(this.settings);
             String containerEncoding;
             final String encoding = settings.getContainerEncoding();
             if ( encoding == null ) {
@@ -119,7 +124,7 @@ public class MultipartFilter implements Filter{
             RequestUtil.manageException(request, response, null, null,
                                         HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                         "Problem in creating the Request",
-                                        null, null, e, this.settings, getLogger(), this);
+                                        null, null, e, this.servletSettings, getLogger(), this);
         } finally {
             try {
                 if (request instanceof MultipartHttpServletRequest) {

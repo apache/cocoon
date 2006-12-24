@@ -24,9 +24,6 @@ package org.apache.cocoon.configuration;
  */
 public abstract class SettingsDefaults {
 
-    /** Default value for {@link Settings#isManageExceptions()}. */
-    public static final boolean MANAGE_EXCEPTIONS = true;
-
     /** The default running mode. */
     public static final String DEFAULT_RUNNING_MODE = "prod";
 
@@ -37,14 +34,6 @@ public abstract class SettingsDefaults {
      * Default value for {@link Settings#isReloadingEnabled(String)} parameter (false).
      */
     public static final boolean RELOADING_ENABLED_DEFAULT = false;
-
-    public static final boolean SHOW_TIME = false;
-    public static final boolean HIDE_SHOW_TIME = false;
-
-    /**
-     * Default value for {@link Settings#isShowVersion()} parameter (true).
-     */
-    public static final boolean SHOW_COCOON_VERSION = true;
 
     public static final long DEFAULT_CONFIGURATION_RELOAD_DELAY = 1000;
 

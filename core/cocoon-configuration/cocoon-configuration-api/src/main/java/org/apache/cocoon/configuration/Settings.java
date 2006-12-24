@@ -57,12 +57,6 @@ public interface Settings {
     String KEY_WORK_DIRECTORY = "org.apache.cocoon.work.directory";
 
     /**
-     * If true or not set, this class will try to catch and handle all Cocoon exceptions.
-     * If false, it will rethrow them to the servlet container.
-     */
-    String KEY_MANAGE_EXCEPTIONS = "org.apache.cocoon.manageexceptions";
-
-    /**
      * Set form encoding. This will be the character set used to decode request
      * parameters. If not set the ISO-8859-1 encoding will be assumed.
     */
@@ -84,21 +78,6 @@ public interface Settings {
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
     String KEY_RELOADING = "org.apache.cocoon.reloading";
-
-    /**
-     * Allow adding processing time to the response
-     */
-    String KEY_SHOWTIME = "org.apache.cocoon.showtime";
-
-    /**
-     * If true, processing time will be added as an HTML comment
-     */
-    String KEY_HIDE_SHOWTIME = "org.apache.cocoon.hideshowtime";
-
-    /**
-     * If true, the X-Cocoon-Version response header will be included.
-     */
-    String KEY_SHOW_VERSION = "org.apache.cocoon.show-version";
 
     /**
      * Delay between reload checks for the configuration
@@ -160,12 +139,6 @@ public interface Settings {
     String getContainerEncoding();
 
     /**
-     * @return Returns the manageExceptions.
-     * @see #KEY_MANAGE_EXCEPTIONS
-     */
-    boolean isManageExceptions();
-
-    /**
      * @return Returns the cacheDirectory.
      * @see #KEY_CACHE_DIRECTORY
      */
@@ -175,18 +148,6 @@ public interface Settings {
      * The creation time of the current Cocoon instance.
      */
     long getCreationTime();
-
-    /**
-     * @return Returns the hideShowTime.
-     * @see #KEY_HIDE_SHOWTIME
-     */
-    boolean isHideShowTime();
-
-    /**
-     * @return Returns the showCocoonVersion.
-     * @see #KEY_SHOW_VERSION
-     */
-    boolean isShowVersion();
 
     /**
      * This method can be used by components to query if they are
@@ -205,12 +166,6 @@ public interface Settings {
      * @see #KEY_RELOAD_DELAY
      */
     long getReloadDelay(String type);
-
-    /**
-     * @return Returns the showTime.
-     * @see #KEY_SHOWTIME
-     */
-    boolean isShowTime();
 
     /**
      * Return the current running mode.

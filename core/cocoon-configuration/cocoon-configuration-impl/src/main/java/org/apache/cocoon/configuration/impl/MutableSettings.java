@@ -77,27 +77,6 @@ public class MutableSettings implements Settings {
     protected String workDirectory;
 
     /**
-     * Allow adding processing time to the response
-     */
-    protected boolean showTime;
-
-    /**
-     * If true, processing time will be added as an HTML comment
-     */
-    protected boolean hideShowTime;
-
-    /**
-     * If true, the X-Cocoon-Version response header will be included.
-     */
-    protected boolean showCocoonVersion;
-
-    /**
-     * If true or not set, this class will try to catch and handle all Cocoon exceptions.
-     * If false, it will rethrow them to the servlet container.
-     */
-    protected boolean manageExceptions;
-
-    /**
      * Set form encoding. This will be the character set used to decode request
      * parameters. If not set the ISO-8859-1 encoding will be assumed.
     */
@@ -128,10 +107,6 @@ public class MutableSettings implements Settings {
     public MutableSettings(String mode) {
         // set default values
         this.reloadingEnabled = SettingsDefaults.RELOADING_ENABLED_DEFAULT;
-        this.showTime = SettingsDefaults.SHOW_TIME;
-        this.hideShowTime = SettingsDefaults.HIDE_SHOW_TIME;
-        this.showCocoonVersion = SettingsDefaults.SHOW_COCOON_VERSION;
-        this.manageExceptions = SettingsDefaults.MANAGE_EXCEPTIONS;
         this.configurationReloadDelay = SettingsDefaults.DEFAULT_CONFIGURATION_RELOAD_DELAY;
         this.containerEncoding = SettingsDefaults.DEFAULT_CONTAINER_ENCODING;
         this.runningMode = mode;
@@ -163,14 +138,6 @@ public class MutableSettings implements Settings {
                         this.setCacheDirectory(value);
                     } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
                         this.setWorkDirectory(value);
-                    } else if ( key.equals(KEY_SHOWTIME) ) {
-                        this.setShowTime(BooleanUtils.toBoolean(value));
-                    } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
-                        this.setHideShowTime(BooleanUtils.toBoolean(value));
-                    } else if ( key.equals(KEY_SHOW_VERSION) ) {
-                        this.setShowCocoonVersion(BooleanUtils.toBoolean(value));
-                    } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
-                        this.setManageExceptions(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_FORM_ENCODING) ) {
                         this.setFormEncoding(value);
                     } else if ( key.startsWith(KEY_LOAD_CLASSES) ) {
@@ -182,16 +149,6 @@ public class MutableSettings implements Settings {
             }
             this.properties.putAll(props);
         }
-    }
-
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#isHideShowTime()
-     */
-    public boolean isHideShowTime() {
-        if ( this.parent != null ) {
-            return this.parent.isHideShowTime();
-        }
-        return this.hideShowTime;
     }
 
     /**
@@ -263,36 +220,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#isManageExceptions()
-     */
-    public boolean isManageExceptions() {
-        if ( parent != null ) {
-            return parent.isManageExceptions();
-        }
-        return this.manageExceptions;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#isShowTime()
-     */
-    public boolean isShowTime() {
-        if ( parent != null ) {
-            return parent.isShowTime();
-        }
-        return this.showTime;
-    }
-
-    /**
-     * @return Returns the showCocoonVersion flag.
-     */
-    public boolean isShowVersion() {
-        if ( parent != null ) {
-            return parent.isShowVersion();
-        }
-        return this.showCocoonVersion;
-    }
-
-    /**
      * @see org.apache.cocoon.core.BaseSettings#getWorkDirectory()
      */
     public String getWorkDirectory() {
@@ -346,12 +273,6 @@ public class MutableSettings implements Settings {
                 value = this.getCacheDirectory();
             } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
                 value = this.getWorkDirectory();
-            } else if ( key.equals(KEY_SHOWTIME) ) {
-                value = String.valueOf(this.isShowTime());
-            } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
-                value = String.valueOf(this.isHideShowTime());
-            } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
-                value = String.valueOf(this.isManageExceptions());
             } else if ( key.equals(KEY_FORM_ENCODING) ) {
                 value = this.getFormEncoding();
             } else if ( key.equals(KEY_LOAD_CLASSES) ) {
@@ -382,14 +303,10 @@ public class MutableSettings implements Settings {
           KEY_RELOAD_DELAY + " : " + this.getReloadDelay(null) + '\n' +
           KEY_RELOADING + " : " + this.isReloadingEnabled(null) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.getLoadClasses()) + '\n' +
-          KEY_MANAGE_EXCEPTIONS + " : " + this.isManageExceptions() + '\n' +
           KEY_CACHE_DIRECTORY + " : " + this.getCacheDirectory() + '\n' +
           KEY_WORK_DIRECTORY + " : " + this.getWorkDirectory() + '\n' +
           KEY_FORM_ENCODING + " : " + this.getFormEncoding() + '\n' +
-          KEY_CONTAINER_ENCODING + " : " + this.getContainerEncoding() + '\n' +
-          KEY_SHOWTIME + " : " + this.isShowTime() + '\n' +
-          KEY_HIDE_SHOWTIME + " : " + this.isHideShowTime() + '\n' +
-          KEY_SHOW_VERSION + " : " + this.isShowVersion() + '\n';
+          KEY_CONTAINER_ENCODING + " : " + this.getContainerEncoding() + '\n';
     }
 
     /**
@@ -408,15 +325,6 @@ public class MutableSettings implements Settings {
             buffer.append(i.next());
         }
         return buffer.toString();        
-    }
-
-    /**
-     * @param hideShowTime The hideShowTime to set.
-     */
-    public void setHideShowTime(boolean hideShowTime) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.hideShowTime = hideShowTime;
     }
 
     /**
@@ -452,33 +360,6 @@ public class MutableSettings implements Settings {
     public void addToLoadClasses(String className) {
         this.checkWriteable();
         this.loadClasses.add(className);
-    }
-
-    /**
-     * @param manageExceptions The manageExceptions to set.
-     */
-    public void setManageExceptions(boolean manageExceptions) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.manageExceptions = manageExceptions;
-    }
-
-    /**
-     * @param showTime The showTime to set.
-     */
-    public void setShowTime(boolean showTime) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.showTime = showTime;
-    }
-
-    /**
-     * @param showCocoonVersion The showCocoonVersion flag to set.
-     */
-    public void setShowCocoonVersion(boolean showCocoonVersion) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.showCocoonVersion = showCocoonVersion;
     }
 
     /**
