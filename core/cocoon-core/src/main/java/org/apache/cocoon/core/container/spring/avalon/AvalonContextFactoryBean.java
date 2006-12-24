@@ -71,7 +71,6 @@ public class AvalonContextFactoryBean
 
         // add the Avalon context attributes that are contained in the settings
         appContext.put(Constants.CONTEXT_WORK_DIR, new File(this.settings.getWorkDirectory()));
-        appContext.put(Constants.CONTEXT_UPLOAD_DIR, new File(this.settings.getUploadDirectory()));
         appContext.put(Constants.CONTEXT_CACHE_DIR, new File(this.settings.getCacheDirectory()));
         appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.settings.getFormEncoding());
 

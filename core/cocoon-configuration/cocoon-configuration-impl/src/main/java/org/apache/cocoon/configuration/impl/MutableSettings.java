@@ -61,39 +61,6 @@ public class MutableSettings implements Settings {
     protected final List loadClasses = new ArrayList();
 
     /**
-     * Causes all files in multipart requests to be processed.
-     * Default is false for security reasons.
-     */
-    protected boolean enableUploads;
-
-    /**
-     * This parameter allows to specify where Cocoon should put uploaded files.
-     * The path specified can be either absolute or relative to the context
-     * path of the servlet. On windows platform, absolute directory must start
-     * with volume: C:\Path\To\Upload\Directory.
-     */
-    protected String uploadDirectory;
-
-    /**
-     * Causes all files in multipart requests to be saved to upload-dir.
-     * Default is true for security reasons.
-     */
-    protected boolean autosaveUploads;
-
-    /**
-     * Specify handling of name conflicts when saving uploaded files to disk.
-     * Acceptable values are deny, allow, rename (default). Files are renamed
-     * x_filename where x is an integer value incremented to make the new
-     * filename unique.
-     */
-    protected String overwriteUploads;
-
-    /**
-     * Specify maximum allowed size of the upload. Defaults to 10 Mb.
-     */
-    protected int maxUploadSize;
-
-    /**
      * This parameter allows to specify where Cocoon should create its page
      * and other objects cache. The path specified can be either absolute or
      * relative to the context path of the servlet. On windows platform,
@@ -161,9 +128,6 @@ public class MutableSettings implements Settings {
     public MutableSettings(String mode) {
         // set default values
         this.reloadingEnabled = SettingsDefaults.RELOADING_ENABLED_DEFAULT;
-        this.enableUploads = SettingsDefaults.ENABLE_UPLOADS;
-        this.autosaveUploads = SettingsDefaults.SAVE_UPLOADS_TO_DISK;
-        this.maxUploadSize = SettingsDefaults.MAX_UPLOAD_SIZE;
         this.showTime = SettingsDefaults.SHOW_TIME;
         this.hideShowTime = SettingsDefaults.HIDE_SHOW_TIME;
         this.showCocoonVersion = SettingsDefaults.SHOW_COCOON_VERSION;
@@ -195,16 +159,6 @@ public class MutableSettings implements Settings {
                         this.setConfigurationReloadDelay(Long.valueOf(value).longValue());
                     } else if ( key.equals(KEY_RELOADING) ) {
                         this.setReloadingEnabled(BooleanUtils.toBoolean(value));
-                    } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
-                        this.setEnableUploads(BooleanUtils.toBoolean(value));
-                    } else if ( key.equals(KEY_UPLOADS_DIRECTORY) ) {
-                        this.setUploadDirectory(value);
-                    } else if ( key.equals(KEY_UPLOADS_AUTOSAVE) ) {
-                        this.setAutosaveUploads(BooleanUtils.toBoolean(value));
-                    } else if ( key.equals(KEY_UPLOADS_OVERWRITE) ) {
-                        this.setOverwriteUploads(value);
-                    } else if ( key.equals(KEY_UPLOADS_MAXSIZE) ) {
-                        this.setMaxUploadSize(Integer.valueOf(value).intValue());
                     } else if ( key.equals(KEY_CACHE_DIRECTORY) ) {
                         this.setCacheDirectory(value);
                     } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
@@ -261,16 +215,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.DynamicSettings#isAutosaveUploads()
-     */
-    public boolean isAutosaveUploads() {
-        if ( parent != null ) {
-            return parent.isAutosaveUploads();
-        }
-        return this.autosaveUploads;
-    }
-
-    /**
      * @see org.apache.cocoon.core.BaseSettings#getCacheDirectory()
      */
     public String getCacheDirectory() {
@@ -278,16 +222,6 @@ public class MutableSettings implements Settings {
             return this.parent.getCacheDirectory();
         }
         return this.cacheDirectory;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#isEnableUploads()
-     */
-    public boolean isEnableUploads() {
-        if ( parent != null ) {
-            return parent.isEnableUploads();
-        }
-        return this.enableUploads;
     }
 
     /**
@@ -339,26 +273,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.DynamicSettings#getMaxUploadSize()
-     */
-    public int getMaxUploadSize() {
-        if ( parent != null ) {
-            return parent.getMaxUploadSize();
-        }
-        return this.maxUploadSize;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#getOverwriteUploads()
-     */
-    public String getOverwriteUploads() {
-        if ( this.parent != null ) {
-            return this.parent.getOverwriteUploads();
-        }
-        return this.overwriteUploads;
-    }
-
-    /**
      * @see org.apache.cocoon.core.DynamicSettings#isShowTime()
      */
     public boolean isShowTime() {
@@ -379,16 +293,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getUploadDirectory()
-     */
-    public String getUploadDirectory() {
-        if ( this.parent != null ) {
-            return this.parent.getUploadDirectory();
-        }
-        return this.uploadDirectory;
-    }
-
-    /**
      * @see org.apache.cocoon.core.BaseSettings#getWorkDirectory()
      */
     public String getWorkDirectory() {
@@ -396,36 +300,6 @@ public class MutableSettings implements Settings {
             return this.parent.getWorkDirectory();
         }
         return this.workDirectory;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#isAllowOverwrite()
-     */
-    public boolean isAllowOverwrite() {
-        final String value = this.getOverwriteUploads();
-        if ("deny".equalsIgnoreCase(value)) {
-            return false;
-        } else if ("allow".equalsIgnoreCase(value)) {
-            return true;
-        } else {
-            // either rename is specified or unsupported value - default to rename.
-            return false;
-        }
-    }
-
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#isSilentlyRename()
-     */
-    public boolean isSilentlyRename() {
-        final String value = this.getOverwriteUploads();
-        if ("deny".equalsIgnoreCase(value)) {
-            return false;
-        } else if ("allow".equalsIgnoreCase(value)) {
-            return false; // ignored in this case
-        } else {
-            // either rename is specified or unsupported value - default to rename.
-            return true;
-        }
     }
 
     /**
@@ -468,16 +342,6 @@ public class MutableSettings implements Settings {
                 value = String.valueOf(this.getReloadDelay(null));
             } else if ( key.equals(KEY_RELOADING) ) {
                 value = String.valueOf(this.isReloadingEnabled(null));
-            } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
-                value = String.valueOf(this.isEnableUploads());
-            } else if ( key.equals(KEY_UPLOADS_DIRECTORY) ) {
-                value = this.getUploadDirectory();
-            } else if ( key.equals(KEY_UPLOADS_AUTOSAVE) ) {
-                value = String.valueOf(this.isAutosaveUploads());
-            } else if ( key.equals(KEY_UPLOADS_OVERWRITE) ) {
-                value = this.getOverwriteUploads();
-            } else if ( key.equals(KEY_UPLOADS_MAXSIZE) ) {
-                value = String.valueOf(this.getMaxUploadSize());
             } else if ( key.equals(KEY_CACHE_DIRECTORY) ) {
                 value = this.getCacheDirectory();
             } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
@@ -519,11 +383,6 @@ public class MutableSettings implements Settings {
           KEY_RELOADING + " : " + this.isReloadingEnabled(null) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.getLoadClasses()) + '\n' +
           KEY_MANAGE_EXCEPTIONS + " : " + this.isManageExceptions() + '\n' +
-          KEY_UPLOADS_DIRECTORY + " : " + this.getUploadDirectory() + '\n' +
-          KEY_UPLOADS_AUTOSAVE + " : " + this.isAutosaveUploads() + '\n' +
-          KEY_UPLOADS_ENABLE + " : " + this.isEnableUploads() + '\n' +
-          KEY_UPLOADS_MAXSIZE + " : " + this.getMaxUploadSize() + '\n' +
-          KEY_UPLOADS_OVERWRITE + " : " + this.isAllowOverwrite() + '\n' +
           KEY_CACHE_DIRECTORY + " : " + this.getCacheDirectory() + '\n' +
           KEY_WORK_DIRECTORY + " : " + this.getWorkDirectory() + '\n' +
           KEY_FORM_ENCODING + " : " + this.getFormEncoding() + '\n' +
@@ -570,30 +429,12 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @param autosaveUploads The autosaveUploads to set.
-     */
-    public void setAutosaveUploads(boolean autosaveUploadsValue) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.autosaveUploads = autosaveUploadsValue;
-    }
-
-    /**
      * @param cacheDirectory The cacheDirectory to set.
      */
     public void setCacheDirectory(String cacheDirectory) {
         this.checkWriteable();
         this.checkSubSetting();
         this.cacheDirectory = cacheDirectory;
-    }
-
-    /**
-     * @param enableUploads The enableUploads to set.
-     */
-    public void setEnableUploads(boolean enableUploads) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.enableUploads = enableUploads;
     }
 
     /**
@@ -623,24 +464,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @param maxUploadSize The maxUploadSize to set.
-     */
-    public void setMaxUploadSize(int maxUploadSize) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.maxUploadSize = maxUploadSize;
-    }
-
-    /**
-     * @param overwriteUploads The overwriteUploads to set.
-     */
-    public void setOverwriteUploads(String overwriteUploads) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.overwriteUploads = overwriteUploads;
-    }
-    
-    /**
      * @param showTime The showTime to set.
      */
     public void setShowTime(boolean showTime) {
@@ -656,15 +479,6 @@ public class MutableSettings implements Settings {
         this.checkWriteable();
         this.checkSubSetting();
         this.showCocoonVersion = showCocoonVersion;
-    }
-
-    /**
-     * @param uploadDirectory The uploadDirectory to set.
-     */
-    public void setUploadDirectory(String uploadDirectory) {
-        this.checkWriteable();
-        this.checkSubSetting();
-        this.uploadDirectory = uploadDirectory;
     }
 
     /**

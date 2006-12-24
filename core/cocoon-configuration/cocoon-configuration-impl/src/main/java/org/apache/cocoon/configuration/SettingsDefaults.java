@@ -38,13 +38,6 @@ public abstract class SettingsDefaults {
      */
     public static final boolean RELOADING_ENABLED_DEFAULT = false;
 
-    /**
-     * Default value for {@link Settings#isEnableUploads()} parameter (false).
-     */
-    public static final boolean ENABLE_UPLOADS = false;
-    public static final boolean SAVE_UPLOADS_TO_DISK = true;
-    public static final int MAX_UPLOAD_SIZE = 10000000; // 10Mb
-
     public static final boolean SHOW_TIME = false;
     public static final boolean HIDE_SHOW_TIME = false;
 

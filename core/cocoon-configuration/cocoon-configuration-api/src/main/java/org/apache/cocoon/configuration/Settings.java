@@ -41,14 +41,6 @@ public interface Settings {
     String KEY_LOAD_CLASSES = "org.apache.cocoon.classloader.load.classes";
 
     /**
-     * This parameter allows to specify where Cocoon should put uploaded files.
-     * The path specified can be either absolute or relative to the context
-     * path of the servlet. On windows platform, absolute directory must start
-     * with volume: C:\Path\To\Upload\Directory.
-     */
-    String KEY_UPLOADS_DIRECTORY = "org.apache.cocoon.uploads.directory";
-
-    /**
      * This parameter allows to specify where Cocoon should create its page
      * and other objects cache. The path specified can be either absolute or
      * relative to the context path of the servlet. On windows platform,
@@ -92,31 +84,6 @@ public interface Settings {
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
     String KEY_RELOADING = "org.apache.cocoon.reloading";
-
-    /**
-     * Causes all files in multipart requests to be processed.
-     * Default is false for security reasons.
-     */
-    String KEY_UPLOADS_ENABLE = "org.apache.cocoon.uploads.enable";
-
-    /**
-     * Causes all files in multipart requests to be saved to upload-dir.
-     * Default is true for security reasons.
-     */
-    String KEY_UPLOADS_AUTOSAVE = "org.apache.cocoon.uploads.autosave";
-
-    /**
-     * Specify handling of name conflicts when saving uploaded files to disk.
-     * Acceptable values are deny, allow, rename (default). Files are renamed
-     * x_filename where x is an integer value incremented to make the new
-     * filename unique.
-     */
-    String KEY_UPLOADS_OVERWRITE = "org.apache.cocoon.uploads.overwrite";
-
-    /**
-     * Specify maximum allowed size of the upload. Defaults to 10 Mb.
-     */
-    String KEY_UPLOADS_MAXSIZE = "org.apache.cocoon.uploads.maxsize";
 
     /**
      * Allow adding processing time to the response
@@ -173,12 +140,6 @@ public interface Settings {
      * @see #KEY_LOAD_CLASSES
      */
     List getLoadClasses();
-
-    /**
-     * @return Returns the uploadDirectory.
-     * @see #KEY_UPLOADS_DIRECTORY
-     */
-    String getUploadDirectory();
 
     /**
      * @return Returns the workDirectory.
@@ -246,38 +207,10 @@ public interface Settings {
     long getReloadDelay(String type);
 
     /**
-     * @return Returns the autosaveUploads.
-     * @see #KEY_UPLOADS_AUTOSAVE
-     */
-    boolean isAutosaveUploads();
-
-    /**
-     * @return Returns the enableUploads.
-     * @see #KEY_UPLOADS_ENABLE
-     */
-    boolean isEnableUploads();
-
-    /**
-     * @return Returns the maxUploadSize.
-     * @see #KEY_UPLOADS_MAXSIZE
-     */
-    int getMaxUploadSize();
-
-    /**
-     * @return Returns the overwriteUploads.
-     * @see #KEY_UPLOADS_OVERWRITE
-     */
-    String getOverwriteUploads();
-
-    /**
      * @return Returns the showTime.
      * @see #KEY_SHOWTIME
      */
     boolean isShowTime();
-
-    boolean isAllowOverwrite();
-
-    boolean isSilentlyRename();
 
     /**
      * Return the current running mode.

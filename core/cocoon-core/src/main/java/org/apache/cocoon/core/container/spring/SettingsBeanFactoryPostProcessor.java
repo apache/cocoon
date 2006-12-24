@@ -102,22 +102,6 @@ public class SettingsBeanFactoryPostProcessor
             }
         }
 
-        final String uploadDirParam = settings.getUploadDirectory();
-        File uploadDir;
-        if (uploadDirParam != null) {
-            uploadDir = new File(uploadDirParam);
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Using upload-directory " + uploadDir);
-            }
-        } else {
-            uploadDir = new File(workDir, "upload-dir" + File.separator);
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Using default upload-directory " + uploadDir);
-            }
-        }
-        uploadDir.mkdirs();
-        settings.setUploadDirectory(uploadDir.getAbsolutePath());
-
         String cacheDirParam = settings.getCacheDirectory();
         File cacheDir;
         if (cacheDirParam != null) {

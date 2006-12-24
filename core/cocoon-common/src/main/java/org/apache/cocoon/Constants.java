@@ -190,12 +190,6 @@ public final class Constants {
     public static final String CONTEXT_WORK_DIR = "work-directory";
 
     /**
-     * Application <code>Context</code> Key for the upload directory path.
-     * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getUploadDirectory()} instead.
-     */
-    public static final String CONTEXT_UPLOAD_DIR = "upload-directory";
-
-    /**
      * Application <code>Context</code> Key for the cache directory path.
      * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getCacheDirectory()} instead.
      */
