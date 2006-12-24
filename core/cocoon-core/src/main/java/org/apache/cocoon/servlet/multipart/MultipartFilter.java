@@ -58,27 +58,14 @@ public class MultipartFilter implements Filter{
     /** The root settings. */
     protected Settings settings;
 
+    /** The servlet context. */
+    protected ServletContext servletContext;
+
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig config) throws ServletException {
-        String containerEncoding;
-        ServletContext servletContext = config.getServletContext();
-        this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-        this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
-        final String encoding = settings.getContainerEncoding();
-        if ( encoding == null ) {
-            containerEncoding = "ISO-8859-1";
-        } else {
-            containerEncoding = encoding;
-        }
-        this.requestFactory = new RequestFactory(this.settings.isAutosaveUploads(),
-                                                 new File(this.settings.getUploadDirectory()),
-                                                 this.settings.isAllowOverwrite(),
-                                                 this.settings.isSilentlyRename(),
-                                                 this.settings.getMaxUploadSize(),
-                                                 containerEncoding);
-        this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
+        this.servletContext = config.getServletContext();
     }
 
     /**
@@ -88,10 +75,37 @@ public class MultipartFilter implements Filter{
         // nothing to do
     }
 
+    protected synchronized void configure() {
+        if ( this.cocoonBeanFactory == null ) {
+            this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
+            this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
+            this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
+            String containerEncoding;
+            final String encoding = settings.getContainerEncoding();
+            if ( encoding == null ) {
+                containerEncoding = "ISO-8859-1";
+            } else {
+                containerEncoding = encoding;
+            }
+            final MultipartConfigurationHelper config = new MultipartConfigurationHelper();
+            config.configure(this.settings, this.log);
+            this.requestFactory = new RequestFactory(config.isAutosaveUploads(),
+                                                     new File(config.getUploadDirectory()),
+                                                     config.isAllowOverwrite(),
+                                                     config.isSilentlyRename(),
+                                                     config.getMaxUploadSize(),
+                                                     containerEncoding);
+        }
+    }
+
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
+    throws IOException, ServletException {
+        if ( this.cocoonBeanFactory == null ) {
+            this.configure();
+        }
         // get the request (wrapped if contains multipart-form data)
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
