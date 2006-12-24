@@ -16,7 +16,8 @@
  */
 package org.apache.cocoon.core.xml.impl;
 
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -28,8 +29,7 @@ import org.xml.sax.EntityResolver;
  * @version $Id$
  * @since 2.2
  */
-public abstract class AbstractJaxpParser
-    extends AbstractLogEnabled {
+public abstract class AbstractJaxpParser {
 
     /** the Entity Resolver */
     protected EntityResolver resolver;
@@ -39,6 +39,17 @@ public abstract class AbstractJaxpParser
 
     /** Do we want to validate? */
     protected boolean validate = false;
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
 
     public void setEntityResolver(EntityResolver r) {
         this.resolver = r;

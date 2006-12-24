@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.springframework.core.io.Resource;
@@ -37,14 +39,24 @@ import org.xml.sax.SAXException;
  * found at
  * http://xml.apache.org/cocoon/userdocs/concepts/catalog.html
  *
- * TODO - This class contains two methods copied from core's resource utils!!
+ * TODO - This class contains one method copied from core's resource utils!!
  *
  * @version $Id$
  * @since 2.2
  */
 public class DefaultEntityResolver
-    extends AbstractLogEnabled
     implements EntityResolver {
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
 
     /**
      * TODO - Copied from ResourceUtils
