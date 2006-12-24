@@ -28,88 +28,10 @@
     <artifactId>cocoon-core-modules</artifactId>
     <version>3-SNAPSHOT</version>
   </parent>
-  <artifactId>cocoon-core</artifactId>
-  <version>2.2.0-M3-SNAPSHOT</version>
-  <name>Cocoon Core</name>
-  <build>
-    <plugins>
-      <plugin>
-        <!-- export our test classes in a separate jar -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <includes>
-            <include>**/*TestCase.class</include>
-            <include>**/*Test.class</include>
-          </includes>
-          <excludes>
-            <exclude>**/AllTest.class</exclude>
-            <exclude>**/CocoonBeanTestCase.class</exclude>
-            <exclude>**/*$$*Test.class</exclude>
-            <exclude>**/Abstract*.class</exclude>
-            <exclude>**/SitemapComponentTestCase*</exclude>
-            <exclude>**/SitemapTestCase*</exclude>
-            <exclude>**/ContainerTestCase*</exclude>
-            <exclude>**/CocoonTestCase*</exclude>
-            <exclude>**/Virtual*TestCase*</exclude>
-          </excludes>
-          <!-- currently triggers NPE in surefire plugin
-          <systemProperties>
-            <property>
-              <name>junit.test.loglevel</name>
-              <value>3</value>
-            </property>
-          </systemProperties>
-          -->
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>1206</navDocId>
-          <collection>cdocs-core</collection>          
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>       
-    </plugins>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-  </build>
-  <properties>
-    <docs.name>Cocoon Core</docs.name>    
-    <docs.version>2.2</docs.version>
-  </properties>  
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/core-modules/core/${docs.version}/</url>
-    </site>
-  </distributionManagement>  
+  <artifactId>cocoon-spring</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Cocoon Spring</name>
   <dependencies>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-spring</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-configuration-impl</artifactId>
