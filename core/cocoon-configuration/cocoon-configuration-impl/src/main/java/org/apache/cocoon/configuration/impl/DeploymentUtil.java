@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.deployment;
+package org.apache.cocoon.configuration.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;

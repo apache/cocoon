@@ -29,9 +29,9 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
+import org.apache.cocoon.configuration.impl.DeploymentUtil;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
-import org.apache.cocoon.core.deployment.DeploymentUtil;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
