@@ -125,7 +125,7 @@ public class DefaultEntityResolver
      * parameters that may have been specified in cocoon.xconf
      * @param params The configuration information
      */
-    protected void init()
+    public void init()
     throws Exception { 
         // Over-ride debug level that is set by CatalogManager.properties
         if ( this.verbosity != null ) {

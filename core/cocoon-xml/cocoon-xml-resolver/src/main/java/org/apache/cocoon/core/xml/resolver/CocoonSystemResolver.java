@@ -39,7 +39,7 @@ public class CocoonSystemResolver extends DefaultEntityResolver {
     /**
      * @see org.apache.cocoon.core.xml.impl.DefaultEntityResolver#init()
      */
-    protected void init()
+    public void init()
     throws Exception {
         // create temporary directory for our entities
         final File workDirectory = new File(settings.getWorkDirectory());
