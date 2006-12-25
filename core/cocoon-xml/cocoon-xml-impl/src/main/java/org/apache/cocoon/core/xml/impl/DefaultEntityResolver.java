@@ -39,8 +39,6 @@ import org.xml.sax.SAXException;
  * found at
  * http://xml.apache.org/cocoon/userdocs/concepts/catalog.html
  *
- * TODO - This class contains one method copied from core's resource utils!!
- *
  * @version $Id$
  * @since 2.2
  */
@@ -59,16 +57,16 @@ public class DefaultEntityResolver
     }
 
     /**
-     * TODO - Copied from ResourceUtils
+     * Correct resource uris.
      */
-    protected static String correctUri(String uri) {
+    protected String correctUri(String uri) throws IOException {
         // if it is a file we have to recreate the url,
         // otherwise we get problems under windows with some file
         // references starting with "/DRIVELETTER" and some
         // just with "DRIVELETTER"
         if (uri.startsWith("file:")) {
             final File f = new File(uri.substring(5));
-            return "file://" + f.getAbsolutePath();
+            return f.toURL().toExternalForm();
         }
         return uri;
     }
@@ -158,7 +156,7 @@ public class DefaultEntityResolver
 
         final Resource resource = this.resourceLoader.getResource(uri);
         try {
-            this.catalogResolver.getCatalog().parseCatalog(correctUri(resource.getURL().toExternalForm()));
+            this.catalogResolver.getCatalog().parseCatalog(this.correctUri(resource.getURL().toExternalForm()));
         } catch (Exception e) {   
             this.getLogger().warn("Could not get Catalog file. Trying again: " + uri, e);
                         
