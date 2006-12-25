@@ -53,12 +53,13 @@
       |
       |     <property name="verbosity" value="2"/>
       |
-      | settings:
-      |   The settings property should reference the Cocoon settings bean.
+      | workingDirectory:
+      |   The path to the working directory.
       |
       +-->
   <bean name="org.xml.sax.EntityResolver"
-        class="org.apache.cocoon.core.xml.resolver.CocoonSystemResolver">
+        class="org.apache.cocoon.core.xml.resolver.CocoonSystemResolver"
+        init-method="init">
     <property name="settings" ref="org.apache.cocoon.configuration.Settings"></property>
     <property name="verbosity" value="2"/>
   </bean>
