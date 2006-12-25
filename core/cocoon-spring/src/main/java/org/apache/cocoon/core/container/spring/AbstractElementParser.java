@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  * 
  * @version $Id: AbstractElementParser.java 463297 2006-10-12 16:03:45Z
  *          cziegeler $
- * @since 2.2
+ * @since 1.0
  */
 public abstract class AbstractElementParser implements BeanDefinitionParser {
 

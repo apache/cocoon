@@ -36,7 +36,7 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
  * Utility class for Spring resource handling.
  * 
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public abstract class ResourceUtils {
 

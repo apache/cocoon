@@ -38,7 +38,7 @@ import org.apache.cocoon.configuration.impl.PropertyHelper;
  * them in the spring configuration files.
  * In addition this bean acts as a factory bean providing the settings object.
  *
- * @since 2.2
+ * @since 1.0
  * @version $Id$
  */
 public class SettingsBeanFactoryPostProcessor

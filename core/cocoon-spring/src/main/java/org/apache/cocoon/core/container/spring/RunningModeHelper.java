@@ -21,9 +21,9 @@ package org.apache.cocoon.core.container.spring;
 import org.apache.cocoon.configuration.SettingsDefaults;
 
 /**
- * Helper class to determine the running mode
+ * Helper class to determine the running mode.
  *
- * @since 2.2
+ * @since 1.0
  * @version $Id$
  */
 public class RunningModeHelper {

@@ -26,7 +26,7 @@ import org.springframework.web.context.ServletContextAware;
  * This avoids a dependence to Springs ServletContextAware interface.
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public class ServletContextFactoryBean implements FactoryBean, ServletContextAware {
 

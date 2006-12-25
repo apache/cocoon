@@ -22,7 +22,7 @@ package org.apache.cocoon.core.container.spring;
  * Some constants for the spring integration.
  * 
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public abstract class Constants {
 
