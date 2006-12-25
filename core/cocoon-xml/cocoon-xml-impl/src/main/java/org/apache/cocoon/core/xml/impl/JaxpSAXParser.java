@@ -44,10 +44,6 @@ public final class JaxpSAXParser
     /** the SAX Parser factory */
     protected SAXParserFactory factory;
 
-    /** The SAX reader. It is created lazily by {@link #setupXMLReader()}
-     and cleared if a parsing error occurs. */
-    protected XMLReader reader;
-
     /** do we want namespaces also as attributes ? */
     protected boolean nsPrefixes = false;
 
@@ -150,7 +146,7 @@ public final class JaxpSAXParser
     /**
      * Initialize the sax parser factory.
      */
-    protected void initSaxParserFactory()
+    protected synchronized void initSaxParserFactory()
     throws Exception {
         if ( this.factory == null ) {
             if( "javax.xml.parsers.SAXParserFactory".equals( this.saxParserFactoryName ) ) {
@@ -165,21 +161,13 @@ public final class JaxpSAXParser
     }
 
     /**
-     * Parse the <code>InputSource</code> and send
-     * SAX events to the consumer.
-     * Attention: the consumer can  implement the
-     * <code>LexicalHandler</code> as well.
-     * The parse should take care of this.
+     * @see org.apache.cocoon.core.xml.SAXParser#parse(org.xml.sax.InputSource, org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler)
      */
     public void parse( final InputSource in,
                        final ContentHandler contentHandler,
                        final LexicalHandler lexicalHandler )
     throws SAXException, IOException {
-        this.setupXMLReader();
-
-        // Ensure we will use a fresh new parser at next parse in case of failure
-        XMLReader tmpReader = this.reader;
-        this.reader = null;
+        final XMLReader tmpReader = this.setupXMLReader();
 
         try {
             LexicalHandler theLexicalHandler = null;
@@ -203,19 +191,9 @@ public final class JaxpSAXParser
                 "'http://xml.org/sax/properties/lexical-handler'";
             this.getLogger().warn( message );
         }
-
-        tmpReader.setErrorHandler( this );
         tmpReader.setContentHandler( contentHandler );
-        if( this.resolver != null  ) {
-            tmpReader.setEntityResolver( this.resolver );
-        }
 
         tmpReader.parse( in );
-
-        // Here, parsing was successful : restore reader
-        if ( this.reuseParsers ) {
-            this.reader = tmpReader;
-        }
     }
 
     /**
@@ -230,37 +208,44 @@ public final class JaxpSAXParser
     /**
      * Creates a new {@link XMLReader} if needed.
      */
-    protected void setupXMLReader()
+    protected XMLReader setupXMLReader()
     throws SAXException {
-        try {
-            this.initSaxParserFactory();
-        } catch (Exception e) {
-            final String message = "Cannot initialize sax parser factory";
-            throw new SAXException( message, e );
-        }
-        if( this.reader == null ) {
-            // Create the XMLReader
+        if ( this.factory == null ) {
             try {
-                this.reader = this.factory.newSAXParser().getXMLReader();
-            } catch( final ParserConfigurationException pce ) {
-                final String message = "Cannot produce a valid parser";
-                throw new SAXException( message, pce );
-            }
-            
-            this.reader.setFeature( "http://xml.org/sax/features/namespaces", true );
-            
-            if( this.nsPrefixes ) {
-                try {
-                    this.reader.setFeature( "http://xml.org/sax/features/namespace-prefixes",
-                                            this.nsPrefixes );
-                } catch( final SAXException se ) {
-                    final String message =
-                        "SAX2 XMLReader does not support setting feature: " +
-                        "'http://xml.org/sax/features/namespace-prefixes'";
-                    this.getLogger().warn( message );
-                }
+                this.initSaxParserFactory();
+            } catch (Exception e) {
+                final String message = "Cannot initialize sax parser factory";
+                throw new SAXException( message, e );
             }
         }
+        XMLReader reader;
+        // Create the XMLReader
+        try {
+            reader = this.factory.newSAXParser().getXMLReader();
+        } catch( final ParserConfigurationException pce ) {
+            final String message = "Cannot produce a valid parser";
+            throw new SAXException( message, pce );
+        }
+
+        reader.setFeature( "http://xml.org/sax/features/namespaces", true );
+
+        if( this.nsPrefixes ) {
+            try {
+                reader.setFeature("http://xml.org/sax/features/namespace-prefixes",
+                                  this.nsPrefixes );
+            } catch( final SAXException se ) {
+                final String message =
+                    "SAX2 XMLReader does not support setting feature: " +
+                    "'http://xml.org/sax/features/namespace-prefixes'";
+                this.getLogger().warn( message );
+            }
+        }
+        reader.setErrorHandler( this );
+        if( this.resolver != null  ) {
+            reader.setEntityResolver( this.resolver );
+        }
+
+        return reader;
     }
 
     /**

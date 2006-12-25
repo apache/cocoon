@@ -41,10 +41,6 @@ public final class JaxpDOMParser
     /** the Document Builder factory */
     protected DocumentBuilderFactory factory;
 
-    /** The DOM builder. It is created lazily by {@link #setupDocumentBuilder()}
-     and cleared if a parsing error occurs. */
-    protected DocumentBuilder docBuilder;
-
     protected String documentBuilderFactoryName = "javax.xml.parsers.DocumentBuilderFactory";
 
     public String getDocumentBuilderFactoryName() {
@@ -58,7 +54,7 @@ public final class JaxpDOMParser
     /**
      * Initialize the dom builder factory.
      */
-    protected void initDomBuilderFactory()
+    protected synchronized void initDomBuilderFactory()
     throws Exception {
         if ( this.factory == null ) {
             if( "javax.xml.parsers.DocumentBuilderFactory".equals( this.documentBuilderFactoryName ) ) {
@@ -73,26 +69,13 @@ public final class JaxpDOMParser
     }
 
     /**
-     * Parses a new Document object from the given InputSource.
+     * @see org.apache.cocoon.core.xml.DOMParser#parseDocument(org.xml.sax.InputSource)
      */
     public Document parseDocument( final InputSource input )
     throws SAXException, IOException {
-        this.setupDocumentBuilder();
-
-        // Ensure we will use a fresh new parser at next parse in case of failure
-        DocumentBuilder tmpBuilder = this.docBuilder;
-        this.docBuilder = null;
-
-        if( this.resolver != null ) {
-            tmpBuilder.setEntityResolver( this.resolver );
-        }
+        final DocumentBuilder tmpBuilder = this.setupDocumentBuilder();
 
         final Document result = tmpBuilder.parse( input );
-
-        // Here, parsing was successful : restore builder
-        if( this.reuseParsers ) {
-            this.docBuilder = tmpBuilder;
-        }
 
         return result;
     }
@@ -100,30 +83,35 @@ public final class JaxpDOMParser
     /**
      * Creates a new {@link DocumentBuilder} if needed.
      */
-    protected void setupDocumentBuilder()
+    protected DocumentBuilder setupDocumentBuilder()
     throws SAXException {
-        try {
-            this.initDomBuilderFactory();
-        } catch (Exception e) {
-            final String message = "Cannot initialize dom builder factory";
-            throw new SAXException( message, e );
-        }
-        if( this.docBuilder == null ) {
+        if ( this.factory == null ) {
             try {
-                this.docBuilder = this.factory.newDocumentBuilder();
-            } catch( final ParserConfigurationException pce ) {
-                final String message = "Could not create DocumentBuilder";
-                throw new SAXException( message, pce );
+                this.initDomBuilderFactory();
+            } catch (Exception e) {
+                final String message = "Cannot initialize dom builder factory";
+                throw new SAXException( message, e );
             }
         }
+        DocumentBuilder docBuilder;
+        try {
+            docBuilder = this.factory.newDocumentBuilder();
+        } catch( final ParserConfigurationException pce ) {
+            final String message = "Could not create DocumentBuilder";
+            throw new SAXException( message, pce );
+        }
+        if( this.resolver != null ) {
+            docBuilder.setEntityResolver( this.resolver );
+        }
+
+        return docBuilder;
     }
 
     /**
-     * Return a new {@link Document}.
+     * @see org.apache.cocoon.core.xml.DOMParser#createDocument()
      */
     public Document createDocument()
     throws SAXException {
-        setupDocumentBuilder();
-        return this.docBuilder.newDocument();
+        return this.setupDocumentBuilder().newDocument();
     }
 }
