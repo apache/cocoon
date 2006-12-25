@@ -18,35 +18,23 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import java.util.Properties;
-
-import org.apache.cocoon.configuration.Settings;
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * A properties implementation using the settings object.
- * @since 2.2
+ * Spring namespace handler for the sitemap namespace.
+ * Currently this namespace defines the following elements
+ * (in the namespace "http://cocoon.apache.org/sitemap"):
+ * "sitemap" : This sets up a sub context for a sitemap.
+ *
  * @version $Id$
+ * @since 2.2
  */
-public class SettingsProperties extends Properties {
-
-    protected final Settings settings;
-
-    public SettingsProperties(Settings s) {
-        this.settings = s;
-    }
+public class SitemapNamespaceHandler extends NamespaceHandlerSupport {
 
     /**
-     * @see java.util.Properties#getProperty(java.lang.String, java.lang.String)
+     * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
-    public String getProperty(String key, String defaultValue) {
-        return this.settings.getProperty(key, defaultValue);
+    public void init() {
+        registerBeanDefinitionParser("sitemap", new SitemapElementParser());
     }
-
-    /**
-     * @see java.util.Properties#getProperty(java.lang.String)
-     */
-    public String getProperty(String key) {
-        return this.settings.getProperty(key);
-    }
-    
 }

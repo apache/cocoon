@@ -22,8 +22,10 @@ package org.apache.cocoon.core.container.spring;
  * Some constants for the spring integration.
  * 
  * @version $Id$
+ * @since 2.2
  */
-public class Constants {
+public abstract class Constants {
+
     /** The default location of spring related configuration files. */
     public static final String DEFAULT_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
     public static final String DEFAULT_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";

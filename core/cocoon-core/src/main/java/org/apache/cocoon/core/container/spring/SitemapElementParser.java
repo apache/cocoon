@@ -39,7 +39,7 @@ import org.xml.sax.InputSource;
  * Add a bean definition for the settings object of a child context to the bean factory
  * and process all includes of spring configurations.
  *
- * @see CocoonNamespaceHandler
+ * @see SitemapNamespaceHandler
  * @see SubSettingsBeanFactoryPostProcessor
  * @version $Id$
  * @since 2.2

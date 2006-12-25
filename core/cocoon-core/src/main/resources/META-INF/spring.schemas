@@ -13,9 +13,5 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-# This file contains the default settings for Cocoon.
-# You should NOT change this file directly. Create your own properties
-# file and put it in the sub directories for the mode you are running
-# Cocoon in.
-http\://cocoon.apache.org/core.xsd=org/apache/cocoon/core/container/spring/cocoon.xsd
+http\://cocoon.apache.org/sitemap.xsd=org/apache/cocoon/core/container/spring/sitemap.xsd
 http\://cocoon.apache.org/avalon.xsd=org/apache/cocoon/core/container/spring/avalon/avalon.xsd

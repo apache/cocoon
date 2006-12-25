@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
 /**
  * Add a bean definition for the settings object to the bean factory.
  * 
- * @see CocoonNamespaceHandler
+ * @see SitemapNamespaceHandler
  * @see SettingsBeanFactoryPostProcessor
  * @version $Id: SettingsElementParser.java 470732 2006-11-03 09:10:13Z
  *          cziegeler $
