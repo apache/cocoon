@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.xml.sax.EntityResolver;
@@ -44,7 +45,7 @@ import org.xml.sax.SAXException;
  * @since 2.2
  */
 public class DefaultEntityResolver
-    implements EntityResolver {
+    implements EntityResolver, ResourceLoaderAware {
 
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
