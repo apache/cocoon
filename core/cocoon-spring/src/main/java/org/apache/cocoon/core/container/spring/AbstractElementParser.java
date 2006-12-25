@@ -38,7 +38,7 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
 import org.w3c.dom.Element;
 
 /**
- * This is a base class for all bean definition parser used in Cocoon. It
+ * This is a base class for all bean definition parsers used in Cocoon. It
  * provides some utility methods.
  * 
  * @version $Id: AbstractElementParser.java 463297 2006-10-12 16:03:45Z

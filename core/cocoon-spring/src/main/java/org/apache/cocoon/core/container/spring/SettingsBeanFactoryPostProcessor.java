@@ -25,14 +25,12 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.configuration.impl.DeploymentUtil;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
-import org.apache.cocoon.util.ClassUtils;
 
 /**
  * This is a bean factory post processor which handles all the settings stuff
@@ -156,7 +154,7 @@ public class SettingsBeanFactoryPostProcessor
             throw new IllegalArgumentException(msg);
         }
         */
-        this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is running in mode: " + mode);
+        this.servletContext.log("Apache Cocoon is running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(mode);
@@ -274,7 +272,7 @@ public class SettingsBeanFactoryPostProcessor
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Loading class: " + fqcn);
                 }
-                ClassUtils.loadClass(fqcn).newInstance();
+                Thread.currentThread().getContextClassLoader().loadClass(fqcn).newInstance();
             } catch (Exception e) {
                 if (this.logger.isWarnEnabled()) {
                     this.logger.warn("Could not load class: " + fqcn + ". Continuing initialization.", e);

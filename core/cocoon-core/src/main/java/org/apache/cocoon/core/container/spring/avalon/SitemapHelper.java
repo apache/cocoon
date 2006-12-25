@@ -126,11 +126,11 @@ public class SitemapHelper {
         buffer.append("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
         buffer.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
         buffer.append(" xmlns:util=\"http://www.springframework.org/schema/util\"");
-        buffer.append(" xmlns:cocoon=\"http://cocoon.apache.org/core\"");
+        buffer.append(" xmlns:cocoon=\"http://cocoon.apache.org/sitemap\"");
         buffer.append(" xmlns:avalon=\"http://cocoon.apache.org/avalon\"");
         buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd");
         buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd");
-        buffer.append(" http://cocoon.apache.org/core http://cocoon.apache.org/core.xsd");
+        buffer.append(" http://cocoon.apache.org/sitemap http://cocoon.apache.org/sitemap.xsd");
         buffer.append(" http://cocoon.apache.org/avalon http://cocoon.apache.org/avalon.xsd\">\n");
     }
 
