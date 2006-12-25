@@ -48,7 +48,7 @@ public class CocoonSystemResolver extends DefaultEntityResolver {
         // deploy resources
         DeploymentUtil.deployJarResources("META-INF/cocoon/entities", entitiesDirectory.getAbsolutePath());
         // set catalog
-        this.setCatalog(entitiesDirectory.getAbsolutePath() + File.separator + "catalog");
+        this.setCatalog(entitiesDirectory.toURL().toExternalForm() + "/catalog");
         // now initialize
         super.init();
     }
