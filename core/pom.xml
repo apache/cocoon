@@ -43,6 +43,7 @@
     <module>cocoon-thread</module>
     <module>cocoon-util</module>
     <module>cocoon-webapp</module>
+    <module>cocoon-xml</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core</connection>
