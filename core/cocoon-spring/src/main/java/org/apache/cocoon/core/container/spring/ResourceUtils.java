@@ -33,12 +33,12 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 
 /**
- * Utility class for Spring resource handling
+ * Utility class for Spring resource handling.
  * 
  * @version $Id$
  * @since 2.2
  */
-public class ResourceUtils {
+public abstract class ResourceUtils {
 
     /**
      * Get the uri of a resource. This method corrects the uri in the case of
@@ -148,13 +148,23 @@ public class ResourceUtils {
     }
 
     /**
-     * Return a resource comparator
+     * Return a resource comparator.
+     * This comparator compares the file name of two resources.
+     * In addition all resources contained in a directory named
+     * WEB-INF/classes/cocoon are sorted (in alphabetical) order
+     * after all other files.
      */
     public static Comparator getResourceComparator() {
         return new ResourceComparator();
     }
 
+    /**
+     * Class implementing a simple resource comparator as described
+     * here: {@link ResourceUtils#getResourceComparator}.
+     */
     protected final static class ResourceComparator implements Comparator {
+
+        protected static final String WEB_INF_CLASSES_META_INF_COCOON = "/WEB-INF/classes/META-INF/cocoon/";
 
         /**
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
@@ -163,6 +173,24 @@ public class ResourceUtils {
             if (!(o1 instanceof Resource) || !(o2 instanceof Resource)) {
                 return 0;
             }
+            try {
+                String name1 = ((Resource)o1).getURL().toExternalForm();
+                String name2 = ((Resource)o2).getURL().toExternalForm();
+                // replace '\' with '/'
+                name1.replace('\\', '/');
+                name2.replace('\\', '/');
+                boolean webInfClasses1 = name1.indexOf(ResourceComparator.WEB_INF_CLASSES_META_INF_COCOON) != -1;
+                boolean webInfClasses2 = name2.indexOf(ResourceComparator.WEB_INF_CLASSES_META_INF_COCOON) != -1;
+                if ( !webInfClasses1 && webInfClasses2 ) {
+                    return -1;
+                }
+                if ( webInfClasses1 && !webInfClasses2 ) {
+                    return +1;
+                }
+            } catch (IOException io) {
+                // ignore
+            }
+            // default behaviour:
             return ((Resource) o1).getFilename().compareTo(((Resource) o2).getFilename());
         }
     }

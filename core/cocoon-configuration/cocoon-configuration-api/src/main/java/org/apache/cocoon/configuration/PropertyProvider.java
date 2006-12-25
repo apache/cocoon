@@ -31,7 +31,19 @@ import java.util.Properties;
  */
 public interface PropertyProvider {
 
+    /**
+     * The bean must be registered with this name.
+     */
     String ROLE = PropertyProvider.class.getName();
 
+    /**
+     * Provide the properties.
+     *
+     * @param settings    The already loaded settings.
+     * @param runningMode The current running mode.
+     * @param path        A path specifying the application context the settings are applied to.
+     *                    A path of null indicates the root application context.
+     * @return            The additional properties.
+     */
     Properties getProperties(Settings settings, String runningMode, String path);
 }

@@ -128,13 +128,20 @@ public class SettingsBeanFactoryPostProcessor
      * The property files are read in the following order:
      * 1) classpath*:/META-INF/cocoon/properties/*.properties
      *    Default values for the core and each block - the files are read in alphabetical order.
+     *    Actually the files are read in two chunks, the first one containing all property files
+     *    from jar files, and the second one containing all property files from WEB-INF/classes.
      * 2) classpath*:/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties
      *    Default values for the core and each block for a specific running mode - the files are
      *    read in alphabetical order.
+     *    Actually the files are read in two chunks, the first one containing all property files
+     *    from jar files, and the second one containing all property files from WEB-INF/classes.
      * 3) Working directory from servlet context (if not already set)
      * 4) Optional property file which is stored under ".cocoon/settings.properties" in the user
      *    directory.
-     * 5) Additional property file specified by the "org.apache.cocoon.settings" property.
+     * 5) Additional property file specified by the "org.apache.cocoon.settings" property. If the
+     *    property defines a directory, all property files from this directory are read in alphabetical
+     *    order and all files from a sub directory with the name of the current running mode
+     *    are read in alphabetical order as well.
      * 6) Property provider (if configured in the bean factory)
      * 7) System properties
      *
@@ -146,7 +153,7 @@ public class SettingsBeanFactoryPostProcessor
     protected MutableSettings createSettings() {
         // get the running mode
         final String mode = RunningModeHelper.determineRunningMode( this.runningMode );
-        
+
         /*
         if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
             final String msg =
@@ -199,12 +206,27 @@ public class SettingsBeanFactoryPostProcessor
             if ( this.logger.isDebugEnabled() ) {
                 this.logger.debug("Reading user settings from '" + additionalPropertyFile + "'");
             }
-            try {
-                final FileInputStream fis = new FileInputStream(additionalPropertyFile);
-                properties.load(fis);
-                fis.close();
-            } catch (IOException ignore) {
-                this.logger.info("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.", ignore);
+            final File additionalFile = new File(additionalPropertyFile);
+            if ( additionalFile.exists() ) {
+                if ( additionalFile.isDirectory() ) {
+                    // read from directory
+                    ResourceUtils.readProperties(additionalFile.getAbsolutePath(),
+                            properties, this.getResourceLoader(), this.logger);
+                    // read all properties from the mode dependent directory
+                    ResourceUtils.readProperties(additionalFile.getAbsolutePath() + File.separatorChar + mode,
+                                                 properties, this.getResourceLoader(), this.logger);
+                } else {
+                    // read the file
+                    try {
+                        final FileInputStream fis = new FileInputStream(additionalFile);
+                        properties.load(fis);
+                        fis.close();
+                    } catch (IOException ignore) {
+                        this.logger.info("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.", ignore);
+                    }
+                }
+            } else {
+                this.logger.info("Additional settings file '" + additionalPropertyFile + "' does not exist - continuing with initialization.");
             }
         }
         // check for property providers
