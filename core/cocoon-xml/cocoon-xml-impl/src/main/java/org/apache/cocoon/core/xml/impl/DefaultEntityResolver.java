@@ -19,7 +19,6 @@ package org.apache.cocoon.core.xml.impl;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.resolver.CatalogManager;

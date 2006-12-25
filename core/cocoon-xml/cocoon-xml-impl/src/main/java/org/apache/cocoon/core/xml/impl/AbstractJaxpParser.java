@@ -34,9 +34,6 @@ public abstract class AbstractJaxpParser {
     /** the Entity Resolver */
     protected EntityResolver resolver;
 
-    /** do we want to reuse parsers ? */
-    protected boolean reuseParsers = true;
-
     /** Do we want to validate? */
     protected boolean validate = false;
 
@@ -57,24 +54,6 @@ public abstract class AbstractJaxpParser {
 
     public EntityResolver getEntityResolver() {
         return this.resolver;
-    }
-
-    /**
-     * @see #setReuseParsers(boolean)
-     */
-    public boolean isReuseParsers() {
-        return reuseParsers;
-    }
-
-    /**
-     * Do we want to reuse parsers or create a new parser for each parse ?
-     * (Default is true)
-     * <i>Note</i> : even if this parameter is <code>true</code>, parsers are not
-     * recycled in case of parsing errors : some parsers (e.g. Xerces) don't like
-     * to be reused after failure.
-     */
-    public void setReuseParsers(boolean reuseParsers) {
-        this.reuseParsers = reuseParsers;
     }
 
     /**
