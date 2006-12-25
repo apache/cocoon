@@ -70,8 +70,7 @@ public class SettingsBeanFactoryPostProcessor
         this.forceLoad();
 
         // finally deploy block artifacts!
-        final DeploymentUtil deployer = new DeploymentUtil(this.settings.getWorkDirectory());
-        deployer.deploy();
+        DeploymentUtil.deployBlockArtifacts(this.settings.getWorkDirectory());
     }
 
     /**
