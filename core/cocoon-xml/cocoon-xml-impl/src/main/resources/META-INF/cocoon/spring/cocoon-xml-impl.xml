@@ -20,13 +20,60 @@
 
 <!-- @version $Id$ -->
 <beans>
-  <!-- The DOM Parser -->
+  <!--+
+      | DOM XML Parser
+      |
+      | Configuration parameters:
+      | - validate (boolean, default = false): should the parser validate
+      |     parsed documents?
+      |     Note: XML validation is only being used for the documentation build.
+      |     (If you are going to use it elsewhere, then do so with caution.)
+      |     You really should have validated all of your XML documents already,
+      |     according to their proper DTD or schema. Do not expect Cocoon
+      |     to do it.
+      | - documentBuilderFactory (string, optional) : the name of the
+      |     DocumentBuilderFactory implementation to be used (similar to
+      |     sax-parser-factory for DOM).
+      | - resolver
+      |     An optional entity resolver.
+      +-->
   <bean name="org.apache.cocoon.core.xml.DOMParser"
         class="org.apache.cocoon.core.xml.impl.JaxpDOMParser">
     <property name="validate" value="false"/>
   </bean>
 
-  <!-- The SAX Parser -->
+  <!--+
+      | SAX XML Parser
+      |
+      | Configuration parameters:
+      | - validate (boolean, default = false): should the parser validate
+      |     parsed documents?
+      |     Note: XML validation is only being used for the documentation build.
+      |     (If you are going to use it elsewhere, then do so with caution.)
+      |     You really should have validated all of your XML documents already,
+      |     according to their proper DTD or schema. Do not expect Cocoon
+      |     to do it.
+      | - nsPrefixes (boolean, default = false) : do we want
+      |     namespaces declarations also as 'xmlns:' attributes?
+      |     Note : setting this to true confuses some XSL processors
+      |     (e.g. Saxon).
+      | - stopOnWarning (boolean, default = true) : should the parser
+      |     stop parsing if a warning occurs ?
+      | - stopOnRecoverableError (boolean, default = true) : should the
+      |     parser stop parsing if a recoverable error occurs ?
+      | - saxParserFactory (string, optional) : the name of the
+      |     SAXParserFactory implementation class to be used instead of using
+      |     the standard JAXP mechanism (SAXParserFactory.newInstance()). This
+      |     allows to choose unambiguously the JAXP implementation to be used
+      |     when several of them are available in the classpath.
+      | - dropDtdComments : should comment() events from DTD's be dropped?
+      |     Note: Since this implementation does not support the DeclHandler
+      |     interface anyway, it is quite useless to only have the comments
+      |     from DTD. And the comment events from the internal DTD subset
+      |     would appear in the serialized output again.
+      | - resolver
+      |     An optional entity resolver.
+      +-->
   <bean name="org.apache.cocoon.core.xml.SAXParser"
         class="org.apache.cocoon.core.xml.impl.JaxpSAXParser">
     <property name="validate" value="false"/>
