@@ -135,6 +135,27 @@ public class DeploymentUtil {
         deployBlockResources("blocks", destinationDirectory);
     }
 
+    public static void deployJarResources(String pattern, String destinationDirectory)
+    throws IOException {
+        final Enumeration jarUrls = DeploymentUtil.class.getClassLoader().getResources(pattern);
+        while ( jarUrls.hasMoreElements() ) {
+            final URL resourceUrl = (URL)jarUrls.nextElement();
+
+            String url = resourceUrl.toExternalForm();
+            // we only handle jars!
+            if ( "jar".equals(resourceUrl.getProtocol()) ) {
+                // if this is a jar url, it has this form: "jar:{url-to-jar}!/{resource-path}"
+                // to open the jar, we can simply remove everything after "!/"
+                int pos = url.indexOf('!');
+                url = url.substring(0, pos+2); // +2 as we include "!/"
+                final URL jarUrl = new URL(url);
+                final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
+                final JarFile jarFile = connection.getJarFile();
+                deploy(jarFile, pattern, destinationDirectory);
+            }
+        }
+    }
+
     /**
      * Get a map that associates a block name with the root URL of the blocks resources
      *  
