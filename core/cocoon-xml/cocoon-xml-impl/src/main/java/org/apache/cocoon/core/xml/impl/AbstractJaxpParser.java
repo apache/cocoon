@@ -18,6 +18,9 @@ package org.apache.cocoon.core.xml.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -29,7 +32,10 @@ import org.xml.sax.EntityResolver;
  * @version $Id$
  * @since 2.2
  */
-public abstract class AbstractJaxpParser {
+public abstract class AbstractJaxpParser implements BeanFactoryAware {
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
 
     /** the Entity Resolver */
     protected EntityResolver resolver;
@@ -37,10 +43,10 @@ public abstract class AbstractJaxpParser {
     /** Do we want to validate? */
     protected boolean validate = false;
 
-    /** By default we use the logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
+    /** Do we search for a resolver if it is not configured? */
+    protected boolean searchResolver = true;
 
-    public Log getLogger() {
+    protected Log getLogger() {
         return this.logger;
     }
 
@@ -71,6 +77,14 @@ public abstract class AbstractJaxpParser {
         this.validate = validate;
     }
 
+    public boolean isSearchResolver() {
+        return searchResolver;
+    }
+
+    public void setSearchResolver(boolean searchResolver) {
+        this.searchResolver = searchResolver;
+    }
+
     /**
      * Load a class
      */
@@ -80,5 +94,23 @@ public abstract class AbstractJaxpParser {
             loader = getClass().getClassLoader();
         }
         return loader.loadClass( name );
+    }
+
+    /**
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
+    public void setBeanFactory(BeanFactory factory) throws BeansException {
+        // we search for a resolver if we don't have one already 
+        if ( this.resolver == null && this.searchResolver ) {
+            if ( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug("Searching for entity resolver in factory: " + factory);
+            }
+            if ( factory.containsBean(EntityResolver.class.getName()) ) {
+                this.resolver = (EntityResolver) factory.getBean(EntityResolver.class.getName());
+                if ( this.getLogger().isDebugEnabled() ) {
+                    this.getLogger().debug("Set resolver to: " + this.resolver);
+                }
+            }
+        }
     }
 }
