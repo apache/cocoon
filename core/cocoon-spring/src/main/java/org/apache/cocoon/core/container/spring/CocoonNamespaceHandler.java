@@ -30,7 +30,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  *              can be used (this should be a subclass of the {@link SettingsBeanFactoryPostProcessor}).
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public class CocoonNamespaceHandler extends NamespaceHandlerSupport {
 

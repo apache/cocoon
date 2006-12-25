@@ -34,7 +34,7 @@ import org.springframework.core.io.ResourceLoader;
  * 
  * @version $Id: CocoonPropertyOverrideConfigurer.java 470754 2006-11-03
  *          10:47:52Z lgawron $
- * @since 2.2
+ * @since 1.0
  */
 public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
 

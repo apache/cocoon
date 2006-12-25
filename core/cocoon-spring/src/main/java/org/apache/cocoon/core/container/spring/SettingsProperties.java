@@ -24,7 +24,7 @@ import org.apache.cocoon.configuration.Settings;
 
 /**
  * A properties implementation using the settings object.
- * @since 2.2
+ * @since 1.0
  * @version $Id$
  */
 public class SettingsProperties extends Properties {

@@ -52,7 +52,7 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
  * @see SettingsBeanFactoryPostProcessor
  * @see SubSettingsBeanFactoryPostProcessor
  *
- * @since 2.2
+ * @since 1.0
  * @version $Id$
  */
 public abstract class AbstractSettingsBeanFactoryPostProcessor

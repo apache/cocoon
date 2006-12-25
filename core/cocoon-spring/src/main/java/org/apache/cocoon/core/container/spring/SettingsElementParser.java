@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  * @see SettingsBeanFactoryPostProcessor
  * @version $Id: SettingsElementParser.java 470732 2006-11-03 09:10:13Z
  *          cziegeler $
- * @since 2.2
+ * @since 1.0
  */
 public class SettingsElementParser extends AbstractElementParser {
 
