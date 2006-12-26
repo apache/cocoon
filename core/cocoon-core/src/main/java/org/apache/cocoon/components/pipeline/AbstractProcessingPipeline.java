@@ -41,6 +41,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.DisposableSitemapComponent;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
@@ -126,13 +127,13 @@ public abstract class AbstractProcessingPipeline
     /** The current SourceResolver */
     protected SourceResolver sourceResolver;
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service (ServiceManager manager)
+    public void service (ServiceManager aManager)
     throws ServiceException {
-        this.manager = manager;
-        this.newManager = manager;
+        this.manager = aManager;
+        this.newManager = aManager;
     }
 
     /**
@@ -659,18 +660,27 @@ public abstract class AbstractProcessingPipeline
         return true;
     }
 
+    /**
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
     public void recycle() {
         this.prepared = false;
 
         // Release reader.
         if (this.reader != null) {
+            if ( this.reader instanceof DisposableSitemapComponent ) {
+                ((DisposableSitemapComponent)this.reader).dispose();
+            }
             this.newManager.release(this.reader);
             this.reader = null;
             this.readerParam = null;
         }
 
+        // Release generator.
         if (this.generator != null) {
-            // Release generator.
+            if ( this.generator instanceof DisposableSitemapComponent ) {
+                ((DisposableSitemapComponent)this.generator).dispose();
+            }
             this.newManager.release(this.generator);
             this.generator = null;
             this.generatorParam = null;
@@ -679,6 +689,9 @@ public abstract class AbstractProcessingPipeline
         // Release transformers
         int size = this.transformers.size();
         for (int i = 0; i < size; i++) {
+            if ( this.transformers.get(i) instanceof DisposableSitemapComponent ) {
+                ((DisposableSitemapComponent)this.transformers.get(i)).dispose();
+            }
             this.newManager.release(this.transformers.get(i));
         }
         this.transformers.clear();
@@ -687,6 +700,9 @@ public abstract class AbstractProcessingPipeline
 
         // Release serializer
         if (this.serializer != null) {
+            if ( this.serializer instanceof DisposableSitemapComponent ) {
+                ((DisposableSitemapComponent)this.serializer).dispose();
+            }
             this.newManager.release(this.serializer);
             this.serializerParam = null;
         }
