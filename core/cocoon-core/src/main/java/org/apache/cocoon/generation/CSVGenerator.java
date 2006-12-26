@@ -30,11 +30,12 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.source.Source;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * <p>A simple parser converting a Comma Separated Values (CSV) file into XML.</p>
@@ -147,11 +148,11 @@ public class CSVGenerator extends FileGenerator {
     }
 
     /**
-     * <p>Recycle this component.</p>.
+     * @see org.apache.cocoon.generation.FileGenerator#dispose()
      */
-    public void recycle() {
-        super.recycle();
-        
+    public void dispose() {
+        super.dispose();
+
         this.encoding = DEFAULT_ENCODING;
         this.separator = DEFAULT_SEPARATOR.charAt(0);
         this.escape = DEFAULT_ESCAPE.charAt(0);
@@ -208,9 +209,9 @@ public class CSVGenerator extends FileGenerator {
 
         try {
             /* Start the document */
-            this.contentHandler.setDocumentLocator(csv);
-            this.contentHandler.startDocument();
-            this.contentHandler.startPrefixMapping(NAMESPACE_PREFIX, NAMESPACE_URI);
+            this.consumer.setDocumentLocator(csv);
+            this.consumer.startDocument();
+            this.consumer.startPrefixMapping(NAMESPACE_PREFIX, NAMESPACE_URI);
             this.indent(0);
             this.startElement("document");
 
@@ -266,8 +267,8 @@ public class CSVGenerator extends FileGenerator {
             /* Terminate the document */
             this.indent(0);
             this.endElement("document");
-            this.contentHandler.endPrefixMapping(NAMESPACE_PREFIX);
-            this.contentHandler.endDocument();
+            this.consumer.endPrefixMapping(NAMESPACE_PREFIX);
+            this.consumer.endDocument();
 
         } finally {
             csv.close();
@@ -288,7 +289,7 @@ public class CSVGenerator extends FileGenerator {
             if (this.recordnumber > 0) {
                 AttributesImpl attributes = new AttributesImpl();
                 String value = Integer.toString(this.recordnumber);
-                attributes.addAttribute("", "number", "number", "CDATA", value);
+                attributes.addCDATAAttribute("number", value);
                 this.startElement("record", attributes);
             } else {
                 this.startElement("header");
@@ -303,7 +304,7 @@ public class CSVGenerator extends FileGenerator {
 
         AttributesImpl attributes = new AttributesImpl();
         String value = Integer.toString(this.fieldnumber);
-        attributes.addAttribute("", "number", "number", "CDATA", value);
+        attributes.addCDATAAttribute("number", value);
 
         if (this.recordnumber < 1) {
             this.columns.put(new Integer(this.fieldnumber), new String(array));
@@ -311,12 +312,12 @@ public class CSVGenerator extends FileGenerator {
         } else if (this.columns != null) {
             String header = (String) this.columns.get(new Integer(this.fieldnumber));
             if (header != null) {
-                attributes.addAttribute("", "column", "column", "CDATA", header);
+                attributes.addCDATAAttribute("column", header);
             }
         }
 
         this.startElement(element, attributes);
-        this.contentHandler.characters(array, 0, array.length);
+        this.consumer.characters(array, 0, array.length);
         this.endElement(element);
         this.buffer.reset();
 
@@ -339,26 +340,25 @@ public class CSVGenerator extends FileGenerator {
 
     private void indent(int level)
     throws SAXException {
-        this.contentHandler.characters(INDENT_STRING, 0, level + 1);
+        this.consumer.characters(INDENT_STRING, 0, level + 1);
     }
 
     private void startElement(String name)
     throws SAXException {
-        this.startElement(name, new AttributesImpl());
+        this.startElement(name, XMLUtils.EMPTY_ATTRIBUTES);
     }
 
     private void startElement(String name, Attributes atts)
     throws SAXException {
         if (name == null) throw new NullPointerException("Null name");
-        if (atts == null) atts = new AttributesImpl();
         String qual = NAMESPACE_PREFIX + ':' + name;
-        this.contentHandler.startElement(NAMESPACE_URI, name, qual, atts);
+        this.consumer.startElement(NAMESPACE_URI, name, qual, (atts == null ? XMLUtils.EMPTY_ATTRIBUTES : atts));
     }
 
     private void endElement(String name)
     throws SAXException {
         String qual = NAMESPACE_PREFIX + ':' + name;
-        this.contentHandler.endElement(NAMESPACE_URI, name, qual);
+        this.consumer.endElement(NAMESPACE_URI, name, qual);
     }
 
     private static final class CSVReader extends Reader implements Locator {
@@ -369,7 +369,7 @@ public class CSVGenerator extends FileGenerator {
         private int line = 1;
         private int last = -1;
 
-        private CSVReader(Source source, String encoding, int buffer)
+        protected CSVReader(Source source, String encoding, int buffer)
         throws IOException {
             InputStream stream = source.getInputStream();
             Reader reader = new InputStreamReader(stream, encoding);

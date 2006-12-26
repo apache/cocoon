@@ -20,7 +20,11 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.sitemap.DisposableSitemapComponent;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -36,49 +40,63 @@ import java.util.Map;
  * and generates SAX Events. The <code>FileGenerator</code> implements the
  * <code>CacheableProcessingComponent</code> interface.
  *
- * <br>See {@link FileGeneratorFactory} for thread safe implementation of this
- * component.
- *
  * @cocoon.sitemap.component.name   file
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.file
  * @cocoon.sitemap.component.documentation.caching
  *     Uses the last modification date of the xml document for validation
  *
- * @cocoon.sitemap.component.pooling.max  32
- *
  * @version $Id$
  */
-public class FileGenerator extends ServiceableGenerator
-                           implements CacheableProcessingComponent {
+public class FileGenerator
+    extends AbstractLogEnabled
+    implements Generator, CacheableProcessingComponent, DisposableSitemapComponent {
 
     /** The input source */
     protected Source inputSource;
 
+    /** The source resolver. */
+    protected SourceResolver resolver;
+
+    /** The consumer. */
+    protected XMLConsumer consumer;
+
+    /** The SAX Parser. */
+    protected SAXParser parser;
+
+    public void setParser(SAXParser parser) {
+        this.parser = parser;
+    }
+
     /**
-     * Recycle this component.
-     * All instance variables are set to <code>null</code>.
+     * @see org.apache.cocoon.sitemap.DisposableSitemapComponent#dispose()
      */
-    public void recycle() {
-        if (null != this.inputSource) {
-            super.resolver.release(this.inputSource);
+    public void dispose() {
+        if ( this.inputSource != null ) {
+            this.resolver.release(this.inputSource);
             this.inputSource = null;
         }
-        super.recycle();
+        this.resolver = null;
+        this.consumer = null;
     }
 
     /**
      * Setup the file generator.
      * Try to get the last modification date of the source for caching.
+     *
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
-
-        super.setup(resolver, objectModel, src, par);
+        this.resolver = resolver;
         try {
-            this.inputSource = super.resolver.resolveURI(src);
+            this.inputSource = this.resolver.resolveURI(src);
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
+        }
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Source " + src +
+                              " resolved to " + this.inputSource.getURI());
         }
     }
 
@@ -103,17 +121,19 @@ public class FileGenerator extends ServiceableGenerator
     }
 
     /**
+     * @see org.apache.cocoon.xml.XMLProducer#setConsumer(org.apache.cocoon.xml.XMLConsumer)
+     */
+    public void setConsumer(XMLConsumer consumer) {
+        this.consumer = consumer;
+    }
+
+    /**
      * Generate XML data.
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-
         try {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Source " + super.source +
-                                  " resolved to " + this.inputSource.getURI());
-            }
-            SourceUtil.parse(this.manager, this.inputSource, super.xmlConsumer);
+            this.parser.parse(SourceUtil.getInputSource(this.inputSource), this.consumer);
         } catch (SAXException e) {
             SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
