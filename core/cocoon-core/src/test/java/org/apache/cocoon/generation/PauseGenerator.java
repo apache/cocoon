@@ -17,8 +17,11 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
+import java.util.Map;
 
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.FileGenerator;
 import org.xml.sax.SAXException;
 
@@ -34,17 +37,34 @@ import org.xml.sax.SAXException;
 public class PauseGenerator 
     extends FileGenerator {
 
+    protected long secs;
 
+    /**
+     * @see org.apache.cocoon.generation.FileGenerator#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, par);
+        this.secs = par.getParameterAsLong("pause", 60);
+    }
+
+    /**
+     * @see org.apache.cocoon.generation.FileGenerator#generate()
+     */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-        long secs = this.parameters.getParameterAsLong("pause", 60);
-        this.getLogger().debug("Waiting for " + secs + " secs.");
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Waiting for " + secs + " secs.");
+        }
         try {
             Thread.sleep(secs * 1000);
         } catch (InterruptedException ie) {
+            // ignore
         }
-        this.getLogger().debug("Finished waiting.");
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Finished waiting.");
+        }
         super.generate();
     }
+
 
 }
