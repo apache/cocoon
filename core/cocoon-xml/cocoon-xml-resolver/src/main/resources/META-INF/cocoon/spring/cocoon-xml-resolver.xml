@@ -59,7 +59,7 @@
       +-->
   <bean name="org.xml.sax.EntityResolver"
         class="org.apache.cocoon.core.xml.resolver.CocoonSystemResolver"
-        init-method="init">
+        init-method="init" scope="singleton">
     <property name="settings" ref="org.apache.cocoon.configuration.Settings"></property>
     <property name="verbosity" value="2"/>
   </bean>
