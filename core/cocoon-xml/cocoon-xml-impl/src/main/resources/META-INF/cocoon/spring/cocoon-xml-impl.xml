@@ -38,7 +38,7 @@
       |     An optional entity resolver.
       +-->
   <bean name="org.apache.cocoon.core.xml.DOMParser"
-        class="org.apache.cocoon.core.xml.impl.JaxpDOMParser">
+        class="org.apache.cocoon.core.xml.impl.JaxpDOMParser" scope="singleton">
     <property name="validate" value="false"/>
   </bean>
 
@@ -75,7 +75,7 @@
       |     An optional entity resolver.
       +-->
   <bean name="org.apache.cocoon.core.xml.SAXParser"
-        class="org.apache.cocoon.core.xml.impl.JaxpSAXParser">
+        class="org.apache.cocoon.core.xml.impl.JaxpSAXParser" scope="singleton">
     <property name="validate" value="false"/>
   </bean>
 </beans>
