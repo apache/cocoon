@@ -21,7 +21,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.xpath.PrefixResolver;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.xml.sax.SAXException;
@@ -60,7 +60,7 @@ public class XPointerContext implements PrefixResolver {
     public Document getDocument() throws SAXException, ResourceNotFoundException {
         if (document == null) {
             try {
-                document = SourceUtil.toDOM(source);
+                document = SourceUtil.toDOM(manager, source);
             } catch (ResourceNotFoundException e) {
                 throw e;
             } catch (Exception e) {

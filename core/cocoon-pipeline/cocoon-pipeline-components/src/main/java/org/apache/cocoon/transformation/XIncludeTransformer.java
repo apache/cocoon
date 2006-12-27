@@ -35,7 +35,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.source.impl.MultiSourceValidity;
 import org.apache.cocoon.components.xpointer.XPointer;
 import org.apache.cocoon.components.xpointer.XPointerContext;
@@ -478,7 +478,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                             }
                             xptr.process(context);
                         } else {
-                            SourceUtil.toSAX(url, new IncludeXMLConsumer(subPipe));
+                            SourceUtil.toSAX(manager, url, new IncludeXMLConsumer(subPipe));
                         }
                         // restore locator on the consumer
                         if (locator != null)

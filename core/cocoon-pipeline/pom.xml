@@ -35,5 +35,6 @@
   <modules>
     <module>cocoon-pipeline-api</module>
     <module>cocoon-pipeline-impl</module>
+    <module>cocoon-pipeline-components</module>
   </modules>
 </project>

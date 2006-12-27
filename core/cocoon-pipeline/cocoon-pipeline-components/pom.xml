@@ -28,20 +28,25 @@
     <version>2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>cocoon-pipeline-impl</artifactId>
+  <artifactId>cocoon-pipeline-components</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Cocoon Pipeline Implementation</name>
+  <name>Cocoon Pipeline Components</name>
   <dependencies>
     <!-- Cocoon -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-pipeline-api</artifactId>
+      <artifactId>cocoon-configuration-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-configuration-api</artifactId>
+      <artifactId>cocoon-environment-impl</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-pipeline-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -49,27 +54,12 @@
       <artifactId>cocoon-util</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-xml-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <!-- Excalibur -->
-    <dependency>
-      <groupId>org.apache.excalibur.components.store</groupId>
-      <artifactId>excalibur-store</artifactId>
-      <version>2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.excalibur.containerkit.instrument</groupId>
-      <artifactId>excalibur-instrument-api</artifactId>
-      <version>2.1</version>
-    </dependency>
 
     <dependency>
-      <groupId>jakarta-regexp</groupId>
-      <artifactId>jakarta-regexp</artifactId>
-      <version>1.4</version>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
