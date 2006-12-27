@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.impl.AbstractElementParser;
+import org.apache.cocoon.spring.impl.Constants;
+import org.apache.cocoon.spring.impl.RunningModeHelper;
+import org.apache.cocoon.spring.impl.SettingsElementParser;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.xml.dom.DomHelper;
 import org.springframework.beans.factory.BeanDefinitionStoreException;

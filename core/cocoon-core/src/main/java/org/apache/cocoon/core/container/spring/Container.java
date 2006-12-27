@@ -21,6 +21,7 @@ import java.util.Stack;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.impl.ServletContextFactoryBean;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;

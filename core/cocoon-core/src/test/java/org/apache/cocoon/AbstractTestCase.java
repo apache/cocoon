@@ -23,12 +23,12 @@ import junit.framework.TestCase;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.impl.MutableSettings;
-import org.apache.cocoon.core.container.spring.ServletContextFactoryBean;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockRequestAttributes;
 import org.apache.cocoon.environment.mock.MockResponse;
+import org.apache.cocoon.spring.impl.ServletContextFactoryBean;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;

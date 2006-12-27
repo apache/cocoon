@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,21 +16,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring.impl;
+
+import java.util.Properties;
+
+import org.apache.cocoon.configuration.Settings;
 
 /**
- * Some constants for the spring integration.
- * 
- * @version $Id$
+ * A properties implementation using the settings object.
  * @since 1.0
+ * @version $Id$
  */
-public abstract class Constants {
+public class SettingsProperties extends Properties {
 
-    /** The default location of spring related configuration files. */
-    public static final String DEFAULT_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
-    public static final String DEFAULT_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
+    protected final Settings settings;
 
-    /** The default location of spring related per sitemap configuration files. */
-    public static final String DEFAULT_SITEMAP_SPRING_CONFIGURATION_LOCATION = "config/spring";
-    public static final String DEFAULT_SITEMAP_PROPERTIES_LOCATION = "config/properties";
+    public SettingsProperties(Settings s) {
+        this.settings = s;
+    }
+
+    /**
+     * @see java.util.Properties#getProperty(java.lang.String, java.lang.String)
+     */
+    public String getProperty(String key, String defaultValue) {
+        return this.settings.getProperty(key, defaultValue);
+    }
+
+    /**
+     * @see java.util.Properties#getProperty(java.lang.String)
+     */
+    public String getProperty(String key) {
+        return this.settings.getProperty(key);
+    }
+    
 }

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -168,10 +168,10 @@ public class SettingsBeanFactoryPostProcessor
         final Properties properties = new Properties();
 
         // now read all properties from the properties directory
-        ResourceUtils.readProperties(org.apache.cocoon.core.container.spring.Constants.DEFAULT_PROPERTIES_LOCATION,
+        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.DEFAULT_PROPERTIES_LOCATION,
                 properties, this.getResourceLoader(), this.logger);
         // read all properties from the mode dependent directory
-        ResourceUtils.readProperties(org.apache.cocoon.core.container.spring.Constants.DEFAULT_PROPERTIES_LOCATION
+        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.DEFAULT_PROPERTIES_LOCATION
                 + "/" + mode, properties, this.getResourceLoader(), this.logger);
 
         // fill from the servlet context

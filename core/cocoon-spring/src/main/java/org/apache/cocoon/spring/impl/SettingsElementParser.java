@@ -16,11 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring.impl;
 
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.SitemapNamespaceHandler;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
