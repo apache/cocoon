@@ -25,6 +25,7 @@
    <column title="Apache OJB example">
      <p>The values retrieved from the database:</p>
      <table>
+      <jx:set var="nrOfItems" value="${employee.size()}"/>
       <jx:forEach var="item" items="${employee}">
         <tr>
           <td>ID: </td><td>${item.id}</td>
@@ -35,7 +36,7 @@
         </tr>
       </jx:forEach>
      </table>
-     <p><a href="insertEmployee.do">insert</a></p>
+     <p><a href="insertEmployee.do?id=${nrOfItems+1}">insert</a></p>
    </column>
   </row>
  </body>
