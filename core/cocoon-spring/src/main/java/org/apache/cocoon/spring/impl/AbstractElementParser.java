@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;

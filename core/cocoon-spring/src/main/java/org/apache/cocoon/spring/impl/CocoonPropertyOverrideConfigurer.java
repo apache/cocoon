@@ -21,6 +21,7 @@ package org.apache.cocoon.spring.impl;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.ResourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
