@@ -47,7 +47,7 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
     throws Throwable {
         if ( method.getName().equals("putBackIntoAvalonPool") ) {
             this.run();
-            RequestContextHolder.getRequestAttributes().removeAttribute(this.attributeName, RequestAttributes.SCOPE_REQUEST);
+            RequestContextHolder.currentRequestAttributes().removeAttribute(this.attributeName, RequestAttributes.SCOPE_REQUEST);
             return null;
         }
         if ( method.getName().equals("hashCode") && args == null ) {
@@ -55,7 +55,7 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
         }
         if ( this.componentHolder.get() == null ) {
             this.componentHolder.set(this.handler.getFromPool());
-            RequestContextHolder.getRequestAttributes().registerDestructionCallback(this.attributeName, this, RequestAttributes.SCOPE_REQUEST);
+            RequestContextHolder.currentRequestAttributes().registerDestructionCallback(this.attributeName, this, RequestAttributes.SCOPE_REQUEST);
         }
         try {
             return method.invoke(this.componentHolder.get(), args);
