@@ -45,8 +45,6 @@ public class DeploymentUtil {
 
     protected static final String BLOCK_RESOURCES_PATH = "COB-INF";
 
-    protected static final Map blockContexts = new HashMap(); 
-
     /**
      * Deploy all files with a given prefix from a jar file to a directory
      * in the file system.
@@ -75,7 +73,8 @@ public class DeploymentUtil {
     }
 
     protected static void deployBlockResources(String relativeDirectory,
-                                               String destinationDirectory)
+                                               String destinationDirectory,
+                                               Map    blockContexts)
     throws IOException {
         final Enumeration jarUrls = DeploymentUtil.class.getClassLoader().getResources(BLOCK_RESOURCES_PATH);
         while ( jarUrls.hasMoreElements() ) {
@@ -92,7 +91,7 @@ public class DeploymentUtil {
                     String blockName = url.substring(0, pos);
                     blockName = blockName.substring(blockName.lastIndexOf('/') + 1);
                     // register the root URL for the block resources
-                    DeploymentUtil.blockContexts.put(blockName, url);
+                    blockContexts.put(blockName, url);
                 }
             } else if ( "jar".equals(resourceUrl.getProtocol()) ) {
                 // if this is a jar url, it has this form: "jar:{url-to-jar}!/{resource-path}"
@@ -119,20 +118,22 @@ public class DeploymentUtil {
                 String destination = buffer.toString();
                 deploy(jarFile, BLOCK_RESOURCES_PATH, destination);
                 // register the root URL for the block resources
-                DeploymentUtil.blockContexts.put(blockName, destination);
+                blockContexts.put(blockName, destination);
             }
             // we only handle jar files and ordinary files
             // TODO - Should we throw an exception if it's some other protocol type? (or log?)
         }        
     }
 
-    public static void deployBlockArtifacts(String destinationDirectory)
+    public static Map deployBlockArtifacts(String destinationDirectory)
     throws IOException {
         if ( destinationDirectory == null ) {
             throw new IllegalArgumentException("Destination must not be null.");
         }
+        final Map blockContexts = new HashMap();
         // deploy all artifacts containing block resources
-        deployBlockResources("blocks", destinationDirectory);
+        deployBlockResources("blocks", destinationDirectory, blockContexts);
+        return blockContexts;
     }
 
     public static void deployJarResources(String pattern, String destinationDirectory)
@@ -155,15 +156,4 @@ public class DeploymentUtil {
             }
         }
     }
-
-    /**
-     * Get a map that associates a block name with the root URL of the blocks resources
-     *  
-     * @return the blockContexts
-     */
-    // FIXME: It would be better to make the block contexts mapping available as a
-    // component instead of as a static method
-    public static Map getBlockContexts() {
-        return blockContexts;
-    }    
 }

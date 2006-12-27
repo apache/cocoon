@@ -21,6 +21,7 @@ package org.apache.cocoon.spring.impl;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.BlockResourcesHolder;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -71,8 +72,14 @@ public class SettingsElementParser extends AbstractElementParser {
         this.registerPropertyOverrideConfigurer(parserContext, springConfigLocation);
 
         // add the servlet context as a bean
-        this.addComponent(ServletContextFactoryBean.class.getName(), ServletContext.class.getName(), null, false,
-                parserContext.getRegistry());
+        this.addComponent(ServletContextFactoryBean.class.getName(),
+                          ServletContext.class.getName(),
+                          null, false, parserContext.getRegistry());
+
+        // deploy blocks and add a bean holding the information
+        this.addComponent(DefaultBlockResourcesHolder.class.getName(), 
+                          BlockResourcesHolder.class.getName(),
+                          "init", true, parserContext.getRegistry());
 
         // handle includes
         try {
@@ -81,6 +88,7 @@ public class SettingsElementParser extends AbstractElementParser {
         } catch (Exception e) {
             throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION, e);
         }
+
         return null;
     }
 }

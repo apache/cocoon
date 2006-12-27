@@ -25,7 +25,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.configuration.impl.DeploymentUtil;
+import org.apache.cocoon.spring.BlockResourcesHolder;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -42,11 +42,14 @@ public class BlockContextSourceFactory extends AbstractLogEnabled implements
     
     private ServiceManager serviceManager;
 
-    /* (non-Javadoc)
+    private BlockResourcesHolder blockResourcesHolder;
+
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
+    public void service(ServiceManager aServiceManager) throws ServiceException {
+        this.serviceManager = aServiceManager;
+        this.blockResourcesHolder = (BlockResourcesHolder) this.serviceManager.lookup(BlockResourcesHolder.class.getName());
     }
 
     /* (non-Javadoc)
@@ -55,7 +58,7 @@ public class BlockContextSourceFactory extends AbstractLogEnabled implements
     public Source getSource(String location, Map parameters) throws IOException,
             MalformedURLException {
 
-        Map blockContexts = DeploymentUtil.getBlockContexts();
+        Map blockContexts = this.blockResourcesHolder.getBlockContexts();
 
         // the root "directory" of the blocks
         if (location.endsWith(":/"))
@@ -95,10 +98,11 @@ public class BlockContextSourceFactory extends AbstractLogEnabled implements
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
      */
     public void release(Source source) {
+        // nothing to do
     }
 
 }

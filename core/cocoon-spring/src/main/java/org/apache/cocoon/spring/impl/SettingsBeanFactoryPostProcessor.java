@@ -28,7 +28,6 @@ import java.util.Properties;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
-import org.apache.cocoon.configuration.impl.DeploymentUtil;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.apache.cocoon.spring.ResourceUtils;
@@ -69,9 +68,6 @@ public class SettingsBeanFactoryPostProcessor
         this.dumpSystemProperties();
         this.dumpSettings();
         this.forceLoad();
-
-        // finally deploy block artifacts!
-        DeploymentUtil.deployBlockArtifacts(this.settings.getWorkDirectory());
     }
 
     /**
