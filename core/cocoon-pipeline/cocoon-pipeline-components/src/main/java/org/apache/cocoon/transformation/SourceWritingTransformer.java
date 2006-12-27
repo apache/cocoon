@@ -27,7 +27,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -614,7 +614,7 @@ public class SourceWritingTransformer extends AbstractSAXTransformer {
             // Insert?
             if (exists && this.state == STATE_INSERT) {
                 message = "content inserted at: " + path;
-                resource = SourceUtil.toDOM(source);
+                resource = SourceUtil.toDOM(this.manager, source);
                 // import the fragment
                 Node importNode = resource.importNode(fragment, true);
                 // get the node

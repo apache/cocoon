@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.ProcessingException;
 
 import java.util.StringTokenizer;
@@ -51,7 +51,7 @@ public class ElementPathPart implements PointerPart {
         PathInclusionPipe pipe = new PathInclusionPipe(expression, xpointerContext);
         pipe.setConsumer(xpointerContext.getXmlConsumer());
         try {
-            SourceUtil.toSAX(xpointerContext.getSource(), pipe);
+            SourceUtil.toSAX(xpointerContext.getServiceManager(), xpointerContext.getSource(), pipe);
         } catch (IOException e) {
             throw new SAXException("Exception while trying to XInclude data: " + e.getMessage(), e);
         } catch (ProcessingException e) {
