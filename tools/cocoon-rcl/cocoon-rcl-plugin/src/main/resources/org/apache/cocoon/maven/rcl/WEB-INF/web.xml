@@ -21,9 +21,12 @@
     <web-app>
       <context-param>
         <param-name>org.apache.cocoon.servlet.ReloadingListener</param-name>
-        <param-value>org.springframework.web.context.ContextLoaderListener</param-value>
+        <param-value>
+          org.springframework.web.context.ContextLoaderListener
+        </param-value>
       </context-param>
-      <filter>
+      
+      <!--filter>
         <filter-name>ReloadingSpringFilter</filter-name>
         <display-name>ReloadingSpringFilter</display-name>
         <description>Reloads the Spring application context if a classloader change was detected.</description>
@@ -32,17 +35,17 @@
           <param-name>filter-class</param-name>
           <param-value>org.apache.cocoon.servlet.ReloadingSpringFilter</param-value>
         </init-param>
-      </filter>   
+      </filter-->         
       <filter>
-        <filter-name>CocoonMultipartFilter</filter-name>
-        <display-name>Cocoon multipart filter</display-name>
-        <description>Multipart MIME handling filter for Cocoon</description>
+        <filter-name>RequestContextFilter</filter-name>
+        <display-name>Request context filter</display-name>
+        <description>Servlet filter that exposes the request to the current thread.</description>
         <filter-class>org.apache.cocoon.servlet.ReloadingServletFilter</filter-class>
         <init-param>
           <param-name>filter-class</param-name>
-          <param-value>org.apache.cocoon.servlet.multipart.MultipartFilter</param-value>
+          <param-value>org.springframework.web.filter.RequestContextFilter</param-value>
         </init-param>
-      </filter>
+      </filter>       
       <filter>
         <filter-name>CocoonDebugFilter</filter-name>
         <display-name>Cocoon debug filter</display-name>
@@ -52,18 +55,39 @@
           <param-name>filter-class</param-name>
           <param-value>org.apache.cocoon.servlet.DebugFilter</param-value>
         </init-param>
-      </filter>   
+      </filter>    
+      <filter>
+        <filter-name>CocoonMultipartFilter</filter-name>
+        <display-name>Cocoon multipart filter</display-name>
+        <description>Multipart MIME handling filter for Cocoon</description>
+        <filter-class>org.apache.cocoon.servlet.ReloadingServletFilter</filter-class>
+        <init-param>
+          <param-name>filter-class</param-name>
+          <param-value>org.apache.cocoon.servlet.multipart.MultipartFilter</param-value>
+        </init-param>
+      </filter>     
+                  
       <!--filter-mapping>
         <filter-name>ReloadingSpringFilter</filter-name>
         <servlet-name>Cocoon</servlet-name>
-      </filter-mapping-->  
+      </filter-mapping-->                    
+      <filter-mapping>
+        <filter-name>RequestContextFilter</filter-name>
+        <servlet-name>DispatcherServlet</servlet-name>
+      </filter-mapping>   
+      <filter-mapping>
+        <filter-name>CocoonDebugFilter</filter-name>
+        <servlet-name>DispatcherServlet</servlet-name>
+      </filter-mapping>                 
       <filter-mapping>
         <filter-name>CocoonMultipartFilter</filter-name>
-        <servlet-name>Cocoon</servlet-name>
-      </filter-mapping>
+        <servlet-name>DispatcherServlet</servlet-name>
+      </filter-mapping> 
+      
       <listener>
         <listener-class>org.apache.cocoon.servlet.ReloadingListener</listener-class>
-      </listener>
+      </listener> 
+           
       <servlet>
         <servlet-name>DispatcherServlet</servlet-name>
         <display-name>DispatcherServlet</display-name>
@@ -75,6 +99,7 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
       </servlet>
+      
       <servlet-mapping>
         <servlet-name>DispatcherServlet</servlet-name>
         <url-pattern>/*</url-pattern>
