@@ -46,6 +46,7 @@ import org.apache.cocoon.portal.acting.helpers.FullScreenMapping;
 import org.apache.cocoon.portal.acting.helpers.LayoutMapping;
 import org.apache.cocoon.portal.acting.helpers.Mapping;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
 /**
@@ -79,11 +80,16 @@ implements ThreadSafe, Parameterizable {
     
     protected String configurationFile;
     
-    /* (non-Javadoc)
+    protected SourceValidity oldValidity;
+
+    protected boolean reloadCheck = true;
+
+    /**
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
         this.historyParameterName = parameters.getParameter("history-parameter-name", "history");
+        this.reloadCheck = parameters.getParameterAsBoolean("check-reload", this.reloadCheck);
         this.configurationFile = parameters.getParameter("src", null);
         if ( this.configurationFile == null ) return;
         
@@ -100,77 +106,94 @@ implements ThreadSafe, Parameterizable {
     private void loadConfig() throws ParameterException {
         Configuration config;
         org.apache.excalibur.source.SourceResolver resolver = null;
+        Source source = null;  
         try {
-            resolver = (org.apache.excalibur.source.SourceResolver) this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-            Source source = null;
-            try {
-                source = resolver.resolveURI(configurationFile);
-                SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX(source, handler);
-                config = handler.getConfiguration();
-            } catch (ProcessingException se) {
-                throw new ParameterException("Unable to read configuration from " + configurationFile, se);
-            } catch (SAXException se) {
-                throw new ParameterException("Unable to read configuration from " + configurationFile, se);
-            } catch (IOException ioe) {
-                throw new ParameterException("Unable to read configuration from " + configurationFile, ioe);
-            } finally {
-                resolver.release(source);
-            }
-        } catch (ServiceException se) {
-            throw new ParameterException("Unable to lookup source resolver.", se);
+        	try {
+        		resolver = (org.apache.excalibur.source.SourceResolver) this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
+        		source = resolver.resolveURI(configurationFile);
+        	} catch (IOException ioe) {
+				throw new ParameterException("Unable to read configuration from " + configurationFile, ioe);
+        	} catch (ServiceException se) {
+    			throw new ParameterException("Unable to lookup source resolver.", se);
+        	}
+        	SourceValidity newValidity = source.getValidity();
+        	if ( this.oldValidity == null
+                 || this.oldValidity.isValid() == SourceValidity.INVALID
+                 || this.oldValidity.isValid(newValidity) == SourceValidity.INVALID)	{
+                this.oldValidity = newValidity;
+        		try {
+        			SAXConfigurationHandler handler = new SAXConfigurationHandler();
+        			SourceUtil.toSAX(source, handler);
+        			config = handler.getConfiguration();
+        		} catch (ProcessingException se) {
+        			throw new ParameterException("Unable to read configuration from " + configurationFile, se);
+        		} catch (SAXException se) {
+        			throw new ParameterException("Unable to read configuration from " + configurationFile, se);
+        		} catch (IOException ioe) {
+        			throw new ParameterException("Unable to read configuration from " + configurationFile, ioe);
+        		}
+        		Configuration[] events = config.getChild("events").getChildren("event");
+        		
+        		if ( events != null ) {
+        			for(int i=0; i<events.length;i++) {
+        				try {
+        					final String type = events[i].getAttribute("type");
+        					final String id = events[i].getAttribute("id");
+        					if ( "jxpath".equals(type) ) {
+        						if ( this.eventMap.containsKey(id)) {
+        							throw new ParameterException("The id for the event " + id + " is not unique.");
+        						}
+        						final String targetType = events[i].getChild("targettype").getValue();
+        						final String targetId = events[i].getChild("targetid").getValue();
+        						final String path = events[i].getChild("path").getValue();
+        						if ( "layout".equals(targetType) ) {
+        							LayoutMapping mapping = new LayoutMapping();
+        							mapping.layoutId = targetId;
+        							mapping.path = path;
+        							this.eventMap.put(id, mapping);
+        						} else if ( "coplet".equals(targetType) ) {
+        							CopletMapping mapping = new CopletMapping();
+        							mapping.copletId = targetId;
+        							mapping.path = path;  
+        							this.eventMap.put(id, mapping);
+        						} else {
+        							throw new ParameterException("Unknown target type " + targetType);
+        						}
+        					} else if ( "fullscreen".equals(type) ) {
+        						if ( this.eventMap.containsKey(id)) {
+        							throw new ParameterException("The id for the event " + id + " is not unique.");
+        						}
+        						final String targetId = events[i].getChild("targetid").getValue();
+        						final String layoutId = events[i].getChild("layoutid").getValue();
+        						FullScreenMapping mapping = new FullScreenMapping();
+        						mapping.copletId = targetId;
+        						mapping.layoutId = layoutId;
+        						this.eventMap.put(id, mapping);                        
+        					} else {
+        						throw new ParameterException("Unknown event type for event " + id + ": " + type);                        
+        					}
+        				} catch (ConfigurationException ce) {
+        					throw new ParameterException("Configuration exception" ,ce);
+        				}
+        			}
+        		}
+        	}
         } finally {
-            this.manager.release(resolver);
+        	if (resolver != null) {
+        		resolver.release(source);
+        	}
+        	if (resolver != null) {
+        		this.manager.release(resolver);
+        	}
         }
-        Configuration[] events = config.getChild("events").getChildren("event");
-        if ( events != null ) {
-            for(int i=0; i<events.length;i++) {
-                try {
-                    final String type = events[i].getAttribute("type");
-                    final String id = events[i].getAttribute("id");
-                    if ( "jxpath".equals(type) ) {
-                        if ( this.eventMap.containsKey(id)) {
-                            throw new ParameterException("The id for the event " + id + " is not unique.");
-                        }
-                        final String targetType = events[i].getChild("targettype").getValue();
-                        final String targetId = events[i].getChild("targetid").getValue();
-                        final String path = events[i].getChild("path").getValue();
-                        if ( "layout".equals(targetType) ) {
-                            LayoutMapping mapping = new LayoutMapping();
-                            mapping.layoutId = targetId;
-                            mapping.path = path;
-                            this.eventMap.put(id, mapping);
-                        } else if ( "coplet".equals(targetType) ) {
-                            CopletMapping mapping = new CopletMapping();
-                            mapping.copletId = targetId;
-                            mapping.path = path;  
-                            this.eventMap.put(id, mapping);
-                        } else {
-                            throw new ParameterException("Unknown target type " + targetType);
-                        }
-                    } else if ( "fullscreen".equals(type) ) {
-                        if ( this.eventMap.containsKey(id)) {
-                            throw new ParameterException("The id for the event " + id + " is not unique.");
-                        }
-                        final String targetId = events[i].getChild("targetid").getValue();
-                        final String layoutId = events[i].getChild("layoutid").getValue();
-                        FullScreenMapping mapping = new FullScreenMapping();
-                        mapping.copletId = targetId;
-                        mapping.layoutId = layoutId;
-                        this.eventMap.put(id, mapping);                        
-                    } else {
-                        throw new ParameterException("Unknown event type for event " + id + ": " + type);                        
-                    }
-                } catch (ConfigurationException ce) {
-                    throw new ParameterException("Configuration exception" ,ce);
-                }
-            }
+        if ( !this.reloadCheck ) {
+            this.configurationFile = null;
         }
-        
-        // Nullify config filename so as not to reload it.
-        this.configurationFile = null;
     }
 
+    /**
+     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public Map act(Redirector redirector,
                    SourceResolver resolver,
                    Map objectModel,
@@ -185,7 +208,7 @@ implements ThreadSafe, Parameterizable {
         }
 
         if (this.configurationFile != null) {
-            loadConfig();
+            this.loadConfig();
         }
 
         Map result;
