@@ -23,7 +23,6 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.ParameterException;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.programming.java.JavaProgram;
 import org.apache.cocoon.util.ClassUtils;
