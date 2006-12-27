@@ -31,6 +31,7 @@ import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.configuration.impl.DeploymentUtil;
 import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.configuration.impl.PropertyHelper;
+import org.apache.cocoon.spring.ResourceUtils;
 
 /**
  * This is a bean factory post processor which handles all the settings stuff
