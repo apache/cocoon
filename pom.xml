@@ -534,6 +534,10 @@
                 <name>cdocs-fop</name>
                 <path>blocks/fop/1.0/</path>
               </collection>
+              <collection>
+                <name>cdocs-rcl-plugin</name>
+                <path>maven-plugins/rcl/1.0/</path>
+              </collection>              
             </collections>
             <siteXmlContent>
               <![CDATA[
