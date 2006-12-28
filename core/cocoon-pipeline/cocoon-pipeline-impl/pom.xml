@@ -86,11 +86,23 @@
       <artifactId>excalibur-instrument-api</artifactId>
       <version>2.1</version>
     </dependency>
+    <!-- commons -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2</version>
+    </dependency>
 
     <dependency>
       <groupId>jakarta-regexp</groupId>
       <artifactId>jakarta-regexp</artifactId>
       <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
