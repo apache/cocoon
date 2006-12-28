@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <!--+
-    | This is the default cocoon.xconf which is used if no one configuration file is used.
+    | This is the default cocoon.xconf which is used if no own configuration file is used.
     | $Id$
     +-->
 <cocoon version="2.2">
