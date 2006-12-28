@@ -16,10 +16,6 @@
  */
 package org.apache.cocoon.util;
 
-import org.apache.cocoon.environment.Request;
-import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.source.SourceParameters;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -27,11 +23,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.BitSet;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
@@ -447,29 +444,6 @@ public class NetUtils {
             }
         }
         return buffer.toString();
-    }
-
-    /**
-     * Create new <code>SourceParameters</code> with the same
-     * parameters as the current request
-     */
-    public static SourceParameters createParameters(Request request) {
-        final SourceParameters pars = new SourceParameters();
-
-        if (null != request) {
-            final Enumeration names = request.getParameterNames();
-            while (names.hasMoreElements()) {
-                final String current = (String)names.nextElement();
-                final String[] values = request.getParameterValues(current);
-                if (null != values) {
-                    for(int i=0; i < values.length; i++) {
-                        pars.setParameter(current, values[i]);
-                    }
-                }
-            }
-        }
-
-        return pars;
     }
 
     /**
