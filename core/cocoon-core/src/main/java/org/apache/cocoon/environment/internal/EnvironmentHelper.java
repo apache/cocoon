@@ -392,8 +392,7 @@ implements SourceResolver, Serviceable, Disposable {
     static public ServiceManager getSitemapServiceManager() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
-            final Container container = Container.getCurrentContainer();
-            return (ServiceManager)container.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+            return (ServiceManager)Container.getCurrentWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         }
         return null;
     }

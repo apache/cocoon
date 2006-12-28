@@ -49,7 +49,7 @@ public class PipelineNodeBuilder extends AbstractParentProcessingNodeBuilder {
         super.setBuilder(treeBuilder);
         // check ssettings for ignoring of internal only pipeline flags
         this.ignoreInternalOnly = false;
-        final Settings settings = (Settings)treeBuilder.getContainer().getBeanFactory().getBean(Settings.ROLE);
+        final Settings settings = (Settings)treeBuilder.getWebApplicationContext().getBean(Settings.ROLE);
         final String value = settings.getProperty(PipelineNodeBuilder.PROPERTY_SITEMAP_INTERNALONLY);
         if ( value != null ) {
             this.ignoreInternalOnly = Boolean.valueOf(value).booleanValue();

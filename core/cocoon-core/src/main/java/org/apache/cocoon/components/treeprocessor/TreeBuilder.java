@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.core.container.spring.Container;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
@@ -30,7 +30,7 @@ public interface TreeBuilder {
 
     String ROLE = TreeBuilder.class.getName();
 
-    Container getContainer();
+    WebApplicationContext getWebApplicationContext();
 
     ConcreteTreeProcessor getProcessor();
 

@@ -389,7 +389,7 @@ public class TreeProcessor extends AbstractLogEnabled
                 treeBuilder.setProcessor(newProcessor);
                 ProcessingNode root = treeBuilder.build(sitemapProgram, this.source.getURI());
                 newProcessor.setProcessorData(
-                        treeBuilder.getContainer(),
+                        treeBuilder.getWebApplicationContext(),
                         root,
                         treeBuilder.getDisposableNodes(),
                         treeBuilder.getEnterSitemapEventListeners(),

@@ -38,7 +38,7 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
      */
     public void setBuilder(TreeBuilder treeBuilder) {
         this.treeBuilder = treeBuilder;
-        this.manager = (ServiceManager)treeBuilder.getContainer().getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+        this.manager = (ServiceManager)treeBuilder.getWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
     }
 
     /**
