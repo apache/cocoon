@@ -46,6 +46,7 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -89,7 +90,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     protected Map processorAttributes = new HashMap();
 
     /** Container for this sitemap. */
-    protected Container container;
+    protected WebApplicationContext webAppContext;
 
     /** Classloader for this sitemap. */
     protected ClassLoader classLoader;
@@ -107,7 +108,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }
 
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(Container container,
+    public void setProcessorData(WebApplicationContext webAppContext,
                                  ProcessingNode rootNode,
                                  List disposableNodes,
                                  List enterSitemapEventListeners,
@@ -115,9 +116,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
-        this.classLoader = container.getBeanFactory().getClassLoader();
-        this.container = container;
-        this.manager = (ServiceManager)this.container.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+        this.classLoader = webAppContext.getClassLoader();
+        this.webAppContext = webAppContext;
+        this.manager = (ServiceManager)this.webAppContext.getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
@@ -209,7 +210,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         Thread.currentThread().setContextClassLoader(this.classLoader);
         Object handle = null;
         try {
-            handle = this.container.enteringContext();
+            handle = Container.enteringContext(this.webAppContext);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
@@ -243,7 +244,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         } finally {
             this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
-            this.container.leavingContext(handle);
+            Container.leavingContext(this.webAppContext, handle);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
@@ -339,10 +340,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // clear listeners
         this.enterSitemapEventListeners.clear();
         this.leaveSitemapEventListeners.clear();
-        if ( this.container != null ) {
-        	this.container.shutdown();
-            this.container = null;
-        }
+        Container.shutdown(this.webAppContext);
+        this.webAppContext = null;
     }
 
     private class TreeProcessorRedirector extends ForwardRedirector {

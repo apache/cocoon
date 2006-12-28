@@ -78,6 +78,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * The tree builder for the sitemap language.
@@ -124,7 +125,7 @@ public class SitemapLanguage
      */
     private ServiceManager itsManager;
 
-    private Container itsContainer;
+    private WebApplicationContext itsContainer;
 
     /**
      * Helper object which sets up components in the context of the processor
@@ -222,10 +223,11 @@ public class SitemapLanguage
         return this.processor;
     }
 
+
     /**
-     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getContainer()
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getWebApplicationContext()
      */
-    public Container getContainer() {
+    public WebApplicationContext getWebApplicationContext() {
         return this.itsContainer;
     }
 
@@ -344,17 +346,17 @@ public class SitemapLanguage
                                                location,
                                                fam,
                                                (ServletContext)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
-        final Context itsContext = (Context)this.itsContainer.getBeanFactory().getBean(AvalonUtils.CONTEXT_ROLE);
+        final Context itsContext = (Context)this.itsContainer.getBean(AvalonUtils.CONTEXT_ROLE);
         // The namespace used in the whole sitemap is the one of the root
         // element
         this.itsNamespace = tree.getNamespace();
 
         // replace properties?
         if ( tree.getChild("components").getAttributeAsBoolean("replace-properties", true) ) {
-            tree = AvalonUtils.replaceProperties(tree, (Settings)this.itsContainer.getBeanFactory().getBean(Settings.ROLE));
+            tree = AvalonUtils.replaceProperties(tree, (Settings)this.itsContainer.getBean(Settings.ROLE));
         }
 
-        this.itsManager = (ServiceManager) this.itsContainer.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+        this.itsManager = (ServiceManager) this.itsContainer.getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         // register listeners
         this.registerListeners();
 
@@ -553,7 +555,7 @@ public class SitemapLanguage
         }
 
         final String beanName = role + '/' + type;
-        if ( !this.itsContainer.getBeanFactory().containsBean(beanName) ) {
+        if ( !this.itsContainer.containsBean(beanName) ) {
             throw new ConfigurationException("Type '" + type + "' does not exist for 'map:"
                     + statement.getName() + "' at " + statement.getLocation());
         }
@@ -605,8 +607,8 @@ public class SitemapLanguage
      * Register all registered sitemap listeners
      */
     protected void registerListeners() {
-        if ( this.itsContainer.getBeanFactory() instanceof ListableBeanFactory ) {
-            final ListableBeanFactory listableFactory = (ListableBeanFactory)this.itsContainer.getBeanFactory();
+        if ( this.itsContainer instanceof ListableBeanFactory ) {
+            final ListableBeanFactory listableFactory = (ListableBeanFactory)this.itsContainer;
             Map beans = listableFactory.getBeansOfType(EnterSitemapEventListener.class);
             if ( beans != null ) {
                 final Iterator i = beans.values().iterator();

@@ -138,10 +138,10 @@ public class SitemapHelper {
         buffer.append("</beans>\n");
     }
 
-    public static Container createContainer(Configuration  config,
-                                            String         sitemapLocation,
-                                            Monitor        fam,
-                                            ServletContext servletContext)
+    public static WebApplicationContext createContainer(Configuration  config,
+                                                        String         sitemapLocation,
+                                                        Monitor        fam,
+                                                        ServletContext servletContext)
     throws Exception {
         // let's get the root container first
         final WebApplicationContext rootContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
@@ -154,12 +154,7 @@ public class SitemapHelper {
         }
         final String contextUrl = sitemapLocation.substring(0, pos + 1);
 
-        final Container container = Container.getCurrentContainer();
-        // for now we require that the parent container is a web application context (FIXME)
-        if ( !(container.getBeanFactory() instanceof WebApplicationContext) ) {
-            throw new Exception("Parent container is not a web application context: " + container.getBeanFactory());
-        }
-        final WebApplicationContext parentContext = (WebApplicationContext)container.getBeanFactory();
+        final WebApplicationContext parentContext = Container.getCurrentWebApplicationContext();
 
         // get classloader
 //      TODO rcl            
@@ -176,7 +171,7 @@ public class SitemapHelper {
                                                                                         parentContext,
                                                                                         contextUrl,
                                                                                         definition);
-            return new Container(context);
+            return context;
         } finally {
             PARENT_CONTEXT.set(null);
         }

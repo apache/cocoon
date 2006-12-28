@@ -129,8 +129,7 @@ public class TemplateObjectModelHelper {
             cocoon.put("parameters", new ParametersMap(parameters));
         }
 
-        final Container container = Container.getCurrentContainer();
-        cocoon.put("settings", (Settings)container.getBeanFactory().getBean(Settings.ROLE));
+        cocoon.put("settings", (Settings)Container.getCurrentWebApplicationContext().getBean(Settings.ROLE));
 
         final Map map = new HashMap();
         map.put("cocoon", cocoon);

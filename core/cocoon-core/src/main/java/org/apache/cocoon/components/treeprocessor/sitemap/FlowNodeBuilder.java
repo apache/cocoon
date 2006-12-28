@@ -54,7 +54,7 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
         // since 2.2 we add by default all flow scripts located in the ./flow directory
         // The default location can be overwritten by specifying the location attribute.
-        final BeanFactory beanFactory = this.treeBuilder.getContainer().getBeanFactory();
+        final BeanFactory beanFactory = this.treeBuilder.getWebApplicationContext();
         if ( beanFactory instanceof ApplicationContext && node.getInterpreter().getScriptExtension() != null ) {
             final ResourceLoader resourceLoader = (ApplicationContext)beanFactory;
             final String scriptLocation = config.getAttribute("location", DEFAULT_FLOW_SCRIPT_LOCATION);
