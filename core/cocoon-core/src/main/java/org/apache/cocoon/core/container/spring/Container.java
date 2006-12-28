@@ -20,9 +20,7 @@ import java.util.Stack;
 
 import javax.servlet.ServletContext;
 
-import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.impl.ServletContextFactoryBean;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,7 +29,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * FIXME - What about the ResourceLoader?
  * @version $Id$
  */
 public class Container {
@@ -41,12 +38,10 @@ public class Container {
 
     protected static final String CONTAINER_STACK_REQUEST_ATTRIBUTE = Container.class.getName() + "/Stack";
 
-    protected ClassLoader classLoader;
-    protected BeanFactory beanFactory;
+    protected WebApplicationContext beanFactory;
 
-    public Container(BeanFactory beanFactory, ClassLoader classLoader) {
-        this.beanFactory = beanFactory;
-        this.classLoader = classLoader;
+    public Container(WebApplicationContext webAppContext) {
+        this.beanFactory = webAppContext;
     }
 
     protected static Container ROOT_CONTAINER;
@@ -71,7 +66,7 @@ public class Container {
         if ( ROOT_CONTAINER == null ) {
             final ServletContext servletContext = ServletContextFactoryBean.getServletContext();
             final WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-            ROOT_CONTAINER = new Container(parentContext, parentContext.getClassLoader());
+            ROOT_CONTAINER = new Container(parentContext);
         }
         return ROOT_CONTAINER;
     }
@@ -93,7 +88,7 @@ public class Container {
             stack.push(oldContext);
         }
         attributes.setAttribute(CONTAINER_REQUEST_ATTRIBUTE, this, RequestAttributes.SCOPE_REQUEST);
-        Thread.currentThread().setContextClassLoader(this.classLoader);
+        Thread.currentThread().setContextClassLoader(this.beanFactory.getClassLoader());
         return oldClassLoader;
     }
 
@@ -116,15 +111,7 @@ public class Container {
         }
     }
 
-    public ClassLoader getClassLoader() {
-        return this.classLoader;
-    }
-
-    public Settings getSettings() {
-        return (Settings)this.beanFactory.getBean(Settings.ROLE);
-    }
-
-    public BeanFactory getBeanFactory() {
+    public WebApplicationContext getBeanFactory() {
         return this.beanFactory;
     }
 
