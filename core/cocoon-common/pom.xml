@@ -33,7 +33,7 @@
   <packaging>jar</packaging>
   <name>Cocoon Common</name>
   <dependencies>
-    <!--  excalibur -->
+    <!-- Excalibur -->
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>
       <artifactId>avalon-framework-api</artifactId>
@@ -45,11 +45,18 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- commons -->
+    <!-- Commons -->
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.1</version>
+    </dependency>
+    <!-- Test Dependencies  -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
