@@ -36,7 +36,6 @@
     <module>cocoon-common</module>
     <module>cocoon-configuration</module>
     <module>cocoon-core</module>
-    <module>cocoon-environment</module>
     <module>cocoon-pipeline</module>
     <module>cocoon-sitemap</module>
     <module>cocoon-spring</module>
