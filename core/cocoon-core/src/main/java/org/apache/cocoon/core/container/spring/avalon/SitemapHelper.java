@@ -176,7 +176,7 @@ public class SitemapHelper {
                                                                                         parentContext,
                                                                                         contextUrl,
                                                                                         definition);
-            return new Container(context, context.getClassLoader());
+            return new Container(context);
         } finally {
             PARENT_CONTEXT.set(null);
         }

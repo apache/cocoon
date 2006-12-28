@@ -69,7 +69,7 @@ public final class SettingsInputModule
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
         final Container container = Container.getCurrentContainer();
-        final Settings settings = container.getSettings();
+        final Settings settings = (Settings)container.getBeanFactory().getBean(Settings.ROLE);
         return settings.getProperty(name);
     }
 

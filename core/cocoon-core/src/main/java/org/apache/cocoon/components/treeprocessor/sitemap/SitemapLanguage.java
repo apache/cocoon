@@ -60,6 +60,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.core.container.spring.avalon.SitemapHelper;
@@ -350,7 +351,7 @@ public class SitemapLanguage
 
         // replace properties?
         if ( tree.getChild("components").getAttributeAsBoolean("replace-properties", true) ) {
-            tree = AvalonUtils.replaceProperties(tree, this.itsContainer.getSettings());
+            tree = AvalonUtils.replaceProperties(tree, (Settings)this.itsContainer.getBeanFactory().getBean(Settings.ROLE));
         }
 
         this.itsManager = (ServiceManager) this.itsContainer.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);

@@ -115,7 +115,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
-        this.classLoader = container.getClassLoader();
+        this.classLoader = container.getBeanFactory().getClassLoader();
         this.container = container;
         this.manager = (ServiceManager)this.container.getBeanFactory().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         this.rootNode = rootNode;
