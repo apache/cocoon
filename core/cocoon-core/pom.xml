@@ -122,12 +122,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-sitemap-impl</artifactId>
+      <artifactId>cocoon-sitemap-components</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -189,51 +184,11 @@
       <artifactId>commons-io</artifactId>
       <version>1.2</version>
     </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2</version>
-    </dependency>
     <!--dependency>
       <groupId>org.apache.commons</groupId> 
       <artifactId>commons-jci-core</artifactId> 
       <version>1.0-SNAPSHOT</version> 
     </dependency-->
-    <dependency>
-      <groupId>commons-jxpath</groupId>
-      <artifactId>commons-jxpath</artifactId>
-      <version>1.2</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>ant-optional</artifactId>
-          <groupId>ant-optional</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-beanutils</artifactId>
-          <groupId>commons-beanutils</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jdom</artifactId>
-          <groupId>jdom</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>servlet</artifactId>
-          <groupId>javax.servlet</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>servletapi</artifactId>
-          <groupId>servletapi</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>xerces</artifactId>
-          <groupId>xerces</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>ant-optional</artifactId>
-          <groupId>ant</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>

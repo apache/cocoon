@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.source.impl;
+package org.apache.cocoon.source.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
