@@ -23,7 +23,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.excalibur.source.Source;
@@ -173,7 +173,7 @@ public class XMLFileModule extends AbstractJXPathModule
                     }
                     src = resolver.resolveURI(this.uri);
                     this.validity = src.getValidity();
-                    this.document = SourceUtil.toDOM(src);
+                    this.document = SourceUtil.toDOM(manager, src);
                 } else if (this.reloadable) {
                     if (logger.isDebugEnabled()) {
                         logger.debug("Document cached... checking validity of uri " + this.uri);
@@ -190,7 +190,7 @@ public class XMLFileModule extends AbstractJXPathModule
                                 logger.debug("Reloading document... uri " + this.uri);
                             }
                             this.validity = newValidity;
-                            this.document = SourceUtil.toDOM(src);
+                            this.document = SourceUtil.toDOM(manager, src);
 
                             /*
                              * Clear the cache, otherwise reloads won't do much.

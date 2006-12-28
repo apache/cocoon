@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.source.impl;
+package org.apache.cocoon.source.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,7 +29,8 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;

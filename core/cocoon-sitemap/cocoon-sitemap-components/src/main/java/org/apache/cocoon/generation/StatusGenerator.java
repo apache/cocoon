@@ -31,7 +31,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuationDataBean;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.AttributesImpl;

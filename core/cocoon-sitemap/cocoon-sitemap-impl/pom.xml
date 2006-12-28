@@ -51,6 +51,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-thread-api</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
@@ -75,9 +80,46 @@
           <groupId>avalon-logkit</groupId>
           <artifactId>avalon-logkit</artifactId>
         </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Commons -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-jxpath</groupId>
+      <artifactId>commons-jxpath</artifactId>
+      <version>1.2</version>
+      <exclusions>
         <exclusion>
-          <groupId>org.apache.avalon.logkit</groupId>
-          <artifactId>avalon-logkit</artifactId>
+          <artifactId>ant-optional</artifactId>
+          <groupId>ant-optional</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-beanutils</artifactId>
+          <groupId>commons-beanutils</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jdom</artifactId>
+          <groupId>jdom</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>servlet</artifactId>
+          <groupId>javax.servlet</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>servletapi</artifactId>
+          <groupId>servletapi</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>xerces</artifactId>
+          <groupId>xerces</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>ant-optional</artifactId>
+          <groupId>ant</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -96,6 +138,12 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <version>2.0.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>   
     <dependency>
       <groupId>org.springframework</groupId>
