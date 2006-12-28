@@ -127,7 +127,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-sitemap-api</artifactId>
+      <artifactId>cocoon-sitemap-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -287,11 +287,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>jakarta-regexp</groupId>
-      <artifactId>jakarta-regexp</artifactId>
-      <version>1.4</version>
-    </dependency>
-    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.13</version>
@@ -301,31 +296,6 @@
       <artifactId>jakarta-bcel</artifactId>
       <version>20040329</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>2.0.1</version>
-    </dependency>   
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>2.0.1</version>
-    </dependency>    
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <version>2.0.1</version>
-    </dependency>   
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>2.0.1</version>
-    </dependency>      
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <version>2.0.1</version>
-    </dependency>             
     <!--  test dependencies  -->
     <dependency>
       <groupId>xmlunit</groupId>

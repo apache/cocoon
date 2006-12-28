@@ -46,7 +46,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;

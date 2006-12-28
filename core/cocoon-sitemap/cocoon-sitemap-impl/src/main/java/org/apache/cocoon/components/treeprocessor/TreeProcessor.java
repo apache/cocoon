@@ -34,7 +34,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.flow.Interpreter;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
 import org.apache.cocoon.configuration.Settings;
