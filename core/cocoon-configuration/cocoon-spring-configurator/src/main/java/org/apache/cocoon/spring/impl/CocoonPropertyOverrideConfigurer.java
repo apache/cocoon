@@ -19,7 +19,6 @@
 package org.apache.cocoon.spring.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -37,8 +36,7 @@ import org.springframework.core.io.ResourceLoader;
  * the Cocoon spring configuration directory. A property should have the
  * following format: {bean name}/{property name}={value}.
  * 
- * @version $Id: CocoonPropertyOverrideConfigurer.java 470754 2006-11-03
- *          10:47:52Z lgawron $
+ * @version $Id$
  * @since 1.0
  */
 public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
