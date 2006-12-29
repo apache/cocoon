@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.math.NumberUtils;
-
 /**
  * This object holds the global configuration of Cocoon.
  *
@@ -131,7 +128,7 @@ public class MutableSettings implements Settings {
                     if ( key.equals(KEY_RELOAD_DELAY) ) {
                         this.setConfigurationReloadDelay(Long.valueOf(value).longValue());
                     } else if ( key.equals(KEY_RELOADING) ) {
-                        this.setReloadingEnabled(BooleanUtils.toBoolean(value));
+                        this.setReloadingEnabled(Boolean.valueOf(value).booleanValue());
                     } else if ( key.equals(KEY_CACHE_DIRECTORY) ) {
                         this.setCacheDirectory(value);
                     } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
@@ -161,7 +158,7 @@ public class MutableSettings implements Settings {
         }
         String o = this.getProperty(KEY_RELOADING + '.' + type);
         if ( o != null ) {
-            return BooleanUtils.toBoolean(o);
+            return Boolean.valueOf(o).booleanValue();
         }
         if ( this.parent != null ) {
             return this.parent.isReloadingEnabled(type);
@@ -239,7 +236,7 @@ public class MutableSettings implements Settings {
         }
         String o = this.getProperty(KEY_RELOAD_DELAY + '.' + type);
         if ( o != null ) {
-            return NumberUtils.toLong(o);
+            return Long.valueOf(o).longValue();
         }
         if ( this.parent != null ) {
             return this.parent.getReloadDelay(type);
