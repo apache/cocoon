@@ -23,9 +23,10 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.BlockResourcesHolder;
 
 /**
- * FIXME: Perhaps someone has a better name?!?
- * @version $Id$
+ * Default implementation of a {@link BlockResourceHolder}.
  *
+ * @version $Id$
+ * @since 1.0
  */
 public class DefaultBlockResourcesHolder
     implements BlockResourcesHolder {

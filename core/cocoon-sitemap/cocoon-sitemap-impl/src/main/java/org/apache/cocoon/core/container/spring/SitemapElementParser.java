@@ -19,6 +19,7 @@
 package org.apache.cocoon.core.container.spring;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -131,7 +132,7 @@ public class SitemapElementParser extends AbstractElementParser {
 
             // register a PropertyPlaceholderConfigurer
             if ( useDefaultIncludes ) {
-                this.registerPropertyOverrideConfigurer(parserContext, Constants.DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION);
+                this.registerPropertyOverrideConfigurer(parserContext, Collections.singletonList(Constants.DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION));
             }
             
             RootBeanDefinition def =  this.createBeanDefinition(SubSettingsBeanFactoryPostProcessor.class.getName(),

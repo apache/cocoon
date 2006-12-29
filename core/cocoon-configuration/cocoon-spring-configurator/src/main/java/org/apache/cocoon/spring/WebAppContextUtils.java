@@ -25,7 +25,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
+ * Utility class to manage hierarchical application contexts.
+ *
  * @version $Id$
+ * @since 1.0
  */
 public abstract class WebAppContextUtils {
 

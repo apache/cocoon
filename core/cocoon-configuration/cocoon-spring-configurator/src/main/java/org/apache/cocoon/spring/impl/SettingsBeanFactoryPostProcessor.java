@@ -164,11 +164,18 @@ public class SettingsBeanFactoryPostProcessor
         // create an empty properties object
         final Properties properties = new Properties();
 
-        // now read all properties from the properties directory
+        // now read all properties from classpath directory
         ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.CLASSPATH_PROPERTIES_LOCATION,
                 properties, this.getResourceLoader(), this.logger);
         // read all properties from the mode dependent directory
         ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.CLASSPATH_PROPERTIES_LOCATION
+                + "/" + mode, properties, this.getResourceLoader(), this.logger);
+
+        // now read all properties from the properties directory
+        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.GLOBAL_PROPERTIES_LOCATION,
+                properties, this.getResourceLoader(), this.logger);
+        // read all properties from the mode dependent directory
+        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.GLOBAL_PROPERTIES_LOCATION
                 + "/" + mode, properties, this.getResourceLoader(), this.logger);
 
         // fill from the servlet context

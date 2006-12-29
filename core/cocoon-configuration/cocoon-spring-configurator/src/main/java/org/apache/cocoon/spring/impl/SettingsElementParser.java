@@ -18,6 +18,9 @@
  */
 package org.apache.cocoon.spring.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
@@ -33,8 +36,7 @@ import org.w3c.dom.Element;
  * 
  * @see SitemapNamespaceHandler
  * @see SettingsBeanFactoryPostProcessor
- * @version $Id: SettingsElementParser.java 470732 2006-11-03 09:10:13Z
- *          cziegeler $
+ * @version $Id$
  * @since 1.0
  */
 public class SettingsElementParser extends AbstractElementParser {
@@ -53,8 +55,6 @@ public class SettingsElementParser extends AbstractElementParser {
      *      org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        final String springConfigLocation = this.getAttributeValue(element, "location",
-                Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
 
         // create bean definition for settings object
         final String componentClassName = this.getAttributeValue(element, PROCESSOR_CLASS_NAME_ATTR,
@@ -69,7 +69,15 @@ public class SettingsElementParser extends AbstractElementParser {
         this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
 
         // register a PropertyPlaceholderConfigurer
-        this.registerPropertyOverrideConfigurer(parserContext, springConfigLocation);
+        // we create a list with the default locations and add the optional location attribute
+        final List locations = new ArrayList();
+        locations.add(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
+        locations.add(Constants.GLOBAL_SPRING_CONFIGURATION_LOCATION);
+        final String springConfigLocation = this.getAttributeValue(element, "location", null);
+        if ( springConfigLocation != null ) {
+            locations.add(springConfigLocation);
+        }
+        this.registerPropertyOverrideConfigurer(parserContext, locations);
 
         // add the servlet context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(),
