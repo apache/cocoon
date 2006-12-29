@@ -20,22 +20,30 @@ package org.apache.cocoon.configuration;
  * This object defines the default values for the {@link Settings}.
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public abstract class SettingsDefaults {
 
-    /** The default running mode. */
+    /** 
+     * The default running mode.
+     * @see Settings#getRunningMode()
+     */
     public static final String DEFAULT_RUNNING_MODE = "prod";
-
-    /** This is the list of predefined running modes. */
-    // public static final String[] RUNNING_MODES = {"prod", "dev", "test"};
 
     /**
      * Default value for {@link Settings#isReloadingEnabled(String)} parameter (false).
      */
     public static final boolean RELOADING_ENABLED_DEFAULT = false;
 
+    /**
+     * Default reload delay for configurations in milliseconds.
+     * @see Settings#getReloadDelay(String)
+     */
     public static final long DEFAULT_CONFIGURATION_RELOAD_DELAY = 1000;
 
+    /**
+     * The default encoding for the web container.
+     * @see Settings#getContainerEncoding()
+     */
     public static final String DEFAULT_CONTAINER_ENCODING = "ISO-8859-1";
 }

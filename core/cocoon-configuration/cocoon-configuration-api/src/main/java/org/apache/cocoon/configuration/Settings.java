@@ -22,7 +22,7 @@ import java.util.List;
  * This object holds the global configuration of Cocoon.
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public interface Settings {
 
