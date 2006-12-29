@@ -52,30 +52,6 @@
 
       <node name="components" builder="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsNodeBuilder"/>
 
-      <node name="generators" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCsNodeBuilder"/>
-
-      <node name="generator" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCNodeBuilder">
-        <ignored-children>source</ignored-children>
-      </node>
-
-      <node name="transformers" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCsNodeBuilder"/>
-
-      <node name="transformer" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCNodeBuilder">
-        <ignored-children>source</ignored-children>
-      </node>
-
-      <node name="serializers" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCsNodeBuilder"/>
-
-      <node name="serializer" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCNodeBuilder">
-        <ignored-children>source</ignored-children>
-      </node>
-
-      <node name="readers" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCsNodeBuilder"/>
-
-      <node name="reader" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCNodeBuilder">
-        <ignored-children>source</ignored-children>
-      </node>
-
       <node name="views" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder">
         <allowed-children>view</allowed-children>
       </node>
