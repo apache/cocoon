@@ -63,9 +63,11 @@ implements Cache, ThreadSafe, Serviceable, Disposable, Parameterizable {
      * Disposable Interface
      */
     public void dispose() {
-        this.manager.release(this.store);
-        this.store = null;
-        this.manager = null;
+        if ( this.manager != null ) {
+            this.manager.release(this.store);
+            this.store = null;
+            this.manager = null;
+        }
     }
 
     /**
