@@ -107,9 +107,9 @@ public class SubSettingsBeanFactoryPostProcessor
 
         // read properties from default includes
         if ( this.useDefaultIncludes ) {
-            ResourceUtils.readProperties(Constants.DEFAULT_SITEMAP_PROPERTIES_LOCATION, properties, this.getResourceLoader(), this.logger);
+            ResourceUtils.readProperties(Constants.DEFAULT_CHILD_PROPERTIES_LOCATION, properties, this.getResourceLoader(), this.logger);
             // read all properties from the mode dependent directory
-            ResourceUtils.readProperties(Constants.DEFAULT_SITEMAP_PROPERTIES_LOCATION + '/' + mode, properties, this.getResourceLoader(), this.logger);    
+            ResourceUtils.readProperties(Constants.DEFAULT_CHILD_PROPERTIES_LOCATION + '/' + mode, properties, this.getResourceLoader(), this.logger);    
         }
 
         if ( this.directories != null ) {
