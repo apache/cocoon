@@ -19,8 +19,6 @@ package org.apache.cocoon.core.container.spring;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.spring.impl.ServletContextFactoryBean;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -93,14 +91,6 @@ public abstract class Container {
             attributes.removeAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         } else {
             attributes.setAttribute(CONTAINER_REQUEST_ATTRIBUTE, info.webAppContext, RequestAttributes.SCOPE_REQUEST);
-        }
-    }
-
-    public static void shutdown(WebApplicationContext webAppContext) {
-        if ( webAppContext instanceof ConfigurableApplicationContext ) {
-            ((ConfigurableApplicationContext)webAppContext).close();
-        } else if ( webAppContext instanceof ConfigurableBeanFactory ) {
-            ((ConfigurableBeanFactory)webAppContext).destroySingletons();
         }
     }
 

@@ -46,6 +46,8 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -340,8 +342,14 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // clear listeners
         this.enterSitemapEventListeners.clear();
         this.leaveSitemapEventListeners.clear();
-        Container.shutdown(this.webAppContext);
-        this.webAppContext = null;
+        if ( this.webAppContext != null ) {
+            if ( webAppContext instanceof ConfigurableApplicationContext ) {
+                ((ConfigurableApplicationContext)webAppContext).close();
+            } else if ( webAppContext instanceof ConfigurableBeanFactory ) {
+                ((ConfigurableBeanFactory)webAppContext).destroySingletons();
+            }
+            this.webAppContext = null;
+        }
     }
 
     private class TreeProcessorRedirector extends ForwardRedirector {
