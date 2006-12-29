@@ -27,6 +27,6 @@ package org.apache.cocoon.spring.impl;
 public abstract class Constants {
 
     /** The default location of spring related configuration files. */
-    public static final String DEFAULT_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
-    public static final String DEFAULT_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
+    public static final String DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
+    public static final String DEFAULT_CLASSPATH_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
 }
