@@ -55,7 +55,7 @@ public class SitemapHelper {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
         // Settings
-        buffer.append("  <cocoon:sitemap location=\"");
+        buffer.append("  <sitemap:sitemap location=\"");
         buffer.append(sitemapLocation);
         buffer.append("\" runningMode=\"");
         buffer.append(runningMode);
@@ -126,7 +126,7 @@ public class SitemapHelper {
         buffer.append("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
         buffer.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
         buffer.append(" xmlns:util=\"http://www.springframework.org/schema/util\"");
-        buffer.append(" xmlns:cocoon=\"http://cocoon.apache.org/schema/sitemap\"");
+        buffer.append(" xmlns:sitemap=\"http://cocoon.apache.org/schema/sitemap\"");
         buffer.append(" xmlns:avalon=\"http://cocoon.apache.org/schema/avalon\"");
         buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd");
         buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd");
