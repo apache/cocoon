@@ -97,6 +97,14 @@ public class SettingsElementParser extends AbstractElementParser {
             throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION, e);
         }
 
+        if ( springConfigLocation != null ) {
+            try {
+                this.handleBeanInclude(parserContext, null, springConfigLocation, "*.xml", true);
+                this.handleBeanInclude(parserContext, null, springConfigLocation + "/" + runningMode, "*.xml", true);            
+            } catch (Exception e) {
+                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + springConfigLocation, e);
+            }
+        }
         return null;
     }
 }
