@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-spring</artifactId>
+      <artifactId>cocoon-spring-configurator</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
