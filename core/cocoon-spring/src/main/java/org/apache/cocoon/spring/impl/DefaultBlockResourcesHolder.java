@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.DeploymentUtil;
 import org.apache.cocoon.spring.BlockResourcesHolder;
 
 /**

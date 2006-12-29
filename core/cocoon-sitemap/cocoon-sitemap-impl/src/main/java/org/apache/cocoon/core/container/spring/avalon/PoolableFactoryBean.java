@@ -26,8 +26,8 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;

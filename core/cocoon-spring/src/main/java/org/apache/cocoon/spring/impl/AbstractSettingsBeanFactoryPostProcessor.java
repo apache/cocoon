@@ -26,8 +26,8 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+import org.apache.cocoon.configuration.MutableSettings;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;

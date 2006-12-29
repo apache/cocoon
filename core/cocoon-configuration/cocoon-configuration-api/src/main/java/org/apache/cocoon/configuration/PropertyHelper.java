@@ -16,12 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.configuration.impl;
+package org.apache.cocoon.configuration;
 
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.apache.cocoon.configuration.Settings;
 
 /**
  * Helper class for replacing property references with the value of the
