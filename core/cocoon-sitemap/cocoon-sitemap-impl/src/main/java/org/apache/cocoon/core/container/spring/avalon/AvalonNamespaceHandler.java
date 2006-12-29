@@ -29,7 +29,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Spring namespace handler for the cocoon avalon namespace.
  * Currently this namespace defines the following elements
- * (in the namespace "http://cocoon.apache.org/avalon"):
+ * (in the namespace "http://cocoon.apache.org/schema/avalon"):
  * "avalon" : This adds all Avalon configured components to the bean factory.
  *            (Attribute location is required)
  *

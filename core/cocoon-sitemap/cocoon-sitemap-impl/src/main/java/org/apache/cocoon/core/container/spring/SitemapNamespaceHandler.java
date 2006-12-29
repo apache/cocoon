@@ -23,7 +23,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Spring namespace handler for the sitemap namespace.
  * Currently this namespace defines the following elements
- * (in the namespace "http://cocoon.apache.org/sitemap"):
+ * (in the namespace "http://cocoon.apache.org/schema/sitemap"):
  * "sitemap" : This sets up a sub context for a sitemap.
  *
  * @version $Id$

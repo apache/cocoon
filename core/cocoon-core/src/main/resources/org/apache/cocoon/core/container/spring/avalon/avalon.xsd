@@ -16,8 +16,8 @@
   limitations under the License.
 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://cocoon.apache.org/avalon"
-        xmlns:tns="http://cocoon.apache.org/avalon">
+        targetNamespace="http://cocoon.apache.org/schema/avalon"
+        xmlns:tns="http://cocoon.apache.org/schema/avalon">
 
     <xsd:element name="avalon" type="tns:avalonType"/>
     <xsd:element name="sitemap" type="tns:sitemapType"/>

@@ -17,8 +17,8 @@
 -->
 <!-- @version $Id$ -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://cocoon.apache.org/sitemap"
-            xmlns:tns="http://cocoon.apache.org/sitemap">
+            targetNamespace="http://cocoon.apache.org/schema/sitemap"
+            xmlns:tns="http://cocoon.apache.org/schema/sitemap">
 
     <xsd:element name="sitemap" type="tns:sitemapType"/>
     <xsd:complexType name="sitemapType">
