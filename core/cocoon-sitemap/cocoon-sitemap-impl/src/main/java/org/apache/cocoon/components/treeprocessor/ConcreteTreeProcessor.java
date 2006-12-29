@@ -29,7 +29,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
-import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
@@ -44,6 +43,7 @@ import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.LeaveSitemapEvent;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.spring.WebAppContextUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -212,7 +212,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         Thread.currentThread().setContextClassLoader(this.classLoader);
         Object handle = null;
         try {
-            handle = Container.enteringContext(this.webAppContext);
+            handle = WebAppContextUtils.enteringContext(this.webAppContext);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
@@ -246,7 +246,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         } finally {
             this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
-            Container.leavingContext(this.webAppContext, handle);
+            WebAppContextUtils.leavingContext(this.webAppContext, handle);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
