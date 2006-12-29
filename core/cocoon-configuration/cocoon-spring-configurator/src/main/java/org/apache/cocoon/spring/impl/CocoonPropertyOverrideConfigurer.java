@@ -18,6 +18,9 @@
  */
 package org.apache.cocoon.spring.impl;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
@@ -40,10 +43,10 @@ import org.springframework.core.io.ResourceLoader;
 public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
 
     /**
-     * The location of the directory where the different property files are
+     * The locations of the directories where the different property files are
      * located.
      */
-    protected String location = Constants.DEFAULT_SPRING_CONFIGURATION_LOCATION;
+    protected List locations = Collections.singletonList(Constants.DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION);
 
     /**
      * The resource loader used to load the property files. This loader is
@@ -58,13 +61,12 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
     protected Settings settings;
 
     /**
-     * Set the directory to search in.
+     * Set the directories to search in.
      * 
-     * @param object
-     *            New value.
+     * @param list     A list of string pointing to directories.
      */
-    public void setLocation(final String object) {
-        this.location = object;
+    public void setLocations(final List list) {
+        this.locations = list;
     }
 
     /** Set the settings. */
@@ -95,9 +97,15 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
         final String mode = RunningModeHelper.determineRunningMode(this.settings != null ? this.settings.getRunningMode() : null);
         final Properties mergedProps = new Properties();
 
-        ResourceUtils.readProperties(this.location, mergedProps, this.resourceLoader, this.logger);
-        // read properties from running-mode dependent directory
-        ResourceUtils.readProperties(this.location + '/' + mode, mergedProps, this.resourceLoader, this.logger);
+        if ( this.locations != null ) {
+            final Iterator i = this.locations.iterator();
+            while ( i.hasNext() ) {
+                final String location = (String)i.next();
+                ResourceUtils.readProperties(location, mergedProps, this.resourceLoader, this.logger);
+                // read properties from running-mode dependent directory
+                ResourceUtils.readProperties(location + '/' + mode, mergedProps, this.resourceLoader, this.logger);
+            }
+        }
 
         if (mergedProps.size() > 0) {
             // Convert the merged properties, if necessary.

@@ -20,6 +20,7 @@ package org.apache.cocoon.spring.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.ResourceUtils;
@@ -275,7 +276,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
                                                       final String        location) {
         final RootBeanDefinition beanDef = this.createBeanDefinition(CocoonPropertyOverrideConfigurer.class.getName(),
                 null, true);
-        beanDef.getPropertyValues().addPropertyValue("location", location);
+        beanDef.getPropertyValues().addPropertyValue("locations", Collections.singletonList(location));
         beanDef.getPropertyValues().addPropertyValue("resourceLoader",
                 parserContext.getReaderContext().getReader().getResourceLoader());
         beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");
