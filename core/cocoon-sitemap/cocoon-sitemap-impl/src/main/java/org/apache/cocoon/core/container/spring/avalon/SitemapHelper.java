@@ -27,7 +27,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
+import org.apache.cocoon.core.container.spring.ChildXmlWebApplicationContext;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
@@ -167,10 +167,16 @@ public class SitemapHelper {
                                                    ((Settings)parentContext.getBean(Settings.ROLE)).getRunningMode());
         PARENT_CONTEXT.set(parentContext);
         try {
-            final CocoonWebApplicationContext context = new CocoonWebApplicationContext(classloader,
-                                                                                        parentContext,
-                                                                                        contextUrl,
+            final ChildXmlWebApplicationContext context = new ChildXmlWebApplicationContext(contextUrl,
                                                                                         definition);
+            context.setServletContext(servletContext);
+            if ( parentContext != null ) {
+                context.setParent(parentContext);
+            }
+            if ( classloader != null ) {
+                context.setClassLoader(classloader);
+            }
+            context.refresh();
             return context;
         } finally {
             PARENT_CONTEXT.set(null);

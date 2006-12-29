@@ -30,7 +30,7 @@ public abstract class Constants {
     public static final String DEFAULT_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
     public static final String DEFAULT_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
 
-    /** The default location of spring related per sitemap configuration files. */
-    public static final String DEFAULT_SITEMAP_SPRING_CONFIGURATION_LOCATION = "config/spring";
-    public static final String DEFAULT_SITEMAP_PROPERTIES_LOCATION = "config/properties";
+    /** The default location of spring related child configuration files. */
+    public static final String DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION = "config/spring";
+    public static final String DEFAULT_CHILD_PROPERTIES_LOCATION = "config/properties";
 }

@@ -28,9 +28,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
@@ -40,34 +38,42 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * @since 2.2
  * @version $Id$
  */
-public class CocoonWebApplicationContext extends XmlWebApplicationContext {
+public class ChildXmlWebApplicationContext extends XmlWebApplicationContext {
 
     /** The base url (already postfixed with a '/'). */
-    protected final String baseUrl;
-
-    /** The class loader for this context (or null). */
-    protected final ClassLoader classLoader;
+    protected String baseUrl;
 
     /** The bean definition for this context. */
-    protected final String beanDefinition;
+    protected String beanDefinition;
 
-    public CocoonWebApplicationContext(ClassLoader           classloader,
-                                       WebApplicationContext parent,
-                                       String                url,
-                                       String                rootDefinition) {
-        this.setParent(parent);
-        this.setClassLoader(classloader);
-        this.setServletContext(parent.getServletContext());
+    public ChildXmlWebApplicationContext() {
+        // nothing to do here
+    }
+
+    public ChildXmlWebApplicationContext(String url,
+                                       String rootDefinition) {
+        this.setBaseUrl(url);
+        this.setBeanDefinition(rootDefinition);
+    }
+
+    public String getBaseUrl() {
+        return this.baseUrl;
+    }
+
+    public void setBaseUrl(String url) {
         if ( url.endsWith("/") ) {
             this.baseUrl = url;
         } else {
             this.baseUrl = url + '/';
         }
-        this.classLoader = (classloader != null ? classloader : ClassUtils.getDefaultClassLoader());
-        //TODO : is there a cleaner way to set the new classLoader to the spring context?
-        Thread.currentThread().setContextClassLoader(this.classLoader);
-        this.beanDefinition = rootDefinition;
-        this.refresh();
+    }
+
+    public String getBeanDefinition() {
+        return beanDefinition;
+    }
+
+    public void setBeanDefinition(String beanDefinition) {
+        this.beanDefinition = beanDefinition;
     }
 
     /**
@@ -84,20 +90,22 @@ public class CocoonWebApplicationContext extends XmlWebApplicationContext {
      * @see org.springframework.web.context.support.AbstractRefreshableWebApplicationContext#getResourceByPath(java.lang.String)
      */
     protected Resource getResourceByPath(String path) {
-        // only if the path does not start with a "/" and is not a url
-        // we assume it is relative
-        if ( path != null && !path.startsWith("/") && !ResourceUtils.isUrl(path) ) {
-            final String absoluteUrl = this.baseUrl + path;
-            if (absoluteUrl.startsWith(CLASSPATH_URL_PREFIX)) {
-                return new ClassPathResource(absoluteUrl.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
-            }
-            try {
-                // try URL
-                URL url = new URL(absoluteUrl);
-                return new UrlResource(url);
-            } catch (MalformedURLException ex) {
-                // no URL -> resolve resource path
-                return super.getResourceByPath(absoluteUrl);
+        if ( this.baseUrl != null ) {
+            // only if the path does not start with a "/" and is not a url
+            // we assume it is relative
+            if ( path != null && !path.startsWith("/") && !ResourceUtils.isUrl(path) ) {
+                final String absoluteUrl = this.baseUrl + path;
+                if (absoluteUrl.startsWith(CLASSPATH_URL_PREFIX)) {
+                    return new ClassPathResource(absoluteUrl.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
+                }
+                try {
+                    // try URL
+                    URL url = new URL(absoluteUrl);
+                    return new UrlResource(url);
+                } catch (MalformedURLException ex) {
+                    // no URL -> resolve resource path
+                    return super.getResourceByPath(absoluteUrl);
+                }
             }
         }
         return super.getResourceByPath(path);
