@@ -157,7 +157,17 @@ public class SettingsBeanFactoryPostProcessor
             throw new IllegalArgumentException(msg);
         }
         */
-        this.servletContext.log("Apache Cocoon is running in mode: " + mode);
+        final Properties pomProps = ResourceUtils.getPOMProperties("org.apache.cocoon", "cocoon-spring-configurator");
+        final String version;
+        if ( pomProps != null ) {
+            version = pomProps.getProperty("version");
+        } else {
+            version = null;
+        }
+
+        this.servletContext.log("Apache Cocoon Spring Configurator " +
+                                (version != null ? "v" + version + " " : "") +
+                                "is running in mode '" + mode + "'.");
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(mode);
