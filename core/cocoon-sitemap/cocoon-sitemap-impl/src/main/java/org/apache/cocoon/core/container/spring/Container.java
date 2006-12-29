@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import java.util.Stack;
-
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.spring.impl.ServletContextFactoryBean;
@@ -35,8 +33,6 @@ public abstract class Container {
 
     /** The name of the request attribute containing the current bean factory. */
     public static final String CONTAINER_REQUEST_ATTRIBUTE = Container.class.getName();
-
-    protected static final String CONTAINER_STACK_REQUEST_ATTRIBUTE = Container.class.getName() + "/Stack";
 
     protected static WebApplicationContext ROOT_CONTAINER;
 
@@ -69,20 +65,14 @@ public abstract class Container {
      * @return A handle which should be passed to {@link #leavingContext(RequestAttributes, Object)}.
      */
     public static Object enteringContext(WebApplicationContext webAppContext) {
+        // get request attributes
         final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-        final Object oldContext = attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
-        if ( oldContext != null ) {
-            Stack stack = (Stack)attributes.getAttribute(CONTAINER_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
-            if ( stack == null ) {
-                stack = new Stack();
-                attributes.setAttribute(CONTAINER_STACK_REQUEST_ATTRIBUTE, stack, RequestAttributes.SCOPE_REQUEST);
-            }
-            stack.push(oldContext);
-        }
+        final WebApplicationContext oldContext = (WebApplicationContext)attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        final ContextInfo info = new ContextInfo(oldContext, oldClassLoader);
         attributes.setAttribute(CONTAINER_REQUEST_ATTRIBUTE, webAppContext, RequestAttributes.SCOPE_REQUEST);
         Thread.currentThread().setContextClassLoader(webAppContext.getClassLoader());
-        return oldClassLoader;
+        return info;
     }
 
     /**
@@ -90,17 +80,19 @@ public abstract class Container {
      * @param handle     The returned handle from {@link #enteringContext(RequestAttributes)}.
      */
     public static void leavingContext(WebApplicationContext webAppContext, Object handle) {
+        if ( !(handle instanceof ContextInfo) ) {
+            throw new IllegalArgumentException("Handle must be an instance of ContextInfo and not " + handle);
+        }
+        final ContextInfo info = (ContextInfo)handle;
+        // get request attributes
         final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-        Thread.currentThread().setContextClassLoader((ClassLoader)handle);
-        final Stack stack = (Stack)attributes.getAttribute(CONTAINER_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
-        if ( stack == null ) {
+        // restore class loader
+        Thread.currentThread().setContextClassLoader(info.classLoader);
+        // restore previous web application context (or remove attribute)
+        if ( info.webAppContext == null ) {
             attributes.removeAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         } else {
-            final Object oldContext = stack.pop();
-            attributes.setAttribute(CONTAINER_REQUEST_ATTRIBUTE, oldContext, RequestAttributes.SCOPE_REQUEST);
-            if ( stack.size() == 0 ) {
-                attributes.removeAttribute(CONTAINER_STACK_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
-            }
+            attributes.setAttribute(CONTAINER_REQUEST_ATTRIBUTE, info.webAppContext, RequestAttributes.SCOPE_REQUEST);
         }
     }
 
@@ -109,6 +101,16 @@ public abstract class Container {
             ((ConfigurableApplicationContext)webAppContext).close();
         } else if ( webAppContext instanceof ConfigurableBeanFactory ) {
             ((ConfigurableBeanFactory)webAppContext).destroySingletons();
+        }
+    }
+
+    protected static final class ContextInfo {
+        public final ClassLoader classLoader;
+        public final WebApplicationContext webAppContext;
+        
+        public ContextInfo(WebApplicationContext w, ClassLoader c) {
+            this.classLoader = c;
+            this.webAppContext = w;
         }
     }
 }
