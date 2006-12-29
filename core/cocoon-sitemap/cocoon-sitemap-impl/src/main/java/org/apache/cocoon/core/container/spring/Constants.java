@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.spring.impl;
+package org.apache.cocoon.core.container.spring;
 
 /**
  * Some constants for the spring integration.
@@ -26,7 +26,7 @@ package org.apache.cocoon.spring.impl;
  */
 public abstract class Constants {
 
-    /** The default location of spring related configuration files. */
-    public static final String DEFAULT_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
-    public static final String DEFAULT_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
+    /** The default location of spring related child configuration files. */
+    public static final String DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION = "config/spring";
+    public static final String DEFAULT_CHILD_PROPERTIES_LOCATION = "config/properties";
 }

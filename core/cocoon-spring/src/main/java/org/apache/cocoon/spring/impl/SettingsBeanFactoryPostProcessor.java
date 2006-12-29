@@ -239,6 +239,11 @@ public class SettingsBeanFactoryPostProcessor
             }
         }
         
+        if ( this.additionalProperties != null ) {
+            PropertyHelper.replaceAll(this.additionalProperties, s);
+            properties.putAll(this.additionalProperties);
+        }
+
         // now overwrite with system properties
         try {
             properties.putAll(System.getProperties());
