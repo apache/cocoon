@@ -31,7 +31,7 @@ import org.apache.cocoon.core.container.spring.ChildXmlWebApplicationContext;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
-import org.apache.cocoon.spring.WebAppContextUtils;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 

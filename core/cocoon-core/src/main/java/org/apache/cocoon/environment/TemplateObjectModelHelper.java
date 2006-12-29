@@ -28,7 +28,7 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.WebAppContextUtils;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;

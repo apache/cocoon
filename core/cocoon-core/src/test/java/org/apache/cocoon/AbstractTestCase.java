@@ -28,7 +28,7 @@ import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockRequestAttributes;
 import org.apache.cocoon.environment.mock.MockResponse;
-import org.apache.cocoon.spring.impl.ServletContextFactoryBean;
+import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;

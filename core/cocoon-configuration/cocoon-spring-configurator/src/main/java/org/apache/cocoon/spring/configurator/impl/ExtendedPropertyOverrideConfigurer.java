@@ -39,7 +39,7 @@ import org.springframework.core.io.ResourceLoader;
  * @version $Id$
  * @since 1.0
  */
-public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
+public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigurer {
 
     /**
      * The locations of the directories where the different property files are
@@ -59,7 +59,7 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
      */
     protected Settings settings;
 
-    public CocoonPropertyOverrideConfigurer() {
+    public ExtendedPropertyOverrideConfigurer() {
         // add default locations
         final List list = new ArrayList();
         list.add(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);

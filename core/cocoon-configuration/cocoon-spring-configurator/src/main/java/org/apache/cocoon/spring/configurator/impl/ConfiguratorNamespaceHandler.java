@@ -32,7 +32,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * @version $Id$
  * @since 1.0
  */
-public class CocoonNamespaceHandler extends NamespaceHandlerSupport {
+public class ConfiguratorNamespaceHandler extends NamespaceHandlerSupport {
 
     /**
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
