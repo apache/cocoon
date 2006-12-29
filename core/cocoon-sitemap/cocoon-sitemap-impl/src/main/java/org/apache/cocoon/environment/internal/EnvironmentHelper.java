@@ -30,10 +30,10 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.util.SourceUtil;
-import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.spring.WebAppContextUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 
@@ -392,7 +392,7 @@ implements SourceResolver, Serviceable, Disposable {
     static public ServiceManager getSitemapServiceManager() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
-            return (ServiceManager)Container.getCurrentWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+            return (ServiceManager)WebAppContextUtils.getCurrentWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         }
         return null;
     }

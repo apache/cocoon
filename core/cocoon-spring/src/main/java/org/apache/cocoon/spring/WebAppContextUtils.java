@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring;
 
 import javax.servlet.ServletContext;
 
@@ -27,13 +27,18 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 /**
  * @version $Id$
  */
-public abstract class Container {
+public abstract class WebAppContextUtils {
 
     /** The name of the request attribute containing the current bean factory. */
-    public static final String CONTAINER_REQUEST_ATTRIBUTE = Container.class.getName();
+    public static final String CONTAINER_REQUEST_ATTRIBUTE = WebAppContextUtils.class.getName();
 
     protected static WebApplicationContext ROOT_CONTAINER;
 
+    /**
+     * Get the current web application context.
+     * @throws IllegalStateException if no WebApplicationContext could not be found
+     * @return
+     */
     public static WebApplicationContext getCurrentWebApplicationContext() {
         final RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         return getCurrentWebApplicationContext(attributes);
@@ -42,6 +47,7 @@ public abstract class Container {
     /**
      * Return the current web application context.
      * @param attributes     The request attributes.
+     * @throws IllegalStateException if no WebApplicationContext could not be found
      * @return The web application context.
      */
     protected static WebApplicationContext getCurrentWebApplicationContext(RequestAttributes attributes) {
@@ -94,6 +100,10 @@ public abstract class Container {
         }
     }
 
+    /**
+     * Private bean keeping track of the class loader and web application context.
+     * @version $Id$
+     */
     protected static final class ContextInfo {
         public final ClassLoader classLoader;
         public final WebApplicationContext webAppContext;

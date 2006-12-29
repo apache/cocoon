@@ -28,10 +28,10 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.CocoonWebApplicationContext;
-import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.spring.WebAppContextUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -154,7 +154,7 @@ public class SitemapHelper {
         }
         final String contextUrl = sitemapLocation.substring(0, pos + 1);
 
-        final WebApplicationContext parentContext = Container.getCurrentWebApplicationContext();
+        final WebApplicationContext parentContext = WebAppContextUtils.getCurrentWebApplicationContext();
 
         // get classloader
 //      TODO rcl            

@@ -28,8 +28,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.Container;
 import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.spring.WebAppContextUtils;
 import org.apache.commons.collections.IteratorUtils;
 
 /**
@@ -68,7 +68,7 @@ public final class SettingsInputModule
      */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        final Settings settings = (Settings)Container.getCurrentWebApplicationContext().getBean(Settings.ROLE);
+        final Settings settings = (Settings)WebAppContextUtils.getCurrentWebApplicationContext().getBean(Settings.ROLE);
         return settings.getProperty(name);
     }
 
