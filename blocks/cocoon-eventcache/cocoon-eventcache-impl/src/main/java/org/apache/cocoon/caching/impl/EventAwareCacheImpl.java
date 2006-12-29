@@ -28,7 +28,7 @@ import org.apache.cocoon.caching.EventAware;
 import org.apache.cocoon.caching.EventRegistry;
 import org.apache.cocoon.caching.validity.Event;
 import org.apache.cocoon.caching.validity.EventValidity;
-import org.apache.cocoon.components.source.impl.SitemapSource;
+import org.apache.cocoon.source.impl.SitemapSource;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
