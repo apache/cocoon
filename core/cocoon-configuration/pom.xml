@@ -34,5 +34,6 @@
   <name>Cocoon Configuration [modules]</name>
   <modules>
     <module>cocoon-configuration-api</module>
+    <module>cocoon-spring-configurator</module>
   </modules>
 </project>
