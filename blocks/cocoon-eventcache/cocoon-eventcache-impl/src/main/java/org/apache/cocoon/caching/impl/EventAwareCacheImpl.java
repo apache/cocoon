@@ -41,9 +41,7 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 public class EventAwareCacheImpl extends CacheImpl implements Initializable,
                                                               EventAware {
     
-    private ServiceManager m_manager;
-
-	private EventRegistry m_eventRegistry;
+	private EventRegistry eventRegistry;
 
 	/** 
      * Clears the entire Cache, including all registered event-pipeline key 
@@ -51,7 +49,7 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
 	 */
 	public void clear() {
 		super.clear();
-        m_eventRegistry.clear();
+        this.eventRegistry.clear();
 	}
     
 	/** 
@@ -86,9 +84,8 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      * Look up the EventRegistry 
      */
 	public void service(ServiceManager manager) throws ServiceException {
-		this.m_manager = manager;
         super.service(manager);
-        this.m_eventRegistry = (EventRegistry)manager.lookup(EventRegistry.ROLE);
+        this.eventRegistry = (EventRegistry)this.manager.lookup(EventRegistry.ROLE);
 	}
 
 	/**
@@ -97,7 +94,7 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
 	 */
 	public void remove(Serializable key) {
 		super.remove(key);
-        m_eventRegistry.removeKey(key);
+        this.eventRegistry.removeKey(key);
 	}
     
     /**
@@ -108,7 +105,7 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      */
     public void processEvent(Event e) {
         if (e == null) return;
-        Serializable[] keys = m_eventRegistry.keysForEvent(e);
+        Serializable[] keys = this.eventRegistry.keysForEvent(e);
         if (keys == null) return;
         for (int i=0;i<keys.length; i++) {
             if (keys[i] != null) {
@@ -130,7 +127,7 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      * orphaned Event/PipelineKey mappings.
      */
 	public void initialize() throws Exception {
-		if (!m_eventRegistry.wasRecoverySuccessful()) {
+		if (!this.eventRegistry.wasRecoverySuccessful()) {
             super.clear();
         } else {
             // Not sure if we want this overhead here, but where else?
@@ -147,11 +144,11 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      * removed abnormally or is not configured with persistence.
      */
     public void veryifyEventCache() {
-        Serializable[] keys = m_eventRegistry.allKeys();
+        Serializable[] keys = this.eventRegistry.allKeys();
         if (keys == null) return;
         for (int i=0; i<keys.length; i++) {
             if (!this.containsKey(keys[i])) {
-                m_eventRegistry.removeKey(keys[i]);
+                this.eventRegistry.removeKey(keys[i]);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Cache key no longer valid: " + 
                             keys[i]);
@@ -164,10 +161,11 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      * Release resources
      */
 	public void dispose() {
-        m_manager.release(m_eventRegistry);
+        if ( this.manager != null ) {
+            this.manager.release(this.eventRegistry);
+            this.eventRegistry = null;
+        }
 		super.dispose();
-        m_manager = null;
-        m_eventRegistry = null;
 	}
 
     private void examineValidity(SourceValidity val, Serializable key) {
@@ -196,7 +194,7 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Found EventValidity: " + val.toString());
         }
-        m_eventRegistry.register(val.getEvent(),key); 
+        this.eventRegistry.register(val.getEvent(),key); 
     }
 
 }
