@@ -20,13 +20,32 @@ package org.apache.cocoon.spring.impl;
 
 /**
  * Some constants for the spring integration.
- * 
+ * The default location of spring related configuration files.
+ *
  * @version $Id$
  * @since 1.0
  */
 public abstract class Constants {
 
-    /** The default location of spring related configuration files. */
-    public static final String DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
-    public static final String DEFAULT_CLASSPATH_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
+    /**
+     * The location of spring configuration files in the classpath.
+     * From this location bean definitions (*.xml) and property overrides (*.properties)
+     * are read.
+     */
+    public static final String CLASSPATH_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
+
+    /**
+     * The location of property files (*.properties) for the settings.
+     */
+    public static final String CLASSPATH_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
+
+    /**
+     * The location of global property overrides (*.properties).
+     */
+    public static final String GLOBAL_SPRING_CONFIGURATION_LOCATION = "/WEB-INF/cocoon/spring";
+
+    /**
+     * The location of global property files (*.properties) for the settings.
+     */
+    public static final String GLOBAL_PROPERTIES_LOCATION = "/WEB-INF/cocoon/properties";
 }

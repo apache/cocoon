@@ -54,7 +54,7 @@ public class SettingsElementParser extends AbstractElementParser {
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final String springConfigLocation = this.getAttributeValue(element, "location",
-                Constants.DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION);
+                Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
 
         // create bean definition for settings object
         final String componentClassName = this.getAttributeValue(element, PROCESSOR_CLASS_NAME_ATTR,
@@ -83,10 +83,10 @@ public class SettingsElementParser extends AbstractElementParser {
 
         // handle includes
         try {
-            this.handleBeanInclude(parserContext, null, Constants.DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION, "*.xml", true);
-            this.handleBeanInclude(parserContext, null, Constants.DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION + "/" + runningMode, "*.xml", true);
+            this.handleBeanInclude(parserContext, null, Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION, "*.xml", true);
+            this.handleBeanInclude(parserContext, null, Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION + "/" + runningMode, "*.xml", true);
         } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION, e);
+            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION, e);
         }
 
         return null;
