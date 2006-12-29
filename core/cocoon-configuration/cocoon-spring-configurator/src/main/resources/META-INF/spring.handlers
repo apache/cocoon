@@ -13,4 +13,4 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-http\://cocoon.apache.org/schema/configurator=org.apache.cocoon.spring.impl.CocoonNamespaceHandler
+http\://cocoon.apache.org/schema/configurator=org.apache.cocoon.spring.configurator.impl.ConfiguratorNamespaceHandler

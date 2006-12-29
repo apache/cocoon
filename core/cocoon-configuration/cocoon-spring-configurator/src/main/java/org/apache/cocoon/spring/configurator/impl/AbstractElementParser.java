@@ -16,14 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.spring.impl;
+package org.apache.cocoon.spring.configurator.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.ResourceUtils;
+import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;

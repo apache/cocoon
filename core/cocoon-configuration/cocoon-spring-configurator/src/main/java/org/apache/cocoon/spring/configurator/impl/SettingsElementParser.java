@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.spring.impl;
+package org.apache.cocoon.spring.configurator.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.BlockResourcesHolder;
+import org.apache.cocoon.spring.configurator.BlockResourcesHolder;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
