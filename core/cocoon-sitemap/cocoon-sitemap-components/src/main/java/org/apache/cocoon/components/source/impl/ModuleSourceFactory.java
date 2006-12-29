@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.cocoon.source.impl;
+package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,10 +36,10 @@ import org.apache.excalibur.source.SourceFactory;
 import org.apache.cocoon.components.ContextHelper;
 
 /**
- * A factory for 'xmodule:' sources (see {@link XModuleSource}). 
+ * A factory for 'module:' sources (see {@link ModuleSource}). 
  *
  */
-public class XModuleSourceFactory extends AbstractLogEnabled
+public class ModuleSourceFactory extends AbstractLogEnabled
   implements SourceFactory, Serviceable, Contextualizable, ThreadSafe {
     
     private ServiceManager manager;
@@ -61,7 +61,7 @@ public class XModuleSourceFactory extends AbstractLogEnabled
     
 
     /**
-     * Get a {@link XModuleSource} object.
+     * Get a {@link ModuleSource} object.
      * 
      * @param location   The URI to resolve - this URI includes the scheme.
      * @param parameters this is optional and not used here
@@ -70,7 +70,7 @@ public class XModuleSourceFactory extends AbstractLogEnabled
         throws IOException, MalformedURLException {
 
         Map objectModel = ContextHelper.getObjectModel( this.context );
-        return new XModuleSource( objectModel, location, this.manager, getLogger() );
+        return new ModuleSource( objectModel, location, this.manager, getLogger() );
     }
     
     /**
@@ -79,4 +79,5 @@ public class XModuleSourceFactory extends AbstractLogEnabled
     public void release( Source source ) {
         // Do nothing here
     }
+
 }
