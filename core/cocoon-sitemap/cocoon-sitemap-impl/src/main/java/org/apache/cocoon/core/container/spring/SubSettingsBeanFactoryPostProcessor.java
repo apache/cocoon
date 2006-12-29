@@ -28,7 +28,6 @@ import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.ResourceUtils;
 import org.apache.cocoon.spring.impl.AbstractSettingsBeanFactoryPostProcessor;
-import org.apache.cocoon.spring.impl.Constants;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.core.io.Resource;
@@ -47,8 +46,6 @@ public class SubSettingsBeanFactoryPostProcessor
     protected List directories;
 
     protected boolean useDefaultIncludes = true;
-
-    protected Properties globalSitemapVariables;    
 
     /**
      * Initialize this settings.
@@ -73,8 +70,8 @@ public class SubSettingsBeanFactoryPostProcessor
         this.directories = directories;
     }
 
-    public void setGlobalSitemapVariables(Properties globalSitemapVariables) {
-        this.globalSitemapVariables = globalSitemapVariables;
+    public void setAdditionalProperties(Properties props) {
+        this.additionalProperties = props;
     }
 
     public void setUseDefaultIncludes(boolean useDefaultIncludes) {
@@ -138,9 +135,9 @@ public class SubSettingsBeanFactoryPostProcessor
             }
         }
 
-        if ( globalSitemapVariables != null ) {
-            PropertyHelper.replaceAll(globalSitemapVariables, s);
-            properties.putAll(globalSitemapVariables);
+        if ( this.additionalProperties != null ) {
+            PropertyHelper.replaceAll(this.additionalProperties, s);
+            properties.putAll(this.additionalProperties);
         }
         PropertyHelper.replaceAll(properties, parent);
         s.configure(properties);

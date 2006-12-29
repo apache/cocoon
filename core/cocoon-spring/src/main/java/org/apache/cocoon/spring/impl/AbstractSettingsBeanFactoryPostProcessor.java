@@ -70,6 +70,8 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
 
     protected ResourceLoader resourceLoader;
 
+    protected Properties additionalProperties;
+
     /**
      * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */

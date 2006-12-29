@@ -24,7 +24,6 @@ import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.impl.AbstractElementParser;
-import org.apache.cocoon.spring.impl.Constants;
 import org.apache.cocoon.spring.impl.RunningModeHelper;
 import org.apache.cocoon.spring.impl.SettingsElementParser;
 import org.apache.cocoon.util.Deprecation;
@@ -143,7 +142,7 @@ public class SitemapElementParser extends AbstractElementParser {
 
             final Properties globalSitemapVariables = this.getGlobalSitemapVariables(rootElement);
             if ( globalSitemapVariables != null ) {
-                def.getPropertyValues().addPropertyValue("globalSitemapVariables", globalSitemapVariables);                
+                def.getPropertyValues().addPropertyValue("additionalProperties", globalSitemapVariables);                
             }
 
             final List includes = this.getPropertyIncludes(componentsElement);
