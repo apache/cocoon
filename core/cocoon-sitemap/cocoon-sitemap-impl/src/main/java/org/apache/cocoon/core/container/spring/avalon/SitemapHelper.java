@@ -170,9 +170,7 @@ public class SitemapHelper {
             final ChildXmlWebApplicationContext context = new ChildXmlWebApplicationContext(contextUrl,
                                                                                         definition);
             context.setServletContext(servletContext);
-            if ( parentContext != null ) {
-                context.setParent(parentContext);
-            }
+            context.setParent(parentContext);
             if ( classloader != null ) {
                 context.setClassLoader(classloader);
             }
