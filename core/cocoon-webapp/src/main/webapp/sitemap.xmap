@@ -156,12 +156,6 @@
       <map:serialize type="xhtml"/>
     </map:match>
 
-    <!-- FIXME Remove later -->
-    <map:match pattern="v">
-      <map:generate type="virtual"/>
-      <map:serialize type="xhtml"/>
-    </map:match>
-
     <!--+
         | The default matching is also capable of matching more than a
         | single request by the use of 'wildcards'. There are two kinds of

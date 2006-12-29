@@ -68,15 +68,6 @@
    <map:generator name="exception" src="org.apache.cocoon.generation.ExceptionGenerator"/>
    <map:generator label="content" logger="sitemap.generator.mp3directory" name="mp3directory" src="org.apache.cocoon.generation.MP3DirectoryGenerator"/>
 
-   <!--
-     - Virtual Pipeline Generator: Composed of other pipeline components.
-     -->
-   <map:generator name="virtual" src="org.apache.cocoon.generation.VirtualPipelineGenerator">
-     <map:generate src="welcome.xml"/>
-     <map:transform src="welcome.xslt">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-     </map:transform>
-   </map:generator>
  </map:generators>
 
 
