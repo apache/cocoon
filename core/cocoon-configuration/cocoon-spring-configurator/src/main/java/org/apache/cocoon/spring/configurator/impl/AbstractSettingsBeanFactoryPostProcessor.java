@@ -50,7 +50,7 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
  * them in the spring configuration files.
  * In addition this bean acts as a factory bean providing the settings object.
  * @see SettingsBeanFactoryPostProcessor
- * @see SubSettingsBeanFactoryPostProcessor
+ * @see ChildSettingsBeanFactoryPostProcessor
  *
  * @since 1.0
  * @version $Id$

@@ -38,7 +38,7 @@ import org.springframework.core.io.Resource;
  * @since 2.2
  * @version $Id$
  */
-public class SubSettingsBeanFactoryPostProcessor
+public class ChildSettingsBeanFactoryPostProcessor
     extends AbstractSettingsBeanFactoryPostProcessor {
 
     protected String location;

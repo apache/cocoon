@@ -44,7 +44,7 @@ import org.xml.sax.InputSource;
  * and process all includes of spring configurations.
  *
  * @see SitemapNamespaceHandler
- * @see SubSettingsBeanFactoryPostProcessor
+ * @see ChildSettingsBeanFactoryPostProcessor
  * @version $Id$
  * @since 2.2
  */
@@ -135,7 +135,7 @@ public class SitemapElementParser extends AbstractElementParser {
                 this.registerPropertyOverrideConfigurer(parserContext, Collections.singletonList(Constants.DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION));
             }
             
-            RootBeanDefinition def =  this.createBeanDefinition(SubSettingsBeanFactoryPostProcessor.class.getName(),
+            RootBeanDefinition def =  this.createBeanDefinition(ChildSettingsBeanFactoryPostProcessor.class.getName(),
                     "init",
                     false);
             def.getPropertyValues().addPropertyValue("location", location);
