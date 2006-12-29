@@ -18,6 +18,7 @@
  */
 package org.apache.cocoon.spring.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +47,7 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
      * The locations of the directories where the different property files are
      * located.
      */
-    protected List locations = Collections.singletonList(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
+    protected List locations;
 
     /**
      * The resource loader used to load the property files. This loader is
@@ -59,6 +60,13 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
      * The settings object.
      */
     protected Settings settings;
+
+    public CocoonPropertyOverrideConfigurer() {
+        // add default locations
+        final List list = new ArrayList();
+        list.add(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
+        list.add(Constants.GLOBAL_SPRING_CONFIGURATION_LOCATION);
+    }
 
     /**
      * Set the directories to search in.
