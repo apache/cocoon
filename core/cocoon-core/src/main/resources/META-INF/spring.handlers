@@ -13,5 +13,5 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-http\://cocoon.apache.org/sitemap=org.apache.cocoon.core.container.spring.SitemapNamespaceHandler
-http\://cocoon.apache.org/avalon=org.apache.cocoon.core.container.spring.avalon.AvalonNamespaceHandler
+http\://cocoon.apache.org/schema/sitemap=org.apache.cocoon.core.container.spring.SitemapNamespaceHandler
+http\://cocoon.apache.org/schema/avalon=org.apache.cocoon.core.container.spring.avalon.AvalonNamespaceHandler
