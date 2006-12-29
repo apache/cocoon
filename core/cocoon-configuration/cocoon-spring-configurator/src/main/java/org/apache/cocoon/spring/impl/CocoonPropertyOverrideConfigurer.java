@@ -46,7 +46,7 @@ public class CocoonPropertyOverrideConfigurer extends PropertyOverrideConfigurer
      * The locations of the directories where the different property files are
      * located.
      */
-    protected List locations = Collections.singletonList(Constants.DEFAULT_CLASSPATH_SPRING_CONFIGURATION_LOCATION);
+    protected List locations = Collections.singletonList(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
 
     /**
      * The resource loader used to load the property files. This loader is
