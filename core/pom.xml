@@ -33,7 +33,6 @@
   <name>Cocoon Core [modules]</name>
   <modules>
     <module>cocoon-blocks-fw</module>
-    <module>cocoon-common</module>
     <module>cocoon-configuration</module>
     <module>cocoon-core</module>
     <module>cocoon-pipeline</module>
