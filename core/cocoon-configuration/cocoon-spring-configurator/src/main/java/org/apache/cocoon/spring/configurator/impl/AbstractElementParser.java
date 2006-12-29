@@ -273,12 +273,12 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      */
     protected void registerPropertyOverrideConfigurer(final ParserContext parserContext,
                                                       final List          locations) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(CocoonPropertyOverrideConfigurer.class.getName(),
+        final RootBeanDefinition beanDef = this.createBeanDefinition(ExtendedPropertyOverrideConfigurer.class.getName(),
                 null, true);
         beanDef.getPropertyValues().addPropertyValue("locations", locations);
         beanDef.getPropertyValues().addPropertyValue("resourceLoader",
                 parserContext.getReaderContext().getReader().getResourceLoader());
         beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");
-        this.register(beanDef, CocoonPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
+        this.register(beanDef, ExtendedPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
     }
 }

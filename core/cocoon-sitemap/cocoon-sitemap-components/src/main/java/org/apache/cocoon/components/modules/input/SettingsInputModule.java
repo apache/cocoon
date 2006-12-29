@@ -29,7 +29,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.processing.ProcessInfoProvider;
-import org.apache.cocoon.spring.WebAppContextUtils;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.commons.collections.IteratorUtils;
 
 /**

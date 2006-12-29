@@ -33,7 +33,7 @@ import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.spring.WebAppContextUtils;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 

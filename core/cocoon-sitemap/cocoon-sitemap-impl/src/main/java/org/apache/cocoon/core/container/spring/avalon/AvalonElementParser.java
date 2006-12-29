@@ -35,7 +35,7 @@ import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.spring.impl.AbstractElementParser;
+import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
 import org.apache.cocoon.transformation.Transformer;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;

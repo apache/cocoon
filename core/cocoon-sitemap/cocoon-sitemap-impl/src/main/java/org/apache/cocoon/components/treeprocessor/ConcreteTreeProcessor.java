@@ -43,7 +43,7 @@ import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.LeaveSitemapEvent;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
-import org.apache.cocoon.spring.WebAppContextUtils;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

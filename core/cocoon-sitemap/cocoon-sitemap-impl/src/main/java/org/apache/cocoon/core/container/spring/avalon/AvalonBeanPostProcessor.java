@@ -34,7 +34,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.configuration.MutableSettings;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.ResourceUtils;
+import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
