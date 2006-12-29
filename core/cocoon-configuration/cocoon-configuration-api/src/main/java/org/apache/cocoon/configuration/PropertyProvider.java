@@ -27,7 +27,7 @@ import java.util.Properties;
  * context.
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public interface PropertyProvider {
 

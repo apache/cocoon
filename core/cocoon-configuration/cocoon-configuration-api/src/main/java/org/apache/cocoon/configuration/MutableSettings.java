@@ -23,10 +23,15 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * This object holds the global configuration of Cocoon.
+ * This is an implementation of the {@link Settings} object.
+ * The value can either be set using the various setter methods
+ * or through properties ({@link #configure(Properties)}.
+ *
+ * The object can be set to read-only using {@link #makeReadOnly()}. From that
+ * on the object is immutable and can't be changed anymore.
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public class MutableSettings implements Settings {
 
@@ -107,7 +112,14 @@ public class MutableSettings implements Settings {
         this.runningMode = mode;
     }
 
+    /**
+     * Create a new child settings object.
+     * @param parent The parent settings object.
+     */
     public MutableSettings(Settings parent) {
+        if ( parent == null ) {
+            throw new IllegalArgumentException("Parent is not allowed to be null.");
+        }
         this.parent = parent;
         this.runningMode = parent.getRunningMode();
     }
