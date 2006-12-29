@@ -34,6 +34,5 @@
   <name>Cocoon Configuration [modules]</name>
   <modules>
     <module>cocoon-configuration-api</module>
-    <module>cocoon-configuration-impl</module>
   </modules>
 </project>
