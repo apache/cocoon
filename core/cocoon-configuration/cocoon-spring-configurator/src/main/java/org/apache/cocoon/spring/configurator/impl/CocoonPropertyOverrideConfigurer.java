@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.spring.impl;
+package org.apache.cocoon.spring.configurator.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.ResourceUtils;
+import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyOverrideConfigurer;

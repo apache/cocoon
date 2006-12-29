@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.spring.impl;
+package org.apache.cocoon.spring.configurator.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +30,7 @@ import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
-import org.apache.cocoon.spring.ResourceUtils;
+import org.apache.cocoon.spring.configurator.ResourceUtils;
 
 /**
  * This is a bean factory post processor which handles all the settings stuff
@@ -165,17 +165,17 @@ public class SettingsBeanFactoryPostProcessor
         final Properties properties = new Properties();
 
         // now read all properties from classpath directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.CLASSPATH_PROPERTIES_LOCATION,
+        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.CLASSPATH_PROPERTIES_LOCATION,
                 properties, this.getResourceLoader(), this.logger);
         // read all properties from the mode dependent directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.CLASSPATH_PROPERTIES_LOCATION
+        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.CLASSPATH_PROPERTIES_LOCATION
                 + "/" + mode, properties, this.getResourceLoader(), this.logger);
 
         // now read all properties from the properties directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.GLOBAL_PROPERTIES_LOCATION,
+        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.GLOBAL_PROPERTIES_LOCATION,
                 properties, this.getResourceLoader(), this.logger);
         // read all properties from the mode dependent directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.impl.Constants.GLOBAL_PROPERTIES_LOCATION
+        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.GLOBAL_PROPERTIES_LOCATION
                 + "/" + mode, properties, this.getResourceLoader(), this.logger);
 
         // fill from the servlet context

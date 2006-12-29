@@ -13,4 +13,4 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-http\://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.xsd=org/apache/cocoon/spring/impl/cocoon.xsd
+http\://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.xsd=org/apache/cocoon/spring/configurator/schema/cocoon-configurator-1.0.xsd
