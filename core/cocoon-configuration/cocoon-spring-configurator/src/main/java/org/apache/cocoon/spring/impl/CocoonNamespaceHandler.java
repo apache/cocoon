@@ -23,7 +23,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Spring namespace handler for the cocoon core namespace.
  * Currently this namespace defines the following elements
- * (in the namespace "http://cocoon.apache.org/core"):
+ * (in the namespace "http://cocoon.apache.org/schema/configurator"):
  * "settings" : This sets up the Cocoon Settings object (by reading the property
  *              files located under /WEB-INF/cocoon/properties.
  *              By specifying the attribute "processorClassName" an own implementation

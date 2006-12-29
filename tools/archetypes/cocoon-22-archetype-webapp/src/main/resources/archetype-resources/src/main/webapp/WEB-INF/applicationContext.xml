@@ -19,15 +19,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:cocoon="http://cocoon.apache.org/core"
+       xmlns:configurator="http://cocoon.apache.org/schema/configurator"
        xmlns:avalon="http://cocoon.apache.org/avalon"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
-                           http://cocoon.apache.org/core http://cocoon.apache.org/core.xsd
+                           http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.xsd
                            http://cocoon.apache.org/avalon http://cocoon.apache.org/avalon.xsd">
 
-  <!-- Load all the properties for Cocoon -->
-  <cocoon:settings/>
+  <!-- Activate Cocoon Spring Configurator -->
+  <configurator:settings/>
 
   <!-- Load Avalon configurations
        If you want to use a different logger than the default log4j logger,
