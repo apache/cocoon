@@ -194,4 +194,19 @@ public abstract class ResourceUtils {
             return ((Resource) o1).getFilename().compareTo(((Resource) o2).getFilename());
         }
     }
+
+    /**
+     * Return the properties added by Maven.
+     * @return Returns a properties object or null if the properties can't be found/read.
+     */
+    public static Properties getPOMProperties(String groupId, String versionId) {
+        final String resourceName = "META-INF/maven/" + groupId + "/" + versionId + "/pom.properties";
+        try {
+            final Properties p = new Properties();
+            p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName));
+            return p;
+        } catch (IOException ignore) {
+            return null;
+        }
+    }
 }
