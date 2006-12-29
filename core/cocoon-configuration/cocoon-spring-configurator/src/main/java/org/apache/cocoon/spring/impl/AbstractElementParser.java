@@ -20,7 +20,7 @@ package org.apache.cocoon.spring.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.ResourceUtils;
@@ -43,8 +43,7 @@ import org.w3c.dom.Element;
  * This is a base class for all bean definition parsers used in Cocoon. It
  * provides some utility methods.
  * 
- * @version $Id: AbstractElementParser.java 463297 2006-10-12 16:03:45Z
- *          cziegeler $
+ * @version $Id$
  * @since 1.0
  */
 public abstract class AbstractElementParser implements BeanDefinitionParser {
@@ -267,16 +266,16 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Register a property placeholder configurer. The configurer will read all
-     * *.properties files from the specified location.
+     * *.properties files from the specified locations.
      * 
      * @param parserContext
-     * @param location
+     * @param locations
      */
     protected void registerPropertyOverrideConfigurer(final ParserContext parserContext,
-                                                      final String        location) {
+                                                      final List          locations) {
         final RootBeanDefinition beanDef = this.createBeanDefinition(CocoonPropertyOverrideConfigurer.class.getName(),
                 null, true);
-        beanDef.getPropertyValues().addPropertyValue("locations", Collections.singletonList(location));
+        beanDef.getPropertyValues().addPropertyValue("locations", locations);
         beanDef.getPropertyValues().addPropertyValue("resourceLoader",
                 parserContext.getReaderContext().getReader().getResourceLoader());
         beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");

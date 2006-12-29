@@ -19,9 +19,10 @@ package org.apache.cocoon.spring;
 import java.util.Map;
 
 /**
- * FIXME: Perhaps someone has a better name?!?
- * @version $Id$
+ * This component provides a map with the deployed block resources.
  *
+ * @version $Id$
+ * @since 1.0
  */
 public interface BlockResourcesHolder {
 

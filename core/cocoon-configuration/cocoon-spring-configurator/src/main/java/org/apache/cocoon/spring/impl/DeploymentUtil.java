@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * Helper class for deploying resources from the block artifacts.
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public class DeploymentUtil {
 
