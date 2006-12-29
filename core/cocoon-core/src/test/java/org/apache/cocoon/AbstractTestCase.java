@@ -21,8 +21,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.apache.cocoon.configuration.MutableSettings;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRequest;

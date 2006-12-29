@@ -19,8 +19,8 @@ package org.apache.cocoon.core.xml.resolver;
 import java.io.File;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.DeploymentUtil;
 import org.apache.cocoon.core.xml.impl.DefaultEntityResolver;
+import org.apache.cocoon.spring.impl.DeploymentUtil;
 
 /**
  * 

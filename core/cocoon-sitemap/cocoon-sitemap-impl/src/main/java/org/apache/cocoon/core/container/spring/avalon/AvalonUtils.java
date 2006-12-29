@@ -19,8 +19,8 @@ package org.apache.cocoon.core.container.spring.avalon;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.PropertyHelper;
 
 /**
  * Some utility methods for handling Avalon stuff.

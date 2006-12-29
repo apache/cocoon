@@ -22,10 +22,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.cocoon.configuration.MutableSettings;
+import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.configuration.impl.MutableSettings;
-import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.apache.cocoon.spring.ResourceUtils;
 import org.apache.cocoon.spring.impl.AbstractSettingsBeanFactoryPostProcessor;
 import org.apache.cocoon.spring.impl.Constants;

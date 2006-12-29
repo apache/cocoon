@@ -18,7 +18,7 @@
  */
 package org.apache.cocoon.core.container.util;
 
-import org.apache.cocoon.configuration.impl.PropertyHelper;
+import org.apache.cocoon.configuration.PropertyHelper;
 
 import junit.framework.TestCase;
 
