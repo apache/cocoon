@@ -23,7 +23,6 @@
 
     <xsd:element name="settings">
       <xsd:complexType>
-    	<xsd:attribute name="processorClassName" type="xsd:string" use="optional"></xsd:attribute>
     	<xsd:attribute name="runningMode" type="xsd:string" use="optional"></xsd:attribute>
     	<xsd:attribute name="location" type="xsd:string" use="optional"></xsd:attribute>
       </xsd:complexType>
