@@ -19,6 +19,7 @@
 package org.apache.cocoon.spring.configurator.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +39,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This is a base class for all bean definition parsers used in Cocoon. It
@@ -53,8 +56,8 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Get the value of an attribute or if the attribute is not present return
-     * the default value. For any strange reason, getAttribute() does not return
-     * null if the attribute is not present but an empty string!
+     * the default value. As Element#getAttribute(String) returns an empty string
+     * and not null, we have to check this.
      */
     protected String getAttributeValue(Element element, String attributeName, String defaultValue) {
         String value = element.getAttribute(attributeName);
@@ -62,6 +65,21 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
             value = defaultValue;
         }
         return value;
+    }
+
+    /**
+     * Returns all Element children of an Element that have the given local name.
+     */
+    protected Element[] getChildElements(Element element, String localName) {
+        final ArrayList elements = new ArrayList();
+        final NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            final Node node = nodeList.item(i);
+            if (node instanceof Element && localName.equals(node.getLocalName())) {
+                elements.add(node);
+            }
+        }
+        return (Element[])elements.toArray(new Element[elements.size()]);
     }
 
     /**
