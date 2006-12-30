@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,17 +16,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring.configurator.impl;
+
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * Some constants for the spring integration.
- * 
+ * Spring namespace handler for the sitemap namespace.
+ * Currently this namespace defines the following elements
+ * (in the namespace "http://cocoon.apache.org/schema/sitemap"):
+ * "sitemap" : This sets up a sub context for a sitemap.
+ *
  * @version $Id$
- * @since 1.0
+ * @since 2.2
  */
-public abstract class Constants {
+public class SitemapNamespaceHandler extends NamespaceHandlerSupport {
 
-    /** The default location of spring related child configuration files. */
-    public static final String DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION = "config/spring";
-    public static final String DEFAULT_CHILD_PROPERTIES_LOCATION = "config/properties";
+    /**
+     * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
+     */
+    public void init() {
+        registerBeanDefinitionParser("sitemap", new ChildSettingsElementParser());
+    }
 }

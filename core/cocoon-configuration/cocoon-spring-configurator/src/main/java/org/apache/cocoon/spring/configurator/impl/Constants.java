@@ -48,4 +48,15 @@ public abstract class Constants {
      * The location of global property files (*.properties) for the settings.
      */
     public static final String GLOBAL_PROPERTIES_LOCATION = "/WEB-INF/cocoon/properties";
+
+    /**
+     * The default location of spring related child configuration files.
+     * TODO Move this to the sitemap handler
+     */
+    public static final String DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION = "config/spring";
+    /**
+     * The default location of spring related child configuration files.
+     * TODO Move this to the sitemap handler
+     */
+    public static final String DEFAULT_CHILD_PROPERTIES_LOCATION = "config/properties";
 }
