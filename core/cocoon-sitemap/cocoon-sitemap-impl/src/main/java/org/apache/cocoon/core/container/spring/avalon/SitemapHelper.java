@@ -31,11 +31,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.ChildXmlWebApplicationContext;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
+import org.apache.cocoon.spring.configurator.impl.ChildXmlWebApplicationContext;
 import org.apache.cocoon.util.Deprecation;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -63,8 +63,8 @@ public class SitemapHelper {
                                              Properties props) {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
-        // Child setting for sitemap
-        buffer.append("  <sitemap:sitemap");
+        // Child settings for sitemap
+        buffer.append("  <configurator:child-settings");
         addAttribute(buffer, "location", sitemapLocation);
         addAttribute(buffer, "runningMode", runningMode);
         addAttribute(buffer, "useDefaultIncludes", String.valueOf(useDefaultIncludes));
@@ -73,7 +73,7 @@ public class SitemapHelper {
             final Iterator i = beanIncludes.iterator();
             while ( i.hasNext() ) {
                 final IncludeInfo info = (IncludeInfo)i.next();
-                buffer.append("    <sitemap:include-beans");
+                buffer.append("    <configurator:include-beans");
                 addAttribute(buffer, "src", info.src);
                 addAttribute(buffer, "dir", info.dir);
                 addAttribute(buffer, "pattern", info.pattern);
@@ -85,7 +85,7 @@ public class SitemapHelper {
             final Iterator i = propertyIncludes.iterator();
             while ( i.hasNext() ) {
                 final IncludeInfo info = (IncludeInfo)i.next();
-                buffer.append("    <sitemap:include-properties");
+                buffer.append("    <configurator:include-properties");
                 addAttribute(buffer, "dir", info.dir);
                 buffer.append("/>\n");
             }
@@ -94,13 +94,13 @@ public class SitemapHelper {
             final Iterator kI = props.keySet().iterator();
             while ( kI.hasNext() ) {
                 final String key = (String)kI.next();
-                buffer.append("    <sitemap:property");
+                buffer.append("    <configurator:property");
                 addAttribute(buffer, "name", key.toString());
                 addAttribute(buffer, "value", props.getProperty(key));
                 buffer.append("/>\n");
             }
         }
-        buffer.append("  </sitemap:sitemap>\n");
+        buffer.append("  </configurator:child-settings>\n");
         // Avalon
         buffer.append("  <avalon:sitemap");
         addAttribute(buffer, "location", sitemapLocation);
@@ -117,11 +117,11 @@ public class SitemapHelper {
         buffer.append("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
         buffer.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
         buffer.append(" xmlns:util=\"http://www.springframework.org/schema/util\"");
-        buffer.append(" xmlns:sitemap=\"http://cocoon.apache.org/schema/sitemap\"");
+        buffer.append(" xmlns:configurator=\"http://cocoon.apache.org/schema/configurator\"");
         buffer.append(" xmlns:avalon=\"http://cocoon.apache.org/schema/avalon\"");
         buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd");
         buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd");
-        buffer.append(" http://cocoon.apache.org/schema/sitemap http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd");
+        buffer.append(" http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.xsd");
         buffer.append(" http://cocoon.apache.org/schema/avalon http://cocoon.apache.org/schema/avalon/cocoon-avalon-1.0.xsd\">\n");
     }
 

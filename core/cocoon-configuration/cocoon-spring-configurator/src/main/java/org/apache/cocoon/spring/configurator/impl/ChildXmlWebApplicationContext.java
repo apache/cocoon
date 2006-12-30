@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring.configurator.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,7 +35,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * Own implementation of a {@link XmlWebApplicationContext} which is configured with
  * a base url specifying the root directory for this web application context.
  *
- * @since 2.2
+ * @since 1.0
  * @version $Id$
  */
 public class ChildXmlWebApplicationContext extends XmlWebApplicationContext {

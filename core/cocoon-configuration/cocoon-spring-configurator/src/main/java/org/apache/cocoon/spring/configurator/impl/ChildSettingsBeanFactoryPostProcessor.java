@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring.configurator.impl;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +27,6 @@ import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.configurator.ResourceUtils;
-import org.apache.cocoon.spring.configurator.impl.AbstractSettingsBeanFactoryPostProcessor;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.core.io.Resource;
@@ -35,7 +34,7 @@ import org.springframework.core.io.Resource;
 /**
  * This is a bean factory post processor which sets up a child settings object.
  *
- * @since 2.2
+ * @since 1.0
  * @version $Id$
  */
 public class ChildSettingsBeanFactoryPostProcessor

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring;
+package org.apache.cocoon.spring.configurator.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
-import org.apache.cocoon.spring.configurator.impl.RunningModeHelper;
-import org.apache.cocoon.spring.configurator.impl.SettingsElementParser;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -40,9 +37,9 @@ import org.w3c.dom.Element;
  * @see SitemapNamespaceHandler
  * @see ChildSettingsBeanFactoryPostProcessor
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
-public class SitemapElementParser extends AbstractElementParser {
+public class ChildSettingsElementParser extends AbstractElementParser {
 
     protected List getPropertyIncludes(Element childSettingsElement)
     throws Exception {
