@@ -222,57 +222,31 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      * Handle include for spring bean configurations.
      */
     protected void handleBeanInclude(final ParserContext parserContext,
-                                     final String        src,
                                      final String        path,
-                                     final String        pattern,
                                      final boolean       optional)
     throws Exception {
-        // TODO 'optional' parameter is ignored now 
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
 
-        final String includeURI = src;
-        String pathURI = null;
-        if (includeURI == null) {
-            // check for directories
-            pathURI = path;
-        }
-        if (includeURI == null && pathURI == null) {
-            throw new Exception("Include statement must either have a 'src' or 'dir' attribute.");
-        }
-
-        if (includeURI != null) {
-            Resource rsrc = resourceLoader.getResource(includeURI);
-            if ( rsrc.exists() ) {
-                try {
-                    this.handleImport(parserContext, rsrc.getURL().toExternalForm());
-                } catch (Exception e) {
-                    throw new Exception("Cannot load bean configuration '" + includeURI + "'.", e);
-                }
-            } else if ( !optional ) {
-                throw new Exception("Unable to find bean configuration '" + includeURI + "'.");    
+        // check if the directory to read from exists
+        // we only check if optional is set to true
+        boolean load = true;
+        if ( optional
+             && !ResourceUtils.isClasspathUri(path) ) {
+            final Resource rsrc = resolver.getResource(path);
+            if ( !rsrc.exists()) {
+                load = false;
             }
-        } else {
-            // check if the directory to read from exists
-            // we only check if optional is set to true
-            boolean load = true;
-            if ( optional
-                 && !ResourceUtils.isClasspathUri(pathURI) ) {
-                final Resource rsrc = resolver.getResource(pathURI);
-                if ( !rsrc.exists()) {
-                    load = false;
+        }
+        if ( load ) {
+            try {
+                Resource[] resources = resolver.getResources(path + "/*.xml");
+                Arrays.sort(resources, ResourceUtils.getResourceComparator());
+                for (int i = 0; i < resources.length; i++) {
+                    this.handleImport(parserContext, resources[i].getURL().toExternalForm());
                 }
-            }
-            if ( load ) {
-                try {
-                    Resource[] resources = resolver.getResources(pathURI + '/' + pattern);
-                    Arrays.sort(resources, ResourceUtils.getResourceComparator());
-                    for (int i = 0; i < resources.length; i++) {
-                        this.handleImport(parserContext, resources[i].getURL().toExternalForm());
-                    }
-                } catch (IOException ioe) {
-                    throw new Exception("Unable to read configurations from " + pathURI, ioe);
-                }
+            } catch (IOException ioe) {
+                throw new Exception("Unable to read configurations from " + path, ioe);
             }
         }
     }

@@ -19,15 +19,17 @@
 package org.apache.cocoon.spring.configurator.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.web.context.WebApplicationContext;
 import org.w3c.dom.Element;
 
 /**
@@ -77,60 +79,82 @@ public class ChildSettingsElementParser extends AbstractElementParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        final String runningMode = RunningModeHelper.determineRunningMode( this.getAttributeValue(element, SettingsElementParser.RUNNING_MODE_ATTR, null) );
-        final String location = element.getAttribute("location");
+        // get root application context
+        final WebApplicationContext rootAppContext = WebAppContextUtils.getCurrentWebApplicationContext();
+        // get running mode from root settings
+        final String runningMode = ((Settings)rootAppContext.getBean(Settings.ROLE)).getRunningMode();
         try {
-            final boolean useDefaultIncludes = Boolean.valueOf(this.getAttributeValue(element, "useDefaultIncludes", "true")).booleanValue();
+            // Get bean includes
+            final List beanIncludes = this.getBeanIncludes(element);
 
-            // register a PropertyPlaceholderConfigurer
-            if ( useDefaultIncludes ) {
-                this.registerPropertyOverrideConfigurer(parserContext, Collections.singletonList(Constants.DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION));
+            // If there are bean includes for a directory, we register a property placeholder configurer
+            if ( beanIncludes.size() > 0 ) {
+                // we need a list of directories
+                final List dirs = new ArrayList(beanIncludes.size());
+                final Iterator i = beanIncludes.iterator();
+                while ( i.hasNext() ) {
+                    dirs.add(((IncludeInfo)i.next()).dir);
+                }
+                this.registerPropertyOverrideConfigurer(parserContext, dirs); 
             }
-            
+
+            // Create definition for child settings
             RootBeanDefinition def =  this.createBeanDefinition(ChildSettingsBeanFactoryPostProcessor.class.getName(),
                     "init",
                     false);
-            def.getPropertyValues().addPropertyValue("location", location);
-            def.getPropertyValues().addPropertyValue("useDefaultIncludes", Boolean.valueOf(useDefaultIncludes));
+            def.getPropertyValues().addPropertyValue("name", element.getAttribute("name"));
 
             final Properties additionalProps = this.getAdditionalProperties(element);
             if ( additionalProps != null ) {
                 def.getPropertyValues().addPropertyValue("additionalProperties", additionalProps);                
             }
 
-            final List includes = this.getPropertyIncludes(element);
-            if ( includes != null ) {
-                def.getPropertyValues().addPropertyValue("directories", includes);
+            final List propertiesIncludes = this.getPropertyIncludes(element);
+            if ( propertiesIncludes != null ) {
+                def.getPropertyValues().addPropertyValue("directories", propertiesIncludes);
             }
 
-            if ( useDefaultIncludes ) {
-                this.handleBeanInclude(parserContext, null, Constants.DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION, "*.xml", true);
-                this.handleBeanInclude(parserContext, null, Constants.DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION + "/" + runningMode, "*.xml", true);
-            }
-            // search for includes
-            if ( element.hasChildNodes() ) {
-                final Element[] includeElements = this.getChildElements(element, "include-beans");
-                if ( includeElements != null ) {
-                    for(int i = 0 ; i < includeElements.length; i++ ) {
-                        final String src = this.getAttributeValue(includeElements[i], "src", null);
-                        final String dir = this.getAttributeValue(includeElements[i], "dir", null);
-                        final String pattern = this.getAttributeValue(includeElements[i], "pattern", "*.xml");
-                        final boolean optional = Boolean.valueOf(this.getAttributeValue(includeElements[i], "optional", "false")).booleanValue();
+            // process bean includes!
+            final Iterator beanIncludeIterator = beanIncludes.iterator();
+            while ( beanIncludeIterator.hasNext() ) {
+                final IncludeInfo info = (IncludeInfo)beanIncludeIterator.next();
 
-                        this.handleBeanInclude(parserContext, src, dir, pattern, optional);
-
-                        // TODO do we really need both src/dir attributes? The
-                        // quiet precedence of 'src' over 'dir' attribute is at
-                        // least unclear.
-                        if (src == null && dir != null)
-                            this.handleBeanInclude(parserContext, null, dir + "/" + runningMode, pattern, optional);
-                    }
-                }
+                this.handleBeanInclude(parserContext, info.dir, info.optional);
+                this.handleBeanInclude(parserContext, info.dir + "/" + runningMode, true);
             }
+
+            // and now we register the child settings
             this.register(def, Settings.ROLE, parserContext.getRegistry());
         } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to process sitemap at '" + location + "'.",e);
+            throw new BeanDefinitionStoreException("Unable to process child settings element.", e);
         }
         return null;
+    }
+
+    protected List getBeanIncludes(Element childSettingsElement) {
+        final List includes = new ArrayList();
+        // search for includes
+        if ( childSettingsElement.hasChildNodes() ) {
+            final Element[] includeElements = this.getChildElements(childSettingsElement, "include-beans");
+            if ( includeElements != null ) {
+                for(int i = 0 ; i < includeElements.length; i++ ) {
+                    final String dir = this.getAttributeValue(includeElements[i], "dir", null);
+                    final boolean optional = Boolean.valueOf(this.getAttributeValue(includeElements[i], "optional", "false")).booleanValue();
+
+                    includes.add(new IncludeInfo(dir, optional));
+                }
+            }
+        }
+        return includes;
+    }
+
+    protected static final class IncludeInfo {
+        public final String dir;
+        public final boolean optional;
+
+        public IncludeInfo(String d, boolean o) {
+            this.dir = d;
+            this.optional = o;
+        }
     }
 }
