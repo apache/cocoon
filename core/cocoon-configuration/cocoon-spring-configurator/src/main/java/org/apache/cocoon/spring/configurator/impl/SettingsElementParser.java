@@ -41,12 +41,6 @@ import org.w3c.dom.Element;
  */
 public class SettingsElementParser extends AbstractElementParser {
 
-    /**
-     * The name of the configuration attribute to use a different processor
-     * class.
-     */
-    public static final String PROCESSOR_CLASS_NAME_ATTR = "processorClassName";
-
     /** The name of the configuration attribute to specify the running mode. */
     public static final String RUNNING_MODE_ATTR = "runningMode";
 
@@ -57,9 +51,7 @@ public class SettingsElementParser extends AbstractElementParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
 
         // create bean definition for settings object
-        final String componentClassName = this.getAttributeValue(element, PROCESSOR_CLASS_NAME_ATTR,
-                SettingsBeanFactoryPostProcessor.class.getName());
-        final RootBeanDefinition beanDef = this.createBeanDefinition(componentClassName, "init", false);
+        final RootBeanDefinition beanDef = this.createBeanDefinition(SettingsBeanFactoryPostProcessor.class.getName(), "init", false);
         // if running mode is specified add it as a property
         final String runningMode = RunningModeHelper.determineRunningMode( this.getAttributeValue(element, RUNNING_MODE_ATTR, null) );
         if (runningMode != null) {
