@@ -27,7 +27,6 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
 import org.apache.cocoon.spring.configurator.impl.RunningModeHelper;
 import org.apache.cocoon.spring.configurator.impl.SettingsElementParser;
-import org.apache.cocoon.xml.dom.DomHelper;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -45,20 +44,15 @@ import org.w3c.dom.Element;
  */
 public class SitemapElementParser extends AbstractElementParser {
 
-    protected Element getComponentsElement(Element rootElement) {
-        final Element componentsElement = DomHelper.getChildElement(rootElement, rootElement.getNamespaceURI(), "components");
-        return componentsElement;
-    }
-
-    protected List getPropertyIncludes(Element componentsElement)
+    protected List getPropertyIncludes(Element childSettingsElement)
     throws Exception {
         List propertyDirs = null;
-        if ( componentsElement != null ) {
-            final Element[] propertyDirConfigs = DomHelper.getChildElements(componentsElement, componentsElement.getNamespaceURI(), "include-properties");
+        if ( childSettingsElement != null ) {
+            final Element[] propertyDirConfigs = this.getChildElements(childSettingsElement, "include-properties");
             if ( propertyDirConfigs != null && propertyDirConfigs.length > 0 ) {
                 propertyDirs = new ArrayList();
                 for(int i=0; i < propertyDirConfigs.length; i++) {
-                    propertyDirs.add(DomHelper.getAttribute(propertyDirConfigs[i], "dir"));
+                    propertyDirs.add(this.getAttributeValue(propertyDirConfigs[i], "dir", null));
                 }
             }
         }
@@ -68,14 +62,15 @@ public class SitemapElementParser extends AbstractElementParser {
     /**
      * Get additional properties.
      */
-    protected Properties getAdditionalProperties(Element rootElement)
+    protected Properties getAdditionalProperties(Element childSettingsElement)
     throws Exception {
         Properties variables = null;
-        final Element[] properties = DomHelper.getChildElements(rootElement, rootElement.getNamespaceURI(), "property");
+        final Element[] properties = this.getChildElements(childSettingsElement, "property");
         if ( properties != null && properties.length > 0 ) {
             variables = new Properties();
             for(int i=0; i<properties.length; i++) {
-                variables.setProperty(DomHelper.getAttribute(properties[i], "name"), DomHelper.getAttribute(properties[i], "value"));
+                variables.setProperty(this.getAttributeValue(properties[i], "name", null),
+                                      this.getAttributeValue(properties[i], "value", null));
             }
         }
         return variables;
@@ -117,16 +112,16 @@ public class SitemapElementParser extends AbstractElementParser {
             }
             // search for includes
             if ( element.hasChildNodes() ) {
-                final Element[] includeElements = DomHelper.getChildElements(element, element.getNamespaceURI(), "include-beans");
+                final Element[] includeElements = this.getChildElements(element, "include-beans");
                 if ( includeElements != null ) {
                     for(int i = 0 ; i < includeElements.length; i++ ) {
-                        final String src = DomHelper.getAttribute(includeElements[i], "src", null);
-                        final String dir = DomHelper.getAttribute(includeElements[i], "dir", null);
-                        final String pattern = DomHelper.getAttribute(includeElements[i], "pattern", "*.xml");
-                        final boolean optional = DomHelper.getAttributeAsBoolean(includeElements[i], "optional", false);
+                        final String src = this.getAttributeValue(includeElements[i], "src", null);
+                        final String dir = this.getAttributeValue(includeElements[i], "dir", null);
+                        final String pattern = this.getAttributeValue(includeElements[i], "pattern", "*.xml");
+                        final boolean optional = Boolean.valueOf(this.getAttributeValue(includeElements[i], "optional", "false")).booleanValue();
 
                         this.handleBeanInclude(parserContext, src, dir, pattern, optional);
-                        
+
                         // TODO do we really need both src/dir attributes? The
                         // quiet precedence of 'src' over 'dir' attribute is at
                         // least unclear.
