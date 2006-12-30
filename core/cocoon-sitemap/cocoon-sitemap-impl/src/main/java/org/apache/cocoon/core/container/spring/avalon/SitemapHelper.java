@@ -19,6 +19,10 @@
 package org.apache.cocoon.core.container.spring.avalon;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
@@ -32,6 +36,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
+import org.apache.cocoon.util.Deprecation;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -51,27 +56,162 @@ public class SitemapHelper {
 
     protected static String createDefinition(String     uriPrefix,
                                              String     sitemapLocation,
-                                             String     runningMode) {
+                                             String     runningMode,
+                                             boolean    useDefaultIncludes,
+                                             List       beanIncludes,
+                                             List       propertyIncludes,
+                                             Properties props) {
         final StringBuffer buffer = new StringBuffer();
         addHeader(buffer);
-        // Settings
-        buffer.append("  <sitemap:sitemap location=\"");
-        buffer.append(sitemapLocation);
-        buffer.append("\" runningMode=\"");
-        buffer.append(runningMode);
-        buffer.append("\"/>\n");
+        // Child setting for sitemap
+        buffer.append("  <sitemap:sitemap");
+        addAttribute(buffer, "location", sitemapLocation);
+        addAttribute(buffer, "runningMode", runningMode);
+        addAttribute(buffer, "useDefaultIncludes", String.valueOf(useDefaultIncludes));
+        buffer.append(">\n");
+        if ( beanIncludes != null ) {
+            final Iterator i = beanIncludes.iterator();
+            while ( i.hasNext() ) {
+                final IncludeInfo info = (IncludeInfo)i.next();
+                buffer.append("    <sitemap:include-beans");
+                addAttribute(buffer, "src", info.src);
+                addAttribute(buffer, "dir", info.dir);
+                addAttribute(buffer, "pattern", info.pattern);
+                addAttribute(buffer, "optional", String.valueOf(info.optional));
+                buffer.append("/>\n");
+            }
+        }
+        if ( propertyIncludes != null ) {
+            final Iterator i = propertyIncludes.iterator();
+            while ( i.hasNext() ) {
+                final IncludeInfo info = (IncludeInfo)i.next();
+                buffer.append("    <sitemap:include-properties");
+                addAttribute(buffer, "dir", info.dir);
+                buffer.append("/>\n");
+            }
+        }
+        if ( props != null ) {
+            final Iterator kI = props.keySet().iterator();
+            while ( kI.hasNext() ) {
+                final String key = (String)kI.next();
+                buffer.append("    <sitemap:property");
+                addAttribute(buffer, "name", key.toString());
+                addAttribute(buffer, "value", props.getProperty(key));
+                buffer.append("/>\n");
+            }
+        }
+        buffer.append("  </sitemap:sitemap>\n");
         // Avalon
-        buffer.append("  <avalon:sitemap location=\"");
-        buffer.append(sitemapLocation);
-        buffer.append("\" uriPrefix=\"");
-        buffer.append(uriPrefix);
-        buffer.append("\"/>\n");
+        buffer.append("  <avalon:sitemap");
+        addAttribute(buffer, "location", sitemapLocation);
+        addAttribute(buffer, "uriPrefix", uriPrefix);
+        buffer.append("/>\n");
         addFooter(buffer);
         return buffer.toString();
     }
 
+    /**
+     * Add the header for the xml configuration file.
+     */
+    protected static void addHeader(StringBuffer buffer) {
+        buffer.append("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
+        buffer.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+        buffer.append(" xmlns:util=\"http://www.springframework.org/schema/util\"");
+        buffer.append(" xmlns:sitemap=\"http://cocoon.apache.org/schema/sitemap\"");
+        buffer.append(" xmlns:avalon=\"http://cocoon.apache.org/schema/avalon\"");
+        buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd");
+        buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd");
+        buffer.append(" http://cocoon.apache.org/schema/sitemap http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd");
+        buffer.append(" http://cocoon.apache.org/schema/avalon http://cocoon.apache.org/schema/avalon/cocoon-avalon-1.0.xsd\">\n");
+    }
+
+    /**
+     * Add the footer for the xml configuration file.
+     */
+    protected static void addFooter(StringBuffer buffer) {
+        buffer.append("</beans>\n");
+    }
+
+    /**
+     * Append an attribute to the xml stream if it has a value.
+     */
+    protected static void addAttribute(StringBuffer buffer, String name, String value) {
+        if ( value != null ) {
+            buffer.append(' ');
+            buffer.append(name);
+            buffer.append("=\"");
+            buffer.append(value);
+            buffer.append("\"");
+        }
+    }
+
+    /**
+     * Should the default includes be read for this sitemap?
+     */
     protected static boolean isUsingDefaultIncludes(Configuration config) {
         return config.getChild("components").getAttributeAsBoolean("use-default-includes", true);
+    }
+
+    /**
+     * Get all includes for bean configurations from the sitemap.
+     * @param sitemap
+     * @return
+     */
+    protected static List getBeanIncludes(Configuration sitemap)
+    throws ConfigurationException {
+        final List includes = new ArrayList();
+        final Configuration[] includeConfigs = sitemap.getChild("components").getChildren("include-beans");
+        for(int i = 0 ; i < includeConfigs.length; i++ ) {
+            final String src = includeConfigs[i].getAttribute("src", null);
+            final String dir = includeConfigs[i].getAttribute("dir", null);
+            final String pattern = includeConfigs[i].getAttribute("pattern", "*.xml");
+            final boolean optional = includeConfigs[i].getAttributeAsBoolean("optional", false);
+
+            if ( src != null && dir != null ) {
+                throw new ConfigurationException("Element include-beans can either be configured with a directory or with a src, but not with both.", includeConfigs[i]);
+            }
+            if ( src == null && dir == null ) {
+                throw new ConfigurationException("Element include-beans must either be configured with a directory or with a src.", includeConfigs[i]);
+            }
+            includes.add(new IncludeInfo(src, dir, pattern, optional));
+        }
+        return includes;
+    }
+
+    /**
+     * Get all includes for properties from the sitemap.
+     * @param sitemap
+     * @return
+     */
+    protected static List getPropertiesIncludes(Configuration sitemap)
+    throws ConfigurationException {
+        final List includes = new ArrayList();
+        final Configuration[] includeConfigs = sitemap.getChild("components").getChildren("include-properties");
+        for(int i = 0 ; i < includeConfigs.length; i++ ) {
+            final String dir = includeConfigs[i].getAttribute("dir");
+
+            includes.add(new IncludeInfo(null, dir, null, true));
+        }
+        return includes;
+    }
+
+    /**
+     * compatibility with 2.1.x - check for global variables in sitemap
+     * TODO - This will be removed in later versions!
+     */
+    protected static Properties getGlobalSitemapVariables(Configuration sitemap)
+    throws ConfigurationException {
+        Properties variables = null;
+        final Configuration varConfig = sitemap.getChild("pipelines").getChild("component-configurations").getChild("global-variables", false);
+        if ( varConfig != null ) {
+            Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
+            variables = new Properties();
+            final Configuration[] variableElements = varConfig.getChildren();
+            for(int v=0; v<variableElements.length; v++) {
+                variables.setProperty(variableElements[v].getName(), variableElements[v].getValue());
+            }
+        }
+        return variables;
     }
 
     public static Configuration createSitemapConfiguration(Configuration config)
@@ -122,22 +262,16 @@ public class SitemapHelper {
         return componentConfig;
     }
 
-    protected static void addHeader(StringBuffer buffer) {
-        buffer.append("<beans xmlns=\"http://www.springframework.org/schema/beans\"");
-        buffer.append(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-        buffer.append(" xmlns:util=\"http://www.springframework.org/schema/util\"");
-        buffer.append(" xmlns:sitemap=\"http://cocoon.apache.org/schema/sitemap\"");
-        buffer.append(" xmlns:avalon=\"http://cocoon.apache.org/schema/avalon\"");
-        buffer.append(" xsi:schemaLocation=\"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd");
-        buffer.append(" http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd");
-        buffer.append(" http://cocoon.apache.org/schema/sitemap http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd");
-        buffer.append(" http://cocoon.apache.org/schema/avalon http://cocoon.apache.org/schema/avalon/cocoon-avalon-1.0.xsd\">\n");
-    }
-
-    protected static void addFooter(StringBuffer buffer) {
-        buffer.append("</beans>\n");
-    }
-
+    /**
+     * Create the per sitemap container.
+     *
+     * @param config          The sitemap as a configuration object.
+     * @param sitemapLocation The uri of the sitemap
+     * @param fam
+     * @param servletContext  The servlet context
+     * @return
+     * @throws Exception
+     */
     public static WebApplicationContext createContainer(Configuration  config,
                                                         String         sitemapLocation,
                                                         Monitor        fam,
@@ -164,7 +298,11 @@ public class SitemapHelper {
         // create root bean definition
         final String definition = createDefinition(request.getSitemapURIPrefix(),
                                                    sitemapLocation.substring(pos+1),
-                                                   ((Settings)parentContext.getBean(Settings.ROLE)).getRunningMode());
+                                                   ((Settings)parentContext.getBean(Settings.ROLE)).getRunningMode(),
+                                                   isUsingDefaultIncludes(config),
+                                                   getBeanIncludes(config),
+                                                   getPropertiesIncludes(config),
+                                                   getGlobalSitemapVariables(config));
         PARENT_CONTEXT.set(parentContext);
         try {
             final ChildXmlWebApplicationContext context = new ChildXmlWebApplicationContext(contextUrl,
@@ -214,4 +352,17 @@ public class SitemapHelper {
 //                                           servletContext);
 //    }
 
+    protected static final class IncludeInfo {
+        public final String src;
+        public final String dir;
+        public final String pattern;
+        public final boolean optional;
+
+        public IncludeInfo(String s, String d, String p, boolean o) {
+            this.src = s;
+            this.dir = d;
+            this.pattern = p;
+            this.optional = o;
+        }
+    }
 }
