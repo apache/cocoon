@@ -29,7 +29,6 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
-import org.springframework.core.io.Resource;
 
 /**
  * This is a bean factory post processor which sets up a child settings object.
@@ -40,11 +39,11 @@ import org.springframework.core.io.Resource;
 public class ChildSettingsBeanFactoryPostProcessor
     extends AbstractSettingsBeanFactoryPostProcessor {
 
-    protected String location;
+    /** Unique name for this child settings context. */
+    protected String name;
 
+    /** List of property directories. */
     protected List directories;
-
-    protected boolean useDefaultIncludes = true;
 
     /**
      * Initialize this settings.
@@ -61,8 +60,8 @@ public class ChildSettingsBeanFactoryPostProcessor
         this.settings.makeReadOnly();
     }
 
-    public void setLocation(String sitemapUri) {
-        this.location = sitemapUri;
+    public void setName(String newName) {
+        this.name = newName;
     }
 
     public void setDirectories(List directories) {
@@ -71,10 +70,6 @@ public class ChildSettingsBeanFactoryPostProcessor
 
     public void setAdditionalProperties(Properties props) {
         this.additionalProperties = props;
-    }
-
-    public void setUseDefaultIncludes(boolean useDefaultIncludes) {
-        this.useDefaultIncludes = useDefaultIncludes;
     }
 
     /**
@@ -101,13 +96,6 @@ public class ChildSettingsBeanFactoryPostProcessor
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(parent);
 
-        // read properties from default includes
-        if ( this.useDefaultIncludes ) {
-            ResourceUtils.readProperties(Constants.DEFAULT_CHILD_PROPERTIES_LOCATION, properties, this.getResourceLoader(), this.logger);
-            // read all properties from the mode dependent directory
-            ResourceUtils.readProperties(Constants.DEFAULT_CHILD_PROPERTIES_LOCATION + '/' + mode, properties, this.getResourceLoader(), this.logger);    
-        }
-
         if ( this.directories != null ) {
             final Iterator i = directories.iterator();
             while ( i.hasNext() ) {
@@ -122,9 +110,8 @@ public class ChildSettingsBeanFactoryPostProcessor
         // Next look for a custom property provider in the parent bean factory
         if (parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
             try {
-                final Resource r = this.resourceLoader.getResource(this.location);
                 final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
-                final Properties providedProperties = provider.getProperties(s, mode, r.getURL().toExternalForm());
+                final Properties providedProperties = provider.getProperties(s, mode, this.name);
                 if ( providedProperties != null ) {
                     properties.putAll(providedProperties);
                 }

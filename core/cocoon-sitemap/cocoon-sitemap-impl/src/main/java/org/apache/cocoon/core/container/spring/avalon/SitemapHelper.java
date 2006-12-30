@@ -30,7 +30,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.classloader.reloading.Monitor;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
@@ -54,10 +53,17 @@ public class SitemapHelper {
 
     private static final String DEFAULT_CONFIG_XCONF  = "config/avalon";
 
+    /**
+     * The default location of spring related child configuration files.
+     */
+    public static final String DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION = "config/spring";
+    /**
+     * The default location of spring related child configuration files.
+     */
+    public static final String DEFAULT_CHILD_PROPERTIES_LOCATION = "config/properties";
+
     protected static String createDefinition(String     uriPrefix,
                                              String     sitemapLocation,
-                                             String     runningMode,
-                                             boolean    useDefaultIncludes,
                                              List       beanIncludes,
                                              List       propertyIncludes,
                                              Properties props) {
@@ -65,18 +71,14 @@ public class SitemapHelper {
         addHeader(buffer);
         // Child settings for sitemap
         buffer.append("  <configurator:child-settings");
-        addAttribute(buffer, "location", sitemapLocation);
-        addAttribute(buffer, "runningMode", runningMode);
-        addAttribute(buffer, "useDefaultIncludes", String.valueOf(useDefaultIncludes));
+        addAttribute(buffer, "name", sitemapLocation);
         buffer.append(">\n");
         if ( beanIncludes != null ) {
             final Iterator i = beanIncludes.iterator();
             while ( i.hasNext() ) {
                 final IncludeInfo info = (IncludeInfo)i.next();
                 buffer.append("    <configurator:include-beans");
-                addAttribute(buffer, "src", info.src);
                 addAttribute(buffer, "dir", info.dir);
-                addAttribute(buffer, "pattern", info.pattern);
                 addAttribute(buffer, "optional", String.valueOf(info.optional));
                 buffer.append("/>\n");
             }
@@ -107,6 +109,7 @@ public class SitemapHelper {
         addAttribute(buffer, "uriPrefix", uriPrefix);
         buffer.append("/>\n");
         addFooter(buffer);
+
         return buffer.toString();
     }
 
@@ -160,20 +163,15 @@ public class SitemapHelper {
     protected static List getBeanIncludes(Configuration sitemap)
     throws ConfigurationException {
         final List includes = new ArrayList();
+        if ( isUsingDefaultIncludes(sitemap) ) {
+            includes.add(new IncludeInfo(DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION, true));
+        }
         final Configuration[] includeConfigs = sitemap.getChild("components").getChildren("include-beans");
         for(int i = 0 ; i < includeConfigs.length; i++ ) {
-            final String src = includeConfigs[i].getAttribute("src", null);
-            final String dir = includeConfigs[i].getAttribute("dir", null);
-            final String pattern = includeConfigs[i].getAttribute("pattern", "*.xml");
+            final String dir = includeConfigs[i].getAttribute("dir");
             final boolean optional = includeConfigs[i].getAttributeAsBoolean("optional", false);
 
-            if ( src != null && dir != null ) {
-                throw new ConfigurationException("Element include-beans can either be configured with a directory or with a src, but not with both.", includeConfigs[i]);
-            }
-            if ( src == null && dir == null ) {
-                throw new ConfigurationException("Element include-beans must either be configured with a directory or with a src.", includeConfigs[i]);
-            }
-            includes.add(new IncludeInfo(src, dir, pattern, optional));
+            includes.add(new IncludeInfo(dir, optional));
         }
         return includes;
     }
@@ -186,11 +184,14 @@ public class SitemapHelper {
     protected static List getPropertiesIncludes(Configuration sitemap)
     throws ConfigurationException {
         final List includes = new ArrayList();
+        if ( isUsingDefaultIncludes(sitemap) ) {
+            includes.add(new IncludeInfo(DEFAULT_CHILD_PROPERTIES_LOCATION, true));
+        }
         final Configuration[] includeConfigs = sitemap.getChild("components").getChildren("include-properties");
         for(int i = 0 ; i < includeConfigs.length; i++ ) {
             final String dir = includeConfigs[i].getAttribute("dir");
 
-            includes.add(new IncludeInfo(null, dir, null, true));
+            includes.add(new IncludeInfo(dir, true));
         }
         return includes;
     }
@@ -298,8 +299,6 @@ public class SitemapHelper {
         // create root bean definition
         final String definition = createDefinition(request.getSitemapURIPrefix(),
                                                    sitemapLocation.substring(pos+1),
-                                                   ((Settings)parentContext.getBean(Settings.ROLE)).getRunningMode(),
-                                                   isUsingDefaultIncludes(config),
                                                    getBeanIncludes(config),
                                                    getPropertiesIncludes(config),
                                                    getGlobalSitemapVariables(config));
@@ -353,15 +352,11 @@ public class SitemapHelper {
 //    }
 
     protected static final class IncludeInfo {
-        public final String src;
         public final String dir;
-        public final String pattern;
         public final boolean optional;
 
-        public IncludeInfo(String s, String d, String p, boolean o) {
-            this.src = s;
+        public IncludeInfo(String d, boolean o) {
             this.dir = d;
-            this.pattern = p;
             this.optional = o;
         }
     }

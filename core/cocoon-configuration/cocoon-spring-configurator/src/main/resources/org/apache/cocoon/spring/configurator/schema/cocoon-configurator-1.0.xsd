@@ -36,17 +36,13 @@
     	    <xsd:element ref="include-properties" minOccurs="0" maxOccurs="unbounded"/>
     	    <xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
     	</xsd:sequence>
-    	<xsd:attribute name="location" type="xsd:string" use="required"/>
-    	<xsd:attribute name="runningMode" type="xsd:string" use="optional"/>
-    	<xsd:attribute name="useDefaultIncludes" type="xsd:boolean"	use="optional"/>
+    	<xsd:attribute name="name" type="xsd:string" use="required"/>
       </xsd:complexType>
     </xsd:element>
 
     <xsd:element name="include-beans">
       <xsd:complexType>
-    	<xsd:attribute name="src" type="xsd:string" use="optional"/>
     	<xsd:attribute name="dir" type="xsd:string" use="optional"/>
-    	<xsd:attribute name="pattern" type="xsd:string" use="optional"/>
     	<xsd:attribute name="optional" type="xsd:boolean" use="optional"/>
       </xsd:complexType>
     </xsd:element>
