@@ -27,17 +27,12 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
 import org.apache.cocoon.spring.configurator.impl.RunningModeHelper;
 import org.apache.cocoon.spring.configurator.impl.SettingsElementParser;
-import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.xml.dom.DomHelper;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
 
 /**
  * Add a bean definition for the settings object of a child context to the bean factory
@@ -50,27 +45,9 @@ import org.xml.sax.InputSource;
  */
 public class SitemapElementParser extends AbstractElementParser {
 
-    protected Element readSitemap(String location, ResourceLoader resourceLoader)
-    throws Exception {
-        // read the sitemap
-        final Resource sitemapResource = resourceLoader.getResource(location);
-        final InputSource is = new InputSource(sitemapResource.getInputStream());
-        is.setSystemId(sitemapResource.getURL().toExternalForm());
-        final Document doc = DomHelper.parse(is);
-        final Element rootElement = doc.getDocumentElement();
-        return rootElement;
-    }
-
     protected Element getComponentsElement(Element rootElement) {
         final Element componentsElement = DomHelper.getChildElement(rootElement, rootElement.getNamespaceURI(), "components");
         return componentsElement;
-    }
-
-    protected boolean isUseDefaultIncludes(Element componentsElement) {
-        if ( componentsElement != null ) {
-            return DomHelper.getAttributeAsBoolean(componentsElement, "use-default-includes", true);
-        }
-        return true;
     }
 
     protected List getPropertyIncludes(Element componentsElement)
@@ -89,30 +66,16 @@ public class SitemapElementParser extends AbstractElementParser {
     }
 
     /**
-     * compatibility with 2.1.x - check for global variables in sitemap
-     * TODO - This will be removed in later versions!
+     * Get additional properties.
      */
-    protected Properties getGlobalSitemapVariables(Element rootElement)
+    protected Properties getAdditionalProperties(Element rootElement)
     throws Exception {
         Properties variables = null;
-        final Element pipelines = DomHelper.getChildElement(rootElement, rootElement.getNamespaceURI(), "pipelines");
-        if ( pipelines != null ) {
-            final Element configs = DomHelper.getChildElement(pipelines, pipelines.getNamespaceURI(), "component-configurations");
-            if ( configs != null ) {
-                Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
-                variables = new Properties();
-                // now check for global variables - if any other element occurs: throw exception
-                Element[] children = DomHelper.getChildElements(configs, configs.getNamespaceURI());
-                for(int i=0; i<children.length; i++) {
-                    if ( "global-variables".equals(children[i].getLocalName()) ) {
-                        Element[] variableElements = DomHelper.getChildElements(children[i], children[i].getNamespaceURI());
-                        for(int v=0; v<variableElements.length; v++) {
-                            variables.setProperty(variableElements[v].getLocalName(), DomHelper.getElementText(variableElements[v]));
-                        }
-                    } else {
-                        throw new Exception("Component configurations in the sitemap are not allowed for component: " + children[i].getLocalName());
-                    }
-                }
+        final Element[] properties = DomHelper.getChildElements(rootElement, rootElement.getNamespaceURI(), "property");
+        if ( properties != null && properties.length > 0 ) {
+            variables = new Properties();
+            for(int i=0; i<properties.length; i++) {
+                variables.setProperty(DomHelper.getAttribute(properties[i], "name"), DomHelper.getAttribute(properties[i], "value"));
             }
         }
         return variables;
@@ -124,11 +87,8 @@ public class SitemapElementParser extends AbstractElementParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final String runningMode = RunningModeHelper.determineRunningMode( this.getAttributeValue(element, SettingsElementParser.RUNNING_MODE_ATTR, null) );
         final String location = element.getAttribute("location");
-        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
         try {
-            final Element rootElement = this.readSitemap(location, resourceLoader);
-            final Element componentsElement = this.getComponentsElement(rootElement);
-            final boolean useDefaultIncludes = this.isUseDefaultIncludes(componentsElement);
+            final boolean useDefaultIncludes = Boolean.valueOf(this.getAttributeValue(element, "useDefaultIncludes", "true")).booleanValue();
 
             // register a PropertyPlaceholderConfigurer
             if ( useDefaultIncludes ) {
@@ -141,12 +101,12 @@ public class SitemapElementParser extends AbstractElementParser {
             def.getPropertyValues().addPropertyValue("location", location);
             def.getPropertyValues().addPropertyValue("useDefaultIncludes", Boolean.valueOf(useDefaultIncludes));
 
-            final Properties globalSitemapVariables = this.getGlobalSitemapVariables(rootElement);
-            if ( globalSitemapVariables != null ) {
-                def.getPropertyValues().addPropertyValue("additionalProperties", globalSitemapVariables);                
+            final Properties additionalProps = this.getAdditionalProperties(element);
+            if ( additionalProps != null ) {
+                def.getPropertyValues().addPropertyValue("additionalProperties", additionalProps);                
             }
 
-            final List includes = this.getPropertyIncludes(componentsElement);
+            final List includes = this.getPropertyIncludes(element);
             if ( includes != null ) {
                 def.getPropertyValues().addPropertyValue("directories", includes);
             }
@@ -156,8 +116,8 @@ public class SitemapElementParser extends AbstractElementParser {
                 this.handleBeanInclude(parserContext, null, Constants.DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION + "/" + runningMode, "*.xml", true);
             }
             // search for includes
-            if ( componentsElement != null ) {
-                final Element[] includeElements = DomHelper.getChildElements(componentsElement, componentsElement.getNamespaceURI(), "include-beans");
+            if ( element.hasChildNodes() ) {
+                final Element[] includeElements = DomHelper.getChildElements(element, element.getNamespaceURI(), "include-beans");
                 if ( includeElements != null ) {
                     for(int i = 0 ; i < includeElements.length; i++ ) {
                         final String src = DomHelper.getAttribute(includeElements[i], "src", null);
