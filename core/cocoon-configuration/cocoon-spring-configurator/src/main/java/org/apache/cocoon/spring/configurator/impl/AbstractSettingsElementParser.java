@@ -78,22 +78,11 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
             if ( includeElements != null ) {
                 for(int i = 0 ; i < includeElements.length; i++ ) {
                     final String dir = this.getAttributeValue(includeElements[i], "dir", null);
-                    final boolean optional = Boolean.valueOf(this.getAttributeValue(includeElements[i], "optional", "false")).booleanValue();
 
-                    includes.add(new IncludeInfo(dir, optional));
+                    includes.add(dir);
                 }
             }
         }
         return includes;
-    }
-
-    protected static final class IncludeInfo {
-        public final String dir;
-        public final boolean optional;
-
-        public IncludeInfo(String d, boolean o) {
-            this.dir = d;
-            this.optional = o;
-        }
     }
 }
