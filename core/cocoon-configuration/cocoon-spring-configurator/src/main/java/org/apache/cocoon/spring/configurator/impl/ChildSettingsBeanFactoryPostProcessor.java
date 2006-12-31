@@ -18,20 +18,17 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.cocoon.configuration.MutableSettings;
-import org.apache.cocoon.configuration.PropertyHelper;
-import org.apache.cocoon.configuration.PropertyProvider;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.configurator.ResourceUtils;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.HierarchicalBeanFactory;
 
 /**
  * This is a bean factory post processor which sets up a child settings object.
+ *
+ * The settings object is created by reading several property files and merging of
+ * the values. If there is more than one definition for a property, the last one wins.
+ * The property files are read in the following order:
+ * 1) Property provider (if configured in the bean factory)
+ * 2) Add properties from configured directories {@link #directories}.
+ * 3) Add additional properties configured at {@link #additionalProperties}
+ * 4) System properties
  *
  * @since 1.0
  * @version $Id$
@@ -42,92 +39,24 @@ public class ChildSettingsBeanFactoryPostProcessor
     /** Unique name for this child settings context. */
     protected String name;
 
-    /** List of property directories. */
-    protected List directories;
-
     /**
-     * Initialize this settings.
-     * Setup the settings object.
-     * @throws Exception
+     * Set the unique name for this settings context.
      */
-    public void init()
-    throws Exception {
-        this.settings = this.createSettings();
-
-        this.doInit();
-
-        // settings can't be changed anymore
-        this.settings.makeReadOnly();
-    }
-
     public void setName(String newName) {
         this.name = newName;
     }
 
-    public void setDirectories(List directories) {
-        this.directories = directories;
-    }
-
-    public void setAdditionalProperties(Properties props) {
-        this.additionalProperties = props;
+    /**
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsBeanFactoryPostProcessor#getRunningMode()
+     */
+    protected String getRunningMode() {
+        return this.getParentSettings().getRunningMode();
     }
 
     /**
-     * Get the settings for Cocoon.
-     * This method reads several property files and merges the result. If there
-     * is more than one definition for a property, the last one wins.
-     * The property files are read in the following order:
-     * 1) PROPERTYDIR/*.properties
-     *    Default values for the core and each block - the order in which the files are read is not guaranteed.
-     * 2) PROPERTYDIR/[RUNNING_MODE]/*.properties
-     *    Default values for the running mode - the order in which the files are read is not guaranteed.
-     * 3) Property providers (ToBeDocumented)
-     *
-     * @return A new Settings object
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsBeanFactoryPostProcessor#getNameForPropertyProvider()
      */
-    protected MutableSettings createSettings() {
-        final BeanFactory parentBeanFactory = ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory();
-        final Settings parent = (Settings)parentBeanFactory.getBean(Settings.ROLE);
-        // get the running mode
-        final String mode = parent.getRunningMode();
-        // get properties
-        final Properties properties = new Properties();
-
-        // create an empty settings objects
-        final MutableSettings s = new MutableSettings(parent);
-
-        if ( this.directories != null ) {
-            final Iterator i = directories.iterator();
-            while ( i.hasNext() ) {
-                final String directory = (String)i.next();
-                // now read all properties from the properties directory
-                ResourceUtils.readProperties(directory, properties, this.getResourceLoader(), this.logger);
-                // read all properties from the mode dependent directory
-                ResourceUtils.readProperties(directory + '/' + mode, properties, this.getResourceLoader(), this.logger);
-            }
-        }
-
-        // Next look for a custom property provider in the parent bean factory
-        if (parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
-            try {
-                final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
-                final Properties providedProperties = provider.getProperties(s, mode, this.name);
-                if ( providedProperties != null ) {
-                    properties.putAll(providedProperties);
-                }
-            } catch (Exception ignore) {
-                this.logger.warn("Unable to get properties from provider.", ignore);
-                this.logger.warn("Continuing initialization.");            
-            }
-        }
-
-        if ( this.additionalProperties != null ) {
-            PropertyHelper.replaceAll(this.additionalProperties, s);
-            properties.putAll(this.additionalProperties);
-        }
-        PropertyHelper.replaceAll(properties, parent);
-        s.configure(properties);
-
-        return s;
+    protected String getNameForPropertyProvider() {
+        return this.name;
     }
 }

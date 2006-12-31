@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.MutableSettings;
-import org.apache.cocoon.configuration.PropertyHelper;
-import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.spring.configurator.ResourceUtils;
@@ -38,16 +36,85 @@ import org.apache.cocoon.spring.configurator.ResourceUtils;
  * them in the spring configuration files.
  * In addition this bean acts as a factory bean providing the settings object.
  *
+ * The settings object is created by reading several property files and merging of
+ * the values. If there is more than one definition for a property, the last one wins.
+ * The property files are read in the following order:
+ * 1) If {@link #readFromClasspath} is true: classpath*:/META-INF/cocoon/properties/*.properties
+ *    Default values for the core and each block - the files are read in alphabetical order.
+ *    Actually the files are read in two chunks, the first one containing all property files
+ *    from jar files, and the second one containing all property files from WEB-INF/classes.
+ * 2) If {@link #readFromClasspath} is true: classpath*:/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties
+ *    Default values for the core and each block for a specific running mode - the files are
+ *    read in alphabetical order.
+ *    Actually the files are read in two chunks, the first one containing all property files
+ *    from jar files, and the second one containing all property files from WEB-INF/classes.
+ * 3) If {@link #readFromGlobalLocation} is true: /WEB-INF/cocoon/properties/*.properties
+ *    Default values for the core and each block - the files are read in alphabetical order.
+ *    Actually the files are read in two chunks, the first one containing all property files
+ *    from jar files, and the second one containing all property files from WEB-INF/classes.
+ * 4) If {@link #readFromGlobalLocation} is true: /WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
+ *    Default values for the core and each block for a specific running mode - the files are
+ *    read in alphabetical order.
+ *    Actually the files are read in two chunks, the first one containing all property files
+ *    from jar files, and the second one containing all property files from WEB-INF/classes.
+ * 5) Working directory from servlet context (if not already set)
+ * 6) Optional property file which is stored under ".cocoon/settings.properties" in the user
+ *    directory.
+ * 7) Additional property file specified by the "org.apache.cocoon.settings" property. If the
+ *    property defines a directory, all property files from this directory are read in alphabetical
+ *    order and all files from a sub directory with the name of the current running mode
+ *    are read in alphabetical order as well.
+ * 8) Property provider (if configured in the bean factory)
+ * 9) Add properties from configured directories {@link #directories}.
+ * 10) Add additional properties configured at {@link #additionalProperties}
+ * 11) System properties
+ *
+ * This means that system properties (provided on startup of the web application) override all
+ * others etc.
+ *
  * @since 1.0
  * @version $Id$
  */
 public class SettingsBeanFactoryPostProcessor
     extends AbstractSettingsBeanFactoryPostProcessor {
 
+    /**
+     * The running mode for the web application.
+     */
     protected String runningMode = SettingsDefaults.DEFAULT_RUNNING_MODE;
 
+    /**
+     * Should we read the properties from the classpath?
+     * @see Constants#CLASSPATH_PROPERTIES_LOCATION
+     */
+    protected boolean readFromClasspath = true;
+
+    /**
+     * Should we read the properties from the global location?
+     * @see Constants#GLOBAL_PROPERTIES_LOCATION
+     */
+    protected boolean readFromGlobalLocation = true;
+
+    /**
+     * Set the running mode.
+     */
     public void setRunningMode(String runningMode) {
         this.runningMode = runningMode;
+    }
+
+    /**
+     * Set if we read property configurations from the classpath.
+     * @param readFromClasspath
+     */
+    public void setReadFromClasspath(boolean readFromClasspath) {
+        this.readFromClasspath = readFromClasspath;
+    }
+
+    /**
+     * Set if we read property configurations from the global location.
+     */
+    public void setReadFromGlobalLocation(boolean readFromGlobalLocation) {
+        this.readFromGlobalLocation = readFromGlobalLocation;
     }
 
     /**
@@ -57,106 +124,11 @@ public class SettingsBeanFactoryPostProcessor
      */
     public void init()
     throws Exception {
-        this.settings = this.createSettings();
-
-        this.doInit();
-
-        this.initSettingsFiles();
-        // settings can't be changed anymore
-        this.settings.makeReadOnly();
-
-        this.dumpSystemProperties();
-        this.dumpSettings();
-        this.forceLoad();
-    }
-
-    /**
-     * Init work, upload and cache directory
-     */
-    protected void initSettingsFiles() {
-        // first init the work-directory for the logger.
-        // this is required if we are running inside a war file!
-        final String workDirParam = settings.getWorkDirectory();
-        File workDir;
-        if (workDirParam != null) {
-            // No context path : consider work-directory as absolute
-            workDir = new File(workDirParam);
-        } else {
-            workDir = new File("cocoon-files");
-        }
-        workDir.mkdirs();
-        settings.setWorkDirectory(workDir.getAbsolutePath());
-
-        // Output some debug info
-        if (this.logger.isDebugEnabled()) {
-            if (workDirParam != null) {
-                this.logger.debug("Using work-directory " + workDir);
-            } else {
-                this.logger.debug("Using default work-directory " + workDir);
-            }
-        }
-
-        String cacheDirParam = settings.getCacheDirectory();
-        File cacheDir;
-        if (cacheDirParam != null) {
-            cacheDir = new File(cacheDirParam);
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Using cache-directory " + cacheDir);
-            }
-        } else {
-            cacheDir = new File(workDir, "cache-dir" + File.separator);
-            File parent = cacheDir.getParentFile();
-            if (parent != null) {
-                parent.mkdirs();
-            }
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("cache-directory was not set - defaulting to " + cacheDir);
-            }
-        }
-        cacheDir.mkdirs();
-        settings.setCacheDirectory(cacheDir.getAbsolutePath());
-    }
-
-    /**
-     * Get the settings for Cocoon.
-     * This method reads several property files and merges the result. If there
-     * is more than one definition for a property, the last one wins.
-     * The property files are read in the following order:
-     * 1) classpath*:/META-INF/cocoon/properties/*.properties
-     *    Default values for the core and each block - the files are read in alphabetical order.
-     *    Actually the files are read in two chunks, the first one containing all property files
-     *    from jar files, and the second one containing all property files from WEB-INF/classes.
-     * 2) classpath*:/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties
-     *    Default values for the core and each block for a specific running mode - the files are
-     *    read in alphabetical order.
-     *    Actually the files are read in two chunks, the first one containing all property files
-     *    from jar files, and the second one containing all property files from WEB-INF/classes.
-     * 3) Working directory from servlet context (if not already set)
-     * 4) Optional property file which is stored under ".cocoon/settings.properties" in the user
-     *    directory.
-     * 5) Additional property file specified by the "org.apache.cocoon.settings" property. If the
-     *    property defines a directory, all property files from this directory are read in alphabetical
-     *    order and all files from a sub directory with the name of the current running mode
-     *    are read in alphabetical order as well.
-     * 6) Property provider (if configured in the bean factory)
-     * 7) System properties
-     *
-     * This means that system properties (provided on startup of the web application) override all
-     * others etc.
-     *
-     * @return A new Settings object
-     */
-    protected MutableSettings createSettings() {
         // get the running mode
-        final String mode = RunningModeHelper.determineRunningMode( this.runningMode );
+        final String mode = this.getRunningMode();
+        RunningModeHelper.checkRunningMode(mode);
 
-        /*
-        if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
-            final String msg =
-                "Invalid running mode: " + mode + " - Use one of: " + Arrays.asList(SettingsDefaults.RUNNING_MODES);
-            throw new IllegalArgumentException(msg);
-        }
-        */
+        // print out version information
         final Properties pomProps = ResourceUtils.getPOMProperties("org.apache.cocoon", "cocoon-spring-configurator");
         final String version;
         if ( pomProps != null ) {
@@ -164,29 +136,45 @@ public class SettingsBeanFactoryPostProcessor
         } else {
             version = null;
         }
-
         this.servletContext.log("Apache Cocoon Spring Configurator " +
                                 (version != null ? "v" + version + " " : "") +
                                 "is running in mode '" + mode + "'.");
 
-        // create an empty settings objects
-        final MutableSettings s = new MutableSettings(mode);
-        // create an empty properties object
-        final Properties properties = new Properties();
+        // first we dump the system properties
+        this.dumpSystemProperties();
+        // now create the settings object
+        super.init();
 
-        // now read all properties from classpath directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.CLASSPATH_PROPERTIES_LOCATION,
-                properties, this.getResourceLoader(), this.logger);
-        // read all properties from the mode dependent directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.CLASSPATH_PROPERTIES_LOCATION
-                + "/" + mode, properties, this.getResourceLoader(), this.logger);
+        // finally pre load classes
+        this.forceLoad();
+    }
 
-        // now read all properties from the properties directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.GLOBAL_PROPERTIES_LOCATION,
-                properties, this.getResourceLoader(), this.logger);
-        // read all properties from the mode dependent directory
-        ResourceUtils.readProperties(org.apache.cocoon.spring.configurator.impl.Constants.GLOBAL_PROPERTIES_LOCATION
-                + "/" + mode, properties, this.getResourceLoader(), this.logger);
+    /**
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsBeanFactoryPostProcessor#getRunningMode()
+     */
+    protected String getRunningMode() {
+        return RunningModeHelper.determineRunningMode( this.runningMode );
+    }
+
+    protected void preInit(final MutableSettings s, final Properties properties) {
+        final String mode = this.getRunningMode();
+        if ( this.readFromClasspath ) {
+            // now read all properties from classpath directory
+            ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION,
+                    properties, this.getResourceLoader(), this.logger);
+            // read all properties from the mode dependent directory
+            ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION
+                    + "/" + mode, properties, this.getResourceLoader(), this.logger);
+        }
+
+        if ( this.readFromGlobalLocation ) {
+            // now read all properties from the properties directory
+            ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION,
+                    properties, this.getResourceLoader(), this.logger);
+            // read all properties from the mode dependent directory
+            ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION
+                    + "/" + mode, properties, this.getResourceLoader(), this.logger);
+        }
 
         // fill from the servlet context
         if ( s.getWorkDirectory() == null ) {
@@ -242,35 +230,53 @@ public class SettingsBeanFactoryPostProcessor
                 this.logger.info("Additional settings file '" + additionalPropertyFile + "' does not exist - continuing with initialization.");
             }
         }
-        // check for property providers
-        if (this.beanFactory != null && this.beanFactory.containsBean(PropertyProvider.ROLE) ) {
-            try {
-                final PropertyProvider provider = (PropertyProvider)this.beanFactory.getBean(PropertyProvider.ROLE);
-                final Properties providedProperties = provider.getProperties(s, mode, null);
-                if ( providedProperties != null ) {
-                    properties.putAll(providedProperties);
-                }
-            } catch (Exception ignore) {
-                this.logger.warn("Unable to get properties from provider.", ignore);
-                this.logger.warn("Continuing initialization.");            
+    }
+
+    /**
+     * Init work, upload and cache directory
+     */
+    protected void postInit(final MutableSettings s, final Properties properties) {
+        // first init the work-directory for the logger.
+        // this is required if we are running inside a war file!
+        final String workDirParam = s.getWorkDirectory();
+        File workDir;
+        if (workDirParam != null) {
+            // No context path : consider work-directory as absolute
+            workDir = new File(workDirParam);
+        } else {
+            workDir = new File("cocoon-files");
+        }
+        workDir.mkdirs();
+        s.setWorkDirectory(workDir.getAbsolutePath());
+
+        // Output some debug info
+        if (this.logger.isDebugEnabled()) {
+            if (workDirParam != null) {
+                this.logger.debug("Using work-directory " + workDir);
+            } else {
+                this.logger.debug("Using default work-directory " + workDir);
             }
         }
-        
-        if ( this.additionalProperties != null ) {
-            PropertyHelper.replaceAll(this.additionalProperties, s);
-            properties.putAll(this.additionalProperties);
-        }
 
-        // now overwrite with system properties
-        try {
-            properties.putAll(System.getProperties());
-        } catch (SecurityException se) {
-            // we ignore this
+        String cacheDirParam = s.getCacheDirectory();
+        File cacheDir;
+        if (cacheDirParam != null) {
+            cacheDir = new File(cacheDirParam);
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Using cache-directory " + cacheDir);
+            }
+        } else {
+            cacheDir = new File(workDir, "cache-dir" + File.separator);
+            File parent = cacheDir.getParentFile();
+            if (parent != null) {
+                parent.mkdirs();
+            }
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("cache-directory was not set - defaulting to " + cacheDir);
+            }
         }
-        PropertyHelper.replaceAll(properties, null);
-        s.configure(properties);
-
-        return s;
+        cacheDir.mkdirs();
+        s.setCacheDirectory(cacheDir.getAbsolutePath());
     }
 
     /**
