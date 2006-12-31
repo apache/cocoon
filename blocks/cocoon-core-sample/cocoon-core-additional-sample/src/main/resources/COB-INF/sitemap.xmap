@@ -60,11 +60,12 @@
 
   <map:pipelines>
     <map:pipeline>
+<!--
       <map:match pattern="v">
         <map:generate type="virtual"/>
         <map:serialize type="xhtml"/>
       </map:match>
-
+-->
       <map:match pattern="">
         <map:generate src="samples.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
