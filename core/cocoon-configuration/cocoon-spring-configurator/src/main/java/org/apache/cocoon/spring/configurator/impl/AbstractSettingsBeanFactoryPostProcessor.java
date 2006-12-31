@@ -27,13 +27,17 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.MutableSettings;
+import org.apache.cocoon.configuration.PropertyHelper;
+import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionVisitor;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -70,7 +74,15 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
 
     protected ResourceLoader resourceLoader;
 
+    /**
+     * Additional properties.
+     */
     protected Properties additionalProperties;
+
+    /**
+     * List of additional property directories.
+     */
+    protected List directories;
 
     /**
      * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#setBeanFactory(org.springframework.beans.factory.BeanFactory)
@@ -94,11 +106,148 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         this.resourceLoader = loader;
     }
 
+    public void setDirectories(List directories) {
+        this.directories = directories;
+    }
+
+    public void setAdditionalProperties(Properties props) {
+        this.additionalProperties = props;
+    }
+
     /**
-     * This method can be overwritten by subclasses to further initialize the settings
+     * Initialize this processor.
+     * Setup the settings object.
+     * @throws Exception
      */
-    protected void doInit() {
-        // nothing to do here
+    public void init()
+    throws Exception {
+        this.settings = this.createSettings();
+
+        this.dumpSettings();
+    }
+
+    /**
+     * Get the running mode.
+     * This method should be implemented by subclasses.
+     */
+    protected abstract String getRunningMode();
+
+    /**
+     * Return a parent settings object if available.
+     */
+    protected Settings getParentSettings() {
+        final BeanFactory parentBeanFactory = ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory();
+        if ( parentBeanFactory != null ) {
+            return (Settings)parentBeanFactory.getBean(Settings.ROLE);
+        }
+        return null;
+    }
+
+    /**
+     * Create a new settings object.
+     * If a parent settings object is available a new child settings object is created.
+     * Otherwise a new root settings object with the running mode is instantiated.
+     */
+    protected MutableSettings createMutableSettingsInstance() {
+        final Settings parentSettings = this.getParentSettings();
+        if ( parentSettings == null ) {
+            return new MutableSettings(this.getRunningMode());              
+        }
+        return new MutableSettings(parentSettings);
+    }
+
+    /**
+     * This method can be used by subclasses to initialize the settings and/or
+     * the properties before {@link #createSettings()} does it's work.
+     */
+    protected void preInit(final MutableSettings s, final Properties properties) {
+        // default implementation does nothing
+    }
+
+    /**
+     * This method can be used by subclasses to initialize the settings and/or
+     * the properties after {@link #createSettings()} did it's work.
+     */
+    protected void postInit(final MutableSettings s, final Properties properties) {
+        // default implementation does nothing
+    }
+
+    protected String getNameForPropertyProvider() {
+        return null;
+    }
+
+    /**
+     * Create a settings object.
+     * This method creates the settings by executing the following task:
+     * 1) Create a new mutable settings object invoking {@link #createMutableSettingsInstance()}.
+     * 2) Configure the properties and settings object by calling {@link #preInit(MutableSettings, Properties)}.
+     * 3) Invoke a {@link PropertyProvider} if configured in the same application context (or its parent)
+     * 4) Add properties from configured directories {@link #directories}.
+     * 5) Add additional properties configured at {@link #additionalProperties}
+     * 6) Apply system properties
+     * 7) Configure the properties and settings object by calling {@link #postInit(MutableSettings, Properties)}.
+     * 8) Replace references in properties
+     * 9) Configure the settings object with the properties
+     * 10) Make the settings object read-only.
+     *
+     * @return A new Settings object
+     */
+    protected MutableSettings createSettings() {
+        final String mode = this.getRunningMode();
+        // create an empty settings objects
+        final MutableSettings s = this.createMutableSettingsInstance();
+        // create the initial properties
+        final Properties properties = new Properties();
+        // invoke pre initialization hook
+        this.preInit(s, properties);
+
+        // check for property providers
+        if (this.beanFactory != null && this.beanFactory.containsBean(PropertyProvider.ROLE) ) {
+            try {
+                final PropertyProvider provider = (PropertyProvider)this.beanFactory.getBean(PropertyProvider.ROLE);
+                final Properties providedProperties = provider.getProperties(s, mode, this.getNameForPropertyProvider());
+                if ( providedProperties != null ) {
+                    properties.putAll(providedProperties);
+                }
+            } catch (Exception ignore) {
+                this.logger.warn("Unable to get properties from provider.", ignore);
+                this.logger.warn("Continuing initialization.");            
+            }
+        }
+
+        // add aditional directories
+        if ( this.directories != null ) {
+            final Iterator i = directories.iterator();
+            while ( i.hasNext() ) {
+                final String directory = (String)i.next();
+                // now read all properties from the properties directory
+                ResourceUtils.readProperties(directory, properties, this.getResourceLoader(), this.logger);
+                // read all properties from the mode dependent directory
+                ResourceUtils.readProperties(directory + '/' + mode, properties, this.getResourceLoader(), this.logger);
+            }
+        }
+
+        // add additional properties
+        if ( this.additionalProperties != null ) {
+            PropertyHelper.replaceAll(this.additionalProperties, s);
+            properties.putAll(this.additionalProperties);
+        }
+
+        // now overwrite with system properties
+        try {
+            properties.putAll(System.getProperties());
+        } catch (SecurityException se) {
+            // we ignore this
+        }
+        // invoke pre initialization hook
+        this.postInit(s, properties);
+
+        PropertyHelper.replaceAll(properties, this.getParentSettings());
+        // configure settings
+        s.configure(properties);
+        s.makeReadOnly();
+
+        return s;
     }
 
     protected ResourceLoader getResourceLoader() {
