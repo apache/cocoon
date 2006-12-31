@@ -18,10 +18,21 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.cocoon.spring.configurator.ResourceUtils;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.w3c.dom.Element;
 
 /**
@@ -33,6 +44,18 @@ import org.w3c.dom.Element;
  * @since 1.0
  */
 public abstract class AbstractSettingsElementParser extends AbstractElementParser {
+
+    /**
+     * Get the current running mode
+     */
+    protected abstract String getRunningMode(Element e);
+
+    /**
+     * Create and register the settings bean factory post processor.
+     */
+    protected abstract void createSettingsBeanFactoryPostProcessor(Element       element,
+                                                                   ParserContext parserContext,
+                                                                   String        runningMode);
 
     /**
      * Get additonal includes of property directories.
@@ -84,5 +107,113 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
             }
         }
         return includes;
+    }
+
+    /**
+     * Return the includes for the property override configuration
+     */
+    protected List getBeanPropertyOverrideIncludes(Element settingsElement) {
+        return this.getBeanIncludes(settingsElement);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        final String runningMode = this.getRunningMode(element);
+
+        // create factory for settings object
+        this.createSettingsBeanFactoryPostProcessor(element, parserContext, runningMode);
+
+        // Get bean includes for property overrides
+        final List overridePropertyIncludes = this.getBeanPropertyOverrideIncludes(element);
+
+        // If there are bean includes for a directory, we register a property placeholder configurer
+        if ( overridePropertyIncludes.size() > 0 ) {
+            this.registerPropertyOverrideConfigurer(parserContext, overridePropertyIncludes); 
+        }
+
+        // register additonal components
+        this.registerComponents(parserContext);
+
+        // Get bean includes
+        final List beanIncludes = this.getBeanIncludes(element);
+        // process bean includes!
+        final Iterator beanIncludeIterator = beanIncludes.iterator();
+        while ( beanIncludeIterator.hasNext() ) {
+            final String dir = (String)beanIncludeIterator.next();
+
+            try {
+                this.handleBeanInclude(parserContext, dir, false);
+                this.handleBeanInclude(parserContext, dir + "/" + runningMode, true);
+            } catch (Exception e) {
+                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + dir, e);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * This method can be used for subclasses to register additional components.
+     */
+    protected void registerComponents(ParserContext parserContext) {
+        // nothing to do here
+    }
+
+    /**
+     * Handle include for spring bean configurations.
+     */
+    protected void handleBeanInclude(final ParserContext parserContext,
+                                     final String        path,
+                                     final boolean       optional)
+    throws Exception {
+        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
+        ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
+
+        // check if the directory to read from exists
+        // we only check if optional is set to true
+        boolean load = true;
+        if ( optional
+             && !ResourceUtils.isClasspathUri(path) ) {
+            final Resource rsrc = resolver.getResource(path);
+            if ( !rsrc.exists()) {
+                load = false;
+            }
+        }
+        if ( load ) {
+            try {
+                Resource[] resources = resolver.getResources(path + "/*.xml");
+                Arrays.sort(resources, ResourceUtils.getResourceComparator());
+                for (int i = 0; i < resources.length; i++) {
+                    this.handleImport(parserContext, resources[i].getURL().toExternalForm());
+                }
+            } catch (IOException ioe) {
+                throw new Exception("Unable to read configurations from " + path, ioe);
+            }
+        }
+    }
+
+    protected void handleImport(ParserContext parserContext, String uri) {
+        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
+        parserContext.getDelegate().getReaderContext().getReader().loadBeanDefinitions(resourceLoader.getResource(uri));
+    }
+
+    /**
+     * Register a property placeholder configurer. The configurer will read all
+     * *.properties files from the specified locations.
+     * 
+     * @param parserContext
+     * @param locations
+     */
+    protected void registerPropertyOverrideConfigurer(final ParserContext parserContext,
+                                                      final List          locations) {
+        final RootBeanDefinition beanDef = this.createBeanDefinition(ExtendedPropertyOverrideConfigurer.class.getName(),
+                null, true);
+        beanDef.getPropertyValues().addPropertyValue("locations", locations);
+        beanDef.getPropertyValues().addPropertyValue("resourceLoader",
+                parserContext.getReaderContext().getReader().getResourceLoader());
+        beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");
+        this.register(beanDef, ExtendedPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
     }
 }

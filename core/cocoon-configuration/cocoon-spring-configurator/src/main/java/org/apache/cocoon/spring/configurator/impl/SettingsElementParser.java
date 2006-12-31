@@ -18,8 +18,6 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -27,8 +25,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.configurator.BlockResourcesHolder;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
@@ -36,7 +32,7 @@ import org.w3c.dom.Element;
 /**
  * Add a bean definition for the settings object to the bean factory.
  * 
- * @see SitemapNamespaceHandler
+ * @see ConfiguratorNamespaceHandler
  * @see SettingsBeanFactoryPostProcessor
  * @version $Id$
  * @since 1.0
@@ -89,36 +85,43 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
     }
 
     /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element,
-     *      org.springframework.beans.factory.xml.ParserContext)
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#getRunningMode(org.w3c.dom.Element)
      */
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
-        final String runningMode = RunningModeHelper.determineRunningMode( this.getAttributeValue(element, RUNNING_MODE_ATTR, null) );
-        this.createSettingsBeanFactoryPostProcessor(element, parserContext, runningMode);
+    protected String getRunningMode(Element e) {
+        return RunningModeHelper.determineRunningMode( this.getAttributeValue(e, RUNNING_MODE_ATTR, null) );        
+    }
 
-        // Get bean includes
-        final List beanIncludes = this.getBeanIncludes(element);
-
-        // register a PropertyPlaceholderConfigurer
-        // we create a list with the default locations and add the optional location attribute
-        final List dirs = new ArrayList();
-        // check for boolean settings
-        final boolean readFromClasspath = Boolean.valueOf(this.getAttributeValue(element, READ_FROM_CLASSPATH_ATTR, "true")).booleanValue();
-        final boolean readFromGlobalLocation = Boolean.valueOf(this.getAttributeValue(element, READ_FROM_GLOBAL_LOCATION_ATTR, "true")).booleanValue();
+    /**
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#getBeanIncludes(org.w3c.dom.Element)
+     */
+    protected List getBeanIncludes(Element settingsElement) {
+        final List includes = super.getBeanIncludes(settingsElement);
+        final boolean readFromClasspath = Boolean.valueOf(this.getAttributeValue(settingsElement, READ_FROM_CLASSPATH_ATTR, "true")).booleanValue();
         if ( readFromClasspath ) {
-            dirs.add(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
+            includes.add(0, Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
         }
-        if ( readFromGlobalLocation ) {
-            dirs.add(Constants.GLOBAL_SPRING_CONFIGURATION_LOCATION);
-        }
-        // If there are bean includes for a directory, we register them as well
-        if ( beanIncludes.size() > 0 ) {
-            dirs.addAll(beanIncludes);
-        }
-        if ( dirs.size() > 0 ) {
-            this.registerPropertyOverrideConfigurer(parserContext, dirs);
-        }
+        return includes;
+    }
 
+    /**
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#getBeanPropertyOverrideIncludes(org.w3c.dom.Element)
+     */
+    protected List getBeanPropertyOverrideIncludes(Element settingsElement) {
+        final List includes = super.getBeanPropertyOverrideIncludes(settingsElement);
+        final boolean readFromClasspath = Boolean.valueOf(this.getAttributeValue(settingsElement, READ_FROM_CLASSPATH_ATTR, "true")).booleanValue();
+        final boolean readFromGlobalLocation = Boolean.valueOf(this.getAttributeValue(settingsElement, READ_FROM_GLOBAL_LOCATION_ATTR, "true")).booleanValue();
+        if (readFromGlobalLocation) {
+            int pos = (readFromClasspath ? 1 : 0);
+            includes.add(pos, Constants.GLOBAL_SPRING_CONFIGURATION_LOCATION);
+        }
+        return includes;
+    }
+
+    /**
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#registerComponents(org.springframework.beans.factory.xml.ParserContext)
+     */
+    protected void registerComponents(ParserContext parserContext) {
+        super.registerComponents(parserContext);
         // add the servlet context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(),
                           ServletContext.class.getName(),
@@ -128,25 +131,5 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
         this.addComponent(DefaultBlockResourcesHolder.class.getName(), 
                           BlockResourcesHolder.class.getName(),
                           "init", true, parserContext.getRegistry());
-
-        // handle includes - add default location
-        if ( readFromClasspath ) {
-            beanIncludes.add(0, Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
-        }
-
-        // process bean includes!
-        final Iterator beanIncludeIterator = beanIncludes.iterator();
-        while ( beanIncludeIterator.hasNext() ) {
-            final String dir = (String)beanIncludeIterator.next();
-
-            try {
-                this.handleBeanInclude(parserContext, dir, false);
-                this.handleBeanInclude(parserContext, dir + "/" + runningMode, true);
-            } catch (Exception e) {
-                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + dir, e);
-            }
-        }
-
-        return null;
     }
 }

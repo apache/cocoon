@@ -18,14 +18,11 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -35,7 +32,7 @@ import org.w3c.dom.Element;
  * Add a bean definition for the settings object of a child context to the bean factory
  * and process all includes of spring configurations.
  *
- * @see SitemapNamespaceHandler
+ * @see ConfiguratorNamespaceHandler
  * @see ChildSettingsBeanFactoryPostProcessor
  * @version $Id$
  * @since 1.0
@@ -43,22 +40,21 @@ import org.w3c.dom.Element;
 public class ChildSettingsElementParser extends AbstractSettingsElementParser {
 
     /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#getRunningMode(org.w3c.dom.Element)
      */
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+    protected String getRunningMode(Element e) {
         // get root application context
         final WebApplicationContext rootAppContext = WebAppContextUtils.getCurrentWebApplicationContext();
         // get running mode from root settings
-        final String runningMode = ((Settings)rootAppContext.getBean(Settings.ROLE)).getRunningMode();
+        return ((Settings)rootAppContext.getBean(Settings.ROLE)).getRunningMode();
+    }
 
-        // Get bean includes
-        final List beanIncludes = this.getBeanIncludes(element);
-
-        // If there are bean includes for a directory, we register a property placeholder configurer
-        if ( beanIncludes.size() > 0 ) {
-            this.registerPropertyOverrideConfigurer(parserContext, beanIncludes); 
-        }
-
+    /**
+     * Create and register the settings bean factory post processor.
+     */
+    protected void createSettingsBeanFactoryPostProcessor(Element       element,
+                                                          ParserContext parserContext,
+                                                          String        runningMode) {
         // Create definition for child settings
         RootBeanDefinition def =  this.createBeanDefinition(ChildSettingsBeanFactoryPostProcessor.class.getName(),
                 "init",
@@ -75,21 +71,7 @@ public class ChildSettingsElementParser extends AbstractSettingsElementParser {
             def.getPropertyValues().addPropertyValue("directories", propertiesIncludes);
         }
 
-        // process bean includes!
-        final Iterator beanIncludeIterator = beanIncludes.iterator();
-        while ( beanIncludeIterator.hasNext() ) {
-            final String dir = (String)beanIncludeIterator.next();
-
-            try {
-                this.handleBeanInclude(parserContext, dir, false);
-                this.handleBeanInclude(parserContext, dir + "/" + runningMode, true);
-            } catch (Exception e) {
-                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + dir, e);
-            }
-        }
-
         // and now we register the child settings
         this.register(def, Settings.ROLE, parserContext.getRegistry());
-        return null;
     }
 }
