@@ -18,13 +18,9 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -34,10 +30,6 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
-import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -216,61 +208,5 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         final RootBeanDefinition beanDef = this.createBeanDefinition(componentClass, initMethod, requiresSettings);
 
         this.register(beanDef, beanName, registry);
-    }
-
-    /**
-     * Handle include for spring bean configurations.
-     */
-    protected void handleBeanInclude(final ParserContext parserContext,
-                                     final String        path,
-                                     final boolean       optional)
-    throws Exception {
-        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
-        ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
-
-        // check if the directory to read from exists
-        // we only check if optional is set to true
-        boolean load = true;
-        if ( optional
-             && !ResourceUtils.isClasspathUri(path) ) {
-            final Resource rsrc = resolver.getResource(path);
-            if ( !rsrc.exists()) {
-                load = false;
-            }
-        }
-        if ( load ) {
-            try {
-                Resource[] resources = resolver.getResources(path + "/*.xml");
-                Arrays.sort(resources, ResourceUtils.getResourceComparator());
-                for (int i = 0; i < resources.length; i++) {
-                    this.handleImport(parserContext, resources[i].getURL().toExternalForm());
-                }
-            } catch (IOException ioe) {
-                throw new Exception("Unable to read configurations from " + path, ioe);
-            }
-        }
-    }
-
-    protected void handleImport(ParserContext parserContext, String uri) {
-        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
-        parserContext.getDelegate().getReaderContext().getReader().loadBeanDefinitions(resourceLoader.getResource(uri));
-    }
-
-    /**
-     * Register a property placeholder configurer. The configurer will read all
-     * *.properties files from the specified locations.
-     * 
-     * @param parserContext
-     * @param locations
-     */
-    protected void registerPropertyOverrideConfigurer(final ParserContext parserContext,
-                                                      final List          locations) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(ExtendedPropertyOverrideConfigurer.class.getName(),
-                null, true);
-        beanDef.getPropertyValues().addPropertyValue("locations", locations);
-        beanDef.getPropertyValues().addPropertyValue("resourceLoader",
-                parserContext.getReaderContext().getReader().getResourceLoader());
-        beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");
-        this.register(beanDef, ExtendedPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
     }
 }
