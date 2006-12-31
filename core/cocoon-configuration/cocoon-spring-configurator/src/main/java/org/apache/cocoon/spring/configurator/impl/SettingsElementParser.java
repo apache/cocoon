@@ -113,11 +113,7 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
         }
         // If there are bean includes for a directory, we register them as well
         if ( beanIncludes.size() > 0 ) {
-            // we need a list of directories
-            final Iterator i = beanIncludes.iterator();
-            while ( i.hasNext() ) {
-                dirs.add(((IncludeInfo)i.next()).dir);
-            }
+            dirs.addAll(beanIncludes);
         }
         if ( dirs.size() > 0 ) {
             this.registerPropertyOverrideConfigurer(parserContext, dirs);
@@ -135,19 +131,19 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
 
         // handle includes - add default location
         if ( readFromClasspath ) {
-            beanIncludes.add(0, new IncludeInfo(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION, true));
+            beanIncludes.add(0, Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
         }
 
         // process bean includes!
         final Iterator beanIncludeIterator = beanIncludes.iterator();
         while ( beanIncludeIterator.hasNext() ) {
-            final IncludeInfo info = (IncludeInfo)beanIncludeIterator.next();
+            final String dir = (String)beanIncludeIterator.next();
 
             try {
-                this.handleBeanInclude(parserContext, info.dir, info.optional);
-                this.handleBeanInclude(parserContext, info.dir + "/" + runningMode, true);
+                this.handleBeanInclude(parserContext, dir, false);
+                this.handleBeanInclude(parserContext, dir + "/" + runningMode, true);
             } catch (Exception e) {
-                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + info.dir, e);
+                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + dir, e);
             }
         }
 

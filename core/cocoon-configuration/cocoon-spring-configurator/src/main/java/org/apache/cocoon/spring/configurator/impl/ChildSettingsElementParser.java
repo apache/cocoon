@@ -18,7 +18,6 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -57,13 +56,7 @@ public class ChildSettingsElementParser extends AbstractSettingsElementParser {
 
         // If there are bean includes for a directory, we register a property placeholder configurer
         if ( beanIncludes.size() > 0 ) {
-            // we need a list of directories
-            final List dirs = new ArrayList(beanIncludes.size());
-            final Iterator i = beanIncludes.iterator();
-            while ( i.hasNext() ) {
-                dirs.add(((IncludeInfo)i.next()).dir);
-            }
-            this.registerPropertyOverrideConfigurer(parserContext, dirs); 
+            this.registerPropertyOverrideConfigurer(parserContext, beanIncludes); 
         }
 
         // Create definition for child settings
@@ -85,13 +78,13 @@ public class ChildSettingsElementParser extends AbstractSettingsElementParser {
         // process bean includes!
         final Iterator beanIncludeIterator = beanIncludes.iterator();
         while ( beanIncludeIterator.hasNext() ) {
-            final IncludeInfo info = (IncludeInfo)beanIncludeIterator.next();
+            final String dir = (String)beanIncludeIterator.next();
 
             try {
-                this.handleBeanInclude(parserContext, info.dir, info.optional);
-                this.handleBeanInclude(parserContext, info.dir + "/" + runningMode, true);
+                this.handleBeanInclude(parserContext, dir, false);
+                this.handleBeanInclude(parserContext, dir + "/" + runningMode, true);
             } catch (Exception e) {
-                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + info.dir, e);
+                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + dir, e);
             }
         }
 

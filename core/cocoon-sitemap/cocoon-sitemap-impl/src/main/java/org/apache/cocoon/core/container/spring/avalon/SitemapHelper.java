@@ -36,6 +36,7 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.spring.configurator.impl.ChildXmlWebApplicationContext;
 import org.apache.cocoon.util.Deprecation;
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -76,19 +77,18 @@ public class SitemapHelper {
         if ( beanIncludes != null ) {
             final Iterator i = beanIncludes.iterator();
             while ( i.hasNext() ) {
-                final IncludeInfo info = (IncludeInfo)i.next();
+                final String dir = (String)i.next();
                 buffer.append("    <configurator:include-beans");
-                addAttribute(buffer, "dir", info.dir);
-                addAttribute(buffer, "optional", String.valueOf(info.optional));
+                addAttribute(buffer, "dir", dir);
                 buffer.append("/>\n");
             }
         }
         if ( propertyIncludes != null ) {
             final Iterator i = propertyIncludes.iterator();
             while ( i.hasNext() ) {
-                final IncludeInfo info = (IncludeInfo)i.next();
+                final String dir = (String)i.next();
                 buffer.append("    <configurator:include-properties");
-                addAttribute(buffer, "dir", info.dir);
+                addAttribute(buffer, "dir", dir);
                 buffer.append("/>\n");
             }
         }
@@ -160,18 +160,22 @@ public class SitemapHelper {
      * @param sitemap
      * @return
      */
-    protected static List getBeanIncludes(Configuration sitemap)
+    protected static List getBeanIncludes(WebApplicationContext webAppContext,
+                                          String                contextUrl,
+                                          Configuration         sitemap)
     throws ConfigurationException {
         final List includes = new ArrayList();
         if ( isUsingDefaultIncludes(sitemap) ) {
-            includes.add(new IncludeInfo(DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION, true));
+            final Resource rsrc = webAppContext.getResource(contextUrl + DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION);
+            if ( rsrc.exists() ) {
+                includes.add(DEFAULT_CHILD_SPRING_CONFIGURATION_LOCATION);
+            }
         }
         final Configuration[] includeConfigs = sitemap.getChild("components").getChildren("include-beans");
         for(int i = 0 ; i < includeConfigs.length; i++ ) {
             final String dir = includeConfigs[i].getAttribute("dir");
-            final boolean optional = includeConfigs[i].getAttributeAsBoolean("optional", false);
 
-            includes.add(new IncludeInfo(dir, optional));
+            includes.add(dir);
         }
         return includes;
     }
@@ -181,17 +185,22 @@ public class SitemapHelper {
      * @param sitemap
      * @return
      */
-    protected static List getPropertiesIncludes(Configuration sitemap)
+    protected static List getPropertiesIncludes(WebApplicationContext webAppContext,
+                                                String                contextUrl,
+                                                Configuration         sitemap)
     throws ConfigurationException {
         final List includes = new ArrayList();
         if ( isUsingDefaultIncludes(sitemap) ) {
-            includes.add(new IncludeInfo(DEFAULT_CHILD_PROPERTIES_LOCATION, true));
+            final Resource rsrc = webAppContext.getResource(contextUrl + DEFAULT_CHILD_PROPERTIES_LOCATION);
+            if ( rsrc.exists() ) {
+                includes.add(DEFAULT_CHILD_PROPERTIES_LOCATION);
+            }
         }
         final Configuration[] includeConfigs = sitemap.getChild("components").getChildren("include-properties");
         for(int i = 0 ; i < includeConfigs.length; i++ ) {
             final String dir = includeConfigs[i].getAttribute("dir");
 
-            includes.add(new IncludeInfo(dir, true));
+            includes.add(dir);
         }
         return includes;
     }
@@ -299,8 +308,8 @@ public class SitemapHelper {
         // create root bean definition
         final String definition = createDefinition(request.getSitemapURIPrefix(),
                                                    sitemapLocation.substring(pos+1),
-                                                   getBeanIncludes(config),
-                                                   getPropertiesIncludes(config),
+                                                   getBeanIncludes(parentContext, contextUrl, config),
+                                                   getPropertiesIncludes(parentContext, contextUrl, config),
                                                    getGlobalSitemapVariables(config));
         PARENT_CONTEXT.set(parentContext);
         try {
@@ -350,14 +359,4 @@ public class SitemapHelper {
 //                                           configBean,
 //                                           servletContext);
 //    }
-
-    protected static final class IncludeInfo {
-        public final String dir;
-        public final boolean optional;
-
-        public IncludeInfo(String d, boolean o) {
-            this.dir = d;
-            this.optional = o;
-        }
-    }
 }

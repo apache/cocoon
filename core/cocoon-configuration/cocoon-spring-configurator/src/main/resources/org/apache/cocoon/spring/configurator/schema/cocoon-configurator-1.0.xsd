@@ -48,7 +48,6 @@
     <xsd:element name="include-beans">
       <xsd:complexType>
     	<xsd:attribute name="dir" type="xsd:string" use="optional"/>
-    	<xsd:attribute name="optional" type="xsd:boolean" use="optional"/>
       </xsd:complexType>
     </xsd:element>
 
