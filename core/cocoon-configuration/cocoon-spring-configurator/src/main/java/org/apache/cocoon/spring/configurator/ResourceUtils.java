@@ -203,7 +203,10 @@ public abstract class ResourceUtils {
         final String resourceName = "META-INF/maven/" + groupId + "/" + versionId + "/pom.properties";
         try {
             final Properties p = new Properties();
-            p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName));
+            final InputStream resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
+            if (resourceAsStream == null)
+                return null;
+            p.load(resourceAsStream);
             return p;
         } catch (IOException ignore) {
             return null;
