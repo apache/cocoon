@@ -21,7 +21,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="org.apache.cocoon.core.main.block" class="org.apache.cocoon.blocks.BlockServlet">
+	<bean id="org.apache.cocoon.core.additional.sample.block" class="org.apache.cocoon.blocks.BlockServlet">
 		<property name="mountPath" value="/cocoon-core-additional-sample"/>
 		<property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
 		<property name="blockContextURL" value="blockcontext:/cocoon-core-additional-sample/"/>
