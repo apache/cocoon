@@ -19,7 +19,9 @@
 package org.apache.cocoon.spring.configurator.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
@@ -39,37 +41,87 @@ import org.w3c.dom.Element;
  * @version $Id$
  * @since 1.0
  */
-public class SettingsElementParser extends AbstractElementParser {
+public class SettingsElementParser extends AbstractSettingsElementParser {
 
     /** The name of the configuration attribute to specify the running mode. */
     public static final String RUNNING_MODE_ATTR = "runningMode";
+
+    /** The name of the configuration attribute to specify if configurations are read from the classpath. */
+    public static final String READ_FROM_CLASSPATH_ATTR = "readFromClasspath";
+    
+    /** The name of the configuration attribute to specify if configurations are read from the global location. */
+    public static final String READ_FROM_GLOBAL_LOCATION_ATTR = "readFromGlobalLocation";
+
+    /**
+     * Create and register the settings bean factory post processor.
+     */
+    protected void createSettingsBeanFactoryPostProcessor(Element       element,
+                                                          ParserContext parserContext,
+                                                          String        runningMode) {
+        // create bean definition for settings object
+        final RootBeanDefinition beanDef = this.createBeanDefinition(SettingsBeanFactoryPostProcessor.class.getName(), "init", false);
+        // add additional properties
+        final Properties additionalProps = this.getAdditionalProperties(element);
+        if ( additionalProps != null ) {
+            beanDef.getPropertyValues().addPropertyValue("additionalProperties", additionalProps);                
+        }
+
+        // add additional property directories
+        final List propertiesIncludes = this.getPropertyIncludes(element);
+        if ( propertiesIncludes != null ) {
+            beanDef.getPropertyValues().addPropertyValue("directories", propertiesIncludes);
+        }
+
+        // check for boolean settings
+        final Boolean readFromClasspath = Boolean.valueOf(this.getAttributeValue(element, READ_FROM_CLASSPATH_ATTR, "true"));
+        final Boolean readFromGlobalLocation = Boolean.valueOf(this.getAttributeValue(element, READ_FROM_GLOBAL_LOCATION_ATTR, "true"));
+
+        beanDef.getPropertyValues().addPropertyValue(READ_FROM_CLASSPATH_ATTR, readFromClasspath);
+        beanDef.getPropertyValues().addPropertyValue(READ_FROM_GLOBAL_LOCATION_ATTR, readFromGlobalLocation);
+
+        // if running mode is specified add it as a property
+        if (runningMode != null) {
+            beanDef.getPropertyValues().addPropertyValue(RUNNING_MODE_ATTR, runningMode);
+        }
+
+        // register settings bean
+        this.register(beanDef, Settings.ROLE, parserContext.getRegistry());        
+    }
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element,
      *      org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-
-        // create bean definition for settings object
-        final RootBeanDefinition beanDef = this.createBeanDefinition(SettingsBeanFactoryPostProcessor.class.getName(), "init", false);
-        // if running mode is specified add it as a property
         final String runningMode = RunningModeHelper.determineRunningMode( this.getAttributeValue(element, RUNNING_MODE_ATTR, null) );
-        if (runningMode != null) {
-            beanDef.getPropertyValues().addPropertyValue("runningMode", runningMode);
-        }
-        // register settings bean
-        this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
+        this.createSettingsBeanFactoryPostProcessor(element, parserContext, runningMode);
+
+        // Get bean includes
+        final List beanIncludes = this.getBeanIncludes(element);
 
         // register a PropertyPlaceholderConfigurer
         // we create a list with the default locations and add the optional location attribute
-        final List locations = new ArrayList();
-        locations.add(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
-        locations.add(Constants.GLOBAL_SPRING_CONFIGURATION_LOCATION);
-        final String springConfigLocation = this.getAttributeValue(element, "location", null);
-        if ( springConfigLocation != null ) {
-            locations.add(springConfigLocation);
+        final List dirs = new ArrayList();
+        // check for boolean settings
+        final boolean readFromClasspath = Boolean.valueOf(this.getAttributeValue(element, READ_FROM_CLASSPATH_ATTR, "true")).booleanValue();
+        final boolean readFromGlobalLocation = Boolean.valueOf(this.getAttributeValue(element, READ_FROM_GLOBAL_LOCATION_ATTR, "true")).booleanValue();
+        if ( readFromClasspath ) {
+            dirs.add(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION);
         }
-        this.registerPropertyOverrideConfigurer(parserContext, locations);
+        if ( readFromGlobalLocation ) {
+            dirs.add(Constants.GLOBAL_SPRING_CONFIGURATION_LOCATION);
+        }
+        // If there are bean includes for a directory, we register them as well
+        if ( beanIncludes.size() > 0 ) {
+            // we need a list of directories
+            final Iterator i = beanIncludes.iterator();
+            while ( i.hasNext() ) {
+                dirs.add(((IncludeInfo)i.next()).dir);
+            }
+        }
+        if ( dirs.size() > 0 ) {
+            this.registerPropertyOverrideConfigurer(parserContext, dirs);
+        }
 
         // add the servlet context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(),
@@ -81,22 +133,24 @@ public class SettingsElementParser extends AbstractElementParser {
                           BlockResourcesHolder.class.getName(),
                           "init", true, parserContext.getRegistry());
 
-        // handle includes
-        try {
-            this.handleBeanInclude(parserContext, Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION, true);
-            this.handleBeanInclude(parserContext, Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION + "/" + runningMode, true);
-        } catch (Exception e) {
-            throw new BeanDefinitionStoreException("Unable to read spring configurations from " + Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION, e);
+        // handle includes - add default location
+        if ( readFromClasspath ) {
+            beanIncludes.add(0, new IncludeInfo(Constants.CLASSPATH_SPRING_CONFIGURATION_LOCATION, true));
         }
 
-        if ( springConfigLocation != null ) {
+        // process bean includes!
+        final Iterator beanIncludeIterator = beanIncludes.iterator();
+        while ( beanIncludeIterator.hasNext() ) {
+            final IncludeInfo info = (IncludeInfo)beanIncludeIterator.next();
+
             try {
-                this.handleBeanInclude(parserContext, springConfigLocation, true);
-                this.handleBeanInclude(parserContext, springConfigLocation + "/" + runningMode, true);            
+                this.handleBeanInclude(parserContext, info.dir, info.optional);
+                this.handleBeanInclude(parserContext, info.dir + "/" + runningMode, true);
             } catch (Exception e) {
-                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + springConfigLocation, e);
+                throw new BeanDefinitionStoreException("Unable to read spring configurations from " + info.dir, e);
             }
         }
+
         return null;
     }
 }
