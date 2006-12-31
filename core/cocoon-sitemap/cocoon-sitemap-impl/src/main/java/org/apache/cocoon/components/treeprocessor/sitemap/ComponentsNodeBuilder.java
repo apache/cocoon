@@ -19,7 +19,7 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
+//import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 
 /**
  * Handles &lt;map:components&gt;. It doesn't actually create a <code>ProcessingNode</code>.
@@ -38,6 +38,7 @@ public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
         // Handle the VPCs
+/*
         for (int i = 0; i < VPCTypes.length; i++) {
             Configuration child = config.getChild(VPCTypes[i], false);
             if (child != null) {
@@ -46,6 +47,7 @@ public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder {
                 childBuilder.buildNode(child);
             }
         }
+*/
         return null;
     }
 }
