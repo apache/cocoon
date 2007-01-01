@@ -52,6 +52,15 @@ public class TextSerializer extends AbstractTextSerializer {
      * Set to true after first XML element
      */
     private boolean hadNoRootElement;
+    
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.serialization.AbstractTextSerializer#init()
+     */
+    public void init() throws Exception {
+        super.init();
+        this.format.put(OutputKeys.METHOD, "text");
+    }
 
     /**
      * Set the configurations for this serializer.

@@ -27,11 +27,14 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.Attributes;
@@ -43,6 +46,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -58,6 +62,9 @@ import java.util.Properties;
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
         implements Configurable, Serviceable, CacheableProcessingComponent {
+    
+    /** The default logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
 
     /**
      * Cache for avoiding unnecessary checks of namespaces abilities.
@@ -73,7 +80,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
     /**
      * The <code>Properties</code> used by this serializer.
      */
-    protected final Properties format = new Properties();
+    protected Properties format = new Properties();
 
     /**
      * The pipe that adds namespaces as xmlns attributes.
@@ -83,7 +90,57 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
     /**
      * The caching key
      */
-    private String cachingKey = "1";
+    private String cachingKey;
+
+    private String transformerFactoryClass;
+    
+    private String defaultEncoding = null;
+
+    /**
+     * Set the properties used for transformer handler used by the serializer
+     * see {@link OutputKeys} for possible settings.
+     * 
+     * @param format
+     */
+    public void setFormat(Properties format) {
+        this.format = format;
+    }
+
+    /**
+     * Set the default encoding. This will be overided if the encoding is set
+     * in the format properties. This is mainly useful together with Spring
+     * bean inheritance.
+     * 
+     * @param defaultEncoding
+     */
+    public void setDefaultEncoding(String defaultEncoding) {
+        this.defaultEncoding = defaultEncoding;
+    }
+
+    /**
+     * Initialize logger, caching key, transformer handler and namespace pipe
+     *
+     * @throws Exception 
+     */
+    public void init() throws Exception {
+        this.enableLogging(new CLLoggerWrapper(this.logger));
+        if (!this.format.containsKey(OutputKeys.ENCODING) && this.defaultEncoding != null)
+            this.format.put(OutputKeys.ENCODING, this.defaultEncoding);
+        this.cachingKey = createCachingKey(format);
+        this.initTransformerFactory();
+        this.initNamespacePipe();
+    }
+
+    /**
+     * Optionally set the transformer factory used for creating the transformer
+     * handler that is used for serialization. Otherwise the standard transformer
+     * factory is used ({@link TransformerFactory}).
+     * 
+     * @param transformerFactoryClass the name of the class
+     */
+    public void setTransformerFactory(String transformerFactoryClass) {
+        this.transformerFactoryClass = transformerFactoryClass;
+    }
 
     /**
      * Interpose namespace pipe if needed.
@@ -156,6 +213,8 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * 
+     * @deprecated use property injection instead
      */
     public void service(ServiceManager manager) throws ServiceException {
         final Settings settings = (Settings)manager.lookup(Settings.ROLE);
@@ -168,6 +227,8 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
 
     /**
      * Set the configurations for this serializer.
+     * 
+     * @deprecated use property injection instead
      */
     public void configure(Configuration conf) throws ConfigurationException {
         // configure buffer size
@@ -187,69 +248,75 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         String standAlone = conf.getChild("standalone").getValue(null);
         String version = conf.getChild("version").getValue(null);
 
-        final StringBuffer buffer = new StringBuffer();
-
         if (cdataSectionElements != null) {
             format.put(OutputKeys.CDATA_SECTION_ELEMENTS, cdataSectionElements);
-            buffer.append(";cdata-section-elements=").append(cdataSectionElements);
         }
         if (dtPublic != null) {
             format.put(OutputKeys.DOCTYPE_PUBLIC, dtPublic);
-            buffer.append(";doctype-public=").append(dtPublic);
         }
         if (dtSystem != null) {
             format.put(OutputKeys.DOCTYPE_SYSTEM, dtSystem);
-            buffer.append(";doctype-system=").append(dtSystem);
         }
         if (encoding != null) {
             format.put(OutputKeys.ENCODING, encoding);
-            buffer.append(";encoding=").append(encoding);
         }
         if (indent != null) {
             format.put(OutputKeys.INDENT, indent);
-            buffer.append(";indent=").append(indent);
         }
         if (mediaType != null) {
             format.put(OutputKeys.MEDIA_TYPE, mediaType);
-            buffer.append(";media-type=").append(mediaType);
         }
         if (method != null) {
             format.put(OutputKeys.METHOD, method);
-            buffer.append(";method=").append(method);
         }
         if (omitXMLDeclaration != null) {
             format.put(OutputKeys.OMIT_XML_DECLARATION, omitXMLDeclaration);
-            buffer.append(";omit-xml-declaration=").append(omitXMLDeclaration);
         }
         if (standAlone != null) {
             format.put(OutputKeys.STANDALONE, standAlone);
-            buffer.append(";standalone=").append(standAlone);
         }
         if (version != null) {
             format.put(OutputKeys.VERSION, version);
-            buffer.append(";version=").append(version);
         }
 
-        if ( buffer.length() > 0 ) {
-            this.cachingKey = buffer.toString();
+        this.cachingKey = createCachingKey(format);
+
+        this.transformerFactoryClass = conf.getChild("transformer-factory").getValue(null);
+        this.initTransformerFactory();
+
+        this.initNamespacePipe();
+
+    }
+
+    /**
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
+    public void recycle() {
+        super.recycle();
+    
+        if (this.namespacePipe != null) {
+            this.namespacePipe.recycle();
         }
-        
-        String tFactoryClass = conf.getChild("transformer-factory").getValue(null);
-        if (tFactoryClass != null) {
+    }
+
+    private void initTransformerFactory() throws ConfigurationException, TransformerFactoryConfigurationError {
+        if (transformerFactoryClass != null) {
             try {
-                this.tfactory = (SAXTransformerFactory) ClassUtils.newInstance(tFactoryClass);
+                this.tfactory = (SAXTransformerFactory) ClassUtils.newInstance(transformerFactoryClass);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Using transformer factory " + tFactoryClass);
+                    getLogger().debug("Using transformer factory " + transformerFactoryClass);
                 }
             } catch (Exception e) {
-                throw new ConfigurationException("Cannot load transformer factory " + tFactoryClass, e);
+                throw new ConfigurationException("Cannot load transformer factory " + transformerFactoryClass, e);
             }
         } else {
             // Standard TrAX behaviour
             this.tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
         }
         tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
+    }
 
+    private void initNamespacePipe() {
         // Check if we need namespace as attributes.
         try {
             if (needsNamespacesAsAttributes()) {
@@ -260,18 +327,56 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         } catch (Exception e) {
             getLogger().warn("Cannot know if transformer needs namespaces attributes - assuming NO.", e);
         }
-
     }
 
     /**
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     * Create the caching key from the formating properties used by the
+     * transformer handler that is used for serialization.
+     * @param format 
+     *
      */
-    public void recycle() {
-        super.recycle();
+    protected static String createCachingKey(Properties format) {
+        final StringBuffer buffer = new StringBuffer();
+        String value = null;
+        
+        // Use lookup of the property values instead of just iterating through the
+        // enumeration of them to give the caching key a  deterministic order of its parts
 
-        if (this.namespacePipe != null) {
-            this.namespacePipe.recycle();
+        if ((value = format.getProperty(OutputKeys.CDATA_SECTION_ELEMENTS)) != null) {
+            buffer.append(";cdata-section-elements=").append(value);
         }
+        if ((value = format.getProperty(OutputKeys.DOCTYPE_PUBLIC)) != null) {
+            buffer.append(";doctype-public=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.DOCTYPE_SYSTEM)) != null) {
+            buffer.append(";doctype-system=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.ENCODING)) != null) {
+            buffer.append(";encoding=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.INDENT)) != null) {
+            buffer.append(";indent=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.MEDIA_TYPE)) != null) {
+            buffer.append(";media-type=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.METHOD)) != null) {
+            buffer.append(";method=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.OMIT_XML_DECLARATION)) != null) {
+            buffer.append(";omit-xml-declaration=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.STANDALONE)) != null) {
+            buffer.append(";standalone=").append(value);
+        }
+        if ((value = format.getProperty(OutputKeys.VERSION)) != null) {
+            buffer.append(";version=").append(value);
+        }
+
+        if ( buffer.length() > 0 )
+            return buffer.toString();
+        else
+            return "1";
     }
 
     /**

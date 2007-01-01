@@ -33,6 +33,14 @@ import java.io.OutputStream;
 
 public class XMLSerializer extends AbstractTextSerializer {
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.serialization.AbstractTextSerializer#init()
+     */
+    public void init() throws Exception {
+        super.init();
+        this.format.put(OutputKeys.METHOD,"xml");
+    }
+
     /**
      * Set the configurations for this serializer.
      */
