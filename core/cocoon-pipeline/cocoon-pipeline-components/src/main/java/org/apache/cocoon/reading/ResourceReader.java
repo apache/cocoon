@@ -32,6 +32,9 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpResponse;
 import org.apache.cocoon.util.ByteRange;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -86,15 +89,23 @@ import java.util.Map;
 public class ResourceReader extends AbstractReader
                             implements CacheableProcessingComponent, Configurable {
 
+    private static final boolean CONFIGURED_BYTE_RANGES_DEFAULT = true;
+    private static final int CONFIGURED_BUFFER_SIZE_DEFAULT = 8192;
+    private static final boolean CONFIGURED_QUICK_TEST_DEFAULT = false;
+    private static final int CONFIGURED_EXPIRES_DEFAULT = -1;
+
+    /** The default logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
     /**
      * The list of generated documents
      */
     private static final Map documents = new HashMap();
 
-    protected long configuredExpires;
-    protected boolean configuredQuickTest;
-    protected int configuredBufferSize;
-    protected boolean configuredByteRanges;
+    protected long configuredExpires = CONFIGURED_EXPIRES_DEFAULT;
+    protected boolean configuredQuickTest = CONFIGURED_QUICK_TEST_DEFAULT;
+    protected int configuredBufferSize = CONFIGURED_BUFFER_SIZE_DEFAULT;
+    protected boolean configuredByteRanges = CONFIGURED_BYTE_RANGES_DEFAULT;
 
     protected long expires;
     protected boolean quickTest;
@@ -106,21 +117,77 @@ public class ResourceReader extends AbstractReader
     protected Source inputSource;
 
     /**
+     * @param bufferSize
+     */
+    public void setBufferSize(int bufferSize) {
+        this.configuredBufferSize = bufferSize;
+    }
+
+    /**
+     * This parameter is optional. This boolean parameter controls whether
+     * Cocoon should support byterange requests (to allow clients to resume
+     * broken/interrupted downloads).
+     * Defaults to true.
+     *       
+     * @param byteRanges
+     */
+    public void setByteRanges(boolean byteRanges) {
+        this.configuredByteRanges = byteRanges;
+    }
+
+    /**
+     * This parameter is optional. When specified it determines how long
+     * in miliseconds the resources can be cached by any proxy or browser
+     * between Cocoon and the requesting visitor. Defaults to -1.
+     *
+     * @param expires
+     */
+    public void setExpires(long expires) {
+        this.configuredExpires = expires;
+    }
+
+    /**
+     * This parameter is optional. This boolean parameter controls the
+     * last modified test. If set to true (default is false), only the
+     * last modified of the current source is tested, but not if the
+     * same source is used as last time
+     * (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
+     * 
+     * @param quickTest
+     */
+    public void setQuickTest(boolean quickTest) {
+        this.configuredQuickTest = quickTest;
+    }
+    
+    /**
+     * Initialize the logger
+     *
+     * FIXME: This is a hack to enable logging in non Avalon containers while keeping
+     * back compabillity. It would have been neater to just override the get getLogger
+     * method, but it is final.
+     */
+    public void init() {
+        this.enableLogging(new CLLoggerWrapper(this.logger));
+    }
+
+    /**
      * Read reader configuration
+     * 
+     * @deprecated use property injection instead
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         // VG Parameters are deprecated as of 2.2.0-Dev/2.1.6-Dev
         final Parameters parameters = Parameters.fromConfiguration(configuration);
-        this.configuredExpires = parameters.getParameterAsLong("expires", -1);
-        this.configuredQuickTest = parameters.getParameterAsBoolean("quick-modified-test", false);
-        this.configuredBufferSize = parameters.getParameterAsInteger("buffer-size", 8192);
-        this.configuredByteRanges = parameters.getParameterAsBoolean("byte-ranges", true);
+        this.setExpires(parameters.getParameterAsLong("expires", CONFIGURED_EXPIRES_DEFAULT));
+        this.setQuickTest(parameters.getParameterAsBoolean("quick-modified-test", CONFIGURED_QUICK_TEST_DEFAULT));
+        this.setBufferSize(parameters.getParameterAsInteger("buffer-size", CONFIGURED_BUFFER_SIZE_DEFAULT));
+        this.setByteRanges(parameters.getParameterAsBoolean("byte-ranges", CONFIGURED_BYTE_RANGES_DEFAULT));
 
         // Configuration has precedence over parameters.
-        this.configuredExpires = configuration.getChild("expires").getValueAsLong(configuredExpires);
-        this.configuredQuickTest = configuration.getChild("quick-modified-test").getValueAsBoolean(configuredQuickTest);
-        this.configuredBufferSize = configuration.getChild("buffer-size").getValueAsInteger(configuredBufferSize);
-        this.configuredByteRanges = configuration.getChild("byte-ranges").getValueAsBoolean(configuredByteRanges);
+        this.setExpires(configuration.getChild("expires").getValueAsLong(configuredExpires));
+        this.setQuickTest(configuration.getChild("quick-modified-test").getValueAsBoolean(configuredQuickTest));
+        this.setBufferSize(configuration.getChild("buffer-size").getValueAsInteger(configuredBufferSize));
+        this.setByteRanges(configuration.getChild("byte-ranges").getValueAsBoolean(configuredByteRanges));
     }
 
     /* (non-Javadoc)
