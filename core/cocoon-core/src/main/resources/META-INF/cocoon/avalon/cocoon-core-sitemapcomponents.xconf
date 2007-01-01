@@ -199,18 +199,7 @@
      | contain any generator, transformer or serializer in addition to a
      | reader. They are useful for delivering binary content like images.
      +-->
- <map:readers default="resource">
-   <map:reader logger="sitemap.reader.resource" name="resource" pool-max="32" src="org.apache.cocoon.reading.ResourceReader">
-     <!--+
-         | Resource reader has these configuration parameters:
-     <expires>-1</expires>
-     <quick-modified-test>false</quick-modified-test>
-     <byte-ranges>true</byte-ranges>
-     <buffer-size>8192</buffer-size>
-         +-->
-   </map:reader>
-   <map:reader logger="sitemap.reader.image" name="image" src="org.apache.cocoon.reading.ImageReader"/>
- </map:readers>
+ <map:readers default="resource"/>
 
  <!--+
      | Matchers are executed during pipeline setup. They decide if a
