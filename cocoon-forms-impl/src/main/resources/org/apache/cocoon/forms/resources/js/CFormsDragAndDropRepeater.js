@@ -61,10 +61,7 @@ dojo.widget.defineWidget(
     buildRendering: function(args, frag) {
         // FIXME: we should destroy all drag sources and drop targets when the widget is destroyed
 
-        // refering to this.domNode, allows a user to specify a template to wrap the widget
-        //if (!this.domNode) this.domNode = this.domNode;
 		cocoon.forms.CFormsRepeater.superclass.buildRendering.call(this, args, frag);
-		
         this.id = this.domNode.getAttribute("id");
         if (!this.orderable && this.select == "none") {
             dojo.debug(this.widgetType + " '" + this.id + "' is not orderable nor selectable");
