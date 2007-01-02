@@ -19,22 +19,11 @@ package org.apache.cocoon.components.hsqldb;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import javax.servlet.ServletContext;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hsqldb.Database;
 import org.hsqldb.DatabaseManager;
 
@@ -43,9 +32,8 @@ import org.hsqldb.DatabaseManager;
  *
  * @version $Id$
  */
-public class ServerImpl extends AbstractLogEnabled
-                        implements Server, Parameterizable, Contextualizable,
-                                   ThreadSafe, Runnable, Serviceable, Startable {
+public class ServerImpl
+       implements Runnable {
 
     private static final boolean DEFAULT_TRACE = false;
     private static final boolean DEFAULT_SILENT = true;
@@ -54,103 +42,145 @@ public class ServerImpl extends AbstractLogEnabled
     private static final String DEFAULT_DB_NAME = "cocoondb";
     private static final String DEFAULT_DB_PATH = "context://WEB-INF/db";
 
-    /** Cocoon context **/
-    private org.apache.cocoon.environment.Context cocoonContext;
-
     /** The HSQLDB HSQL protocol network database server instance **/
     private org.hsqldb.Server hsqlServer = new org.hsqldb.Server();
 
     /** The threadpool name to be used for daemon thread */
-    private String m_daemonThreadPoolName = "daemon";
+    private String daemonThreadPoolName = "daemon";
 
-    /** The {@link ServiceManager} instance */
-    private ServiceManager m_serviceManager;
+    /** The path to the db. */
+    private String path = DEFAULT_DB_PATH;
 
-    /** Contextualize this class */
-    public void contextualize(Context context) throws ContextException {
-        cocoonContext = (org.apache.cocoon.environment.Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    /** The servlet context. */
+    private ServletContext servletContext;
+
+    /** The db name. */
+    private String name = DEFAULT_DB_NAME;
+
+    /** The runnable manager. */
+    private RunnableManager runnableManager;
+
+    private boolean trace = DEFAULT_TRACE;
+    private boolean silent = DEFAULT_SILENT;
+    private int port = DEFAULT_PORT;
+
+    public ServerImpl() {
+        hsqlServer.setLogWriter(null); /* Remove console log */
+        hsqlServer.setErrWriter(null); /* Remove console log */
+        hsqlServer.setNoSystemExit(true);        
+    }
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
+
+    public org.hsqldb.Server getServer() {
+        return this.hsqlServer;
+    }
+
+    public void setThreadPoolName(String name) {
+        this.daemonThreadPoolName = name;
+    }
+
+    public void setPath(String newPath) {
+        this.path = newPath;
+    }
+
+    public void setPort(int p) {
+        this.port = p;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent;
+    }
+
+    public void setTrace(boolean trace) {
+        this.trace = trace;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setServletContext(ServletContext c) {
+        this.servletContext = c;
+    }
+
+    public void setRunnableManager(RunnableManager runnableManager) {
+        this.runnableManager = runnableManager;
     }
 
     /**
      * Initialize the ServerImpl.
-     * Posible options:
-     * <ul>
-     *  <li>port = port where the server is listening</li>
-     *  <li>silent = false => display all queries</li>
-     *  <li>trace = print JDBC trace messages</li>
-     *  <li>name = name of the HSQL-DB</li>
-     *  <li>path = path to the database - context-protocol is resolved</li>
-     * </ul>
      */
-    public void parameterize(Parameters params) throws ParameterException {
-        hsqlServer.setLogWriter(null); /* Remove console log */
-        hsqlServer.setErrWriter(null); /* Remove console log */
-        hsqlServer.setPort(params.getParameterAsInteger("port", DEFAULT_PORT));
-        hsqlServer.setSilent(params.getParameterAsBoolean("silent", DEFAULT_SILENT));
-        hsqlServer.setTrace(params.getParameterAsBoolean("trace", DEFAULT_TRACE));
-        hsqlServer.setNoSystemExit(true);
+    public void init() {
+        this.hsqlServer.setSilent(this.silent);
+        this.hsqlServer.setTrace(this.trace);
+        this.hsqlServer.setPort(this.port);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Configure HSQLDB with port: " + hsqlServer.getPort() +
                               ", silent: " + hsqlServer.isSilent() +
                               ", trace: " + hsqlServer.isTrace());
         }
 
-        m_daemonThreadPoolName = params.getParameter("thread-pool-name", m_daemonThreadPoolName);
-
-        final String dbCfgPath = params.getParameter("path", DEFAULT_DB_PATH);
+        final String dbCfgPath = this.path;
         String dbPath = dbCfgPath;
         // Test if we are running inside a WAR file
         if(dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
-            dbPath = this.cocoonContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
+            dbPath = this.servletContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
         }
         if (dbPath == null) {
-            throw new ParameterException("The hsqldb cannot be used inside an unexpanded WAR file. " +
+            throw new IllegalArgumentException("The hsqldb cannot be used inside an unexpanded WAR file. " +
                                          "Real path for <" + dbCfgPath + "> is null.");
         }
 
-        String dbName = params.getParameter("name", DEFAULT_DB_NAME);
         try {
-            hsqlServer.setDatabasePath(0, new File(dbPath).getCanonicalPath() + File.separator + dbName);
+            hsqlServer.setDatabasePath(0, new File(dbPath).getCanonicalPath() + File.separator + name);
         } catch (IOException e) {
-            throw new ParameterException("Could not get database directory <" + dbPath + ">", e);
+            throw new RuntimeException("Could not get database directory <" + dbPath + ">", e);
         }
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Database path is <" + hsqlServer.getDatabasePath(0, true) + ">");
         }
+        this.start();
     }
 
     /**
-     * @param serviceManager The <@link ServiceManager} instance
-     * @throws ServiceException In case we cannot find a service needed
+     * Destroy the server and release everything.
      */
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        m_serviceManager = serviceManager;
+    public void destroy() {
+        this.stop();
     }
 
-    /** Start the server */
-    public void start() {
-        RunnableManager runnableManager = null;
-        try {
-            runnableManager = (RunnableManager) m_serviceManager.lookup(RunnableManager.ROLE);
-            runnableManager.execute(m_daemonThreadPoolName, this);
-        } catch(final ServiceException e) {
-            throw new CascadingRuntimeException("Cannot get RunnableManager", e);
-        } finally {
-            if (null != runnableManager) {
-                m_serviceManager.release(runnableManager);
-            }
+    /** 
+     * Start the server.
+     */
+    protected void start() {
+        this.runnableManager.execute(this.daemonThreadPoolName, this);
+    }
+
+    /**
+     * Stop the server.
+     */
+    protected void stop() {
+        if ( this.getLogger().isDebugEnabled() ) {
+            getLogger().debug("Shutting down HSQLDB");
         }
-    }
-
-    /** Stop the server */
-    public void stop() {
-        getLogger().debug("Shutting down HSQLDB");
         // AG: Temporally workaround for http://issues.apache.org/jira/browse/COCOON-1862
         // A newer version of hsqldb or SAP NetWeaver may not need the next line
         DatabaseManager.closeDatabases(Database.CLOSEMODE_COMPACT);
-        hsqlServer.stop();
-        getLogger().debug("Shutting down HSQLDB: Done");
+        this.hsqlServer.stop();
+        if ( this.getLogger().isDebugEnabled() ) {
+            getLogger().debug("Shutting down HSQLDB: Done");
+        }
     }
 
     /** Run the server */
