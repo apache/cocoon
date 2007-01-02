@@ -14,6 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// DEPRECATED: This functionality is provided more elegantly via the manifest.js file
+
 dojo.kwCompoundRequire({
         common: [
                 "cocoon.ajax.BUHandler"
