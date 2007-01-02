@@ -24,13 +24,20 @@
     <para>
     For this example to work, you must enable uploads in your web.xml file.
     </para>
+    <para>
+    If your browser supports it, the upload happens via Ajax, using dojo.io.IframeIO.
+    </para>
+    <para>
+    This sample uses an on-value-changed handler on the upload field, meaning the form will be submitted as soon as you have selected a file.<br/>
+    There is another upload sample with a <a href="uploadprogress">progress bar</a>.
+    </para>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" enctype="multipart/form-data" ajax="true">
       <fi:group>
         <fi:styling layout="columns"/>
         <fi:items>
           <ft:widget id="user"/>
           <ft:widget id="upload"/>
-	  <ft:widget id="message"/>
+	      <ft:widget id="message"/>
           <input type="submit"/>
         </fi:items>
       </fi:group>

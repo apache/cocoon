@@ -36,6 +36,37 @@
     See "carselector_form.xml" and "carselector_template.xml" to see how this is done.
   </para>
   <content>
+    <script type="text/javascript">
+       // avoid doing this before everything is loaded
+       dojo.addOnLoad(function(){cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight.blue});
+       var currentEffect = "blue";
+       function setEffect(effect) {
+           if (effect == "none") {
+               cocoon.ajax.BUHandler.highlight = null;
+           } else if (effect == "blink") {
+               cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.blink;
+           } else if (cocoon.ajax.effects.highlight[effect]) {
+               cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight[effect];
+           }
+           
+           document.getElementById(currentEffect).style.fontWeight = "";
+           document.getElementById(effect).style.fontWeight = "bold";
+           currentEffect = effect;
+           return false;
+       }
+    </script>
+    <para>
+      Page update effect:
+      <a id="none" href="#" onclick="return setEffect('none')">None</a> - 
+      <a id="yellow" href="#" onclick="return setEffect('yellow')">Yellow</a> - 
+      <a id="blue" href="#" onclick="return setEffect('blue')" style="font-weight: bold">Blue</a> - 
+      <a id="red" href="#" onclick="return setEffect('red')">Red</a> - 
+      <a id="green" href="#" onclick="return setEffect('green')">Green</a> - 
+      <a id="orange" href="#" onclick="return setEffect('orange')">Orange</a> - 
+      <a id="purple" href="#" onclick="return setEffect('purple')">Purple</a> - 
+      <a id="grey" href="#" onclick="return setEffect('grey')">Grey</a> - 
+      <a id="blink" href="#" onclick="return setEffect('blink')">Blink</a>
+    </para>
       
     <ft:form-template action="continue" method="POST" ajax="true">
       <ft:continuation-id/>

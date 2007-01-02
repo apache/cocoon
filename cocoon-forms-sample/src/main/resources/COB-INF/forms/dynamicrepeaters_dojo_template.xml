@@ -24,12 +24,6 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  <fi:init>
-	<script type="text/javascript">
-	  // Uncomment next line to see Dojo debug
-	  // var djConfig = { isDebug: true };
-  </script>
-  </fi:init>
   <h4 class="samplesGroup">Repeater widget with advanced interaction</h4>
   <title>Repeater widget with advanced interaction</title>
   <style type="text/css">
@@ -56,7 +50,7 @@
       <li>use in-place editing (an input appears when you click on the text) in the third repeater.</li>
     </ul>
       <ft:repeater id="contacts1">
-        <div dojoType="CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
+        <div dojoType="forms:CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>
@@ -97,7 +91,7 @@
     </ft:repeater>
     <!-- 2nd repeater -->
     <ft:repeater id="contacts2">
-        <div dojoType="CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
+        <div dojoType="forms:CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>
@@ -139,7 +133,7 @@
             </ft:repeater>
      <!-- 3rd repeater -->
      <ft:repeater id="contacts3">
-        <div dojoType="CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
+        <div dojoType="forms:CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>

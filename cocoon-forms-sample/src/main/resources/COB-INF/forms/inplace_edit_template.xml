@@ -24,7 +24,7 @@
   <h4 class="samplesGroup">Inline editing</h4>
   <title>Inline editing</title>
   <script type="text/javascript">
-     //cocoon.ajax.BrowserUpdater.highlight = cocoon.ajax.Fader.fade;
+      dojo.addOnLoad(function(){cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight.red});
   </script>
   <content>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">

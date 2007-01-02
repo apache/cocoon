@@ -128,6 +128,10 @@
      (Ajax) The dynamic repeater sample revisited, featuring drag and drop reordering of rows,
      selecting rows by clicking anywhere in the row, and in-place editing of values.
    </sample>
+   <sample name="Multi drag and drop reordering" href="do-dojoRepeaters.flow">
+     (Ajax) The dynamic repeater sample revisited again, this time featuring drag and drop reordering of rows,
+     with the ability to drag and drop from one repeater to another.
+   </sample>
    <sample name="Cocoon suggests" href="do-suggest.flow">
      (Ajax) Very simple demo of the &lt;fd:suggestion-list&gt; feature.
    </sample>
@@ -142,7 +146,7 @@
  
  <group name="Dynamic repeater template and event handling">
     <sample name="Dynamic repeater template" href="dreamteam">
-      <b>Currently broken!</b> Create your Euro 2004 soccer dream team
+      Create your Euro 2004 soccer dream team
     </sample>
  </group>
 

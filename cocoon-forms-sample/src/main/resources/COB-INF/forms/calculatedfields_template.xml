@@ -18,10 +18,6 @@ limitations under the License.
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  <fi:init>
-    <script type="text/javascript"> // Uncomment this to see Dojo debug // var djConfig = { isDebug: true };
-    </script>
-  </fi:init>
   <h4 class="samplesGroup">Calculated widgets sample</h4>
   <title>Sample form</title>
   <content>
@@ -42,7 +38,7 @@ limitations under the License.
       <!-- manual layout of fields, without use of a fi:group -->
       <ft:widget-label id="articles"/><br/>
       <ft:repeater id="articles">
-        <div dojoType="CFormsRepeater" orderable="true">
+        <div dojoType="forms:CFormsRepeater" orderable="true">
           <table border="1">
             <thead>
               <tr>

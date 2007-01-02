@@ -20,80 +20,83 @@
  *       features for dynamic behaviour on non Ajax-capable browsers.
  *       Advanced widgets such as double selection list and multivalue
  *       field will be refactored as Dojo widgets.
+ * NOTE: (2.1.11) moving support for non-ajax forms to cocoon.forms.common and the SimpleForm Widget.
+ *
+ * This file has dependencies on cocoon.forms.common
+ *    /_cocoon/resources/forms/js/common.js
  *
  * @version $Id$
  */
 
-// Handlers that are to be called in the document's "onload" event
-var forms_onloadHandlers = new Array();
-
-function forms_onload() {
-    for (var i = 0; i < forms_onloadHandlers.length; i++) {
-        forms_onloadHandlers[i].forms_onload();
-    }
-    // Reset it (we no more need them)
-    forms_onloadHandlers = new Array();
-}
-
-// Handlers that are to be called in form's "onsubmit" event
-// FIXME: this single var implies only one form per page, and needs to be
-//       visited if we decide to support several forms per page.
-var forms_onsubmitHandlers = new Array();
-
-function forms_onsubmit() {
-    if (forms_onsubmitHandlers == null) {
-        // Form already submited, but the new page is not yet loaded. This can happen when
-        // the focus is in an input with an "onchange" and the user clicks on a submit button.
-        return false;
-    }
-
-    for (var i = 0; i < forms_onsubmitHandlers.length; i++) {
-        if (forms_onsubmitHandlers[i].forms_onsubmit() == false) {
-            // handler cancels the submit
-            return false;
-        	}
-    }
-    // clear it
-    forms_onsubmitHandlers = null;
-    return true;
-}
 
 /**
- * Submit the form containing an element, also storing in the hidden
- * 'forms_submit_id' field the name of the element which triggered the submit.
- */
-function oldforms_submitForm(element, name) {
-    name = name || element.name;
-    
-    var form = forms_getForm(element);
-    if (form == null) {
-        alert("Cannot find form for " + element);
-    } else {
-        form["forms_submit_id"].value = name;
-        if (!form.onsubmit || form.onsubmit() != false) {
-            form.submit();
+  * Deprecated legacy functions
+  * To be removed in 2.1.12(?) release
+  */
+forms_submitForm = function() { 
+    if (dojo) dojo.debug("DEPRECATED: forms_submitForm(), use cocoon.forms.submitForm(element[, name, params]) instead");
+    // we do not know which form is being submitted, let's at least try to find it.
+    var form = document.getElementById("_cforms_default_form_"); // maybe forms_onsubmitHandlers.push has been called
+    if (!form) {
+        for (var i = 0; i < document.forms.length; i++) {
+            if (document.forms[i].getAttribute("dojoWidgetId") != "") {
+                form = document.forms[i];
+                form.setAttribute("id", "_cforms_default_form_"); // just in case we get here again ...
+            }
+            if (form) break;
         }
     }
-}
-
-/**
- * Crawl the parents of an element up to finding a form.
- */
-function forms_getForm(element) {
-    while(element != null && element.tagName != null && element.tagName.toLowerCase() != "form") {
-        element = element.parentNode;
+    if (!form) { // last ditch attempt, maybe dojo is not being used
+        form = document.forms[0];
     }
-    return element;
+    cocoon.forms.submitForm.apply(cocoon.forms, [form]); 
 }
 
-/**
- * Move a named element as an immediate child of the <body> element.
- * This is required for help popups inside <wi:group> tabs. The reason is that CSS positioning
- * properties ("left" and "top") on a block with a "position: absolute" are actually relative to
- * the nearest ancestor that has a position of "absolute", "relative" or "fixed".
- * See http://www.w3.org/TR/CSS21/visudet.html#containing-block-details $4
- */
+forms_getForm = function(element) { 
+    if (dojo) dojo.debug("DEPRECATED: forms_getForm(element), use cocoon.forms.getForm(element) instead");
+    cocoon.forms.getForm.apply(cocoon.forms, arguments); 
+}
 
+forms_onsubmit = function() { 
+    if (dojo) dojo.debug("DEPRECATED: forms_onsubmit(), use cocoon.forms.callOnSubmitHandlers(form) instead");
+    var form = document.getElementById("_cforms_default_form_");
+    cocoon.forms.callOnSubmitHandlers.apply(cocoon.forms, [form]); 
+}
+
+forms_onload = function() { 
+    if (dojo) dojo.debug("DEPRECATED: forms_onload(), use cocoon.forms.callOnLoadHandlers() instead");
+    cocoon.forms.callOnLoadHandlers.apply(cocoon.forms, arguments);
+}
+
+var forms_onloadHandlers = new Array();
+forms_onloadHandlers.push = function(handler) {
+    if (dojo) dojo.debug("DEPRECATED: forms_onloadHandlers.push(handler), use cocoon.forms.addOnLoadHandler(handler) instead");
+    cocoon.forms.addOnLoadHandler.apply(cocoon.forms, arguments) 
+}
+
+var forms_onsubmitHandlers = new Array();
+forms_onsubmitHandlers.push = function(handler) {
+    if (dojo) dojo.debug("DEPRECATED: forms_onsubmitHandlers.push(handler), use cocoon.forms.addOnSubmitHandler(form, handler) instead");
+    // we do not know which form the handler is from, let's at least try to find it.
+    var form = document.getElementById("_cforms_default_form_"); // maybe we did this before
+    if (!form) {
+        for (var i = 0; i < document.forms.length; i++) {
+            if (document.forms[i].getAttribute("dojoWidgetId") != "") {
+                form = document.forms[i];
+                form.setAttribute("id", "_cforms_default_form_"); // make it easier to find is there are more submit handlers
+            }
+            if (form) break;
+        }
+    }
+    if (!form) { // last ditch attempt, maybe dojo is not being used
+        form = document.forms[0];
+        if (form) form.setAttribute("id", "_cforms_default_form_");
+    }
+    cocoon.forms.addOnSubmitHandler.apply(cocoon.forms, [form, handler]); 
+}
+
+
+// TODO: Not called
 function forms_moveInBody(element) {
     element.parentNode.removeChild(element);
     document.body.appendChild(element);
@@ -109,10 +112,11 @@ function forms_createPopupWindow(id) {
     result.autoHide();
     // add to onload handlers
     result.forms_id = id;
+    // TODO: This onLoad handler never would get called
     result.forms_onload = function() {
         forms_moveInBody(document.getElementById(this.forms_id));
     }
-    forms_onloadHandlers.push(result);
+    cocoon.forms.addOnLoadHandler(result);
     return result;
 }
 
@@ -123,7 +127,7 @@ function forms_createOptionTransfer(id, submitOnChange) {
     // add to onload handlers
     result.forms_id = id + ":input";
     result.forms_onload = function() {
-        var form = forms_getForm(document.getElementById(this.forms_id));
+        var form = cocoon.forms.getForm(document.getElementById(this.forms_id));
         this.init(form);
         sortSelect(this.left);
         sortSelect(this.right);
@@ -132,28 +136,28 @@ function forms_createOptionTransfer(id, submitOnChange) {
     result.forms_transferLeft = function() {
         this.transferLeft();
         if (this.submitOnChange) {
-            forms_submitForm(document.getElementById(this.forms_id));
+            cocoon.forms.submitForm(document.getElementById(this.forms_id));
         }
     }
     result.forms_transferRight = function() {
         this.transferRight();
         if (this.submitOnChange) {
-            forms_submitForm(document.getElementById(this.forms_id));
+            cocoon.forms.submitForm(document.getElementById(this.forms_id));
         }
     }
     result.forms_transferAllLeft = function() {
         this.transferAllLeft();
         if (this.submitOnChange) {
-            forms_submitForm(document.getElementById(this.forms_id));
+            cocoon.forms.submitForm(document.getElementById(this.forms_id));
         }
     };
     result.forms_transferAllRight = function() {
         this.transferAllRight();
         if (this.submitOnChange) {
-            forms_submitForm(document.getElementById(this.forms_id));
+            cocoon.forms.submitForm(document.getElementById(this.forms_id));
         }
     };
-    forms_onloadHandlers.push(result);
+    cocoon.forms.addOnLoadHandler(result);
     
     // add to onsubmit handlers
     result.forms_onsubmit = function() {
@@ -161,7 +165,7 @@ function forms_createOptionTransfer(id, submitOnChange) {
         // its values are sent.
         selectAllOptions(this.right);
     }
-    forms_onsubmitHandlers.push(result);
+    cocoon.forms.addOnSubmitHandler(document.getElementById(id), result);
     return result;
 }
 
@@ -226,7 +230,7 @@ function FormsMultiValueEditor(id) {
     onsubmitHandler.forms_onsubmit = function () {
         self.selectAll();
     }
-    forms_onsubmitHandlers.push(onsubmitHandler);
+    cocoon.forms.addOnSubmitHandler(document.getElementById(id), onsubmitHandler);
 }
 
 /**

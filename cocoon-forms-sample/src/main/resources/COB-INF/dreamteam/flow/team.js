@@ -40,7 +40,7 @@ function prot_showTeam() {
   }
   var viewData = {
      list : persons,
-     size : size
+     teamsize : size
   };
   cocoon.sendPage("showTeam.form", viewData);
 } // showTeam

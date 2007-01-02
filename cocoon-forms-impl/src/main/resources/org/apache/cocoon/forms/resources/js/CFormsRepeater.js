@@ -30,30 +30,30 @@ dojo.require("dojo.widget.DomWidget");
 
 // Extends the base DomWidget class. We don't need all the HtmlWidget stuff
 // but need traversal of the DOM to build child widgets.
-cocoon.forms.CFormsRepeater = function() {
-	dojo.widget.DomWidget.call(this);
-};
 
-dojo.inherits(cocoon.forms.CFormsRepeater, dojo.widget.DomWidget);
-
-dojo.lang.extend(cocoon.forms.CFormsRepeater, {
+dojo.widget.defineWidget(
+    "cocoon.forms.CFormsRepeater",
+    dojo.widget.DomWidget, {
     // Properties
     orderable: false,
     select: "$no$", // default value used to type the property, but indicating that
                     // no selection will occur
 
     // Widget definition
+    ns: "forms",
     widgetType: "CFormsRepeater",
     isContainer: true,
-    //
+    preventClobber: true, // don't clobber our node
+    
     getType: function() {
 			    return "cforms-" + this.id;
     },
-    buildRendering: function(args, parserFragment, parentWidget) {
+    
+    // widget interface
+    buildRendering: function(args, frag) {
 	    // FIXME: we should destroy all drag sources and drop targets when the widget is destroyed
-        // Magical statement to get the dom node, stolen in DomWidget
-	    this.domNode = parserFragment["dojo:"+this.widgetType.toLowerCase()].nodeRef;
-
+	    
+        cocoon.forms.CFormsRepeater.superclass.buildRendering.call(this, args, frag);
         this.id = this.domNode.getAttribute("id");
         if (!this.orderable && this.select == "none") {
             dojo.debug(this.widgetType + " '" + this.id + "' is not orderable nor selectable");
@@ -78,8 +78,8 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 				with (this.dropIndicator.style) {
 					position = "absolute";
 					zIndex = 1;
-					width = dojo.style.getInnerWidth(this.domNode) + "px";
-					left = dojo.style.getAbsoluteX(this.domNode) + "px";
+					width = dojo.html.getBorderBox(this.domNode).width + "px";
+					left = dojo.html.getAbsolutePosition(this.domNode).x + "px";
 				}
 			};
 			dojo.event.connect(dropTarget, "insert", this, "afterInsert");
@@ -159,8 +159,3 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 	    }
 	}
 });
-
-dojo.widget.tags.addParseTreeHandler("dojo:CFormsRepeater");
-// Register this module as a widget package
-dojo.widget.manager.registerWidgetPackage("cocoon.forms");
-
