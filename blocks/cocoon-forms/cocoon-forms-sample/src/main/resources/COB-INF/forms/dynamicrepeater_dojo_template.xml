@@ -24,13 +24,6 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  <fi:init>
-	<script type="text/javascript">
-	  // Uncomment this to see Dojo debug
-	  var djConfig = { isDebug: true };
-	
-    </script>	
-  </fi:init>
   <h4 class="samplesGroup">Repeater widget with advanced interaction</h4>
   <title>Repeater widget with advanced interaction</title>
   <style type="text/css">
@@ -56,7 +49,7 @@
       <li>use in-place editing (an input appears when you click on the text).</li>
     </ul>
       <ft:repeater id="contacts">
-        <div dojoType="CFormsRepeater" orderable="true" select="select">
+        <div dojoType="forms:CFormsRepeater" orderable="true" select="select">
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>

@@ -111,7 +111,9 @@
         <map:call resource="simple-page2html">
           <map:parameter name="file" value="forms/{1}_template.xml"/>
         </map:call>
-        <map:transform src="../resources/forms-samples-styling.xsl"/>
+        <map:transform src="../resources/forms-samples-styling.xsl">
+          <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+        </map:transform>
         <map:serialize/>
       </map:match>
       

@@ -34,13 +34,13 @@
       </xsp:logic>
     -->
     email has the following value:
-    ${request.getAttribute("form1").lookupWidget("email").getValue()}
+    ${cocoon.request.getAttribute("form1").lookupWidget("email").getValue()}
     <br/>
     Second person has this firstname:
-    ${request.getAttribute("form1").lookupWidget("contacts").getWidget(1, "firstname").getValue()}
+    ${cocoon.request.getAttribute("form1").lookupWidget("contacts").getWidget(1, "firstname").getValue()}
     <br/>
     The value of the checkbox is:
-    ${request.getAttribute("form1").lookupWidget("somebool").getValue()}
+    ${cocoon.request.getAttribute("form1").lookupWidget("somebool").getValue()}
     <p>
       <a href="./">Back to Forms samples</a>
     </p>

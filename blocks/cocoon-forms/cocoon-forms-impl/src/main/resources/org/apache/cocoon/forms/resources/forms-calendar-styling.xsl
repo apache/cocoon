@@ -82,7 +82,7 @@
 	        </xsl:when>
 	        <xsl:otherwise>
 	          <a href="#" name="{$id}" id="{$id}"
-	             onclick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
+	             onclick="forms_calendar.select(cocoon.forms.getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
 	            <img src="{$resources-uri}/forms/img/cal.gif" alt="forms:calendar.alt" i18n:attr="alt"/>
 	          </a>
 	        </xsl:otherwise>

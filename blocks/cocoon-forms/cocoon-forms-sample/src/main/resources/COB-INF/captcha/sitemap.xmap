@@ -87,7 +87,7 @@
          <map:parameter name="file" value="forms/{1}.tpl.xml"/>
        </map:call>
        <map:transform src="../resources/forms-samples-styling.xsl">
-         <map:parameter name="resources-uri" value="../resources"/>
+          <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
        </map:transform>
        <map:transform type="i18n">
        </map:transform>

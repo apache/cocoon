@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 dojo.provide("cocoon.forms.CFormsSuggest");
-dojo.require("dojo.widget.html.ComboBox");
+dojo.require("dojo.widget.ComboBox");
 
 /**
  * Dojo widget for suggestion-lists. Extends Dojo's ComboBox widget.
@@ -34,17 +34,17 @@ dojo.require("dojo.widget.html.ComboBox");
  * @version $Id$
  */
 
-cocoon.forms.CFormsSuggest = function() {
-    dojo.widget.html.ComboBox.call(this);
-    this.widgetType = "CFormsSuggest";
-}
-
-dojo.inherits(cocoon.forms.CFormsSuggest, dojo.widget.html.ComboBox);
-
-dojo.lang.extend(cocoon.forms.CFormsSuggest, {
+dojo.widget.defineWidget(
+    "cocoon.forms.CFormsSuggest",
+    dojo.widget.ComboBox, {
+    
+    // Widget definition
+    ns: "forms",
+    widgetType: "CFormsSuggest",
+    
     fillInTemplate: function(args, frag) {
         this.mode = "remote";
-        var node = frag["dojo:"+this.widgetType.toLowerCase()]["nodeRef"];
+        var node = this.getFragNodeRef(frag);
         var form = cocoon.forms.getForm(node);
         var contId = form["continuation-id"].value;
         if (!contId) throw "Cannot find continuation Id";
@@ -53,7 +53,7 @@ dojo.lang.extend(cocoon.forms.CFormsSuggest, {
             this.dataUrl = "_cocoon/forms/suggest?widget=" + node.getAttribute("name") +
                 "&continuation-id=" + contId + "&filter=%{searchString}";
         }
-        dojo.widget.html.ComboBox.prototype.fillInTemplate.apply(this, arguments);
+        cocoon.forms.CFormsSuggest.superclass.fillInTemplate.call(this, args, frag);
         if (node.value) {
             // Get the suggestion text from the server
             this.getData(this, "_cocoon/forms/suggest?widget=" + node.getAttribute("name") + 
@@ -84,8 +84,4 @@ dojo.lang.extend(cocoon.forms.CFormsSuggest, {
             mimetype: "text/json"
         });
     }
-})
-
-dojo.widget.tags.addParseTreeHandler("dojo:CFormsSuggest");
-// Register this module as a widget package
-dojo.widget.manager.registerWidgetPackage("cocoon.forms");
+});

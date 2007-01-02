@@ -17,7 +17,6 @@
 dojo.provide("cocoon.ajax.PartialLink");
 
 dojo.require("dojo.widget.DomWidget");
-dojo.require("dojo.io");
 dojo.require("cocoon.ajax.common");
 
 /**
@@ -26,25 +25,21 @@ dojo.require("cocoon.ajax.common");
  * @version $Id$
  */
 
-cocoon.ajax.PartialLink = function() {
-	dojo.widget.DomWidget.call(this);
-};
-
-dojo.inherits(cocoon.ajax.PartialLink, dojo.widget.DomWidget);
-
-dojo.lang.extend(cocoon.ajax.PartialLink, {
+dojo.widget.defineWidget(
+    "cocoon.ajax.PartialLink",
+    dojo.widget.DomWidget,
+ {
 	// Properties
 	href: "",
 	target: "",
 	
 	// Widget definition
+	ns: "forms",
 	widgetType: "PartialLink",
-    isContainer: true,
+    isContainer: false,
+    preventClobber: true, // don't clobber our node
     
-    buildRendering: function(args, parserFragment, parentWidget) {
-
-        // Magical statement to get the dom node, stolen in DomWidget
-	    this.domNode = parserFragment["dojo:"+this.widgetType.toLowerCase()].nodeRef;
+    fillInTemplate: function(args, frag) {
 
 	    if (this.target.indexOf("#") < 0) {
 	        dojo.debug("PartialLink: wrong value for 'target' attribute: " + this.target);
@@ -60,8 +55,4 @@ dojo.lang.extend(cocoon.ajax.PartialLink, {
         cocoon.ajax.update(_this.href, _this.target);
     }
 });
-
-dojo.widget.tags.addParseTreeHandler("dojo:PartialLink");
-// Register this module as a widget package
-dojo.widget.manager.registerWidgetPackage("cocoon.ajax");
 

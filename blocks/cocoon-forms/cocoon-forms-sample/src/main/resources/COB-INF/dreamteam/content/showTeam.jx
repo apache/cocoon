@@ -53,7 +53,7 @@
         </thead>
         <tbody>
           <jx:choose>
-            <jx:when test="size &lt; 1">
+            <jx:when test="${teamsize &lt; 1}"><!--  -->
               <tr>
                 <td colspan="4" align="center">
                   <strong>No team selected</strong>

@@ -27,30 +27,61 @@
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
 
+  <xsl:param name="dojo-debug">false</xsl:param><!-- option to turn on console debugging for dojo on the browser, from a parameter in the sitemap -->
+
+  <!--+  
+      | Setup the scripts for CForms
+      |
+      | CForms can run in two different modes, in each mode different form widgets get instantiated.
+      | The @ajax attribute in your ft:form-template controls the mode.
+      |
+      | 1. non-ajax mode (@ajax="false", this is the default) : 
+      |     All form submits happen via full page loads.
+      |     Form submission is handled by cocoon.forms.SimpleForm (dojoType="forms:SimpleForm")
+      |     either directly (submit buttons) or via cocoon.forms.submitForm (scripts, onChange handlers etc.).
+      |
+      | 2. ajax-mode (@ajax="true") :
+      |     All form submits happen via AJAX (XHR or IframeIO) resulting in partial page updates.
+      |     Form submission is handled by cocoon.forms.AjaxForm (dojoType="forms:AjaxForm")
+      |     either directly (buttons) or via cocoon.forms.submitForm (scripts).
+      | 
+      | NOTES: 
+      |    Dojo is always loaded by this XSLT. You can use dojo widgets regardless of whether you want ajax-type behaviour.
+      |    Since 2.1.11, cocoon widgets no longer need to be explicitly 'dojo.require'd in the page, they load automatically using a namespace manifest.
+      |    You may use this same mechanism for your own namespace widgets.
+      |    Because we now use lazy-loading, it is recommended that any initialisation code your templates or custom widgets require
+      |    should be added as an OnLoadHandler, as this guarentees that all code is loaded without you having to register cocoon modules etc.
+      |
+      |    If you are overiding this xslt to avoid the use of dojo (untested, but cocoon.forms.common should still work)
+      |    you should add a call to run CForms OnLoadHandlers into the body's @onload attribute
+      |     
+      |      eg.
+      |       <xsl:attribute name="onload">cocoon.forms.callOnLoadHandlers(); <xsl:value-of select="@onload"/></xsl:attribute>
+      +-->
   <xsl:template match="head" mode="forms-field">
-    <!-- copy any pre-initialization code which can be used e.g. to setup dojo debugging with
-         <script> djConfig = {isDebug: true} </script> -->
-    <xsl:copy-of select="fi:init/node()"/>
-    <script src="{$resources-uri}/dojo/dojo.js" type="text/javascript"/>
-    <script src="{$resources-uri}/ajax/cocoon.js" type="text/javascript"/>
-    <script src="{$resources-uri}/forms/js/forms-lib.js" type="text/javascript"/>
+    <xsl:if test="$dojo-debug = 'true'">                                           <!-- turn on debugging, if requested -->
+        <script type="text/javascript"> djConfig = {isDebug: true} </script>
+    </xsl:if>
+    <script src="{$resources-uri}/dojo/dojo.js" type="text/javascript"/>           <!-- load dojo -->
+    <script type="text/javascript">dojo.require("dojo.widget.*");</script>         <!-- require dojo.widget for auto-loading -->
+    <xsl:if test="$dojo-debug = 'true'">                                           <!-- require console etc. for dojo debug, if requested -->
+        <script type="text/javascript">dojo.require("dojo.debug.console"); dojo.require("dojo.widget.Tree");</script>
+    </xsl:if>
+    <script src="{$resources-uri}/forms/js/forms-lib.js" type="text/javascript"/>  <!-- load legacy scripts -->
+    <!-- load forms library -->
     <script type="text/javascript">
-        dojo.addOnLoad(forms_onload);
-        dojo.require("cocoon.forms.*");
-    </script>
-    
-    <!-- googlemap-key -->
-    <xsl:if test="/*/fi:googlemap">
+    dojo.registerModulePath("cocoon.forms", "../forms/js");                        <!-- tell dojo how to find our forms module. NB: (since 2.1.11, replaces cocoon.js) -->
+    dojo.require("cocoon.forms.common");                                           <!-- tell dojo we require the commons library -->
+    dojo.addOnLoad(cocoon.forms.callOnLoadHandlers);                               <!-- ask dojo to run our onLoad handlers -->
+    </script>    
+    <xsl:copy-of select="fi:init/node()"/>                                         <!-- copy optional initialisation from form template -->    
+    <xsl:if test="/*/fi:googlemap">                                                <!-- googlemap-key TODO: This looks broken to me (JQ) -->
       <script src="/*/fi:googlemap/fi:key" type="text/javascript"/>
     </xsl:if>
-
-    
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms/css/forms.css"/>
   </xsl:template>
   
-  <xsl:template match="fi:init">
-    <!-- ignore, was handled above -->
-  </xsl:template>
+  <xsl:template match="fi:init"/>                                                  <!-- ignore, was handled above -->
 
   <xsl:template match="body" mode="forms-field">
     <xsl:copy-of select="@*"/>
@@ -104,13 +135,13 @@
     <!--  Auto submit on fields which are listening -->
     <xsl:if test="@listening = 'true' and not(fi:styling/@submit-on-change = 'false') and not(fi:styling/@onchange) and not(fi:styling/@list-type = 'double-listbox')">
       <xsl:choose>
-          <!-- IE does not react to a click with an onchange, as firefox does, so for radio and checkbox put an onclick handler instead -->
-	      <xsl:when test="local-name() = 'booleanfield' or fi:styling/@list-type = 'radio' or fi:styling/@list-type = 'checkbox'">
-	        <xsl:attribute name="onclick">forms_submitForm(this)</xsl:attribute>  
-	      </xsl:when>
-          <xsl:otherwise>
-	      	<xsl:attribute name="onchange">forms_submitForm(this)</xsl:attribute>
-          </xsl:otherwise>
+        <!-- IE does not react to a click with an onchange, as firefox does, so for radio and checkbox put an onclick handler instead -->
+        <xsl:when test="local-name() = 'booleanfield' or fi:styling/@list-type = 'radio' or fi:styling/@list-type = 'checkbox'">
+          <xsl:attribute name="onclick">cocoon.forms.submitForm(this)</xsl:attribute>  
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="onchange">cocoon.forms.submitForm(this)</xsl:attribute>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
 
@@ -140,7 +171,7 @@
 
   <xsl:template match="fi:styling/@submit-on-change" mode="styling">
     <xsl:if test=". = 'true'">
-      <xsl:attribute name="onchange">forms_submitForm(this)</xsl:attribute>
+      <xsl:attribute name="onchange">cocoon.forms.submitForm(this)</xsl:attribute>
     </xsl:if>
   </xsl:template>
 
@@ -390,10 +421,10 @@
       +-->
   <xsl:template match="fi:booleanfield[@state='output']" priority="3">
     <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled" value="{@true-value}" name="{@id}">
-        <xsl:apply-templates select="." mode="css"/>
-    	  <xsl:if test="fi:value != 'false'">
-    	    <xsl:attribute name="checked">checked</xsl:attribute>
-    	  </xsl:if>
+      <xsl:apply-templates select="." mode="css"/>
+      <xsl:if test="fi:value != 'false'">
+        <xsl:attribute name="checked">checked</xsl:attribute>
+      </xsl:if>
     </input>
   </xsl:template>
 
@@ -411,7 +442,7 @@
       | fi:action, link-style
       +-->
   <xsl:template match="fi:action[fi:styling/@type = 'link']" priority="1">
-    <a id="{@id}" title="{fi:hint}" href="#" onclick="forms_submitForm(this, '{@id}'); return false">
+    <a id="{@id}" title="{fi:hint}" href="#" onclick="cocoon.forms.submitForm(this, '{@id}'); return false">
       <xsl:apply-templates select="." mode="styling"/>
       <xsl:copy-of select="fi:label/node()"/>
     </a>
@@ -495,7 +526,7 @@
         <xsl:variable name="value" select="@value"/>
         <xsl:if test="$values[. = $value]">
           <xsl:value-of select="fi:label/node()"/>
-    	</xsl:if>
+        </xsl:if>
       </xsl:for-each>
     </span>
   </xsl:template>
@@ -512,7 +543,7 @@
             <xsl:text>[</xsl:text>
             <xsl:value-of select="fi:value"/>
             <xsl:text>] </xsl:text>
-            <input type="button" id="{@id}:input" name="{@id}" value="..." onclick="forms_submitForm(this)" class="forms upload-change-button"/>
+            <input type="button" id="{@id}:input" name="{@id}" value="..." onclick="cocoon.forms.submitForm(this)" class="forms upload-change-button"/>
         </xsl:when>
         <xsl:otherwise>
           <input type="file" id="{@id}:input" name="{@id}" title="{fi:hint}" accept="{@mime-types}">
@@ -578,23 +609,33 @@
 
   <!--+
       | fi:form-template|fi:form-generated
+      |
+      |      NB. If you are overiding this xslt to avoid the use of Dojo
+      |      You should add a call to run CForms OnSubmitHandlers into the form's @onsubmit attribute
+      |      
+      |      eg.
+      |        <xsl:attribute name="onsubmit">cocoon.forms.callOnSubmitHandlers(this); <xsl:value-of select="@onsubmit"/></xsl:attribute>
       +-->
   <xsl:template match="fi:form-template|fi:form-generated">
+    <xsl:variable name="id">
+      <xsl:choose>
+        <xsl:when test="@id != ''"><xsl:value-of select="@id"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <form>
       <xsl:copy-of select="@*"/>
-      <xsl:choose>
-        <xsl:when test="@ajax = 'true'">
-          <xsl:attribute name="dojoType">CFormsForm</xsl:attribute>
-          <xsl:if test="@ajax = 'true'">
-            <script type="text/javascript">cocoon.forms.ajax = true;</script>
-          </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="onsubmit">forms_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
-      <!-- hidden field to store the submit id -->
-      <div><input type="hidden" name="forms_submit_id"/></div>
+      <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute><!-- form/@id required since 2.1.11-->
+      <xsl:if test="not(@dojoType)">
+        <xsl:choose>
+          <xsl:when test="@ajax = 'true'">
+            <xsl:attribute name="dojoType">forms:AjaxForm</xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="dojoType">forms:SimpleForm</xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
       <xsl:apply-templates/>
 
       <!-- TODO: consider putting this in the xml stream from the generator? -->
@@ -654,7 +695,7 @@
       <xsl:if test="fi:message">
         <xsl:apply-templates select="." mode="label"/>:
         <ul>
-		  <xsl:apply-templates select="." mode="css"/>            
+          <xsl:apply-templates select="." mode="css"/>
           <xsl:for-each select="fi:message">
             <li><xsl:apply-templates/></li>
           </xsl:for-each>

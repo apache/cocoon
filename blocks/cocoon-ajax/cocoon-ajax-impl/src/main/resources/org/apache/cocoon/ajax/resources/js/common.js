@@ -22,6 +22,8 @@
 dojo.provide("cocoon.ajax");
 dojo.provide("cocoon.ajax.common");
 dojo.require("cocoon.ajax.insertion");
+dojo.require("dojo.lfx.html");
+
 
 dojo.lang.mixin(cocoon.ajax, {
     /**
@@ -75,5 +77,39 @@ dojo.lang.mixin(cocoon.ajax, {
         timer.onStart = timer.onTick;
         timer.start();
         return timer;
+    },
+    
+    // Update effects. These function can be used to set cocoon.ajax.BUHandler.highlight
+    effects: {
+        // highlight effects - transition the background colour
+        highlight: { // these are intended to look like a semi-opaque layer of colour over white
+            yellow: function(node) {
+                dojo.lfx.html.highlight(node, [240, 238, 133], 1000).play(0);
+            },
+            blue: function(node) {
+                dojo.lfx.html.highlight(node, [141, 133, 252], 1000).play(0);
+            },
+            red: function(node) {
+                dojo.lfx.html.highlight(node, [220, 133, 133], 1000).play(0);
+            },
+            green: function(node) {
+                dojo.lfx.html.highlight(node, [159, 223, 133], 1000).play(0);
+            },
+            grey: function(node) {
+                dojo.lfx.html.highlight(node, [128, 128, 128], 1000).play(0);
+            },
+            purple: function(node) {
+                dojo.lfx.html.highlight(node, [197, 133, 220], 1000).play(0);
+            },
+            orange: function(node) {
+                dojo.lfx.html.highlight(node, [252, 202, 133], 1000).play(0);
+            }
+        },
+        blink: function(node) { // hide then show the node
+            var opacity = dojo.html.getOpacity(node);
+            dojo.html.setOpacity(node, 0.2);
+            setTimeout(function() {dojo.html.setOpacity(node, opacity);}, 600);
+        }
+        // add more effects?
     }
 });

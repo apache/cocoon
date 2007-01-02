@@ -16,7 +16,7 @@
  */
 
 /**
- * General purpose AJAX infrastructure to handle a BU ("browser update") response
+ * General purpose AJAX infrastructure to handle a BU (browser update) response
  *
  * To add a new handler for a given request, create a new BUHandler and update its
  * handlers property.
@@ -24,24 +24,21 @@
  * @version $Id$
  */
 
+dojo.provide("cocoon.ajax.BUHandler");
 dojo.require("dojo.dom");
 dojo.require("dojo.html");
+dojo.require("cocoon.ajax.common");
 dojo.require("cocoon.ajax.insertion");
-dojo.provide("cocoon.ajax.BUHandler");
 
 cocoon.ajax.BUHandler = function() { };
 
-cocoon.ajax.BUHandler.fade = function(node) {
-    dojo.require("dojo.fx.*");
-    dojo.fx.highlight(element, dojo.graphics.color.hex2rgb("#ffc"), 700, 300);
-}
+// Default highlight effect (none)
+cocoon.ajax.BUHandler.highlight = null;
 
 dojo.lang.extend(cocoon.ajax.BUHandler, {
-    // Default highlight effect
-	highlight: null,
     
-  processResponse: function(doc, request) {
-		var base = doc.documentElement;
+    processResponse: function(doc) {
+		var base = doc.documentElement;		
 		
 		var nodes = [];
 		if (base.nodeName.toLowerCase() == "bu:document") {
@@ -109,9 +106,9 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 			}
 			var newElement = cocoon.ajax.insertion.replace(oldElement, firstChild);
 
-			if (this.highlight) {
-				this.highlight(newElement);
+			if (typeof(cocoon.ajax.BUHandler.highlight) == "function") {
+				cocoon.ajax.BUHandler.highlight(newElement);
 			}
 		}
-	}
+	}	
 });
