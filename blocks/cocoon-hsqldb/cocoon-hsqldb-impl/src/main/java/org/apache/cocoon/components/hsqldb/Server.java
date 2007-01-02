@@ -17,10 +17,10 @@
 package org.apache.cocoon.components.hsqldb;
 
 /**
- *
+ * @deprecated This interface will be removed in upcoming versions as it is unused.
  * @version $Id$
  */
 public interface Server  {
-    
+
     String ROLE = Server.class.getName();
 }
