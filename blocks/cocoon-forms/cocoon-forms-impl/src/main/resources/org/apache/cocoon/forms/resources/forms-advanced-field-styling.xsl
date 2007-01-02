@@ -238,7 +238,7 @@
           <xsl:value-of select="@id"/>
           <xsl:text>:input').value = arguments[0];</xsl:text>
           <xsl:if test="(@listening = 'true' and not(fi:styling/@submit-on-change = 'false')) or fi:styling/@submit-on-change = 'true'">
-            <xsl:text>forms_submitForm(dojo.byId('</xsl:text>
+            <xsl:text>cocoon.forms.submitForm(dojo.byId('</xsl:text>
             <xsl:value-of select="@id"/>
             <xsl:text>:input'))</xsl:text>
           </xsl:if>
@@ -253,7 +253,7 @@
             <xsl:value-of select="fi:value"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:attribute name="defaultText">
+            <xsl:attribute name="value">
               <xsl:text>[</xsl:text>
               <xsl:value-of select="fi:hint"/>
               <xsl:text>]</xsl:text>
@@ -272,7 +272,7 @@
       +-->
   <xsl:template match="fi:field[fi:styling/@type='suggest' and @state='active']">
     <span id="{@id}">
-      <input name="{@id}" id="{@id}:input" value="{fi:value}" dojoType="CFormsSuggest">
+      <input name="{@id}" id="{@id}:input" value="{fi:value}" dojoType="forms:CFormsSuggest">
         <xsl:apply-templates select="." mode="styling"/>
         <xsl:if test="fi:suggestion">
           <xsl:attribute name="suggestion"><xsl:value-of select="fi:suggestion"/></xsl:attribute>

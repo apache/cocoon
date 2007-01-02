@@ -14,77 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-dojo.provide("cocoon.forms.CFormsForm");
-dojo.require("dojo.event");
-dojo.require("dojo.widget.DomWidget");
-dojo.require("cocoon.forms.common");
+dojo.provide("cocoon.forms.AjaxForm");
+dojo.require("cocoon.forms.SimpleForm");
 dojo.require("cocoon.ajax.BUHandler");
 
 
 /**
- * DEPRECATED: 2.1.11, in favour of SimpleForm and AjaxForm
+ * Dojo widget for CForms, that handles the Ajax interaction with the server.
  *
- * Dojo widget for forms, that handles the Ajax interaction with the server.
+ * Extends cocoon.forms.SimpleForm with Ajax behaviour
  *
- * Extends the base DomWidget class. We don't need all the HtmlWidget stuff
- * but need traversal of the DOM to build child widgets
+ * NOTE: Introduced in 2.1.11
  *
  * @version $Id$
  */
 
 dojo.widget.defineWidget(
-    "cocoon.forms.CFormsForm",
-    dojo.widget.DomWidget,
+    "cocoon.forms.AjaxForm",
+    cocoon.forms.SimpleForm,
     {
 
-    // properties
-    ns: "forms",
-    widgetType: "CFormsForm",
-    isContainer: true,
-        
-    // Widget definition
-    buildRendering: function(args, frag) {
-        this.domNode = this.getFragNodeRef(frag);
-        this.id = this.domNode.getAttribute("id");
-        this.domNode.setAttribute("dojoWidgetId", this.widgetId);
-        dojo.event.connect("around", this.domNode, "onsubmit", this, "_browserSubmit");
-        dojo.event.connect(this.domNode, "onclick", this, "_grabClickTarget");
-        dojo.debug("DEPRECATED: cocoon.forms.CFormsForm - Please use cocoon.forms.AjaxForm instead.");
-    },
-
-    _grabClickTarget: function(event) {
-        // Keep targets of onclick so that we can know what input triggered the submit
-        // (the event in onsubmit() is the HTMLFormElement).
-        this.lastClickTarget = dojo.html.getEventTarget(event);
-    },
-
-    /** Connected to the forms 'onsubmit' event, called when the user clicks a submit input */
-    _browserSubmit: function(invocation) {
-        if (invocation.proceed() == false) {
-            // onsubmit handlers stopped submission
-            return false;
-        }
-        var event = invocation.args[0] || window.event;
-        // Interestingly, FF provides the explicitOriginalTarget property that can avoid
-        // grabClickTarget above, but avoid browser specifics for now.
-        var target = /*event.explicitOriginalTarget ||*/ this.lastClickTarget;
-        this.submit(target && target.name);
-        // If real submit has to occur, it's taken care of in submit()
-        return false;
-    },
+    // widget properties
+    widgetType: "AjaxForm",
 
     /**
-     * Submit the form, choosing the right transport depending on the widgets in the form.
+     * Submit the form via Ajax.
+     * Choose the right transport depending on the widgets in the form and the browser's capabilities.
      *
      * @param name the name of the widget that triggered the submit (if any)
-     * @param params an object containing additional parameters to be added to the
-     *              query string (optional)
+     * @param params an object containing additional parameters to be added to the form data (optional)
      */
     submit: function(name, params) {
         var form = this.domNode;                                /* the form node */
-        var thisWidget = this;                                  /* closure magic for the callback handler */
         var mimetype = "text/xml";                              /* the default mime-type */
         if (!params) params = {};                               /* create if not passed */
+        
+        // TODO: should CForm's onSubmit handlers be called for Ajax events ?
+        //if (cocoon.forms.callOnSubmitHandlers(form)) == false) return; /* call CForm's onSubmit handlers */
         
         // Provide feedback that something is happening.
         document.body.style.cursor = "wait";
@@ -95,20 +61,16 @@ dojo.widget.defineWidget(
         if (!uri) uri = form.action;
         if (uri == "") uri = document.location;
 
-        form["forms_submit_id"].value = name;                   /* name of the button doing the submit */
+        params["forms_submit_id"] = name;                       /* name of the button doing the submit */
         params["cocoon-ajax"] = true;                           /* tell Cocoon we want AJAX-style browser updates */
         if (dojo.io.formHasFile(form)) {                        /* check for file-upload fields */
-            if (dojo.render.html.safari) {                      /* poor old safari, hopefully Apple will fix this soon, it works in the nightly builds of WebKit (2006-10-11) */
-                form.submit();                                  /* do a full-page submit */
-                return;
-            }
             dojo.require("dojo.io.IframeIO");                   /* using IframeIO as we have file-upload fields */
             mimetype = "text/html";                             /* a different mime-type is required for IframeIO */
         }
 
         dojo.io.bind({
             url: uri,
-            handle: function(type, data, evt) { thisWidget._handleBrowserUpdate(thisWidget, name, type, data, evt) },
+            handle: dojo.lang.hitch(this, function(type, data) { this._handleBrowserUpdate(this, name, type, data) }),
             method: "post",
             mimetype: mimetype,                                 /* the mimetype of the response */
             content: params,                                    /* add extra params to the form */
@@ -122,30 +84,37 @@ dojo.widget.defineWidget(
     },
         
     /**
-     * Handle the server response
+     * Handle the server's BrowserUpdate response.
+     * Update the part of the form referenced by ids in the reponse.
      */
-    _handleBrowserUpdate: function(widget, name, type, data, evt) {
+    _handleBrowserUpdate: function(widget, name, type, data) {
         // Restore normal cursor
         document.body.style.cursor = "auto";
         // Attempt to re-enable the click target
         if (this.domNode[name]) this.domNode[name].disabled = false;
-        
+        // get a BrowsewrUpdateHandler which will replace the updated parts of the form
         var updater = new cocoon.ajax.BUHandler();
         if (type == "load") {
-            // Handle browser update directives
             if (!data) {
                 cocoon.ajax.BUHandler.handleError("No xml answer", data);
                 return;
             }
-            updater.handlers['continue'] = function() { widget._continue(); }
-            updater.processResponse(data, evt);
+            // add the continue handler for CForms
+            updater.handlers['continue'] = function() { widget._continue(); } 
+            // Handle browser update directives
+            updater.processResponse(data);
         } else if (type == "error") {
             updater.handleError("Request failed", data);
         } else {
-            // umm, how did we get here ?
+            dojo.debug("WARNING: dojo.io.bind returned an unhandled state : " + type);
         }
     },
     
+    /**
+     * Handle the server continue message.
+     * The server is signalling in a BrowserUpdate response that the CForm is finished.
+     * Return an acknowledgement to the continuation so cocoon.sendForm may complete.
+     */
     _continue: function() {
         var form = this.domNode;
         if (form.method.toLowerCase() == "post") {
@@ -172,7 +141,11 @@ dojo.widget.defineWidget(
     }
 });
 
-// override built-in dojo function, we do not care about 'file' fields that are disabled
+/**
+ * Override built-in dojo function, we do not care about 'file' fields that are disabled.
+ * We overide because dojo will call this during form submission and we do not want it
+ * to be bothered by disabled file fields. Hopefully this can be added to dojo .....
+ */
 dojo.io.checkChildrenForFile = function(node) {
     var hasFile = false;
     var inputs = node.getElementsByTagName("input");

@@ -27,16 +27,17 @@ dojo.require("cocoon.forms.CFormsRepeater");
  */
 
 // Extends the base CFormsRepeater class.
-cocoon.forms.CFormsDragAndDropRepeater = function() {
-    cocoon.forms.CFormsRepeater.call(this);
-};
 
-dojo.inherits(cocoon.forms.CFormsDragAndDropRepeater, cocoon.forms.CFormsRepeater);
-
-dojo.lang.extend(cocoon.forms.CFormsDragAndDropRepeater, {
+dojo.widget.defineWidget(
+    "cocoon.forms.CFormsDragAndDropRepeater",
+    cocoon.forms.CFormsRepeater, {
     // Properties
     // Widget definition
+    ns: "forms",
     widgetType: "CFormsDragAndDropRepeater",
+    isContainer: true,
+    preventClobber: true, // don't clobber our node
+    
     /**
      * Returns the action name to be called on the server for model update.
      */
@@ -55,11 +56,15 @@ dojo.lang.extend(cocoon.forms.CFormsDragAndDropRepeater, {
              }
              return "cforms-" + type;
     },
-    buildRendering: function(args, parserFragment, parentWidget) {
+    
+    // widget interface
+    buildRendering: function(args, frag) {
         // FIXME: we should destroy all drag sources and drop targets when the widget is destroyed
-        // Magical statement to get the dom node, stolen in DomWidget
-        this.domNode = parserFragment["dojo:"+this.widgetType.toLowerCase()].nodeRef;
 
+        // refering to this.domNode, allows a user to specify a template to wrap the widget
+        //if (!this.domNode) this.domNode = this.domNode;
+		cocoon.forms.CFormsRepeater.superclass.buildRendering.call(this, args, frag);
+		
         this.id = this.domNode.getAttribute("id");
         if (!this.orderable && this.select == "none") {
             dojo.debug(this.widgetType + " '" + this.id + "' is not orderable nor selectable");
@@ -84,8 +89,8 @@ dojo.lang.extend(cocoon.forms.CFormsDragAndDropRepeater, {
                 with (this.dropIndicator.style) {
                     position = "absolute";
                     zIndex = 1;
-                    width = dojo.style.getInnerWidth(this.domNode) + "px";
-                    left = dojo.style.getAbsoluteX(this.domNode) + "px";
+                    width = dojo.html.getBorderBox(this.domNode).width + "px";
+                    left = dojo.html.getAbsolutePosition(this.domNode).x + "px";
                 }
             };
             dojo.event.connect("before", dropTarget, "insert", this, "beforeInsert");
@@ -225,7 +230,3 @@ dojo.lang.extend(cocoon.forms.CFormsDragAndDropRepeater, {
                     dojoForm.submit(this.getDndAction(), params);
         }
 });
-
-dojo.widget.tags.addParseTreeHandler("dojo:CFormsDragAndDropRepeater");
-// Register this module as a widget package
-dojo.widget.manager.registerWidgetPackage("cocoon.forms");

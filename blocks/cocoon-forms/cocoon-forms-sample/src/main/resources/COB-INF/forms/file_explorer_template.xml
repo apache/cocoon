@@ -48,12 +48,12 @@
             alert("Error: cannot find element with id '" + id + "'");
             return;
         }
-        var form = forms_getForm(elt);
+        var form = cocoon.forms.getForm(elt);
         var actInput = id + ":action";
         var pathInput = id + ":path";
         form[actInput].value = act
         form[pathInput].value = path;
-        forms_submitForm(elt, id);
+        cocoon.forms.submitForm(elt, id);
         // Reset fields (this form may be reposted later when in Ajax mode)
         form[actInput].value = "";
         form[pathInput].value = "";

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -91,20 +91,20 @@
                   {value: 12, label: "Antonio Gallardo"},
                   {value: 13, label: "Ugo Cei"},
                   {value: 14, label: "David Crossley"},
-                  {value: 15, label: "Bertrand Delacr&#233;taz"},
+                  {value: 15, label: "Bertrand Delacrétaz"},
                   {value: 16, label: "Bruno Dumon"},
                   {value: 17, label: "Daniel Fagerstrom"},
                   {value: 18, label: "Leszek Gawron"},
                   {value: 19, label: "Ralph Goers"},
                   {value: 20, label: "Vadim Gritsenko"},
                   {value: 21, label: "Jorg Heymans"},
-                  {value: 22, label: "J&#246;rg Heinicke"},
+                  {value: 22, label: "Jörg Heinicke"},
                   {value: 23, label: "Jean-Baptiste Quenot"}
                 ];
         }
 
         function startsWith(string1, string2) {
-          return (new java.lang.String(string1)).startsWith(string2);
+          return (new java.lang.String(string1.toLowerCase())).startsWith(string2.toLowerCase());
         }
         
         function searchByString() {

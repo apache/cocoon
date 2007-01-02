@@ -60,7 +60,7 @@
             <xsl:value-of select="fi:styling/conf/text()"/>
             editor.generate();
           }
-          forms_onloadHandlers.push(handler);      
+          cocoon.forms.addOnLoadHandler(handler);      
         </script>        
       </xsl:when>
       <!-- use a passed configuration function -->
@@ -73,7 +73,7 @@
             "or not available! Can't render widget '<xsl:value-of select="@id"/>'");
           }
           handler.forms_onload = <xsl:value-of select="fi:styling/initFunction"/>;
-          forms_onloadHandlers.push(handler);   
+          cocoon.forms.addOnLoadHandler(handler);   
         </script>
       </xsl:when>    
       <!-- default mode with all buttons available -->  
@@ -84,7 +84,7 @@
           handler.forms_onload = function() {
             HTMLArea.replace('<xsl:value-of select="@id"/>');
           }
-          forms_onloadHandlers.push(handler);      
+          cocoon.forms.addOnLoadHandler(handler);      
         </script>  
       </xsl:otherwise>
     </xsl:choose>

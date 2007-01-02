@@ -24,12 +24,6 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  <fi:init>
-	<script type="text/javascript">
-	  // Uncomment this to see Dojo debug
-	  // var djConfig = { isDebug: true };
-    </script>	
-  </fi:init>
   <h4 class="samplesGroup">Repeater widget</h4>
   <title>Dynamic template</title>
   <style type="text/css">

@@ -36,6 +36,7 @@ dojo.provide("cocoon");
 
 // Setup hooks to load JS files provided by Cocoon blocks
 (function() {
+    dojo.debug("DEPRECATED: We now use dojo 0.4.1 with namespace registration, please see the samples.");
     // base path is "resources/dojo". Move to back to "resources"
     var rsrcPath = "../";
   

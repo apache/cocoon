@@ -23,7 +23,7 @@
       <fd:label>User name</fd:label>
     </fd:field>
     
-    <fd:upload id="upload" mime-types="text/plain" required="true">
+    <fd:upload id="upload" mime-types="text/plain application/text" required="true">
       <fd:label>Upload a text file</fd:label>
       <fd:hint>You must choose a text file</fd:hint>
       <fd:on-value-changed>
