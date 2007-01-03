@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * 
  * @cocoon.sitemap.component.pooling.max  32
  * 
- * @version $Id: $
+ * @version $Id$
  * @author ard schrijvers
  *  
  */
