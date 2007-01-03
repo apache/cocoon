@@ -118,18 +118,20 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
     }
 
     /**
-     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#registerComponents(org.springframework.beans.factory.xml.ParserContext)
+     * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#registerComponents(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
-    protected void registerComponents(ParserContext parserContext) {
-        super.registerComponents(parserContext);
+    protected void registerComponents(Element settingsElement, ParserContext parserContext) {
+        super.registerComponents(settingsElement, parserContext);
         // add the servlet context as a bean
         this.addComponent(ServletContextFactoryBean.class.getName(),
                           ServletContext.class.getName(),
                           null, false, parserContext.getRegistry());
 
         // deploy blocks and add a bean holding the information
-        this.addComponent(DefaultBlockResourcesHolder.class.getName(), 
-                          BlockResourcesHolder.class.getName(),
-                          "init", true, parserContext.getRegistry());
+        final Boolean extractBlockResources = Boolean.valueOf(this.getAttributeValue(settingsElement, "extractBlockResources", "true"));
+        final RootBeanDefinition beanDef = this.createBeanDefinition(DefaultBlockResourcesHolder.class.getName(),
+                                                                     "init", true);
+        beanDef.getPropertyValues().addPropertyValue("extractBlockResources", extractBlockResources);
+        this.register(beanDef, BlockResourcesHolder.class.getName(), parserContext.getRegistry());
     }
 }

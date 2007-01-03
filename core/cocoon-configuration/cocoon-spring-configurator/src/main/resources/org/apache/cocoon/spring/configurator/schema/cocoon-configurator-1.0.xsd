@@ -31,6 +31,7 @@
     	<xsd:attribute name="runningMode" type="xsd:string" use="optional"/>
     	<xsd:attribute name="readFromClasspath" type="xsd:boolean" use="optional"/>
     	<xsd:attribute name="readFromGlobalLocation" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="extractBlockResources" type="xsd:boolean" use="optional"/>
       </xsd:complexType>
     </xsd:element>
 

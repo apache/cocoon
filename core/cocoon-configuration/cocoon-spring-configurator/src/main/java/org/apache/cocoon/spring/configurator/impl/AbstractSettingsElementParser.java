@@ -134,7 +134,7 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
         }
 
         // register additonal components
-        this.registerComponents(parserContext);
+        this.registerComponents(element, parserContext);
 
         // Get bean includes
         final List beanIncludes = this.getBeanIncludes(element);
@@ -157,7 +157,7 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
     /**
      * This method can be used for subclasses to register additional components.
      */
-    protected void registerComponents(ParserContext parserContext) {
+    protected void registerComponents(Element settingsElement, ParserContext parserContext) {
         // nothing to do here
     }
 

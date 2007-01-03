@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,11 @@ import org.apache.cocoon.spring.configurator.BlockResourcesHolder;
 public class DefaultBlockResourcesHolder
     implements BlockResourcesHolder {
 
+    /** The settings object. */
     protected Settings settings;
+
+    /** extractBlockResources. */
+    protected boolean extractBlockResources = true;
 
     protected Map blockContexts = new HashMap();
 
@@ -39,9 +44,21 @@ public class DefaultBlockResourcesHolder
         this.settings = settings;
     }
 
+    public void setExtractBlockResources(boolean extractBlockResources) {
+        this.extractBlockResources = extractBlockResources;
+    }
+
+    /**
+     * Initialize this component.
+     * @throws Exception
+     */
     public void init()
     throws Exception {
-        this.blockContexts = DeploymentUtil.deployBlockArtifacts(this.settings.getWorkDirectory());
+        if ( this.extractBlockResources ) {
+            this.blockContexts = DeploymentUtil.deployBlockArtifacts(this.settings.getWorkDirectory());
+        } else {
+            this.blockContexts = Collections.EMPTY_MAP;
+        }
     }
 
     /**
