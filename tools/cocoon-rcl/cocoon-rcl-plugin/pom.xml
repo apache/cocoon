@@ -106,8 +106,22 @@
       </plugin>        
     </plugins>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+      </plugin>       
+    </plugins>
+  </reporting>  
   <properties>
     <docs.name>Cocoon Reloading Classloader - Maven 2 Plugin</docs.name>    
     <docs.version>1.0</docs.version>
-  </properties>   
+  </properties>    
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/maven-plugins/reloading-classloader-plugin/${docs.version}/</url>
+    </site>
+  </distributionManagement>    
 </project>
