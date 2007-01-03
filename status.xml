@@ -181,6 +181,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1976" due-to="Rob Berens">
+      POI Block: Prevent NPE in ElementProcessorSerializer on characters before first startElement.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1776" due-to="Vincent Demay">
       Portal Block: Applied and improved patch for reloading bookmarks based on their (file) validity.
     </action>
