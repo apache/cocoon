@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache</groupId>
@@ -530,29 +531,29 @@
                 <name>cdocs-template</name>
                 <path>blocks/template/1.0/</path>
               </collection>
-			        <collection>
+              <collection>
                 <name>cdocs-fop</name>
                 <path>blocks/fop/1.0/</path>
               </collection>
               <collection>
                 <name>cdocs-rcl-plugin</name>
-                <path>maven-plugins/rcl/1.0/</path>
+                <path>maven-plugins/reloading-classloader-plugin/1.0/</path>
               </collection>              
             </collections>
             <siteXmlContent>
               <![CDATA[
-								<project>
-								  <skin>
-								    <groupId>org.apache.cocoon</groupId>
-								    <artifactId>cocoon-maven-site-skin</artifactId>
-								    <version>1.0.0-SNAPSHOT</version>
-								  </skin>
-								  <body>
-								    <!-- @daisy-start@ --><!-- @daisy-end@ -->
-								    <menu ref="reports" />
-								  </body>
-								</project>
-            	]]>
+                <project>
+                  <skin>
+                    <groupId>org.apache.cocoon</groupId>
+                    <artifactId>cocoon-maven-site-skin</artifactId>
+                    <version>1.0.0-SNAPSHOT</version>
+                  </skin>
+                  <body>
+                    <!-- @daisy-start@ --><!-- @daisy-end@ -->
+                    <menu ref="reports" />
+                  </body>
+                </project>
+              ]]>
             </siteXmlContent>
           </configuration>
           <executions>
@@ -566,6 +567,7 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -573,6 +575,7 @@
         <version>1.0-alpha-6</version>
       </extension>
     </extensions>
+    
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -611,11 +614,10 @@
       </plugin>
     </plugins>
   </build>
+  
   <reporting>
-    <excludeDefaults>true</excludeDefaults>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>2.0.1</version>
         <reportSets>
@@ -624,6 +626,7 @@
               <report>project-team</report>
               <report>dependencies</report>
               <report>license</report>
+              <report>summary</report>
             </reports>
           </reportSet>
         </reportSets>
@@ -659,10 +662,23 @@
             <version>2.2</version>
             <configuration>
               <maxmemory>512m</maxmemory>
-            </configuration>
+              <links>
+                <link>http://java.sun.com/j2ee/1.4/docs/api</link>
+                <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
+                <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
+                <link>http://www.junit.org/junit/javadoc/</link>
+                <link>http://logging.apache.org/log4j/docs/api/</link>
+                <link>http://jakarta.apache.org/regexp/apidocs/</link>
+                <link>http://jakarta.apache.org/velocity/api/</link>
+              </links>
+            </configuration>            
           </plugin>
           <plugin>
-          	<artifactId>maven-changes-plugin</artifactId>
+            <artifactId>maven-changes-plugin</artifactId>
             <version>2.0-beta-2</version>
           </plugin>
           <plugin>
@@ -697,7 +713,7 @@
                 </reports>
               </reportSet>
             </reportSets>
-          </plugin>
+          </plugin>        
         </plugins>
       </reporting>
     </profile>
@@ -710,7 +726,7 @@
             <artifactId>maven-surefire-report-plugin</artifactId>
             <version>2.0</version>
           </plugin>        
-      		<plugin>
+          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>cobertura-maven-plugin</artifactId>
             <version>2.1</version>
