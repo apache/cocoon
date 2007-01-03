@@ -51,21 +51,16 @@ import org.xml.sax.SAXException;
 public abstract class ElementProcessorSerializer
     extends AbstractLogEnabled implements Serializer, Serviceable {
 
-    private static final boolean _should_set_content_length = false;
-    private OutputStream         _output_stream;
-    private Stack                _open_elements;
-    private Locator              _locator;
-    /** Service Manager */
-    protected ServiceManager   manager;
+    private OutputStream outputStream;
+    private Stack openElements;
+    private Locator locator;
+    protected ServiceManager manager;
 
     /**
      * Constructor
      */
-
     public ElementProcessorSerializer() {
-        _output_stream = null;
-        _open_elements = new Stack();
-        _locator       = null;
+        this.openElements = new Stack();
     }
 
     public void service(ServiceManager manager) {
@@ -77,7 +72,6 @@ public abstract class ElementProcessorSerializer
      *
      * @return an ElementProcessorFactory suitable for the file type
      */
-
     protected abstract ElementProcessorFactory getElementProcessorFactory();
 
     /**
@@ -88,16 +82,13 @@ public abstract class ElementProcessorSerializer
      *
      * @exception SAXException on errors
      */
-
-    protected abstract void doPreInitialization(ElementProcessor processor)
-	    throws SAXException;
+    protected abstract void doPreInitialization(ElementProcessor processor) throws SAXException;
 
     /**
      * @return the output stream
      */
-
     protected OutputStream getOutputStream() {
-        return _output_stream;
+        return this.outputStream;
     }
 
     /**
@@ -108,21 +99,19 @@ public abstract class ElementProcessorSerializer
      *
      * @return new SAXException
      */
-
-    protected SAXException SAXExceptionFactory(final String message,
-                       final Exception e) {
+    protected SAXException SAXExceptionFactory(final String message, final Exception e) {
         StringBuffer message_buffer = new StringBuffer();
 
         message_buffer.append((message == null) ? "" : message);
-        if (_locator != null) {
+        if (this.locator != null) {
             message_buffer.append("; System id: \"");
-            message_buffer.append(_locator.getSystemId());
+            message_buffer.append(this.locator.getSystemId());
             message_buffer.append("\"; public id: \"");
-            message_buffer.append(_locator.getPublicId());
+            message_buffer.append(this.locator.getPublicId());
             message_buffer.append("\"; line number: ");
-            message_buffer.append(_locator.getLineNumber());
+            message_buffer.append(this.locator.getLineNumber());
             message_buffer.append("; column number: ");
-            message_buffer.append(_locator.getColumnNumber());
+            message_buffer.append(this.locator.getColumnNumber());
         }
         SAXException rval = null;
 
@@ -141,20 +130,17 @@ public abstract class ElementProcessorSerializer
      *
      * @return new SAXException
      */
-
     protected SAXException SAXExceptionFactory(final String message) {
         return SAXExceptionFactory(message, null);
     }
 
     private ElementProcessor getCurrentElementProcessor() {
-        return _open_elements.empty() ? null
-                              : (ElementProcessor) _open_elements.peek();
+        return this.openElements.empty() ? null
+                                         : (ElementProcessor)this.openElements.peek();
     }
 
-    private char [] cleanupArray(final char [] array, final int start,
-                         final int length) {
+    private char [] cleanupArray(final char [] array, final int start, final int length) {
         char[] output = new char[length];
-
         System.arraycopy(array, start, output, 0, length);
         return output;
     }
@@ -168,9 +154,8 @@ public abstract class ElementProcessorSerializer
      * @param out the OutputStream to which the serialized data will
      *            be written
      */
-
     public void setOutputStream(final OutputStream out) {
-        _output_stream = out;
+        this.outputStream = out;
     }
 
     /**
@@ -178,9 +163,8 @@ public abstract class ElementProcessorSerializer
      *
      * @return false
      */
-
     public boolean shouldSetContentLength() {
-        return _should_set_content_length;
+        return false;
     }
 
     /* **********  END  implementation of SitemapOutputComponent ********** */
@@ -189,67 +173,46 @@ public abstract class ElementProcessorSerializer
     /**
      * Report an XML comment anywhere in the document. We don't really
      * care.
-     *
-     * @param ignored_ch
-     * @param ignored_start
-     * @param ignored_length
      */
-
-    public void comment(final char [] ignored_ch, final int ignored_start,
-                    final int ignored_length) {
+    public void comment(final char [] ch, final int start, final int length) {
     }
 
     /**
      * Report the end of a CDATA section. We don't really care.
      */
-
     public void endCDATA() {
     }
 
     /**
      * Report the end of DTD declarations. We don't really care.
      */
-
     public void endDTD() {
     }
 
     /**
      * Report the end of an entity. We don't really care.
-     *
-     * @param ignored_name
      */
-
-    public void endEntity(final String ignored_name) {
+    public void endEntity(final String name) {
     }
 
     /**
      * Report the start of a CDATA section. We don't really care.
      */
-
     public void startCDATA() {
     }
 
     /**
      * Report the start of DTD declarations, if any. We don't really
      * care.
-     *
-     * @param ignored_name
-     * @param ignored_publicId
-     * @param ignored_systemId
      */
-
-    public void startDTD(final String ignored_name,
-             final String ignored_publicId, final String ignored_systemId) {
+    public void startDTD(final String name, final String publicId, final String systemId) {
     }
 
     /**
      * Report the beginning of some internal and external XML
      * entities. We don't really care.
-     *
-     * @param ignored_name
      */
-
-    public void startEntity(final String ignored_name) {
+    public void startEntity(final String name) {
     }
 
     /* **********  END  implementation of LexicalHandler ********** */
@@ -265,46 +228,29 @@ public abstract class ElementProcessorSerializer
      * @exception SAXException if anything goes wrong in processing
      *            the character data
      */
-
-    public void characters(final char [] ch, final int start,
-           final int length) throws SAXException {
-        try {
-            getCurrentElementProcessor().acceptCharacters(cleanupArray(ch,
-                    start, length));
-        } catch (Exception e) {
-            throw SAXExceptionFactory("could not process characters event", e);
-        }
+    public void characters(final char [] ch, final int start, final int length) throws SAXException {
+        getCurrentElementProcessor().acceptCharacters(cleanupArray(ch, start, length));
     }
 
     /**
      * Receive notification of the end of an element.
      *
-     * @param ignored_namespaceURI
-     * @param ignored_localName
-     * @param ignored_qName
-     *
      * @exception SAXException on any errors processing the event.
      */
-
-    public void endElement(final String ignored_namespaceURI,
-            final String ignored_localName, final String ignored_qName)
-            throws SAXException {
+    public void endElement(final String namespaceURI, final String localName, 
+            final String qName) throws SAXException {
         try {
             getCurrentElementProcessor().endProcessing();
-            _open_elements.pop();
-        } catch (Exception e) {
-            throw SAXExceptionFactory("could not process endElement event",
-                                      e);
+            this.openElements.pop();
+        } catch (IOException e) {
+            throw SAXExceptionFactory("could not process endElement event", e);
         }
     }
 
     /**
      * End the scope of a prefix-URI mapping. We don't really care.
-     *
-     * @param ignored_prefix
      */
-
-    public void endPrefixMapping(final String ignored_prefix) {
+    public void endPrefixMapping(final String prefix) {
     }
 
     /**
@@ -318,28 +264,15 @@ public abstract class ElementProcessorSerializer
      * @exception SAXException if anything goes wrong in processing
      *            the character data
      */
-
-    public void ignorableWhitespace(final char [] ch, final int start,
-                    final int length) throws SAXException {
-        try {
-            getCurrentElementProcessor()
-                .acceptWhitespaceCharacters(cleanupArray(ch, start, length));
-        } catch (Exception e) {
-            throw SAXExceptionFactory(
-                "could not process ignorableWhitespace event", e);
-        }
+    public void ignorableWhitespace(final char [] ch, final int start, final int length) throws SAXException {
+        getCurrentElementProcessor().acceptWhitespaceCharacters(cleanupArray(ch, start, length));
     }
 
     /**
      * Receive notification of a processing instruction. We don't
      * really care.
-     *
-     * @param ignored_target
-     * @param ignored_data
      */
-
-    public void processingInstruction(final String ignored_target,
-                                      final String ignored_data) {
+    public void processingInstruction(final String target, final String data) {
     }
 
     /**
@@ -348,24 +281,19 @@ public abstract class ElementProcessorSerializer
      *
      * @param locator the Locator object
      */
-
     public void setDocumentLocator(final Locator locator) {
-        _locator = locator;
+        this.locator = locator;
     }
 
     /**
      * Receive notification of a skipped entity. We don't really care.
-     *
-     * @param ignored_name
      */
-
-    public void skippedEntity(final String ignored_name) {
+    public void skippedEntity(final String name) {
     }
 
     /**
      * Receive notification of the beginning of a document.
      */
-
     public void startDocument() {
         // nothing to do; should be ready as soon as we were
         // constructed
@@ -382,25 +310,21 @@ public abstract class ElementProcessorSerializer
      * @exception SAXException if we cannot create an ElementProcessor
      *            to handle the element
      */
-
-    public void startElement(final String namespaceURI,
-            final String localName, final String qName, final Attributes atts)
-            throws SAXException {
+    public void startElement(final String namespaceURI, final String localName, 
+            final String qName, final Attributes atts) throws SAXException {
         String name = "";
 
-        if ((localName != null) && (localName.length() != 0)) {
+        if (localName != null && localName.length() != 0) {
             name = localName;
-        } else if ((qName != null) && (qName.length() != 0)) {
+        } else if (qName != null && qName.length() != 0) {
             name = qName;
         }
         ElementProcessor processor;
 
         try {
-            processor =
-                getElementProcessorFactory().createElementProcessor(name);
+            processor = getElementProcessorFactory().createElementProcessor(name);
         } catch (CannotCreateElementProcessorException e) {
-            throw SAXExceptionFactory("could not process startElement event",
-                                      e);
+            throw SAXExceptionFactory("could not process startElement event", e);
         }
         doPreInitialization(processor);
         Attribute[] attributes = (atts == null) ? new Attribute[0]
@@ -414,19 +338,15 @@ public abstract class ElementProcessorSerializer
         } catch (IOException e) {
             throw SAXExceptionFactory("Exception processing startElement", e);
         }
-        _open_elements.push(processor);
+        this.openElements.push(processor);
     }
 
     /**
      * Begin the scope of a prefix-URI Namespace mapping. We don't
      * really care.
-     *
-     * @param ignored_prefix
-     * @param ignored_uri
      */
-
-    public void startPrefixMapping(final String ignored_prefix,
-                                   final String ignored_uri) {
+    public void startPrefixMapping(final String prefix, final String uri) {
     }
     /* **********  END  implementation of ContentHandler ********** */
+
 }   // end public abstract class ElementProcessorSerializer
