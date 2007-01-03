@@ -101,7 +101,7 @@
         <configuration>        
           <navDocId>1296</navDocId>
           <collection>cdocs-rcl-plugin</collection>          
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
       </plugin>        
     </plugins>
