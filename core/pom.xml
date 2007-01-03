@@ -32,7 +32,11 @@
   <version>3-SNAPSHOT</version>
   <name>Cocoon Core [modules]</name>
   <modules>
-    <module>cocoon-blocks-fw</module>
+    <module>cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
+    <module>cocoon-blocks-fw/cocoon-blocks-fw-demo1</module>
+    <module>cocoon-blocks-fw/cocoon-blocks-fw-demo2</module>
+    <module>cocoon-blocks-fw/cocoon-blocks-fw-sample</module>    
+    
     <module>cocoon-configuration</module>
     <module>cocoon-core</module>
     <module>cocoon-pipeline</module>
