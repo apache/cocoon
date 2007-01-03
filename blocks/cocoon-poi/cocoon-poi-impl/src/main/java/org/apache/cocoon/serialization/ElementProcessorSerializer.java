@@ -27,6 +27,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.elementprocessor.CannotCreateElementProcessorException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
+import org.apache.cocoon.components.elementprocessor.NoOpElementProcessor;
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
 
 import org.xml.sax.Attributes;
@@ -51,16 +52,20 @@ import org.xml.sax.SAXException;
 public abstract class ElementProcessorSerializer
     extends AbstractLogEnabled implements Serializer, Serviceable {
 
-    private OutputStream outputStream;
-    private Stack openElements;
-    private Locator locator;
+    private final Stack openElements;
+    private final ElementProcessor noOpElementProcessor;
+    
     protected ServiceManager manager;
 
+    private OutputStream outputStream;
+    private Locator locator;
+    
     /**
      * Constructor
      */
     public ElementProcessorSerializer() {
         this.openElements = new Stack();
+        this.noOpElementProcessor = new NoOpElementProcessor();
     }
 
     public void service(ServiceManager manager) {
@@ -135,7 +140,7 @@ public abstract class ElementProcessorSerializer
     }
 
     private ElementProcessor getCurrentElementProcessor() {
-        return this.openElements.empty() ? null
+        return this.openElements.empty() ? this.noOpElementProcessor
                                          : (ElementProcessor)this.openElements.peek();
     }
 
