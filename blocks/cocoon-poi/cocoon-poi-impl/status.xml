@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <!DOCTYPE status [
-<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT status (developers?, todo?, changes)>
 <!ELEMENT developers (person+)>
 <!ELEMENT person EMPTY>
 <!ATTLIST person
@@ -66,6 +66,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1976" due-to="Rob Berens">
+      Prevent NPE in ElementProcessorSerializer on characters before first startElement.
+    </action>
   </release>
  </changes>
 
