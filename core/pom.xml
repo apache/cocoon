@@ -35,17 +35,24 @@
     <module>cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
     <module>cocoon-blocks-fw/cocoon-blocks-fw-demo1</module>
     <module>cocoon-blocks-fw/cocoon-blocks-fw-demo2</module>
-    <module>cocoon-blocks-fw/cocoon-blocks-fw-sample</module>    
-    
-    <module>cocoon-configuration</module>
+    <module>cocoon-blocks-fw/cocoon-blocks-fw-sample</module>     
+    <module>cocoon-configuration/cocoon-configuration-api</module>
+    <module>cocoon-configuration/cocoon-spring-configurator</module>    
     <module>cocoon-core</module>
-    <module>cocoon-pipeline</module>
-    <module>cocoon-sitemap</module>
-    <module>cocoon-store</module>
-    <module>cocoon-thread</module>
+    <module>cocoon-pipeline/cocoon-pipeline-api</module>
+    <module>cocoon-pipeline/cocoon-pipeline-impl</module>
+    <module>cocoon-pipeline/cocoon-pipeline-components</module>
+    <module>cocoon-sitemap/cocoon-sitemap-api</module>
+    <module>cocoon-sitemap/cocoon-sitemap-impl</module>
+    <module>cocoon-sitemap/cocoon-sitemap-components</module>   
+    <module>cocoon-store/cocoon-store-impl</module>
+    <module>cocoon-thread/cocoon-thread-api</module>
+    <module>cocoon-thread/cocoon-thread-impl</module>
     <module>cocoon-util</module>
     <module>cocoon-webapp</module>
-    <module>cocoon-xml</module>
+    <module>cocoon-xml/cocoon-xml-api</module>
+    <module>cocoon-xml/cocoon-xml-impl</module>
+    <module>cocoon-xml/cocoon-xml-resolver</module>    
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core</connection>
