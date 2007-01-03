@@ -48,6 +48,9 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
     /** The name of the configuration attribute to specify if configurations are read from the global location. */
     public static final String READ_FROM_GLOBAL_LOCATION_ATTR = "readFromGlobalLocation";
 
+    /** The name of the configuration attribute to specify if block resources should be extracted. */
+    public static final String EXTRACT_BLOCK_RESOURCES_ATTR = "extractBlockResources";
+
     /**
      * Create and register the settings bean factory post processor.
      */
@@ -128,10 +131,10 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
                           null, false, parserContext.getRegistry());
 
         // deploy blocks and add a bean holding the information
-        final Boolean extractBlockResources = Boolean.valueOf(this.getAttributeValue(settingsElement, "extractBlockResources", "true"));
+        final Boolean extractBlockResources = Boolean.valueOf(this.getAttributeValue(settingsElement, EXTRACT_BLOCK_RESOURCES_ATTR, "true"));
         final RootBeanDefinition beanDef = this.createBeanDefinition(DefaultBlockResourcesHolder.class.getName(),
                                                                      "init", true);
-        beanDef.getPropertyValues().addPropertyValue("extractBlockResources", extractBlockResources);
+        beanDef.getPropertyValues().addPropertyValue(EXTRACT_BLOCK_RESOURCES_ATTR, extractBlockResources);
         this.register(beanDef, BlockResourcesHolder.class.getName(), parserContext.getRegistry());
     }
 }
