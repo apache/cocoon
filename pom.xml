@@ -481,7 +481,7 @@
               </collection>
               <collection>
                 <name>cdocs-core</name>
-                <path>core-modules/core/2.2/</path>
+                <path>${docs.m.core.relPath}</path>
               </collection>
               <collection>
                 <name>cdocs-ajax</name>
@@ -631,6 +631,33 @@
           </reportSet>
         </reportSets>
       </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <maxmemory>512m</maxmemory>
+          <links>
+            <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+            <link>http://static.springframework.org/spring/docs/2.0.x/api/</link>
+            <link>http://excalibur.apache.org/apidocs/</link>
+            <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+            <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
+            <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
+            <link>http://www.junit.org/junit/javadoc/</link>
+            <link>http://logging.apache.org/log4j/docs/api/</link>
+            <link>http://jakarta.apache.org/regexp/apidocs/</link>
+            <link>http://jakarta.apache.org/velocity/api/</link>
+          </links>
+        </configuration>            
+      </plugin>
+      <plugin>
+        <artifactId>maven-changes-plugin</artifactId>
+        <version>2.0-beta-2</version>
+      </plugin>      
     </plugins>
   </reporting>
 
@@ -638,6 +665,8 @@
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
+    <docs.m.core.version>2.2</docs.m.core.version>
+    <docs.m.core.relPath>core-modules/core/${docs.m.core.version}/</docs.m.core.relPath> 
   </properties>
 
   <profiles>
@@ -657,30 +686,6 @@
       </pluginRepositories>
       <reporting>
         <plugins>
-          <plugin>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.2</version>
-            <configuration>
-              <maxmemory>512m</maxmemory>
-              <links>
-                <link>http://java.sun.com/j2ee/1.4/docs/api</link>
-                <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
-                <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
-                <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
-                <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
-                <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-                <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
-                <link>http://www.junit.org/junit/javadoc/</link>
-                <link>http://logging.apache.org/log4j/docs/api/</link>
-                <link>http://jakarta.apache.org/regexp/apidocs/</link>
-                <link>http://jakarta.apache.org/velocity/api/</link>
-              </links>
-            </configuration>            
-          </plugin>
-          <plugin>
-            <artifactId>maven-changes-plugin</artifactId>
-            <version>2.0-beta-2</version>
-          </plugin>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>taglist-maven-plugin</artifactId>
@@ -707,7 +712,6 @@
                   <range>30</range>
                 </configuration>
                 <reports>
-                  <report>changelog</report>
                   <report>file-activity</report>
                   <report>dev-activity</report>
                 </reports>
