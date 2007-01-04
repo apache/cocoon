@@ -19,10 +19,10 @@
         targetNamespace="http://cocoon.apache.org/schema/avalon"
         xmlns:tns="http://cocoon.apache.org/schema/avalon">
 
-    <xsd:element name="avalon" type="tns:avalonType"/>
+    <xsd:element name="bridge" type="tns:bridgeType"/>
     <xsd:element name="sitemap" type="tns:sitemapType"/>
 
-    <xsd:complexType name="avalonType">
+    <xsd:complexType name="bridgeType">
     	<xsd:attribute name="location" type="xsd:string" use="optional"/>
     </xsd:complexType>
 
