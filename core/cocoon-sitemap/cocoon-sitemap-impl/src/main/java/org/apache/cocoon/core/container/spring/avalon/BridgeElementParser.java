@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  * @version $Id$
  * @since 2.2
  */
-public class AvalonElementParser extends AbstractElementParser {
+public class BridgeElementParser extends AbstractElementParser {
     public static final String DEFAULT_COCOON_XCONF_LOCATION = "resource://org/apache/cocoon/cocoon.xconf";
     
     /**
@@ -105,8 +105,7 @@ public class AvalonElementParser extends AbstractElementParser {
                 registry);
 
         // add logger
-        final String loggingConfiguration = (element == null ? null : element.getAttribute("loggingConfiguration"));
-        this.addLogger(loggingConfiguration, registry, info.getRootLogger());
+        this.addLogger(registry, info.getRootLogger());
 
         // handle includes of spring configurations
         final Iterator includeIter = info.getImports().iterator();
@@ -150,22 +149,16 @@ public class AvalonElementParser extends AbstractElementParser {
 
     /**
      * Add the logger bean.
-     * @param configuration  The location of the logging configuration.
      * @param registry       The bean registry.
      * @param loggerCategory The optional category for the logger.
      */
-    protected void addLogger(String                 configuration,
-                             BeanDefinitionRegistry registry,
+    protected void addLogger(BeanDefinitionRegistry registry,
                              String                 loggerCategory) {
-        // we only add the logger if the configuration is present
-        if ( configuration != null && configuration.trim().length() > 0 ) {
-            final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonLoggerFactoryBean.class, "init", true);
-            beanDef.getPropertyValues().addPropertyValue("configuration", configuration);
-            if ( loggerCategory != null ) {
-                beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
-            }
-            this.register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
+        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonLoggerFactoryBean.class, null, false);
+        if ( loggerCategory != null ) {
+            beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
         }
+        this.register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
     }
 
     public void createConfig(ConfigurationInfo      info,

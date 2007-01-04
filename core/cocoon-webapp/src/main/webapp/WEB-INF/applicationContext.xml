@@ -29,13 +29,13 @@
   <!-- Activate Cocoon Spring Configurator -->
   <configurator:settings/>
 
-  <!-- Load Avalon configurations
-       If you want to use a different logger than the default log4j logger,
-       add a bean conforming to the Avalon Logger interface to this definition
-       and leave out the loggingConfiguration attribute.
-       If you have an own cocoon.xconf specify the location attribute,
-       like location="/WEB-INF/cocoon/cocoon.xconf".
-   -->
-  <avalon:avalon loggingConfiguration="/WEB-INF/cocoon/log4j.xconf"/>
+  <bean name="org.apache.cocoon.spring.configurator.log4j"
+        class="org.apache.cocoon.spring.configurator.log4j.Log4JConfigurator"
+        scope="singleton">
+    <property name="resource" value="/WEB-INF/cocoon/log4j.xconf"/>
+  </bean>
+
+  <!-- Load Avalon configurations -->
+  <avalon:bridge/>
 
 </beans>

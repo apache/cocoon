@@ -41,7 +41,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.AbstractTestCase;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.core.container.spring.avalon.AvalonBeanPostProcessor;
-import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
+import org.apache.cocoon.core.container.spring.avalon.BridgeElementParser;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationReader;
@@ -389,7 +389,7 @@ public abstract class ContainerTestCase extends AbstractTestCase {
         return this.getComponent(classname, null, null);
     }
 
-    protected static class AvalonInstantiator extends AvalonElementParser {
+    protected static class AvalonInstantiator extends BridgeElementParser {
 
         protected final Map properties;
 
@@ -404,9 +404,9 @@ public abstract class ContainerTestCase extends AbstractTestCase {
         }
 
         /**
-         * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#addLogger(java.lang.String, org.springframework.beans.factory.support.BeanDefinitionRegistry, java.lang.String)
+         * @see org.apache.cocoon.core.container.spring.avalon.BridgeElementParser#addLogger(org.springframework.beans.factory.support.BeanDefinitionRegistry, java.lang.String)
          */
-        protected void addLogger(String configuration, BeanDefinitionRegistry registry, String loggerCategory) {
+        protected void addLogger(BeanDefinitionRegistry registry, String loggerCategory) {
             this.addComponent(ConsoleLogger.class, AvalonUtils.LOGGER_ROLE, null, false, registry);
         }
     }

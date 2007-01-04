@@ -16,23 +16,10 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
-import java.io.File;
-import java.net.URL;
-
-import javax.servlet.ServletContext;
-
-import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.web.context.ServletContextAware;
 
 /**
  * Spring factory bean to setup the Avalon logger.
@@ -41,79 +28,16 @@ import org.springframework.web.context.ServletContextAware;
  * @version $Id$
  */
 public class AvalonLoggerFactoryBean
-    implements FactoryBean, ServletContextAware {
-
-    /** Logger (we use the same logging mechanism as Spring!) */
-    protected final Log log = LogFactory.getLog(getClass());
-
-    /** The servlet context. */
-    protected ServletContext servletContext;
-
-    /** The settings. */
-    protected Settings settings;
-
-    protected Logger logger;
-
-    /** The logging configuration. */
-    protected String configuration;
+    implements FactoryBean {
 
     /** The logging category. */
-    protected String category;
-
-    /**
-     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
-     */
-    public void setServletContext(ServletContext sContext) {
-        this.servletContext = sContext;
-    }
-
-    protected void init()
-    throws Exception {
-        // create log directory
-        final File logSCDir = new File(settings.getWorkDirectory(), "cocoon-logs");
-        logSCDir.mkdirs();
-
-        // create an own context for the logger manager
-        final DefaultContext subcontext = new SettingsContext(settings);
-        subcontext.put("context-work", new File(settings.getWorkDirectory()));
-        subcontext.put("log-dir", logSCDir.toString());
-        subcontext.put("servlet-context", servletContext);
-
-        final Log4JConfLoggerManager loggerManager = new Log4JConfLoggerManager();
-        loggerManager.enableLogging(new CLLoggerWrapper(this.log));
-        loggerManager.contextualize(subcontext);
-
-        // Configure the log4j manager
-        String loggerConfig = this.configuration;
-        if ( loggerConfig != null && !loggerConfig.startsWith("/") ) {
-            loggerConfig = '/' + loggerConfig;
-        }
-        if ( loggerConfig != null ) {
-            final URL url = servletContext.getResource(loggerConfig);
-            if ( url != null ) {
-                final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder(true);
-                final Configuration conf = builder.build(servletContext.getResourceAsStream(loggerConfig));
-                loggerManager.configure(conf);
-            } else {
-                this.log.warn("The logging configuration '" + loggerConfig + "' is not available.");
-                loggerManager.configure(new DefaultConfiguration("empty"));
-            }
-        } else {
-            loggerManager.configure(new DefaultConfiguration("empty"));
-        }
-
-        String loggingCategory = this.category;
-        if ( loggingCategory == null ) {
-            loggingCategory = "cocoon";
-        }
-        this.logger = loggerManager.getLoggerForCategory(loggingCategory);
-    }
+    protected String category = "cocoon";
 
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
     public Object getObject() throws Exception {
-        return this.logger;
+        return new CLLoggerWrapper(LogFactory.getLog(this.category));
     }
 
     /**
@@ -128,14 +52,6 @@ public class AvalonLoggerFactoryBean
      */
     public boolean isSingleton() {
         return true;
-    }
-
-    public void setSettings(Settings settings) {
-        this.settings = settings;
-    }
-
-    public void setConfiguration(String loggingConfiguration) {
-        this.configuration = loggingConfiguration;
     }
 
     public void setCategory(String category) {

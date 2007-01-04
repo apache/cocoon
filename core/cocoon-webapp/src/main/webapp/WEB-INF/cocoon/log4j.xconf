@@ -23,7 +23,7 @@
          Note, that you can use properties for value substitution.
     -->
     <appender name="COCOON_DEFAULT" class="org.apache.log4j.FileAppender">
-        <param name="File"   value="${log-dir}/log4j.log" />
+        <param name="File"   value="${org.apache.cocoon.work.directory}/cocoon-logs/log4j.log" />
         <param name="Append" value="false" />	    	
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%t %-5p %c{2} - %m%n"/>
