@@ -21,6 +21,7 @@
     | @version $Id$
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
   <parent>
@@ -31,6 +32,8 @@
   <artifactId>cocoon-core</artifactId>
   <version>2.2.0-M3-SNAPSHOT</version>
   <name>Cocoon Core</name>
+  <url>http://cocoon.apache.org/${docs.m.core.relPath}</url>
+  
   <build>
     <plugins>
       <plugin>
@@ -94,16 +97,19 @@
       </resource>
     </resources>
   </build>
+  
   <properties>
     <docs.name>Cocoon Core</docs.name>    
     <docs.version>2.2</docs.version>
   </properties>  
+  
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/core-modules/core/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.core.relPath}</url>
     </site>
   </distributionManagement>  
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -290,19 +296,5 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-changes-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>changes-report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
+  
 </project>
