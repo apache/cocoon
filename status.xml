@@ -181,6 +181,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1977" due-to="Ellis Pritchard">
+      Core: Fix threading issue with internal cache in ResourceReader.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1976" due-to="Rob Berens">
       POI Block: Prevent NPE in ElementProcessorSerializer on characters before first startElement.
     </action>
