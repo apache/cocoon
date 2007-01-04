@@ -47,7 +47,7 @@
     <!-- Cocoon Blocks -->
     <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
     <module>../blocks/cocoon-auth/cocoon-auth-impl</module>
-    <module>../blocks/cocoon-captcha/cocoon-captcha-impl</module>
+    <!--module>../blocks/cocoon-captcha/cocoon-captcha-impl</module-->
     <module>../blocks/cocoon-flowscript/cocoon-flowscript-impl</module>
     <module>../blocks/cocoon-fop/cocoon-fop-impl</module>
     <module>../blocks/cocoon-forms/cocoon-forms-impl</module>
@@ -61,8 +61,24 @@
     <!-- Maven plugins -->
     <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>    
     
-    <!-- Core modules -->
+    <!-- Core modules --> 
+    <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
     <module>../core/cocoon-core</module>    
+    <!--module>../core/cocoon-configuration/cocoon-configuration-api</module>
+    <module>../core/cocoon-configuration/cocoon-spring-configurator</module>    
+    <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
+    <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>
+    <module>../core/cocoon-pipeline/cocoon-pipeline-components</module>
+    <module>../core/cocoon-sitemap/cocoon-sitemap-api</module>
+    <module>../core/cocoon-sitemap/cocoon-sitemap-impl</module>
+    <module>../core/cocoon-sitemap/cocoon-sitemap-components</module>   
+    <module>../core/cocoon-store/cocoon-store-impl</module>
+    <module>../core/cocoon-thread/cocoon-thread-api</module>
+    <module>../core/cocoon-thread/cocoon-thread-impl</module>
+    <module>../core/cocoon-util</module>
+    <module>../core/cocoon-xml/cocoon-xml-api</module>
+    <module>../core/cocoon-xml/cocoon-xml-impl</module>
+    <module>../core/cocoon-xml/cocoon-xml-resolver</module-->         
   </modules>
   
   <build>

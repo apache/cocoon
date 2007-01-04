@@ -34,6 +34,7 @@
   <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon Blocks Framework Implementation</name>
   <description>${project.name}</description>
+  <url>http://cocoon.apache.org/${docs.m.blocks-fw-impl.relPath}</url>
   
   <dependencies>
     <dependency>
@@ -89,13 +90,13 @@
   
   <properties>
     <docs.name>${project.name}</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.version>${docs.m.blocks-fw-impl.version}</docs.version>
   </properties>  
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/core-modules/blocks-fw-impl/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.blocks-fw-impl.relPath}</url>
     </site>
   </distributionManagement>    
   
