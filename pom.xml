@@ -657,6 +657,13 @@
       <plugin>
         <artifactId>maven-changes-plugin</artifactId>
         <version>2.0-beta-2</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>        
       </plugin>      
     </plugins>
   </reporting>
@@ -665,8 +672,11 @@
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
+    
     <docs.m.core.version>2.2</docs.m.core.version>
     <docs.m.core.relPath>core-modules/core/${docs.m.core.version}/</docs.m.core.relPath> 
+    <docs.m.blocks-fw-impl.version>1.0</docs.m.blocks-fw-impl.version>
+    <docs.m.blocks-fw-impl.relPath>core-modules/blocks-fw-impl/${docs.m.blocks-fw-impl.version}/</docs.m.blocks-fw-impl.relPath>     
   </properties>
 
   <profiles>
