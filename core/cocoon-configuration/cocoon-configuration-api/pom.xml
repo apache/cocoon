@@ -33,4 +33,34 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Configuration API</name>
+  <url>http://cocoon.apache.org/${docs.m.configuration-api.relPath}</url>  
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>
+          <createSiteXmlOnly>true</createSiteXmlOnly>
+        </configuration>
+      </plugin>       
+    </plugins>
+  </build>  
+  
+  <properties>
+    <docs.name>${project.name}</docs.name>    
+    <docs.version>${docs.m.configuration-api.version}</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.configuration-api.relPath}</url>
+    </site>
+  </distributionManagement>     
+  
 </project>
