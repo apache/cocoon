@@ -24,8 +24,10 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">  
-      
+    <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">
+      <action dev="joerg" type="fix" issue="COCOON-1977" due-to="Ellis Pritchard">
+        Fix threading issue with internal cache in ResourceReader.
+      </action>
     </release>
   </body>
 </document>

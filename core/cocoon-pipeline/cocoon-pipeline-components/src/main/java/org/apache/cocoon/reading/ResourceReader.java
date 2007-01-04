@@ -44,6 +44,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,7 +101,7 @@ public class ResourceReader extends AbstractReader
     /**
      * The list of generated documents
      */
-    private static final Map documents = new HashMap();
+    private static final Map documents = Collections.synchronizedMap(new HashMap());
 
     protected long configuredExpires = CONFIGURED_EXPIRES_DEFAULT;
     protected boolean configuredQuickTest = CONFIGURED_QUICK_TEST_DEFAULT;
