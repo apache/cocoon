@@ -24,7 +24,6 @@
 
     <xsd:complexType name="avalonType">
     	<xsd:attribute name="location" type="xsd:string" use="optional"/>
-    	<xsd:attribute name="loggingConfiguration" type="xsd:string" use="optional"/>
     </xsd:complexType>
 
     <xsd:complexType name="sitemapType">

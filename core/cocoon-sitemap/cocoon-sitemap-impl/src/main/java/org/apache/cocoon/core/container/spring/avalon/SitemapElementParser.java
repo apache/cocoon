@@ -28,10 +28,10 @@ import org.w3c.dom.Element;
  * @version $Id$
  * @since 2.2
  */
-public class SitemapElementParser extends AvalonElementParser {
+public class SitemapElementParser extends BridgeElementParser {
 
     /**
-     * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#addContext(org.w3c.dom.Element, org.springframework.beans.factory.support.BeanDefinitionRegistry)
+     * @see org.apache.cocoon.core.container.spring.avalon.BridgeElementParser#addContext(org.w3c.dom.Element, org.springframework.beans.factory.support.BeanDefinitionRegistry)
      */
     protected void addContext(Element element, BeanDefinitionRegistry registry) {
         // we get the uriPrefix from the configuration
@@ -45,12 +45,10 @@ public class SitemapElementParser extends AvalonElementParser {
 
     /**
      * Add the logger bean.
-     * @param configuration  The location of the logging configuration.
      * @param registry       The bean registry.
      * @param loggerCategory The optional category for the logger.
      */
-    protected void addLogger(String                 configuration,
-                             BeanDefinitionRegistry registry,
+    protected void addLogger(BeanDefinitionRegistry registry,
                              String                 loggerCategory) {
         final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonChildLoggerFactoryBean.class, "init", false);
         if ( loggerCategory != null ) {
@@ -60,7 +58,7 @@ public class SitemapElementParser extends AvalonElementParser {
     }
 
     /**
-     * @see org.apache.cocoon.core.container.spring.avalon.AvalonElementParser#readConfiguration(java.lang.String, org.springframework.core.io.ResourceLoader)
+     * @see org.apache.cocoon.core.container.spring.avalon.BridgeElementParser#readConfiguration(java.lang.String, org.springframework.core.io.ResourceLoader)
      */
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
     throws Exception {

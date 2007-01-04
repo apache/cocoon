@@ -20,7 +20,7 @@ package org.apache.cocoon.core.container.spring.avalon;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.core.container.spring.avalon.AvalonElementParser;
+import org.apache.cocoon.core.container.spring.avalon.BridgeElementParser;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
@@ -30,8 +30,8 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * Spring namespace handler for the cocoon avalon namespace.
  * Currently this namespace defines the following elements
  * (in the namespace "http://cocoon.apache.org/schema/avalon"):
- * "avalon" : This adds all Avalon configured components to the bean factory.
- *            (Attribute location is required)
+ * "bridge" : This adds all Avalon configured components to the bean factory.
+ * "sitemap":
  *
  * @version $Id$
  * @since 2.2
@@ -76,7 +76,7 @@ public class AvalonNamespaceHandler extends NamespaceHandlerSupport {
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
     public void init() {
-        registerBeanDefinitionParser("avalon", new AvalonElementParser());
+        registerBeanDefinitionParser("bridge", new BridgeElementParser());
         registerBeanDefinitionParser("sitemap", new SitemapElementParser());
     }
 }
