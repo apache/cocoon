@@ -187,11 +187,17 @@ cocoon.forms.callOnSubmitHandlers = function(form) {
         // the focus is in an input with an "onchange" and the user clicks on a submit button.
         return false;
     }
+    if (cocoon.forms.onSubmitHandlers[id] == null) {
+        // When addOnSubmitHandler has never been called, there will be no submit handlers
+        return true;
+    }
     for (var i = 0; i < cocoon.forms.onSubmitHandlers[id].length; i++) {
         if (cocoon.forms.onSubmitHandlers[id][i].forms_onsubmit() == false) {
             // handler cancels the submit
             return false;
             // TODO: should we allow all onsubmithandlers to be called, but then return the aggregate result ?
+            //  (bruno): I don't think so, the first cancel operation should cancel it completely (esp. if this
+            //           might be the result of some user interaction)
         }
     }
     // clear it
