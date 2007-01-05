@@ -436,7 +436,7 @@
 
   <build>
     <pluginManagement>
-      <plugins>
+      <plugins>       
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -690,7 +690,7 @@
     <docs.m.pipeline-impl.relPath>core-modules/pipeline-impl/${docs.m.pipeline-impl.version}/</docs.m.pipeline-impl.relPath>  
     <docs.m.pipeline-components.version>1.0</docs.m.pipeline-components.version>
     <docs.m.pipeline-components.relPath>core-modules/pipeline-components/${docs.m.pipeline-components.version}/</docs.m.pipeline-components.relPath>    
-  	<!-- module properties: blocks -->
+    <!-- module properties: blocks -->
   </properties>
 
   <profiles>
@@ -741,7 +741,21 @@
                 </reports>
               </reportSet>
             </reportSets>
-          </plugin>        
+          </plugin>   
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>1.0.0</version>
+            <configuration>
+              <xmlOutput>false</xmlOutput>
+              <threshold>Low</threshold>
+              <effort>Default</effort>
+              <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+              <includeFilterFile>findbugs-include.xml</includeFilterFile>
+              <visitors>FindDeadLocalStores,UnreadFields</visitors>
+              <omitVisitors>FindDeadLocalStores,UnreadFields</omitVisitors>
+            </configuration>
+          </plugin>               
         </plugins>
       </reporting>
     </profile>
