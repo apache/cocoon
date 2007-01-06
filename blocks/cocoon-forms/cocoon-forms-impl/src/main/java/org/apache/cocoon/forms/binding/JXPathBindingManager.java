@@ -135,20 +135,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 is.setSystemId(source.getURI());
 
                 Document doc = DomHelper.parse(is, this.manager);
-                Element rootElm = doc.getDocumentElement();
-                if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
-                    binding = getBuilderAssistant()
-                    .getBindingForConfigurationElement(rootElm);
-                    ((JXPathBindingBase) binding).enableLogging(getLogger());
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Creation of new binding finished. " + binding);
-                    }
-                } else {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Root Element of said binding file is in wrong namespace.");
-                    }
-                }
-
+                binding = createBinding(doc.getDocumentElement());
                 this.cacheManager.set(binding, source, PREFIX);
             } catch (BindingException e) {
                 throw e;
@@ -184,6 +171,23 @@ public class JXPathBindingManager extends AbstractLogEnabled
         }
     }
 
+    public Binding createBinding(Element bindingElement) throws BindingException {
+        Binding binding = null;
+        if (BindingManager.NAMESPACE.equals(bindingElement.getNamespaceURI())) {
+            binding = getBuilderAssistant()
+            .getBindingForConfigurationElement(bindingElement);
+            ((JXPathBindingBase) binding).enableLogging(getLogger());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Creation of new binding finished. " + binding);
+            }
+        } else {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Root Element of said binding file is in wrong namespace.");
+            }
+        }
+        return binding;
+    }
+    
     public Assistant getBuilderAssistant() {
         return new Assistant();
     }
