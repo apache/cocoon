@@ -25,26 +25,14 @@
 defineClass("org.apache.cocoon.forms.flow.javascript.ScriptableWidget");
 
 /**
- * Create a form, given the URI of its definition file
+ * Create a form from XML form definition, given as URI, Source or DOM
  */
 function Form(formDefinition) {
-    var formMgr = null;
-    var resolver = null;
-    var src = null;
-    var xmlAdapter = null;
+    var formMgr = cocoon.getComponent(Packages.org.apache.cocoon.forms.FormManager.ROLE);
     try {
-        formMgr = cocoon.getComponent(Packages.org.apache.cocoon.forms.FormManager.ROLE);
-        if ((typeof formDefinition) == "string" || formDefinition instanceof String) {
-            resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
-            src = resolver.resolveURI(formDefinition);
-            this.form = formMgr.createForm(src);
-        } else {
-            this.form = formMgr.createForm(formDefinition)
-        }
+        this.form = formMgr.createForm(formDefinition);
     } finally {
         cocoon.releaseComponent(formMgr);
-        if (src != null) resolver.release(src);
-        cocoon.releaseComponent(resolver);
     }
     this.binding = null;
     this.eventHandler = null;
@@ -270,21 +258,15 @@ Form.prototype.getValidationError = function() {
     return this.form.getValidationError();
 }
 
-Form.prototype.createBinding = function(bindingURI) {
-    var bindingManager = null;
-    var source = null;
-    var resolver = null;
-
+/**
+ * Create a binding from XML binding definition, given as URI, Source or DOM
+ */
+Form.prototype.createBinding = function(bindingDefinition) {
+    var bindingManager = cocoon.getComponent(Packages.org.apache.cocoon.forms.binding.BindingManager.ROLE);
     try {
-        bindingManager = cocoon.getComponent(Packages.org.apache.cocoon.forms.binding.BindingManager.ROLE);
-        resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
-        source = resolver.resolveURI(bindingURI);
-        this.binding = bindingManager.createBinding(source);
+        this.binding = bindingManager.createBinding(bindingDefinition);
     } finally {
-        if (source != null)
-            resolver.release(source);
         cocoon.releaseComponent(bindingManager);
-        cocoon.releaseComponent(resolver);
     }
 }
 
