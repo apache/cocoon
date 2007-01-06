@@ -31,7 +31,7 @@
         pool-max="16"
       />
       <map:generator name="jx" 
-        src="org.apache.cocoon.generation.JXTemplateGenerator" 
+        src="org.apache.cocoon.template.JXTemplateGenerator" 
         logger="generator.jx" 
         pool-max="16" 
       />
