@@ -191,12 +191,6 @@ public class ResourceReader extends AbstractReader
         this.setByteRanges(configuration.getChild("byte-ranges").getValueAsBoolean(configuredByteRanges));
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(Parameters)
-     */
-    public void parameterize(Parameters parameters) throws ParameterException {
-    }
-
     /**
      * Setup the reader.
      * The resource is opened to get an <code>InputStream</code>,
