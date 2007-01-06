@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.excalibur.source.Source;
+import org.w3c.dom.Element;
 
 /**
  * BindingManager declares the factory method that produces actual Bindings.
@@ -46,4 +47,14 @@ public interface BindingManager {
      * The binding will be cached.
      */
     Binding createBinding(String bindingURI) throws BindingException;
+
+    /**
+     * Creates a binding from the XML config that is supplied as a DOM tree.
+     * 
+     * <p>The specified element must be a fb:context element.</p>
+     * 
+     * <p>The binding will <b>not</b> be cached.</p>
+     */
+    Binding createBinding(Element bindingElement) throws BindingException;
+    
 }
