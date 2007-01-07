@@ -129,67 +129,12 @@
      +-->
  <map:serializers default="html">
    <map:serializer logger="sitemap.serializer.links" name="links" src="org.apache.cocoon.serialization.LinkSerializer"/>
-   <map:serializer logger="sitemap.serializer.xml" mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
 
-   <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-max="32" src="org.apache.cocoon.serialization.HTMLSerializer">
-     <doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
-     <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
-   </map:serializer>
-
-   <map:serializer logger="sitemap.serializer.wml" mime-type="text/vnd.wap.wml" name="wml" src="org.apache.cocoon.serialization.XMLSerializer">
-    <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
-    <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
-    <encoding>ASCII</encoding>
-    <omit-xml-declaration>yes</omit-xml-declaration>
-   </map:serializer>
-
-   <map:serializer logger="sitemap.serializer.chtml" mime-type="text/html" name="chtml" src="org.apache.cocoon.serialization.HTMLSerializer">
-    <!--+
-        | Compact HTML for Small Information Appliances,
-        | based on http://www.w3.org/TR/1998/NOTE-compactHTML-19980209/
-        + -->
-    <doctype-public>-//W3C//DTD Compact HTML 1.0 Draft//EN</doctype-public>
-   </map:serializer>
-
-   <map:serializer logger="sitemap.serializer.svgxml" mime-type="image/svg+xml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer">
-    <doctype-public>-//W3C//DTD SVG 1.0//EN</doctype-public>
-    <doctype-system>http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</doctype-system>
-   </map:serializer>
-
-   <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" pool-max="64" src="org.apache.cocoon.serialization.XMLSerializer">
-     <!--+
-         | You can choose from Strict, Transitional, or Frameset XHTML.
-         | For Strict XHTML set doctype to:
-         |   <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
-         |   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
-         | For Transitional XHTML set doctype to:
-         |   <doctype-public>-//W3C//DTD XHTML 1.0 Transitional//EN</doctype-public>
-         |   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</doctype-system>
-         | For Frameset XHTML set doctype to:
-         |   <doctype-public>-//W3C//DTD XHTML 1.0 Frameset//EN</doctype-public>
-         |   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd</doctype-system>
-         |
-         | Default XHTML doctype in Cocoon is XHTML Strict. If you want to use more than one
-         | XHTML DTD simultaneously, you can define several XHTML serializers.
-         +-->
-     <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
-     <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
-     <encoding>UTF-8</encoding>
-   </map:serializer>
-
-   <map:serializer logger="sitemap.serializer.xhtml" mime-type="application/xhtml+xml" name="xhtml11" pool-max="64" src="org.apache.cocoon.serialization.XMLSerializer">
-     <doctype-public>-//W3C//DTD XHTML 1.1//EN</doctype-public>
-     <doctype-system>http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</doctype-system>
-     <encoding>UTF-8</encoding>
-   </map:serializer>
-
-   <map:serializer logger="sitemap.serializer.text" mime-type="text/plain" name="text" src="org.apache.cocoon.serialization.TextSerializer"/>
    <map:serializer logger="sitemap.serializer.zip"  mime-type="application/zip" name="zip" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
    <map:serializer logger="sitemap.serializer.sxw"  mime-type="application/vnd.sun.xml.writer" name="sxw" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
    <map:serializer logger="sitemap.serializer.sxc"  mime-type="application/vnd.sun.xml.calc" name="sxc" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
    <map:serializer logger="sitemap.serializer.sxd"  mime-type="application/vnd.sun.xml.draw" name="sxd" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
    <map:serializer logger="sitemap.serializer.sxi"  mime-type="application/vnd.sun.xml.impress" name="sxi" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
-   <map:serializer logger="sitemap.serializer.vrml" mime-type="model/vrml" name="vrml" src="org.apache.cocoon.serialization.TextSerializer"/>
  </map:serializers>
 
 
