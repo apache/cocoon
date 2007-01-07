@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.core.xml.impl.JaxpSAXParser;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.WhitespaceFilter;
@@ -53,7 +53,7 @@ public class FileGeneratorBeanTestCase extends MockObjectTestCase {
     private Mock manager = new Mock(ServiceManager.class);
     
     public void setUp() throws SAXException {
-        final XMLReader xmlReader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+        final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
         parser = new SAXParser() {
 
             public void parse(InputSource src, 
@@ -76,9 +76,6 @@ public class FileGeneratorBeanTestCase extends MockObjectTestCase {
         Parameters parameters = new Parameters();
         String result = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
         FileGeneratorBean generator = new FileGeneratorBean();
-        manager.expects(atLeastOnce()).method("lookup").with(same(SAXParser.ROLE)).
-                will(returnValue(parser));
-        manager.expects(once()).method("release").with(same(parser));
         Mock resolver = new Mock(SourceResolver.class);
         Source source = new ResourceSource(src);
         resolver.expects(once()).method("resolveURI").with(same(src)).

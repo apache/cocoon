@@ -25,7 +25,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.MockLogger;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -53,7 +53,7 @@ public class FileGeneratorTestCase extends MockObjectTestCase {
     private Mock manager = new Mock(ServiceManager.class);
     
     public void setUp() throws SAXException {
-        final XMLReader xmlReader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+        final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
         parser = new SAXParser() {
 
             public void parse(InputSource src, 
