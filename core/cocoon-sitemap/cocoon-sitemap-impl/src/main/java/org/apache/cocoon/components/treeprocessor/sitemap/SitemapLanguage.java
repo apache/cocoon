@@ -46,6 +46,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.components.pipeline.impl.PipelineComponentInfo;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
@@ -56,7 +57,6 @@ import org.apache.cocoon.components.treeprocessor.NodeBuilderSelector;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
-import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
@@ -142,7 +142,7 @@ public class SitemapLanguage
     /**
      * The sitemap component information grabbed while building itsMaanger
      */
-    protected ProcessorComponentInfo itsComponentInfo;
+    protected PipelineComponentInfo itsComponentInfo;
 
     /** Optional event listeners for the enter sitemap event */
     protected List enterSitemapEventListeners = new ArrayList();
@@ -360,7 +360,7 @@ public class SitemapLanguage
         // register listeners
         this.registerListeners();
 
-        this.itsComponentInfo = (ProcessorComponentInfo) this.itsManager.lookup(ProcessorComponentInfo.ROLE);
+        this.itsComponentInfo = (PipelineComponentInfo) this.itsManager.lookup(PipelineComponentInfo.ROLE);
         // Create a helper object to setup components
         this.itsLifecycle = new LifecycleHelper(getLogger(), itsContext, this.itsManager, null /* configuration */);
 
