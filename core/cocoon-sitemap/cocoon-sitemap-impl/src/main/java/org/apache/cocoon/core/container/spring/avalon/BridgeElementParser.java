@@ -28,8 +28,10 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
+import org.apache.cocoon.components.pipeline.impl.PipelineComponentInfo;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.pipeline.PipelineComponentInfoFactoryBean;
+import org.apache.cocoon.core.container.spring.pipeline.PipelineComponentInfoInitializer;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
@@ -40,6 +42,7 @@ import org.apache.cocoon.transformation.Transformer;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReader;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -272,7 +275,7 @@ public class BridgeElementParser extends AbstractElementParser {
 
     protected void registerComponentInfo(ConfigurationInfo      configInfo,
                                          BeanDefinitionRegistry registry) {
-        ProcessorComponentInfo info = new ProcessorComponentInfo(null);
+        PipelineComponentInfo info = new PipelineComponentInfo(null);
         final Iterator i = configInfo.getComponents().values().iterator();
         while (i.hasNext()) {
             final ComponentInfo current = (ComponentInfo) i.next();
@@ -287,13 +290,23 @@ public class BridgeElementParser extends AbstractElementParser {
         prepareSelector(info, configInfo, Matcher.ROLE);
         prepareSelector(info, configInfo, Reader.ROLE);
         info.lock();
-        final RootBeanDefinition beanDef = new RootBeanDefinition();
-        beanDef.setBeanClass(ProcessorComponentInfoFactoryBean.class);
-        beanDef.setSingleton(true);
-        beanDef.setLazyInit(false);
-        beanDef.getPropertyValues().addPropertyValue("data", info.getData());
-        beanDef.setInitMethodName("init");
-        this.register(beanDef, ProcessorComponentInfo.ROLE, registry);
+        if (!registry.containsBeanDefinition(PipelineComponentInfo.ROLE)) {
+            final RootBeanDefinition beanDef = new RootBeanDefinition();
+            beanDef.setBeanClass(PipelineComponentInfoFactoryBean.class);
+            beanDef.setSingleton(true);
+            beanDef.setLazyInit(false);
+            beanDef.setInitMethodName("init");
+            this.register(beanDef, PipelineComponentInfo.ROLE, registry);
+        }
+        BeanDefinitionBuilder initDefBuilder =
+            BeanDefinitionBuilder.rootBeanDefinition(PipelineComponentInfoInitializer.class);
+        initDefBuilder.addPropertyReference("info", PipelineComponentInfo.ROLE);
+        initDefBuilder.setSingleton(true);
+        initDefBuilder.setLazyInit(false);
+        initDefBuilder.setInitMethodName("init");
+        initDefBuilder.addPropertyValue("data", info.getData());
+        final String beanName = this.getClass().getName() + "/init";
+        this.register(initDefBuilder.getBeanDefinition(), beanName, registry);
 
         final RootBeanDefinition ciBeanDef = new RootBeanDefinition();
         ciBeanDef.setBeanClass(ConfigurationInfoFactoryBean.class);
@@ -303,7 +316,7 @@ public class BridgeElementParser extends AbstractElementParser {
         this.register(ciBeanDef, ConfigurationInfo.class.getName(), registry);
     }
 
-    protected static void prepareSelector(ProcessorComponentInfo info,
+    protected static void prepareSelector(PipelineComponentInfo info,
                                           ConfigurationInfo configInfo,
                                           String category) {
         final ComponentInfo component = (ComponentInfo) configInfo.getComponents().get(category + "Selector");
