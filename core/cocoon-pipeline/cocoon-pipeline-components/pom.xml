@@ -93,5 +93,44 @@
       <version>2.4</version>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-pipeline-impl</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml-impl</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <version>0.8</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jmock</groupId>
+      <artifactId>jmock</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
