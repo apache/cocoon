@@ -289,7 +289,9 @@ public class MutableSettings implements Settings {
             }
         }
 
-        value = this.properties.getProperty(key);
+        if ( value == null ) {
+            value = this.properties.getProperty(key);
+        }
 
         if ( value == null ) {
             if ( this.parent != null ) {
