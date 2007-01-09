@@ -33,9 +33,6 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -56,6 +53,7 @@ import org.apache.axis.transport.http.HTTPTransport;
 import org.apache.axis.transport.http.ServletEndpointContextImpl;
 import org.apache.axis.utils.XMLUtils;
 import org.apache.cocoon.components.axis.providers.AvalonProvider;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
@@ -82,7 +80,7 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class SoapServerImpl extends AbstractLogEnabled
-    implements SoapServer, Serviceable, Configurable, Contextualizable, Initializable,
+    implements SoapServer, Serviceable, Configurable, Initializable,
                Disposable, ThreadSafe {
 
     /**
@@ -115,19 +113,11 @@ public class SoapServerImpl extends AbstractLogEnabled
     // array containing locations to descriptors this reader should manage
     private WSDDDocument[] m_descriptors;
 
-    // context reference
-    private Context context;
-
     // serivce manager reference
     private ServiceManager manager;
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(final Context context)
-    throws ContextException {
-        this.context = context;
-    }
+    /** The settings object. */
+    private Settings settings;
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -135,6 +125,7 @@ public class SoapServerImpl extends AbstractLogEnabled
     public void service(ServiceManager manager)
     throws ServiceException {
         this.manager = manager;
+        this.settings = (Settings)this.manager.lookup(Settings.ROLE);
     }
 
     /**
@@ -222,13 +213,12 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception ContextException if a context error occurs
      */
     private void setAttachmentDir(final Configuration config)
-    throws ConfigurationException, ContextException {
+    throws ConfigurationException {
         final Configuration dir = config.getChild("attachment-dir");
         m_attachmentDir = dir.getAttribute("src", null);
 
         if (m_attachmentDir == null) {
-            File workDir =
-                (File) this.context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
+            File workDir = new File(this.settings.getWorkDirectory());
             File attachmentDir =
                 IOUtils.createFile(workDir, "attachments" + File.separator);
             m_attachmentDir = IOUtils.getFullFilename(attachmentDir);
@@ -248,13 +238,12 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception ContextException if a context error occurs
      */
     private void setJWSDir(final Configuration config)
-    throws ConfigurationException, ContextException {
+    throws ConfigurationException {
         final Configuration dir = config.getChild("jws-dir");
         m_jwsClassDir = dir.getAttribute("src", null);
 
         if (m_jwsClassDir == null) {
-            File workDir =
-                (File) this.context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
+            File workDir = new File(this.settings.getWorkDirectory());
             File jwsClassDir =
                 IOUtils.createFile(workDir, "axis-jws" + File.separator);
             m_jwsClassDir = IOUtils.getFullFilename(jwsClassDir);
@@ -414,8 +403,16 @@ public class SoapServerImpl extends AbstractLogEnabled
         }
     }
     
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         doStop();
+        if ( this.manager != null ) {
+            this.manager.release(this.settings);
+            this.settings = null;
+            this.manager = null;
+        }
     }
 
     /* (non-Javadoc)
