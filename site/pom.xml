@@ -42,6 +42,7 @@
     <module>cocoon-blocks-site</module>
     <module>cocoon-core-site</module>    
     <module>cocoon-main-site</module>
+    <module>cocoon-subprojects-site</module>
     <module>cocoon-maven-plugins-site</module>     
        
     <!-- Cocoon Blocks -->
