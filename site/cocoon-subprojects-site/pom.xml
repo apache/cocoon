@@ -33,16 +33,16 @@
   <version>1.0.0-SNAPSHOT</version>
   
   <name>Apache Cocoon Subprojects Site</name>
-  <url>http://cocoon.apache.org</url>
+  <url>http://cocoon.apache.org/${docs.m.subprojects.relPath}</url>
   
   <properties>
-    <docs.name>Cocoon Core Modules</docs.name>    
+    <docs.name>Cocoon Subprojects</docs.name>    
   </properties>      
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/subprojects/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.subprojects.relPath}</url>
     </site>
   </distributionManagement>
   
@@ -56,7 +56,7 @@
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>
-          <navDocId>1212</navDocId>
+          <navDocId>1307</navDocId>
           <collection>cdocs-site-subprojects</collection>
           <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
         </configuration>
