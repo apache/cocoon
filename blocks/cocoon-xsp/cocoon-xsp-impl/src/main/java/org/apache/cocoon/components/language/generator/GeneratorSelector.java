@@ -31,9 +31,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.programming.Program;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
 import org.apache.cocoon.xsp.handler.ComponentHandler;
 
@@ -68,8 +68,9 @@ public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe,
 
         this.classManager = (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
 
+        final Settings settings = (Settings)manager.lookup(Settings.ROLE);
         try {
-            this.classManager.addDirectory((File) this.context.get(Constants.CONTEXT_WORK_DIR));
+            this.classManager.addDirectory(new File(settings.getWorkDirectory()));
         } catch (Exception e) {
             throw new ServiceException(ROLE, "Could not add repository to ClassLoaderManager", e);
         }
