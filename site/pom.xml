@@ -57,7 +57,10 @@
     <module>../blocks/cocoon-portal/cocoon-portal-impl</module>
     <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
     <module>../blocks/cocoon-template/cocoon-template-impl</module>
-        
+
+    <!-- Subprojects -->
+    <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
+
     <!-- Maven plugins -->
     <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>    
     
@@ -65,7 +68,6 @@
     <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
     <module>../core/cocoon-core</module>    
     <module>../core/cocoon-configuration/cocoon-configuration-api</module>
-    <!--module>../core/cocoon-configuration/cocoon-spring-configurator</module-->    
     <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-components</module>

@@ -540,6 +540,10 @@
                 <name>cdocs-rcl-plugin</name>
                 <path>maven-plugins/reloading-classloader-plugin/1.0/</path>
               </collection>              
+              <collection>
+                <name>cdocs-spring-configurator</name>
+                <path>subprojects/spring-configurator/1.0/</path>
+              </collection>              
             </collections>
             <siteXmlContent>
               <![CDATA[
