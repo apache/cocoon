@@ -464,6 +464,7 @@
             <author>The Cocoon Community</author>
             <navDocId>0</navDocId>            
             <collections>
+              <!-- sites -->
               <collection>
                 <name>cdocs-site-main</name>
                 <path></path>
@@ -477,13 +478,24 @@
                 <path>core-modules/</path>
               </collection>
               <collection>
+                <name>cdocs-site-subprojects</name>
+                <path>${docs.m.subprojects.relPath}</path>
+              </collection>              
+              <collection>
                 <name>cdocs-site-maven-plugins</name>
                 <path>maven-plugins/</path>
               </collection>
+              <!-- core -->
               <collection>
                 <name>cdocs-core</name>
                 <path>${docs.m.core.relPath}</path>
               </collection>
+              <!-- subprojects -->
+              <collection>
+                <name>cdocs-spring-configurator</name>
+                <path>${docs.m.spring-configurator.relPath}</path>
+              </collection>                 
+              <!-- blocks -->
               <collection>
                 <name>cdocs-ajax</name>
                 <path>blocks/ajax/1.0/</path>
@@ -536,14 +548,11 @@
                 <name>cdocs-fop</name>
                 <path>blocks/fop/1.0/</path>
               </collection>
+              <!-- Maven plugins -->
               <collection>
                 <name>cdocs-rcl-plugin</name>
                 <path>maven-plugins/reloading-classloader-plugin/1.0/</path>
-              </collection>              
-              <collection>
-                <name>cdocs-spring-configurator</name>
-                <path>${docs.m.spring-configurator.relPath}</path>
-              </collection>              
+              </collection>                         
             </collections>
             <siteXmlContent>
               <![CDATA[
@@ -674,27 +683,31 @@
   </reporting>
 
   <properties>
+    <!-- General Daisy plugin properties -->
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.externalUrl>http://cocoon.apache.org</docs.externalUrl>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
-    <!-- module properties: core -->
-    <docs.m.core.version>2.2</docs.m.core.version>
+    <!-- Path and version properties: sites -->
+    <docs.m.subprojects.relPath>subprojects/</docs.m.subprojects.relPath> 
+    <!-- core -->
+    <docs.m.core.version>2.2</docs.m.core.version>    
     <docs.m.core.relPath>core-modules/core/${docs.m.core.version}/</docs.m.core.relPath> 
-    <docs.m.blocks-fw-impl.version>1.0</docs.m.blocks-fw-impl.version>
-    <docs.m.blocks-fw-impl.relPath>core-modules/blocks-fw-impl/${docs.m.blocks-fw-impl.version}/</docs.m.blocks-fw-impl.relPath>     
     <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
     <docs.m.configuration-api.relPath>core-modules/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>     
     <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
-    <docs.m.configuration-api.relPath>core-modules/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>     
-    <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
-    <docs.m.spring-configurator.relPath>subprojects/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>      
+    <docs.m.configuration-api.relPath>core-modules/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>       
     <docs.m.pipeline-api.version>1.0</docs.m.pipeline-api.version>
     <docs.m.pipeline-api.relPath>core-modules/pipeline-api/${docs.m.pipeline-api.version}/</docs.m.pipeline-api.relPath> 
     <docs.m.pipeline-impl.version>1.0</docs.m.pipeline-impl.version>
     <docs.m.pipeline-impl.relPath>core-modules/pipeline-impl/${docs.m.pipeline-impl.version}/</docs.m.pipeline-impl.relPath>  
     <docs.m.pipeline-components.version>1.0</docs.m.pipeline-components.version>
     <docs.m.pipeline-components.relPath>core-modules/pipeline-components/${docs.m.pipeline-components.version}/</docs.m.pipeline-components.relPath>    
-    <!-- module properties: blocks -->
+    <!-- Path and version properties: subprojects -->
+    <docs.m.blocks-fw-impl.version>1.0</docs.m.blocks-fw-impl.version>
+    <docs.m.blocks-fw-impl.relPath>subprojects/blocks-fw-impl/${docs.m.blocks-fw-impl.version}/</docs.m.blocks-fw-impl.relPath>  
+    <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
+    <docs.m.spring-configurator.relPath>subprojects/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>               
+    <!-- Path and version properties: blocks -->
   </properties>
 
   <profiles>
