@@ -35,12 +35,12 @@
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/subprojects/spring-configurator/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.spring-configurator.relPath}/</url>
     </site>
   </distributionManagement>
   <properties>
     <docs.name>Cocoon Spring Configurator</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.version>${docs.m.spring-configurator.version}</docs.version>
   </properties>     
   <build>
     <plugins>
@@ -50,7 +50,7 @@
         <configuration>        
           <navDocId>1305</navDocId>
           <collection>cdocs-spring-configurator</collection>          
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
       </plugin>         
     </plugins> 

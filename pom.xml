@@ -542,7 +542,7 @@
               </collection>              
               <collection>
                 <name>cdocs-spring-configurator</name>
-                <path>subprojects/spring-configurator/1.0/</path>
+                <path>${docs.m.spring-configurator.relPath}</path>
               </collection>              
             </collections>
             <siteXmlContent>
@@ -687,7 +687,7 @@
     <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
     <docs.m.configuration-api.relPath>core-modules/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>     
     <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
-    <docs.m.spring-configurator.relPath>core-modules/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>      
+    <docs.m.spring-configurator.relPath>subprojects/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>      
     <docs.m.pipeline-api.version>1.0</docs.m.pipeline-api.version>
     <docs.m.pipeline-api.relPath>core-modules/pipeline-api/${docs.m.pipeline-api.version}/</docs.m.pipeline-api.relPath> 
     <docs.m.pipeline-impl.version>1.0</docs.m.pipeline-impl.version>
