@@ -41,28 +41,28 @@ public class DefaultThreadPool
     //~ Instance fields --------------------------------------------------------
 
     /** Wrapps a channel */
-    private ChannelWrapper m_channelWrapper;
+    private ChannelWrapper channelWrapper;
 
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
 
     /** The Queue */
-    private Queue m_queue;
+    private Queue queue;
 
     /** The blocking policy */
-    private String m_blockPolicy;
+    private String blockPolicy;
 
     /** The name of this thread pool */
-    private String m_name;
+    private String name;
 
     /** Should we wait for running jobs to terminate on shutdown ? */
-    private boolean m_shutdownGraceful;
+    private boolean shutdownGraceful;
 
     /** The maximum queue size */
-    private int m_queueSize;
+    private int queueSize;
 
     /** How long to wait for running jobs to terminate on disposition */
-    private int m_shutdownWaitTimeMs;
+    private int shutdownWaitTimeMs;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -73,6 +73,18 @@ public class DefaultThreadPool
         this( new ChannelWrapper() );
     }
 
+    /**
+     * Create a new pool.
+     *
+     * @param channel DOCUMENT ME!
+     */
+    private DefaultThreadPool( final ChannelWrapper channel ) {
+        super( channel );
+        channelWrapper = channel;
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
     public Log getLogger() {
         return this.logger;
     }
@@ -82,24 +94,12 @@ public class DefaultThreadPool
     }
 
     /**
-     * Create a new pool.
-     *
-     * @param channel DOCUMENT ME!
-     */
-    private DefaultThreadPool( final ChannelWrapper channel ) {
-        super( channel );
-        m_channelWrapper = channel;
-    }
-
-    //~ Methods ----------------------------------------------------------------
-
-    /**
      * DOCUMENT ME!
      *
      * @return Returns the blockPolicy.
      */
     public String getBlockPolicy() {
-        return m_blockPolicy;
+        return blockPolicy;
     }
 
     /**
@@ -110,7 +110,7 @@ public class DefaultThreadPool
      * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
      */
     public int getMaxQueueSize() {
-        return ( ( m_queueSize < 0 ) ? Integer.MAX_VALUE : m_queueSize );
+        return ( ( queueSize < 0 ) ? Integer.MAX_VALUE : queueSize );
     }
 
     /**
@@ -121,14 +121,14 @@ public class DefaultThreadPool
      * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
      */
     public int getMaximumQueueSize() {
-        return m_queueSize;
+        return queueSize;
     }
 
     /**
      * @see org.apache.cocoon.components.thread.ThreadPool#getName()
      */
     public String getName() {
-        return m_name;
+        return name;
     }
 
     /**
@@ -149,7 +149,7 @@ public class DefaultThreadPool
      * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
      */
     public int getQueueSize() {
-        return m_queue.getQueueSize();
+        return queue.getQueueSize();
     }
 
     /**
@@ -160,7 +160,7 @@ public class DefaultThreadPool
      * @see org.apache.cocoon.components.thread.ThreadPool#isQueued()
      */
     public boolean isQueued() {
-        return m_queueSize != 0;
+        return queueSize != 0;
     }
 
     /**
@@ -183,7 +183,7 @@ public class DefaultThreadPool
      * @see org.apache.cocoon.components.thread.ThreadPool#shutdown()
      */
     public void shutdown() {
-        if( m_shutdownGraceful ) {
+        if( shutdownGraceful ) {
             shutdownAfterProcessingCurrentlyQueuedTasks();
         } else {
             shutdownNow();
@@ -212,7 +212,7 @@ public class DefaultThreadPool
      * @param blockPolicy The blocking policy value
      */
     void setBlockPolicy( final String blockPolicy ) {
-        m_blockPolicy = blockPolicy;
+        this.blockPolicy = blockPolicy;
 
         if( POLICY_ABORT.equalsIgnoreCase( blockPolicy ) ) {
             abortWhenBlocked(  );
@@ -245,7 +245,7 @@ public class DefaultThreadPool
      * @param name The name to set.
      */
     void setName( String name ) {
-        m_name = name;
+        this.name = name;
     }
 
     /**
@@ -256,16 +256,16 @@ public class DefaultThreadPool
     void setQueue( final int queueSize ) {
         if( queueSize != 0 ) {
             if( queueSize > 0 ) {
-                m_queue = new BoundedQueue( queueSize );
+                queue = new BoundedQueue( queueSize );
             } else {
-                m_queue = new LinkedQueue(  );
+                queue = new LinkedQueue(  );
             }
         } else {
-            m_queue = new SynchronousChannel(  );
+            queue = new SynchronousChannel(  );
         }
 
-        m_queueSize = queueSize;
-        m_channelWrapper.setChannel( m_queue );
+        this.queueSize = queueSize;
+        channelWrapper.setChannel( queue );
     }
 
     /**
@@ -274,7 +274,7 @@ public class DefaultThreadPool
      * @param shutdownGraceful The shutdownGraceful to set.
      */
     void setShutdownGraceful( boolean shutdownGraceful ) {
-        m_shutdownGraceful = shutdownGraceful;
+        this.shutdownGraceful = shutdownGraceful;
     }
 
     /**
@@ -283,7 +283,7 @@ public class DefaultThreadPool
      * @return Returns the shutdownGraceful.
      */
     boolean isShutdownGraceful() {
-        return m_shutdownGraceful;
+        return shutdownGraceful;
     }
 
     /**
@@ -292,7 +292,7 @@ public class DefaultThreadPool
      * @param shutdownWaitTimeMs The shutdownWaitTimeMs to set.
      */
     void setShutdownWaitTimeMs( int shutdownWaitTimeMs ) {
-        m_shutdownWaitTimeMs = shutdownWaitTimeMs;
+        this.shutdownWaitTimeMs = shutdownWaitTimeMs;
     }
 
     /**
@@ -301,6 +301,6 @@ public class DefaultThreadPool
      * @return Returns the shutdownWaitTimeMs.
      */
     int getShutdownWaitTimeMs() {
-        return m_shutdownWaitTimeMs;
+        return shutdownWaitTimeMs;
     }
 }
