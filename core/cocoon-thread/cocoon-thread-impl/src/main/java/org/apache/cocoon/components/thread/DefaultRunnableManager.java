@@ -18,16 +18,11 @@ package org.apache.cocoon.components.thread;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -67,12 +62,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  */
 public class DefaultRunnableManager
-    implements RunnableManager,
-               Configurable,
-               Disposable,
-               Startable,
-               Runnable,
-               ThreadSafe {
+    implements RunnableManager, Runnable {
     
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
@@ -127,6 +117,9 @@ public class DefaultRunnableManager
     /** Keep us running? */
     private boolean keepRunning = false;
 
+    private String threadFactory = DEFAULT_THREAD_FACTORY;
+
+    private List threadPools;
     //~ Methods ----------------------------------------------------------------
 
     public Log getLogger() {
@@ -137,27 +130,30 @@ public class DefaultRunnableManager
         this.logger = l;
     }
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure( final Configuration config )
-    throws ConfigurationException {
-        final String defaultThreadFactoryName =
-            config.getChild( "thread-factory" ).getValue( DEFAULT_THREAD_FACTORY );
+    public void setThreadFactory(String threadFactory) {
+        this.threadFactory = threadFactory;
+    }
 
+    public void setThreadPools(List threadPools) {
+        this.threadPools = threadPools;
+    }
+
+    /**
+     * Initialize
+     */
+    public void init() throws Exception {
         try {
             defaultThreadFactoryClass =
-                Thread.currentThread().getContextClassLoader().loadClass( defaultThreadFactoryName );
+                Thread.currentThread().getContextClassLoader().loadClass( this.threadFactory );
         } catch( final Exception ex ) {
-            throw new ConfigurationException( "Cannot create instance of default thread factory " +
-                                              defaultThreadFactoryName, ex );
+            throw new Exception( "Cannot create instance of default thread factory " +
+                    this.threadFactory, ex );
         }
 
-        final Configuration [] threadpools =
-            config.getChild( "thread-pools" ).getChildren( "thread-pool" );
-
-        for( int i = 0; i < threadpools.length; i++ ) {
-            configThreadPool( threadpools[ i ] );
+        if ( this.threadPools != null ) {
+            for( int i = 0; i < this.threadPools.size(); i++ ) {
+                configThreadPool( (Map)this.threadPools.get(i) );
+            }            
         }
 
         // Check if a "default" pool has been created
@@ -172,6 +168,8 @@ public class DefaultRunnableManager
                         DefaultThreadPool.POLICY_DEFAULT,
                         DEFAULT_SHUTDOWN_GRACEFUL, DEFAULT_SHUTDOWN_WAIT_TIME );
         }
+        // now start
+        this.start();
     }
 
     /**
@@ -255,9 +253,10 @@ public class DefaultRunnableManager
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     * Destroy
      */
-    public void dispose() {
+    public void destroy() throws Exception {
+        this.stop();
         if( getLogger().isDebugEnabled() ) {
             getLogger().debug( "Disposing all thread pools" );
         }
@@ -410,8 +409,7 @@ public class DefaultRunnableManager
     /**
      * The heart of the command manager
      */
-    public void run()
-    {
+    public void run() {
         if( getLogger().isDebugEnabled() ) {
             getLogger().debug( "Entering loop" );
         }
@@ -466,7 +464,7 @@ public class DefaultRunnableManager
      *
      * @throws Exception DOCUMENT ME!
      */
-    public void start() throws Exception {
+    protected void start() throws Exception {
         if( getLogger().isDebugEnabled() ) {
             getLogger().debug( "Starting the heart" );
         }
@@ -478,7 +476,7 @@ public class DefaultRunnableManager
     /**
      * Stop the managing thread
      */
-    public void stop( ) {
+    protected void stop( ) {
         keepRunning = false;
 
         synchronized( commandStack ) {
@@ -506,51 +504,6 @@ public class DefaultRunnableManager
 
             return Thread.NORM_PRIORITY;
         }
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param config DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     *
-     * @throws ConfigurationException DOCUMENT ME!
-     */
-    private DefaultThreadPool configThreadPool( final Configuration config )
-    throws ConfigurationException {
-        final String name = config.getChild( "name" ).getValue();
-        final int queueSize =
-            config.getChild( "queue-size" ).getValueAsInteger( DEFAULT_QUEUE_SIZE );
-        final int maxPoolSize =
-            config.getChild( "max-pool-size" ).getValueAsInteger( DEFAULT_MAX_POOL_SIZE );
-        int minPoolSize =
-            config.getChild( "min-pool-size" ).getValueAsInteger( DEFAULT_MIN_POOL_SIZE );
-
-        // make sure we have enough threads for the default thread pool as we
-        // need one for ourself
-        if( DEFAULT_THREADPOOL_NAME.equals( name ) &&
-            ( ( minPoolSize > 0 ) && ( minPoolSize < DEFAULT_MIN_POOL_SIZE ) ) ) {
-            minPoolSize = DEFAULT_MIN_POOL_SIZE;
-        }
-
-        final String priority =
-            config.getChild( "priority" ).getValue( DEFAULT_THREAD_PRIORITY );
-        final boolean isDaemon =
-            config.getChild( "daemon" ).getValueAsBoolean( DEFAULT_DAEMON_MODE );
-        final long keepAliveTime =
-            config.getChild( "keep-alive-time-ms" ).getValueAsLong( DEFAULT_KEEP_ALIVE_TIME );
-        final String blockPolicy =
-            config.getChild( "block-policy" ).getValue( DefaultThreadPool.POLICY_DEFAULT );
-        final boolean shutdownGraceful =
-            config.getChild( "shutdown-graceful" ).getValueAsBoolean( DEFAULT_SHUTDOWN_GRACEFUL );
-        final int shutdownWaitTime =
-            config.getChild( "shutdown-wait-time-ms" ).getValueAsInteger( DEFAULT_SHUTDOWN_WAIT_TIME );
-
-        return createPool( new DefaultThreadPool(), name, queueSize,
-                           maxPoolSize, minPoolSize, getPriority( priority ),
-                           isDaemon, keepAliveTime, blockPolicy,
-                           shutdownGraceful, shutdownWaitTime );
     }
 
     private String getConfigValue( final Map    config,

@@ -201,10 +201,5 @@
   <role name="org.apache.cocoon.components.persistence.RequestDataStore"
         shorthand="request-data-store"
         default-class="org.apache.cocoon.components.persistence.RequestDataStoreImpl"/>
-  
-  <!-- Running commands (Runnable) in background -->
-  <role name="org.apache.cocoon.components.thread.RunnableManager"
-        shorthand="runnable-manager"
-        default-class="org.apache.cocoon.components.thread.DefaultRunnableManager"/>
 
 </role-list>

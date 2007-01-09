@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.components.thread;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.easymock.MockControl;
 
 import java.util.ArrayList;
@@ -34,8 +32,8 @@ import junit.framework.TestCase;
  * @version $Id$
  */
 public class AbstractTestCase
-    extends TestCase
-{
+    extends TestCase {
+
     //~ Instance fields --------------------------------------------------------
 
     /**
@@ -51,17 +49,15 @@ public class AbstractTestCase
      *
      * @param name
      */
-    public AbstractTestCase( String name )
-    {
+    public AbstractTestCase( String name ) {
         super( name );
     }
 
     /**
      * Constructor
      */
-    public AbstractTestCase(  )
-    {
-        super(  );
+    public AbstractTestCase() {
+        super();
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -72,11 +68,10 @@ public class AbstractTestCase
      *
      * @throws Exception
      */
-    protected void setUp(  )
-        throws Exception
-    {
-        super.setUp(  );
-        m_controls = new ArrayList(  );
+    protected void setUp()
+    throws Exception {
+        super.setUp();
+        m_controls = new ArrayList();
     }
 
     /**
@@ -86,20 +81,19 @@ public class AbstractTestCase
      * @param defaultValue The value accepted as the default value
      *
      * @return A mock <code>Configuration</code>
-     */
     protected Configuration createBooleanConfigMock( final boolean value,
-                                                     final boolean defaultValue )
-    {
+                                                     final boolean defaultValue ) {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
-            (Configuration)valueConfigControl.getMock(  );
+            (Configuration)valueConfigControl.getMock();
         valueConfig.getValueAsBoolean( defaultValue );
         valueConfigControl.setReturnValue( value );
-        valueConfigControl.replay(  );
+        valueConfigControl.replay();
 
         return valueConfig;
     }
+     */
 
     /**
      * Create a mock {@link Configuration}instance that has a boolean value
@@ -109,20 +103,19 @@ public class AbstractTestCase
      * @return A mock <code>Configuration</code>
      *
      * @throws ConfigurationException
-     */
     protected Configuration createBooleanConfigMock( final boolean value )
-        throws ConfigurationException
-    {
+    throws ConfigurationException {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
             (Configuration)valueConfigControl.getMock(  );
-        valueConfig.getValueAsBoolean(  );
+        valueConfig.getValueAsBoolean();
         valueConfigControl.setReturnValue( value );
-        valueConfigControl.replay(  );
+        valueConfigControl.replay();
 
         return valueConfig;
     }
+     */
 
     /**
      * Create a {@link Configuration}instance that has a child
@@ -131,20 +124,19 @@ public class AbstractTestCase
      * @param value The value to return
      *
      * @return A mock <code>Configuration</code>
-     */
     protected Configuration createChildConfigMock( final String name,
-                                                   final Configuration value )
-    {
+                                                   final Configuration value ) {
         final MockControl childConfigControl =
             createStrictControl( Configuration.class );
         final Configuration childConfig =
             (Configuration)childConfigControl.getMock(  );
         childConfig.getChild( name );
         childConfigControl.setReturnValue( value );
-        childConfigControl.replay(  );
+        childConfigControl.replay();
 
         return childConfig;
     }
+     */
 
     /**
      * Create a {@link Configuration}instance that has a boolean value
@@ -153,20 +145,19 @@ public class AbstractTestCase
      * @param value The value to return
      *
      * @return A mock <code>Configuration</code>
-     */
     protected Configuration createChildrenConfigMock( final String name,
-                                                      final Configuration [] value )
-    {
+                                                      final Configuration [] value ) {
         final MockControl childrenConfigControl =
             createStrictControl( Configuration.class );
         final Configuration childrenConfig =
             (Configuration)childrenConfigControl.getMock(  );
         childrenConfig.getChildren( name );
         childrenConfigControl.setReturnValue( value );
-        childrenConfigControl.replay(  );
+        childrenConfigControl.replay();
 
         return childrenConfig;
     }
+     */
 
     /**
      * Create a {@link Configuration}instance that has a int value
@@ -175,20 +166,19 @@ public class AbstractTestCase
      * @param defaultValue The value accepted as the default value
      *
      * @return A mock <code>Configuration</code>
-     */
     protected Configuration createIntegerConfigMock( final int value,
-                                                     final int defaultValue )
-    {
+                                                     final int defaultValue ) {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
             (Configuration)valueConfigControl.getMock(  );
         valueConfig.getValueAsInteger( defaultValue );
         valueConfigControl.setReturnValue( value );
-        valueConfigControl.replay(  );
+        valueConfigControl.replay();
 
         return valueConfig;
     }
+     */
 
     /**
      * Create a {@link Configuration}instance that has a int value
@@ -198,20 +188,19 @@ public class AbstractTestCase
      * @return A mock <code>Configuration</code>
      *
      * @throws ConfigurationException
-     */
     protected Configuration createIntegerConfigMock( final int value )
-        throws ConfigurationException
-    {
+    throws ConfigurationException {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
-            (Configuration)valueConfigControl.getMock(  );
-        valueConfig.getValueAsInteger(  );
+            (Configuration)valueConfigControl.getMock();
+        valueConfig.getValueAsInteger();
         valueConfigControl.setReturnValue( value );
         valueConfigControl.replay(  );
 
         return valueConfig;
     }
+     */
 
     /**
      * Create a {@link Configuration}instance that has a long value
@@ -220,20 +209,19 @@ public class AbstractTestCase
      * @param defaultValue The value accepted as the default value
      *
      * @return A mock <code>Configuration</code>
-     */
     protected Configuration createLongConfigMock( final long value,
-                                                  final long defaultValue )
-    {
+                                                  final long defaultValue ) {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
             (Configuration)valueConfigControl.getMock(  );
         valueConfig.getValueAsLong( defaultValue );
         valueConfigControl.setReturnValue( value );
-        valueConfigControl.replay(  );
+        valueConfigControl.replay();
 
         return valueConfig;
     }
+     */
 
     /**
      * Create a {@link Configuration}instance that has a long value
@@ -243,20 +231,19 @@ public class AbstractTestCase
      * @return A mock <code>Configuration</code>
      *
      * @throws ConfigurationException
-     */
     protected Configuration createLongConfigMock( final long value )
-        throws ConfigurationException
-    {
+    throws ConfigurationException {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
             (Configuration)valueConfigControl.getMock(  );
         valueConfig.getValueAsLong(  );
         valueConfigControl.setReturnValue( value );
-        valueConfigControl.replay(  );
+        valueConfigControl.replay();
 
         return valueConfig;
     }
+     */
 
     /**
      * Create a strict mock control
@@ -265,8 +252,7 @@ public class AbstractTestCase
      *
      * @return The mock instance
      */
-    protected MockControl createStrictControl( final Class clazz )
-    {
+    protected MockControl createStrictControl( final Class clazz ) {
         final MockControl control = MockControl.createStrictControl( clazz );
         m_controls.add( control );
 
@@ -280,20 +266,19 @@ public class AbstractTestCase
      * @param defaultValue The value accepted as the default value
      *
      * @return A mock <code>Configuration</code>
-     */
     protected Configuration createValueConfigMock( final String value,
-                                                   final String defaultValue )
-    {
+                                                   final String defaultValue ) {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
             (Configuration)valueConfigControl.getMock(  );
         valueConfig.getValue( defaultValue );
         valueConfigControl.setReturnValue( value );
-        valueConfigControl.replay(  );
+        valueConfigControl.replay();
 
         return valueConfig;
     }
+     */
 
     /**
      * Create a {@link Configuration}instance that has a string value
@@ -303,39 +288,36 @@ public class AbstractTestCase
      * @return A mock <code>Configuration</code>
      *
      * @throws ConfigurationException
-     */
     protected Configuration createValueConfigMock( final String value )
-        throws ConfigurationException
-    {
+    throws ConfigurationException {
         final MockControl valueConfigControl =
             createStrictControl( Configuration.class );
         final Configuration valueConfig =
             (Configuration)valueConfigControl.getMock(  );
         valueConfig.getValue(  );
         valueConfigControl.setReturnValue( value );
-        valueConfigControl.replay(  );
+        valueConfigControl.replay();
 
         return valueConfig;
     }
+     */
 
     /**
      * @see TestCase#tearDown()
      */
-    protected void tearDown(  )
-        throws Exception
-    {
+    protected void tearDown()
+    throws Exception {
         m_controls = null;
+        super.tearDown();
     }
 
     /**
      * Verify all <code>MockCOntrol</code>s
      */
-    protected void verify(  )
-    {
-        for( Iterator i = m_controls.iterator(  ); i.hasNext(  ); )
-        {
+    protected void verify() {
+        for( Iterator i = m_controls.iterator(  ); i.hasNext(  ); ) {
             final MockControl control = (MockControl)i.next(  );
-            control.verify(  );
+            control.verify();
         }
     }
 }

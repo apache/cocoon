@@ -15,8 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
-<components>
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
   <!--+
       | Runnable manager
@@ -24,7 +28,9 @@
       | This component manages commands (Runnables) executed in background using
       | preconfigured pools of worker threads
       +-->
-  <runnable-manager logger="core.runnable">
+  <bean name="org.apache.cocoon.components.thread.RunnableManager"
+        class="org.apache.cocoon.components.thread.DefaultRunnableManager"
+        scope="singleton" init-method="init" destroy-method="destroy">
     <!--+
         | This is the default configuration of the runnable-manager. More
         | indepth information can be found at
@@ -90,41 +96,42 @@
         |                        immediate shutdown after a graceful shutdown
         |                        has been requested.
         +-->
-    <thread-factory>org.apache.cocoon.components.thread.DefaultThreadFactory</thread-factory>
-    <thread-pools>
-      <!--+
-          | This is the default thread pool. It's use fits best for short
-          | running background tasks.
-          +-->
-      <thread-pool>
-        <name>default</name>
-        <priority>NORM</priority>
-        <daemon>false</daemon>
-        <queue-size>-1</queue-size>
-        <max-pool-size>5</max-pool-size>
-        <min-pool-size>5</min-pool-size>
-        <keep-alive-time-ms>60000</keep-alive-time-ms>
-        <block-policy>ABORT</block-policy>
-        <shutdown-graceful>false</shutdown-graceful>
-        <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
-      </thread-pool>
-      <!--+
-          | This thread pool should be used for daemons (permanently running
-          | threads).
-          +-->
-      <thread-pool>
-        <name>daemon</name>
-        <priority>NORM</priority>
-        <daemon>true</daemon>
-        <queue-size>0</queue-size>
-        <max-pool-size>-1</max-pool-size>
-        <min-pool-size>1</min-pool-size>
-        <keep-alive-time-ms>60000</keep-alive-time-ms>
-        <block-policy>ABORT</block-policy>
-        <shutdown-graceful>false</shutdown-graceful>
-        <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
-      </thread-pool>
-    </thread-pools>
-  </runnable-manager>
-
-</components>
+    <property name="threadFactory" value="org.apache.cocoon.components.thread.DefaultThreadFactory"/>
+    <property name="threadPools">
+      <list>
+        <!--+
+            | This is the default thread pool. It's use fits best for short
+            | running background tasks.
+            +-->
+        <map>
+          <entry key="name" value="default"/>
+          <entry key="priority" value="NORM"/>
+          <entry key="daemon" value="false"/>
+          <entry key="queue-size" value="-1"/>
+          <entry key="max-pool-size" value="5"/>
+          <entry key="min-pool-size" value="5"/>
+          <entry key="keep-alive-time-ms" value="60000"/>
+          <entry key="block-policy" value="ABORT"/>
+          <entry key="shutdown-graceful" value="false"/>
+          <entry key="shutdown-wait-time-ms" value="-1"/>
+        </map>
+        <!--+
+            | This thread pool should be used for daemons (permanently running
+            | threads).
+            +-->
+        <map>
+          <entry key="name" value="daemon"/>
+          <entry key="priority" value="NORM"/>
+          <entry key="daemon" value="true"/>
+          <entry key="queue-size" value="0"/>
+          <entry key="max-pool-size" value="-1"/>
+          <entry key="min-pool-size" value="1"/>
+          <entry key="keep-alive-time-ms" value="60000"/>
+          <entry key="block-policy" value="ABORT"/>
+          <entry key="shutdown-graceful" value="false"/>
+          <entry key="shutdown-wait-time-ms" value="-1"/>
+        </map>
+      </list>
+    </property>
+  </bean>
+</beans>
