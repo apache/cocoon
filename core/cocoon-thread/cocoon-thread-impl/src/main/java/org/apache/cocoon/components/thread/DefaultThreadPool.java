@@ -16,8 +16,8 @@
  */
 package org.apache.cocoon.components.thread;
 
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
@@ -31,7 +31,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  */
 public class DefaultThreadPool
     extends PooledExecutor
-    implements ThreadPool, LogEnabled {
+    implements ThreadPool {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -43,8 +43,8 @@ public class DefaultThreadPool
     /** Wrapps a channel */
     private ChannelWrapper m_channelWrapper;
 
-    /** Our logger */
-    private Logger m_logger;
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
 
     /** The Queue */
     private Queue m_queue;
@@ -71,6 +71,14 @@ public class DefaultThreadPool
      */
     DefaultThreadPool() {
         this( new ChannelWrapper() );
+    }
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
     }
 
     /**
@@ -153,17 +161,6 @@ public class DefaultThreadPool
      */
     public boolean isQueued() {
         return m_queueSize != 0;
-    }
-
-    /**
-     * Set the logger
-     *
-     * @param logger
-     *
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging( Logger logger ) {
-        m_logger = logger;
     }
 
     /**
@@ -305,14 +302,5 @@ public class DefaultThreadPool
      */
     int getShutdownWaitTimeMs() {
         return m_shutdownWaitTimeMs;
-    }
-
-    /**
-     * Get our <code>Logger</code>
-     *
-     * @return our <code>Logger</code>
-     */
-    private Logger getLogger() {
-        return m_logger;
     }
 }

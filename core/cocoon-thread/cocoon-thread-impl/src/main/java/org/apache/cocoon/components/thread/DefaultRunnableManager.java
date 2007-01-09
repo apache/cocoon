@@ -27,9 +27,9 @@ import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The DefaultRunnableManager implements the {@link RunnableManager} interface
@@ -67,7 +67,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version $Id$
  */
 public class DefaultRunnableManager
-    extends AbstractLogEnabled
     implements RunnableManager,
                Configurable,
                Disposable,
@@ -75,6 +74,9 @@ public class DefaultRunnableManager
                Runnable,
                ThreadSafe {
     
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
     //~ Static fields/initializers ---------------------------------------------
 
     /** The default {@link ThreadFactory} */
@@ -127,6 +129,14 @@ public class DefaultRunnableManager
 
     //~ Methods ----------------------------------------------------------------
 
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
+
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
@@ -147,7 +157,7 @@ public class DefaultRunnableManager
             config.getChild( "thread-pools" ).getChildren( "thread-pool" );
 
         for( int i = 0; i < threadpools.length; i++ ) {
-            final DefaultThreadPool pool = configThreadPool( threadpools[ i ] );
+            configThreadPool( threadpools[ i ] );
         }
 
         // Check if a "default" pool has been created
@@ -543,6 +553,62 @@ public class DefaultRunnableManager
                            shutdownGraceful, shutdownWaitTime );
     }
 
+    private String getConfigValue( final Map    config,
+                                   final String key)
+    throws Exception {
+        final Object value = config.get(key);
+        if ( value == null ) {
+            throw new Exception("Required configuration value for key '" + key + "' is missing.");
+        }
+        return value.toString();
+    }
+
+    private String getConfigValue( final Map    config,
+                                   final String key,
+                                   final String defaultValue) {
+        final Object value = config.get(key);
+        if ( value == null ) {
+            return defaultValue;
+        }
+        return value.toString();
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param config DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     *
+     * @throws ConfigurationException DOCUMENT ME!
+     */
+    private DefaultThreadPool configThreadPool( final Map config )
+    throws Exception {
+        final String name = this.getConfigValue(config, "name");
+        final int queueSize = Integer.valueOf(this.getConfigValue(config, "queue-size", String.valueOf(DEFAULT_QUEUE_SIZE))).intValue();
+        final int maxPoolSize = Integer.valueOf(this.getConfigValue(config, "max-pool-size", String.valueOf(DEFAULT_MAX_POOL_SIZE))).intValue();
+        int minPoolSize = Integer.valueOf(this.getConfigValue(config, "min-pool-size", String.valueOf(DEFAULT_MIN_POOL_SIZE))).intValue();
+
+        // make sure we have enough threads for the default thread pool as we
+        // need one for ourself
+        if( DEFAULT_THREADPOOL_NAME.equals( name ) &&
+            ( ( minPoolSize > 0 ) && ( minPoolSize < DEFAULT_MIN_POOL_SIZE ) ) ) {
+            minPoolSize = DEFAULT_MIN_POOL_SIZE;
+        }
+
+        final String priority = this.getConfigValue(config, "priority", DEFAULT_THREAD_PRIORITY);
+        final boolean isDaemon = Boolean.valueOf(this.getConfigValue(config, "daemon", String.valueOf(DEFAULT_DAEMON_MODE))).booleanValue();
+        final long keepAliveTime = Long.valueOf(this.getConfigValue(config, "keep-alive-time-ms", String.valueOf(DEFAULT_KEEP_ALIVE_TIME))).longValue();
+        final String blockPolicy = this.getConfigValue(config, "block-policy", DefaultThreadPool.POLICY_DEFAULT );
+        final boolean shutdownGraceful = Boolean.valueOf(this.getConfigValue(config, "shutdown-graceful", String.valueOf(DEFAULT_SHUTDOWN_GRACEFUL))).booleanValue();
+        final int shutdownWaitTime = Integer.valueOf(this.getConfigValue(config, "shutdown-wait-time-ms", String.valueOf(DEFAULT_SHUTDOWN_WAIT_TIME))).intValue();
+
+        return createPool( new DefaultThreadPool(), name, queueSize,
+                           maxPoolSize, minPoolSize, getPriority( priority ),
+                           isDaemon, keepAliveTime, blockPolicy,
+                           shutdownGraceful, shutdownWaitTime );
+    }
+
     /**
      * Create a ThreadPool
      *
@@ -577,7 +643,7 @@ public class DefaultRunnableManager
                                           final String blockPolicy,
                                           final boolean shutdownGraceful,
                                           final int shutdownWaitTime ) {
-        pool.enableLogging( getLogger().getChildLogger( name ) );
+        pool.setLogger( getLogger() );
         pool.setName( name );
 
         ThreadFactory factory = null;
@@ -670,7 +736,7 @@ public class DefaultRunnableManager
         //~ Instance fields ----------------------------------------------------
 
         /** Our logger */
-        final Logger m_logger;
+        final Log m_logger;
 
         /** DOCUMENT ME! */
         final Runnable m_command;
@@ -702,7 +768,7 @@ public class DefaultRunnableManager
                        final Runnable command,
                        final long delay,
                        final long interval,
-                       final Logger logger ) {
+                       final Log logger ) {
             m_pool = pool;
             m_command = command;
             m_delay = delay;
