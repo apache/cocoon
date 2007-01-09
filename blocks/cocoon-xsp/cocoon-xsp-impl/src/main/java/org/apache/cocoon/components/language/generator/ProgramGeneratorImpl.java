@@ -36,6 +36,7 @@ import org.apache.cocoon.components.language.markup.MarkupLanguage;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.source.Source;
@@ -91,10 +92,6 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
 
     /** Contextualize this class */
     public void contextualize(Context context) throws ContextException {
-        if (this.workDir == null) {
-            this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
-        }
-
         if (this.contextDir == null) {
             org.apache.cocoon.environment.Context ctx =
                 (org.apache.cocoon.environment.Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
@@ -131,6 +128,10 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
         this.cache = (GeneratorSelector) this.manager.lookup(GeneratorSelector.ROLE + "Selector");
         this.markupSelector = (ServiceSelector)this.manager.lookup(MarkupLanguage.ROLE + "Selector");
         this.languageSelector = (ServiceSelector)this.manager.lookup(ProgrammingLanguage.ROLE + "Selector");
+        final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
+        if (this.workDir == null) {
+            this.workDir = new File(settings.getWorkDirectory());
+        }
     }
 
     /**
