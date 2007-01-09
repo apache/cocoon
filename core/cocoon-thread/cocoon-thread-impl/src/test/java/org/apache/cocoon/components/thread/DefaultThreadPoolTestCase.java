@@ -16,7 +16,8 @@
  */
 package org.apache.cocoon.components.thread;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easymock.MockControl;
 
 /**
@@ -24,8 +25,9 @@ import org.easymock.MockControl;
  *
  * @version $Id$
  */
-public class DefaultThreadPoolTestCase extends AbstractTestCase
-{
+public class DefaultThreadPoolTestCase
+    extends AbstractTestCase {
+
     //~ Methods ----------------------------------------------------------------
 
     /**
@@ -109,7 +111,7 @@ public class DefaultThreadPoolTestCase extends AbstractTestCase
     throws InterruptedException {
         final Runnable runnable = new Runnable(){
             public void run() {
-                final ConsoleLogger logger = new ConsoleLogger( ConsoleLogger.LEVEL_DEBUG );
+                final Log logger = LogFactory.getLog(DefaultThreadPoolTestCase.this.getClass());
                 logger.info( "runnable runs" );
                 try {
                     Thread.sleep( 1000 );
