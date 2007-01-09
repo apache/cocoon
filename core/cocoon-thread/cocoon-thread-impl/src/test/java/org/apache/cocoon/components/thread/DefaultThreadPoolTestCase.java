@@ -34,7 +34,6 @@ public class DefaultThreadPoolTestCase extends AbstractTestCase
     public final void testDefaultThreadPool(  )
     {
         final DefaultThreadPool pool = new DefaultThreadPool(  );
-        pool.enableLogging( new ConsoleLogger( ConsoleLogger.LEVEL_DEBUG ) );
         pool.setName( "mypool" );
 
         // We cannot mock the DefaultThreadFactory as the underlying
@@ -80,7 +79,6 @@ public class DefaultThreadPoolTestCase extends AbstractTestCase
         runnableControl.replay(  );
 
         final DefaultThreadPool pool = new DefaultThreadPool(  );
-        pool.enableLogging( new ConsoleLogger( ConsoleLogger.LEVEL_DEBUG ) );
         pool.setName( "mypool" );
         // We cannot mock the DefaultThreadFactory as the underlying
         // PooledExecutor of the DefaultThreadPool will again wrapp it into a
@@ -108,19 +106,14 @@ public class DefaultThreadPoolTestCase extends AbstractTestCase
      * @throws InterruptedException DOCUMENT ME!
      */
     public final void testShutdown(  )
-    throws InterruptedException
-    {
+    throws InterruptedException {
         final Runnable runnable = new Runnable(){
-            public void run()
-            {
+            public void run() {
                 final ConsoleLogger logger = new ConsoleLogger( ConsoleLogger.LEVEL_DEBUG );
                 logger.info( "runnable runs" );
-                try
-                {
+                try {
                     Thread.sleep( 1000 );
-                }
-                catch( final InterruptedException ie )
-                {
+                } catch( final InterruptedException ie ) {
                     logger.info( "runnable has been interrupted ");
                 }
                 logger.info( "runnable terminated" );
@@ -128,7 +121,6 @@ public class DefaultThreadPoolTestCase extends AbstractTestCase
         };
 
         final DefaultThreadPool pool = new DefaultThreadPool(  );
-        pool.enableLogging( new ConsoleLogger( ConsoleLogger.LEVEL_DEBUG ) );
         pool.setName( "mypool" );
         pool.setThreadFactory( new DefaultThreadFactory() );
         pool.setQueue( 0 );
@@ -144,6 +136,6 @@ public class DefaultThreadPoolTestCase extends AbstractTestCase
         Thread.sleep( 200 );
         pool.shutdown(  );
         Thread.sleep( 200 );
-        verify(  );
+        verify();
     }
 }
