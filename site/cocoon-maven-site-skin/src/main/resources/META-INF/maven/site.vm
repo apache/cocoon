@@ -218,12 +218,14 @@
       </div>
     </div>
     <div id="breadcrumbs">
-      <div id="projectName">#nameAndVersion()</div>
+      <div id="projectName">     
+      	#nameAndVersion()
+     </div>
       <div class="xright">
-		  <a href="http://www.apache.org/">The Apache Software Foundation</a> |  
 		  <a href="$project.getProperties().get("docs.externalUrl")/core-modules/">Cocoon Core</a> | 
 		  <a href="$project.getProperties().get("docs.externalUrl")/blocks/">Cocoon Blocks</a> |   
-		  <a href="$project.getProperties().get("docs.externalUrl")/maven-plugins/">Cocoon Maven Plugins</a>    
+		  <a href="$project.getProperties().get("docs.externalUrl")/subprojects/">Subprojects</a> |		  
+		  <a href="$project.getProperties().get("docs.externalUrl")/maven-plugins/">Maven Plugins</a>
       	  #links( $decoration.body.links )</div>
       <div class="clear">
         <hr/>
