@@ -113,6 +113,7 @@ public class ServerImpl extends AbstractLogEnabled
         String dbName = params.getParameter("name", DEFAULT_DB_NAME);
         try {
             hsqlServer.setDatabasePath(0, new File(dbPath).getCanonicalPath() + File.separator + dbName);
+            hsqlServer.setDatabaseName(0, dbName);
         } catch (IOException e) {
             throw new ParameterException("Could not get database directory <" + dbPath + ">", e);
         }
