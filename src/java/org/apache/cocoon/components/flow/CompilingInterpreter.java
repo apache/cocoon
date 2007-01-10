@@ -105,6 +105,10 @@ public abstract class CompilingInterpreter
             return source;
         }
 
+        public long getCompileTime() {
+            return compileTime;
+        }
+
         public Script getScript(Context context, Scriptable scope,
                                 boolean refresh, CompilingInterpreter interpreter)
         throws Exception {
