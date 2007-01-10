@@ -26,6 +26,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -33,8 +35,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -57,8 +57,9 @@ import org.xml.sax.SAXException;
 public class DatabaseReader extends ServiceableReader
                             implements Configurable, Disposable, CacheableProcessingComponent {
 
-    private ServiceSelector datasourceSelector;
-    private DataSourceComponent datasource;
+    private DataSourceComponent dataSourceComponent;
+
+    private DataSource dataSource;
 
     private int typeColumn;
     private boolean defaultCache = true;
@@ -71,10 +72,12 @@ public class DatabaseReader extends ServiceableReader
     private long lastModified = System.currentTimeMillis();
     private boolean doCommit;
 
-
-    public void service(final ServiceManager manager) throws ServiceException {
-        super.service(manager);
-        this.datasourceSelector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
+    /**
+     * Set a data source to be used by this component.
+     * @param dataSource A datasource.
+     */
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     /**
@@ -84,11 +87,13 @@ public class DatabaseReader extends ServiceableReader
     public void configure(Configuration conf) throws ConfigurationException {
         this.defaultCache = conf.getChild("invalidate").getValue("never").equals("always");
 
-        String datasourceName = conf.getChild("use-connection").getValue();
-        try {
-            this.datasource = (DataSourceComponent) datasourceSelector.select(datasourceName);
-        } catch (ServiceException e) {
-            throw new ConfigurationException("Datasource '" + datasourceName + "' is not available.", e);
+        if ( this.dataSource == null ) {
+            String datasourceName = conf.getChild("use-connection").getValue();
+            try {
+                this.dataSourceComponent = (DataSourceComponent) this.manager.lookup(DataSourceComponent.ROLE + '/' + datasourceName);
+            } catch (ServiceException e) {
+                throw new ConfigurationException("Datasource '" + datasourceName + "' is not available.", e);
+            }
         }
     }
 
@@ -101,7 +106,11 @@ public class DatabaseReader extends ServiceableReader
         super.setup(resolver, objectModel, src, par);
 
         try {
-            this.connection = datasource.getConnection();
+            if ( this.dataSource != null ) {
+                this.connection = this.dataSource.getConnection();
+            } else {
+                this.connection = dataSourceComponent.getConnection();
+            }
             if (this.connection.getAutoCommit()) {
                 this.connection.setAutoCommit(false);
             }
@@ -324,6 +333,9 @@ public class DatabaseReader extends ServiceableReader
         }
     }
 
+    /**
+     * @see org.apache.cocoon.reading.AbstractReader#recycle()
+     */
     public void recycle() {
         super.recycle();
         this.resource = null;
@@ -331,19 +343,19 @@ public class DatabaseReader extends ServiceableReader
         this.mimeType = null;
         this.typeColumn = 0;
 
-        try {
-            if (resultSet != null) {
+        if (resultSet != null) {
+            try {
                 resultSet.close();
-            }
-        } catch (SQLException e) { /* ignored */ }
-        resultSet = null;
+            } catch (SQLException e) { /* ignored */ }
+            resultSet = null;
+        }
 
-        try {
-            if (statement != null) {
+        if (statement != null) {
+            try {
                 statement.close();
-            }
-        } catch (SQLException e) { /* ignored */ }
-        statement = null;
+            } catch (SQLException e) { /* ignored */ }
+            statement = null;
+        }
 
         if (this.connection != null) {
             try {
@@ -363,19 +375,21 @@ public class DatabaseReader extends ServiceableReader
         }
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
-        recycle();
-        if (datasource != null) {
-            datasourceSelector.release(datasource);
-            datasource = null;
+        this.recycle();
+        if (manager != null) {
+            this.manager.release(dataSourceComponent);
+            dataSourceComponent = null;
+            this.manager = null;
         }
-        if (datasourceSelector != null) {
-            manager.release(datasourceSelector);
-            datasourceSelector = null;
-        }
-        manager = null;
     }
 
+    /**
+     * @see org.apache.cocoon.reading.AbstractReader#getMimeType()
+     */
     public String getMimeType() {
         if (mimeType != null) {
             return mimeType;
