@@ -83,7 +83,6 @@
         <module>cocoon-flowscript</module>
         <!-- <module>cocoon-fop</module> -->
         <module>cocoon-forms</module>
-        <module>cocoon-hsqldb</module>
         <module>cocoon-html</module>
         <module>cocoon-itext</module>
         <module>cocoon-javaflow</module>
