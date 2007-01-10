@@ -66,6 +66,10 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+   <action dev="CZ" type="add">
+     Make database reader usable with a (Spring managed) data source (instead
+     of an excalibur datasource).
+   </action>
    <action dev="VG" type="fix">
      Read CLOBs using getCharacterStream, delegate character decoding
      to the database. Revert to old behavior if clob-encoding parameter is present.
