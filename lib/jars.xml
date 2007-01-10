@@ -459,7 +459,7 @@
       database engine which offers both in memory and disk based tables.
     </description>
     <used-by>Cocoon samples webapp</used-by>
-    <lib>optional/hsqldb-1.8.0.2.jar</lib>
+    <lib>optional/hsqldb-1.8.0.7.jar</lib>
     <homepage>http://hsqldb.sourceforge.net/</homepage>
   </file>
 
