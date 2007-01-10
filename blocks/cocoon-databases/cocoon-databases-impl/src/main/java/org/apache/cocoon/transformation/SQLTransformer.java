@@ -43,7 +43,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
@@ -224,9 +223,6 @@ public class SQLTransformer extends AbstractSAXTransformer {
     /** The current state of the event receiving FSM */
     protected int state;
 
-    /** The datasource component selector */
-    protected ServiceSelector datasources;
-
     /** The "name" of the connection shared by top level queries (if configuration allows) */
     protected String connName;
 
@@ -248,15 +244,22 @@ public class SQLTransformer extends AbstractSAXTransformer {
     //
 
     /**
-     * Serviceable
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
-        try {
-            this.datasources = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
-        } catch (ServiceException e) {
-            getLogger().warn("DataSource component selector is not available.", e);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
+        this.parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
+    }
+
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.parser);
+            this.parser = null;
         }
+        super.dispose();
     }
 
     /**
@@ -308,21 +311,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
         }
         this.connName = null;
 
-        this.manager.release(this.parser);
-        this.parser = null;
-
         super.recycle();
-    }
-
-    /**
-     * Dispose
-     */
-    public void dispose() {
-        if (this.datasources != null) {
-            this.manager.release(this.datasources);
-            this.datasources = null;
-        }
-        super.dispose();
     }
 
     /**
@@ -770,15 +759,9 @@ public class SQLTransformer extends AbstractSAXTransformer {
         // First check datasource name parameter
         final String datasourceName = params.getParameter(SQLTransformer.MAGIC_CONNECTION, null);
         if (datasourceName != null) {
-            // Use datasource components
-            if (this.datasources == null) {
-                throw new SQLException("Unable to get connection from datasource '" + datasourceName + "': " +
-                                       "No datasources configured in cocoon.xconf.");
-            }
-
             DataSourceComponent datasource = null;
             try {
-                datasource = (DataSourceComponent) this.datasources.select(datasourceName);
+                datasource = (DataSourceComponent) this.manager.lookup(DataSourceComponent.ROLE + '/' + datasourceName);
                 for (int i = 0; i < this.connectAttempts && result == null; i++) {
                     try {
                         result = datasource.getConnection();
@@ -805,9 +788,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
                 throw new SQLException("Unable to get connection from datasource '" + datasourceName + "': " +
                                        "No such datasource.");
             } finally {
-                if (datasource != null) {
-                    this.datasources.release(datasource);
-                }
+                this.manager.release(datasource);
             }
 
             if (result == null) {
@@ -838,24 +819,21 @@ public class SQLTransformer extends AbstractSAXTransformer {
     /**
      * Attempt to parse string value
      */
-    private void stream(String value) throws ServiceException, SAXException, IOException {
-            // Strip off the XML Declaration if there is one!
-            if (value.startsWith("<?xml ")) {
-                value = value.substring(value.indexOf("?>") + 2);
-            }
+    private void stream(String value)
+    throws ServiceException, SAXException, IOException {
+        // Strip off the XML Declaration if there is one!
+        if (value.startsWith("<?xml ")) {
+            value = value.substring(value.indexOf("?>") + 2);
+        }
 
-            // Lookup components
-            if (this.parser == null) {
-                this.parser = (SAXParser) manager.lookup(SAXParser.ROLE);
-            }
-        XMLByteStreamCompiler compiler = new XMLByteStreamCompiler();
-        XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
+        final XMLByteStreamCompiler compiler = new XMLByteStreamCompiler();
+        final XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
 
-            this.parser.parse(new InputSource(new StringReader("<root>" + value + "</root>")),
+        this.parser.parse(new InputSource(new StringReader("<root>" + value + "</root>")),
                           compiler);
 
-            IncludeXMLConsumer filter = new IncludeXMLConsumer(this, this);
-            filter.setIgnoreRootElement(true);
+        final IncludeXMLConsumer filter = new IncludeXMLConsumer(this, this);
+        filter.setIgnoreRootElement(true);
 
         interpreter.setConsumer(filter);
         interpreter.deserialize(compiler.getSAXFragment());
