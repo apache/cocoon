@@ -483,7 +483,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 } else {
                     this.sourceresolver.release(src);
                 }
-                compiledScript = entry.getScript(cx, this.scope, false, this);
+                boolean needsRefresh = reloadScripts &&
+                       (entry.getCompileTime() + checkTime < System.currentTimeMillis());
+                compiledScript = entry.getScript(cx, this.scope, needsRefresh, this);
                 return compiledScript;
             }
         }
