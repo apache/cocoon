@@ -143,6 +143,7 @@ public class ServerImpl
 
         try {
             hsqlServer.setDatabasePath(0, new File(dbPath).getCanonicalPath() + File.separator + name);
+            hsqlServer.setDatabaseName(0, name);
         } catch (IOException e) {
             throw new RuntimeException("Could not get database directory <" + dbPath + ">", e);
         }
