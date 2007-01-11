@@ -138,6 +138,9 @@ public class ServerImpl
             final Map.Entry current = (Map.Entry)i.next();
             final String name = current.getKey().toString();
             final String dbCfgPath = current.getValue().toString();
+            if ( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug("Configuring database " + name + " with path " + dbCfgPath);
+            }
             String dbPath = dbCfgPath;
             // Test if we are running inside a WAR file
             if (dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
