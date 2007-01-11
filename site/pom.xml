@@ -60,6 +60,7 @@
     <module>../blocks/cocoon-template/cocoon-template-impl</module>
 
     <!-- Subprojects -->
+    <module>../core/cocoon-configuration/cocoon-configuration-api</module>
     <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
 
     <!-- Maven plugins -->
