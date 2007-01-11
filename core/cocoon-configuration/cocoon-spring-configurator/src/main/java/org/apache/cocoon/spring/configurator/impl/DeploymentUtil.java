@@ -118,7 +118,7 @@ public class DeploymentUtil {
                 String destination = buffer.toString();
                 deploy(jarFile, BLOCK_RESOURCES_PATH, destination);
                 // register the root URL for the block resources
-                blockContexts.put(blockName, destination);
+                blockContexts.put(blockName, new File(destination).toURL().toExternalForm());
             }
             // we only handle jar files and ordinary files
             // TODO - Should we throw an exception if it's some other protocol type? (or log?)
