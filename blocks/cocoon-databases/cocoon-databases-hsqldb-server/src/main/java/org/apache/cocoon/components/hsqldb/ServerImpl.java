@@ -18,6 +18,7 @@ package org.apache.cocoon.components.hsqldb;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -142,13 +143,27 @@ public class ServerImpl
                 this.getLogger().debug("Configuring database " + name + " with path " + dbCfgPath);
             }
             String dbPath = dbCfgPath;
-            // Test if we are running inside a WAR file
+            // is the context protocol used? 
             if (dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
+                // Test if we are running inside a WAR file
                 dbPath = this.servletContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
-            }
-            if (dbPath == null) {
-                throw new IllegalArgumentException("The hsqldb cannot be used inside an unexpanded WAR file. " +
-                                             "Real path for <" + dbCfgPath + "> is null.");
+                if (dbPath == null) {
+                    throw new IllegalArgumentException("The hsqldb cannot be used inside an unexpanded WAR file. " +
+                                                 "Real path for <" + dbCfgPath + "> is null.");
+                }
+            } else {
+                // is this a file url
+                if ( dbPath.startsWith("file:") ) {
+                    dbPath = dbPath.substring(5);
+                }
+                // we test if the path points to a directory in the file system
+                final File directory = new File(dbPath);
+                if ( !directory.exists() ) {
+                    throw new IllegalArgumentException("Path for hsqldb database does not exist: " + dbPath);
+                }
+                if ( !directory.isDirectory() ) {
+                    throw new IllegalArgumentException("Path for hsqldb database does not point to a directory: " + dbPath);
+                }
             }
 
             try {
