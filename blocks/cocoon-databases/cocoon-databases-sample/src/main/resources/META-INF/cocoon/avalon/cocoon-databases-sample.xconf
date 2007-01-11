@@ -21,8 +21,6 @@
     | @version $Id$
     +-->
 <components>
-  <include src="resource://org/apache/cocoon/components/database/database.roles"/>
-
   <!-- Datasource for the database samples. -->
   <datasources>
     <!--
