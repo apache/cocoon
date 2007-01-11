@@ -38,7 +38,16 @@
     It describes a mechanism for handling properties in an standardized way.
   </description>
   <url>http://cocoon.apache.org/${docs.m.configuration-api.relPath}</url>  
-  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.configuration-api.relPath}</url>
+    </site>
+  </distributionManagement>     
+  <properties>
+    <docs.name>Cocoon Configuration API</docs.name>    
+    <docs.version>${docs.m.configuration-api.version}</docs.version>
+  </properties>     
   <build>
     <plugins>
       <plugin>
@@ -48,23 +57,12 @@
       <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
+        <configuration>        
+          <navDocId>1313</navDocId>
+          <collection>cdocs-configuration-api</collection>          
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin>       
-    </plugins>
-  </build>  
-  
-  <properties>
-    <docs.name>${project.name}</docs.name>    
-    <docs.version>${docs.m.configuration-api.version}</docs.version>
-  </properties>  
-  
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.configuration-api.relPath}</url>
-    </site>
-  </distributionManagement>     
-  
+      </plugin>         
+    </plugins> 
+  </build>
 </project>
