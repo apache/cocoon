@@ -28,8 +28,9 @@
       |  port   : number      port where the server is listening
       |  silent : true/false  display all queries
       |  trace  : true/false  display JDBC trace messages
-      |  name   : string      name of the HSQL-DB
-      |  path   : string      path to the database - context-protocol is resolved
+      |  databases : Properties configuring the databases, the key is the name of the
+      |              database and the value is the path to the database. Context protocol
+      |              can be used.
       +-->
   <bean name="org.apache.cocoon.components.hsqldb.Server"
         class="org.apache.cocoon.components.hsqldb.ServerImpl"
@@ -40,7 +41,10 @@
     <property name="silent" value="true"/>
     <property name="trace" value="false"/>
     <property name="threadPoolName" value="daemon"/>
-    <property name="name" value="cocoondb"/>
-    <property name="path" value="${org.apache.cocoon.hsqldb.server.db.path}"/>
+    <property name="databases">
+      <value>
+        cocoondb=${org.apache.cocoon.hsqldb.server.db.path}
+      </value>
+    </property>
   </bean>
 </beans>

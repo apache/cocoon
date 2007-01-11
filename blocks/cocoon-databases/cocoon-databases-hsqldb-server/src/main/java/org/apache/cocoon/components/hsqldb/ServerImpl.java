@@ -18,6 +18,9 @@ package org.apache.cocoon.components.hsqldb;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
@@ -48,17 +51,11 @@ public class ServerImpl
     /** The threadpool name to be used for daemon thread */
     private String daemonThreadPoolName = "daemon";
 
-    /** The path to the db. */
-    private String path = DEFAULT_DB_PATH;
-
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
 
     /** The servlet context. */
     private ServletContext servletContext;
-
-    /** The db name. */
-    private String name = DEFAULT_DB_NAME;
 
     /** The runnable manager. */
     private RunnableManager runnableManager;
@@ -67,10 +64,14 @@ public class ServerImpl
     private boolean silent = DEFAULT_SILENT;
     private int port = DEFAULT_PORT;
 
+    private Properties databases;
+
     public ServerImpl() {
         hsqlServer.setLogWriter(null); /* Remove console log */
         hsqlServer.setErrWriter(null); /* Remove console log */
-        hsqlServer.setNoSystemExit(true);        
+        hsqlServer.setNoSystemExit(true);
+        this.databases = new Properties();
+        this.databases.setProperty(DEFAULT_DB_NAME, DEFAULT_DB_PATH);
     }
 
     public Log getLogger() {
@@ -89,8 +90,8 @@ public class ServerImpl
         this.daemonThreadPoolName = name;
     }
 
-    public void setPath(String newPath) {
-        this.path = newPath;
+    public void setDatabases(Properties p) {
+        this.databases = p;
     }
 
     public void setPort(int p) {
@@ -105,10 +106,6 @@ public class ServerImpl
         this.trace = trace;
     }
 
-    public void setName(String newName) {
-        this.name = newName;
-    }
-
     public void setServletContext(ServletContext c) {
         this.servletContext = c;
     }
@@ -121,6 +118,11 @@ public class ServerImpl
      * Initialize the ServerImpl.
      */
     public void init() {
+        if ( this.databases == null || this.databases.size() == 0 ) {
+            this.getLogger().warn("HSQLDB Server is configured, but no databases are configured!");
+            this.getLogger().warn("HSQLDB Server not started.");
+            return;
+        }
         this.hsqlServer.setSilent(this.silent);
         this.hsqlServer.setTrace(this.trace);
         this.hsqlServer.setPort(this.port);
@@ -130,26 +132,33 @@ public class ServerImpl
                               ", trace: " + hsqlServer.isTrace());
         }
 
-        final String dbCfgPath = this.path;
-        String dbPath = dbCfgPath;
-        // Test if we are running inside a WAR file
-        if(dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
-            dbPath = this.servletContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
-        }
-        if (dbPath == null) {
-            throw new IllegalArgumentException("The hsqldb cannot be used inside an unexpanded WAR file. " +
-                                         "Real path for <" + dbCfgPath + "> is null.");
-        }
+        final Iterator i = this.databases.entrySet().iterator();
+        int index = 0;
+        while ( i.hasNext() ) {
+            final Map.Entry current = (Map.Entry)i.next();
+            final String name = current.getKey().toString();
+            final String dbCfgPath = current.getValue().toString();
+            String dbPath = dbCfgPath;
+            // Test if we are running inside a WAR file
+            if (dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
+                dbPath = this.servletContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
+            }
+            if (dbPath == null) {
+                throw new IllegalArgumentException("The hsqldb cannot be used inside an unexpanded WAR file. " +
+                                             "Real path for <" + dbCfgPath + "> is null.");
+            }
 
-        try {
-            hsqlServer.setDatabasePath(0, new File(dbPath).getCanonicalPath() + File.separator + name);
-            hsqlServer.setDatabaseName(0, name);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not get database directory <" + dbPath + ">", e);
-        }
+            try {
+                hsqlServer.setDatabasePath(index, new File(dbPath).getCanonicalPath() + File.separator + name);
+                hsqlServer.setDatabaseName(index, name);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not get database directory <" + dbPath + ">", e);
+            }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Database path is <" + hsqlServer.getDatabasePath(0, true) + ">");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Database path for " + name + " is <" + hsqlServer.getDatabasePath(index, true) + ">, index " + index);
+            }
+            index++;
         }
         this.start();
     }
