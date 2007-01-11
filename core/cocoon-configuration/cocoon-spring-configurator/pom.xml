@@ -32,6 +32,11 @@
   <artifactId>cocoon-spring-configurator</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Spring Configurator</name>
+  <description>
+    The Cocoon Spring Configurator is an extension for the Spring framework.
+    It provides a standardized way of handling various configuration issues when using Spring.
+    The feature list includes automatic property handling and inclusion of configuration files.
+  </description>
   <distributionManagement>
     <site>
       <id>website</id>
