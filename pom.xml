@@ -492,6 +492,10 @@
               </collection>
               <!-- subprojects -->
               <collection>
+                <name>cdocs-configuration-api</name>
+                <path>${docs.m.configuration-api.relPath}</path>
+              </collection>                 
+              <collection>
                 <name>cdocs-spring-configurator</name>
                 <path>${docs.m.spring-configurator.relPath}</path>
               </collection>                 
@@ -692,10 +696,6 @@
     <!-- core -->
     <docs.m.core.version>2.2</docs.m.core.version>    
     <docs.m.core.relPath>core-modules/core/${docs.m.core.version}/</docs.m.core.relPath> 
-    <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
-    <docs.m.configuration-api.relPath>core-modules/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>     
-    <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
-    <docs.m.configuration-api.relPath>core-modules/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>       
     <docs.m.pipeline-api.version>1.0</docs.m.pipeline-api.version>
     <docs.m.pipeline-api.relPath>core-modules/pipeline-api/${docs.m.pipeline-api.version}/</docs.m.pipeline-api.relPath> 
     <docs.m.pipeline-impl.version>1.0</docs.m.pipeline-impl.version>
@@ -705,6 +705,8 @@
     <!-- Path and version properties: subprojects -->
     <docs.m.blocks-fw-impl.version>1.0</docs.m.blocks-fw-impl.version>
     <docs.m.blocks-fw-impl.relPath>subprojects/blocks-fw-impl/${docs.m.blocks-fw-impl.version}/</docs.m.blocks-fw-impl.relPath>  
+    <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
+    <docs.m.configuration-api.relPath>subprojects/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>     
     <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
     <docs.m.spring-configurator.relPath>subprojects/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>               
     <!-- Path and version properties: blocks -->
