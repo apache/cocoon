@@ -24,7 +24,8 @@ import java.util.Properties;
  * This is an interface for custom components delivering properties to
  * configure Cocoon.
  * This component must be setup as a Spring bean in the root application
- * context.
+ * context using {@link #ROLE} as the bean identifier.
+ * The registered provider is asked once on startup for a set of properties.
  *
  * @version $Id$
  * @since 1.0
