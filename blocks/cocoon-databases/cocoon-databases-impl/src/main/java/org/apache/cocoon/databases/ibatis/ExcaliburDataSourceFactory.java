@@ -106,5 +106,19 @@ public class ExcaliburDataSourceFactory implements DataSourceFactory {
         public void setLogWriter(PrintWriter out) throws SQLException {
             this.writer = out;
         }       
+
+        /**
+         * Required by JDK1.6.
+         */
+        public Object unwrap(Class iface) throws SQLException {
+            return null;
+        }
+
+        /**
+         * Required by JDK1.6.
+         */
+        public boolean isWrapperFor(Class iface) throws SQLException {
+            return false;
+        }
     }
 }
