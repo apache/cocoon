@@ -16,21 +16,13 @@
  */
 package org.apache.cocoon.portal.security;
 
-import java.util.Collection;
 import java.util.Map;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.auth.AbstractSecurityHandler;
-import org.apache.cocoon.auth.ApplicationManager;
 import org.apache.cocoon.auth.SecurityHandler;
-import org.apache.cocoon.ojb.samples.bean.User;
-import org.apache.ojb.broker.PersistenceBroker;
-import org.apache.ojb.broker.PersistenceBrokerFactory;
-import org.apache.ojb.broker.query.Criteria;
-import org.apache.ojb.broker.query.Query;
-import org.apache.ojb.broker.query.QueryByCriteria;
 
 /**
+ * FIXME - We commented everything out to avoid a dependency to OJB for
  * @version $Id$
  */
 public class DBSecurityHandler 
@@ -40,6 +32,7 @@ public class DBSecurityHandler
      * @see SecurityHandler#login(Map)
      */
     public org.apache.cocoon.auth.User login(Map loginContext) throws Exception {
+        /*
         PersistenceBroker broker = PersistenceBrokerFactory.defaultPersistenceBroker();
 
         try {
@@ -66,7 +59,7 @@ public class DBSecurityHandler
             }
         } finally {
             broker.close();
-        }
+        }*/
         return null;
     }
 
