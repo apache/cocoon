@@ -52,8 +52,9 @@ See also MAVEN REPOSITORY MIRRORS above.
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
 ------------------------------------
 
-from /trunk, run mvn eclipse:clean first to remove any left over eclipse
-files. Then run mvn eclipse:eclipse.
+from /trunk, run
+
+  $ mvn -Dallblocks eclipse:clean eclipse:eclipse
 
 Next go to eclipse, and make sure you haven't got trunk mounted as a
 project already.  Also remove .classpath and .project files possibly
