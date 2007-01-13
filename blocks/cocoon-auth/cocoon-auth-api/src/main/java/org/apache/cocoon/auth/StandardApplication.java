@@ -18,10 +18,10 @@
  */
 package org.apache.cocoon.auth;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.auth.impl.AnonymousSecurityHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -52,15 +52,20 @@ public class StandardApplication
     }
 
     /** The security handler. */
-    protected SecurityHandler handler = new AnonymousSecurityHandler();
+    protected SecurityHandler handler;
 
     /** Attributes. */
-    protected Map attributes = new HashMap();
+    protected Map attributes = Collections.synchronizedMap(new HashMap());
 
     /** Application store. */
     protected ApplicationStore store;
 
     public void setSecurityHandler(SecurityHandler h) {
+        System.out.println("************************************************************");
+        System.out.println("*                                                          *");
+        System.out.println("*                     Set                                  *" + h);
+        System.out.println("*                                                          *");
+        System.out.println("************************************************************");
         this.handler = h;
     }
 

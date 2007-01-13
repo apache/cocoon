@@ -31,9 +31,10 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-auth</artifactId>
   <packaging>pom</packaging>
-  <name>Cocoon Authentication Framework [modules]</name>
+  <name>Cocoon Authentication[modules]</name>
   <version>1-SNAPSHOT</version>
   <modules>
+    <module>cocoon-auth-api</module>
     <module>cocoon-auth-impl</module>
   </modules>
 </project>
