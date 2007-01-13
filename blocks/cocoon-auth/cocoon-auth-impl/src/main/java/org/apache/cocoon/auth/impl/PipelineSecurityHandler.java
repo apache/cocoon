@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.cocoon.auth.AbstractSecurityHandler;
 import org.apache.cocoon.auth.ApplicationManager;
 import org.apache.cocoon.auth.StandardUser;
 import org.apache.cocoon.auth.User;
