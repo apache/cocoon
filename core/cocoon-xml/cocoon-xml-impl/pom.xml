@@ -33,6 +33,9 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon XML Implementation</name>
+  <description>
+    Implementation of the DOMParser and SAXParser.
+  </description>
   <dependencies>
     <!-- Cocoon -->
     <dependency>

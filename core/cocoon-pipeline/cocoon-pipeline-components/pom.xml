@@ -33,6 +33,11 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Pipeline Components</name>
+  <description>
+    Implementations of a number of basic generators, transformers, serializers,
+    and readers that are needed in most Cocoon webapps as well as some basic
+    sources and the XPointer and XSLT components.
+  </description>
   
   <url>http://cocoon.apache.org/${docs.m.pipeline-components.relPath}</url>  
   

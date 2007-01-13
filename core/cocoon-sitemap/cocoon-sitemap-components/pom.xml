@@ -33,6 +33,10 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Sitemap Components</name>
+  <description>
+    Implementation of basic actions, modules, some sources, matchers
+    and selectors that are used in most Cocoon webapps.
+  </description>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

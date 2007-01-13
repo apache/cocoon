@@ -32,6 +32,13 @@
   <artifactId>cocoon-core</artifactId>
   <version>2.2.0-M3-SNAPSHOT</version>
   <name>Cocoon Core</name>
+  <description>
+    Module that contains dependencies to all modules normally needed for a basic
+    Cocoon webapp. Cocoon blocks should normally depend on this modules, as the
+    exact content of the more fine grained sitemap, pipeline and support modules
+    is not stable yet. This module also contains some classes, configuration
+    files and tests that we not have decided where to move yet.
+  </description>
   <url>http://cocoon.apache.org/${docs.m.core.relPath}</url>
   
   <build>
