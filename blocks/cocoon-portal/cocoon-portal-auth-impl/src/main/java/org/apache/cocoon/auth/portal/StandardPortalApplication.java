@@ -25,10 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.user.UserEventUtil;
 import org.apache.cocoon.portal.om.PortalUser;
@@ -49,43 +45,17 @@ public class StandardPortalApplication
     public static final String PORTAL_USER = PortalUser.class.getName();
 
     /** The configuration. */
-    protected Map portalConfig;
+    protected Map portalConfig = Collections.EMPTY_MAP;
 
     /** The portal service. */
     protected PortalService portalService;
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(final Configuration conf) throws ConfigurationException {
-        super.configure(conf);
-        final Configuration config = conf.getChild("profiles");
-        final Configuration[] children = config.getChildren();
-        this.portalConfig = new HashMap();
-        if ( children != null ) {
-            for(int i=0; i < children.length; i++) {
-                this.portalConfig.put(children[i].getName(), children[i].getAttribute("uri"));
-            }
-        }
+    public void setPortalService(PortalService s) {
+        this.portalService = s;
     }
 
-    /**
-     * @see org.apache.cocoon.auth.StandardApplication#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.portalService);
-            this.portalService = null;
-        }
-        super.dispose();
-    }
-
-    /**
-     * @see org.apache.cocoon.auth.StandardApplication#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        super.service(aManager);
-        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+    public void setPortalConfig(Map config) {
+        this.portalConfig = config;
     }
 
     /**

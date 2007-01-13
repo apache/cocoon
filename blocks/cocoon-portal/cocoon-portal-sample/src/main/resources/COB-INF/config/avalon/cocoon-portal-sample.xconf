@@ -31,9 +31,6 @@
       | components properly. However, the best way is to start your
       | portal project from scratch!
       +-->
-  <!-- Load Sitemap components provided by CAuth. -->
-  <include src="resource://org/apache/cocoon/auth/sitemap-addons.xconf"/>
-
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
 
@@ -43,9 +40,6 @@
   <!-- If you don't need WSRP support, you can remove the following include -->
   <include src="resource://org/apache/cocoon/portal/wsrp/portal-wsrp.roles"/>
 
-  <!-- We use CAuth for authentication. If you don't use CAuth remove this line: -->
-  <include src="auth-cauth.xconf"/>
-  
   <!-- We use Castor for persisting/mapping the profiles to XML: -->
   <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
 
