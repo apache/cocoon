@@ -19,14 +19,11 @@ package org.apache.cocoon.components.store.impl;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.impl.AbstractFilesystemStore;
 
 /**
@@ -36,42 +33,63 @@ import org.apache.excalibur.store.impl.AbstractFilesystemStore;
  * @version $Id$
  */
 public final class FilesystemStore
-    extends AbstractFilesystemStore
-    implements Serviceable, Parameterizable {
+    extends AbstractFilesystemStore {
+
+    private static final boolean USE_CACHE_DIRECTORY = false;
+    private static final boolean USE_WORK_DIRECTORY = false;
+    
+    private boolean useCacheDirectory = USE_CACHE_DIRECTORY;
+    private boolean useWorkDirectory = USE_WORK_DIRECTORY;
+    private String directory;
 
     protected File workDir;
     protected File cacheDir;
+    
+    /** The default logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    private Settings settings;
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * @param settings
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        final Settings settings = (Settings)manager.lookup(Settings.ROLE);
-        this.workDir = new File(settings.getWorkDirectory());
-        this.cacheDir = new File(settings.getCacheDirectory());
-        manager.release(settings);
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 
     /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     * @param useCacheDirectory
      */
-    public void parameterize(Parameters params)
-    throws ParameterException {
+    public void setUseCacheDirectory(boolean useCacheDirectory) {
+        this.useCacheDirectory = useCacheDirectory;
+    }
+
+    /**
+     * @param useWorkDirectory
+     */
+    public void setUseWorkDirectory(boolean useWorkDirectory) {
+        this.useWorkDirectory = useWorkDirectory;
+    }
+
+    public void init() throws Exception {
+        this.enableLogging(new CLLoggerWrapper(this.logger));
+        this.workDir = new File(settings.getWorkDirectory());
+        this.cacheDir = new File(settings.getCacheDirectory());
+        
         try {
-            if (params.getParameterAsBoolean("use-cache-directory", false)) {
+            if (this.useCacheDirectory) {
                 if (this.getLogger().isDebugEnabled())
                     getLogger().debug("Using cache directory: " + cacheDir);
                 setDirectory(cacheDir);
-            } else if (params.getParameterAsBoolean("use-work-directory", false)) {
+            } else if (this.useWorkDirectory) {
                 if (this.getLogger().isDebugEnabled())
                     getLogger().debug("Using work directory: " + workDir);
                 setDirectory(workDir);
-            } else if (params.getParameter("directory", null) != null) {
-                String dir = params.getParameter("directory");
-                dir = IOUtils.getContextFilePath(workDir.getPath(), dir);
+            } else if (this.directory != null) {
+                this.directory = IOUtils.getContextFilePath(workDir.getPath(), this.directory);
                 if (this.getLogger().isDebugEnabled())
-                    getLogger().debug("Using directory: " + dir);
-                setDirectory(new File(dir));
+                    getLogger().debug("Using directory: " + this.directory);
+                setDirectory(new File(this.directory));
             } else {
                 try {
                     // Legacy: use working directory by default
@@ -81,7 +99,7 @@ public final class FilesystemStore
                 }
             }
         } catch (IOException e) {
-            throw new ParameterException("Unable to set directory", e);
+            throw new Exception("Unable to set directory", e);
         }
     }
 }

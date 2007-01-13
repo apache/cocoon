@@ -16,9 +16,6 @@
  */
 package org.apache.cocoon.components.store.impl;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.excalibur.store.impl.MRUMemoryStore;
 
 /**
  * Default implementation of Cocoon's transient store. This is a <code>MRUMemoryStore</code>
@@ -28,10 +25,13 @@ import org.apache.excalibur.store.impl.MRUMemoryStore;
  */
 public class DefaultTransientStore extends MRUMemoryStore {
     
-    public void parameterize(Parameters params) throws ParameterException {
-        if (params.getParameterAsBoolean("use-persistent-cache", false)) {
-            throw new ParameterException("A transient store cannot be backed by a persistent store.");
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.store.impl.MRUMemoryStore#init()
+     */
+    public void init() throws Exception {
+        super.init();
+        if (this.persistent) {
+            throw new Exception("A transient store cannot be backed by a persistent store.");
         }
-        super.parameterize(params);
     }
 }

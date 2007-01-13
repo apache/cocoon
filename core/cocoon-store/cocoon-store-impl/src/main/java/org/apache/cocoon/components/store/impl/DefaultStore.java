@@ -16,9 +16,6 @@
  */
 package org.apache.cocoon.components.store.impl;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.excalibur.store.impl.MRUMemoryStore;
 
 /**
  * Default implementation of Cocoon's store. It's a <code>MRUMemoryStore</code> whose
@@ -30,10 +27,13 @@ import org.apache.excalibur.store.impl.MRUMemoryStore;
  */
 public class DefaultStore extends MRUMemoryStore {
     
-    public void parameterize(Parameters params) throws ParameterException {
-        if (!params.isParameter("use-persistent-cache")) {
-            params.setParameter("use-persistent-cache", "true");
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.store.impl.MRUMemoryStore#init()
+     */
+    public void init() throws Exception {
+        super.init();
+        if (!this.persistent) {
+            throw new Exception("A persistent store must be backed by a persistent store.");
         }
-        super.parameterize(params);
     }
 }

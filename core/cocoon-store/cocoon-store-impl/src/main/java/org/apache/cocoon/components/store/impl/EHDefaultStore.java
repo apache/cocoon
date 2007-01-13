@@ -30,36 +30,91 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 
 /**
  * Store implementation based on EHCache.
  * (http://ehcache.sourceforge.net/)
+ * Configure the store. 
+ * <br/>
+ * The following options can be used:
+ * <ul>
+ *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
+ *  <li><code>overflow-to-disk</code> (true) - Whether to spool elements to disk after
+ *   maxobjects has been exceeded.</li>
+ * <li><code>eternal</code> (true) - whether or not entries expire. When set to
+ * <code>false</code> the <code>timeToLiveSeconds</code> and
+ * <code>timeToIdleSeconds</code> parameters are used to determine when an
+ * item expires.</li>
+ * <li><code>timeToLiveSeconds</code> (0) - how long an entry may live in the cache
+ * before it is removed. The entry will be removed no matter how frequently it is retrieved.</li>
+ * <li><code>timeToIdleSeconds</code> (0) - the maximum time between retrievals
+ * of an entry. If the entry is not retrieved for this period, it is removed from the
+ * cache.</li>
+ *  <li><code>use-cache-directory</code> (false) - If true the <i>cache-directory</i>
+ *   context entry will be used as the location of the disk store. 
+ *   Within the servlet environment this is set in web.xml.</li>
+ *  <li><code>use-work-directory</code> (false) - If true the <i>work-directory</i>
+ *   context entry will be used as the location of the disk store.
+ *   Within the servlet environment this is set in web.xml.</li>
+ *  <li><code>directory</code> - Specify an alternative location of the disk store.
+ * </ul>
+ * 
+ * <p>
+ * Setting <code>eternal</code> to <code>false</code> but not setting
+ * <code>timeToLiveSeconds</code> and/or <code>timeToIdleSeconds</code>, has the
+ * same effect as setting <code>eternal</code> to <code>true</code>.
+ * </p>
+ * 
+ * <p>
+ * Here is an example to clarify the purpose of the <code>timeToLiveSeconds</code> and
+ * <code>timeToIdleSeconds</code> parameters:
+ * </p>
+ * <ul>
+ *   <li>timeToLiveSeconds = 86400 (1 day)</li>
+ *   <li>timeToIdleSeconds = 10800 (3 hours)</li>
+ * </ul>
+ * 
+ * <p>
+ * With these settings the entry will be removed from the cache after 24 hours. If within
+ * that 24-hour period the entry is not retrieved within 3 hours after the last retrieval, it will
+ * also be removed from the cache.
+ * </p>
+ * 
+ * <p>
+ * By setting <code>timeToLiveSeconds</code> to <code>0</code>, an item can stay in
+ * the cache as long as it is retrieved within <code>timeToIdleSeconds</code> after the
+ * last retrieval.
+ * </p>
+ *
+ * <p>
+ * By setting <code>timeToIdleSeconds</code> to <code>0</code>, an item will stay in
+ * the cache for exactly <code>timeToLiveSeconds</code>.
+ * </p>
+ *
+ * <p>
+ * <code>disk-persistent</code> Whether the disk store persists between restarts of
+ * the Virtual Machine. The default value is true.
+ *
  * @version $Id$
  */
-public class EHDefaultStore
-    extends AbstractLogEnabled 
-    implements Store,
-               Serviceable,
-               Parameterizable,
-               Initializable,
-               Disposable,
-               ThreadSafe {
+public class EHDefaultStore implements Store {
 
     // ---------------------------------------------------- Constants
+
+    private static final int MAXOBJECTS = 10000;
+    private static final boolean OVERFLOW_TO_DISK = true;
+    private static final boolean DISK_PERSISTENT = true;
+    private static final boolean ETERNAL = true;
+    private static final long TIME_TO_LIVE_SECONDS = 0L;
+    private static final long TIME_TO_IDLE_SECONDS = 0L;
+    private static final boolean USE_WORK_DIRECTORY = false;
+    private static final boolean USE_CACHE_DIRECTORY = false;
 
     private static final String CONFIG_FILE = "org/apache/cocoon/components/store/impl/ehcache.xml";
 
@@ -73,18 +128,25 @@ public class EHDefaultStore
     private final String cacheName;
 
     // configuration options
-    private int maxObjects;
-    private boolean overflowToDisk;
-    private boolean diskPersistent;
-    private boolean eternal;
-    private long timeToLiveSeconds;
-    private long timeToIdleSeconds;
-
+    private int maxObjects = MAXOBJECTS;
+    private boolean overflowToDisk = OVERFLOW_TO_DISK;
+    private boolean diskPersistent = DISK_PERSISTENT;
+    private boolean eternal = ETERNAL;
+    private long timeToLiveSeconds = TIME_TO_LIVE_SECONDS;
+    private long timeToIdleSeconds = TIME_TO_IDLE_SECONDS;
+    private boolean useCacheDirectory = USE_CACHE_DIRECTORY;
+    private boolean useWorkDirectory = USE_WORK_DIRECTORY;
+    private String directory;
     /** The service manager */
-    private ServiceManager manager;
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
 
     /** The store janitor */
     private StoreJanitor storeJanitor;
+    
+    /** The settings object */
+    private Settings settings;
 
     private File workDir;
     private File cacheDir;
@@ -97,118 +159,109 @@ public class EHDefaultStore
     }
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     *  <li><code>directory</code> - Specify an alternative location of the disk store.
+     * @param directory
      */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-        this.storeJanitor = (StoreJanitor) this.manager.lookup(StoreJanitor.ROLE);
-        final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
-        this.workDir = new File(settings.getWorkDirectory());
-        this.cacheDir = new File(settings.getCacheDirectory());
-        this.manager.release(settings);
+    public void setDirectory(String directory) {
+        this.directory = directory;
     }
 
     /**
-     * Configure the store. The following options can be used:
-     * <ul>
-     *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
-     *  <li><code>overflow-to-disk</code> (true) - Whether to spool elements to disk after
-     *   maxobjects has been exceeded.</li>
+     * <code>disk-persistent</code> Whether the disk store persists between restarts of
+     * the Virtual Machine. The default value is true.
+     * @param diskPersistent
+     */
+    public void setDiskPersistent(boolean diskPersistent) {
+        this.diskPersistent = diskPersistent;
+    }
+
+    /**
      * <li><code>eternal</code> (true) - whether or not entries expire. When set to
      * <code>false</code> the <code>timeToLiveSeconds</code> and
      * <code>timeToIdleSeconds</code> parameters are used to determine when an
      * item expires.</li>
-     * <li><code>timeToLiveSeconds</code> (0) - how long an entry may live in the cache
-     * before it is removed. The entry will be removed no matter how frequently it is retrieved.</li>
+     * @param eternal
+     */
+    public void setEternal(boolean eternal) {
+        this.eternal = eternal;
+    }
+
+    /**
+     * <code>maxobjects</code> (10000) - The maximum number of in-memory objects.
+     * @param maxObjects
+     */
+    public void setMaxObjects(int maxObjects) {
+        this.maxObjects = maxObjects;
+    }
+
+    /**
+     *  <li><code>overflow-to-disk</code> (true) - Whether to spool elements to disk after
+     *   maxobjects has been exceeded.</li>
+     * @param overflowToDisk
+     */
+    public void setOverflowToDisk(boolean overflowToDisk) {
+        this.overflowToDisk = overflowToDisk;
+    }
+
+    /**
      * <li><code>timeToIdleSeconds</code> (0) - the maximum time between retrievals
      * of an entry. If the entry is not retrieved for this period, it is removed from the
      * cache.</li>
+     * @param timeToIdleSeconds
+     */
+    public void setTimeToIdleSeconds(long timeToIdleSeconds) {
+        this.timeToIdleSeconds = timeToIdleSeconds;
+    }
+
+    /**
+     * <li><code>timeToLiveSeconds</code> (0) - how long an entry may live in the cache
+     * before it is removed. The entry will be removed no matter how frequently it is retrieved.</li>
+     * @param timeToLiveSeconds
+     */
+    public void setTimeToLiveSeconds(long timeToLiveSeconds) {
+        this.timeToLiveSeconds = timeToLiveSeconds;
+    }
+
+    /**
      *  <li><code>use-cache-directory</code> (false) - If true the <i>cache-directory</i>
      *   context entry will be used as the location of the disk store. 
      *   Within the servlet environment this is set in web.xml.</li>
+     * @param useCacheDirectory
+     */
+    public void setUseCacheDirectory(boolean useCacheDirectory) {
+        this.useCacheDirectory = useCacheDirectory;
+    }
+
+    /**
      *  <li><code>use-work-directory</code> (false) - If true the <i>work-directory</i>
      *   context entry will be used as the location of the disk store.
      *   Within the servlet environment this is set in web.xml.</li>
-     *  <li><code>directory</code> - Specify an alternative location of the disk store.
-     * </ul>
-     * 
-     * <p>
-     * Setting <code>eternal</code> to <code>false</code> but not setting
-     * <code>timeToLiveSeconds</code> and/or <code>timeToIdleSeconds</code>, has the
-     * same effect as setting <code>eternal</code> to <code>true</code>.
-     * </p>
-     * 
-     * <p>
-     * Here is an example to clarify the purpose of the <code>timeToLiveSeconds</code> and
-     * <code>timeToIdleSeconds</code> parameters:
-     * </p>
-     * <ul>
-     *   <li>timeToLiveSeconds = 86400 (1 day)</li>
-     *   <li>timeToIdleSeconds = 10800 (3 hours)</li>
-     * </ul>
-     * 
-     * <p>
-     * With these settings the entry will be removed from the cache after 24 hours. If within
-     * that 24-hour period the entry is not retrieved within 3 hours after the last retrieval, it will
-     * also be removed from the cache.
-     * </p>
-     * 
-     * <p>
-     * By setting <code>timeToLiveSeconds</code> to <code>0</code>, an item can stay in
-     * the cache as long as it is retrieved within <code>timeToIdleSeconds</code> after the
-     * last retrieval.
-     * </p>
-     *
-     * <p>
-     * By setting <code>timeToIdleSeconds</code> to <code>0</code>, an item will stay in
-     * the cache for exactly <code>timeToLiveSeconds</code>.
-     * </p>
-     *
-     * <p>
-     * <code>disk-persistent</code> Whether the disk store persists between restarts of
-     * the Virtual Machine. The default value is true.
-     *
+     * @param useWorkDirectory
      */
-    public void parameterize(Parameters parameters) throws ParameterException {
-        this.maxObjects = parameters.getParameterAsInteger("maxobjects", 10000);
-        this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
-        this.diskPersistent = parameters.getParameterAsBoolean("disk-persistent", true);
+    public void setUseWorkDirectory(boolean useWorkDirectory) {
+        this.useWorkDirectory = useWorkDirectory;
+    }
 
-        this.eternal = parameters.getParameterAsBoolean("eternal", true);
-        if (!this.eternal) {
-            this.timeToLiveSeconds = parameters.getParameterAsLong("timeToLiveSeconds", 0L);
-            this.timeToIdleSeconds = parameters.getParameterAsLong("timeToIdleSeconds", 0L);
-        }
+    public Log getLogger() {
+        return this.logger;
+    }
 
-        try {
-            if (parameters.getParameterAsBoolean("use-cache-directory", false)) {
-                if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug("Using cache directory: " + cacheDir);
-                }
-                setDirectory(cacheDir);
-            } else if (parameters.getParameterAsBoolean("use-work-directory", false)) {
-                if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug("Using work directory: " + workDir);
-                }
-                setDirectory(workDir);
-            } else if (parameters.getParameter("directory", null) != null) {
-                String dir = parameters.getParameter("directory");
-                dir = IOUtils.getContextFilePath(workDir.getPath(), dir);
-                if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug("Using directory: " + dir);
-                }
-                setDirectory(new File(dir));
-            } else {
-                try {
-                    // Legacy: use working directory by default
-                    setDirectory(workDir);
-                } catch (IOException e) {
-                    // EMPTY
-                }
-            }
-        } catch (IOException e) {
-            throw new ParameterException("Unable to set directory", e);
-        }
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
+
+    /**
+     * @param settings the settings to set
+     */
+    public void setSettings(Settings settings) {
+        this.settings = settings;
+    }
+
+    /**
+     * @param storeJanitor the storeJanitor to set
+     */
+    public void setStoreJanitor(StoreJanitor storeJanitor) {
+        this.storeJanitor = storeJanitor;
     }
 
     /**
@@ -260,7 +313,39 @@ public class EHDefaultStore
     /**
      * Initialize the CacheManager and created the Cache.
      */
-    public void initialize() throws Exception {
+    public void init() throws Exception {
+        this.workDir = new File(settings.getWorkDirectory());
+        this.cacheDir = new File(settings.getCacheDirectory());
+
+        try {
+            if (this.useCacheDirectory) {
+                if (this.getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using cache directory: " + cacheDir);
+                }
+                setDirectory(cacheDir);
+            } else if (this.useWorkDirectory) {
+                if (this.getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using work directory: " + workDir);
+                }
+                setDirectory(workDir);
+            } else if (this.directory != null) {
+                this.directory = IOUtils.getContextFilePath(workDir.getPath(), this.directory);
+                if (this.getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using directory: " + this.directory);
+                }
+                setDirectory(new File(this.directory));
+            } else {
+                try {
+                    // Legacy: use working directory by default
+                    setDirectory(this.workDir);
+                } catch (IOException e) {
+                    // EMPTY
+                }
+            }
+        } catch (IOException e) {
+            throw new Exception("Unable to set directory", e);
+        }
+
         URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(CONFIG_FILE);
         this.cacheManager = CacheManager.create(configFileURL);
         this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
@@ -273,13 +358,10 @@ public class EHDefaultStore
     /**
      * Shutdown the CacheManager.
      */
-    public void dispose() {
-        if (this.storeJanitor != null) {
+    public void destroy() {
+        if (this.storeJanitor != null)
             this.storeJanitor.unregister(this);
-            this.manager.release(this.storeJanitor);
-            this.storeJanitor = null;
-        }
-        this.manager = null;
+
         /*
          * EHCache can be a bitch when shutting down. Basically every cache registers
          * a hook in the Runtime for every persistent cache, that will be executed when
@@ -303,8 +385,6 @@ public class EHDefaultStore
                 getLogger().info("EHCache cache \"" + this.cacheName + "\" already disposed.");
             }
         }
-        this.cacheManager = null;
-        this.cache = null;
     }
 
     // ---------------------------------------------------- Store implementation
