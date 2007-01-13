@@ -71,6 +71,10 @@ public class SitemapServlet extends HttpServlet {
             super(servletContext);
         }
 
+        protected boolean rethrowExceptions() {
+            return true;
+        }
+
         protected Processor getProcessor() {
             ServiceManager serviceManager =
                 (ServiceManager) this.cocoonBeanFactory.getBean(AvalonUtils.SERVICE_MANAGER_ROLE);

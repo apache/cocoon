@@ -111,6 +111,10 @@ public class RequestProcessor {
     public void setProcessor(Processor processor) {
         this.processor = processor;
     }
+    
+    protected boolean rethrowExceptions() {
+        return false;
+    }
 
     /**
      * Process the specified <code>HttpServletRequest</code> producing output
@@ -143,7 +147,11 @@ public class RequestProcessor {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon servlet", e);
             }
-
+            
+            if (rethrowExceptions()) {
+                throw new ServletException(e);
+            }
+            
             RequestUtil.manageException(request, res, null, uri,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                             "Problem in creating the Environment", null, null, e,
@@ -158,6 +166,11 @@ public class RequestProcessor {
                 // We reach this when there is nothing in the processing change that matches
                 // the request. For example, no matcher matches.
                 getLogger().fatalError("The Cocoon engine failed to process the request.");
+
+                if (rethrowExceptions()) {
+                    throw new ServletException("The Cocoon engine failed to process the request.");
+                }
+
                 RequestUtil.manageException(request, res, env, uri,
                                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                 "Request Processing Failed",
@@ -174,6 +187,10 @@ public class RequestProcessor {
                 getLogger().warn(e.getMessage());
             }
 
+            if (rethrowExceptions()) {
+                throw new ServletException(e);
+            }
+                 
             RequestUtil.manageException(request, res, env, uri,
                             HttpServletResponse.SC_NOT_FOUND,
                             "Resource Not Found",
@@ -201,6 +218,10 @@ public class RequestProcessor {
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Internal Cocoon Problem", e);
+            }
+
+            if (rethrowExceptions()) {
+                throw new ServletException(e);
             }
 
             RequestUtil.manageException(request, res, env, uri,
