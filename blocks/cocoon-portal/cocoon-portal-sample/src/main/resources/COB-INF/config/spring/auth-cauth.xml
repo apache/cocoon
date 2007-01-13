@@ -36,12 +36,14 @@
   <bean name="org.apache.cocoon.auth.SecurityHandler/portal"
         class="org.apache.cocoon.auth.impl.PipelineSecurityHandler"
         scope="singleton">
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     <property name="authenticationResource" value="cocoon:raw:/sunrise-authuser"/>
   </bean>
   
   <bean name="org.apache.cocoon.auth.Application/portal"
         class="org.apache.cocoon.auth.portal.StandardPortalApplication"
         scope="singleton">
+    <property name="portalService" ref="org.apache.cocoon.portal.PortalService"/>
     <property name="securityHandler" ref="org.apache.cocoon.auth.SecurityHandler/portal"/>
   </bean>
 

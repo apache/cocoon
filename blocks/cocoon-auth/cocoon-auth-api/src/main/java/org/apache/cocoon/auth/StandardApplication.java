@@ -61,11 +61,6 @@ public class StandardApplication
     protected ApplicationStore store;
 
     public void setSecurityHandler(SecurityHandler h) {
-        System.out.println("************************************************************");
-        System.out.println("*                                                          *");
-        System.out.println("*                     Set                                  *" + h);
-        System.out.println("*                                                          *");
-        System.out.println("************************************************************");
         this.handler = h;
     }
 
