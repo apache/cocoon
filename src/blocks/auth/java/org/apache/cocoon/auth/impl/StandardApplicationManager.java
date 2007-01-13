@@ -181,8 +181,8 @@ public class StandardApplicationManager
                 // is the user already logged in on the security handler?
                 loginInfos = (Map)session.getAttribute(LOGIN_INFO_KEY);
                 if ( loginInfos != null
-                      && loginInfos.containsKey(app.getSecurityHandler()) ) {
-                    info = (LoginInfo)loginInfos.get(app.getSecurityHandler());
+                      && loginInfos.containsKey(app.getSecurityHandler().getId()) ) {
+                    info = (LoginInfo)loginInfos.get(app.getSecurityHandler().getId());
                     user = info.user;
                 }
             }
