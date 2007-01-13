@@ -20,7 +20,6 @@ package org.apache.cocoon.auth.impl;
 
 import java.util.Map;
 
-import org.apache.cocoon.auth.AbstractSecurityHandler;
 import org.apache.cocoon.auth.StandardUser;
 import org.apache.cocoon.auth.User;
 
