@@ -61,7 +61,7 @@ public class PipelineSecurityHandler
         this.logoutResource = logoutResource;
     }
 
-    public void setResolver(SourceResolver resolver) {
+    public void setSourceResolver(SourceResolver resolver) {
         this.resolver = resolver;
     }
 
