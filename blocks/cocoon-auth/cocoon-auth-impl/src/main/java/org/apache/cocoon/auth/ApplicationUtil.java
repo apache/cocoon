@@ -20,32 +20,18 @@ package org.apache.cocoon.auth;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-
+import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 
 /**
  * Utility class that can be used from flow to access the different
  * application functions of Cocoon Authentication.
  *
  * @version $Id$
-*/
-public class ApplicationUtil
-    implements Contextualizable {
-
-    /** The Avalon context. */
-    protected Context context;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(final Context aContext) throws ContextException {
-        this.context = aContext;
-    }
+ */
+public class ApplicationUtil {
 
     /**
      * Return the current user.
@@ -98,7 +84,8 @@ public class ApplicationUtil
      * @return The current user or null.
      */
     public User getUser() {
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
+        final ProcessInfoProvider pip = (ProcessInfoProvider)WebAppContextUtils.getCurrentWebApplicationContext().getBean(ProcessInfoProvider.ROLE);
+        final Map objectModel = pip.getObjectModel();
         return (User)objectModel.get(ApplicationManager.USER);
     }
 
@@ -107,7 +94,8 @@ public class ApplicationUtil
      * @return The current application or null.
      */
     public Application getApplication() {
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
+        final ProcessInfoProvider pip = (ProcessInfoProvider)WebAppContextUtils.getCurrentWebApplicationContext().getBean(ProcessInfoProvider.ROLE);
+        final Map objectModel = pip.getObjectModel();
         return (Application)objectModel.get(ApplicationManager.APPLICATION);
     }
 
@@ -116,7 +104,8 @@ public class ApplicationUtil
      * @return The current user data or null.
      */
     public Object getData() {
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
+        final ProcessInfoProvider pip = (ProcessInfoProvider)WebAppContextUtils.getCurrentWebApplicationContext().getBean(ProcessInfoProvider.ROLE);
+        final Map objectModel = pip.getObjectModel();
         return objectModel.get(ApplicationManager.APPLICATION_DATA);
     }
 
@@ -130,7 +119,8 @@ public class ApplicationUtil
      * @return This returns true, if the user has the role; otherwise false is returned.
      */
     public boolean isUserInRole(final User user, final String role) {
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
+        final ProcessInfoProvider pip = (ProcessInfoProvider)WebAppContextUtils.getCurrentWebApplicationContext().getBean(ProcessInfoProvider.ROLE);
+        final Map objectModel = pip.getObjectModel();
         return isUserInRole(user, role, objectModel);
     }
 }
