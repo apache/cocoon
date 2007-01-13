@@ -21,13 +21,8 @@ package org.apache.cocoon.components.store.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 
@@ -52,29 +47,35 @@ import org.apache.excalibur.store.StoreJanitor;
  *
  * @version $Id$
  */
-public class StoreJanitorImpl extends AbstractLogEnabled
-                              implements StoreJanitor, Parameterizable, ThreadSafe,
-                                         Initializable, Disposable, 
-                                         Runnable {
+public class StoreJanitorImpl implements StoreJanitor, Runnable {
 
     // Note: this class doesn't need to be Startable. This allows the janitor thread to be
     // lazily created the first time a store registers itsefl
 
+    private static final int FREE_MEMORY = 1024 * 1024;
+    private static final int HEAP_SIZE = 66600000;
+    private static final int CLEAN_UP_THREAD_INTERVAL = 10 * 1000;
+    private static final boolean ADAPTIVE_THREAD_INTERVAL = false;
+    private static final int PERCENT_TO_FREE = 10;
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
     // Configuration parameters
-    private int minFreeMemory = -1;
-    private int maxHeapSize = -1;
-    private int threadInterval = -1;
+    private int minFreeMemory = FREE_MEMORY;
+    private int maxHeapSize = HEAP_SIZE;
+    private int threadInterval = CLEAN_UP_THREAD_INTERVAL;
     private int minThreadInterval = 500;
-    private boolean adaptiveThreadInterval;
+    private boolean adaptiveThreadInterval = ADAPTIVE_THREAD_INTERVAL;
     private int priority = -1;
-    private double fraction;
+    private double fraction = PERCENT_TO_FREE / 100.0D;
 
     private Runtime jvm;
     private ArrayList storelist;
     private int index = -1;
 
     /** Should the gc be called on low memory? */
-    protected boolean invokeGC;
+    protected boolean invokeGC = false;
 
     private boolean doRun;
 
@@ -94,36 +95,111 @@ public class StoreJanitorImpl extends AbstractLogEnabled
 
 
     /**
-     * Parameterize the StoreJanitorImpl.
+     * How much free memory shall be available in the jvm?
+     * If not specified, defaults to 1Mb.
+     * 
+     * @param freeMemory
      */
-    public void parameterize(Parameters params) throws ParameterException {
+    public void setFreeMemory(int freeMemory) {
+        this.minFreeMemory = freeMemory;
+    }
+
+    /**
+     * How much memory at max jvm can consume?
+     * The default max heapsize for Sun's JVM is (almost) 64Mb,
+     * can be increased by specifying -Xmx command line parameter.
+     * If not specified, defaults to 66600000 bytes.
+     *
+     * @param heapSize
+     */
+    public void setHeapSize(int heapSize) {
+        this.maxHeapSize = heapSize;
+    }
+
+    /**
+     * How often shall the cleanup thread check memory?
+     * If not specified, defaults to 10 seconds.
+     * 
+     * @param cleanupThreadInterval
+     */
+    public void setCleanupThreadInterval(int cleanupThreadInterval) {
+        this.threadInterval = cleanupThreadInterval * 1000;
+    }
+
+    /**
+     * Experimental adaptive algorithm for cleanup interval
+     *
+     * @param adaptiveThreadInterval
+     */
+    public void setAdaptiveThreadInterval(boolean adaptiveThreadInterval) {
+        this.adaptiveThreadInterval = adaptiveThreadInterval;
+    }
+
+    /**
+     * What percent of the store elements shall be dropped on low memory?
+     * If not specified, defaults to 10%
+     * 
+     * @param percentToFree
+     */
+    public void setPercentToFree(double percentToFree) {
+        this.fraction = percentToFree / 100.0D;
+    }
+
+    /**
+     * Shall garbage collector be invoked on low memory?
+     * If not specified, defaults to false.
+     * 
+     * @param invokeGC
+     */
+    public void setInvokeGC(boolean invokeGC) {
+        this.invokeGC = invokeGC;
+    }
+
+    /**
+     * What should be the priority of the cleanup thread?
+     * This property is used only by older implementation of the janitor.
+     * New implementation uses centrally configured thread pool (see
+     * thread-pools element below).
+     * 
+     * @param threadPriority
+     */
+    public void setThreadPriority(int threadPriority) {
+        this.priority = threadPriority;
+    }
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
+
+    /**
+     * Initialize the StoreJanitorImpl.
+     * @throws Exception 
+     */
+    public void init() throws Exception {
         this.jvm = Runtime.getRuntime();
-        this.minFreeMemory = params.getParameterAsInteger("freememory", 1024 * 1024);
-        this.maxHeapSize = params.getParameterAsInteger("heapsize", 66600000);
-        // Parameter value is in seconds, converted to millis
-        this.threadInterval = params.getParameterAsInteger("cleanupthreadinterval", 10) * 1000;
-        this.adaptiveThreadInterval = params.getParameterAsBoolean("adaptivethreadinterval", false);
-        this.priority = params.getParameterAsInteger("threadpriority", Thread.currentThread().getPriority());
-        int percent = params.getParameterAsInteger("percent_to_free", 10);
-        this.invokeGC = params.getParameterAsBoolean("invokegc", this.invokeGC);
+        if (this.priority == -1) 
+            this.priority = Thread.currentThread().getPriority();
 
         if (getMinFreeMemory() < 1) {
-            throw new ParameterException("StoreJanitorImpl freememory parameter has to be greater then 1");
+            throw new Exception("StoreJanitorImpl freememory parameter has to be greater then 1");
         }
         if (getMaxHeapSize() < 1) {
-            throw new ParameterException("StoreJanitorImpl heapsize parameter has to be greater then 1");
+            throw new Exception("StoreJanitorImpl heapsize parameter has to be greater then 1");
         }
         if (getThreadInterval() < 1) {
-            throw new ParameterException("StoreJanitorImpl cleanupthreadinterval parameter has to be greater then 1");
+            throw new Exception("StoreJanitorImpl cleanupthreadinterval parameter has to be greater then 1");
         }
         if (getPriority() < 1 || getPriority() > 10) {
-            throw new ParameterException("StoreJanitorImpl threadpriority has to be between 1 and 10");
+            throw new Exception("StoreJanitorImpl threadpriority has to be between 1 and 10");
         }
-        if (percent > 100 && percent < 1) {
-            throw new ParameterException("StoreJanitorImpl percent_to_free, has to be between 1 and 100");
+        if (fraction > 1 && fraction < 0.01) {
+            throw new Exception("StoreJanitorImpl percentToFree, has to be between 1 and 100");
         }
 
-        this.fraction = percent / 100.0D;
         this.storelist = new ArrayList();
 
         if (getLogger().isDebugEnabled()) {
@@ -132,12 +208,9 @@ public class StoreJanitorImpl extends AbstractLogEnabled
             getLogger().debug("thread interval=" + getThreadInterval());
             getLogger().debug("adaptivethreadinterval=" + getAdaptiveThreadInterval());
             getLogger().debug("priority=" + getPriority());
-            getLogger().debug("percent=" + percent);
+            getLogger().debug("percent=" + fraction * 100);
             getLogger().debug("invoke gc=" + this.invokeGC);
         }
-    }
-
-    public void initialize() throws Exception {
         doStart();
     }
 
@@ -157,7 +230,7 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         this.doRun = false;
     }
 
-    public void dispose() {
+    public void destroy() {
         doStop();
     }
 

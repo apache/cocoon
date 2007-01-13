@@ -16,13 +16,6 @@
  */
 package org.apache.cocoon.components.store.impl;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-
 import org.apache.cocoon.components.thread.RunnableManager;
 
 /**
@@ -32,16 +25,14 @@ import org.apache.cocoon.components.thread.RunnableManager;
  *
  * @version $Id$
  */
-public class CocoonStoreJanitor extends StoreJanitorImpl
-                                implements Serviceable, Disposable {
+public class CocoonStoreJanitor extends StoreJanitorImpl {
+
+    private static final String THREAD_POOL = "daemon";
 
     //~ Instance fields --------------------------------------------------------
 
     /** Name of the thread pool to use. Defaults to 'daemon'. */
-    private String threadPool;
-
-    /** Our {@link ServiceManager} */
-    private ServiceManager serviceManager;
+    private String threadPool = THREAD_POOL;
 
     /** Our {@link RunnableManager} */
     private RunnableManager runnableManager;
@@ -54,30 +45,23 @@ public class CocoonStoreJanitor extends StoreJanitorImpl
 
     //~ Methods ----------------------------------------------------------------
 
-    public void parameterize(Parameters params) throws ParameterException {
-        super.parameterize(params);
-        this.threadPool = params.getParameter("thread-pool", "daemon");
+    /**
+     * Name of the thread pool to use.
+     * If not specified, defaults to 'daemon'.
+     * 
+     * @param threadPool
+     */
+    public void setThreadPool(String threadPool) {
+        this.threadPool = threadPool;
     }
 
     /**
-     * Get the <code>RunnableManager</code>
-     *
-     * @param serviceManager The <code>ServiceManager</code>
-     * @throws ServiceException If RunnableManager is not available
+     * Set the <code>RunnableManager</code>
+     * 
+     * @param runnableManager
      */
-    public void service(final ServiceManager serviceManager)
-    throws ServiceException {
-        this.serviceManager = serviceManager;
-        this.runnableManager = (RunnableManager) serviceManager.lookup(RunnableManager.ROLE);
-    }
-
-    /**
-     * Release <code>RunnableManager</code>
-     */
-    public void dispose() {
-        this.serviceManager.release(this.runnableManager);
-        this.runnableManager = null;
-        this.serviceManager = null;
+    public void setRunnableManager(RunnableManager runnableManager) {
+        this.runnableManager = runnableManager;
     }
 
     /**
