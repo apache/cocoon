@@ -46,13 +46,18 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class BlockServlet extends HttpServlet
     implements ApplicationContextAware, ServletContextAware, BeanNameAware, InitializingBean, DisposableBean {
+    
     private BlockContext blockContext;
-    private String embededServletClass;
-    private Servlet embededServlet;
+    private String embeddedServletClass;
+    private Servlet embeddedServlet;
     private ServletContext servletContext;
     private String beanName;
     private ApplicationContext parentContainer;
 
+    public BlockServlet() {
+        this.blockContext = new BlockContext();
+    }
+    
     /* (non-Javadoc)
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
      */
@@ -71,7 +76,7 @@ public class BlockServlet extends HttpServlet
         container.setServletContext(this.blockContext);
         container.refresh();
         this.blockContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, container);
-        
+
         // create a servlet config based on the block servlet context
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(servletConfig, this.blockContext) {
@@ -85,32 +90,26 @@ public class BlockServlet extends HttpServlet
                 public Enumeration getInitParameterNames() {
                     return super.getServletContext().getInitParameterNames();
                 }
-        };
-        
-        // create and initialize the embeded servlet
-        try {
-            this.embededServlet =
-                (Servlet) this.getClass().getClassLoader().loadClass(this.embededServletClass).newInstance();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        this.embededServlet.init(blockServletConfig);
-        this.blockContext.setServlet(this.embededServlet);
-    }
+            };
 
-    /* (non-Javadoc)
-     * @see javax.servlet.GenericServlet#destroy()
+        // create and initialize the embeded servlet
+        this.embeddedServlet = createEmbeddedServlet(this.embeddedServletClass, blockServletConfig);
+        this.embeddedServlet.init(blockServletConfig);
+        this.blockContext.setServlet(this.embeddedServlet);
+    }
+    
+    /**
+     * Creates and initializes the embedded servlet
+     * @param string 
+     * @throws ServletException
      */
-    public void destroy() {
-        this.embededServlet.destroy();
-        super.destroy();
+    protected Servlet createEmbeddedServlet(String embeddedServletClassName, ServletConfig servletConfig)
+    throws ServletException {
+        try {
+            return (Servlet) this.getClass().getClassLoader().loadClass(embeddedServletClassName).newInstance();
+        } catch (Exception e) {
+            throw new ServletException("Loading class for embedded servlet failed " + embeddedServletClassName, e);
+        }
     }
 
     /* (non-Javadoc)
@@ -123,15 +122,16 @@ public class BlockServlet extends HttpServlet
         dispatcher.forward(request, response);
     }
 
+    public void destroy() {
+        this.embeddedServlet.destroy();        
+        super.destroy();
+    }
+    
     /**
      * @return the blockContext
      */
     public BlockContext getBlockContext() {
         return this.blockContext;
-    }
-    
-    public BlockServlet() {
-        this.blockContext = new BlockContext();
     }
     
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -166,7 +166,7 @@ public class BlockServlet extends HttpServlet
     }
 
     public void setServletClass(String servletClass) {
-        this.embededServletClass = servletClass;
+        this.embeddedServletClass = servletClass;
     }
 
     public void setProperties(Map properties) {
