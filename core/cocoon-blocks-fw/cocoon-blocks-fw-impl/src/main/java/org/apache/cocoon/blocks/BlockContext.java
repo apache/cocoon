@@ -16,16 +16,22 @@
  */
 package org.apache.cocoon.blocks;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -105,9 +111,6 @@ public class BlockContext extends ServletContextWrapper {
      * @see javax.servlet.ServletContext#getResource(java.lang.String)
      */
     public URL getResource(String path) throws MalformedURLException {
-        if (path.length() == 0 || path.charAt(0) != '/')
-            throw new MalformedURLException("The path must start with '/' " + path);
-
         // hack for getting a file protocol or other protocols that can be used as context
         // path in the getResource method in the servlet context
         if (!(blockContextURL.startsWith("file:") || blockContextURL.startsWith("/")
@@ -129,7 +132,7 @@ public class BlockContext extends ServletContextWrapper {
 
         // HACK: allow file:/ URLs for reloading of sitemaps during development
         if (this.blockContextURL.startsWith("file:")) {
-            return new URL(this.blockContextURL + path);
+            return new URL("file", null, this.blockContextURL.substring("file:".length()) + path);
         } else {
             if (this.blockContextURL.length() != 0 && this.blockContextURL.charAt(0) != '/')
                 throw new MalformedURLException("The blockContextURL must be empty or start with '/' "
@@ -180,8 +183,29 @@ public class BlockContext extends ServletContextWrapper {
      * @see javax.servlet.ServletContext#getInitParameterNames()
      */
     public Enumeration getInitParameterNames() {
-        // TODO Auto-generated method stub
-        return null;
+        Vector names = new Vector();
+        
+        // add all names of the parent servlet context
+        Enumeration enumeration = super.getInitParameterNames();
+        while (enumeration.hasMoreElements()) {
+            names.add(enumeration.nextElement());
+        }
+        
+        // add names of the super block
+        ServletContext superContext = this.getNamedContext(SUPER);
+        if (superContext != null) {
+            enumeration = superContext.getInitParameterNames();
+            while (enumeration.hasMoreElements()) {
+                names.add(enumeration.nextElement());
+            }
+        }
+
+        // add property names of this block
+        if (this.properties != null) {
+            names.addAll(this.properties.keySet());
+        }
+
+        return names.elements();
     }
 
     /*
@@ -225,14 +249,54 @@ public class BlockContext extends ServletContextWrapper {
     public int getMinorVersion() {
         return 3;
     }
+    
+    private Collection getDirectoryList(File file, String pathPrefix) {
+        ArrayList filenames = new ArrayList();
+
+        if (!file.isDirectory()) {
+            filenames.add("/" + file.toString().substring(pathPrefix.length()-1));
+            return filenames;
+        }
+
+        File[] files = file.listFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            File subfile = files[i];
+            filenames.addAll(getDirectoryList(subfile, pathPrefix));
+        }
+
+        return filenames;
+    }
 
     /*
      * (non-Javadoc)
      * 
      * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
      */
-    public Set getResourcePaths(String arg0) {
-        return null;
+    public Set getResourcePaths(String path) {
+        String pathPrefix;
+        if (this.blockContextURL.startsWith("file:")) {
+            pathPrefix = this.blockContextURL.substring("file:".length());
+        } else {
+            pathPrefix = this.blockContextURL;
+        }
+        
+        path = pathPrefix + path;
+        
+        if (path == null) {
+            return Collections.EMPTY_SET;
+        }
+
+        File file = new File(path);
+
+        if (!file.exists()) {
+            return Collections.EMPTY_SET;
+        }
+
+        HashSet set = new HashSet();
+        set.addAll(getDirectoryList(file, pathPrefix));
+
+        return set;
     }
 
     /*
@@ -319,6 +383,10 @@ public class BlockContext extends ServletContextWrapper {
      */
     // FIXME implement NPE handling
     public ServletContext getNamedContext(String name) {
+        if (this.connections == null) {
+            return null;
+        }
+        
         BlockServlet blockServlet =
             (BlockServlet) this.connections.get(name);
         return blockServlet != null ? blockServlet.getBlockContext() : null;
