@@ -18,25 +18,19 @@
  */
 package org.apache.cocoon.auth.impl;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.util.NetUtils;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.auth.AbstractSecurityHandler;
 import org.apache.cocoon.auth.ApplicationManager;
 import org.apache.cocoon.auth.StandardUser;
 import org.apache.cocoon.auth.User;
+import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.util.NetUtils;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,25 +42,27 @@ import org.w3c.dom.NodeList;
  * @version $Id$
 */
 public class PipelineSecurityHandler
-    extends AbstractSecurityHandler
-    implements Serviceable,
-               Disposable {
-
-    /** The service manager. */
-    protected ServiceManager manager;
+    extends AbstractSecurityHandler {
 
     /** The source resolver. */
     protected SourceResolver resolver;
 
-    /** Configuration. */
-    protected Configuration config;
+    /** The authentication resource. */
+    protected String authenticationResource;
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(final Configuration conf) throws ConfigurationException {
-        super.configure(conf);
-        this.config = conf;
+    /** The logout resource. */
+    protected String logoutResource;
+
+    public void setAuthenticationResource(String authenticationResource) {
+        this.authenticationResource = authenticationResource;
+    }
+
+    public void setLogoutResource(String logoutResource) {
+        this.logoutResource = logoutResource;
+    }
+
+    public void setResolver(SourceResolver resolver) {
+        this.resolver = resolver;
     }
 
     /**
@@ -86,22 +82,21 @@ public class PipelineSecurityHandler
             // now authentication must have one child ID
             if (child.hasChildNodes()) {
                 final NodeList children = child.getChildNodes();
-                boolean found = false;
                 int     i = 0;
                 Node    current = null;
 
-                while (!found && i < children.getLength()) {
-                    current = children.item(i);
-                    if (current.getNodeType() == Node.ELEMENT_NODE
-                        && current.getNodeName().equals("ID")) {
-                        found = true;
+                while (current == null && i < children.getLength()) {
+                    final Node node = children.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE
+                        && node.getNodeName().equals("ID")) {
+                        current = node;
                     } else {
                         i++;
                     }
                 }
 
                 // now the last check: ID must have a TEXT child
-                if (found) {
+                if ( current != null ) {
                     current.normalize(); // join text nodes
                     if (current.hasChildNodes() &&
                         current.getChildNodes().getLength() == 1 &&
@@ -123,19 +118,19 @@ public class PipelineSecurityHandler
      * @see org.apache.cocoon.auth.SecurityHandler#login(java.util.Map)
      */
     public User login(final Map loginContext) throws Exception {
-        String authenticationResourceName =
-                      this.config.getChild("authentication-resource").getValue();
+        String authenticationResourceName = this.authenticationResource;
 
         // append parameters
-        Parameters p = (Parameters)
-                     loginContext.get(ApplicationManager.LOGIN_CONTEXT_PARAMETERS_KEY);
+        Properties p = (Properties)
+                     loginContext.get(ApplicationManager.LOGIN_CONTEXT_PROPERTIES_KEY);
         if ( p != null ) {
             final StringBuffer b = new StringBuffer(authenticationResourceName);
             boolean hasParams = (authenticationResourceName.indexOf('?') != -1);
-            final String[] names = p.getNames();
-            for(int i=0;i<names.length;i++) {
-                final String key = names[i];
-                final String value = p.getParameter(key);
+            final Iterator i = p.entrySet().iterator();
+            while ( i.hasNext() ) {
+                final Map.Entry current = (Map.Entry)i.next();
+                final String key = current.getKey().toString();
+                final String value = current.getValue().toString();
                 if ( hasParams ) {
                     b.append('&');
                 } else {
@@ -154,7 +149,7 @@ public class PipelineSecurityHandler
         try {
             source = SourceUtil.getSource(authenticationResourceName, null,
                                           null, this.resolver);
-            doc = SourceUtil.toDOM(source);
+            doc = org.apache.cocoon.components.source.SourceUtil.toDOM(source);
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } finally {
@@ -176,29 +171,10 @@ public class PipelineSecurityHandler
     }
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(final ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ){
-            this.manager.release( this.resolver );
-            this.manager = null;
-            this.resolver = null;
-        }
-    }
-
-    /**
      * @see org.apache.cocoon.auth.SecurityHandler#logout(java.util.Map, org.apache.cocoon.auth.User)
      */
     public void logout(final Map logoutContext, final User user) {
-        final String logoutResourceName = this.config.getChild("logout-resource").getValue(null);
+        final String logoutResourceName = this.logoutResource;
         if (logoutResourceName != null) {
             // invoke the source
             Source source = null;
@@ -206,7 +182,7 @@ public class PipelineSecurityHandler
                 // This allows arbitrary business logic to be called. Whatever is returned
                 // is ignored.
                 source = SourceUtil.getSource(logoutResourceName, null, null, this.resolver);
-                SourceUtil.toDOM(source);
+                org.apache.cocoon.components.source.SourceUtil.toDOM(source);
             } catch (Exception ignore) {
                 this.getLogger().warn("Exception during logout of user: " + user.getId(),
                         ignore);
@@ -249,7 +225,7 @@ public class PipelineSecurityHandler
          * attributes to the user object.
          */
         protected void calculateContextInfo() {
-            SourceParameters parameters = new SourceParameters();
+            final Properties parameters = new Properties();
 
             // add all elements from inside the handler data
             this.addParametersFromAuthenticationXML("/data",
@@ -259,18 +235,12 @@ public class PipelineSecurityHandler
             this.addParametersFromAuthenticationXML(null,
                                                     parameters);
 
-            Parameters pars = parameters.getFirstParameters();
-            String[] names = pars.getNames();
-            if (names != null) {
-                String key;
-                String value;
-                for(int i=0;i<names.length;i++) {
-                    key = names[i];
-                    value = pars.getParameter(key, null);
-                    if (value != null) {
-                        this.setAttribute(key, value);
-                    }
-                }
+            final Iterator i = parameters.entrySet().iterator();
+            while ( i.hasNext() ) {
+                final Map.Entry current = (Map.Entry)i.next();
+                final String key = current.getKey().toString();
+                final String value = current.getValue().toString();
+                this.setAttribute(key, value);
             }
         }
 
@@ -283,8 +253,8 @@ public class PipelineSecurityHandler
          * @param childElementName The name of the element to search in.
          * @param parameters The found key-value pair is added to this parameters object.
          */
-        private void addParametersFromAuthenticationXML(final String childElementName,
-                                                        final SourceParameters parameters) {
+        private void addParametersFromAuthenticationXML(final String     childElementName,
+                                                        final Properties parameters) {
             Element root = this.userInfo.getDocumentElement();
             if ( childElementName != null ) {
                 NodeList l = root.getElementsByTagName(childElementName);
@@ -322,7 +292,7 @@ public class PipelineSecurityHandler
                             }
                             value = valueBuffer.toString().trim();
                             if (key != null && value != null && value.length() > 0) {
-                                parameters.setParameter(key, value);
+                                parameters.setProperty(key, value);
                             }
                         }
                     }

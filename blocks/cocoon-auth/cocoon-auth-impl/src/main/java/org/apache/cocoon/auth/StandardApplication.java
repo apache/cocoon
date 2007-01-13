@@ -21,16 +21,9 @@ package org.apache.cocoon.auth;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.auth.impl.AnonymousSecurityHandler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This is the default implementation for an {@link Application}.
@@ -38,8 +31,7 @@ import org.apache.cocoon.auth.impl.AnonymousSecurityHandler;
  * @version $Id$
 */
 public class StandardApplication
-    extends AbstractLogEnabled
-    implements Application, Configurable, Serviceable, Disposable, ThreadSafe {
+    implements Application {
 
     /** This prefix is used to lookup security handlers. */
     protected static final String HANDLER_CONFIG_PREFIX =
@@ -48,86 +40,36 @@ public class StandardApplication
     protected static final String STORE_CONFIG_PREFIX =
                                         ApplicationStore.class.getName() + '/';
 
-    /** The service manager. */
-    protected ServiceManager manager;
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
 
     /** The security handler. */
-    protected SecurityHandler handler;
+    protected SecurityHandler handler = new AnonymousSecurityHandler();
 
     /** Attributes. */
-    protected final Map attributes = new HashMap();
+    protected Map attributes = new HashMap();
 
     /** Application store. */
     protected ApplicationStore store;
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(final ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
+    public void setSecurityHandler(SecurityHandler h) {
+        this.handler = h;
     }
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(final Configuration conf)
-    throws ConfigurationException {
-        String handlerName = conf.getAttribute("security-handler", null);
-        String storeName = conf.getAttribute("store", null);
-        try {
-            if ( handlerName == null ) {
-                this.handler = new AnonymousSecurityHandler();
-            } else {
-                if ( !handlerName.startsWith(HANDLER_CONFIG_PREFIX) ) {
-                    handlerName = HANDLER_CONFIG_PREFIX + handlerName;
-                }
-                this.handler = (SecurityHandler)this.manager.lookup(handlerName);
-            }
-            if ( storeName != null ) {
-                if ( !storeName.startsWith(STORE_CONFIG_PREFIX) ) {
-                    storeName = STORE_CONFIG_PREFIX + storeName;
-                }
-                this.store = (ApplicationStore)this.manager.lookup(storeName);
-            }
-        } catch (ServiceException se) {
-            throw new ConfigurationException("Unable to look up component.", se);
-        }
-        this.configureAttributes(conf);
+    public void setApplicationStore(ApplicationStore s) {
+        this.store = s;
     }
 
-    /**
-     * This method is invoked during configuration of the application. The
-     * default behaviour is to add all children of the configuration object
-     * as key value pairs. The name of the child is the key, and the value
-     * of the tag is the value (as a string).
-     * Subclasses can override this method, if a different/additional
-     * behaviour is wanted.
-     * @param conf The application configuration.
-     */
-    protected void configureAttributes(final Configuration conf) {
-        Configuration[] children = conf.getChildren();
-        for(int i=0; i<children.length; i++) {
-            final String name = children[i].getName();
-            final String value = children[i].getValue(null);
-            if ( value != null && value.trim().length() > 0 ) {
-                this.setAttribute(name, value.trim());
-            }
-        }
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null) {
-            this.manager.release(this.store);
-            if ( !(this.handler instanceof AnonymousSecurityHandler) ) {
-                this.manager.release(this.handler);
-            }
-            this.store = null;
-            this.handler = null;
-            this.manager = null;
-        }
+    public void setAttributes(Map map) {
+        this.attributes = map;
     }
 
     /**
