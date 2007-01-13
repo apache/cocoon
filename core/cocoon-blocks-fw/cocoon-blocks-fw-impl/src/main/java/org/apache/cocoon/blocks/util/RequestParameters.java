@@ -50,9 +50,15 @@ implements Serializable {
                     break;
                 case '%':
                     try {
-                        sb.append((char) Integer.parseInt(s.substring(i+1, i+3),
-                              16));
-                        i += 2;
+                        if (s.charAt(i+1) == 'u') {
+                            // working with multi-byte symbols in format %uXXXX
+                            sb.append((char)Integer.parseInt(s.substring(i+2, i+6), 16));
+                            i += 5; // 4 digits and 1 symbol u
+                        } else {
+                            // working with single-byte symbols in format %YY
+                            sb.append((char)Integer.parseInt(s.substring(i+1, i+3), 16));
+                            i += 2;
+                        }
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException();
                     } catch (StringIndexOutOfBoundsException e) {
