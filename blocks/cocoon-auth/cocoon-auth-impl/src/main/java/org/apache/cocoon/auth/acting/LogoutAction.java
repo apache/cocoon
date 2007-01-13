@@ -64,7 +64,7 @@ extends AbstractAuthAction {
         }
 
         final Map logoutContext = new HashMap();
-        logoutContext.put(ApplicationManager.LOGOUT_CONTEXT_PARAMETERS_KEY, par);
+        logoutContext.put(ApplicationManager.LOGOUT_CONTEXT_PROPERTIES_KEY, Parameters.toProperties(par));
         logoutContext.put(ApplicationManager.LOGOUT_CONTEXT_MODE_KEY, mode);
 
         this.applicationManager.logout(applicationName, logoutContext);

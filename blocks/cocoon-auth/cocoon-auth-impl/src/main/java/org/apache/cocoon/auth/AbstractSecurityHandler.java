@@ -18,29 +18,17 @@
  */
 package org.apache.cocoon.auth;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.BeanNameAware;
 
 /**
- * This is a base class that can be used for own {@link SecurityHandler}s. It
- * provides a save implementation for the {@link #getId()} method. The only
- * drawback is that a subclass has to use {@link Configurable} and can't
- * use {@link org.apache.avalon.framework.parameters.Parameterizable}.
+ * This is a base class that can be used for own {@link SecurityHandler}s.
  *
  * @version $Id$
-*/
+ */
 public abstract class AbstractSecurityHandler
-    extends AbstractLogEnabled
-    implements SecurityHandler, Configurable, Contextualizable, ThreadSafe {
-
-    /** The unique identifier. */
-    protected String id;
+    implements SecurityHandler, BeanNameAware {
 
     /** Support for anonymous user? */
     protected boolean supportAnonUser = false;
@@ -51,35 +39,37 @@ public abstract class AbstractSecurityHandler
     /** Password of the anonymous user. */
     protected String anonPass = "anonymous";
 
-    /** Component Context. */
-    protected Context context;
+    /** The id for the security handler. */
+    protected String id = String.valueOf(this.hashCode());
 
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(final Context aContext) throws ContextException {
-        this.context = aContext;
-        String sitemapPrefix = null;
-        try {
-            // this is available starting with Cocoon 2.2
-            sitemapPrefix = (String)this.context.get("env-prefix");
-        } catch (ContextException ce) {
-            // no prefix available, so we are running pre 2.2 which means
-            // we only have one cocoon.xconf anyway
-            sitemapPrefix = "cocoon-2.1.x";
-        }
-        this.id = sitemapPrefix + '/';
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
+
+    public void setAnonymousName(String anonName) {
+        this.anonName = anonName;
+    }
+
+    public void setAnonymousPassword(String anonPass) {
+        this.anonPass = anonPass;
+    }
+
+    public void setSupportAnonymousUser(boolean supportAnonUser) {
+        this.supportAnonUser = supportAnonUser;
     }
 
     /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
      */
-    public void configure(final Configuration conf) throws ConfigurationException {
-        this.id = this.id + '/' + this.getClass().getName() + '/'
-                  + conf.getAttribute( "role", this.getClass().getName());
-        this.supportAnonUser = conf.getChild("supportAnonymous").getValueAsBoolean(this.supportAnonUser);
-        this.anonName = conf.getChild("anonymousName").getValue(this.anonName);
-        this.anonPass = conf.getChild("anonymousPassword").getValue(this.anonPass);
+    public void setBeanName(String name) {
+        this.id = name;
     }
 
     /**
@@ -88,4 +78,5 @@ public abstract class AbstractSecurityHandler
     public String getId() {
         return this.id;
     }
+
 }

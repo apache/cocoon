@@ -18,6 +18,7 @@
  */
 package org.apache.cocoon.auth.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,42 +26,34 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.cocoon.auth.Application;
 import org.apache.cocoon.auth.ApplicationManager;
 import org.apache.cocoon.auth.ApplicationUtil;
 import org.apache.cocoon.auth.SecurityHandler;
 import org.apache.cocoon.auth.User;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * This is the default implementation of the
  * {@link org.apache.cocoon.auth.ApplicationManager}.
  *
+ * This implementation is heavily tied to Spring. This has been done to make
+ * the configuration of the application manager easier.
+ *
  * @version $Id$
-*/
+ */
 public class StandardApplicationManager
-    extends AbstractLogEnabled
-    implements ApplicationManager,
-               Contextualizable,
-               Serviceable,
-               ThreadSafe,
-               Disposable {
+    implements ApplicationManager, BeanFactoryAware {
 
     /** The key used to store the login information in the session. */
     protected static final String LOGIN_INFO_KEY =
@@ -70,68 +63,60 @@ public class StandardApplicationManager
     protected static final String APPLICATION_KEY_PREFIX =
                      StandardApplicationManager.class.getName() + "/app:";
 
-    /** The component context. */
-    protected Context context;
+    /** The prefix used to register applications. */
+    protected static final String APPLICATION_BEAN_NAME_PREFIX = Application.class.getName() + '/';
 
-    /** The service manager. */
-    protected ServiceManager manager;
+    /** The prefix used to register security handler. */
+    protected static final String SECURITYHANDLER_BEAN_NAME_PREFIX = SecurityHandler.class.getName() + '/';
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    /** The process info provider. */
+    protected ProcessInfoProvider processInfoProvider;
+
+    /** A map containing all applications. */
+    protected Map applications = Collections.synchronizedMap(new HashMap());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
 
     /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
-    public void contextualize(final Context aContext) throws ContextException {
-        this.context = aContext;
-        try {
-            final ServletContext servletContext = (ServletContext)aContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-            servletContext.setAttribute(StandardApplicationManager.class.getName(), this);
-        } catch (ContextException ignore) {
-            // we ignore this if we are not running inside a servlet environment
+    public void setBeanFactory(BeanFactory factory) throws BeansException {
+        this.processInfoProvider = (ProcessInfoProvider)factory.getBean(ProcessInfoProvider.ROLE);
+        // put map with applications into servlet context
+        final ServletContext servletContext = (ServletContext)factory.getBean(ServletContext.class.getName());
+        servletContext.setAttribute(StandardApplicationManager.class.getName(), this.applications);
+    }
+
+    /**
+     * Return the application with the name.
+     */
+    protected Application getApplication(final String appName) {
+        final Application app = (Application) WebAppContextUtils.getCurrentWebApplicationContext().getBean(Application.class.getName() + '/' + appName);
+        if ( !this.applications.containsKey(appName) ) {
+            this.applications.put(appName, app);
         }
+        return app;
+    }
+
+    protected String getKey(SecurityHandler handler) {
+        return handler.getId();
     }
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(final ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        this.manager = null;
-    }
-
-    /**
-     * Get the application with the given name. This method tries to lookup the
-     * applicating using the current sitemap service manager.
-     * @param appName The name of the application.
-     * @return The application object.
-     * @throws Exception If the application can't be found.
-     */
-    protected Application getApplication(final String appName)
-    throws Exception {
-        final ServiceManager current = (ServiceManager)
-                   this.context.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-        Object o = current.lookup(Application.class.getName() + '/' + appName);
-        if ( o == null ) {
-            throw new ConfigurationException(
-                           "Application '" + appName + "' not found."
-                       );
-        }
-        // to avoid messy release stuff later on, we just release the app now
-        // as an application is thread safe this isn't really a problem
-        current.release(o);
-        return (Application)o;
-    }
-
-    /**
-     * @see org.apache.cocoon.auth.ApplicationManager#isLoggedIn(java.lang.String)
+     * @see org.apache.cocoon.auth.ApplicationManager#isLoggedIn(String)
      */
     public boolean isLoggedIn(final String appName) {
         Object appData = null;
-        final Map objectModel = ContextHelper.getObjectModel( this.context );
+        final Map objectModel = this.processInfoProvider.getObjectModel();
         final Request req = ObjectModelHelper.getRequest(objectModel);
         final Session session = req.getSession(false);
         if ( session != null ) {
@@ -152,8 +137,8 @@ public class StandardApplicationManager
                         application.userIsAccessing(user);
                     }
                 } catch (Exception ignore) {
-                    throw new CascadingRuntimeException("Unable to get application '"
-                                                        + appName + "'", ignore);
+                    throw new RuntimeException("Unable to get application '"
+                                               + appName + "'", ignore);
                 }
             }
         }
@@ -162,12 +147,14 @@ public class StandardApplicationManager
     }
 
     /**
-     * @see org.apache.cocoon.auth.ApplicationManager#login(java.lang.String, java.util.Map)
+     * @see org.apache.cocoon.auth.ApplicationManager#login(String, java.util.Map)
      */
     public User login(final String appName, final Map loginContext) throws Exception {
-        User user = null;
+        final Map objectModel = this.processInfoProvider.getObjectModel();
+        final Application application = this.getApplication(appName);
+        final String securityHandlerKey = this.getKey(application.getSecurityHandler());
 
-        final Map objectModel = ContextHelper.getObjectModel( this.context );
+        User user = null;
 
         // first check, if we are already logged in
         if ( this.isLoggedIn(appName) ) {
@@ -176,21 +163,19 @@ public class StandardApplicationManager
             final Request req = ObjectModelHelper.getRequest(objectModel);
             Session session = req.getSession(false);
 
-            final Application app = this.getApplication(appName);
             LoginInfo info = null;
             Map loginInfos = null;
 
             if ( session != null ) {
                 // is the user already logged in on the security handler?
                 loginInfos = (Map)session.getAttribute(LOGIN_INFO_KEY);
-                if ( loginInfos != null
-                      && loginInfos.containsKey(app.getSecurityHandler()) ) {
-                    info = (LoginInfo)loginInfos.get(app.getSecurityHandler());
+                if ( loginInfos != null && loginInfos.containsKey(securityHandlerKey)) {
+                    info = (LoginInfo)loginInfos.get(securityHandlerKey);
                     user = info.user;
                 }
             }
             if ( user == null ) {
-                user = app.getSecurityHandler().login(loginContext);
+                user = application.getSecurityHandler().login(loginContext);
                 if ( user != null ) {
                     // create new login info
                     session = req.getSession();
@@ -199,7 +184,7 @@ public class StandardApplicationManager
                         loginInfos = new HashMap();
                     }
                     info = new LoginInfo(user);
-                    loginInfos.put(app.getSecurityHandler().getId(), info);
+                    loginInfos.put(securityHandlerKey, info);
                 }
             }
 
@@ -213,21 +198,21 @@ public class StandardApplicationManager
                 objectModel.put(ApplicationManager.USER, user);
 
                 // set the application in the object model
-                objectModel.put(ApplicationManager.APPLICATION, app);
+                objectModel.put(ApplicationManager.APPLICATION, application);
 
                 // set the application data in the session
                 Object data = ObjectUtils.NULL;
-                if ( app.getApplicationStore() != null ) {
-                    data = app.getApplicationStore().loadApplicationData(user, app);
+                if ( application.getApplicationStore() != null ) {
+                    data = application.getApplicationStore().loadApplicationData(user, application);
                 }
                 session.setAttribute(APPLICATION_KEY_PREFIX + appName, data);
                 objectModel.put(ApplicationManager.APPLICATION_DATA, data);
 
                 // notify the application about successful login
-                app.userDidLogin(user, loginContext);
+                application.userDidLogin(user, loginContext);
 
                 // notify the application about accessing
-                app.userIsAccessing(user);
+                application.userIsAccessing(user);
             }
         }
 
@@ -235,27 +220,21 @@ public class StandardApplicationManager
     }
 
     /**
-     * @see org.apache.cocoon.auth.ApplicationManager#logout(java.lang.String, java.util.Map)
+     * @see org.apache.cocoon.auth.ApplicationManager#logout(String, java.util.Map)
      */
     public void logout(final String appName, final Map logoutContext) {
-        final Map objectModel = ContextHelper.getObjectModel( this.context );
+        final Map objectModel = this.processInfoProvider.getObjectModel();
         final Request req = ObjectModelHelper.getRequest(objectModel);
         final Session session = req.getSession(false);
         if ( session != null ) {
-            Application app;
-
-            try {
-                app = this.getApplication(appName);
-            } catch (Exception ignore) {
-                throw new CascadingRuntimeException("Unable to get application '"
-                                                    + appName + "'", ignore);
-            }
-
             // remove application data from session
             session.removeAttribute(APPLICATION_KEY_PREFIX + appName);
 
+            final Application application = this.getApplication(appName);
+            final String securityHandlerKey = this.getKey(application.getSecurityHandler());
+
             // remove application from object model
-            if ( app.equals( ApplicationUtil.getApplication(objectModel) ) ) {
+            if ( application.equals( ApplicationUtil.getApplication(objectModel) ) ) {
                 objectModel.remove(ApplicationManager.APPLICATION);
                 objectModel.remove(ApplicationManager.APPLICATION_DATA);
                 objectModel.remove(ApplicationManager.USER);
@@ -267,19 +246,19 @@ public class StandardApplicationManager
             // decrement logininfo counter
             final Map loginInfos = (Map)session.getAttribute(LOGIN_INFO_KEY);
             if ( loginInfos != null ) {
-                final LoginInfo info = (LoginInfo)loginInfos.get(app.getSecurityHandler().getId());
+                final LoginInfo info = (LoginInfo)loginInfos.get(securityHandlerKey);
                 if ( info != null ) {
                     // notify the application
-                    app.userWillLogout(info.user, logoutContext);
+                    application.userWillLogout(info.user, logoutContext);
 
                     info.decUsageCounter(appName);
                     if ( info.isUsed() ) {
                         session.setAttribute(LOGIN_INFO_KEY, loginInfos);
                     } else {
                         // logout from security handler
-                        app.getSecurityHandler().logout(logoutContext, info.user);
+                        application.getSecurityHandler().logout(logoutContext, info.user);
                         // remove user info
-                        loginInfos.remove(app.getSecurityHandler().getId());
+                        loginInfos.remove(securityHandlerKey);
                         if ( loginInfos.size() > 0 ) {
                             session.setAttribute(LOGIN_INFO_KEY, loginInfos);
                         } else {
@@ -308,9 +287,7 @@ public class StandardApplicationManager
     public static void logoutFromAllApplications(final HttpSession session) {
         final Map loginInfos = (Map)session.getAttribute(LOGIN_INFO_KEY);
         if ( loginInfos != null ) {
-            final StandardApplicationManager appManager =
-                  (StandardApplicationManager)session.getServletContext()
-                                  .getAttribute(StandardApplicationManager.class.getName());
+            final Map applications = (Map)session.getServletContext().getAttribute(StandardApplicationManager.class.getName());
             final Iterator i = loginInfos.values().iterator();
             while ( i.hasNext() ) {
                 final LoginInfo info = (LoginInfo)i.next();
@@ -320,14 +297,16 @@ public class StandardApplicationManager
                     while ( appIter.hasNext() ) {
                         final String appName = (String)appIter.next();
                         try {
-                            final Application app = appManager.getApplication(appName);
-                            app.userWillLogout(info.getUser(), null);
+                            final Application app = (Application)applications.get(appName);
+                            app.userWillLogout(info.getUser(), Collections.EMPTY_MAP);
                             handler = app.getSecurityHandler();
                         } catch (Exception ignore) {
                             // we ignore this
                         }
                     }
-                    handler.logout(null, info.getUser());
+                    if ( handler != null ) {
+                        handler.logout(Collections.EMPTY_MAP, info.getUser());
+                    }
                 }
             }
         }

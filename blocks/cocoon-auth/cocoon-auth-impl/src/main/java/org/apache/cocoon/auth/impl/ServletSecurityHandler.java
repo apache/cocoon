@@ -21,10 +21,9 @@ package org.apache.cocoon.auth.impl;
 import java.security.Principal;
 import java.util.Map;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.auth.AbstractSecurityHandler;
 import org.apache.cocoon.auth.StandardUser;
 import org.apache.cocoon.auth.User;
@@ -39,15 +38,11 @@ import org.apache.cocoon.auth.User;
 public class ServletSecurityHandler
     extends AbstractSecurityHandler {
 
-    /** The component context. */
-    protected Context context;
+    /** The process info provider. */
+    protected ProcessInfoProvider processInfoProvider;
 
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(final Context aContext) throws ContextException {
-        super.contextualize(aContext);
-        this.context = aContext;
+    public void setProcessInfoProvider(ProcessInfoProvider p) {
+        this.processInfoProvider = p;
     }
 
     /**
@@ -64,7 +59,7 @@ public class ServletSecurityHandler
      * @see org.apache.cocoon.auth.SecurityHandler#login(java.util.Map)
      */
     public User login(final Map loginContext) throws Exception {
-        final Request req = ContextHelper.getRequest(this.context);
+        final Request req = ObjectModelHelper.getRequest(this.processInfoProvider.getObjectModel());
         User user = null;
         if ( req.getRemoteUser() != null ) {
             user = this.createUser( req );
