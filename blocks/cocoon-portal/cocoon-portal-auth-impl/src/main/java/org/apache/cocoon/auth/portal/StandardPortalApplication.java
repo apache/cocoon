@@ -38,31 +38,16 @@ import org.apache.cocoon.auth.User;
  * @version $Id$
 */
 public class StandardPortalApplication
-    extends StandardApplication
-    implements PortalApplication {
+    extends StandardApplication {
 
     /** Attribute storing the portal user. */
     public static final String PORTAL_USER = PortalUser.class.getName();
-
-    /** The configuration. */
-    protected Map portalConfig = Collections.EMPTY_MAP;
 
     /** The portal service. */
     protected PortalService portalService;
 
     public void setPortalService(PortalService s) {
         this.portalService = s;
-    }
-
-    public void setPortalConfig(Map config) {
-        this.portalConfig = config;
-    }
-
-    /**
-     * @see org.apache.cocoon.auth.portal.PortalApplication#getPortalConfiguration()
-     */
-    public Map getPortalConfiguration() {
-        return this.portalConfig;
     }
 
     /**

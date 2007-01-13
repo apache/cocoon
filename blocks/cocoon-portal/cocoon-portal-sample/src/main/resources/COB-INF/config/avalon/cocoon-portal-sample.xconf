@@ -53,7 +53,7 @@
         <!-- The directory where all possible skins are stored. -->
         <skins-path>skins</skins-path>
         <!-- Whether the portal should use ajax or not -->
-        <use-ajax>true</use-ajax>
+        <use-ajax>false</use-ajax>
       </configuration>
     </portal>
   </portal-service>
