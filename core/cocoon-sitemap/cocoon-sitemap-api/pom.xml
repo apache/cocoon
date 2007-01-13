@@ -33,6 +33,11 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Sitemap API</name>
+  <description>
+    Interfaces for the sitemap: Processor, actions, modules, flow, matching,
+    selection and some support interfaces for classloading, notification,
+    processing and various support interfaces.
+  </description>
   <dependencies>
     <!-- Cocoon -->
     <dependency>

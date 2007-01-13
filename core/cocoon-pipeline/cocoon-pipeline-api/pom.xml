@@ -32,6 +32,11 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Pipeline API</name>
+  <description>
+    Interfaces for SAX pipelines: ProcessingPipeline, sitemap components
+    and basic XML interfaces, the environment abstraction, caching interfaces
+    and needed exceptions.
+  </description>
   <url>http://cocoon.apache.org/${docs.m.pipeline-api.relPath}</url>  
   
   <build>
@@ -155,4 +160,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
 </project>

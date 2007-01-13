@@ -34,6 +34,11 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Pipeline Implementation</name>
+  <description>
+    Several implementations of the ProcessingPipeline interface together with
+    needed classes and components. Abstract classes for making it easier to
+    write sitemap components.
+  </description>
   
   <url>http://cocoon.apache.org/${docs.m.pipeline-impl.relPath}</url>  
   

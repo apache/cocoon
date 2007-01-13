@@ -32,6 +32,9 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Util</name>
+  <description>
+    Utility classes.
+  </description>
   <dependencies>
     <!-- Excalibur -->
     <dependency>

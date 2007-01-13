@@ -33,6 +33,11 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Sitemap Implementation</name>
+  <description>
+    The tree processor implementation of the sitemap with dependencies.
+    The Spring packages for Avalon support. Abstract base classes
+    and support classes for making it easier to write sitemap components. 
+  </description>
   <dependencies>
     <!-- Cocoon -->
     <dependency>

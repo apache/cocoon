@@ -33,6 +33,9 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Store Implementation</name>
+  <description>
+    Several components implementing of the Excalibur Store interface.
+  </description>
   <dependencies>
     <!--  Cocoon  -->
     <dependency>

@@ -33,6 +33,9 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Thread API</name>
+  <description>
+    Interfaces for thread factories and pools and for execution of background tassks.
+  </description>
   <dependencies>
     <dependency>
       <groupId>concurrent</groupId>
