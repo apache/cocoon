@@ -28,7 +28,7 @@ import org.apache.cocoon.classloader.ClassLoaderFactory;
 import org.apache.cocoon.classloader.DefaultClassLoaderFactory;
 
 /**
- * Used by the ShieldingBlockServlet to obtain a shielded classloader. Supports
+ * Used by the ShieldingServletService to obtain a shielded classloader. Supports
  * groups of servlets that use the same classloader that is still shielded from
  * the rest of the webapp.
  */

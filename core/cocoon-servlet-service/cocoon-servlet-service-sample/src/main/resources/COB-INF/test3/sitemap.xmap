@@ -29,7 +29,7 @@
       </map:match>
 
       <map:match type="wildcard" pattern="test4">
-        <map:generate type="file" src="block:super:/test"/>
+        <map:generate type="file" src="servlet:super:/test"/>
         <map:serialize type="xml"/>
       </map:match>
 
@@ -44,7 +44,7 @@
       </map:match>
 
       <map:match type="wildcard" pattern="**">
-        <map:read src="block:super:/{1}"/>
+        <map:read src="servlet:super:/{1}"/>
       </map:match>
 
     </map:pipeline>
