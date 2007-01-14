@@ -35,15 +35,14 @@
   
   <modules>
     <module>cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
-    <module>cocoon-blocks-fw/cocoon-blocks-fw-demo1</module>
-    <module>cocoon-blocks-fw/cocoon-blocks-fw-demo2</module>
-    <module>cocoon-blocks-fw/cocoon-blocks-fw-sample</module>     
     <module>cocoon-configuration/cocoon-configuration-api</module>
     <module>cocoon-configuration/cocoon-spring-configurator</module>    
     <module>cocoon-core</module>
     <module>cocoon-pipeline/cocoon-pipeline-api</module>
     <module>cocoon-pipeline/cocoon-pipeline-impl</module>
     <module>cocoon-pipeline/cocoon-pipeline-components</module>
+    <module>cocoon-servlet-service/cocoon-servlet-service-impl</module>
+    <module>cocoon-servlet-service/cocoon-servlet-service-sample</module>     
     <module>cocoon-sitemap/cocoon-sitemap-api</module>
     <module>cocoon-sitemap/cocoon-sitemap-impl</module>
     <module>cocoon-sitemap/cocoon-sitemap-components</module>   
