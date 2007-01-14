@@ -49,7 +49,7 @@ public class BlockPathModule implements InputModule, ThreadSafe {
             baseURI = "/" + baseURI;
          */
         try {
-            // URI uri = BlockSource.resolveURI(new URI(name), new URI(null, null, baseURI, null));
+            // URI uri = ServletSource.resolveURI(new URI(name), new URI(null, null, baseURI, null));
             URI uri = new URI(name);
             absoluteURI= blockContext.absolutizeURI(uri).toString();
         } catch (URISyntaxException e) {

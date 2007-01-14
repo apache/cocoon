@@ -62,7 +62,7 @@ public class DemoServlet extends HttpServlet {
             RequestDispatcher demo2 = this.getServletContext().getNamedDispatcher("demo2");
             demo2.forward(request, response);
         } else if ("/test3".equals(path)) {
-            Source source = this.resolver.resolveURI("block:/test1");
+            Source source = this.resolver.resolveURI("servlet:/test1");
             InputStream is = source.getInputStream();
 
             response.setContentType("text/plain");
@@ -72,7 +72,7 @@ public class DemoServlet extends HttpServlet {
             is.close();
             os.close();
         } else if ("/test4".equals(path)) {
-            Source source = this.resolver.resolveURI("block:demo2:/any");
+            Source source = this.resolver.resolveURI("servlet:demo2:/any");
             InputStream is = source.getInputStream();
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();

@@ -24,7 +24,7 @@
       | Each source factory adds a special uri schemes to the system.
       +-->
   <source-factories>
-    <component-instance name="block" class="org.apache.cocoon.servletservice.components.ServletSourceFactory"/>
+    <component-instance name="servlet" class="org.apache.cocoon.servletservice.components.ServletSourceFactory"/>
   </source-factories>
 
 </components>

@@ -30,7 +30,7 @@ import org.springframework.aop.framework.ProxyFactory;
 /**
  * A servlet for use in cocoon blocks that adds shielded classloading support.
  */
-public class ShieldingBlockServlet extends ServletService {
+public class ShieldingServletService extends ServletService {
 
     /**
      * Spring property, name of the group that will get the same classloader.

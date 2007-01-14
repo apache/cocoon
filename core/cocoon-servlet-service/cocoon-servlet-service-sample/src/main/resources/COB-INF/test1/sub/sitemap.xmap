@@ -29,12 +29,12 @@
 
       <!-- no relative paths yet -->
       <map:match pattern="test2">
-        <map:generate src="block:./test"/>
+        <map:generate src="servlet:./test"/>
         <map:serialize type="xml"/>
       </map:match>
 
       <map:match pattern="test3">
-        <map:generate src="block:/test"/>
+        <map:generate src="servlet:/test"/>
         <map:serialize type="xml"/>
       </map:match>
 
