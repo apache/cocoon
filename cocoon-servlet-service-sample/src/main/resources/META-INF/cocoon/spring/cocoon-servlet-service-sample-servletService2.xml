@@ -20,19 +20,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="org.apache.cocoon.blocks.sample.block1" class="org.apache.cocoon.blocks.BlockServlet">
-		<property name="mountPath" value="/cocoon-blocks-fw-sample1"/>
+	<bean id="org.apache.cocoon.servletservice.sample.servlet2" class="org.apache.cocoon.servletservice.ServletService">
+		<property name="mountPath" value="/cocoon-servlet-service-sample2"/>
 		<property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
-		<property name="blockContextURL" value="blockcontext:/cocoon-blocks-fw-sample/test1"/>
-		<property name="properties">
-			<map>
-				<entry key="foo" value="bar"/>
-			</map>
-		</property>
-		<property name="connections">
-			<map>
-				<entry key="test2" value-ref="org.apache.cocoon.blocks.sample.block2"/>
-			</map>
-		</property>
+		<property name="blockContextURL" value="blockcontext:/cocoon-servlet-service-sample/test2"/>
 	</bean>
 </beans>

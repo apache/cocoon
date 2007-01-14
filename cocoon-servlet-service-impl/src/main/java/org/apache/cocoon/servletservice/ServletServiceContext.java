@@ -351,7 +351,7 @@ public class ServletServiceContext extends ServletContextWrapper {
 
     /**
      * Takes the scheme specific part of a block URI (the scheme is the
-     * responsibilty of the BlockSource) and resolve it with respect to the
+     * responsibilty of the ServletSource) and resolve it with respect to the
      * blocks mount point.
      */
     public URI absolutizeURI(URI uri) throws URISyntaxException {

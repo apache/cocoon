@@ -33,7 +33,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  *
  * @version $Id$
  */
-public final class BlockSourceFactory
+public final class ServletSourceFactory
 extends AbstractLogEnabled
 implements SourceFactory, ThreadSafe, URIAbsolutizer
 {
@@ -47,7 +47,7 @@ public Source getSource( String location, Map parameters )
         getLogger().debug( "Creating source object for " + location );
     }
 
-    return new BlockSource(location, getLogger());
+    return new ServletSource(location, getLogger());
 }
 
 /* (non-Javadoc)
