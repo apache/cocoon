@@ -64,13 +64,6 @@
     </plugins>
   </build>
   <dependencies>
-    <!-- this is just a runtime dependency for the Jetty6 plugin - I (rpoetz) don't understand
-         why the plugin requires it as it is added to WEB-INF/lib by the deployer ... -->
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-default</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
   </dependencies>
   <pluginRepositories>
     <pluginRepository>
