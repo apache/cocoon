@@ -182,6 +182,9 @@
   <changes>
   <release version="2.1.11" date="TBD">
     <action dev="CZ" type="fix">
+      Portal block: Fix truncation of included portlets in html include serializer.
+    </action>
+    <action dev="CZ" type="fix">
       Auth block: Fix checking of double logins for the same security handler.
     </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1979" due-to="Rob Berens">
