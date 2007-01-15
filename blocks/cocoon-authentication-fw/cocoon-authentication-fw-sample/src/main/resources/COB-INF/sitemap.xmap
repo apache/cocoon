@@ -23,10 +23,6 @@
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <!-- Include the configuration for the authentication manager. -->
-  <map:components>
-    <map:include src="conf/auth-manager.xconf"/>
-  </map:components>
 
   <!-- =========================== Pipelines ================================= -->
   <map:pipelines>
