@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;
-import org.apache.cocoon.auth.StandardUser;
+import org.apache.cocoon.auth.AuthenticationException;
 import org.apache.cocoon.auth.User;
 
 /**
@@ -57,7 +57,8 @@ public class ServletSecurityHandler
     /**
      * @see org.apache.cocoon.auth.SecurityHandler#login(java.util.Map)
      */
-    public User login(final Map loginContext) throws Exception {
+    public User login(final Map loginContext)
+    throws AuthenticationException {
         final Request req = ObjectModelHelper.getRequest(this.processInfoProvider.getObjectModel());
         User user = null;
         if ( req.getRemoteUser() != null ) {

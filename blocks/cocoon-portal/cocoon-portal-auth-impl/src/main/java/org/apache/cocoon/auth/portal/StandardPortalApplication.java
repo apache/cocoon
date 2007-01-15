@@ -29,8 +29,8 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.user.UserEventUtil;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.impl.AbstractPortalUser;
-import org.apache.cocoon.auth.StandardApplication;
 import org.apache.cocoon.auth.User;
+import org.apache.cocoon.auth.impl.StandardApplication;
 
 /**
  * This is a default implementation for a portal application.

@@ -38,10 +38,10 @@ public interface SecurityHandler {
      * Try to authenticate the user.
      * @param context The context for the login operation.
      * @return The user if the authentication is successful, null otherwise.
-     * @throws Exception If something goes wrong.
+     * @throws AuthenticationException If something goes wrong.
      */
     User login(Map context)
-    throws Exception;
+    throws AuthenticationException;
 
     /**
      * This notifies the security-handler that a user logs out.

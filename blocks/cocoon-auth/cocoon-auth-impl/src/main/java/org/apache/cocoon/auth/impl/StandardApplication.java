@@ -16,12 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.auth;
+package org.apache.cocoon.auth.impl;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.auth.Application;
+import org.apache.cocoon.auth.ApplicationStore;
+import org.apache.cocoon.auth.SecurityHandler;
+import org.apache.cocoon.auth.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
