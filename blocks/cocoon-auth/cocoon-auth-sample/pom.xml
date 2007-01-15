@@ -24,18 +24,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-blocks-modules</artifactId>
-    <version>3-SNAPSHOT</version>
+    <artifactId>cocoon-auth</artifactId>
+    <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-auth</artifactId>
-  <packaging>pom</packaging>
-  <name>Cocoon Authentication[modules]</name>
-  <version>1-SNAPSHOT</version>
-  <modules>
-    <module>cocoon-auth-api</module>
-    <module>cocoon-auth-impl</module>
-    <module>cocoon-auth-sample</module>
-  </modules>
+  <artifactId>cocoon-auth-sample</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>Cocoon Authentication Sample</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+      <version>2.2.0-M3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-auth-impl</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>
