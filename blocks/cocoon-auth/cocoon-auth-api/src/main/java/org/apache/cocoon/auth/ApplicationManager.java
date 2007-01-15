@@ -39,11 +39,11 @@ public interface ApplicationManager {
     /** The string used to store the application data in the object model .*/
     String APPLICATION_DATA = "cauth-application-data";
 
-    /** The key for properties in the login context. */
-    String LOGIN_CONTEXT_PROPERTIES_KEY = "properties";
+    /** The key for the user name in the login context. */
+    String LOGIN_CONTEXT_USERNAME_KEY = "name";
 
-    /** The key for properties in the logout context. */
-    String LOGOUT_CONTEXT_PROPERTIES_KEY = "properties";
+    /** The key for the user password in the login context. */
+    String LOGIN_CONTEXT_PASSWORD_KEY = "password";
 
     /** The key for the logout method in the logout context. */
     String LOGOUT_CONTEXT_MODE_KEY = "mode";

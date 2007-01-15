@@ -18,37 +18,27 @@
  */
 package org.apache.cocoon.auth.impl;
 
-import java.util.Map;
-
-import org.apache.cocoon.auth.AuthenticationException;
 import org.apache.cocoon.auth.User;
 
 /**
- * This security handlers doesn't check any credentials of the user.
- * It just creates a new user object.
- *
+ * Interface for the user dao.
+ * 
  * @version $Id$
-*/
-public class AnonymousSecurityHandler
-    extends AbstractSecurityHandler {
-
-    /** Counter to generate the anonymous user object. */
-    protected long number = 1;
+ */
+public interface UserDAO {
 
     /**
-     * @see org.apache.cocoon.auth.SecurityHandler#login(java.util.Map)
+     * Get a user info for the given user name.
      */
-    public synchronized User login(final Map loginContext)
-    throws AuthenticationException {
-        final User user = new StandardUser("anonymous"+this.number);
-        this.number++;
-        return user;
-    }
+    UserInfo getUserInfo(String name);
 
     /**
-     * @see org.apache.cocoon.auth.SecurityHandler#logout(java.util.Map, org.apache.cocoon.auth.User)
+     * Store or update a user info in the database.
      */
-    public void logout(final Map context, final User user) {
-        // nothing to do
-    }
+    void storeUserInfo(UserInfo info);
+
+    /**
+     * Get the complete user for the user info.
+     */
+    User getUser(UserInfo info);
 }

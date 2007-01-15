@@ -19,6 +19,7 @@ package org.apache.cocoon.portal.security;
 import java.util.Map;
 
 import org.apache.cocoon.auth.impl.AbstractSecurityHandler;
+import org.apache.cocoon.auth.AuthenticationException;
 import org.apache.cocoon.auth.SecurityHandler;
 
 /**
@@ -31,7 +32,8 @@ public class DBSecurityHandler
     /**
      * @see SecurityHandler#login(Map)
      */
-    public org.apache.cocoon.auth.User login(Map loginContext) throws Exception {
+    public org.apache.cocoon.auth.User login(Map loginContext)
+    throws AuthenticationException {
         /*
         PersistenceBroker broker = PersistenceBrokerFactory.defaultPersistenceBroker();
 

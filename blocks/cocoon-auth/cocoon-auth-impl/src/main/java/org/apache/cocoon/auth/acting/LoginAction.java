@@ -25,7 +25,6 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.auth.ApplicationManager;
 import org.apache.cocoon.auth.User;
 
 /**
@@ -59,7 +58,7 @@ extends AbstractAuthAction {
         Map map = null;
 
         final Map loginContext = new HashMap();
-        loginContext.put(ApplicationManager.LOGIN_CONTEXT_PROPERTIES_KEY, Parameters.toProperties(par));
+        loginContext.putAll(Parameters.toProperties(par));
         final User user =
                   this.applicationManager.login( applicationName, loginContext );
 

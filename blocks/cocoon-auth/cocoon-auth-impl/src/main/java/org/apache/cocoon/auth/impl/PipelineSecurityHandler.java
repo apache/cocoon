@@ -18,22 +18,24 @@
  */
 package org.apache.cocoon.auth.impl;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.cocoon.auth.ApplicationManager;
-import org.apache.cocoon.auth.StandardUser;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.auth.AuthenticationException;
 import org.apache.cocoon.auth.User;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Verify if a user can be authenticated.
@@ -116,30 +118,32 @@ public class PipelineSecurityHandler
     /**
      * @see org.apache.cocoon.auth.SecurityHandler#login(java.util.Map)
      */
-    public User login(final Map loginContext) throws Exception {
+    public User login(final Map loginContext)
+    throws AuthenticationException {
         String authenticationResourceName = this.authenticationResource;
 
         // append parameters
-        Properties p = (Properties)
-                     loginContext.get(ApplicationManager.LOGIN_CONTEXT_PROPERTIES_KEY);
-        if ( p != null ) {
-            final StringBuffer b = new StringBuffer(authenticationResourceName);
-            boolean hasParams = (authenticationResourceName.indexOf('?') != -1);
-            final Iterator i = p.entrySet().iterator();
-            while ( i.hasNext() ) {
-                final Map.Entry current = (Map.Entry)i.next();
-                final String key = current.getKey().toString();
-                final String value = current.getValue().toString();
-                if ( hasParams ) {
-                    b.append('&');
-                } else {
-                    b.append('?');
-                    hasParams = true;
-                }
-                b.append(key).append('=').append(NetUtils.encode(value, "utf-8"));
+        final StringBuffer b = new StringBuffer(authenticationResourceName);
+        boolean hasParams = (authenticationResourceName.indexOf('?') != -1);
+        final Iterator i = loginContext.entrySet().iterator();
+        while ( i.hasNext() ) {
+            final Map.Entry current = (Map.Entry)i.next();
+            final String key = current.getKey().toString();
+            final String value = current.getValue().toString();
+            if ( hasParams ) {
+                b.append('&');
+            } else {
+                b.append('?');
+                hasParams = true;
             }
-            authenticationResourceName = b.toString();
+            try {
+                b.append(key).append('=').append(NetUtils.encode(value, "utf-8"));
+            } catch (UnsupportedEncodingException ignore) {
+                // this can never happen
+            }
         }
+        authenticationResourceName = b.toString();
+
         User user = null;
         Document doc = null;
 
@@ -149,8 +153,12 @@ public class PipelineSecurityHandler
             source = SourceUtil.getSource(authenticationResourceName, null,
                                           null, this.resolver);
             doc = org.apache.cocoon.components.source.SourceUtil.toDOM(source);
-        } catch (SourceException se) {
-            throw SourceUtil.handle(se);
+        } catch (IOException e) {
+            throw new AuthenticationException(e);
+        } catch (ProcessingException e) {
+            throw new AuthenticationException(e);
+        } catch (SAXException e) {
+            throw new AuthenticationException(e);
         } finally {
             this.resolver.release(source);
         }
