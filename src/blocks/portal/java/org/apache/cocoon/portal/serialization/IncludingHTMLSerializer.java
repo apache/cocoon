@@ -252,7 +252,8 @@ final class ReplacingOutputStream extends OutputStream {
     protected void writeNextValue() throws IOException {
         final String value = (String)this.orderedValues.removeLast();
         if ( value != null ) {
-            this.stream.write(value.getBytes(this.encoding), 0, value.length());
+            final byte[] o = value.getBytes(this.encoding);
+            this.stream.write(o, 0, o.length);
         }        
     }
 }
