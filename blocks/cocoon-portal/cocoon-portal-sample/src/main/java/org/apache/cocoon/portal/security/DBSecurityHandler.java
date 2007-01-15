@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.security;
 
 import java.util.Map;
 
-import org.apache.cocoon.auth.AbstractSecurityHandler;
+import org.apache.cocoon.auth.impl.AbstractSecurityHandler;
 import org.apache.cocoon.auth.SecurityHandler;
 
 /**
