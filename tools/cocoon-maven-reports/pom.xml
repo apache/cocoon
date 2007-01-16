@@ -23,24 +23,9 @@
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <packaging>pom</packaging>
-  <parent>
-    <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon</artifactId>
-    <version>3-SNAPSHOT</version>
-  </parent>
-  <artifactId>cocoon-tools-modules</artifactId>
-  <version>3-SNAPSHOT</version>
-  <name>Cocoon Tools [modules]</name>
-  <modules>
-    <module>archetypes</module>
-    <module>cocoon-block-deployer</module>
-    <module>cocoon-maven-reports</module>
-    <module>cocoon-rcl</module>    
-  </modules>
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-tools-modules</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-tools-modules</url>
-  </scm>
+  <groupId>org.apache.cocoon</groupId>
+  <artifactId>cocoon-maven-reports</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+  <name>Cocoon Maven Reports</name>
 </project>

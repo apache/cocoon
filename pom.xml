@@ -592,6 +592,11 @@
         <artifactId>wagon-ssh-external</artifactId>
         <version>1.0-alpha-6</version>
       </extension>
+      <extension>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-maven-reports</artifactId>
+        <version>1.0</version>
+      </extension>
     </extensions>
     
     <plugins>
@@ -681,8 +686,17 @@
               <report>changes-report</report>
             </reports>
           </reportSet>
-        </reportSets>        
+        </reportSets>
       </plugin>      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <configLocation>org/apache/cocoon/maven/reports/checkstyle.xml</configLocation>
+          <headerLocation>org/apache/cocoon/maven/reports/checkstyle-header.txt</headerLocation>
+        </configuration>
+      </plugin>
     </plugins>
   </reporting>
 
