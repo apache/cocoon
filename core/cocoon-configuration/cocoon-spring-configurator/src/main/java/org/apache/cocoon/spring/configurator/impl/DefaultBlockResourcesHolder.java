@@ -35,7 +35,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 /**
- * Default implementation of a {@link BlockResourceHolder}.
+ * Default implementation of a {@link BlockResourcesHolder}.
  *
  * @version $Id$
  * @since 1.0
