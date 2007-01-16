@@ -40,7 +40,7 @@ public abstract class WebAppContextUtils {
     /**
      * Get the current web application context.
      * @throws IllegalStateException if no WebApplicationContext could not be found
-     * @return
+     * @return The current web application context.
      */
     public static WebApplicationContext getCurrentWebApplicationContext() {
         final RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
@@ -69,7 +69,7 @@ public abstract class WebAppContextUtils {
 
     /**
      * Notify about entering this context.
-     * @return A handle which should be passed to {@link #leavingContext(RequestAttributes, Object)}.
+     * @return A handle which should be passed to {@link #leavingContext(WebApplicationContext, Object)}.
      */
     public static Object enteringContext(WebApplicationContext webAppContext) {
         // get request attributes
@@ -84,7 +84,7 @@ public abstract class WebAppContextUtils {
 
     /**
      * Notify about leaving this context.
-     * @param handle     The returned handle from {@link #enteringContext(RequestAttributes)}.
+     * @param handle     The returned handle from {@link #enteringContext(WebApplicationContext)}.
      */
     public static void leavingContext(WebApplicationContext webAppContext, Object handle) {
         if ( !(handle instanceof ContextInfo) ) {
