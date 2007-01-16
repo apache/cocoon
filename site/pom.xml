@@ -69,7 +69,6 @@
     <!-- Core modules --> 
     <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
     <module>../core/cocoon-core</module>    
-    <module>../core/cocoon-configuration/cocoon-configuration-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-components</module>
