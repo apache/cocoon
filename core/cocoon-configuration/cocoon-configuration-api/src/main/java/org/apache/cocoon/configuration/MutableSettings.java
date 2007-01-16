@@ -90,8 +90,9 @@ public class MutableSettings implements Settings {
     /** The time the cocoon instance was created. */
     protected long creationTime;
 
-    /** The container encoding.
-     * @see BaseSettings#KEY_CONTAINER_ENCODING 
+    /** 
+     * The container encoding.
+     * @see Settings#KEY_CONTAINER_ENCODING 
      */
     protected String containerEncoding;
 
