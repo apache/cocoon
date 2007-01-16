@@ -43,7 +43,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      <version>1.0.0-M2-SNAPSHOT</version>
+      <version>1.0.0-M3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
