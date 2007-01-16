@@ -80,7 +80,7 @@ public interface Settings {
     String KEY_RELOADING = "org.apache.cocoon.reloading";
 
     /**
-     * Delay between reload checks for the configuration
+     * Delay between reload checks for the configuration.
      */
     String KEY_RELOAD_DELAY = "org.apache.cocoon.reload-delay";
 
@@ -107,7 +107,7 @@ public interface Settings {
      *         an empty list.
      */
     List getPropertyNames(String keyPrefix);
-    
+
     /**
      * Return all available property names.
      * @return A list of all property names or an empty list.
@@ -145,7 +145,8 @@ public interface Settings {
     String getCacheDirectory();
 
     /**
-     * The creation time of the current Cocoon instance.
+     * The creation time of the current settings instance.
+     * @return The creation time.
      */
     long getCreationTime();
 
@@ -169,6 +170,7 @@ public interface Settings {
 
     /**
      * Return the current running mode.
+     * @return The current running mode.
      */
     String getRunningMode();
 }
