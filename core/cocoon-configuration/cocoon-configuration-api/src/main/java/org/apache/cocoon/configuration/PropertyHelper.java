@@ -22,7 +22,7 @@ import java.util.Properties;
 
 /**
  * Helper class for replacing property references with the value of the
- * property
+ * property.
  *
  * @version $Id$
  * @since 1.0

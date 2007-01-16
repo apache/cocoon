@@ -159,7 +159,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.DynamicSettings#isReloadingEnabled(java.lang.String)
+     * @see org.apache.cocoon.configuration.Settings#isReloadingEnabled(java.lang.String)
      */
     public boolean isReloadingEnabled(String type) {
         if ( type == null ) {
@@ -179,7 +179,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getCacheDirectory()
+     * @see org.apache.cocoon.configuration.Settings#getCacheDirectory()
      */
     public String getCacheDirectory() {
         if ( this.parent != null ) {
@@ -189,7 +189,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getFormEncoding()
+     * @see org.apache.cocoon.configuration.Settings#getFormEncoding()
      */
     public String getFormEncoding() {
         if ( this.parent != null ) {
@@ -199,7 +199,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getContainerEncoding()
+     * @see org.apache.cocoon.configuration.Settings#getContainerEncoding()
      */
     public String getContainerEncoding() {
         if ( this.parent != null ) {
@@ -218,7 +218,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getLoadClasses()
+     * @see org.apache.cocoon.configuration.Settings#getLoadClasses()
      */
     public List getLoadClasses() {
         // we don't ask the parent here as the classes of the parent
@@ -227,7 +227,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getWorkDirectory()
+     * @see org.apache.cocoon.configuration.Settings#getWorkDirectory()
      */
     public String getWorkDirectory() {
         if ( this.parent != null ) {
@@ -237,7 +237,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.DynamicSettings#getReloadDelay(java.lang.String)
+     * @see org.apache.cocoon.configuration.Settings#getReloadDelay(java.lang.String)
      */
     public long getReloadDelay(String type) {
         if ( type == null ) {
@@ -424,7 +424,7 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getCreationTime()
+     * @see org.apache.cocoon.configuration.Settings#getCreationTime()
      */
     public long getCreationTime() {
         if ( this.parent != null ) {

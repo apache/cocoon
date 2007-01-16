@@ -24,7 +24,7 @@ package org.apache.cocoon.configuration;
  */
 public abstract class SettingsDefaults {
 
-    /** 
+    /**
      * The default running mode.
      * @see Settings#getRunningMode()
      */
