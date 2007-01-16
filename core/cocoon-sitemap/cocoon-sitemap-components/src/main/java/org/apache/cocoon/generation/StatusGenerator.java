@@ -283,7 +283,6 @@ public class StatusGenerator extends ServiceableGenerator
         atts.addCDATAAttribute(NAMESPACE, "cocoon-version", Constants.VERSION);
         dateTime = DateFormat.getDateTimeInstance().format(new Date(this.settings.getCreationTime()));
         atts.addCDATAAttribute(NAMESPACE, "creation-time", dateTime);
-        atts.addCDATAAttribute(NAMESPACE, "build-info", Constants.BUILD_INFO);
         super.contentHandler.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
 
         if (this.showContinuations) {
