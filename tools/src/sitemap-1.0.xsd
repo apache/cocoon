@@ -347,6 +347,7 @@
         <xsd:element ref="match"/>
         <xsd:element ref="mount"/>
         <xsd:element ref="call"/>
+        <xsd:element ref="aggregate"/>
         <xsd:element ref="generate"/>
         <xsd:element ref="transform"/>
         <xsd:element ref="serialize"/>
@@ -385,6 +386,28 @@
       <xsd:attribute name="resource" type="xsd:string" use="optional"/>
       <xsd:attribute name="function" type="xsd:string" use="optional"/>
       <xsd:attribute name="continuation" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="aggregate">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="part" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="element" type="xsd:string" use="required"/>
+      <xsd:attribute name="ns" type="xsd:string" use="optional"/>
+      <xsd:attribute name="prefix" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="part">
+    <xsd:complexType>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="element" type="xsd:string" use="optional"/>
+      <xsd:attribute name="ns" type="xsd:string" use="optional"/>
+      <xsd:attribute name="prefix" type="xsd:string" use="optional"/>
+      <xsd:attribute name="strip-root" type="xsd:string" use="optional"/>
     </xsd:complexType>
   </xsd:element>
 
