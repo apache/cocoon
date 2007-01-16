@@ -20,6 +20,5 @@
       xpath="/sitemap/components/actions"
       unless="action[@name='serverpages']">
    <map:action logger="sitemap.action.serverpages" name="serverpages"
-               pool-max="32"
                src="org.apache.cocoon.acting.ServerPagesAction"/>
 </xmap>
