@@ -34,7 +34,7 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
 
 /**
  * Utility class for Spring resource handling.
- * 
+ *
  * @version $Id$
  * @since 1.0
  */
@@ -43,9 +43,8 @@ public abstract class ResourceUtils {
     /**
      * Get the uri of a resource. This method corrects the uri in the case of
      * the file protocol on windows.
-     * 
-     * @param resource
-     *            The resource.
+     *
+     * @param resource The resource.
      * @return The uri.
      * @throws IOException
      */

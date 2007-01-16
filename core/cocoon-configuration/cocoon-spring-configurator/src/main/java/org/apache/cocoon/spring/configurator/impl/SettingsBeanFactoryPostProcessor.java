@@ -198,8 +198,8 @@ public class SettingsBeanFactoryPostProcessor
                 }
             }
         }
-        // check for additionally specified custom file        
-        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
+        // check for additionally specified custom file
+        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS,
                                                       getSystemProperty(Settings.PROPERTY_USER_SETTINGS));
         if ( additionalPropertyFile != null ) {
             if ( this.logger.isDebugEnabled() ) {

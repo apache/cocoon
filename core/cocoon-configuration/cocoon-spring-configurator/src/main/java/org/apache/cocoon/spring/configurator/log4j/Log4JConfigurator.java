@@ -40,15 +40,25 @@ public class Log4JConfigurator
     /** The configuration resources. */
     protected Resource resource;
 
-    public void setSettings(Settings s) {
+    /**
+     * Inject the settings object.
+     * @param s The settings bean.
+     */
+    public void setSettings(final Settings s) {
         this.settings = s;
     }
 
-    public void setResource(Resource r) {
-        this.resource = r;        
+    /**
+     * Set the configuration resource.
+     * @param r The resource.
+     */
+    public void setResource(final Resource r) {
+        this.resource = r;
     }
 
     /**
+     * This method is called after the instance is setup and before it is used.
+     * @throws Exception If anything during configuration goes wrong an exception is thrown.
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
@@ -56,9 +66,12 @@ public class Log4JConfigurator
     }
 
     /**
+     * Substitute variables in the string value.
+     * @param value The value which might contain variable references.
+     * @return The new value without variables (if defined).
      * @see org.apache.log4j.xml.DOMConfigurator#subst(java.lang.String)
      */
-    protected String subst(String value) {
+    protected String subst(final String value) {
         return PropertyHelper.replace(value, this.settings);
-    }  
+    }
 }

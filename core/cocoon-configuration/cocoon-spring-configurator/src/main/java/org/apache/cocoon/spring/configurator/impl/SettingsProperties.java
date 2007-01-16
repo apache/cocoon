@@ -27,13 +27,21 @@ import org.apache.cocoon.configuration.Settings;
  */
 public class SettingsProperties extends Properties {
 
+    /** A reference to the settings beans. */
     protected final Settings settings;
 
+    /**
+     * Constructor for this properties object.
+     * @param s The settings object.
+     */
     public SettingsProperties(Settings s) {
         this.settings = s;
     }
 
     /**
+     * @param key The name of the property.
+     * @param defaultValue The default value of the property.
+     * @return The value of the property or the default value.
      * @see java.util.Properties#getProperty(java.lang.String, java.lang.String)
      */
     public String getProperty(String key, String defaultValue) {
@@ -41,10 +49,11 @@ public class SettingsProperties extends Properties {
     }
 
     /**
+     * @param key The name of the property.
+     * @return The value of the property or null.
      * @see java.util.Properties#getProperty(java.lang.String)
      */
     public String getProperty(String key) {
         return this.settings.getProperty(key);
     }
-    
 }

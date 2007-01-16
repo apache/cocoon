@@ -61,7 +61,7 @@ public class ChildSettingsElementParser extends AbstractSettingsElementParser {
 
         final Properties additionalProps = this.getAdditionalProperties(element);
         if ( additionalProps != null ) {
-            def.getPropertyValues().addPropertyValue("additionalProperties", additionalProps);                
+            def.getPropertyValues().addPropertyValue("additionalProperties", additionalProps);
         }
 
         final List propertiesIncludes = this.getPropertyIncludes(element);

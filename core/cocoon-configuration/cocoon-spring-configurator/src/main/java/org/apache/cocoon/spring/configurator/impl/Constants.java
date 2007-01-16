@@ -30,12 +30,14 @@ public abstract class Constants {
      * From this location bean definitions (*.xml) and property overrides (*.properties)
      * are read.
      */
-    public static final String CLASSPATH_SPRING_CONFIGURATION_LOCATION = "classpath*:META-INF/cocoon/spring";
+    public static final String CLASSPATH_SPRING_CONFIGURATION_LOCATION =
+                "classpath*:META-INF/cocoon/spring";
 
     /**
      * The location of property files (*.properties) for the settings.
      */
-    public static final String CLASSPATH_PROPERTIES_LOCATION = "classpath*:META-INF/cocoon/properties";
+    public static final String CLASSPATH_PROPERTIES_LOCATION =
+                "classpath*:META-INF/cocoon/properties";
 
     /**
      * The location of global property overrides (*.properties).

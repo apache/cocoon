@@ -149,7 +149,7 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     protected MutableSettings createMutableSettingsInstance() {
         final Settings parentSettings = this.getParentSettings();
         if ( parentSettings == null ) {
-            return new MutableSettings(this.getRunningMode());              
+            return new MutableSettings(this.getRunningMode());
         }
         return new MutableSettings(parentSettings);
     }
@@ -209,7 +209,7 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
                 }
             } catch (Exception ignore) {
                 this.logger.warn("Unable to get properties from provider.", ignore);
-                this.logger.warn("Continuing initialization.");            
+                this.logger.warn("Continuing initialization.");
             }
         }
 
