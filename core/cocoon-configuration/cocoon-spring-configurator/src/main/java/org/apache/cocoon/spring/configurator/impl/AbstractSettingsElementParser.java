@@ -69,7 +69,7 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
                 }
             }
         }
-        return propertyDirs;        
+        return propertyDirs;
     }
 
     /**
@@ -128,7 +128,7 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
 
         // If there are bean includes for a directory, we register a property placeholder configurer
         if ( overridePropertyIncludes.size() > 0 ) {
-            this.registerPropertyOverrideConfigurer(parserContext, overridePropertyIncludes); 
+            this.registerPropertyOverrideConfigurer(parserContext, overridePropertyIncludes);
         }
 
         // register additonal components
@@ -200,7 +200,7 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
     /**
      * Register a property placeholder configurer. The configurer will read all
      * *.properties files from the specified locations.
-     * 
+     *
      * @param parserContext
      * @param locations
      */

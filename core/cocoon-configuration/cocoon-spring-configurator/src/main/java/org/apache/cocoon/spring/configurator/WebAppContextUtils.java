@@ -105,12 +105,11 @@ public abstract class WebAppContextUtils {
 
     /**
      * Private bean keeping track of the class loader and web application context.
-     * @version $Id$
      */
     protected static final class ContextInfo {
         public final ClassLoader classLoader;
         public final WebApplicationContext webAppContext;
-        
+
         public ContextInfo(WebApplicationContext w, ClassLoader c) {
             this.classLoader = c;
             this.webAppContext = w;

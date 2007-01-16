@@ -30,7 +30,7 @@ public abstract class RunningModeHelper {
      * Name of the system property specifying the running mode.
      */
     public final static String PROPERTY_RUNNING_MODE = "org.apache.cocoon.mode";
-    
+
     // determine an ev. set running mode from the system properties
     private static final String SYSTEM_RUNNING_MODE;
     static {
@@ -43,8 +43,8 @@ public abstract class RunningModeHelper {
         SYSTEM_RUNNING_MODE = mode;
     }
 
-    /** 
-     * Determine the running mode. 
+    /**
+     * Determine the running mode.
      * A non-null system property will have precedence over everything else.
      * The system default running mode will be used if the passed parameter mode is null.
      * @see #PROPERTY_RUNNING_MODE
@@ -72,6 +72,6 @@ public abstract class RunningModeHelper {
                 "Invalid running mode: " + mode + " - Use one of: " + Arrays.asList(SettingsDefaults.RUNNING_MODES);
             throw new IllegalArgumentException(msg);
         }
-        */        
+        */
     }
 }

@@ -67,7 +67,7 @@ public abstract class DeploymentUtil {
                 out.getParentFile().mkdirs();
                 IOUtils.copy(jarFile.getInputStream(entry), new FileOutputStream(out));
             }
-        }        
+        }
     }
 
     protected static void deployBlockResources(String relativeDirectory,
@@ -120,7 +120,7 @@ public abstract class DeploymentUtil {
             }
             // we only handle jar files and ordinary files
             // TODO - Should we throw an exception if it's some other protocol type? (or log?)
-        }        
+        }
     }
 
     public static Map deployBlockArtifacts(String destinationDirectory)

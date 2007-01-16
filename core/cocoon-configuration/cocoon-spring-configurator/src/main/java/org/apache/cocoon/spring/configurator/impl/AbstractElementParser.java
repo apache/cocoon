@@ -35,7 +35,7 @@ import org.w3c.dom.NodeList;
 /**
  * This is a base class for all bean definition parsers used in Cocoon. It
  * provides some utility methods.
- * 
+ *
  * @version $Id$
  * @since 1.0
  */
@@ -74,13 +74,10 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Register a bean definition.
-     * 
-     * @param beanDef
-     *            The bean definition.
-     * @param beanName
-     *            The name of the bean.
-     * @param registry
-     *            The registry.
+     *
+     * @param beanDef The bean definition.
+     * @param beanName The name of the bean.
+     * @param registry The registry.
      */
     protected void register(BeanDefinition beanDef, String beanName, BeanDefinitionRegistry registry) {
         this.register(beanDef, beanName, null, registry);
@@ -88,15 +85,11 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Register a bean definition.
-     * 
-     * @param beanDef
-     *            The bean definition.
-     * @param beanName
-     *            The name of the bean.
-     * @param alias
-     *            Optional alias.
-     * @param registry
-     *            The registry.
+     *
+     * @param beanDef The bean definition.
+     * @param beanName The name of the bean.
+     * @param alias Optional alias.
+     * @param registry The registry.
      */
     protected void register(BeanDefinition beanDef, String beanName, String alias, BeanDefinitionRegistry registry) {
         if (this.logger.isDebugEnabled()) {
@@ -114,13 +107,10 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Helper method to create a new bean definition.
-     * 
-     * @param componentClass
-     *            The class of the implementation.
-     * @param initMethod
-     *            Optional initialization method.
-     * @param requiresSettings
-     *            If set to true, this bean has a property "settings" for the
+     *
+     * @param componentClass The class of the implementation.
+     * @param initMethod Optional initialization method.
+     * @param requiresSettings If set to true, this bean has a property "settings" for the
      *            settings object.
      * @return A new root bean definition.
      */
@@ -140,13 +130,10 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Helper method to create a new bean definition.
-     * 
-     * @param componentClass
-     *            The class of the implementation.
-     * @param initMethod
-     *            Optional initialization method.
-     * @param requiresSettings
-     *            If set to true, this bean has a property "settings" for the
+     *
+     * @param componentClass The class of the implementation.
+     * @param initMethod Optional initialization method.
+     * @param requiresSettings If set to true, this bean has a property "settings" for the
      *            settings object.
      * @return A new root bean definition.
      */
@@ -166,18 +153,13 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Add a new bean definition to the registry.
-     * 
-     * @param componentClass
-     *            The class of the implementation.
-     * @param beanName
-     *            The name of the bean.
-     * @param initMethod
-     *            Optional initialization method.
-     * @param requiresSettings
-     *            If set to true, this bean has a property "settings" for the
+     *
+     * @param componentClass The class of the implementation.
+     * @param beanName The name of the bean.
+     * @param initMethod Optional initialization method.
+     * @param requiresSettings If set to true, this bean has a property "settings" for the
      *            settings object.
-     * @param registry
-     *            The bean registry.
+     * @param registry The bean registry.
      */
     protected void addComponent(Class componentClass, String beanName, String initMethod, boolean requiresSettings,
             BeanDefinitionRegistry registry) {
@@ -188,18 +170,13 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
 
     /**
      * Add a new bean definition to the registry.
-     * 
-     * @param componentClass
-     *            The class of the implementation.
-     * @param beanName
-     *            The name of the bean.
-     * @param initMethod
-     *            Optional initialization method.
-     * @param requiresSettings
-     *            If set to true, this bean has a property "settings" for the
+     *
+     * @param componentClass The class of the implementation.
+     * @param beanName The name of the bean.
+     * @param initMethod Optional initialization method.
+     * @param requiresSettings If set to true, this bean has a property "settings" for the
      *            settings object.
-     * @param registry
-     *            The bean registry.
+     * @param registry The bean registry.
      */
     protected void addComponent(String componentClass, String beanName, String initMethod, boolean requiresSettings,
             BeanDefinitionRegistry registry) {

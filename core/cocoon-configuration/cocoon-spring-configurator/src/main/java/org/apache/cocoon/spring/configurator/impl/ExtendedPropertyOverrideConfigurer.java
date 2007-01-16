@@ -33,7 +33,7 @@ import org.springframework.core.io.ResourceLoader;
  * Our version of the property override configurer which reads properties from
  * the Cocoon spring configuration directory. A property should have the
  * following format: {bean name}/{property name}={value}.
- * 
+ *
  * @version $Id$
  * @since 1.0
  */
@@ -66,7 +66,7 @@ public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigur
 
     /**
      * Set the directories to search in.
-     * 
+     *
      * @param list     A list of string pointing to directories.
      */
     public void setLocations(final List list) {
@@ -80,9 +80,8 @@ public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigur
 
     /**
      * Set the resource loader.
-     * 
-     * @param loader
-     *            The new resource loader.
+     *
+     * @param loader The new resource loader.
      */
     public void setResourceLoader(final ResourceLoader loader) {
         this.resourceLoader = loader;
@@ -91,7 +90,7 @@ public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigur
     /**
      * Read all property files from the specified location and apply the
      * changes.
-     * 
+     *
      * @see org.springframework.beans.factory.config.PropertyResourceConfigurer#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)
      */
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {

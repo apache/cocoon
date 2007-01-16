@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 
 /**
  * Add a bean definition for the settings object to the bean factory.
- * 
+ *
  * @see ConfiguratorNamespaceHandler
  * @see SettingsBeanFactoryPostProcessor
  * @version $Id$
@@ -42,7 +42,7 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
 
     /** The name of the configuration attribute to specify if configurations are read from the classpath. */
     public static final String READ_FROM_CLASSPATH_ATTR = "readFromClasspath";
-    
+
     /** The name of the configuration attribute to specify if configurations are read from the global location. */
     public static final String READ_FROM_GLOBAL_LOCATION_ATTR = "readFromGlobalLocation";
 
@@ -60,7 +60,7 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
         // add additional properties
         final Properties additionalProps = this.getAdditionalProperties(element);
         if ( additionalProps != null ) {
-            beanDef.getPropertyValues().addPropertyValue("additionalProperties", additionalProps);                
+            beanDef.getPropertyValues().addPropertyValue("additionalProperties", additionalProps);
         }
 
         // add additional property directories
@@ -82,14 +82,14 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
         }
 
         // register settings bean
-        this.register(beanDef, Settings.ROLE, parserContext.getRegistry());        
+        this.register(beanDef, Settings.ROLE, parserContext.getRegistry());
     }
 
     /**
      * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsElementParser#getRunningMode(org.w3c.dom.Element)
      */
     protected String getRunningMode(Element e) {
-        return RunningModeHelper.determineRunningMode( this.getAttributeValue(e, RUNNING_MODE_ATTR, null) );        
+        return RunningModeHelper.determineRunningMode( this.getAttributeValue(e, RUNNING_MODE_ATTR, null) );
     }
 
     /**
