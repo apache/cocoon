@@ -27,7 +27,6 @@
   </map:generators>
   <map:actions>
    <map:action logger="sitemap.action.serverpages" name="serverpages"
-               pool-max="32"
                src="org.apache.cocoon.acting.ServerPagesAction"/>
   </map:actions>
 </map:components>
