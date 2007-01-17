@@ -108,6 +108,10 @@ public class JXMacrosHelper {
 
         // Add the "state" attribute
         attrs.addCDATAAttribute("state", form.getCombinedState().getName());
+
+        // Add locale attribute, useful for client-side code which needs to do stuff that
+        // corresponds to the form locale (e.g. date pickers)
+        attrs.addCDATAAttribute("locale", this.locale.toString().replaceAll("_", "-"));
         
         // Add the "listening" attribute is the value has change listeners
         if (form instanceof ValueChangedListenerEnabled &&
