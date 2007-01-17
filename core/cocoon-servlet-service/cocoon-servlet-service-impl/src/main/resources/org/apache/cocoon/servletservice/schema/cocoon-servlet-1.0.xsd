@@ -15,143 +15,102 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- @version $Id: cocoon-configurator-1.0.xsd 492166 2007-01-03 14:48:23Z cziegeler $ -->
+<!-- @version $Id$ -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://cocoon.apache.org/schema/servlet"
-            xmlns:tns="http://cocoon.apache.org/schema/servlet"
-            xmlns="http://cocoon.apache.org/schema/servlet">
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	targetNamespace="http://cocoon.apache.org/schema/servlet"
+	xmlns:tns="http://cocoon.apache.org/schema/servlet"
+	xmlns="http://cocoon.apache.org/schema/servlet">
 
-    <xsd:annotation>
-      <xsd:documentation>
-        Schema for decorating servlet beans so that they are managed by Spring and
-        used in the servlet context configured by the elements in this scheme.
-      </xsd:documentation>
-    </xsd:annotation>
+	<xsd:import namespace="http://www.springframework.org/schema/beans"
+	            schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"/>
 
-    <xsd:element name="context">
-      <xsd:annotation>
-        <xsd:documentation>
-          The top level element. 
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:complexType>
-    	<xsd:sequence>
-    	    <xsd:element ref="init-params" minOccurs="0" maxOccurs="1"/>
-    	    <xsd:element ref="context-params" minOccurs="0" maxOccurs="1"/>
-    	    <xsd:element ref="connections" minOccurs="0" maxOccurs="1"/>
-    	</xsd:sequence>
-    	<xsd:attribute name="mountPath" type="xsd:string" use="optional">
-    	  <xsd:annotation>
-    	    <xsd:documentation>
-    	      Where the servlet should be mounted relative to the context
-    	      path of the embeding servlet container. Use an empty string
-    	      for mounting directly at the context path. Non empty mount paths
-    	      must start with '/'.
-    	      If the mountPath attribute not is used, the servlet will not be
-    	      available though an URI, it will only be avaliable through its
-    	      bean name for servlet beans connected to this servlet.
-    	    </xsd:documentation>
-    	  </xsd:annotation>
-    	</xsd:attribute>
-    	<xsd:attribute name="contextPath" type="xsd:string" use="optional">
-    	  <xsd:annotation>
-    	    <xsd:documentation>
-    	      The root path for the servlet context.
-    	    </xsd:documentation>
-    	  </xsd:annotation>
-    	</xsd:attribute>
-      </xsd:complexType>
-    </xsd:element>
+	<xsd:annotation>
+		<xsd:documentation>
+			Schema for decorating servlet beans so that they are managed
+			by Spring and used in the servlet context configured by the
+			elements in this scheme.
+		</xsd:documentation>
+	</xsd:annotation>
 
-    <xsd:element name="init-params">
-      <xsd:annotation>
-        <xsd:documentation>
-          The init params for the servlet configuration used for the servlet.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:complexType>
-      	<xsd:sequence>
-      	  <xsd:element ref="init-param" maxOccurs="unbounded" minOccurs="0"/>
-      	</xsd:sequence>
-      </xsd:complexType>
-    </xsd:element>
+	<xsd:element name="context">
+		<xsd:annotation>
+			<xsd:documentation>
+				The top level element.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="init-params" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="context-params" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="connections" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:attribute name="mount-path" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						Where the servlet should be mounted relative to
+						the context path of the embeding servlet
+						container. Use an empty string for mounting
+						directly at the context path. Non empty mount
+						paths must start with '/'. If the mountPath
+						attribute not is used, the servlet will not be
+						available though an URI, it will only be
+						avaliable through its bean name for servlet
+						beans connected to this servlet.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="context-path" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						The root path for the servlet context.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
 
-    <xsd:element name="init-param">
-      <xsd:annotation>
-        <xsd:documentation>
-          An init param for the servlet configuration.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:complexType>
-      	<xsd:attribute name="name" type="xsd:string" use="required"/>
-      	<xsd:attribute name="value" type="xsd:string" use="required"/>
-      </xsd:complexType>
-    </xsd:element>
+	<xsd:element name="init-params">
+		<xsd:annotation>
+			<xsd:documentation>
+				The init params for the servlet configuration used for
+				the servlet.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:mapType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
 
-    <xsd:element name="context-params">
-      <xsd:annotation>
-        <xsd:documentation>
-          Context parameters for the servlet context.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:complexType>
-      	<xsd:sequence>
-      	  <xsd:element ref="context-param" maxOccurs="unbounded" minOccurs="0"/>
-      	</xsd:sequence>
-      </xsd:complexType>
-    </xsd:element>
+	<xsd:element name="context-params">
+		<xsd:annotation>
+			<xsd:documentation>
+				Context parameters for the servlet context.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:mapType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
 
-    <xsd:element name="context-param">
-      <xsd:annotation>
-        <xsd:documentation>
-          A context parameter for the servlet context. Either a string value
-          or a reference to another bean can be used as argument.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:complexType>
-      	<xsd:attribute name="name" type="xsd:string" use="required"/>
-        <xsd:attribute name="value" type="xsd:string" use="optional"/>
-        <xsd:attribute name="ref" type="xsd:string" use="optional"/>
-      </xsd:complexType>
-    </xsd:element>
+	<xsd:element name="connections">
+		<xsd:annotation>
+			<xsd:documentation>
+				Connections to other servlet services that are made
+				available through the named dispatcher of the servlet
+				context. Consist of mappings between a named connection
+				to another servlet and a reference to it.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:mapType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
 
-    <xsd:element name="connections">
-      <xsd:annotation>
-        <xsd:documentation>
-          Connections to other servlet services that are made available
-          through the named dispatcher of the servlet context.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:complexType>
-      	<xsd:sequence>
-      	  <xsd:element ref="connection" maxOccurs="unbounded" minOccurs="0"/>
-      	</xsd:sequence>
-      </xsd:complexType>
-    </xsd:element>
-
-    <xsd:element name="connection">
-      <xsd:annotation>
-        <xsd:documentation>
-          A named connection to another servlet.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:complexType>
-      	<xsd:attribute name="name" type="xsd:string" use="required">
-      	  <xsd:annotation>
-      	    <xsd:documentation>
-      	      The local name of the servlet. Can be used through the named
-      	      dispatcher of the servlet context.
-      	    </xsd:documentation>
-      	  </xsd:annotation>
-      	</xsd:attribute>
-        <xsd:attribute name="ref" type="xsd:string" use="required">
-      	  <xsd:annotation>
-      	    <xsd:documentation>
-      	      A reference to another servlet service.
-      	    </xsd:documentation>
-      	  </xsd:annotation>
-        </xsd:attribute>
-      </xsd:complexType>
-    </xsd:element>
-    
 </xsd:schema>
