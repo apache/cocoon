@@ -54,10 +54,10 @@ public class ServletServiceContext extends ServletContextWrapper {
     
     public static final String SUPER = "super";
 
-    private Hashtable attributes = new Hashtable();
+    private Map attributes = new Hashtable();
     private Servlet servlet;
     private String mountPath;
-    private String blockContextURL;
+    private String contextPath;
     private Map properties;
     private Map connections;
 
@@ -102,7 +102,14 @@ public class ServletServiceContext extends ServletContextWrapper {
      * @see javax.servlet.ServletContext#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
-        return this.attributes.keys();
+        return Collections.enumeration(this.attributes.keySet());
+    }
+
+    /**
+     * @param map the attributes to set
+     */
+    public void setAttributes(Map map) {
+        this.attributes = map;
     }
 
     /*
@@ -113,17 +120,17 @@ public class ServletServiceContext extends ServletContextWrapper {
     public URL getResource(String path) throws MalformedURLException {
         // hack for getting a file protocol or other protocols that can be used as context
         // path in the getResource method in the servlet context
-        if (!(blockContextURL.startsWith("file:") || blockContextURL.startsWith("/")
-                || blockContextURL.indexOf(':') == -1)) {
+        if (!(contextPath.startsWith("file:") || contextPath.startsWith("/")
+                || contextPath.indexOf(':') == -1)) {
             SourceResolver resolver = null;
             Source source = null;
             try {
                 BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(this);
                 resolver = (SourceResolver) factory.getBean(SourceResolver.ROLE);
-                source = resolver.resolveURI(blockContextURL);
-                blockContextURL = source.getURI();
+                source = resolver.resolveURI(contextPath);
+                contextPath = source.getURI();
             } catch (IOException e) {
-                throw new MalformedURLException("Could not resolve " + blockContextURL);
+                throw new MalformedURLException("Could not resolve " + contextPath);
             } finally {
                 if (resolver != null)
                     resolver.release(source);
@@ -131,16 +138,16 @@ public class ServletServiceContext extends ServletContextWrapper {
         }
 
         // HACK: allow file:/ URLs for reloading of sitemaps during development
-        if (this.blockContextURL.startsWith("file:")) {
-            return new URL("file", null, this.blockContextURL.substring("file:".length()) + path);
+        if (this.contextPath.startsWith("file:")) {
+            return new URL("file", null, this.contextPath.substring("file:".length()) + path);
         } else {
-            if (this.blockContextURL.length() != 0 && this.blockContextURL.charAt(0) != '/')
-                throw new MalformedURLException("The blockContextURL must be empty or start with '/' "
-                        + this.blockContextURL);
+            if (this.contextPath.length() != 0 && this.contextPath.charAt(0) != '/')
+                throw new MalformedURLException("The contextPath must be empty or start with '/' "
+                        + this.contextPath);
             
-            // prefix the path with the block context resolve and resolve in the embeding
+            // prefix the path with the servlet context resolve and resolve in the embeding
             // servlet context
-            return super.getResource(this.blockContextURL + path);
+            return super.getResource(this.contextPath + path);
         }
     }
 
@@ -164,7 +171,7 @@ public class ServletServiceContext extends ServletContextWrapper {
         if (this.properties == null)
             return null;
         String value = (String) this.properties.get(name);
-        // Ask the super block for the property
+        // Ask the super servlet for the property
         if (value == null) {
             ServletContext superContext = this.getNamedContext(SUPER);
             if (superContext != null)
@@ -191,7 +198,7 @@ public class ServletServiceContext extends ServletContextWrapper {
             names.add(enumeration.nextElement());
         }
         
-        // add names of the super block
+        // add names of the super servlet
         ServletContext superContext = this.getNamedContext(SUPER);
         if (superContext != null) {
             enumeration = superContext.getInitParameterNames();
@@ -200,7 +207,7 @@ public class ServletServiceContext extends ServletContextWrapper {
             }
         }
 
-        // add property names of this block
+        // add property names of this servlet
         if (this.properties != null) {
             names.addAll(this.properties.keySet());
         }
@@ -275,10 +282,10 @@ public class ServletServiceContext extends ServletContextWrapper {
      */
     public Set getResourcePaths(String path) {
         String pathPrefix;
-        if (this.blockContextURL.startsWith("file:")) {
-            pathPrefix = this.blockContextURL.substring("file:".length());
+        if (this.contextPath.startsWith("file:")) {
+            pathPrefix = this.contextPath.substring("file:".length());
         } else {
-            pathPrefix = this.blockContextURL;
+            pathPrefix = this.contextPath;
         }
         
         path = pathPrefix + path;
@@ -339,10 +346,10 @@ public class ServletServiceContext extends ServletContextWrapper {
         return null;
     }
 
-    // Block specific methods
+    // Servlet service specific methods
     
     /**
-     * Set the servlet of the block
+     * Set the servlet of the context
      * @param servlet
      */
     public void setServlet(Servlet servlet) {
@@ -350,24 +357,24 @@ public class ServletServiceContext extends ServletContextWrapper {
     }
 
     /**
-     * Takes the scheme specific part of a block URI (the scheme is the
+     * Takes the scheme specific part of a servlet service URI (the scheme is the
      * responsibilty of the ServletSource) and resolve it with respect to the
-     * blocks mount point.
+     * servlets mount point.
      */
     public URI absolutizeURI(URI uri) throws URISyntaxException {
-        String blockName = uri.getScheme();
-        ServletServiceContext blockContext;
-        if (blockName == null) {
-            // this block
-            blockContext = this;
+        String servletServiceName = uri.getScheme();
+        ServletServiceContext servletServiceContext;
+        if (servletServiceName == null) {
+            // this servlet service
+            servletServiceContext = this;
         } else {
-            // another block
-            blockContext = (ServletServiceContext) this.getNamedContext(blockName);
-            if (blockContext == null)
-                throw new URISyntaxException(uri.toString(), "Unknown block name");
+            // another servlet service
+            servletServiceContext = (ServletServiceContext) this.getNamedContext(servletServiceName);
+            if (servletServiceContext == null)
+                throw new URISyntaxException(uri.toString(), "Unknown servlet service name");
         }
 
-        String mountPath = blockContext.getMountPath();
+        String mountPath = servletServiceContext.getMountPath();
         if (mountPath == null)
             throw new URISyntaxException(uri.toString(),
                     "No mount point for this URI");
@@ -379,7 +386,7 @@ public class ServletServiceContext extends ServletContextWrapper {
     }
     
     /**
-     * Get the context of a block with a given name.
+     * Get the context of a servlet service with a given name.
      */
     // FIXME implement NPE handling
     public ServletContext getNamedContext(String name) {
@@ -387,9 +394,9 @@ public class ServletServiceContext extends ServletContextWrapper {
             return null;
         }
         
-        ServletService blockServlet =
+        ServletService servletService =
             (ServletService) this.connections.get(name);
-        return blockServlet != null ? blockServlet.getBlockContext() : null;
+        return servletService != null ? servletService.getBlockContext() : null;
     }
         
     /**
@@ -400,23 +407,23 @@ public class ServletServiceContext extends ServletContextWrapper {
     }
 
     /**
-     * Get the mount path of the block context
+     * Get the mount path of the servlet service context
      */
     public String getMountPath() {
         return this.mountPath;
     }
     
     /**
-     * @param blockContextURL the blockContextURL to set
+     * @param contextPath
      */
-    public void setBlockContextURL(String blockContextURL) {
-        this.blockContextURL = blockContextURL;
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 
     /**
      * @param properties The properties to set.
      */
-    public void setProperties(Map properties) {
+    public void setInitParams(Map properties) {
         this.properties = properties;
     }
 
@@ -429,23 +436,23 @@ public class ServletServiceContext extends ServletContextWrapper {
 
     protected class NamedDispatcher implements RequestDispatcher {
 
-        private String blockName;
+        private String servletServiceName;
         private boolean superCall = false;
         private ServletContext context;
 
-        public NamedDispatcher(String blockName) {
-            this.blockName = blockName;
-            this.superCall = SUPER.equals(this.blockName);
+        public NamedDispatcher(String servletServiceName) {
+            this.servletServiceName = servletServiceName;
+            this.superCall = SUPER.equals(this.servletServiceName);
 
-            // Call to a named block that exists in the current context
-            this.context = ServletServiceContext.this.getNamedContext(this.blockName);
+            // Call to a named servlet service that exists in the current context
+            this.context = ServletServiceContext.this.getNamedContext(this.servletServiceName);
             if (this.context == null) {
-                // If there is a super block, the connection might
+                // If there is a super servlet service, the connection might
                 // be defined there instead.
                 ServletServiceContext superContext =
                     (ServletServiceContext) ServletServiceContext.this.getNamedContext(SUPER);
                 if (superContext != null) {
-                    this.context = superContext.getNamedContext(this.blockName);
+                    this.context = superContext.getNamedContext(this.servletServiceName);
                     this.superCall = true;
                 }
             }
@@ -463,9 +470,9 @@ public class ServletServiceContext extends ServletContextWrapper {
          */
         public void forward(ServletRequest request, ServletResponse response)
                 throws ServletException, IOException {
-            // Call to named block
+            // Call to named servlet service
 
-            ServletServiceContext.this.log("Enter processing in block " + this.blockName);
+            ServletServiceContext.this.log("Enter processing in servlet service " + this.servletServiceName);
             RequestDispatcher dispatcher =
                 this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
             if (dispatcher != null && dispatcher instanceof PathDispatcher) {
@@ -474,7 +481,7 @@ public class ServletServiceContext extends ServletContextWrapper {
                 // Cannot happen
                 throw new IllegalStateException();
             }
-            ServletServiceContext.this.log("Leaving processing in block " + this.blockName);
+            ServletServiceContext.this.log("Leaving processing in servlet service " + this.servletServiceName);
         }
 
         /*
@@ -490,11 +497,11 @@ public class ServletServiceContext extends ServletContextWrapper {
     }
     
     /**
-     *  Limited functionality, assumes that there is at most one servlet in the block
+     *  Limited functionality, assumes that there is at most one servlet in the context
      */
     private class PathDispatcher implements RequestDispatcher {
         
-        // Ignores path, as the assumed only servlet within the block is
+        // Ignores path, as the assumed only servlet within the context is
         // implicitly mounted on '/*'
         private PathDispatcher(String path) {
         }
@@ -515,13 +522,13 @@ public class ServletServiceContext extends ServletContextWrapper {
         throws ServletException, IOException {
             try {
                 if (!superCall) {
-                    // It is important to set the current block each time
-                    // a new block is entered, this is used for the block
+                    // It is important to set the current context each time
+                    // a new context is entered, this is used for the servlet
                     // protocol
                     CallStack.enterBlock(ServletServiceContext.this);
                 } else {
-                    // A super block should be called in the context of
-                    // the called block to get polymorphic calls resolved
+                    // A super servlet service should be called in the context of
+                    // the called servlet service to get polymorphic calls resolved
                     // in the right way. We still need to register the
                     // current context for resolving super calls relative it.
                     CallStack.enterSuperBlock(ServletServiceContext.this);

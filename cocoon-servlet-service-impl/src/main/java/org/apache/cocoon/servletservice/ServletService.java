@@ -162,7 +162,7 @@ public class ServletService extends HttpServlet
     // FIXME: would like to throw an exeption if the form of the url is faulty,
     // what is the prefered way of handling faulty properties in Spring?
     public void setBlockContextURL(String blockContextURL) {
-        this.blockContext.setBlockContextURL(blockContextURL);
+        this.blockContext.setContextPath(blockContextURL);
     }
 
     public void setServletClass(String servletClass) {
@@ -170,7 +170,7 @@ public class ServletService extends HttpServlet
     }
 
     public void setProperties(Map properties) {
-        this.blockContext.setProperties(properties);
+        this.blockContext.setInitParams(properties);
     }
     
     public void setConnections(Map connections) {
