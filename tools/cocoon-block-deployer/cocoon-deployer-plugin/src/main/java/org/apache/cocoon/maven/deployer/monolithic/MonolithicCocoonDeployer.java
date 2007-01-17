@@ -111,7 +111,7 @@ public class MonolithicCocoonDeployer {
 
             copyFile(basedir, "blocks/sitemap.xmap");
             //copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
-            writeStringTemplateToFile(basedir, "WEB-INF/cocoon/log4j.xconf", customLog4jXconf, templateObjects);
+            writeStringTemplateToFile(basedir, "WEB-INF/cocoon/log4j.xml", customLog4jXconf, templateObjects);
             // copyFile(basedir, "WEB-INF/web.xml");
 
             for (int i = 0; i < developmentBlocks.length; ++i) {
