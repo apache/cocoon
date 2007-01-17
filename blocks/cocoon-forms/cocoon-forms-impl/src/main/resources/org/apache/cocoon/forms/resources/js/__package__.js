@@ -26,6 +26,7 @@ dojo.kwCompoundRequire({
                 "cocoon.forms.CFormsRepeater",
                 "cocoon.forms.CFormsDragAndDropRepeater",
                 "cocoon.forms.CFormsSuggest",
+                "cocoon.forms.DropdownDateTimePicker",
                 "dojo.widget.InlineEditBox" // also needed by advanced-field-styling
         ]
 });

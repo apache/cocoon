@@ -24,37 +24,19 @@
       | This stylesheet is designed to be included by 'forms-advanced-styling.xsl'.
       +-->
 
-  <xsl:template match="head" mode="forms-calendar">
-    <script src="{$resources-uri}/forms/mattkruse-lib/CalendarPopup.js" type="text/javascript"/>
-    <script src="{$resources-uri}/forms/mattkruse-lib/date.js" type="text/javascript"/>
-    <script type="text/javascript">
-      // Setup calendar
-      var forms_calendar = CalendarPopup();
-      forms_calendar.setWeekStartDay(1);
-      forms_calendar.showYearNavigation();
-      forms_calendar.showYearNavigationInput();
-      forms_calendar.setCssPrefix("forms_");
-    </script>
-    <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms/css/forms-calendar.css"/>
-  </xsl:template>
-
-  <xsl:template match="body" mode="forms-calendar">
-    <!-- div id="forms_calendarDiv"/ -->
-  </xsl:template>
-
   <!--+
       | fi:field or fi:aggregatefield with either
       | - explicit styling @type = 'date' or
       | - implicit if no styling @type is specified,
-      |   but datatype/@type = 'date' and datatype/convertor/@variant = 'date',
+      |   but datatype/@type = 'date',
       |   selection lists must be excluded here
       +-->
   <xsl:template match="fi:field[fi:styling/@type='date'] |
-                       fi:field[fi:datatype[@type='date'][fi:convertor/@variant='date']][not(fi:styling/@type)][not(fi:selection-list)] |
+                       fi:field[fi:datatype[@type='date']][not(fi:styling/@type)][not(fi:selection-list)] |
                        fi:aggregatefield[fi:datatype[@type='date'][fi:convertor/@variant='date']][not(fi:styling/@type)][not(fi:selection-list)]
                        ">
     <xsl:variable name="id" select="concat(@id, ':cal')"/>
-    
+
     <xsl:variable name="format">
       <xsl:choose>
         <xsl:when test="fi:datatype[@type='date']/fi:convertor/@pattern">
@@ -63,32 +45,27 @@
         <xsl:otherwise>yyyy-MM-dd</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    
+
+    <xsl:variable name="variant">
+      <xsl:choose>
+        <xsl:when test="fi:datatype[@type='date']/fi:convertor/@variant">
+          <xsl:value-of select="fi:datatype[@type='date']/fi:convertor/@variant"/>
+        </xsl:when>
+        <xsl:otherwise>date</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <span id="{@id}">
       <xsl:choose>
         <xsl:when test="@state = 'output'">
           <xsl:value-of select="fi:value"/>
         </xsl:when>
         <xsl:otherwise>
-	      <!-- regular input -->
-	      <input id="{@id}:input" name="{@id}" value="{fi:value}" title="{normalize-space(fi:hint)}" type="text">
+        <!-- regular input -->
+	      <input id="{@id}:input" name="{@id}" value="{fi:value}" title="{normalize-space(fi:hint)}" type="text" dojoType="forms:dropdownDateTimePicker" pattern="{$format}" variant="{$variant}">
 	        <xsl:apply-templates select="." mode="styling"/>
 	      </input>
-	    
-	      <!-- calendar popup -->
-	      <xsl:choose>
-	        <xsl:when test="@state = 'disabled'">
-	          <img src="{$resources-uri}/forms/img/cal.gif" alt="forms:calendar.alt" i18n:attr="alt"/>
-	        </xsl:when>
-	        <xsl:otherwise>
-	          <a href="#" name="{$id}" id="{$id}"
-	             onclick="forms_calendar.select(cocoon.forms.getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
-	            <img src="{$resources-uri}/forms/img/cal.gif" alt="forms:calendar.alt" i18n:attr="alt"/>
-	          </a>
-	        </xsl:otherwise>
-	      </xsl:choose>
-	
-	      <!-- common stuff -->
+        <!-- common stuff -->
 	      <xsl:apply-templates select="." mode="common"/>
 	    </xsl:otherwise>
 	  </xsl:choose>

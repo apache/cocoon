@@ -36,13 +36,11 @@
     <script src="{$resources-uri}/forms/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
     <script src="{$resources-uri}/forms/mattkruse-lib/OptionTransfer.js" type="text/javascript"/>
     <script src="{$resources-uri}/forms/mattkruse-lib/selectbox.js" type="text/javascript"/>
-    <xsl:apply-templates select="." mode="forms-calendar"/>
     <xsl:apply-templates select="." mode="forms-htmlarea"/>
   </xsl:template>
 
   <xsl:template match="body" mode="forms-field">
     <xsl:apply-imports/>
-    <xsl:apply-templates select="." mode="forms-calendar"/>
     <xsl:apply-templates select="." mode="forms-htmlarea"/>
   </xsl:template>
 

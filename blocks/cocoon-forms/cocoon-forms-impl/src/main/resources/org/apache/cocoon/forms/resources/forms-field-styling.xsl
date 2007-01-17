@@ -59,9 +59,17 @@
       |       <xsl:attribute name="onload">cocoon.forms.callOnLoadHandlers(); <xsl:value-of select="@onload"/></xsl:attribute>
       +-->
   <xsl:template match="head" mode="forms-field">
-    <xsl:if test="$dojo-debug = 'true'">                                           <!-- turn on debugging, if requested -->
-        <script type="text/javascript"> djConfig = {isDebug: true} </script>
-    </xsl:if>
+    <script type="text/javascript">
+      var djConfig = {};
+      <xsl:if test="$dojo-debug = 'true'">                                           <!-- turn on debugging, if requested -->
+        <xsl:text> djConfig.isDebug = true; </xsl:text>
+      </xsl:if>
+      djConfig.extraLocale = ["en", "de", "nl", "fr", "it", "pt"];
+      var cocoon;
+      if (!cocoon)
+        cocoon = {};
+      cocoon.resourcesUri = "<xsl:value-of select="$resources-uri"/>";
+    </script>
     <script src="{$resources-uri}/dojo/dojo.js" type="text/javascript"/>           <!-- load dojo -->
     <script type="text/javascript">dojo.require("dojo.widget.*");</script>         <!-- require dojo.widget for auto-loading -->
     <xsl:if test="$dojo-debug = 'true'">                                           <!-- require console etc. for dojo debug, if requested -->
