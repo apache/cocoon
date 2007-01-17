@@ -38,16 +38,18 @@ public class FormattingDateConvertorBuilder implements ConvertorBuilder {
 
         String style = configElement.getAttribute("style");
         if (!style.equals("")) {
-            if (style.equals("short"))
-                convertor.setStyle(DateFormat.SHORT);
-            else if (style.equals("medium"))
-                convertor.setStyle(DateFormat.MEDIUM);
-            else if (style.equals("long"))
-                convertor.setStyle(DateFormat.LONG);
-            else if (style.equals("full"))
-                convertor.setStyle(DateFormat.FULL);
-            else
+            int parsedStyle = parseDateTimeStyle(style);
+            if (parsedStyle == -1)
                 throw new Exception("Invalid value \"" + style + "\" for style attribute at " + DomHelper.getLocation(configElement));
+            convertor.setStyle(parsedStyle);
+        }
+
+        String timeStyle = configElement.getAttribute("timeStyle");
+        if (!timeStyle.equals("")) {
+            int parsedStyle = parseDateTimeStyle(timeStyle);
+            if (parsedStyle == -1)
+                throw new Exception("Invalid value \"" + timeStyle + "\" for timeStyle attribute at " + DomHelper.getLocation(configElement));
+            convertor.setTimeStyle(parsedStyle);
         }
 
         String variant = configElement.getAttribute("variant");
@@ -90,5 +92,18 @@ public class FormattingDateConvertorBuilder implements ConvertorBuilder {
         }
 
         return convertor;
+    }
+
+    private int parseDateTimeStyle(String style) {
+        if (style.equals("short"))
+            return DateFormat.SHORT;
+        else if (style.equals("medium"))
+            return DateFormat.MEDIUM;
+        else if (style.equals("long"))
+            return DateFormat.LONG;
+        else if (style.equals("full"))
+            return DateFormat.FULL;
+        else
+            return -1;
     }
 }
