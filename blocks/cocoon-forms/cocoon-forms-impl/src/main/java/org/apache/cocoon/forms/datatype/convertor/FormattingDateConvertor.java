@@ -48,6 +48,7 @@ import java.text.SimpleDateFormat;
 public class FormattingDateConvertor implements Convertor {
     /** See {@link #setStyle}. */
     private int style;
+    private int timeStyle = -1;
     /** See {@link #setVariant}. */
     private String variant;
     /** Locale-specific formatting patterns. */
@@ -98,15 +99,16 @@ public class FormattingDateConvertor implements Convertor {
     protected SimpleDateFormat getDateFormat(Locale locale) {
         SimpleDateFormat dateFormat = null;
 
+        int timeStyle = this.timeStyle != -1 ? this.timeStyle : style;
         if (this.variant.equals(DATE)) {
             //dateFormat = I18nSupport.getInstance().getDateFormat(style, locale);
             dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(style, locale);
         } else if (this.variant.equals(TIME)) {
             //dateFormat = I18nSupport.getInstance().getTimeFormat(style, locale);
-            dateFormat = (SimpleDateFormat)DateFormat.getTimeInstance(style, locale);
+            dateFormat = (SimpleDateFormat)DateFormat.getTimeInstance(timeStyle, locale);
         } else if (this.variant.equals(DATE_TIME)) {
             //dateFormat = I18nSupport.getInstance().getDateTimeFormat(style, style, locale);
-            dateFormat = (SimpleDateFormat)DateFormat.getDateTimeInstance(style, style, locale);
+            dateFormat = (SimpleDateFormat)DateFormat.getDateTimeInstance(style, timeStyle, locale);
         }
 
         String pattern = (String)localizedPatterns.get(locale);
@@ -134,6 +136,15 @@ public class FormattingDateConvertor implements Convertor {
      */
     public void setStyle(int style) {
         this.style = style;
+    }
+
+    /**
+     * Sets the style for times, if not specified it defaults to the same style as for dates.
+     *
+     * @param style one of the constants FULL, LONG, MEDIUM or SHORT defined in the {@link Date} class.
+     */
+    public void setTimeStyle(int style) {
+        this.timeStyle = style;
     }
 
     public void setVariant(String variant) {
