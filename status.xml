@@ -181,6 +181,13 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="BRD" type="update">
+      CForms: introduce a new dojo-based popup-picker for dates, times and datetimes.
+    </action>
+    <action dev="BRD" type="add">
+      CForms: add support for a "timeStyle" attribute on the formatting date convertor, so
+      that the time style can (optionally) be specified independently from the date style.
+    </action>
     <action dev="CZ" type="fix">
       Portal block: Fix truncation of included portlets in html include serializer.
     </action>
