@@ -39,7 +39,8 @@ dojo.provide("cocoon.forms.manifest");
 			"simpleform"                : "cocoon.forms.SimpleForm",
 			"ajaxform"                  : "cocoon.forms.AjaxForm",
 			"cformsrepeater"            : "cocoon.forms.CFormsRepeater",
-			"cformssuggest"             : "cocoon.forms.CFormsSuggest"
+			"cformssuggest"             : "cocoon.forms.CFormsSuggest",
+            "dropdowndatetimepicker"    : "cocoon.forms.DropdownDateTimePicker"
             // register new Widgets in the cocoon.forms namespace here
 		},
 		svg: {
