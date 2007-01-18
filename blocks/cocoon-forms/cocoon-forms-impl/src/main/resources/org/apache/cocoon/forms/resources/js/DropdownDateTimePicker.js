@@ -41,9 +41,9 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
 
         isContainer: true,
 
-        dateIconURL: cocoon.resourcesUri + "/forms/js/templates/dateIcon.gif",
+        dateIconURL: cocoon.resourcesUri + "/forms/js/templates/images/dateIcon.gif",
 
-        timeIconURL: cocoon.resourcesUri + "/forms/js/templates/timeIcon.gif",
+        timeIconURL: cocoon.resourcesUri + "/forms/js/templates/images/timeIcon.gif",
 
         containerToggle: "explode",
 
