@@ -42,7 +42,7 @@ dojo.widget.defineWidget(
 
         closeIconURL: cocoon.resourcesUri + "/forms/js/templates/images/close.gif",
 
-        containerToggle: "show",
+        containerToggle: "plain", /* plain, explode, wipe, fade */
 
         containerToggleDuration: 150,
 
@@ -76,10 +76,6 @@ dojo.widget.defineWidget(
 
             // copy content from original element to the popup
             this.contentNode.innerHTML = this.getFragNodeRef(frag).innerHTML;
-//            var origContent = this.getFragNodeRef(frag).childNodes;
-//            for (var i = 0; i < origContent.length; i++) {
-//                this.contentNode.appendChild(origContent.item(i));
-//            }
 
             // make sure popup can be visible
             this.popupNode.style.display = "";
