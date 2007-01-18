@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.apache.cocoon.auth.ApplicationManager;
 import org.apache.cocoon.auth.AuthenticationException;
+import org.apache.cocoon.auth.SecurityHandler;
 import org.apache.cocoon.auth.User;
 import org.apache.commons.lang.StringUtils;
 
