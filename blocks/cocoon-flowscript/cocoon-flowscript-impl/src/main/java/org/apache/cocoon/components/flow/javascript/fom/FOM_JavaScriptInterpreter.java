@@ -718,13 +718,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         setupView(scope, cocoon, null);
         // FIXME (SW): should we deprecate this method in favor of PipelineUtil?
         PipelineUtil pipeUtil = new PipelineUtil();
-        try {
-            pipeUtil.contextualize(this.avalonContext);
-            pipeUtil.service(this.manager);
-            pipeUtil.processToStream(uri, bizData, out);
-        } finally {
-            pipeUtil.dispose();
-        }
+        pipeUtil.processToStream(uri, bizData, out);
     }
 
     private void setupView(Scriptable scope, FOM_Cocoon cocoon, FOM_WebContinuation kont) {
