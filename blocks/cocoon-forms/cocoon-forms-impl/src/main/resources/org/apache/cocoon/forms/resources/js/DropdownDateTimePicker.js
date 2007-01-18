@@ -250,12 +250,12 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             options.locale = this.locale;
 
             this.dateFormatOptions = options;
-        },
-
-        destroy: function(/*Boolean*/finalize){
-            this.datePicker.destroy(finalize);
-            this.timePicker.destory(finalize);
-            cocoon.forms.DropdownDateTimePicker.superclass.destroy.apply(this, arguments);
         }
+
+//        destroy: function(/*Boolean*/finalize){
+//            this.datePicker.destroy(finalize);
+//            this.timePicker.destory(finalize);
+//            cocoon.forms.DropdownDateTimePicker.superclass.destroy.apply(this, arguments);
+//        }
     }
 );

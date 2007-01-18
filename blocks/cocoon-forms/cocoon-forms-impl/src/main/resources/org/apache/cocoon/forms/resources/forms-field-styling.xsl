@@ -228,7 +228,9 @@
       +-->
   <xsl:template match="fi:validation-message">
     <span dojoType="forms:infopopup" style="display:none" class="forms-validation-message-popup"
-          id="forms-validation-message-{../@id}" icon="validation-message.gif">
+           icon="validation-message.gif">
+      <!-- temporarily removed id attribute as it gave problems in ajax mode (duplicate id),
+            need to research this further id="forms-validation-message-{../@id}"-->
       <xsl:copy-of select="node()"/>
     </span>
   </xsl:template>
