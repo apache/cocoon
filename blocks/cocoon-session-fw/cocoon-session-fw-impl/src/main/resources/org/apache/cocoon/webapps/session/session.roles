@@ -40,7 +40,7 @@
 
   <role name="org.apache.cocoon.webapps.session.context.SessionContextProviderSelector"
         shorthand="session-context-providers"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector">
   </role>
 
 </role-list>
