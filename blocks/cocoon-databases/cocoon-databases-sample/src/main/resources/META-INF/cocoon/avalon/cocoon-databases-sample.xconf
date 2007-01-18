@@ -47,7 +47,7 @@
 
       The default is true.
       -->
-      <dburl>jdbc:hsqldb:hsql://localhost:${org.apache.cocoon.hsqldb.server.port}</dburl>
+      <dburl>jdbc:hsqldb:hsql://localhost:${org.apache.cocoon.hsqldb.server.port}/cocoondb</dburl>
       <user>sa</user>
       <password></password>
     </jdbc>
