@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
@@ -40,6 +39,7 @@ import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -69,7 +69,7 @@ public class FOM_Cocoon extends ScriptableObject {
     class CallContext {
         CallContext caller;
         Context avalonContext;
-        ServiceManager serviceManager;
+        WebApplicationContext webAppContext;
         FOM_JavaScriptInterpreter interpreter;
         Redirector redirector;
         Logger logger;
@@ -86,14 +86,14 @@ public class FOM_Cocoon extends ScriptableObject {
         public CallContext(CallContext caller,
                            FOM_JavaScriptInterpreter interp,
                            Redirector redirector,
-                           ServiceManager manager,
+                           WebApplicationContext waContext,
                            Context avalonContext,
                            Logger logger,
                            WebContinuation lastContinuation) {
             this.caller = caller;
             this.interpreter = interp;
             this.redirector = redirector;
-            this.serviceManager = manager;
+            this.webAppContext = waContext;
             this.avalonContext = avalonContext;
             this.logger = logger;
             this.lastContinuation = lastContinuation;
@@ -220,15 +220,10 @@ public class FOM_Cocoon extends ScriptableObject {
             pageLocal = new PageLocalScopeHolder(getTopLevelScope(this));
         }
         
-        // The call context will use the current sitemap's service manager when looking up components
-        ServiceManager sitemapManager;
-        try {
-            sitemapManager = (ServiceManager)avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-        } catch (ContextException e) {
-            throw new FOMResourceNotFoundException("Cannot get sitemap service manager", e);
-        }
+        // The call context will use the current application context when looking up components
+        final WebApplicationContext appContext = WebAppContextUtils.getCurrentWebApplicationContext();
 
-        this.currentCall = new CallContext(currentCall, interp, redirector, sitemapManager,
+        this.currentCall = new CallContext(currentCall, interp, redirector, appContext,
                                            avalonContext,
                                            logger, lastContinuation);
     }
@@ -325,7 +320,7 @@ public class FOM_Cocoon extends ScriptableObject {
      */
     public Object jsFunction_getComponent(String id)
         throws Exception {
-        return org.mozilla.javascript.Context.javaToJS(getServiceManager().lookup(id), 
+        return org.mozilla.javascript.Context.javaToJS(currentCall.webAppContext.getBean(id), 
                                                        getParentScope());
     }
 
@@ -335,7 +330,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @param component a component
      */
     public void jsFunction_releaseComponent( Object component ) throws Exception {
-        this.getServiceManager().release( unwrap(component) );
+        // this will be done by Spring
     }
 
     /**
@@ -375,7 +370,7 @@ public class FOM_Cocoon extends ScriptableObject {
              unwrap(obj),
              this.getLogger(),
              this.getAvalonContext(),
-             this.getServiceManager(),
+             (ServiceManager)currentCall.webAppContext.getBean(AvalonUtils.SERVICE_MANAGER_ROLE),
              null,// configuration
              true);
          return org.mozilla.javascript.Context.javaToJS(obj, getParentScope());
@@ -697,10 +692,6 @@ public class FOM_Cocoon extends ScriptableObject {
         return currentCall.logger;
     }
 
-    public ServiceManager getServiceManager() {
-        return currentCall.serviceManager;
-    }
-
     private FOM_JavaScriptInterpreter getInterpreter() {
         return currentCall.interpreter;
     }
@@ -811,8 +802,7 @@ public class FOM_Cocoon extends ScriptableObject {
         }
         WebContinuation wk;
         ContinuationsManager contMgr;
-        contMgr = (ContinuationsManager)
-            getServiceManager().lookup(ContinuationsManager.ROLE);
+        contMgr = (ContinuationsManager)currentCall.webAppContext.getBean(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(unwrap(k),
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,

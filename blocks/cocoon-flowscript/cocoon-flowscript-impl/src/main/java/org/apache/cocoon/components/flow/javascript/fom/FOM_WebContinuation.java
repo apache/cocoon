@@ -19,7 +19,6 @@ package org.apache.cocoon.components.flow.javascript.fom;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.mozilla.javascript.Context;
@@ -86,9 +85,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         WebContinuation wk;
         Scriptable scope = getTopLevelScope(c);
         FOM_Cocoon cocoon = (FOM_Cocoon)getProperty(scope, "cocoon");
-        ServiceManager componentManager =  cocoon.getServiceManager();
-        ContinuationsManager contMgr = (ContinuationsManager)
-            componentManager.lookup(ContinuationsManager.ROLE);
+        ContinuationsManager contMgr = (ContinuationsManager)cocoon.getApplicationContext().getBean(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(c,
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,
@@ -165,12 +162,9 @@ public class FOM_WebContinuation extends ScriptableObject {
     }
 
     public void jsFunction_invalidate() throws Exception {
-        ContinuationsManager contMgr = null;
         FOM_Cocoon cocoon =
             (FOM_Cocoon)getProperty(getTopLevelScope(this), "cocoon");
-        ServiceManager componentManager = cocoon.getServiceManager();
-        contMgr = (ContinuationsManager)
-            componentManager.lookup(ContinuationsManager.ROLE);
+        ContinuationsManager contMgr = (ContinuationsManager)cocoon.getApplicationContext().getBean(ContinuationsManager.ROLE);
         contMgr.invalidateWebContinuation(wk);
     }
 
