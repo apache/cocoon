@@ -67,14 +67,9 @@
       +-->
   <xsl:template match="fi:help">
     <xsl:variable name="id" select="concat(../@id, ':help')"/>
-    <div class="forms-help forms help" id="{$id}" style="visibility:hidden; position:absolute;">
-    	<span style="float:right"><a href="#" onClick="document.getElementById('{$id}').style.visibility = 'hidden';return false;"><img align="top" alt="close" src="{$resources-uri}/forms/img/close.gif" height="6" width="6"/></a></span>
-      <xsl:apply-templates select="node()"/>
-    </div>
-    <a id="{$id}:a" href="#" onclick="forms_createPopupWindow('{$id}').showPopup('{$id}:a');return false;">
-      <!-- TODO: i18n key for helppopup -->
-      <img src="{$resources-uri}/forms/img/help.gif" alt="helppopup"/>
-    </a>
+    <span id="{$id}" dojoType="forms:infopopup" style="display:none" class="forms-help-popup" icon="help.gif">
+      <xsl:copy-of select="node()"/>
+    </span>
   </xsl:template>
 
   <!--+

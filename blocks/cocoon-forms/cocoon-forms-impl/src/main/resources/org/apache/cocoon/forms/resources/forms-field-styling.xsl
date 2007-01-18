@@ -227,16 +227,10 @@
       |
       +-->
   <xsl:template match="fi:validation-message">
-    <a href="#" class="forms-validation-message forms validation-message" id="forms-validation-message-{../@id}">
-      <xsl:attribute name="onclick">
-        <xsl:text>alert('</xsl:text>
-        <xsl:call-template name="apos-replace">
-          <xsl:with-param name="text" select="normalize-space(.)"/>
-        </xsl:call-template>
-        <xsl:text>'); return false;</xsl:text>
-      </xsl:attribute>
-      <xsl:text>&#160;!&#160;</xsl:text>
-    </a>
+    <span dojoType="forms:infopopup" style="display:none" class="forms-validation-message-popup"
+          id="forms-validation-message-{../@id}" icon="validation-message.gif">
+      <xsl:copy-of select="node()"/>
+    </span>
   </xsl:template>
 
   <!--+
