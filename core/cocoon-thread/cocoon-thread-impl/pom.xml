@@ -35,7 +35,7 @@
   <name>Cocoon Thread Implementation</name>
   <description>
    Implementation of thread pool and factory components.
-   Implementation of a component for execution of background tassks.
+   Implementation of a component for execution of background tasks.
   </description>
   <dependencies>
     <!--  Cocoon  -->
