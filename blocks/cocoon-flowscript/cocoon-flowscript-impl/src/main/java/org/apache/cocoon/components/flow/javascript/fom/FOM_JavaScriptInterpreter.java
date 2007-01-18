@@ -588,9 +588,14 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     }
                     cocoon.setParameters(parameters);
 
-                    Object fun = ScriptableObject.getProperty(thrScope, funName);
-                    if (fun == Scriptable.NOT_FOUND) {
-                        throw new ResourceNotFoundException("Function \"javascript:" + funName + "()\" not found");
+                    // Resolve function name
+                    // 
+                    Object fun;
+                    try {
+                        fun = context.compileString(funName, null, 1, null).exec (context, thrScope);
+                    } catch (EcmaError ee) {
+                        throw new ResourceNotFoundException (
+                             "Function \"javascript:" + funName + "()\" not found");
                     }
 
                     thrScope.setLock(true);
