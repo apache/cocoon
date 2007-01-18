@@ -19,30 +19,30 @@
 package org.apache.cocoon.auth.impl;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionActivationListener;
 import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
 /**
  * This session listener keeps track of expired sessions. It can be used in
- * conjunction with the {@link org.apache.cocoon.auth.impl.StandardApplicationManager}
+ * conjunction with the {@link StandardApplicationManager}
  *
  * This listener has not been tested yet.
  *
  * @version $Id$
  */
-public class ServletSessionListener implements HttpSessionListener {
+public class ServletSessionListener implements HttpSessionActivationListener {
 
     /**
-     * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
+     * @see javax.servlet.http.HttpSessionActivationListener#sessionDidActivate(javax.servlet.http.HttpSessionEvent)
      */
-    public void sessionCreated(final HttpSessionEvent event) {
+    public void sessionDidActivate(HttpSessionEvent event) {
         // we don't care about a new session
     }
 
     /**
-     * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
+     * @see javax.servlet.http.HttpSessionActivationListener#sessionWillPassivate(javax.servlet.http.HttpSessionEvent)
      */
-    public void sessionDestroyed(final HttpSessionEvent event) {
+    public void sessionWillPassivate(HttpSessionEvent event) {
         final HttpSession session = event.getSession();
         StandardApplicationManager.logoutFromAllApplications(session);
     }
