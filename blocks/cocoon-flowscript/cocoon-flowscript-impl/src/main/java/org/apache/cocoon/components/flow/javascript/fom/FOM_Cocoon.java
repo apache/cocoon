@@ -39,11 +39,13 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.ClassUtils;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
@@ -54,6 +56,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Implementation of FOM (Flow Object Model).
@@ -128,10 +131,9 @@ public class FOM_Cocoon extends ScriptableObject {
             if (session != null) {
                 return session;
             }
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);            
             session = new FOM_Session(
                     getParentScope(),
-                    ObjectModelHelper.getRequest(objectModel).getSession(true));
+                    ObjectModelHelper.getRequest(this.getObjectModel()).getSession(true));
             return session;
         }
 
@@ -139,10 +141,9 @@ public class FOM_Cocoon extends ScriptableObject {
             if (request != null) {
                 return request;
             }
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             request = new FOM_Request(
                     getParentScope(),
-                    ObjectModelHelper.getRequest(objectModel));
+                    ObjectModelHelper.getRequest(this.getObjectModel()));
             return request;
         }
 
@@ -150,10 +151,9 @@ public class FOM_Cocoon extends ScriptableObject {
             if (context != null) {
                 return context;
             }
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             context = new FOM_Context(
                     getParentScope(),
-                    ObjectModelHelper.getContext(objectModel));
+                    ObjectModelHelper.getContext(this.getObjectModel()));
             return context;
         }
 
@@ -161,9 +161,8 @@ public class FOM_Cocoon extends ScriptableObject {
             if (response != null) {
                 return response;
             }
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             response = org.mozilla.javascript.Context.toObject(
-                    ObjectModelHelper.getResponse(objectModel),
+                    ObjectModelHelper.getResponse(this.getObjectModel()),
                     getParentScope());
             return response;
         }
@@ -182,6 +181,10 @@ public class FOM_Cocoon extends ScriptableObject {
 
         public void setParameters(Scriptable parameters) {
             this.parameters = parameters;
+        }
+
+        protected Map getObjectModel() {
+            return ContextHelper.getObjectModel(this.avalonContext);
         }
     }
 
@@ -621,7 +624,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The request
      */
     public Request getRequest() {
-        return ObjectModelHelper.getRequest(ContextHelper.getObjectModel(currentCall.avalonContext));
+        return ObjectModelHelper.getRequest(currentCall.getObjectModel());
     }
 
     /**
@@ -629,7 +632,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The session (may be null)
      */
     public Session getSession() {
-        return ObjectModelHelper.getRequest(ContextHelper.getObjectModel(currentCall.avalonContext)).getSession(true);
+        return ObjectModelHelper.getRequest(currentCall.getObjectModel()).getSession(true);
     }
 
     /**
@@ -637,7 +640,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The response
      */
     public Response getResponse() {
-        return ObjectModelHelper.getResponse(ContextHelper.getObjectModel(currentCall.avalonContext));
+        return ObjectModelHelper.getResponse(currentCall.getObjectModel());
     }
 
     /**
@@ -645,7 +648,37 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The context
      */
     public org.apache.cocoon.environment.Context getContext() {
-        return ObjectModelHelper.getContext(ContextHelper.getObjectModel(currentCall.avalonContext));
+        return ObjectModelHelper.getContext(currentCall.getObjectModel());
+    }
+
+    /**
+     * Get the current settings object.
+     */
+    public Settings getSettings() {
+        return (Settings)WebAppContextUtils.getCurrentWebApplicationContext().getBean(Settings.ROLE);
+    }
+
+    /**
+     * Get the current settings object for java script.
+     */
+    public Scriptable jsGet_settings() {
+        final Settings s = this.getSettings();
+        return org.mozilla.javascript.Context.toObject(s, getParentScope());
+    }
+    
+    /**
+     * Get the current application context.
+     */
+    public WebApplicationContext getApplicationContext() {
+        return WebAppContextUtils.getCurrentWebApplicationContext();
+    }
+
+    /**
+     * Get the current application context for java script.
+     */
+    public Scriptable jsGet_applicationContext() {
+        final WebApplicationContext w = this.getApplicationContext();
+        return org.mozilla.javascript.Context.toObject(w, getParentScope());
     }
 
     /**
@@ -653,7 +686,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The object model
      */
     public Map getObjectModel() {
-        return ContextHelper.getObjectModel(currentCall.avalonContext);
+        return currentCall.getObjectModel();
     }
 
     private Context getAvalonContext() {
