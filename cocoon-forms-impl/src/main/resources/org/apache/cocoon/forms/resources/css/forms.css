@@ -42,11 +42,6 @@
     z-index: 2;
 }
 
-.forms-validation-message, a.forms-validation-message:link {
-    color: red;
-    font-weight: bold;
-}
-
 .forms-validation-errors {
 }
 
@@ -56,15 +51,6 @@
 .forms-field-required {
 	color:blue;
     font-weight: bold;
-}
-
-.forms-help {
-    border-style: dotted;
-    border-width: 1px;
-    padding: 5px;
-    background-color:#FFFFC0; /* light yellow */
-    width: 200px; /* otherwise IE does a weird layout */
-    z-index:1000; /* must be higher than forms-tabContent */
 }
 
 .forms-doubleList select {
