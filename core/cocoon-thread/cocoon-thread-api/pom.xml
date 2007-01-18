@@ -34,7 +34,7 @@
   <packaging>jar</packaging>
   <name>Cocoon Thread API</name>
   <description>
-    Interfaces for thread factories and pools and for execution of background tassks.
+    Interfaces for thread factories and pools and for execution of background tasks.
   </description>
   <dependencies>
     <dependency>
