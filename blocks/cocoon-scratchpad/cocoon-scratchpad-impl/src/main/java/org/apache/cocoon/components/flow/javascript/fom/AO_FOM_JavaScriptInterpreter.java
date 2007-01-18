@@ -756,13 +756,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         throws Exception {
         setupView(scope, cocoon, null);
         PipelineUtil pipeUtil = new PipelineUtil();
-        try {
-            pipeUtil.contextualize(this.avalonContext);
-            pipeUtil.service(this.manager);
-            pipeUtil.processToStream(uri, bizData, out);
-        } finally {
-            pipeUtil.dispose();
-        }
+        pipeUtil.processToStream(uri, bizData, out);
     }
     
     private void setupView(Scriptable scope,

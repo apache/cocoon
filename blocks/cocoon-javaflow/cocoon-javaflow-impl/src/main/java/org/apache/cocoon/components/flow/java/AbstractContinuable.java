@@ -130,16 +130,12 @@ public abstract class AbstractContinuable {
     }
 
     public void processPipelineTo( String uri, Object bizdata, OutputStream out ) {
-        CocoonContinuationContext context = getContext();
         PipelineUtil pipeUtil = new PipelineUtil();
         try {
-            pipeUtil.contextualize(context.getAvalonContext());
-            pipeUtil.service(context.getServiceManager());
             pipeUtil.processToStream(uri, bizdata, out);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Cannot process pipeline to '" + uri + "'", e);
         } finally {
-            pipeUtil.dispose();
         }
     }
 
