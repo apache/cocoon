@@ -15,20 +15,20 @@
 * limitations under the License.
 */
 .forms-default-popup {
-	background: lightgray;
+    background: lightgray;
     border: 1px solid black;
-	width: 22em;
+    width: 22em;
 }
 
 .forms-help-popup {
-	background: #ffff7a;
+    background: #FFFFC0;
     border: 1px solid #baba24;
     padding: 10px;
     width: 22em;
 }
 
 .forms-validation-message-popup {
-	background: #ffe4cc;
+    background: #ffe4cc;
     border: 1px solid #ff7e00;
     padding: 10px;
     width: 22em;

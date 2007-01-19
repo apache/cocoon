@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 dojo.provide("cocoon.forms.InfoPopup");
-//dojo.require("dojo.lfx.rounded");
 
 /*
  * A widget displaying an icon which when pressed shows a popup.
@@ -83,23 +82,6 @@ dojo.widget.defineWidget(
 
         _onIconClick: function() {
             if(!this.infoPopup.isShowingNow) {
-
-                /* rounded corners experiment -- didn't look really nice IMO
-                if (!this.rounded) {
-                    var options = {
-                                tl:{ radius: 10 },
-                                tr:{ radius: 10 },
-                                bl:{ radius: 10 },
-                                br:{ radius: 10 }
-                            };
-
-                    // rounded corners can only be applied when the thing is visible
-                    this.infoPopupContainerNode.style.display = "";
-                    dojo.lfx.rounded(options, [ this.popupNode ]);
-                    this.infoPopupContainerNode.style.display = "none";
-                    this.rounded = true;
-                } */
-
                 this.infoPopup.open(this.buttonNode, this, this.buttonNode);
             } else {
                 this.infoPopup.close();
