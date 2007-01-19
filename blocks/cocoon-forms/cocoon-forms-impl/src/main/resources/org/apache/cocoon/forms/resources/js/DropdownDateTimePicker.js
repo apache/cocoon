@@ -71,11 +71,11 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
 
             this.templateString = "<span style='white-space: nowrap'><input dojoAttachPoint='inputNode' autocomplete='off' style='vertical-align: middle'/>";
 
-            if (this.variant == "date" || this.variant == "datetime") {
+            if (this._datePickerNeeded()) {
                 this.templateString += "<img src='${this.dateIconURL}' dojoAttachEvent='onclick:_onDateIconClick' dojoAttachPoint='dateButtonNode' style='vertical-align: middle; cursor: pointer; cursor: hand'/>";
             }
 
-            if (this.variant == "time" || this.variant == "datetime") {
+            if (this._timePickerNeeded()) {
                 this.templateString += "<img src='${this.timeIconURL}' dojoAttachEvent='onclick:_onTimeIconClick' dojoAttachPoint='timeButtonNode' style='vertical-align: middle; cursor: pointer; cursor: hand'/>";
             }
 
@@ -91,18 +91,24 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             // summary: use attachTemplateNodes to specify containerNode, as fillInTemplate is too late for this
             cocoon.forms.DropdownDateTimePicker.superclass.attachTemplateNodes.apply(this, arguments);
 
-            this.datePopup = dojo.widget.createWidget("PopupContainer", {toggle: this.containerToggle, toggleDuration: this.containerToggleDuration});
-            this.timePopup = dojo.widget.createWidget("PopupContainer", {toggle: this.containerToggle, toggleDuration: this.containerToggleDuration});
+            if (this._datePickerNeeded()) {
+                this.datePopup = dojo.widget.createWidget("PopupContainer", {toggle: this.containerToggle, toggleDuration: this.containerToggleDuration});
+                this.datePopupContainerNode = this.datePopup.domNode;
+            }
 
-            this.datePopupContainerNode = this.datePopup.domNode;
-            this.timePopupContainerNode = this.timePopup.domNode;
+            if (this._timePickerNeeded()) {
+                this.timePopup = dojo.widget.createWidget("PopupContainer", {toggle: this.containerToggle, toggleDuration: this.containerToggleDuration});
+                this.timePopupContainerNode = this.timePopup.domNode;
+            }
         },
 
         fillInTemplate: function(args, frag) {
             cocoon.forms.DropdownDateTimePicker.superclass.fillInTemplate(this, args, frag);
 
-            this.domNode.appendChild(this.datePopup.domNode);
-            this.domNode.appendChild(this.timePopup.domNode);
+            if (this._datePickerNeeded())
+                this.domNode.appendChild(this.datePopup.domNode);
+            if (this._timePickerNeeded())
+                this.domNode.appendChild(this.timePopup.domNode);
 
             // Copy some stuff from the original input field
             var fragNode = this.getFragNodeRef(frag);
@@ -114,15 +120,27 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             this.inputNode.value = fragNode.value;
 
             // Construct date picker
-            var dpArgs = {widgetContainerId: this.widgetId, lang: this.locale, value: this.value};
-            this.datePicker = dojo.widget.createWidget("DatePicker", dpArgs, this.datePopupContainerNode, "child");
-            dojo.event.connect(this.datePicker, "onValueChanged", this, "_updateDate");
+            if (this._datePickerNeeded()) {
+                var dpArgs = {widgetContainerId: this.widgetId, lang: this.locale, value: this.value};
+                this.datePicker = dojo.widget.createWidget("DatePicker", dpArgs, this.datePopupContainerNode, "child");
+                dojo.event.connect(this.datePicker, "onValueChanged", this, "_updateDate");
+            }
 
             // Construct time picker
-            var tpArgs = { widgetContainerId: this.widgetId, lang: this.locale, value: this.value };
-            this.timePicker = dojo.widget.createWidget("TimePicker", tpArgs, this.timePopupContainerNode, "child");
-            dojo.event.connect(this.timePicker, "onValueChanged", this, "_updateTime");
+            if (this._timePickerNeeded()) {
+                var tpArgs = { widgetContainerId: this.widgetId, lang: this.locale, value: this.value };
+                this.timePicker = dojo.widget.createWidget("TimePicker", tpArgs, this.timePopupContainerNode, "child");
+                dojo.event.connect(this.timePicker, "onValueChanged", this, "_updateTime");
+            }
 
+        },
+
+        _datePickerNeeded: function() {
+            return this.variant == "date" || this.variant == "datetime";
+        },
+
+        _timePickerNeeded: function() {
+            return this.variant == "time" || this.variant == "datetime";
         },
 
         _onDateIconClick: function() {
@@ -154,8 +172,8 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
         },
 
         _updateDate: function(value) {
-            // in case there's a time component, preserve it
-            if (this.variant = "datetime") {
+            // in case there's a time component, preserve it if current input is parseable
+            if (this.variant == "datetime") {
                 var currentValue = this._parseCurrentInput();
                 if (currentValue != null) {
                     value.setHours(currentValue.getHours());
@@ -171,8 +189,8 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
         },
 
         _updateTime: function(value) {
-            // in case there's a date component, preserve it
-            if (this.variant = "datetime") {
+            // in case there's a date component, preserve it if current input is parseable
+            if (this.variant == "datetime") {
                 var currentValue = this._parseCurrentInput();
                 if (currentValue != null) {
                     value.setFullYear(currentValue.getFullYear(), currentValue.getMonth(), currentValue.getDate());
@@ -205,6 +223,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
                 return;
             }
 
+            // pattern characters for times
             // http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns
             var timeFormattingChars = ["a", "h", "H", "K", "k", "m", "s", "S", "A", "z", "Z"];
 
@@ -212,6 +231,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             if (pattern == null || pattern == "")
                 return;
 
+            // search position of first time pattern character
             var beginTimePattern = -1;
             for (var i = 0; i < pattern.length; i++) {
                 var c = pattern.charAt(i);
@@ -221,6 +241,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
                 }
             }
 
+            // split pattern in date and time component
             if (beginTimePattern == -1) {
                 // pure date pattern
                 this.datePattern = pattern;
@@ -231,6 +252,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
         },
 
         _initDateFormatOptions: function() {
+            // These are the options to be passed to dojo's date format/parse functions
             var options = {};
 
             switch (this.variant) {
@@ -250,12 +272,24 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             options.locale = this.locale;
 
             this.dateFormatOptions = options;
-        }
+        },
 
-//        destroy: function(/*Boolean*/finalize){
-//            this.datePicker.destroy(finalize);
-//            this.timePicker.destory(finalize);
-//            cocoon.forms.DropdownDateTimePicker.superclass.destroy.apply(this, arguments);
-//        }
+        destroy: function(/*Boolean*/finalize) {
+            if (this._datePickerNeeded()) {
+                if (this.datePicker != null)
+                    this.datePicker.destroy(finalize);
+                else
+                    dojo.debug("DropdownDateTimePicker: no datePicker to destroy?");
+            }
+
+            if (this._timePickerNeeded()) {
+                if (this.timePicker != null)
+                    this.timePicker.destory(finalize);
+                else
+                    dojo.debug("DropdownDateTimePicker: no timePicker to destroy?");
+            }
+
+            cocoon.forms.DropdownDateTimePicker.superclass.destroy.apply(this, arguments);
+        }
     }
 );
