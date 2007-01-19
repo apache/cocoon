@@ -45,6 +45,7 @@
               <fi:items>
                 <ft:widget id="email"/>
                 <ft:widget id="birthdate"/>
+                <ft:widget id="timestamp"/>
                 <ft:widget id="fourchars" fi:list-type="listbox" fi:listbox-size="4">
                   <!-- particular styling for the enumeration 
                   <fi:styling list-type="llistbox" listbox-size="4"/-->
