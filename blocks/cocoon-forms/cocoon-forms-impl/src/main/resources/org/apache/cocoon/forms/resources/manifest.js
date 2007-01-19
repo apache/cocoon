@@ -32,36 +32,36 @@
 dojo.provide("cocoon.forms.manifest");
 
 (function(){
-	var map = {
-		html: {
-			"cformsdraganddroprepeater" : "cocoon.forms.CFormsDragAndDropRepeater",
-			"cformsform"                : "cocoon.forms.CFormsForm",
-			"simpleform"                : "cocoon.forms.SimpleForm",
-			"ajaxform"                  : "cocoon.forms.AjaxForm",
-			"cformsrepeater"            : "cocoon.forms.CFormsRepeater",
-			"cformssuggest"             : "cocoon.forms.CFormsSuggest",
+    var map = {
+        html: {
+            "cformsdraganddroprepeater" : "cocoon.forms.CFormsDragAndDropRepeater",
+            "cformsform"                : "cocoon.forms.CFormsForm",
+            "simpleform"                : "cocoon.forms.SimpleForm",
+            "ajaxform"                  : "cocoon.forms.AjaxForm",
+            "cformsrepeater"            : "cocoon.forms.CFormsRepeater",
+            "cformssuggest"             : "cocoon.forms.CFormsSuggest",
             "dropdowndatetimepicker"    : "cocoon.forms.DropdownDateTimePicker",
             "infopopup"                 : "cocoon.forms.InfoPopup"
             // register new Widgets in the cocoon.forms namespace here
-		},
-		svg: {
-		    // register svg widgets here
-		},
-		vml: {
-		    // register vml widgets here
-		}
-	};
-	
-	function formsResolver(name, domain){
-		if(!domain){ domain="html"; }
-		if(!map[domain]){ return null; }
-		return map[domain][name];    
-	};
-	
-    
+        },
+        svg: {
+            // register svg widgets here
+        },
+        vml: {
+            // register vml widgets here
+        }
+    };
+
+    function formsResolver(name, domain){
+        if(!domain){ domain="html"; }
+        if(!map[domain]){ return null; }
+        return map[domain][name];
+    };
+
+
     dojo.registerModulePath("cocoon.ajax", "../ajax/js"); // cocoon.forms has a dependency on the cocoon.ajax module libraries
     
     dojo.registerModulePath("cocoon.forms", "../forms/js");
-	dojo.registerNamespace("forms", "cocoon.forms", formsResolver);
+    dojo.registerNamespace("forms", "cocoon.forms", formsResolver);
     
 })();
