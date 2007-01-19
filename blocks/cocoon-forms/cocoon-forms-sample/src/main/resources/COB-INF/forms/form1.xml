@@ -226,6 +226,13 @@
       </fd:validation>
     </fd:field>
   
+    <fd:field id="timestamp">
+      <fd:label>A timestamp:</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="formatting" variant="datetime" style="short" timeStyle="medium" lenient="false"/>
+      </fd:datatype>
+    </fd:field>
+
     <fd:field id="altbirthdate" required="true">
       <fd:label>Select a date on which you'd rather had been born:</fd:label>
       <fd:datatype base="date">

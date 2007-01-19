@@ -100,6 +100,7 @@
             <ft:widget id="altbirthdate"/>
             <ft:widget id="altbirthdate2"/>
             <ft:widget id="birthdate"/>
+            <ft:widget id="timestamp"/>
             <ft:widget id="dieselprice"/>
           </fi:items>
         </fi:group>
