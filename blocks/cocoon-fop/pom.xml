@@ -37,7 +37,9 @@
   <modules>
     <module>cocoon-fop-impl</module>
     <module>cocoon-fop-sample</module>
+    <!--
     <module>cocoon-fop-ng-sample</module>
     <module>cocoon-fop-ng-impl</module>
+    -->
   </modules>
 </project>
