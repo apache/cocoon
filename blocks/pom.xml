@@ -81,7 +81,7 @@
         <module>cocoon-eventcache</module>
         <module>cocoon-faces</module>
         <module>cocoon-flowscript</module>
-        <!-- <module>cocoon-fop</module> -->
+        <module>cocoon-fop</module>
         <module>cocoon-forms</module>
         <module>cocoon-html</module>
         <module>cocoon-itext</module>
