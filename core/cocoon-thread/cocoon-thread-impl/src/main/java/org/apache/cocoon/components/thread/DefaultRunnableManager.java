@@ -318,8 +318,8 @@ public class DefaultRunnableManager
         }
 
         if( getLogger().isDebugEnabled() ) {
-            getLogger().debug( "Command entered: " + command.toString() +
-                               ", pool=" + pool.getName() + ", delay=" +
+            getLogger().debug( "Command entered: " + command +
+                               ", pool=" + (null == pool ? "null" : pool.getName()) + ", delay=" +
                                delay + ", interval=" + interval );
         }
 
