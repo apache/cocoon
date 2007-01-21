@@ -246,7 +246,7 @@
       This has been fixed.
     </action>
     <action dev="CZ" type="remove">
-      Core: Removed the buggy WildhardHelper. Use the new improved WildcardMatcherHelper.
+      Core: Removed the buggy WildcardHelper. Use the new improved WildcardMatcherHelper.
     </action>
     <action dev="CZ" type="add">
       Profiler block: Add statistics component.
