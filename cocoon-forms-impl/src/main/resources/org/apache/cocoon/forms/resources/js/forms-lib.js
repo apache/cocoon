@@ -102,25 +102,6 @@ function forms_moveInBody(element) {
     document.body.appendChild(element);
 }
 
-/**
- * Create a popup window for a named element.
- *
- * @param id the ID of the element to make a popup with.
- */
-function forms_createPopupWindow(id) {
-    var result = new PopupWindow(id);
-    result.autoHide();
-    // add to onload handlers
-    result.forms_id = id;
-    // TODO: This onLoad handler never would get called
-    result.forms_onload = function() {
-        forms_moveInBody(document.getElementById(this.forms_id));
-    }
-    cocoon.forms.addOnLoadHandler(result);
-    return result;
-}
-
-
 function forms_createOptionTransfer(id, submitOnChange) {
     var result = new OptionTransfer(id + ".unselected", id);
     result.setAutoSort(true);
