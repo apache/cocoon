@@ -171,7 +171,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     lock = transientStore.get(lockKey);
                 }
             }
-            if(lock != null) {
+            // Avoid deadlock with self (see JIRA COCOON-1985).
+            if(lock != null && lock != Thread.currentThread()) {
                 try {
                     // become owner of monitor
                     synchronized(lock) {
@@ -207,7 +208,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         getLogger().debug("Lock already present in the store!");
                     }
                 } else {
-                    Object lock = new Object();
+                    Object lock = Thread.currentThread();
                     try {
                         transientStore.store(lockKey, lock);
                     } catch (IOException e) {
