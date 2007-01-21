@@ -178,42 +178,27 @@
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
     <div id="{$id}">
-      <input name="{$id}:entry" id="{$id}:entry">
-        <xsl:if test="fi:styling/@size">
-          <xsl:attribute name="size"><xsl:value-of select="fi:styling/@size"/></xsl:attribute>
-        </xsl:if>
-      </input>
-      <br/>
       <table>
         <tr>
           <td>
-            <select name="{$id}" id="{$id}:input" size="5" multiple="multiple" style="width: 150px">
-              <xsl:for-each select="$values">
-                <option value="{.}"><xsl:value-of select="."/></option>
-              </xsl:for-each>
-            </select>
+            <div dojoType="forms:MultiValueEditor" id="{$id}:widget" cformsIdPrefix="{$id}">
+              <!-- Data is supplied to the widget using this table -->
+              <table>
+                <tbody>
+                  <xsl:for-each select="$values">
+                    <tr>
+                      <td><xsl:value-of select="."/></td>
+                    </tr>
+                  </xsl:for-each>
+                </tbody>
+              </table>
+            </div>
           </td>
           <td>
-            <!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
-            <xsl:text>&#160;</xsl:text>
-            <input type="image" id="{$id}:delete" src="{$resources-uri}/forms/img/delete.gif"/>
-            <xsl:text>&#160;</xsl:text>
-            <br/>
-            <xsl:text>&#160;</xsl:text>
-            <input type="image" id="{$id}:up" src="{$resources-uri}/forms/img/move_up.gif"/>
-            <xsl:text>&#160;</xsl:text>
-            <br/>
-            <xsl:text>&#160;</xsl:text>
-            <input type="image" id="{$id}:down" src="{$resources-uri}/forms/img/move_down.gif"/>
-            <xsl:text>&#160;</xsl:text>
-            <br/>
             <xsl:apply-templates select="." mode="common"/>
           </td>
         </tr>
       </table>
-      <script type="text/javascript">
-        new FormsMultiValueEditor("<xsl:value-of select="$id"/>");
-      </script>
     </div>
   </xsl:template>
 
