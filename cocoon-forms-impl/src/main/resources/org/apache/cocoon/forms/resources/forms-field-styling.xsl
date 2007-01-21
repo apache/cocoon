@@ -28,8 +28,9 @@
                 exclude-result-prefixes="fi">
 
   <xsl:param name="dojo-debug">false</xsl:param><!-- option to turn on console debugging for dojo on the browser, from a parameter in the sitemap -->
+  <xsl:param name="dojo-languages">["en", "de", "nl", "fr", "it", "pt"]</xsl:param> <!-- Allows to configure the dojo languages from a parameter in the sitemap. This should be a valid javascript array. -->
 
-  <!--+  
+  <!--+
       | Setup the scripts for CForms
       |
       | CForms can run in two different modes, in each mode different form widgets get instantiated.
@@ -64,7 +65,7 @@
       <xsl:if test="$dojo-debug = 'true'">                                           <!-- turn on debugging, if requested -->
         <xsl:text> djConfig.isDebug = true; </xsl:text>
       </xsl:if>
-      djConfig.extraLocale = ["en", "de", "nl", "fr", "it", "pt"];
+      djConfig.extraLocale = <xsl:value-of select="$dojo-languages"/>;
       var cocoon;
       if (!cocoon)
         cocoon = {};
