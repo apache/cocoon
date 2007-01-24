@@ -24,15 +24,11 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
-
-// import org.apache.excalibur.instrument.CounterInstrument;
-// import org.apache.excalibur.instrument.Instrument;
-// import org.apache.excalibur.instrument.Instrumentable;
-// import org.apache.excalibur.instrument.ValueInstrument;
 
 /**
  * This class provides a cache algorithm for the requested documents. It
@@ -49,7 +45,6 @@ public class MRUMemoryStore implements Store {
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
 
-    // private String instrumentableName;
     private int maxObjects = MAX_OBJECTS;
 
     protected boolean persistent = false;
@@ -61,11 +56,6 @@ public class MRUMemoryStore implements Store {
     private Hashtable cache;
 
     private LinkedList mrulist;
-
-    // private ValueInstrument sizeInstrument = new ValueInstrument("size");
-    // private CounterInstrument hitsInstrument = new CounterInstrument("hits");
-    // private CounterInstrument missesInstrument = new
-    // CounterInstrument("misses");
 
     public Log getLogger() {
         return this.logger;
@@ -200,7 +190,6 @@ public class MRUMemoryStore implements Store {
         this.cache.put(key, value);
         this.mrulist.remove(key);
         this.mrulist.addFirst(key);
-        // this.sizeInstrument.setValue( this.mrulist.size() );
     }
 
     /**
@@ -219,7 +208,6 @@ public class MRUMemoryStore implements Store {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Found key: " + key.toString());
             }
-            // this.hitsInstrument.increment();
             return value;
         }
 
@@ -235,14 +223,12 @@ public class MRUMemoryStore implements Store {
                     if (!this.cache.containsKey(key)) {
                         hold(key, value);
                     }
-                    // this.hitsInstrument.increment();
                     return value;
                 } catch (Exception e) {
                     getLogger().error("Error in get()!", e);
                 }
             }
         }
-        // this.missesInstrument.increment();
         return null;
     }
 
@@ -259,7 +245,6 @@ public class MRUMemoryStore implements Store {
         }
         this.cache.remove(key);
         this.mrulist.remove(key);
-        // this.sizeInstrument.setValue( this.mrulist.size() );
 
         if (this.persistent && key != null) {
             this.persistentStore.remove(key);
@@ -278,7 +263,6 @@ public class MRUMemoryStore implements Store {
             }
             remove(key);
         }
-        // this.sizeInstrument.setValue( 0 );
     }
 
     /**
@@ -344,8 +328,6 @@ public class MRUMemoryStore implements Store {
                         }
                     }
                 }
-
-                // this.sizeInstrument.setValue( this.mrulist.size() );
             }
         } catch (NoSuchElementException e) {
             getLogger().warn("Concurrency error in free()", e);
@@ -368,17 +350,4 @@ public class MRUMemoryStore implements Store {
 
         return (object instanceof java.io.Serializable);
     }
-
-    /*
-     * public void setInstrumentableName(String name) { this.instrumentableName =
-     * name; }
-     * 
-     * public String getInstrumentableName() { return this.instrumentableName; }
-     * 
-     * public Instrument[] getInstruments() { return new Instrument[] {
-     * this.sizeInstrument, this.hitsInstrument, this.missesInstrument }; }
-     * 
-     * public Instrumentable[] getChildInstrumentables() { return
-     * Instrumentable.EMPTY_INSTRUMENTABLE_ARRAY; }
-     */
 }
