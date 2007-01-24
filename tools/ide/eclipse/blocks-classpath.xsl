@@ -54,6 +54,7 @@
                                 <dirset dir="${{blocks}}/@{{name}}">
                                     <include name="java"/>
                                     <include name="test"/>
+                                    <include name="resources"/>
                                 </dirset>
                             </path>
                             <property name="src-@{{name}}" refid="src-@{{name}}"/>
@@ -149,6 +150,7 @@
             <path id="srcs">
                 <!-- main source dir -->
                 <pathelement path="${{src}}/java"/>
+                <pathelement path="${{src}}/jdk1.4/java"/>
                 <!-- samples source dir -->
                 <!-- FIXME: Load based on local.build.properties -->
                 <pathelement path="${{src}}/samples"/>
