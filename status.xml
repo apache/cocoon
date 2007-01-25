@@ -212,15 +212,6 @@
     <action dev="JH" type="fix" fixes-bug="COCOON-1976" due-to="Rob Berens">
       POI Block: Prevent NPE in ElementProcessorSerializer on characters before first startElement.
     </action>
-    <action dev="CZ" type="fix" fixes-bug="COCOON-1776" due-to="Vincent Demay">
-      Portal Block: Applied and improved patch for reloading bookmarks based on their (file) validity.
-    </action>
-    <action dev="CZ" type="fix">
-      Portal Block: Fix handling of missing special parameters for forms in NewEventLinkTransformer.
-    </action>
-    <action dev="CZ" type="fix">
-      Auth Block: Make isUserInRole a static method.
-    </action>
     <action dev="JQ" type="update">
       Updating Dojo to 0.4.1.
       <ul>
@@ -229,6 +220,15 @@
       	<li>deprecation and replacement of functions in forms_lib.js cocoon.js CFormsForm.js</li>
       	<li>all cforms forms now use a dojo widget (forms:SimpleForm or forms:AjaxForm)</li>
       </ul>
+    </action>
+    <action dev="CZ" type="fix" fixes-bug="COCOON-1776" due-to="Vincent Demay">
+      Portal Block: Applied and improved patch for reloading bookmarks based on their (file) validity.
+    </action>
+    <action dev="CZ" type="fix">
+      Portal Block: Fix handling of missing special parameters for forms in NewEventLinkTransformer.
+    </action>
+    <action dev="CZ" type="fix">
+      Auth Block: Make isUserInRole a static method.
     </action>
     <action dev="JQ" type="fix">
       Fixes to forms and ajax samples.
