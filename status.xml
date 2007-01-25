@@ -181,6 +181,10 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="VG" type="add">
+      Core: In store janitor, add an option to cleanup all stores on each janitor
+      run. Default behavior is to cleanup one store at a time.
+    </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-1985" due-to="Ellis Pritchard">
       Core: Fix deadlock in caching pipeline when used in combination with include transformer.
     </action>

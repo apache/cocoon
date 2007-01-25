@@ -519,6 +519,16 @@
         +-->
     <parameter name="invokegc" value="false"/>
     <!--+
+        | Algorithm describing how to clean caches in low memory situations.
+        |   round-robin: The registered caches are cycled through,
+        |                and each time there is a low memory situation one
+        |                of the registered caches has objects freed from it.
+        |   all-stores:  All registered stores have objects removed from
+        |                them each time there is a low memory situation.
+        | If not specified, defaults to 'round-robin'.
+        +-->
+    <parameter name="freeingalgorithm" value="round-robin"/>
+    <!--+
         | Name of the thread pool to use.
         | If not specified, defaults to 'daemon'.
         +-->
