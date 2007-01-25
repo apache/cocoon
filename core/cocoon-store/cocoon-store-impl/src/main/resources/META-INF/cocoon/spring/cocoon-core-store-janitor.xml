@@ -15,16 +15,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
-  <!-- Normally uses the org.apache.excalibur.store.impl.StoreJanitorImpl as
-       the default-class but as that uses its own Thread spawning there is
-       the org.apache.cocoon.components.store.impl.CocoonStoreJanitor class
-       to use a daemon thread from the org.apache.cocoon.components.thread.RunnableManager
-       component 
-       NOT: As soon as our patch has been accepted by the Excalibur community and an
-            excalibur-store has been release we can switch back to the original 
-            org.apache.excalibur.store.impl.StoreJanitorImpl class
-  -->
+
+<!-- Normally uses the org.apache.excalibur.store.impl.StoreJanitorImpl as
+     the default-class but as that uses its own Thread spawning there is
+     the org.apache.cocoon.components.store.impl.CocoonStoreJanitor class
+     to use a daemon thread from the org.apache.cocoon.components.thread.RunnableManager
+     component.
+     NOTE: As soon as our patch has been accepted by the Excalibur community and an
+           excalibur-store has been release we can switch back to the original
+           org.apache.excalibur.store.impl.StoreJanitorImpl class
+
+     $Id$
+-->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
@@ -85,6 +87,16 @@
         | If not specified, defaults to false.
         +-->
     <property name="invokeGC" value="false"/>
+    <!--+
+        | Algorithm describing how to clean caches in low memory situations.
+        |   round-robin: The registered caches are cycled through,
+        |                and each time there is a low memory situation one
+        |                of the registered caches has objects freed from it.
+        |   all-stores:  All registered stores have objects removed from
+        |                them each time there is a low memory situation.
+        | If not specified, defaults to 'round-robin'.
+        +-->
+    <property name="freeingAlgorithm" value="round-robin"/>
     <!--+
         | Name of the thread pool to use.
         | If not specified, defaults to 'daemon'.
