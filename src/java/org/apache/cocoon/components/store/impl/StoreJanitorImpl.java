@@ -34,30 +34,42 @@ import org.apache.excalibur.store.StoreJanitor;
  * the StoreJanitor frees the registered caches until memory is normal.
  *
  * <p>A few parameters can be used:
- * <UL>
- *  <LI><B>freememory</B>: How many bytes shall be always free in the JVM (Default: 1mb)</LI>
- *  <LI><B>heapsize</B>: Maximum possible size of the JVM memory consumption (Default: 64mb)</LI>
- *  <LI><B>cleanupthreadinterval</B>: How often (sec) shall run the cleanup thread (Default: 10s)</LI>
- *  <LI><B>adaptivethreadinterval</B> (experimental): Enable adaptive algorithm to determine thread interval
+ * <ul>
+ *  <li><b>freememory</b>: How many bytes shall be always free in the JVM (Default: 1mb)</li>
+ *  <li><b>heapsize</b>: Maximum possible size of the JVM memory consumption (Default: 64mb)</li>
+ *  <li><b>cleanupthreadinterval</b>: How often (sec) shall run the cleanup thread (Default: 10s)</li>
+ *  <li><b>adaptivethreadinterval</b> (experimental): Enable adaptive algorithm to determine thread interval
  *      (Default: false) When true, <code>cleanupthreadinterval</code> defines the maximum cleanup interval.
  *      Cleanup interval then is determined based on the memory fill rate: the faster memory is filled in,
- *      and the less free memory is left, the shorter is the cleanup time.</LI>
- *  <LI><B>threadpriority</B>: priority of the thread (1-10). (Default: 10)</LI>
- *  <LI><B>percent_to_free</B>: What fraction of the store to free when memory is low (1-100). (Default: 10%)</LI>
- *  <LI><B>invokegc</B>: Invoke the gc on low memory first (true|false; default: false)</LI>
- * </UL></p>
+ *      and the less free memory is left, the shorter is the cleanup time.</li>
+ *  <li><b>threadpriority</b>: priority of the thread (1-10). (Default: current thread's priority)</li>
+ *  <li><b>percent_to_free</b>: What fraction of the store to free when memory is low (1-100). (Default: 10%)</li>
+ *  <li><b>invokegc</b>: Invoke the gc on low memory first (true|false; default: false)</li>
+ *  <li><b>freeingalgorithm</b>: Currently there are two algorithms available. (Default: round-robun)
+ *   <dl>
+ *    <dt>round-robin</dt>
+ *    <dd>The registered caches are cycled through,
+ *     and each time there is a low memory situation one of the
+ *     registered caches has objects freed from it.</dd>
+ *    <dt>all-stores</dt>
+ *    <dd>All registered stores have objects removed from them
+ *    each time there is a low memory situation.</dd>
+ * </ul></p>
  *
  * @avalon.component
  * @avalon.service type=StoreJanitor
  * @x-avalon.info name=store-janitor
  * @x-avalon.lifestyle type=singleton
  *
- * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class StoreJanitorImpl extends AbstractLogEnabled
                               implements StoreJanitor, Parameterizable, ThreadSafe,
                                          Runnable, Startable {
+
+    // Cleaning Algorithms
+    private static final String ALG_ROUND_ROBIN = "round-robin";
+    private static final String ALG_ALL_STORES = "all-stores";
 
     // Configuration parameters
     private int minFreeMemory = -1;
@@ -66,14 +78,16 @@ public class StoreJanitorImpl extends AbstractLogEnabled
     private int minThreadInterval = 500;
     private boolean adaptiveThreadInterval;
     private int priority = -1;
+    private String freeingAlgorithm = ALG_ALL_STORES;
     private double fraction;
-
-    private Runtime jvm;
-    private ArrayList storelist;
-    private int index = -1;
 
     /** Should the gc be called on low memory? */
     protected boolean invokeGC;
+
+    // Runtime state
+    private Runtime jvm;
+    private ArrayList storelist;
+    private int index = -1;
 
     private boolean doRun;
 
@@ -97,6 +111,7 @@ public class StoreJanitorImpl extends AbstractLogEnabled
      */
     public void parameterize(Parameters params) throws ParameterException {
         this.jvm = Runtime.getRuntime();
+
         this.minFreeMemory = params.getParameterAsInteger("freememory", 1024 * 1024);
         this.maxHeapSize = params.getParameterAsInteger("heapsize", 66600000);
         // Parameter value is in seconds, converted to millis
@@ -105,6 +120,7 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         this.priority = params.getParameterAsInteger("threadpriority", Thread.currentThread().getPriority());
         int percent = params.getParameterAsInteger("percent_to_free", 10);
         this.invokeGC = params.getParameterAsBoolean("invokegc", this.invokeGC);
+        this.freeingAlgorithm = params.getParameter("freeingalgorithm", ALG_ROUND_ROBIN);
 
         if (getMinFreeMemory() < 1) {
             throw new ParameterException("StoreJanitorImpl freememory parameter has to be greater then 1");
@@ -120,6 +136,14 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         }
         if (percent > 100 && percent < 1) {
             throw new ParameterException("StoreJanitorImpl percent_to_free, has to be between 1 and 100");
+        }
+
+        if (!this.freeingAlgorithm.equals(ALG_ROUND_ROBIN) || !this.freeingAlgorithm.equals(ALG_ALL_STORES)) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Freeing algorithm is not a valid value: " + this.freeingAlgorithm +
+                                 ".  Defaulting to round-robin.");
+            }
+            this.freeingAlgorithm = ALG_ROUND_ROBIN;
         }
 
         this.fraction = percent / 100.0D;
@@ -167,6 +191,7 @@ public class StoreJanitorImpl extends AbstractLogEnabled
             try {
                 Thread.sleep(this.interval);
             } catch (InterruptedException ignore) {
+                /* ignored */
             }
 
             // Ignore change in memory during the first run (startup)
@@ -318,12 +343,24 @@ public class StoreJanitorImpl extends AbstractLogEnabled
     }
 
     /**
-     * Round Robin alghorithm for freeing the registered caches.
+     * Free configured percentage of objects from stores
+     * based on selected algorithm.
      */
     private void freeMemory() {
-        // TODO: Alternative to RR might be to free same fraction from every storage.
         try {
-            // Determine the store.
+            // What algorithm was selected?
+
+            // Option 1: Downsize all registered stores
+            if (this.freeingAlgorithm.equals(ALG_ALL_STORES)) {
+                for (Iterator i = iterator(); i.hasNext(); ) {
+                    removeStoreObjects((Store) i.next());
+                }
+
+                return;
+            }
+
+            // Option 2: Default to Round Robin
+            // Determine the store to clear this time around.
             if (getIndex() < getStoreList().size()) {
                 if (getIndex() == -1) {
                     setIndex(0);
@@ -336,20 +373,9 @@ public class StoreJanitorImpl extends AbstractLogEnabled
                 setIndex(0);
             }
 
-            // Delete proportionate elements out of the store as configured.
-            Store store = (Store)getStoreList().get(getIndex());
-            int limit = calcToFree(store);
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Freeing " + limit + " items from store #" + getIndex());
-            }
+            // Remove the objects from this store
+            removeStoreObjects((Store) getStoreList().get(getIndex()));
 
-            for (int i = 0; i < limit; i++) {
-                try {
-                    store.free();
-                } catch (OutOfMemoryError e) {
-                    getLogger().error("OutOfMemoryError in freeMemory()");
-                }
-            }
         } catch (Exception e) {
             getLogger().error("Error in freeMemory()", e);
         } catch (OutOfMemoryError e) {
@@ -358,11 +384,35 @@ public class StoreJanitorImpl extends AbstractLogEnabled
     }
 
     /**
-     * This method claculates the number of Elements to be freememory
-     * out of the Cache.
+     * This method clears the configured amount of objects from
+     * the provided store
      *
-     * @param store the Store which was selected as victim
-     * @return number of elements to be removed!
+     * @param store the Store from which to release the objects
+     */
+    private void removeStoreObjects(Store store) {
+        // Calculate how many objects to release from the store
+        int limit = calcToFree(store);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Freeing " + limit + " items from store " + store + " with "
+                              + store.size() + " items.");
+        }
+
+        // Remove the calculated number of objects from the current store
+        for (int i = 0; i < limit; i++) {
+            try {
+                store.free();
+            } catch (OutOfMemoryError e) {
+                getLogger().error("OutOfMemoryError while releasing an object from the store.");
+            }
+        }
+    }
+
+    /**
+     * This method calculates the number of items to free
+     * from the store.
+     *
+     * @param store the Store which was selected as a victim
+     * @return number of items to be removed
      */
     private int calcToFree(Store store) {
         int cnt = store.size();
@@ -377,6 +427,7 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Calculating size for store " + store + " with size " + cnt + ": " + res);
         }
+
         return res;
     }
 
@@ -399,7 +450,6 @@ public class StoreJanitorImpl extends AbstractLogEnabled
                               + getJVM().freeMemory());
         }
     }
-
 
     private int getMinFreeMemory() {
         return this.minFreeMemory;
@@ -429,14 +479,14 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         return this.storelist;
     }
 
+    private int getIndex() {
+        return this.index;
+    }
+
     private void setIndex(int _index) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Setting index=" + _index);
         }
         this.index = _index;
-    }
-
-    private int getIndex() {
-        return this.index;
     }
 }
