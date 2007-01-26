@@ -708,8 +708,9 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>      
-      <plugin>
+      </plugin>
+      <!-- Doesn't work because the maven-report extension needs to be released before. -->     
+      <!--plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.1</version>
@@ -717,7 +718,7 @@
           <configLocation>org/apache/cocoon/maven/reports/checkstyle.xml</configLocation>
           <headerLocation>org/apache/cocoon/maven/reports/checkstyle-header.txt</headerLocation>
         </configuration>
-      </plugin>
+      </plugin-->
     </plugins>
   </reporting>
 
