@@ -124,10 +124,10 @@
           <groupId>org.apache.excalibur.components.store</groupId>
           <artifactId>excalibur-store</artifactId>
         </exclusion>
-        <exclusion>
+        <!-- exclusion>
           <groupId>org.apache.excalibur.components.sourceresolve</groupId>
           <artifactId>excalibur-sourceresolve</artifactId>
-        </exclusion>
+        </exclusion -->
         <exclusion>
           <groupId>org.apache.excalibur.containerkit.instrument</groupId>
           <artifactId>excalibur-instrument-api</artifactId>
