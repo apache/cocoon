@@ -219,8 +219,9 @@ public class StoreJanitorImpl implements StoreJanitor, Runnable {
         if (fraction > 1 && fraction < 0.01) {
             throw new Exception("StoreJanitorImpl percentToFree, has to be between 1 and 100");
         }
-        if (!this.freeingAlgorithm.equals(ALG_ROUND_ROBIN) || !this.freeingAlgorithm.equals(ALG_ALL_STORES)) {
-            throw new Exception("StoreJanitorImpl freeingAlgorithm, has to be round-robin or all-stores.");
+        if (!(this.freeingAlgorithm.equals(ALG_ROUND_ROBIN) || this.freeingAlgorithm.equals(ALG_ALL_STORES))) {
+            throw new Exception("StoreJanitorImpl freeingAlgorithm, has to be 'round-robin' or 'all-stores'. '" 
+                    + this.freeingAlgorithm + "' is not supported.");
         }
 
         this.storelist = new ArrayList();
