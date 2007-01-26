@@ -20,7 +20,9 @@
   	<!-- FIXME : Use maven built-in properties to locate source and destination folders -->
     <property name="srcDir" location="src/main/resources/org/apache/cocoon/dojo/resources"/>
     <property name="destDir" location="target/classes/org/apache/cocoon/dojo/resources"/>
-    <unzip dest="${destDir}">
+    <!-- build.xml:25: The 'unwar' type doesn't support the nested "regexpmapper" element. -->
+    <delete dir="target/dojo-temp"/>
+    <unzip dest="target/dojo-temp">
       <fileset dir="${srcDir}">
         <include name="dojo-*.zip"/>
       </fileset>
@@ -28,5 +30,10 @@
     <delete>
       <fileset dir="${destDir}" includes="dojo-*.zip"/>
     </delete>
+    <copy todir="${destDir}">
+      <fileset dir="target/dojo-temp"/>
+      <regexpmapper from="^([^/]+)/(.*)$$" to="\2" handledirsep="true"/>
+    </copy>
+    <echo>copied</echo>
   </target>
 </project>
