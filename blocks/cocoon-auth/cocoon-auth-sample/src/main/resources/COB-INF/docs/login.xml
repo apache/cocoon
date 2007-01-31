@@ -23,9 +23,10 @@
    <para>
      This page serves as an example of the authentication framework.
    </para>
-   <para>Please log in using your name (cocoon will work)</para>
+   <para>Please log in using your name (cocoon:cocoon will work)</para>
    <form target="do-login" method="post">
-     <input type="text" name="username"/>
+     <input type="text" name="username" title="Username: " />
+     <input type="password" name="password" title="Password: " />
      <input type="submit">Login</input>
    </form>
  </content>
