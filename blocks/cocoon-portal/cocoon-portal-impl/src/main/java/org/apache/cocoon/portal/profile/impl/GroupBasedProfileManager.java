@@ -362,7 +362,7 @@ public class GroupBasedProfileManager
 
     /**
      * Return the current set of global coplet types.
-     * @return
+     * @return The global set of coplet types.
      * @throws Exception
      */
     protected Map getGlobalCopletTypes()
@@ -594,10 +594,7 @@ public class GroupBasedProfileManager
         }
     }
 
-    /**
-     * @see org.apache.cocoon.portal.profile.impl.AbstractProfileManager#saveUserLayout(java.lang.String)
-     */
-    public void saveLayoutInstances() {
+    protected void saveLayoutInstances() {
         try {
             final ProfileHolder profile = this.getUserProfile();
             final Map key = this.buildKey(CATEGORY_USER,

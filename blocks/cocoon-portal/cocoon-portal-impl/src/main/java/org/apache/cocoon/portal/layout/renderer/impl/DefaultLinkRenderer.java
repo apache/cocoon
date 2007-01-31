@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
 public class DefaultLinkRenderer implements Renderer, ThreadSafe {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.impl.AbstractRenderer#toSAX(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.layout.renderer.Renderer#toSAX(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(Layout layout, PortalService service, ContentHandler handler)
     throws SAXException, LayoutException {

@@ -66,7 +66,7 @@ public abstract class Layout extends AbstractParameters {
      * Never create a layout object directly. Use the
      * {@link LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param name The type of the layout.
+     * @param type The type of the layout.
      * @see PortalUtils#testId(String)
      */
     public Layout(String id, String type) {

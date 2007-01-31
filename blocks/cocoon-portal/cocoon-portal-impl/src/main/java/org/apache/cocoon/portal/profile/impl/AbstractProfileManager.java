@@ -92,24 +92,10 @@ public abstract class AbstractProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.om.Layout)
-     */
-    public void register(Layout layout) {
-        // overwrite in subclass
-    }
-
-    /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
      */
     public void saveUserProfiles() {
         // override in subclass
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.om.Layout)
-     */
-    public void unregister(Layout layout) {
-        // overwrite in subclass
     }
 
     /**

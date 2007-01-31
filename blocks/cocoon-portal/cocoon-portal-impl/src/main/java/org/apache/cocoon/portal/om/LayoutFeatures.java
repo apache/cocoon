@@ -108,7 +108,8 @@ public class LayoutFeatures {
 
     /** 
      * The layout traverser gets notified by each layout object in the tree when
-     * the layout is traversed using {@link LayoutFeatures#traverseLayout}.
+     * the layout is traversed using {@link LayoutFeatures#traverseLayout(PortalService, Layout, LayoutTraverser)}
+     * and {@link LayoutFeatures#traverseLayout(PortalService, Layout, LayoutTraverser, boolean)}.
      */
     public interface LayoutTraverser {
 

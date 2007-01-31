@@ -26,7 +26,7 @@ import org.apache.cocoon.portal.util.PortalUtils;
  * A coplet base data defines a coplet type, like a pipeline based coplet,
  * a JSR 168 portlet or a WSRP portlet. For each type exists a coplet base
  * data with some configuration.
- * Based on the coplet base data, coplets are created ({@link CopletData}.
+ * Based on the coplet type, coplets are created ({@link CopletDefinition}.
  *
  * @version $Id$
  */
