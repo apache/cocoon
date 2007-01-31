@@ -120,8 +120,7 @@ public class DefaultEntityResolver
 
     /**
      * Set the configuration. Load the system catalog and apply any
-     * parameters that may have been specified in cocoon.xconf
-     * @param params The configuration information
+     * parameters that may have been set using the public setter methods.
      */
     public void init()
     throws Exception { 
