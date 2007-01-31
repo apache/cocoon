@@ -67,7 +67,7 @@ public abstract class AbstractPortalUser
     }
 
     /**
-     * @param group The group to set.
+     * @param groups The groups to set.
      */
     public void setGroups(Collection groups) {
         this.groups = groups;

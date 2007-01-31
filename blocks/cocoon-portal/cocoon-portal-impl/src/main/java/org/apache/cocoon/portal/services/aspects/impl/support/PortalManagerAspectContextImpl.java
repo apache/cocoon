@@ -55,7 +55,7 @@ public final class PortalManagerAspectContextImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext#invokeNext(org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext#invokeNext(org.xml.sax.ContentHandler, java.util.Properties)
      */
     public void invokeNext(ContentHandler ch, Properties properties) 
     throws SAXException {

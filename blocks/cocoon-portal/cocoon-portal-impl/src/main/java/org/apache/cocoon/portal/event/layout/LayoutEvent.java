@@ -40,7 +40,7 @@ public abstract class LayoutEvent implements Event {
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.LayoutEvent#getTarget()
+     * The target layout object.
      */
     public Layout getTarget() {
         return this.target;

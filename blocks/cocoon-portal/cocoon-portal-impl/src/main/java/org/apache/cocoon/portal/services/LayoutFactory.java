@@ -63,7 +63,7 @@ public interface LayoutFactory  {
      * Create a new layout instance for the layout object.
      * The instance is also registered at the profile manager.
      * @param layout
-     * @return
+     * @return A new layout instance.
      */
     LayoutInstance newInstace(Layout layout);
 

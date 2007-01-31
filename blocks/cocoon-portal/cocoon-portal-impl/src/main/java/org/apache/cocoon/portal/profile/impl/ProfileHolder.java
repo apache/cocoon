@@ -79,7 +79,7 @@ public class ProfileHolder {
 
     /**
      * Set all coplet definitions.
-     * @param copletTypes An id based map of the definitions.
+     * @param copletDefinitions An id based map of the definitions.
      */
     public void setCopletDefinitions(Map copletDefinitions) {
         this.copletDefinitions = copletDefinitions;
@@ -87,7 +87,7 @@ public class ProfileHolder {
 
     /**
      * Set all coplet instances.
-     * @param copletTypes An id based map of the instances.
+     * @param copletInstances An id based map of the instances.
      */
     public void setCopletInstances(Collection copletInstances) {
         this.copletInstances = new HashMap();
@@ -279,7 +279,7 @@ public class ProfileHolder {
     /**
      * Search the layout instance for a layout object.
      * @param layout
-     * @return
+     * @return The layout instance or null.
      */
     public LayoutInstance searchLayoutInstance(Layout layout) {
         if ( layout != null ) {
