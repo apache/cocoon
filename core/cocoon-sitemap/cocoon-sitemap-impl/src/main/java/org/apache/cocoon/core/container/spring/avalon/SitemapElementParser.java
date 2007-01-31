@@ -18,6 +18,7 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.ResourceLoader;
@@ -62,7 +63,7 @@ public class SitemapElementParser extends BridgeElementParser {
      */
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
     throws Exception {
-        WebApplicationContext parentContext = (WebApplicationContext)SitemapHelper.PARENT_CONTEXT.get();
+        WebApplicationContext parentContext = WebAppContextUtils.getCurrentWebApplicationContext();
         return ConfigurationReader.readSitemap((ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName()), location, resourceLoader);
     }
 
