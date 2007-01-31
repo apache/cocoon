@@ -139,8 +139,8 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         }
 
         if (!(this.freeingAlgorithm.equals(ALG_ROUND_ROBIN) || this.freeingAlgorithm.equals(ALG_ALL_STORES))) {
-            throw new Exception("StoreJanitorImpl freeingAlgorithm, has to be 'round-robin' or 'all-stores'. '" 
-                    + this.freeingAlgorithm + "' is not supported.");
+            throw new ParameterException("StoreJanitorImpl freeingAlgorithm, has to be 'round-robin' or 'all-stores'. '" +
+                                         this.freeingAlgorithm + "' is not supported.");
         }
 
         this.fraction = percent / 100.0D;
