@@ -38,7 +38,6 @@ import org.apache.cocoon.spring.configurator.impl.ChildXmlWebApplicationContext;
 import org.apache.cocoon.util.Deprecation;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 /**
@@ -47,8 +46,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @since 2.2
  */
 public class SitemapHelper {
-
-    public static final ThreadLocal PARENT_CONTEXT = new ThreadLocal();
 
     private static final String CLASSLOADER_CONFIG_NAME = "classloader";
 
@@ -287,9 +284,9 @@ public class SitemapHelper {
                                                         Monitor        fam,
                                                         ServletContext servletContext)
     throws Exception {
-        // let's get the root container first
-        final WebApplicationContext rootContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-        final ProcessInfoProvider infoProvider = (ProcessInfoProvider) rootContext.getBean(ProcessInfoProvider.ROLE);
+        // let's get the parent container first
+        final WebApplicationContext parentContext = WebAppContextUtils.getCurrentWebApplicationContext();
+        final ProcessInfoProvider infoProvider = (ProcessInfoProvider) parentContext.getBean(ProcessInfoProvider.ROLE);
         final Request request = ObjectModelHelper.getRequest(infoProvider.getObjectModel());
         // let's determine our context url
         int pos = sitemapLocation.lastIndexOf('/');
@@ -298,7 +295,6 @@ public class SitemapHelper {
         }
         final String contextUrl = sitemapLocation.substring(0, pos + 1);
 
-        final WebApplicationContext parentContext = WebAppContextUtils.getCurrentWebApplicationContext();
 
         // get classloader
 //      TODO rcl            
@@ -311,20 +307,15 @@ public class SitemapHelper {
                                                    getBeanIncludes(parentContext, contextUrl, config),
                                                    getPropertiesIncludes(parentContext, contextUrl, config),
                                                    getGlobalSitemapVariables(config));
-        PARENT_CONTEXT.set(parentContext);
-        try {
-            final ChildXmlWebApplicationContext context = new ChildXmlWebApplicationContext(contextUrl,
-                                                                                        definition);
-            context.setServletContext(servletContext);
-            context.setParent(parentContext);
-            if ( classloader != null ) {
-                context.setClassLoader(classloader);
-            }
-            context.refresh();
-            return context;
-        } finally {
-            PARENT_CONTEXT.set(null);
+        final ChildXmlWebApplicationContext context = new ChildXmlWebApplicationContext(contextUrl,
+                                                                                    definition);
+        context.setServletContext(servletContext);
+        context.setParent(parentContext);
+        if ( classloader != null ) {
+            context.setClassLoader(classloader);
         }
+        context.refresh();
+        return context;
     }
 
 // TODO rcl    
