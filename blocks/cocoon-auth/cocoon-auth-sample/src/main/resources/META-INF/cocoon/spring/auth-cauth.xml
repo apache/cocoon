@@ -30,7 +30,6 @@
   <bean name="org.apache.cocoon.auth.SecurityHandler/simple"
         class="org.apache.cocoon.auth.impl.SimpleSecurityHandler"
         scope="singleton">
-    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     <property name="userProperties">
       <value>
         cocoon=cocoon

@@ -54,6 +54,7 @@
         <map:act type="cauth-login">
           <map:parameter name="application" value="sample"/>
           <map:parameter name="name" value="{request-param:username}"/>
+          <map:parameter name="password" value="{request-param:password}"/>
           <map:redirect-to uri="protected"/>
         </map:act>
         <!-- something was wrong, try it again -->
