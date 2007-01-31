@@ -18,7 +18,6 @@ package org.apache.cocoon.components.hsqldb;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
