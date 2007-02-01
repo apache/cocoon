@@ -476,11 +476,7 @@ public class EHDefaultStore implements Store {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Clearing the store");
         }
-        try {
-            this.cache.removeAll();
-        } catch (IOException e) {
-            getLogger().error("Failure to clearing store", e);
-        }
+        this.cache.removeAll();
     }
 
     /**
