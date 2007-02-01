@@ -218,6 +218,7 @@
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl">
          <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+         <map:parameter name="dojo-locale" value="{flow-attr:locale}"/>
        </map:transform>
        <map:transform type="i18n">
        </map:transform>
@@ -240,7 +241,8 @@
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl">
          <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
-         <map:parameter name="dojo-debug" value="false"/><!-- set to true to turn on dojo debugging in the Browser -->
+         <map:parameter name="dojo-debug" value="true"/><!-- set to true to turn on dojo debugging in the Browser -->
+         <map:parameter name="dojo-locale" value="{flow-attr:locale}"/>
        </map:transform>
        <map:transform type="i18n">
          <map:parameter name="locale" value="{flow-attribute:locale}"/>
