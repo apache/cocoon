@@ -60,10 +60,11 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
                     this.locale = formLocale;
             }
 
-            // make sure locale is supported by dojo, otherwise fall back to 'en'
-            if (this.locale == null || this.locale == "" || !djConfig.extraLocale || !dojo.lang.inArray(djConfig.extraLocale, this.locale.split("-")[0])) {
-                dojo.debug("DropdownDateTimePicker: no locale specified or locale used by widget or CForm (" + this.locale + ") is not loaded via djConfig.extraLocale, will fall back to 'en'.");
+            this.locale = dojo.locale;
+            if (this.locale == null)
                 this.locale = "en";
+            if (this.locale != formLocale) {
+                dojo.debug("DropdownDateTimePicker: form locale (" + formLocale + ") is different from dojo locale (" + dojo.locale + ")")
             }
 
             this._splitPattern();
