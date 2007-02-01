@@ -28,7 +28,19 @@
                 exclude-result-prefixes="fi">
 
   <xsl:param name="dojo-debug">false</xsl:param><!-- option to turn on console debugging for dojo on the browser, from a parameter in the sitemap -->
-  <xsl:param name="dojo-languages">["en", "de", "nl", "fr", "it", "pt"]</xsl:param> <!-- Allows to configure the dojo languages from a parameter in the sitemap. This should be a valid javascript array. -->
+  <xsl:param name="dojo-locale">en</xsl:param> <!-- Allows to configure the dojo locale from a parameter in the sitemap. This should be the same as the form locale. -->
+
+  <!-- Create a variable with the normalized locale, dojo needs locale parts to be separated with a dash -->
+  <xsl:variable name="dojoLocale">
+    <xsl:choose>
+      <xsl:when test="$dojo-locale != ''">
+        <xsl:value-of select="translate($dojo-locale, '_', '-')"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>en</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
 
   <!--+
       | Setup the scripts for CForms
@@ -65,7 +77,7 @@
       <xsl:if test="$dojo-debug = 'true'">                                           <!-- turn on debugging, if requested -->
         <xsl:text> djConfig.isDebug = true; </xsl:text>
       </xsl:if>
-      djConfig.extraLocale = <xsl:value-of select="$dojo-languages"/>;
+      djConfig.locale = "<xsl:value-of select="$dojoLocale"/>";
       var cocoon;
       if (!cocoon)
         cocoon = {};
