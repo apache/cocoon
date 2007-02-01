@@ -190,6 +190,7 @@
     </action>
     <action dev="BRD" type="update">
       CForms: introduce a new dojo-based popup-picker for dates, times and datetimes.
+      For correct localization, supply a "dojo-locale" parameter to the forms styling XSLT (see samples).
     </action>
     <action dev="BRD" type="add">
       CForms: add support for a "timeStyle" attribute on the formatting date convertor, so
