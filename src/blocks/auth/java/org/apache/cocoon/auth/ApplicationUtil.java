@@ -27,8 +27,13 @@ import org.apache.cocoon.environment.Request;
 
 
 /**
- * Utility class that can be used from flow to access the different
+ * Utility class that can be used from flow script to access the different
  * application functions of Cocoon Authentication.
+ * The easiest way to use this class in flow script is to create an instance
+ * using cocoon.createObject():
+ * var util = cocoon.createObject("org.apache.cocoon.auth.ApplicationUtil");
+ * and then you can invoke one of the instance methods like
+ * var user = util.getUser();
  *
  * @version $Id$
 */
