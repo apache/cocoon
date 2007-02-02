@@ -34,6 +34,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -46,6 +47,11 @@ import java.util.Map;
  * <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline">
  *   <parameter name="cache-expires" value="180"/> <!-- Expires in secondes -->
  * </map:pipe>
+ *
+ * The cache-expires parameter controls the period of time for caching the content. A positive
+ * value is a value in seconds, a value of zero means no caching and a negative value means
+ * indefinite caching. In this case, you should use an external mechanism to invalidate the
+ * cache entry.
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
@@ -66,7 +72,7 @@ public class ExpiresCachingProcessingPipeline
     /** The key used for caching */
     protected IdentifierCacheKey cacheKey;
 
-    /** The expires information */
+    /** The expires information. */
     protected long cacheExpires;
 
     /** Default value for expiration */
@@ -173,7 +179,7 @@ public class ExpiresCachingProcessingPipeline
             // internal
             if ( this.cachedResponse == null) {
                 // if we cache, we need an xml serializer
-                if ( this.cacheExpires > 0) {
+                if ( this.cacheExpires != 0) {
                     try {
                         final XMLConsumer old = this.lastConsumer;
                         this.xmlSerializer = (XMLSerializer)this.manager.lookup( XMLSerializer.ROLE );
@@ -243,6 +249,8 @@ public class ExpiresCachingProcessingPipeline
                                            this.serializer == this.lastConsumer);
         if ( this.cacheExpires > 0) {
             this.cacheValidity = new ExpiresValidity(this.cacheExpires*1000);
+        } else if ( this.cacheExpires < 0 ) {
+            this.cacheValidity = NOPValidity.SHARED_INSTANCE;
         }
         final boolean purge = this.parameters.getParameterAsBoolean("purge-cache", false);
 
@@ -263,7 +271,7 @@ public class ExpiresCachingProcessingPipeline
         }
         
         // only actually set up pipeline components when there was no cached response found for the specified key
-        if(this.cachedResponse == null) {
+        if ( this.cachedResponse == null ) {
         	super.setupPipeline( environment );
         }
     }
