@@ -340,7 +340,7 @@ Form.prototype.saveXML = function(uri) {
             outputStream = source.getOutputStream();
             var transformerHandler = tf.newTransformerHandler();
             var transformer = transformerHandler.getTransformer();
-            transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.INDENT, "true");
+            transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.METHOD, "xml");
             transformerHandler.setResult(new Packages.javax.xml.transform.stream.StreamResult(outputStream));
             this.getXML().toSAX(transformerHandler);
