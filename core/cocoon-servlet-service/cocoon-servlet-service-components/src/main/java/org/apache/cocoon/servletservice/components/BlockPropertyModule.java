@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.servletservice.CallStack;
 
@@ -31,7 +30,7 @@ import org.apache.cocoon.servletservice.CallStack;
  *
  * @version $Id: BlockPropertyModule.java 448464 2006-09-21 05:29:11Z crossley $
  */
-public class BlockPropertyModule implements InputModule, ThreadSafe {
+public class BlockPropertyModule implements InputModule {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {

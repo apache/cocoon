@@ -16,10 +16,15 @@
   limitations under the License.
 -->
 <!-- SVN $Id$ -->
-<components>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-  <input-modules>
-    <component-instance name="block-property" class="org.apache.cocoon.servletservice.components.BlockPropertyModule" />
-  </input-modules>
+  <!--+
+      | Source Factories
+      |
+      | Each source factory adds a special uri schemes to the system.
+      +-->
+  <bean name="org.apache.excalibur.source.SourceFactory/servlet" class="org.apache.cocoon.servletservice.components.ServletSourceFactory"/>
 
-</components>
+</beans>
