@@ -31,8 +31,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -62,10 +62,9 @@ public class DispatcherServlet
      */
     private ListableBeanFactory beanFactory;
     
-    /**
-     * The logger.
-     */
-    private Logger log;    
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
     
     public void init() throws ServletException {
     	// get the beanFactory from the web application context
@@ -73,8 +72,7 @@ public class DispatcherServlet
             WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
         
         // setup logger
-        this.log = (Logger) this.beanFactory.getBean(AvalonUtils.LOGGER_ROLE);        
-        this.log.info("DispatcherServlet is initializing");
+        this.logger.info("DispatcherServlet is initializing");
         
         // the returned map contains the bean names as key and the beans as values
         final Map servlets = 
@@ -87,7 +85,7 @@ public class DispatcherServlet
             BeanWrapperImpl wrapper = new BeanWrapperImpl(servlet);
             if (wrapper.isReadableProperty(MOUNT_PATH)) {
                 String mountPath = (String) wrapper.getPropertyValue(MOUNT_PATH);
-                this.log.debug("DispatcherServlet: initializing servlet " + servlet + " at " + mountPath);
+                this.logger.debug("DispatcherServlet: initializing servlet " + servlet + " at " + mountPath);
                 this.mountableServlets.put(mountPath, servlet);
             }
         }
@@ -116,8 +114,8 @@ public class DispatcherServlet
         		getInterfaces(req.getClass()), 
         		new DynamicProxyRequestHandler(req, path));
         
-        if(this.log.isDebugEnabled()) {
-	        this.log.debug("DispatcherServlet: service servlet=" + servlet +
+        if(this.logger.isDebugEnabled()) {
+	        this.logger.debug("DispatcherServlet: service servlet=" + servlet +
 	                " mountPath=" + path +
 	                " servletPath=" + request.getServletPath() +
 	                " pathInfo=" + request.getPathInfo());
