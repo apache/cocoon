@@ -19,19 +19,18 @@
 <!-- @version $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="org.apache.cocoon.servletervice.demo1.servlet" class="org.apache.cocoon.servletservice.ServletService">
-		<property name="mountPath" value="/test1"/>
-		<property name="servletClass" value="org.apache.cocoon.servletservice.demo1.DemoServlet"/>
-		<property name="properties">
-			<map>
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+
+	<bean id="org.apache.cocoon.servletservice.demo1.servlet" class="org.apache.cocoon.servletservice.demo1.DemoServlet">
+    	<servlet:context mount-path="/test1">
+    		<servlet:init-params>
 				<entry key="foo" value="baz"/>
-			</map>
-		</property>
-		<property name="connections">
-			<map>
+			</servlet:init-params>
+			<servlet:connections>
 				<entry key="demo2" value-ref="org.apache.cocoon.servletservice.demo2.servlet"/>
-			</map>
-		</property>
+			</servlet:connections>
+		</servlet:context>
 	</bean>
 </beans>

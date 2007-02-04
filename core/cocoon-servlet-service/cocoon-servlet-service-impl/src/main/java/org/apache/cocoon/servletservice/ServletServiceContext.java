@@ -109,7 +109,8 @@ public class ServletServiceContext extends ServletContextWrapper {
      * @param map the attributes to set
      */
     public void setAttributes(Map map) {
-        this.attributes = map;
+        if (map != null)
+            this.attributes = map;
     }
 
     /*
@@ -394,9 +395,9 @@ public class ServletServiceContext extends ServletContextWrapper {
             return null;
         }
         
-        ServletService servletService =
-            (ServletService) this.connections.get(name);
-        return servletService != null ? servletService.getBlockContext() : null;
+        Servlet servlet =
+            (Servlet) this.connections.get(name);
+        return servlet != null ? ((ServletServiceContextAware)servlet).getServletServiceContext() : null;
     }
         
     /**

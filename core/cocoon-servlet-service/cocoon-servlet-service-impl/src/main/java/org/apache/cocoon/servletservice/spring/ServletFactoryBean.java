@@ -28,8 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.cocoon.servletservice.Mountable;
 import org.apache.cocoon.servletservice.ServletServiceContext;
+import org.apache.cocoon.servletservice.ServletServiceContextAware;
 import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.support.DefaultIntroductionAdvisor;
 import org.springframework.aop.support.DelegatingIntroductionInterceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -61,7 +64,7 @@ public class ServletFactoryBean
     private Map connections;
     
     private ServletServiceContext servletServiceContext;
-
+    
     public ServletFactoryBean() {
     }
     
@@ -184,21 +187,16 @@ public class ServletFactoryBean
         this.connections = connections;
     }
 
-    /**
-     * @return the blockContext
-     */
-    public ServletServiceContext getServletServiceContext() {
-        return this.servletServiceContext;
-    }
-
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
     public Object getObject() throws Exception {
         ProxyFactory proxyFactory = new ProxyFactory(this.embeddedServlet);
         proxyFactory.addAdvice(new ServiceInterceptor());
-        if (this.mountPath != null)
-            proxyFactory.addAdvice(new MountableIntroducer());
+        if (this.mountPath != null) {
+            proxyFactory.addAdvisor(new MountableMixinAdvisor());
+        }
+        proxyFactory.addAdvisor(new ServletServiceContextMixinAdvisor());
         return proxyFactory.getProxy();
     }
 
@@ -236,14 +234,33 @@ public class ServletFactoryBean
         
     }
     
-    public interface Mountable {
-        public String getMountPath();
-    }
-    
-    private class MountableIntroducer extends DelegatingIntroductionInterceptor implements Mountable {
+    private class MountableMixin extends DelegatingIntroductionInterceptor implements Mountable {
 
         public String getMountPath() {
             return ServletFactoryBean.this.mountPath;
         }
+    }
+    
+    private class MountableMixinAdvisor extends DefaultIntroductionAdvisor {
+
+        public MountableMixinAdvisor() {
+            super(new MountableMixin(), Mountable.class);
+        }
+    }
+    
+    private class ServletServiceContextMixin extends DelegatingIntroductionInterceptor
+    implements ServletServiceContextAware {
+
+        public ServletContext getServletServiceContext() {
+            return ServletFactoryBean.this.servletServiceContext;
+        }
+    }
+    
+    private class ServletServiceContextMixinAdvisor extends DefaultIntroductionAdvisor {
+
+        public ServletServiceContextMixinAdvisor() {
+            super(new ServletServiceContextMixin(), ServletServiceContextAware.class);
+        }
+        
     }
 }
