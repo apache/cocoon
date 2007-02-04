@@ -34,7 +34,6 @@
   <name>Cocoon Core [modules]</name>
   
   <modules>
-    <module>cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
     <module>cocoon-configuration/cocoon-configuration-api</module>
     <module>cocoon-configuration/cocoon-spring-configurator</module>    
     <module>cocoon-core</module>
