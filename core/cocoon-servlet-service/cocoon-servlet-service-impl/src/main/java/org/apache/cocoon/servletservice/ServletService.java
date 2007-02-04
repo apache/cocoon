@@ -45,9 +45,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @version $Id: BlockServlet.java 496060 2007-01-14 11:03:06Z danielf $
  */
 public class ServletService extends HttpServlet
-    implements ApplicationContextAware, ServletContextAware, BeanNameAware, InitializingBean, DisposableBean {
+    implements ApplicationContextAware, ServletContextAware, BeanNameAware,
+    InitializingBean, DisposableBean, ServletServiceContextAware {
     
-    private ServletServiceContext blockContext;
+    private ServletServiceContext servletServiceContext;
     private String embeddedServletClass;
     private Servlet embeddedServlet;
     private ServletContext servletContext;
@@ -55,7 +56,7 @@ public class ServletService extends HttpServlet
     private ApplicationContext parentContainer;
 
     public ServletService() {
-        this.blockContext = new ServletServiceContext();
+        this.servletServiceContext = new ServletServiceContext();
     }
     
     /* (non-Javadoc)
@@ -63,7 +64,7 @@ public class ServletService extends HttpServlet
      */
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        this.blockContext.setServletContext(servletConfig.getServletContext());
+        this.servletServiceContext.setServletContext(servletConfig.getServletContext());
 
         // create a sub container that resolves paths relative to the block
         // context rather than the parent context and make it available in
@@ -73,13 +74,13 @@ public class ServletService extends HttpServlet
                 WebApplicationContextUtils.getRequiredWebApplicationContext(servletConfig.getServletContext());
         GenericWebApplicationContext container = new GenericWebApplicationContext();
         container.setParent(this.parentContainer);
-        container.setServletContext(this.blockContext);
+        container.setServletContext(this.servletServiceContext);
         container.refresh();
-        this.blockContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, container);
+        this.servletServiceContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, container);
 
         // create a servlet config based on the block servlet context
         ServletConfig blockServletConfig =
-            new ServletConfigurationWrapper(servletConfig, this.blockContext) {
+            new ServletConfigurationWrapper(servletConfig, this.servletServiceContext) {
 
                 // FIXME: The context should get the init parameters from the
                 // config rather than the oposite way around.
@@ -95,7 +96,7 @@ public class ServletService extends HttpServlet
         // create and initialize the embeded servlet
         this.embeddedServlet = createEmbeddedServlet(this.embeddedServletClass, blockServletConfig);
         this.embeddedServlet.init(blockServletConfig);
-        this.blockContext.setServlet(this.embeddedServlet);
+        this.servletServiceContext.setServlet(this.embeddedServlet);
     }
     
     /**
@@ -118,7 +119,7 @@ public class ServletService extends HttpServlet
     protected void service(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         RequestDispatcher dispatcher =
-            this.blockContext.getRequestDispatcher(request.getPathInfo());
+            this.servletServiceContext.getRequestDispatcher(request.getPathInfo());
         dispatcher.forward(request, response);
     }
 
@@ -128,10 +129,10 @@ public class ServletService extends HttpServlet
     }
     
     /**
-     * @return the blockContext
+     * @return the servletServiceContext
      */
-    public ServletServiceContext getBlockContext() {
-        return this.blockContext;
+    public ServletContext getServletServiceContext() {
+        return this.servletServiceContext;
     }
     
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -147,11 +148,11 @@ public class ServletService extends HttpServlet
     }
 
     public void setMountPath(String mountPath) {
-        this.blockContext.setMountPath(mountPath);        
+        this.servletServiceContext.setMountPath(mountPath);        
     }
     
     public String getMountPath() {
-        return this.blockContext.getMountPath();
+        return this.servletServiceContext.getMountPath();
     }
     
     /**
@@ -162,7 +163,7 @@ public class ServletService extends HttpServlet
     // FIXME: would like to throw an exeption if the form of the url is faulty,
     // what is the prefered way of handling faulty properties in Spring?
     public void setBlockContextURL(String blockContextURL) {
-        this.blockContext.setContextPath(blockContextURL);
+        this.servletServiceContext.setContextPath(blockContextURL);
     }
 
     public void setServletClass(String servletClass) {
@@ -170,11 +171,11 @@ public class ServletService extends HttpServlet
     }
 
     public void setProperties(Map properties) {
-        this.blockContext.setInitParams(properties);
+        this.servletServiceContext.setInitParams(properties);
     }
     
     public void setConnections(Map connections) {
-        this.blockContext.setConnections(connections);
+        this.servletServiceContext.setConnections(connections);
     }
 
     public void afterPropertiesSet() throws Exception {
