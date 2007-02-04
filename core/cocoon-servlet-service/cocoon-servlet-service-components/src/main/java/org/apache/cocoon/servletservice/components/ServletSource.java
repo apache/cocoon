@@ -19,7 +19,10 @@ package org.apache.cocoon.servletservice.components;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.ServletException;
+
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.servletservice.ServletConnection;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -40,7 +43,7 @@ public class ServletSource extends AbstractSource {
         // using the block uri is a little bit questionable as it only is valid
         // whithin the current block, not globally
         setSystemId(location);
-        this.blockConnection = new ServletConnection(location, logger);
+        this.blockConnection = new ServletConnection(location);
         this.blockConnection.connect();
     }
 
@@ -48,7 +51,11 @@ public class ServletSource extends AbstractSource {
      * @see org.apache.excalibur.source.impl.AbstractSource#getInputStream()
      */
     public InputStream getInputStream() throws IOException, SourceException {
-        return this.blockConnection.getInputStream();
+        try {
+            return this.blockConnection.getInputStream();
+        } catch (ServletException e) {
+            throw new CascadingIOException(e.getMessage(), e);
+        }
     }
 
     /**

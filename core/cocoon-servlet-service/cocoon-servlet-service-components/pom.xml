@@ -29,18 +29,24 @@
     <version>3-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
-  <artifactId>cocoon-servlet-service-impl</artifactId>
+  <artifactId>cocoon-servlet-service-components</artifactId>
   <packaging>jar</packaging>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon Servlet Service Implementation</name>
-  <description>
-  	The servlet service framework makes it easy to use servlets as Spring components.
-  	It also contains functionality so that a servlet service can call other servlet
-  	services that it is connected to in the Spring configuration.
-  </description>
-  <!--url>http://cocoon.apache.org/${docs.m.servlet-service-impl.relPath}</url-->
+  <name>Cocoon Servlet Service Components</name>
+  <description>Components for the servlet service framework that depends on pipeline and sitemap APIs.</description>
+  <!--url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url-->
   
   <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+      <version>2.2.0-M3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-impl</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.excalibur.components.sourceresolve</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
@@ -56,28 +62,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- Spring Framework -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>2.0.2</version>
-    </dependency>      
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <version>2.0.2</version>
-    </dependency>   
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>2.0.2</version>
-    </dependency>    
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <version>2.0.2</version>
-    </dependency>             
-
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -111,13 +95,13 @@
   <!--
   <properties>
     <docs.name>${project.name}</docs.name>    
-    <docs.version>${docs.m.servlet-service-impl.version}</docs.version>
+    <docs.version>${docs.m.servlet-service-components.version}</docs.version>
   </properties>  
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-impl.relPath}</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-components.relPath}</url>
     </site>
   </distributionManagement>    
   -->
