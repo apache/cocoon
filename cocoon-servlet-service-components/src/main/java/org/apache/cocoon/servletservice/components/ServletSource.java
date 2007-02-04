@@ -21,7 +21,6 @@ import java.io.InputStream;
 
 import javax.servlet.ServletException;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.servletservice.ServletConnection;
 import org.apache.excalibur.source.Source;
@@ -38,7 +37,7 @@ public class ServletSource extends AbstractSource {
     
     private ServletConnection blockConnection;
     
-    public ServletSource(String location, Logger logger) throws IOException {
+    public ServletSource(String location) throws IOException {
         // the systemId (returned by getURI()) is by default null
         // using the block uri is a little bit questionable as it only is valid
         // whithin the current block, not globally
