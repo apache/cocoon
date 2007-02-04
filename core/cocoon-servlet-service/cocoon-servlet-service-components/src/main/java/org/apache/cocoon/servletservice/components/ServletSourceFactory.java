@@ -20,52 +20,65 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.URIAbsolutizer;
 
 /**
- * This class implements the block: protocol.
- *
- *
+ * This class implements the servlet: protocol.
+ * 
+ * 
  * @version $Id$
  */
-public final class ServletSourceFactory
-extends AbstractLogEnabled
-implements SourceFactory, ThreadSafe, URIAbsolutizer
-{
+public final class ServletSourceFactory implements SourceFactory,
+        URIAbsolutizer {
 
-/* (non-Javadoc)
- * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
- */
-public Source getSource( String location, Map parameters )
-    throws MalformedURLException, IOException {
-    if( getLogger().isDebugEnabled() ) {
-        getLogger().debug( "Creating source object for " + location );
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    private Log getLogger() {
+        return this.logger;
     }
 
-    return new ServletSource(location, getLogger());
-}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String,
+     *      java.util.Map)
+     */
+    public Source getSource(String location, Map parameters)
+            throws MalformedURLException, IOException {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Creating source object for " + location);
+        }
 
-/* (non-Javadoc)
- * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
- */
-public void release( Source source ) {
-    if ( null != source ) {
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("Releasing source " + source.getURI());
+        return new ServletSource(location);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
+     */
+    public void release(Source source) {
+        if (null != source) {
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Releasing source " + source.getURI());
+            }
         }
     }
-}
 
-/* (non-Javadoc)
- * @see org.apache.excalibur.source.URIAbsolutizer#absolutize(java.lang.String, java.lang.String)
- */
-public String absolutize(String baseURI, String location) {
-    return SourceUtil.absolutize(baseURI, location, true);
-}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.excalibur.source.URIAbsolutizer#absolutize(java.lang.String,
+     *      java.lang.String)
+     */
+    public String absolutize(String baseURI, String location) {
+        return SourceUtil.absolutize(baseURI, location, true);
+    }
 
 }
