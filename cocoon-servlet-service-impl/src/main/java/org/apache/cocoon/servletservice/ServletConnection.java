@@ -29,10 +29,10 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Implementation of a {@link URLConnection} that gets its content by
@@ -58,16 +58,16 @@ public final class ServletConnection {
     
     private String systemId;
     
-    private Logger logger;
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+    
 
     /**
      * Construct a new object
      */
-    public ServletConnection(String url, Logger logger)
+    public ServletConnection(String url)
         throws MalformedURLException {
 
-        this.logger = logger;
-        
         URI blockURI = null;
         try {
             blockURI = parseBlockURI(new URI(url.toString()));
@@ -94,8 +94,9 @@ public final class ServletConnection {
 
     /**
      * Return an <code>InputStream</code> object to read from the source.
+     * @throws Exception 
      */
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() throws IOException, ServletException {
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.response.setOutputStream(os);
@@ -117,15 +118,9 @@ public final class ServletConnection {
             byte[] out = os.toByteArray();
             
             return new ByteArrayInputStream(out);
-        } catch (ServletException e) {
-            throw new CascadingIOException("BlockConnection " + e.getMessage(), e);
         } finally {
             os.close();
         }
-    }
-
-    protected final Logger getLogger() {
-        return this.logger;
     }
 
     // Parse the block protocol.
