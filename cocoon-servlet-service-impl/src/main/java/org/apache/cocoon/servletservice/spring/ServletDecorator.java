@@ -40,8 +40,7 @@ public class ServletDecorator implements
      */
     public BeanDefinitionHolder decorate(Node source, BeanDefinitionHolder holder, ParserContext ctx) {
         String embeddedServletBeanName = registerEmbeddedServletBean(holder, ctx);
-        registerServletFactoryBean((Element) source, holder, ctx, embeddedServletBeanName);
-        return holder;
+        return createServletFactoryBeanDefinition((Element) source, holder, ctx, embeddedServletBeanName);
     }
 
     private String registerEmbeddedServletBean(BeanDefinitionHolder holder, ParserContext ctx) {
@@ -53,13 +52,14 @@ public class ServletDecorator implements
         return beanName;
     }
 
-    private void registerServletFactoryBean(Element source, BeanDefinitionHolder holder, ParserContext ctx, String embeddedServletBeanName) {
+    private BeanDefinitionHolder createServletFactoryBeanDefinition(Element source, BeanDefinitionHolder holder, ParserContext ctx, String embeddedServletBeanName) {
+        String ns = source.getNamespaceURI();
         String mountPath = source.hasAttribute("mount-path") ? source.getAttribute("mount-path") : null;
         String contextPath = source.hasAttribute("context-path") ? source.getAttribute("context-path") : null;
         
-        Element initParamsElem = (Element) source.getElementsByTagName("init-params").item(0);
-        Element contextParamsElem = (Element) source.getElementsByTagName("context-params").item(0);
-        Element connectionsElem = (Element) source.getElementsByTagName("connections").item(0);
+        Element initParamsElem = (Element) source.getElementsByTagNameNS(ns, "init-params").item(0);
+        Element contextParamsElem = (Element) source.getElementsByTagNameNS(ns, "context-params").item(0);
+        Element connectionsElem = (Element) source.getElementsByTagNameNS(ns, "connections").item(0);
         
         BeanDefinitionBuilder servletFactoryDefBuilder = BeanDefinitionBuilder.rootBeanDefinition(ServletFactoryBean.class);
         servletFactoryDefBuilder.setSource(ctx.extractSource(source));
@@ -83,6 +83,6 @@ public class ServletDecorator implements
             servletFactoryDefBuilder.addPropertyValue("connections", connections);
         }
 
-        ctx.getRegistry().registerBeanDefinition(holder.getBeanName(), servletFactoryDefBuilder.getBeanDefinition());
+        return new BeanDefinitionHolder(servletFactoryDefBuilder.getBeanDefinition(), holder.getBeanName());
     }
 }

@@ -37,7 +37,7 @@ public class ServletNamespaceHandler extends NamespaceHandlerSupport {
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
     public void init() {
-        this.registerBeanDefinitionDecorator("servlet", new ServletDecorator());
+        this.registerBeanDefinitionDecorator("context", new ServletDecorator());
     }
 
 }

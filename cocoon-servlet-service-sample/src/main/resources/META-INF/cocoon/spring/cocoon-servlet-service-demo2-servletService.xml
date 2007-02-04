@@ -19,9 +19,11 @@
 <!-- @version $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-  <bean id="org.apache.cocoon.servletservice.demo2.servlet" class="org.apache.cocoon.servletservice.ServletService">
-    <property name="mountPath" value="/test2"/>
-    <property name="servletClass" value="org.apache.cocoon.servletservice.demo2.DemoServlet"/>
-  </bean>
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+
+  <bean id="org.apache.cocoon.servletservice.demo2.servlet" class="org.apache.cocoon.servletservice.demo2.DemoServlet">
+    <servlet:context mount-path="/test2"/>
+  </bean>  
 </beans>
