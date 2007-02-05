@@ -48,13 +48,18 @@
     </plugins>
   </build>
   <modules>
-    <module>cocoon-ajax</module>
-    <module>cocoon-apples</module>
-    <module>cocoon-core-sample</module>
-    <module>cocoon-flowscript</module>
-    <module>cocoon-forms</module>
-    <module>cocoon-template</module>
-    <module>cocoon-samples-style</module>
+    <module>cocoon-ajax/cocoon-ajax-impl</module>
+    <module>cocoon-ajax/cocoon-ajax-sample</module>    
+    <module>cocoon-apples/cocoon-apples-impl</module>
+    <module>cocoon-apples/cocoon-apples-sample</module>    
+    <module>cocoon-core-sample/cocoon-core-additional-sample</module>
+    <module>cocoon-core-sample/cocoon-core-main-sample</module>    
+    <module>cocoon-flowscript/cocoon-flowscript-impl</module>
+    <module>cocoon-forms/cocoon-forms-impl</module>
+    <module>cocoon-forms/cocoon-forms-sample</module>    
+    <module>cocoon-template/cocoon-template-impl</module>
+    <module>cocoon-template/cocoon-template-sample</module>    
+    <module>cocoon-samples-style/cocoon-samples-style-default</module>
   </modules>
   <profiles>
     <profile>
