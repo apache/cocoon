@@ -16,9 +16,8 @@
  */
 package org.apache.cocoon.woody.datatype.convertor;
 
-import org.outerj.i18n.DecimalFormat;
-
 import java.util.Locale;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 
 /**
