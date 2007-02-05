@@ -21,26 +21,32 @@
     | @version $Id: pom.xml 448825 2006-09-22 06:19:55Z reinhard $
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
+
   <parent>
+    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-flowscript</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-flowscript-impl</artifactId>
   <version>1.0.0-M2-SNAPSHOT</version>
-  <name>Flowscript Block</name>
+  <name>Cocoon Flowscript Block Implementation</name>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/blocks/flowscript/${docs.version}/</url>
     </site>
   </distributionManagement>
+  
   <properties>
     <docs.name>Cocoon FlowScript</docs.name>    
     <docs.version>1.0</docs.version>
   </properties>
+  
   <build>
     <plugins>
       <plugin>
@@ -54,6 +60,7 @@
       </plugin>      
     </plugins>
   </build>
+  
   <dependencies>
     <dependency>
       <groupId>rhino</groupId>
@@ -62,8 +69,8 @@
     </dependency>
     <dependency>
     	<groupId>org.apache.cocoon</groupId>
-	<artifactId>cocoon-core</artifactId>
-	<version>2.2.0-M3-SNAPSHOT</version>
+	    <artifactId>cocoon-core</artifactId>
+	    <version>2.2.0-M3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -72,4 +79,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
 </project>
