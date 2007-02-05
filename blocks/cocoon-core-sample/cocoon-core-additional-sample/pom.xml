@@ -35,7 +35,7 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-core-additional-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon additional sample Block</name>
+  <name>Cocoon Additional Sample Block</name>
 
   <dependencies>
     <dependency>
