@@ -85,7 +85,10 @@
         <module>cocoon-deli</module>
         <module>cocoon-eventcache</module>
         <module>cocoon-faces</module>
-        <module>cocoon-fop</module>
+        <module>cocoon-fop/cocoon-fop-impl</module>
+        <module>cocoon-fop/cocoon-fop-ng-impl</module>        
+        <module>cocoon-fop/cocoon-fop-ng-sample</module>
+        <module>cocoon-fop/cocoon-fop-sample</module>                
         <module>cocoon-html</module>
         <module>cocoon-itext</module>
         <module>cocoon-javaflow</module>
