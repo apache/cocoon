@@ -19,19 +19,21 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <parent>
+    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-ajax</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>    
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-ajax-impl</artifactId>
   <version>1.0.0-M2-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Ajax Block Implementation</name>
+  <name>Cocoon Ajax Block Implementation</name>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -39,16 +41,19 @@
       <version>2.2.0-M3-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/blocks/ajax/${docs.version}/</url>
     </site>
   </distributionManagement>
+  
   <properties>
     <docs.name>Cocoon Ajax</docs.name>    
     <docs.version>1.0</docs.version>
   </properties>    
+  
   <build>
     <plugins>
       <plugin>
@@ -93,4 +98,5 @@
       </plugin>
     </plugins>
   </build>
+  
 </project>
