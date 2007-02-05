@@ -99,7 +99,8 @@
         <module>cocoon-jsp</module>
         <module>cocoon-linkrewriter</module>
         <module>cocoon-lucene</module>
-        <module>cocoon-mail</module>
+        <module>cocoon-mail/cocoon-mail-impl</module>
+        <module>cocoon-mail/cocoon-mail-sample</module>        
         <module>cocoon-midi</module>
         <module>cocoon-naming</module>
         <module>cocoon-ojb</module>
