@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.callstack;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
 
@@ -35,11 +33,11 @@ public class CallScope implements Scope {
      * @see org.springframework.beans.factory.config.Scope#get(java.lang.String, org.springframework.beans.factory.ObjectFactory)
      */
     public Object get(String name, ObjectFactory objectFactory) {
-        Map attributes = CallStack.getCurrentFrame();
-        Object scopedObject = attributes.get(name);
+        CallFrame frame = CallStack.getCurrentFrame();
+        Object scopedObject = frame.getAttribute(name);
         if (scopedObject == null) {
             scopedObject = objectFactory.getObject();
-            attributes.put(name, scopedObject);
+            frame.setAttribute(name, scopedObject);
         }
         return scopedObject;
     }
@@ -48,10 +46,10 @@ public class CallScope implements Scope {
      * @see org.springframework.beans.factory.config.Scope#remove(java.lang.String)
      */
     public Object remove(String name) {
-        Map attributes = CallStack.getCurrentFrame();
-        Object scopedObject = attributes.get(name);
+        CallFrame frame = CallStack.getCurrentFrame();
+        Object scopedObject = frame.getAttribute(name);
         if (scopedObject != null)
-            attributes.remove(name);
+            frame.removeAttribute(name);
         return scopedObject;
     }
 
@@ -67,8 +65,7 @@ public class CallScope implements Scope {
      * @see org.springframework.beans.factory.config.Scope#registerDestructionCallback(java.lang.String, java.lang.Runnable)
      */
     public void registerDestructionCallback(String name, Runnable callback) {
-        // TODO Auto-generated method stub
-        
+        CallStack.getCurrentFrame().registerDestructionCallback(name, callback);
     }
 
 }
