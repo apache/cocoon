@@ -74,7 +74,8 @@
         <module>cocoon-auth</module>
         <module>cocoon-authentication-fw</module>
         <module>cocoon-axis</module>
-        <module>cocoon-batik</module>
+        <module>cocoon-batik/cocoon-batik-impl</module>
+        <module>cocoon-batik/cocoon-batik-sample</module>        
         <module>cocoon-bsf</module>
         <module>cocoon-captcha</module>
         <module>cocoon-chaperon</module>
