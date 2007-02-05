@@ -16,11 +16,7 @@
  */
 package org.apache.cocoon.callstack;
 
-import java.util.Map;
 import java.util.Stack;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 /**
  * Stack used for storing objects in the current call frame.
@@ -33,59 +29,39 @@ public class CallStack {
     /** The call stack */
     private static final ThreadLocal callStack = new ThreadLocal();
     
-    /** Content map and objects that should be desctructed when the call frame is left */
-    private static class CallStackInfo {
-        public CallStackInfo(Map attributes, Map destructionCallbacks) {
-            this.attributes = attributes;
-            this.destructionCallbacks = destructionCallbacks;
-        }
-        public Map attributes;
-        public Map destructionCallbacks;
-    };
-
     /**
      * This hook must be called each time a call frame is entered.
-     *
-     * <p>This method should never raise an exception, except when the
-     * parameters are not set!</p>
-     *
-     * @throws ServletException if block is null
      */
-    public static void enter(Map attributes)
-    throws ServletException {
-        if (null == attributes) {
-            throw new ServletException("Block is not set.");
-        }
-
+    public static void enter() {
         Stack stack = (Stack)callStack.get();
         if (stack == null) {
             stack = new Stack();
             callStack.set(stack);
         }
-        CallStackInfo info = new CallStackInfo(attributes, null);
+        CallFrame info = new CallFrame();
         stack.push(info);
     }
 
     /**
-     * This hook must be called each time a block is left.
+     * This hook must be called each time a call frame is left.
      *
-     * <p>It's the counterpart to the {@link #enterBlock(Block)}
+     * <p>It's the counterpart to the {@link #enter()}
      * method.</p>
      */
     public static void leave() {
         final Stack stack = (Stack)callStack.get();
-        stack.pop();
+        CallFrame info = (CallFrame) stack.pop();
+        info.executeDestructionCallbacks();
     }
 
     /**
-     * Use this method for getting the context that should be used for
-     * resolving a block protocol call to a super block 
-     * @return a servlet context
+     * Use this method for getting the current call frame
+     * @return a call frame
      */
-    public static Map getCurrentFrame() {
+    public static CallFrame getCurrentFrame() {
         final Stack stack = (Stack)callStack.get();
         if (stack != null && !stack.isEmpty()) {
-            return ((CallStackInfo)stack.peek()).attributes;
+            return (CallFrame)stack.peek();
         }
         return null;
     }
