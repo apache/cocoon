@@ -70,8 +70,6 @@
         </property>
       </activation>
       <modules>
-        <module>cocoon-ajax</module>
-        <module>cocoon-apples</module>
         <module>cocoon-asciiart</module>
         <module>cocoon-auth</module>
         <module>cocoon-authentication-fw</module>
@@ -85,9 +83,7 @@
         <module>cocoon-deli</module>
         <module>cocoon-eventcache</module>
         <module>cocoon-faces</module>
-        <module>cocoon-flowscript</module>
         <module>cocoon-fop</module>
-        <module>cocoon-forms</module>
         <module>cocoon-html</module>
         <module>cocoon-itext</module>
         <module>cocoon-javaflow</module>
@@ -113,12 +109,10 @@
         <module>cocoon-scratchpad</module>
         <module>cocoon-serializers</module>
         <module>cocoon-session-fw</module>
-        <module>cocoon-samples-style</module>
         <module>cocoon-slide</module>
         <module>cocoon-slop</module>
         <module>cocoon-stx</module>
         <module>cocoon-taglib</module>
-        <module>cocoon-template</module>
         <module>cocoon-tour</module>
         <module>cocoon-validation</module>
         <module>cocoon-velocity</module>
