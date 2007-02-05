@@ -16,12 +16,11 @@
  */
 package org.apache.cocoon.woody.datatype.convertor;
 
-import org.outerj.i18n.DateFormat;
-import org.outerj.i18n.I18nSupport;
-
 import java.util.Locale;
 import java.util.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * A Convertor for {@link java.util.Date Date} objects backed by the
@@ -90,24 +89,28 @@ public class FormattingDateConvertor implements Convertor {
     }
 
     protected DateFormat getDateFormat(Locale locale) {
-        DateFormat dateFormat = null;
+        SimpleDateFormat dateFormat = null;
 
         switch (variant) {
             case DATE:
-                dateFormat = I18nSupport.getInstance().getDateFormat(style, locale);
+                dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(style, locale);
                 break;
             case TIME:
-                dateFormat = I18nSupport.getInstance().getTimeFormat(style, locale);
+                dateFormat = (SimpleDateFormat)DateFormat.getTimeInstance(style, locale);
                 break;
             case DATE_TIME:
-                dateFormat = I18nSupport.getInstance().getDateTimeFormat(style, style, locale);
+                dateFormat = (SimpleDateFormat)DateFormat.getDateTimeInstance(style, style, locale);
                 break;
         }
 
         String pattern = (String)localizedPatterns.get(locale);
 
         if (pattern != null)
-            dateFormat.applyLocalizedPattern(pattern);
+            // Note: this was previously using applyLocalizedPattern() which allows to use
+            // a locale-specific pattern syntax, e.g. in french "j" (jour) for "d" and
+            // "a" (annee) for "y". But the localized pattern syntax is very little known and thus
+            // led to some weird pattern syntax error messages.
+            dateFormat.applyPattern(pattern);
         else if (nonLocalizedPattern != null)
             dateFormat.applyPattern(nonLocalizedPattern);
 

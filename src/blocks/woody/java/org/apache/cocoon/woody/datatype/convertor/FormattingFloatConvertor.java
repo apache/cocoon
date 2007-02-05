@@ -16,10 +16,9 @@
  */
 package org.apache.cocoon.woody.datatype.convertor;
 
-import org.outerj.i18n.I18nSupport;
-import org.outerj.i18n.DecimalFormat;
-
 import java.util.Locale;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -110,16 +109,19 @@ public class FormattingFloatConvertor implements Convertor {
 
         switch (variant) {
             case INTEGER:
-                decimalFormat = I18nSupport.getInstance().getIntegerFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getNumberInstance(locale);
+                decimalFormat.setMaximumFractionDigits(0);
+                decimalFormat.setDecimalSeparatorAlwaysShown(false);
+                decimalFormat.setParseIntegerOnly(true);
                 break;
             case NUMBER:
-                decimalFormat = I18nSupport.getInstance().getNumberFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getNumberInstance(locale);
                 break;
             case CURRENCY:
-                decimalFormat = I18nSupport.getInstance().getCurrencyFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getCurrencyInstance(locale);
                 break;
             case PERCENT:
-                decimalFormat = I18nSupport.getInstance().getPercentFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getPercentInstance(locale);
                 break;
         }
 
