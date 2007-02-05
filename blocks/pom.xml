@@ -77,7 +77,8 @@
         <module>cocoon-batik/cocoon-batik-impl</module>
         <module>cocoon-batik/cocoon-batik-sample</module>        
         <module>cocoon-bsf</module>
-        <module>cocoon-captcha</module>
+        <module>cocoon-captcha/cocoon-captcha-impl</module>
+        <module>cocoon-captcha/cocoon-captcha-sample</module>        
         <module>cocoon-chaperon</module>
         <module>cocoon-cron</module>
         <module>cocoon-databases</module>
