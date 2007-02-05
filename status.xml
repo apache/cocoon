@@ -181,6 +181,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="CZ" type="fix" fixes-bug="COCOON-1998" due-to="Woonsan Ko">
+      Portal block: CocoonPortlet needs to allow overriding servlet-path parameter with preferences.
+    </action>
     <action dev="JJ" type="fix" fixes-bug="COCOON-2000" due-to="Abbas Mousavi">
       CForms: Fix "Serialization parameter {indent} must have the value yes or no" error
       in Form.prototype.saveXML() when using Saxon.

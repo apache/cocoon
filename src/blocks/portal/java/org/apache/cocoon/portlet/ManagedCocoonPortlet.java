@@ -51,6 +51,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletPreferences;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -171,6 +172,11 @@ public class ManagedCocoonPortlet extends GenericPortlet {
      * Store pathInfo in session
      */
     protected boolean storeSessionPath;
+
+    /**
+     * Allow overriding servletPath by request or preferences.
+     */
+    private boolean servletPathOverriding = true;
 
     /**
      * Initialize this <code>CocoonPortlet</code> instance.
@@ -354,6 +360,8 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         }
 
         this.storeSessionPath = getInitParameterAsBoolean("store-session-path", false);
+
+        this.servletPathOverriding = getInitParameterAsBoolean("servlet-path-overriding", true);
     }
 
     public void processAction(ActionRequest req, ActionResponse res)
@@ -397,13 +405,35 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         }
 
         // We got it... Process the request
-        String servletPath = this.servletPath;
-        if (servletPath == null) {
-            servletPath = "portlets/" + getPortletConfig().getPortletName();
+        String uri = this.servletPath;
+        if (uri == null) {
+            uri = "portlets/" + getPortletConfig().getPortletName();
         }
+
+        // override servlet-path by the request
+        if (servletPathOverriding) {
+            String reqServletPath = (String) request.getAttribute("servlet-path");
+
+            if (reqServletPath != null) {
+                uri = reqServletPath;
+            } else {
+                PortletPreferences prefs = request.getPreferences();
+                
+                if (prefs != null) {
+                    uri = prefs.getValue("servlet-path", uri);
+                }
+            }
+        }
+
+        if (uri.startsWith("/")) {
+            uri = uri.substring(1);
+        }
+        if (uri.endsWith("/")) {
+            uri = uri.substring(0, uri.length() - 1);
+        }
+
         String pathInfo = getPathInfo(request);
 
-        String uri = servletPath;
         if (pathInfo != null) {
             uri += pathInfo;
         }
@@ -544,13 +574,35 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         }
 
         // We got it... Process the request
-        String servletPath = this.servletPath;
+        String uri = this.servletPath;
         if (servletPath == null) {
-            servletPath = "portlets/" + getPortletConfig().getPortletName();
+            uri = "portlets/" + getPortletConfig().getPortletName();
         }
+
+        // allow servlet-path override by request or preferences
+        if (servletPathOverriding) {
+            String reqServletPath = (String) request.getAttribute("servlet-path");
+
+            if (reqServletPath != null) {
+                uri = reqServletPath;
+            } else {
+                PortletPreferences prefs = request.getPreferences();
+            
+                if (prefs != null) {
+                    uri = prefs.getValue("servlet-path", uri);
+                }
+            }
+        }
+
+        if (uri.startsWith("/")) {
+            uri = uri.substring(1);
+        }
+        if (uri.endsWith("/")) {
+            uri = uri.substring(0, uri.length() - 1);
+        }
+
         String pathInfo = getPathInfo(request);
 
-        String uri = servletPath;
         if (pathInfo != null) {
             uri += pathInfo;
         }
