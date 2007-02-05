@@ -19,30 +19,34 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>  
+  <packaging>jar</packaging>  
+  
   <parent>
+    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-serializers</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-serializers-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <name>Serializers Block Implementation</name>
+  <name>Cocoon Serializers Block Implementation</name>
+  
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/blocks/serializers/${docs.version}/</url>
     </site>
   </distributionManagement>
+  
   <properties>
     <docs.name>Cocoon Serializers</docs.name>    
     <docs.version>1.0</docs.version>
   </properties>
+  
   <build>
     <plugins>
       <plugin>
@@ -56,7 +60,7 @@
       </plugin>      
     </plugins>
   </build>
-  <description/>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -64,4 +68,5 @@
       <version>2.2.0-M3-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  
 </project>
