@@ -20,12 +20,14 @@
 <!--+
     | @version $Id$
     +-->  
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans
-  http://www.springframework.org/schema/beans/spring-beans.xsd">
-  <bean id="org.apache.cocoon.cocoon-rcl-plugin-demo.block" class="org.apache.cocoon.blocks.BlockServlet">
-    <property name="mountPath" value="/cocoon-rcl-plugin-demo"/>
-    <property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
-    <property name="blockContextURL" value="blockcontext:/cocoon-rcl-plugin-demo/"/>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+  
+  <bean id="org.apache.cocoon.cocoon-rcl-plugin-demo.block" class="org.apache.cocoon.sitemap.SitemapServlet">
+    <servlet:context mount-path="" context-path="blockcontext:/cocoon-rcl-plugin-demo/"/>
   </bean>
+  
 </beans>
