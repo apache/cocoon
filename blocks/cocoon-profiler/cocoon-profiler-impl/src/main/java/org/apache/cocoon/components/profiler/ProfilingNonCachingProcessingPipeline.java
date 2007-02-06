@@ -19,6 +19,9 @@ package org.apache.cocoon.components.profiler;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -28,6 +31,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLPipe;
 import org.apache.cocoon.xml.XMLProducer;
 
 /**
@@ -38,13 +42,15 @@ import org.apache.cocoon.xml.XMLProducer;
  * @version $Id$
  */
 public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingPipeline
-                                                   implements Disposable {
+                                                   implements Disposable, Configurable {
 
     private Profiler profiler;
 
     private ProfilerData data;
 
     private int index;
+    
+    private boolean saxstream = false;
 
     /**
      * @see org.apache.cocoon.components.pipeline.AbstractProcessingPipeline#service(org.apache.avalon.framework.service.ServiceManager)
@@ -54,6 +60,10 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
         this.profiler = (Profiler) manager.lookup(Profiler.ROLE);
     }
 
+	public void configure(Configuration conf) throws ConfigurationException {
+		this.saxstream = conf.getAttributeAsBoolean("sax-stream", false);
+	}    
+    
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -295,12 +305,19 @@ public class ProfilingNonCachingProcessingPipeline extends NonCachingProcessingP
      */
     protected void connect(Environment environment, XMLProducer producer,
                            XMLConsumer consumer) throws ProcessingException {
-        ProfilingXMLPipe connector = new ProfilingXMLPipe();
-
-        connector.setup(this.index, this.data);
+    	XMLPipe pipe = null;
+    	if (saxstream) {
+	        ProfilingSAXPipe connector = new ProfilingSAXPipe();
+	        connector.setup(this.index, this.data);
+	        pipe = connector;    		
+    	} else {
+	        ProfilingXMLPipe connector = new ProfilingXMLPipe();
+	        connector.setup(this.index, this.data);
+	        pipe = connector;
+    	}
         this.index++;
-        super.connect(environment, producer, connector);
-        super.connect(environment, connector, consumer);
+        super.connect(environment, producer, pipe);
+        super.connect(environment, pipe, consumer);
     }
 
 }
