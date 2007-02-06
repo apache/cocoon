@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.servletservice.CallStack;
+import org.apache.cocoon.servletservice.CallStackHelper;
 
 /**
  * BlockPropertyModule provides access to the properties of the current block.
@@ -34,7 +34,7 @@ public class BlockPropertyModule implements InputModule {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        return CallStack.getBaseBlockContext().getInitParameter(name);
+        return CallStackHelper.getBaseServletContext().getInitParameter(name);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
