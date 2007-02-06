@@ -65,4 +65,23 @@ public class CallStack {
         }
         return null;
     }
+    
+    /**
+     * @return the size of the call stack
+     */
+    public static int size() {
+        final Stack stack = (Stack)callStack.get();
+        return stack != null ? stack.size() : 0;
+    }
+    
+    /**
+     * Get the frame at the i:th position in the call stack
+     * @param i
+     * @return
+     */
+    public static CallFrame frameAt(int i) {
+        final Stack stack = (Stack)callStack.get();
+        return (CallFrame) (stack != null ? stack.elementAt(i) : null);
+    }
+
 }
