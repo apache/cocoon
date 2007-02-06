@@ -95,7 +95,7 @@
         <servlet-class>org.apache.cocoon.servlet.ReloadingServlet</servlet-class>
         <init-param>
           <param-name>servlet-class</param-name>
-          <param-value>org.apache.cocoon.blocks.DispatcherServlet</param-value>
+          <param-value>org.apache.cocoon.servletservice.DispatcherServlet</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
       </servlet>
