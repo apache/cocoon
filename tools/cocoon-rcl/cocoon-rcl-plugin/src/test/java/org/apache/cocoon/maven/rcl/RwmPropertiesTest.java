@@ -36,8 +36,8 @@ public class RwmPropertiesTest extends TestCase {
         // test variable interpolation
         assertEquals("interpolatedValue:A", springProps.getProperty("b"));
         // test setting the correct context URL if a *%classes-dir property was set
-        assertTrue(springProps.containsKey("org.apache.cocoon.cocoon-rcl-plugin-demo.block/blockContextURL"));
-        assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/blockContextURL")
+        assertTrue(springProps.containsKey("org.apache.cocoon.cocoon-rcl-plugin-demo.block/contextPath"));
+        assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/contextPath")
                 .indexOf("target/classes/COB-INF") > 0);
     }
 

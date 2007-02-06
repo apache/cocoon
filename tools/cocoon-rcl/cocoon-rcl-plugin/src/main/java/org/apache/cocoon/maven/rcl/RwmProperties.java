@@ -31,7 +31,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class RwmProperties {
 
     private static final String COB_INF_DIR = "/COB-INF";
-    private static final String BLOCK_CONTEXT_URL_PARAM = "/blockContextURL";
+    private static final String BLOCK_CONTEXT_URL_PARAM = "/contextPath";
     private static final String CLASSES_DIR = "%classes-dir";    
     
     private Configuration props;
