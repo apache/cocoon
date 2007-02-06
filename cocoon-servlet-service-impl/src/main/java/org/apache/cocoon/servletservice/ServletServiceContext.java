@@ -526,17 +526,17 @@ public class ServletServiceContext extends ServletContextWrapper {
                     // It is important to set the current context each time
                     // a new context is entered, this is used for the servlet
                     // protocol
-                    CallStack.enterBlock(ServletServiceContext.this);
+                    CallStackHelper.enterServlet(ServletServiceContext.this);
                 } else {
                     // A super servlet service should be called in the context of
                     // the called servlet service to get polymorphic calls resolved
                     // in the right way. We still need to register the
                     // current context for resolving super calls relative it.
-                    CallStack.enterSuperBlock(ServletServiceContext.this);
+                    CallStackHelper.enterSuperServlet(ServletServiceContext.this);
                 }                        
                 ServletServiceContext.this.servlet.service(request, response);
             } finally {
-                CallStack.leaveBlock();
+                CallStackHelper.leaveServlet();
             }
         }
 

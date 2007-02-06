@@ -30,6 +30,10 @@ import java.util.Map;
 public class CallFrame {
     private Map attributes;
     private Map destructionCallbacks;
+    
+    public boolean hasAttribute(String name) {
+        return this.attributes != null ? this.attributes.containsKey(name) : false;
+    }
 
     public Object getAttribute(String name) {
         return this.attributes != null ? this.attributes.get(name) : null;

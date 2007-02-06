@@ -79,9 +79,9 @@ public final class ServletConnection {
         // Super calls are resolved relative the current context and ordinary
         // calls relative the last non super call in the call chain
         if (ServletServiceContext.SUPER.equals(this.blockName))
-            this.context = CallStack.getCurrentBlockContext();
+            this.context = CallStackHelper.getCurrentServletContext();
         else
-            this.context = CallStack.getBaseBlockContext();
+            this.context = CallStackHelper.getBaseServletContext();
         
         if (this.context == null)
             throw new MalformedURLException("Must be used in a block context " + url);

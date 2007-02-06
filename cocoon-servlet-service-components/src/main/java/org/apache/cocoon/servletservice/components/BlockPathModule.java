@@ -27,7 +27,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.servletservice.CallStack;
+import org.apache.cocoon.servletservice.CallStackHelper;
 import org.apache.cocoon.servletservice.ServletServiceContext;
 
 /**
@@ -40,7 +40,7 @@ public class BlockPathModule implements InputModule {
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
         Environment env = EnvironmentHelper.getCurrentEnvironment();
-        ServletServiceContext blockContext = (ServletServiceContext) CallStack.getBaseBlockContext();
+        ServletServiceContext blockContext = (ServletServiceContext) CallStackHelper.getBaseServletContext();
         String absoluteURI = null;
         /* No relative block paths yet
         String baseURI = env.getURIPrefix();
