@@ -37,21 +37,21 @@
     <bean name="javax.servlet.http.HttpServletRequest/callstack"
           class="org.apache.cocoon.callstack.environment.HttpServletRequestFactoryBean"
           scope="call">
-        <aop:scoped-proxy/>
+        <!--aop:scoped-proxy proxy-target-class="false"/-->
     </bean>
 
     <!-- The response object of the current call frame -->
     <bean name="javax.servlet.http.HttpServletResponse/callstack"
           class="org.apache.cocoon.callstack.environment.HttpServletResponseFactoryBean"
           scope="call">
-        <aop:scoped-proxy/>
+        <!--aop:scoped-proxy proxy-target-class="false"/-->
     </bean>
 
     <!-- The context object of the current call frame -->
     <bean name="javax.servlet.ServletContext/callstack"
           class="org.apache.cocoon.callstack.environment.ServletContextFactoryBean"
           scope="call">
-        <aop:scoped-proxy/>
+        <!--aop:scoped-proxy proxy-target-class="false"/-->
     </bean>
 
 </beans>
