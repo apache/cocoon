@@ -86,9 +86,10 @@
         <module>cocoon-eventcache</module>
         <module>cocoon-faces</module>
         <module>cocoon-fop/cocoon-fop-impl</module>
+        <module>cocoon-fop/cocoon-fop-sample</module>  
+        <!-- Doesn't work because the FOP project hasn't released the necessary artifacts              
         <module>cocoon-fop/cocoon-fop-ng-impl</module>        
-        <module>cocoon-fop/cocoon-fop-ng-sample</module>
-        <module>cocoon-fop/cocoon-fop-sample</module>                
+        <module>cocoon-fop/cocoon-fop-ng-sample</module-->        
         <module>cocoon-html/cocoon-html-impl</module>
         <module>cocoon-html/cocoon-html-sample</module>        
         <module>cocoon-itext</module>
