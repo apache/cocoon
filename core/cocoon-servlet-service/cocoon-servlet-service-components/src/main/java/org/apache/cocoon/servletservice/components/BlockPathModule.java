@@ -22,11 +22,11 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.servletservice.CallStackHelper;
 import org.apache.cocoon.servletservice.ServletServiceContext;
 
@@ -36,13 +36,21 @@ import org.apache.cocoon.servletservice.ServletServiceContext;
  * @version $Id: BlockPathModule.java 448464 2006-09-21 05:29:11Z crossley $
  */
 public class BlockPathModule implements InputModule {
+    
+    private ServletContext servletContext;
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        Environment env = EnvironmentHelper.getCurrentEnvironment();
-        ServletServiceContext blockContext = (ServletServiceContext) CallStackHelper.getBaseServletContext();
+        // FIXME Will be removed when the scoped proxy work
+        if (this.servletContext == null)
+            this.servletContext = CallStackHelper.getBaseServletContext();
         String absoluteURI = null;
         /* No relative block paths yet
+        Environment env = EnvironmentHelper.getCurrentEnvironment();
         String baseURI = env.getURIPrefix();
         if (baseURI.length() == 0 || !baseURI.startsWith("/"))
             baseURI = "/" + baseURI;
@@ -50,7 +58,7 @@ public class BlockPathModule implements InputModule {
         try {
             // URI uri = ServletSource.resolveURI(new URI(name), new URI(null, null, baseURI, null));
             URI uri = new URI(name);
-            absoluteURI= blockContext.absolutizeURI(uri).toString();
+            absoluteURI = ((ServletServiceContext)this.servletContext).absolutizeURI(uri).toString();
         } catch (URISyntaxException e) {
             throw new ConfigurationException("Couldn't absolutize " + name);
         }
