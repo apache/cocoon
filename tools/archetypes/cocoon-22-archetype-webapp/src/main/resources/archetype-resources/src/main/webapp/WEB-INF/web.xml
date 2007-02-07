@@ -88,7 +88,7 @@
     <description>Cocoon blocks dispatcher</description>
     <display-name>DispatcherServlet</display-name>
     <servlet-name>DispatcherServlet</servlet-name>
-    <servlet-class>org.apache.cocoon.blocks.DispatcherServlet</servlet-class>
+    <servlet-class>org.apache.cocoon.servletservice.DispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
