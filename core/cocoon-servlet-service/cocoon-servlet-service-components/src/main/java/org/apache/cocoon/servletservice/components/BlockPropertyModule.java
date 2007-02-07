@@ -20,6 +20,8 @@ package org.apache.cocoon.servletservice.components;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.modules.input.InputModule;
@@ -32,9 +34,18 @@ import org.apache.cocoon.servletservice.CallStackHelper;
  */
 public class BlockPropertyModule implements InputModule {
 
+    private ServletContext servletContext;
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        return CallStackHelper.getBaseServletContext().getInitParameter(name);
+        // FIXME Will be removed when the scoped proxy work
+        if (this.servletContext == null)
+            this.servletContext = CallStackHelper.getBaseServletContext();
+        return this.servletContext.getInitParameter(name);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
