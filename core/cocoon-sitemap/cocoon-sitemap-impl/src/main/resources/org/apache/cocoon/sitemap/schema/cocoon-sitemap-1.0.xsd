@@ -55,6 +55,7 @@
         <xsd:element ref="actions" minOccurs="0" maxOccurs="1"/>
         <xsd:element ref="pipes" minOccurs="0" maxOccurs="1"/>
       </xsd:all>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
     </xsd:complexType>
   </xsd:element>
 
