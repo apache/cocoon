@@ -19,6 +19,12 @@ package org.apache.cocoon.components.treeprocessor;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -101,12 +107,23 @@ public class TreeProcessor extends AbstractLogEnabled
     /** The actual processor */
     protected ConcreteTreeProcessor concreteProcessor;
 
+    /** The sitemap schema used for validation. */
+    protected Schema sitemapSchema;
+
     /**
      * Create a TreeProcessor.
      */
     public TreeProcessor() {
         this.checkReload = true;
         this.lastModifiedDelay = 1000;
+        // create sitemap schema
+        final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI); 
+        final StreamSource ss = new StreamSource(this.getClass().getResourceAsStream("/org/apache/cocoon/sitemap/schema/cocoon-sitemap-1.0.xsd"));
+        try {
+            this.sitemapSchema = factory.newSchema(ss);
+        } catch (SAXException se) {
+            throw new RuntimeException("Unable to parse sitemap schema.", se);
+        }
     }
 
     /**
@@ -135,6 +152,7 @@ public class TreeProcessor extends AbstractLogEnabled
         ContainerUtil.service(this.environmentHelper, this.manager);
         this.environmentHelper.changeContext(sitemapSource, prefix);
         this.sitemapExecutor = parent.sitemapExecutor;
+        this.sitemapSchema = parent.sitemapSchema;
     }
 
     /**
@@ -328,6 +346,15 @@ public class TreeProcessor extends AbstractLogEnabled
     
     private Configuration createSitemapProgram(Source sitemapSource)
     throws ProcessingException, SAXException, IOException {
+        // do we validate? Default is false
+        final String value = this.settings.getProperty("org.apache.cocoon.sitemap.validating", "false");
+        if ( Boolean.valueOf(value).booleanValue() ) {
+            if ( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug("Validating sitemap " + sitemapSource.getURI());
+            }
+            final Validator validator = this.sitemapSchema.newValidator();
+            validator.validate(new StreamSource(sitemapSource.getInputStream()));
+        }
         NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
         AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
         SourceUtil.toSAX(this.manager, sitemapSource, null, annotationsFilter);
