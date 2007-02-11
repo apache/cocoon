@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
+  
+  <scr:component name="org.apache.cocoon.core.osgi.logger">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiLogger"/>
+    <scr:property name="logLevel" value="debug"/>    
+    <scr:service>
+      <scr:provide interface="org.apache.avalon.framework.logger.Logger"/>
+    </scr:service>    
+    <scr:reference name="logger"
+                   interface="org.osgi.service.log.LogService"
+                   bind="setLogService"/>
+  </scr:component>
+  
+  <scr:component name="org.apache.cocoon.core.osgi.settings">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSettings"/>
+    <scr:service>
+      <scr:provide interface="org.apache.cocoon.core.Settings"/>
+    </scr:service>
+    <scr:reference name="logger"
+      interface="org.apache.avalon.framework.logger.Logger"
+      bind="setLogger"/>    
+  </scr:component>
+  
+  <scr:component name="org.apache.cocoon.core.osgi.SpringEcmFactory" immediate="true">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringECMFactory"/>
+    <scr:property name="configFile" value="/META-INF/xconf/cocoon.xconf"/>
+    <scr:service>
+      <scr:provide interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"/>
+    </scr:service>    
+    <scr:reference name="logger"
+      interface="org.apache.avalon.framework.logger.Logger"
+      bind="setLogger"/>
+    <scr:reference name="settings"
+      interface="org.apache.cocoon.core.Settings"
+      bind="setSettings"/>      
+  </scr:component>  
+  
+  <scr:component name="org.apache.cocoon.core.BlockServlet">
+    <scr:implementation class="org.apache.cocoon.blocks.BlockServlet"/>
+    <scr:service>
+      <scr:provide interface="javax.servlet.Servlet"/>
+	</scr:service>
+	
+    <scr:property name="path" value="/sitemap-test"/>
+    <scr:property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
+    <scr:property name="sitemapPath" value="/COB-INF/sitemap.xmap"/>            
+
+    <scr:reference name="org.springframework.web.context.WebApplicationContext.ROOT"
+      interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
+      target="(component.name=org.apache.cocoon.core.osgi.SpringEcmFactory)"/>         
+  </scr:component>
+
+  <!--scr:component name="org.apache.cocoon.core.osgi.SpringBridge">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringBridge"/>
+    <scr:service>
+      <scr:provide interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"/>
+    </scr:service>    
+  </scr:component-->      
+  
+</components>
