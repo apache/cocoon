@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Apache Cocoon User Guide</title>
+    <subtitle>Appendix Components</subtitle>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+    </authors>
+  </header>
+  <body>
+     <s1 title="Introduction">
+       <p>This appendix lists all available sitemap components in Cocoon.</p>
+       <note>This list is not complete yet, but it will grow!</note>
+     </s1>
+  </body>
+</document>

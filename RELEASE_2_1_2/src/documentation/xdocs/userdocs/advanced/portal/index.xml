@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Webapps Developer Documentation</title>
+  <subtitle>Overview</subtitle>
+  <authors>
+   <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="Overview">
+ <p>This section contains several documents about developing a portal with Cocoon.</p>
+ <p>The <link href="portal-fw-block.html">portal framework</link> is a stable
+   portal framework that uses the authentication framework. It can
+   be used to quickly develop portal applications.</p> 
+<p>The new <link href="portal-block.html">portal engine</link> is a new
+  implementation of a portal engine which focuses on more flexibility
+  and ease-of-use. The current state of this engine is <em>alpha</em>
+  which means that the engine can still change in every aspect.</p>
+
+ </s1>
+
+ </body>
+</document>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide - Installation" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../intro.html"/>
+  </menu>
+
+  <menu label="A. Installation">
+
+    <menu-item label="A.1 Intro" href="index.html"/>
+    <menu-item label="A.2 Requirements" href="requirements.html"/>
+    <menu-item label="A.3 Updating" href="updating.html"/>
+    <menu-item label="A.4 Jars" href="jars.html"/>
+    <menu-item label="A.5 Testing" href="tests.html"/>
+  </menu>
+
+</book>

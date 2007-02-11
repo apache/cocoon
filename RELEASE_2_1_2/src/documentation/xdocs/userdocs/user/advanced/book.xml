@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Basics">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="1. Basics" href="../preface.html"/>
+  </menu>
+  
+  <menu label="1.4 Introduction">
+    <menu-item label="1.4.1 Intro" href="preface.html"/>
+    <menu-item label="1.4.2 Aggregation" href="preface.html"/>
+    <menu-item label="1.4.3 Redirects" href="preface.html"/>
+    <menu-item label="1.4.4 Actions" href="actions.html"/>
+    <menu-item label="1.4.5 Matchers and Selectors" href="matchers_selectors.html"/>
+    <menu-item label="1.4.6 Error Handling" href="errorhandling.html"/>
+  </menu>
+  
+</book>

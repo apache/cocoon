@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+
+    <site>
+    <!--    <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute> -->
+        <backpointer name="Main Menu" do="index.do" />
+        <message></message>
+        <panel>
+            <xsp:attribute name="header">Order #<jpath:value-of select="order/orderId" /></xsp:attribute>
+            <xsp:attribute name="subheader"><jpath:value-of select="order/orderDate" /></xsp:attribute>
+            
+            <panel label="Payment Details">
+                <field label="Card Type"><jpath:value-of select="order/cardType" /></field>
+                <field label="Card Number"><jpath:value-of select="order/creditCard" /></field>
+                <field label="Expiry Date (MM/YYYY)"><jpath:value-of select="order/expiryDate" /></field>
+            </panel>
+            <panel label="Billing Address">
+                <field label="First name"><jpath:value-of select="order/billToFirstName"/></field>
+                <field label="Last name" ><jpath:value-of select="order/billToLastName"/></field>
+                <field label="Address 1" ><jpath:value-of select="order/billAddress1"/></field>
+                <field label="Address 2" ><jpath:value-of select="order/billAddress2"/></field>
+                <field label="City" ><jpath:value-of select="order/billCity"/></field>
+                <field label="State" ><jpath:value-of select="order/billState"/></field>
+                <field label="Zip" ><jpath:value-of select="order/billZip"/></field>
+                <field label="Country" ><jpath:value-of select="order/billCountry"/></field>
+            </panel>
+            <panel label="Shipping Address">
+                <field label="First name"><jpath:value-of select="order/shipToFirstName"/></field>
+                <field label="Last name" ><jpath:value-of select="order/shipToLastName"/></field>
+                <field label="Address 1" ><jpath:value-of select="order/shipAddress1"/></field>
+                <field label="Address 2" ><jpath:value-of select="order/shipAddress2"/></field>
+                <field label="City" ><jpath:value-of select="order/shipCity"/></field>
+                <field label="State" ><jpath:value-of select="order/shipState"/></field>
+                <field label="Zip" ><jpath:value-of select="order/shipZip"/></field>
+                <field label="Country" ><jpath:value-of select="order/shipCountry"/></field>
+                <field label="Courier" ><jpath:value-of select="order/courier"/></field>
+            </panel>
+            <panel label="Status">
+                <field empty="2">
+                    <cart name="Status">
+                        <jpath:for-each select="itemList" >
+                            <item>
+                                <xsp:attribute name="product-id"><jpath:value-of select="item/productId"/></xsp:attribute>
+                                <xsp:attribute name="id"><jpath:value-of select="item/itemId"/></xsp:attribute>
+                                <desc>
+                                    <jpath:value-of select="item/attr1"/> 
+                                    <jpath:value-of select="item/attr2"/> 
+                                    <jpath:value-of select="item/attr3"/> 
+                                    <jpath:value-of select="item/attr4"/> 
+                                    <jpath:value-of select="item/attr5"/> 
+                                    <jpath:value-of select="item/product/name"/> 
+                                </desc>
+                                <price><jpath:value-of select="item/listPrice"/></price>
+                                <quantity><jpath:value-of select="quantity"/></quantity>
+                            </item>
+                        </jpath:for-each>
+                        <total><jpath:value-of select="order/totalPrice"/></total>
+                    </cart>
+                </field>
+            </panel>
+            
+            
+        </panel>
+    </site>
+
+</xsp:page>
+
+
+
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Apache Cocoon User Guide</title>
+    <subtitle>Advanced Topics</subtitle>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Introduction">
+        <p>This chapter deals with several different topics for 
+          building web applications with Cocoon.</p>
+    </s1>
+
+  </body>
+</document>

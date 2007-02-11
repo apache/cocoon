@@ -1,0 +1,154 @@
+/* ============================================================================ *
+ *                   The Apache Software License, Version 1.1                   *
+ * ============================================================================ *
+ *                                                                              *
+ * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved. *
+ *                                                                              *
+ * Redistribution and use in source and binary forms, with or without modifica- *
+ * tion, are permitted provided that the following conditions are met:          *
+ *                                                                              *
+ * 1. Redistributions of  source code must  retain the above copyright  notice, *
+ *    this list of conditions and the following disclaimer.                     *
+ *                                                                              *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, *
+ *    this list of conditions and the following disclaimer in the documentation *
+ *    and/or other materials provided with the distribution.                    *
+ *                                                                              *
+ * 3. The end-user documentation included with the redistribution, if any, must *
+ *    include  the following  acknowledgment:  "This product includes  software *
+ *    developed  by the  Apache Software Foundation  (http://www.apache.org/)." *
+ *    Alternately, this  acknowledgment may  appear in the software itself,  if *
+ *    and wherever such third-party acknowledgments normally appear.            *
+ *                                                                              *
+ * 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be *
+ *    used to  endorse or promote  products derived from  this software without *
+ *    prior written permission. For written permission, please contact          *
+ *    apache@apache.org.                                                        *
+ *                                                                              *
+ * 5. Products  derived from this software may not  be called "Apache", nor may *
+ *    "Apache" appear  in their name,  without prior written permission  of the *
+ *    Apache Software Foundation.                                               *
+ *                                                                              *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, *
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND *
+ * FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE *
+ * APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT, *
+ * INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU- *
+ * DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS *
+ * OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON *
+ * ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT *
+ * (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF *
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            *
+ *                                                                              *
+ * This software  consists of voluntary contributions made  by many individuals *
+ * on  behalf of the Apache Software  Foundation.  For more  information on the *
+ * Apache Software Foundation, please see <http://www.apache.org/>.             *
+ *                                                                              *
+ * ============================================================================ */
+package org.apache.garbage.tree;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+/**
+ * 
+ * 
+ * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
+ * @version CVS $Id: AbstractEvents.java,v 1.1 2003/09/04 12:42:32 cziegeler Exp $
+ */
+public class AbstractEvents implements Events {
+
+    /** Our array of events. */
+    private Event events[] = new Event[1024];
+    /** The length of our array. */
+    private int length = 0;
+
+    /**
+     * Add a new event to this <code>AbstractEvents</code>.
+     *
+     * @param event The <code>Event</code> instance to add.
+     */
+    public synchronized void append(Event event) {
+        if (this.length == this.events.length) {
+            int newlen = this.events.length + (this.events.length >> 1);
+            Event array[] = new Event[newlen];
+            System.arraycopy(this.events, 0, array, 0, this.length);
+            this.events = array;
+        }
+
+        /* If this is the first event, just add it */
+        if (this.length == 0) {
+            this.events[this.length ++] = event;
+            return;
+        }
+
+        /* If this event was merged to its previous, do nothing */
+        if (event.merge(this.events[this.length - 1])) {
+            return;
+        }
+
+        /* In all other cases, add this event to the list */
+        this.events[this.length ++] = event;
+    }
+
+    /**
+     * Return an <code>Iterator</code> over the events contained in this
+     * <code>AbstractEvents</code> instance.
+     */
+    public Iterator iterator() {
+        return(new EventIterator(this));
+    }
+
+    /**
+     * The private implementation of the <code>Iterator</code> interface.
+     */
+    private final static class EventIterator implements Iterator {
+
+        /** The <code>AbstractEvents</code> associated with this instance. */
+        private AbstractEvents events = null;
+
+        /** The current position of this <code>Iterator</code>. */
+        private int position = 0;
+
+        /**
+         * Create a new <code>EventIterator</code> instance associated
+         * with a specified <code>AbstractEvents</code>.
+         *
+         * @param events The <code>AbstractEvents</code> instance.
+         */
+        private EventIterator(AbstractEvents events) {
+            super();
+            this.events = events;
+        }
+
+        /**
+         * Returns true if the iteration has more elements.
+         *
+         * @return <b>true</b> if the iterator has more elements.
+         */
+        public boolean hasNext() {
+            return(this.position < this.events.length);
+        }
+
+        /**
+         * Returns the next element in the iteration.
+         *
+         * @return The next element in the iteration.
+         */
+        public Object next() {
+            if (this.position < this.events.length) {
+                return(this.events.events[this.position ++]);
+            }
+            throw new NoSuchElementException();
+        }
+
+        /**
+         * Operation not supported.
+         *
+         * @throws UnsupportedOperationException Always.
+         */
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+}

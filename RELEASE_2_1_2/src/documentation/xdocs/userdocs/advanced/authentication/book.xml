@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide - Sessions" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="2. Advanced" href="../preface.html"/>
+  </menu>
+  
+  <menu label="2.3 Authentication">
+    <menu-item label="2.3.1 Intro" href="preface.html"/>
+    <menu-item label="2.3.2 Authentication" href="authentication.html"/>
+  </menu>
+
+</book>

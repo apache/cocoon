@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<xmap xpath="/sitemap/components/actions"
+      unless="action[@name='portal-login']">
+
+    <map:action name="portal-login"
+                src="org.apache.cocoon.portal.acting.LoginAction"/>
+    <map:action name="portal-logout"
+                src="org.apache.cocoon.portal.acting.LogoutAction"/>
+    <map:action name="portal-object-model"
+                src="org.apache.cocoon.portal.acting.ObjectModelAction"/>
+</xmap>

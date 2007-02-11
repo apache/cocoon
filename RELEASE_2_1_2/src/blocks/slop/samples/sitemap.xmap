@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<!-- sitemap for slop block samples -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:pipelines>
+
+    <map:pipeline type="caching">
+
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+
+      <map:match pattern="welcome">
+        <map:generate src="welcome.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
+        <!--
+            use the same pipeline for rfc822 and tc for now, they can later
+            be separated to use different configurations of the SlopParser
+        -->
+        <map:match pattern="*/*.xml">
+            <map:generate type="slop" src="{2}.txt">
+                <map:parameter name="encoding" value="iso-8859-1"/>
+            </map:generate>
+            <map:serialize type="xml"/>
+        </map:match>
+        
+        <map:match pattern="*.txt">
+            <map:read mime-type="text/plain" src="{1}.txt"/>
+        </map:match>
+
+        <!-- more samples -->
+        <map:match pattern="*/**">
+           <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+         </map:match>
+
+    </map:pipeline>
+
+  </map:pipelines>
+
+</map:sitemap>

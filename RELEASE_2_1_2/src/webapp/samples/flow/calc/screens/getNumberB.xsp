@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<!--+
+    | CVS: $Id: getNumberB.xsp,v 1.3 2003/05/20 00:54:12 vgritsenko Exp $
+    | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
+    | Date: March 23, 2002
+    +-->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:jpath="http://apache.org/xsp/jpath/1.0">
+  <page>
+    <resources>
+      <resource type="file" href="/samples/flow/calc/calc.js">Flowscript</resource>
+    </resources>
+    <title>Calculator</title>
+    <content>
+      <form method="post">
+        <xsp:attribute name="action"><xsp:expr>"continue." + <jpath:continuation/></xsp:expr></xsp:attribute>
+        <para>a = <strong><jpath:value-of select="a"/></strong></para>
+        <para>Enter value of <strong>b</strong>: <input type="text" name="b"/></para>
+        <input type="submit" name="submit" value="Enter"/>
+      </form>
+    </content>
+  </page>
+</xsp:page>

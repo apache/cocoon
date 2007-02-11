@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--+
+    | CVS: $Id: registrationSuccessful.xsp,v 1.3 2003/07/14 09:30:46 reinhard Exp $
+    | Author: Ovidiu Predescu "ovidiu@apache.org"
+    | Date: August 30, 2002
+    +-->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:jpath="http://apache.org/xsp/jpath/1.0">
+  <page>
+    <resources>
+      <resource type="file" href="/samples/flow/prefs/prefs.js">Flowscript</resource>
+    </resources>
+    <title>Registration successful!</title>
+    <content>
+      <para>
+        Congratulations 
+        <strong><jpath:value-of select="user/firstName"/> <jpath:value-of select="user/lastName"/></strong>!
+        You've successfully registered as a new user.
+      </para>
+      <para>| <link href="edit">Edit my preferences</link> | <link href="logout">Logout</link> |</para>
+    </content>
+  </page>
+</xsp:page>

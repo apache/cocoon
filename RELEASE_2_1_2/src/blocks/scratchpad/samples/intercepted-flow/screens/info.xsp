@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!--+
+    | CVS: $Id: info.xsp,v 1.1 2003/09/06 13:45:49 reinhard Exp $
+    | Author: Reinhard Poetz "reinhard (at) apache.org"
+    | Date: March 23, 2002
+    +-->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:jpath="http://apache.org/xsp/jpath/1.0">
+  <page>
+    <resources>
+      <resource type="file" href="/samples/flow/calc/calc.js">Flowscript</resource>
+    </resources>
+    <title>Intercepted Flow</title>
+    <content>
+      <p>
+        Intercepted Flow. Check the flow logs (WEB-INF/log/flow.log) for the
+        result flowscript.
+      </p>
+    </content>
+  </page>
+</xsp:page>

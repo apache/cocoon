@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide - Developer" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../intro.html"/>
+  </menu>
+
+  <menu label="3. Configuration">
+
+    <menu-item label="3.1 Intro" href="preface.html"/>
+    <menu-item label="3.2 Caching" href="caching.html"/>
+    <menu-item label="3.3 MRUMemoryStore" href="mrustore.html"/>
+    <menu-item label="3.4 Persistence" href="persistence.html"/>
+    <menu-item label="3.5 StoreJanitor" href="storejanitor.html"/>
+    <menu-item label="3.6 Profiler" href="profiler.html"/>
+    <menu-item label="3.7 Performance" href="performancetips.html"/>
+  </menu>
+  
+</book>

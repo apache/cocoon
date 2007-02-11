@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../../dtd/book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Documentation - Concepts" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="2. Advanced" href="../preface.html"/>
+  </menu>
+
+  <menu label="2.5 Offline">
+    <menu-item label="2.5.1 Overview" href="index.html"/>
+    <menu-item label="2.5.2 Command Line" href="cli.html"/>
+    <menu-item label="2.5.3 Ant" href="ant.html"/>
+    <menu-item label="2.5.4 Cocoon Bean" href="bean.html"/>
+  </menu>
+
+</book>
+
+

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<site xmlns:xf="http://apache.org/cocoon/jxforms/1.0" 
+ signOn="false" view="xsp">
+ <editAccountForm>
+	<xf:form id="petstore-edit-account" view="edit-profile" action="petstore" method="GET">
+		<error>
+			<xf:violations class="error"/>
+		</error>
+		
+		<xf:group ref="/account">
+			<xf:label class="header">Profile Information</xf:label>
+			<xf:select1 ref="/account/favCategory">
+			   <xf:label>Favorite Category:</xf:label>
+			   <xf:itemset nodeset="/categoryList">
+				<xf:label><xf:output ref="name"/></xf:label>
+				<xf:value><xf:output ref="name"/></xf:value>
+			   </xf:itemset>
+			</xf:select1>
+			<xf:select1 ref="/account/listOption">
+				<xf:label>Enable MyList</xf:label>
+                                <xf:item>
+				  <xf:label>Yes</xf:label>
+				  <xf:value>true</xf:value>
+                                </xf:item>
+                                <xf:item>
+				  <xf:label>No</xf:label>
+				  <xf:value></xf:value>
+                                </xf:item>
+			</xf:select1>
+			<xf:select1 ref="/account/bannerOption">
+				<xf:label>Enable MyBanner</xf:label>
+                                <xf:item>
+				  <xf:label>Yes</xf:label>
+				  <xf:value>true</xf:value>
+                                </xf:item>
+                                <xf:item>
+				  <xf:label>No</xf:label>
+				  <xf:value></xf:value>
+                                </xf:item>
+			</xf:select1>
+		</xf:group>
+
+		<xf:submit id="prev" continuation="back" class="button">
+			<xf:label>Back</xf:label>
+			<xf:hint>Go Back</xf:hint>
+		</xf:submit>
+		<xf:submit id="next" continuation="forward" class="button">
+			<xf:label>Finish</xf:label>
+			<xf:hint>Submit Account Information</xf:hint>
+		</xf:submit>
+	</xf:form>
+</editAccountForm>
+</site>
