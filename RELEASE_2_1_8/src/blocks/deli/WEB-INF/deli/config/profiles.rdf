@@ -1,0 +1,2440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:deli="http://delicon.sourceforge.net/manufacturerProfiles#">
+
+
+
+
+
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/LG-LG-L3100-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/LG"><rdfs:label>LG</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>LG-L3100</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://gsm.lge.com/html/gsm/LG-L3100.xml"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Handspring-Treo600-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Handspring"><rdfs:label>Handspring</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Treo600</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://device.sprintpcs.com/Handspring/HSTR600HK/Blazer30010.rdf"/>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/Sprint PCS"><rdfs:label>Sprint PCS</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Alcatel-BF5-1.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Alcatel"><rdfs:label>Alcatel</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>BF5</deli:deviceName>
+		<deli:release>1.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www-ccpp-mpd.alcatel.com/files/ALCATEL-BF5_1.0.rdf"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Alcatel-BF4-2.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Alcatel"><rdfs:label>Alcatel</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>BF4</deli:deviceName>
+		<deli:release>2.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www-ccpp-mpd.alcatel.com/files/ALCATEL-BF4_2.0.rdf"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-5810-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5810</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/5810/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6210-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6210/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6230-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6280/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6280-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6280</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6230/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6510-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6510/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6710-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6710</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6710/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-6750-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6750</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/6750/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7210-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7210/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7280-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7280</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7280/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7510-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7510</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7510/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7730-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7730</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7730/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+
+		<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.2.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.3.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.3.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.6.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.6.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.7.0.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.7.1.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.7.2.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7750-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7750</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7750/3.7.3.rdf"/>
+		<deli:useragent>RIM Browser</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.2.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.2.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.2.1.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.3.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.3.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.3.0.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.3.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.3.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.3.1.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.6.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.6.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.6.1.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.6.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.6.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.6.1.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.7.0">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.7.0</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.7.0.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.7.1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.7.1</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.7.1.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.7.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.7.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.7.2.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Blackberry-7230-3.7.3">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Blackberry"><rdfs:label>Blackberry</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7230</deli:deviceName>
+		<deli:release>3.7.3</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.blackberry.net/go/mobile/profiles/uaprof/7230/3.7.3.rdf"/>
+		<deli:useragent>BlackBerry7230/3.7.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Mitsubishi-Trium M320-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Mitsubishi"><rdfs:label>Mitsubishi</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Trium M320</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.mitsubishi-telecom.com/profiles/mt560.ua"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Mitsubishi-Trium Eclipse (mserv)-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Mitsubishi"><rdfs:label>Mitsubishi</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Trium Eclipse (mserv)</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.mitsubishi-telecom.com/profiles/eclipse_mserv.ua"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Mitsubishi-Trium Eclipse-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Mitsubishi"><rdfs:label>Mitsubishi</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Trium Eclipse</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.mitsubishi-telecom.com/profiles/eclipse.ua"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-V500-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>V500</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://motorola.handango.com/phoneconfig/v500/profile/v500.rdf"/>
+		<deli:useragent>MOT-V500/0B.08.8FR MIB/2.2 Profile/MIDP-2.0 Configuration/CLDC-1.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3100b-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3100b</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3100br100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3108-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3108</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3108r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3120-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3120</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3120r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3200-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3200</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3200r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3200-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3200</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3200r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3220-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3220</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3220r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3330-100">
+
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3330</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3330r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3350-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3350</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3350r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3360-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3360</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3360r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3410-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3410</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3410r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3520 3560-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3520 3560</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3520_N3560r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3610-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3610</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3610r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3620-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3620</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3620r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3620-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3620</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3620r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-5140-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5140</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N5140r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-5210-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5210</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N5210r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-5510-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5510</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N5510r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6210-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6210r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6220-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6220</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6220r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6220-300">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6220</deli:deviceName>
+		<deli:release>300</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6220r300.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6230-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6230r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6230-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6230</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6230r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6250-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6250</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6250r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6340-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6340</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6340r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6510-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6510r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6560-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6560</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6560r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6590-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6590</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6590R100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6600-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6600</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6600r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6610i-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6610i</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6610ir100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6620-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6620</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6620r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6620-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6620</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6620r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6650-300">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6650</deli:deviceName>
+		<deli:release>300</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6650r300.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6651-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6651</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6651r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6820-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6820</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6820r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7110-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7110</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7110r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7160-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7160</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7160r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7190-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7190</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7190r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7200-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7200</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7200r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7600-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7600</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7600r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7610-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7610</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7610r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-8310-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>8310</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N8310r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-8910-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>8910</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N8910r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-9110-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>9110</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N9110r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-9210-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>9210</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N9210r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-N-GageQD-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>N-GageQD</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/NNGageQDr100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-N-GageQD-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>N-GageQD</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/NNGageQDr200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-SU-7-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SU-7</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/NSU7r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6650-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6650</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6650r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6650-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6650</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6650r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6800-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6800</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6800r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6800-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6800</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6800r100.xml"/>
+	</deli:Profile>
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7210-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7210r100.xml"/>
+		<deli:useragent>Nokia7210</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7210-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7210</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7210r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-320-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>320</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds1.nds.nokia.com/uaprof/N6220r100.xml"/>
+		<deli:useragent>Nokia3200/1.0 () Profile/MIDP-1.0 Configuration/CLDC-1.0 UP.Link/5.1.2.5</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3200-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3200</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3100r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3300-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3300</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3300r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3300-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3300</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3300r100.xml"/>
+	</deli:Profile>
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6610-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6610</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6610r200.xml"/>
+		<deli:useragent>Nokia6610/1.0 (4.18) Profile/MIDP-1.0 Configuration/CLDC-1.0 UP.Link/5.1.2.5</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6610-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6610</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6610r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6590-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6590</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6590r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6590-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6590</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6590R100.xml"/>
+		<deli:useragent>Nokia6590</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6310-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6310</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6310r100.xml"/>
+		<deli:useragent>Nokia6310</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6220-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6220</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds1.nds.nokia.com/uaprof/N6220r100.xml"/>
+		<deli:useragent>Nokia6220/2.0 Profile/MIDP-1.0 Configuration/CLDC-1.0</deli:useragent>
+
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6200-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6200</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6200r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6108-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6108</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6108r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6100-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6100</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N6100r100.xml"/>
+		<deli:useragent>Nokia6100/1.0 (04.70) Profile/MIDP-1.0 Configuration/CLDC-1.0 UP.Link/5.1.2.5</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-8910i-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>8910i</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N8910ir100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7650-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7650</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7650r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7650-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7650</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7650r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7250i-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7250i</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7250ir100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7250-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7250</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N7250r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-NGage-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>NGage</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/NNGager100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-5100-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5100</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N5100r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3510-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3510</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3510r100.xml"/>
+		<deli:useragent>Nokia3510</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3510i-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3510i</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3510ir100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3520-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3520</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3520r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3560-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3560</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3560r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3590-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3590</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3590r100.xml"/>
+		<deli:useragent>Nokia3590</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3595-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3595</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3595r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3600-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3600</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3600r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3650-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3650</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3650r200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3650-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3650</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3650r100.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3660-100">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3660</deli:deviceName>
+		<deli:release>100</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds1.nds.nokia.com/uaprof/N3660r100.xml"/>
+		<deli:useragent>Nokia3660/1.0 (4.57) SymbianOS/6.1 Series60/0.9 Profile/MIDP-1.0 Configuration/CLDC-1.0 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-5100-200">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5100</deli:deviceName>
+		<deli:release>200</deli:release>
+		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N5100r200.xml"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Openwave-SDK-6.2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Openwave"><rdfs:label>Openwave</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SDK</deli:deviceName>
+		<deli:release>6.2</deli:release>
+		<deli:uaprofUri rdf:resource="http://developer.openwave.com/uaprof/OPWVSDK62.xml"/>
+	</deli:Profile>
+
+
+
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-X70-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>X70</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/X70/R1.xml"/>
+       </deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-X60-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>X60</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/X60/R1new.xml"/>
+       </deli:Profile>
+       <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-X66-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>X66</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/X66/R1.xml"/>
+       </deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-X60-2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>X60</deli:deviceName>
+		<deli:release>2</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/X60/R1-D2.xml"/>
+       </deli:Profile>
+       <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GU87-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GU87</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GU87/R1.xml"/>
+       </deli:Profile>
+       <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-X60 R1-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>X60 R1</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/X60/R1.xml"/>
+       </deli:Profile>
+       <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD88D-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD88D</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD88D/R1.xml"/>
+       </deli:Profile>
+       <deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD86A-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD86A</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD86A/R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD87-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD87</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD87/01.xml"/>
+	</deli:Profile>
+    	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD50-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD50</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/G50/R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD60-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD60</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/G60/R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD70-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD70</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/G70/R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD88-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD88</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD88/R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD87-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD87</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD87/R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD67-4">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD67</deli:deviceName>
+		<deli:release>4</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD67/04.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD67-2">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD67</deli:deviceName>
+		<deli:release>2</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD67/R2.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Panasonic-GD67-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Panasonic"><rdfs:label>Panasonic</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>GD67</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.panasonicbox.com/UAprof/GD67/R1.xml"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sagem-SAGEM-myX-5/2.0 (823404)-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sagem"><rdfs:label>Sagem</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SAGEM-myX-5/2.0 (823404)</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://extranet.sagem.com/UAProfile/823044.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sagem-myV-65-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sagem"><rdfs:label>Sagem</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>myV-65</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://extranet.sagem.com/UAProfile/834495.xml"/>
+		<deli:useragent>SAGEM-myV-65/1.0 UP.Browser/6.2.2.3 (GUI) MMP/1.0 UP.Link/5.1.2.5</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sagem-myX-3/1.0-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sagem"><rdfs:label>Sagem</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>myX-3/1.0</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://extranet.sagem.com/UAProfile/823252.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sagem-myX-5/2.0 (822962)-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sagem"><rdfs:label>Sagem</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>myX-5/2.0 (822962)</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://extranet.sagem.com/UAProfile/822962.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sagem-myX-5/2.0 (823276)-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sagem"><rdfs:label>Sagem</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>myX-5/2.0 (823276)</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://extranet.sagem.com/UAProfile/823276.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sagem-myX-5/2.0 (823404)-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sagem"><rdfs:label>Sagem</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>myX-5/2.0 (823404)</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://extranet.sagem.com/UAProfile/823404.xml"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Samsung-SGHE710-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Samsung"><rdfs:label>Samsung</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SGHE710</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.samsungmobile.com/uaprof/e710_00.xml"/>
+		<deli:useragent>SEC-SGHE710 UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Samsung-SGHE700-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Samsung"><rdfs:label>Samsung</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SGHE700</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.samsungmobile.com/uaprof/SGH-E700.xml"/>
+		<deli:useragent>SAMSUNG-SGH-E700/BSI UP.Browser/6.1.0.6 (GUI) MMP/1.0 UP.Link/5.1.2.5</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Samsung-SPH-N400 VH27-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Samsung"><rdfs:label>Samsung</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SPH-N400 VH27</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://device.sprintpcs.com/Samsung/SPH-N400/VH27.rdf"/>
+		<deli:operator rdf:resource="urn:x-hp-deli:operators/Sprint PCS"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Samsung-SPH-A500 VE31-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Samsung"><rdfs:label>Samsung</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SPH-A500 VE31</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://device.sprintpcs.com/Samsung/SPH-A500/VE31.rdf"/>
+		<deli:operator rdf:resource="urn:x-hp-deli:operators/Sprint PCS"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Samsung-Z100-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Samsung"><rdfs:label>Samsung</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Z100</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.samsungmobile.com/uaprof/Z100UAProf.xml"/>
+		<deli:useragent>Mozilla/SMB3(Z100)/Samsung UP.Link/1.1</deli:useragent>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sharp-STQ-GX12-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sharp"><rdfs:label>Sharp</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>STQ-GX12</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://sharp-mobile.com/UAprof/GX12.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sharp-TQ-GX1-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sharp"><rdfs:label>Sharp</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>TQ-GX1</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://sharp-mobile.com/UAprof/GX1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sharp-TQ-GX10-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sharp"><rdfs:label>Sharp</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>TQ-GX10</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://sharp-mobile.com/UAprof/GX10.xml"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-S55-04">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>S55</deli:deviceName>
+		<deli:release>04</deli:release>
+		<deli:uaprofUri rdf:resource="http://communication-market.siemens.de/UAProf/S55_04.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-S55-05">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>S55</deli:deviceName>
+		<deli:release>05</deli:release>
+		<deli:uaprofUri rdf:resource="http://communication-market.siemens.de/UAProf/S55_05.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-MC60-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>MC60</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://communication-market.siemens.de/UAProf/MC60_00.xml"/>
+		<deli:useragent>SIE-MC60/00 UP.Browser/6.1.0.5.c.5 (GUI) MMP/1.0 UP.Link/5.1.2.5</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-S55-00">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>S55</deli:deviceName>
+		<deli:release>00</deli:release>
+		<deli:uaprofUri rdf:resource="http://communication-market.siemens.de/UAProf/S55_00.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-SX45-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SX45</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.annyway.com/UAProf/cgi-bin/UAProf?AnnyWap1.2"/>
+		<deli:file>Anny Way (MATERNA)</deli:file>
+		<deli:file>AnnyWAP 1.2 (Siemens SX45 Windows CE)</deli:file>
+	</deli:Profile>
+
+
+
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-P800-102">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>P800</deli:deviceName>
+		<deli:release>102</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/P800R102.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-P908-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>P908</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/P908R101.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T65-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T65</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/T65.xml"/>
+	</deli:Profile>
+       <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/T68R1.xml"/>
+	</deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T226-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T226</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T226R101.xml"/>
+	</deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T230-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T230</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T230R101.xml"/>
+	</deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T238-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T238</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T238R101.xml"/>
+	</deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T306-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T306</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T306R101.xml"/>
+	</deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T312-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T312</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T312R201.xml"/>
+	</deli:Profile>
+      <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T610-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T610</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T610R101.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T610-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T610</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T610R201.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T610-301">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T610</deli:deviceName>
+		<deli:release>301</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T610R301.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T610-401">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T610</deli:deviceName>
+		<deli:release>401</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T610R401.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T616-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T616</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T616R101.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T616-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T616</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T616R201.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T618-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T618</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T618R101.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T618-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T618</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T618R201.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T618-301">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T618</deli:deviceName>
+		<deli:release>301</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T618R301.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T618-401">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T618</deli:deviceName>
+		<deli:release>401</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T618R401.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T628-401">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T628</deli:deviceName>
+		<deli:release>401</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T628R401.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T630-401">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T630</deli:deviceName>
+		<deli:release>401</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T630R401.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-Z200-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Z200</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/Z200R101.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-Z600-301">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Z600</deli:deviceName>
+		<deli:release>301</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/Z600R301.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-Z600-401">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Z600</deli:deviceName>
+		<deli:release>401</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/Z600R401.xml"/>
+	</deli:Profile>
+        <deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-Z608-301">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Z608</deli:deviceName>
+		<deli:release>301</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/Z608R301.xml"/>
+	</deli:Profile>
+      	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-Z608-401">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Z608</deli:deviceName>
+		<deli:release>401</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/Z608R401.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-Z1010-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Z1010</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/Z1010R101.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T300-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T300</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T300R201.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T300-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T300</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T300R101.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T302-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T302</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T302R201.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T310-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T310</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/T310R201.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T600-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T600</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T600R101.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T65-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T65</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T65.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-501">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>501</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R501.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-301A">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>301A</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R301.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-401">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>401</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R401.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-502">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>502</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R502.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-P800-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>P800</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericsson.com/UAprof/P800R101.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T200-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T200</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T200.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-P900-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>P900</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.sonyericsson.com/UAProf/P900R101.xml"/>
+		<deli:useragent>SonyEricssonP900/R101 Profile/MIDP-2.0 Configuration/CLDC-1.0 UP.Link/5.1.2.5</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-R520-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>R520</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/R520.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T100-101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T100</deli:deviceName>
+		<deli:release>101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T100R101.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-201">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>201</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R201.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-402">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>402</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R402.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-201A">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>201A</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R201.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T68-301">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>301</deli:release>
+		<deli:uaprofUri rdf:resource="http://wap.sonyericssonmobile.com/UAprof/T68R301.xml"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-R380e-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>R380e</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/R380e.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-R520-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>R520</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/R520.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-T39-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T39</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/T39.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-T60d-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T60d</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/T60d.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-T65-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T65</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/T65.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-T68-1">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T68</deli:deviceName>
+		<deli:release>1</deli:release>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/T68R1.xml"/>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-R600-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>R600</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://mobileinternet.ericsson.com/UAprof/R600.xml"/>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Tel.Me-TELME_T919-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Tel.Me"><rdfs:label>Tel.Me</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>TELME_T919</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://wap.purplelabs.com/UAprofile/UAprofileTelme_T919.xml"/>
+	</deli:Profile>
+
+
+
+  	<deli:Profile rdf:about="urn:x-hp-deli:devices/Hitachi-SH-P300 S2A31-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Hitachi"><rdfs:label>Hitachi</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SH-P300 S2A31</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://device.sprintpcs.com/Hitachi/SH-P300/S2A31.rdf"/>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/sprint-pcs"><rdfs:label>sprint-pcs</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/LG-LG LX5350_11-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/LG"><rdfs:label>LG</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>LG LX5350_11</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://device.sprintpcs.com/LG/5350/LX5350_11.rdf"/>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/sprint-pcs"><rdfs:label>sprint-pcs</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Samsung-SPH-A500 VE31-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Samsung"><rdfs:label>Samsung</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SPH-A500 VE31</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://device.sprintpcs.com/Samsung/SPH-A500/VE31.rdf"/>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/sprint-pcs"><rdfs:label>sprint-pcs</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Samsung-SPH-N400 VH27-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Samsung"><rdfs:label>Samsung</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>SPH-N400 VH27</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://device.sprintpcs.com/Samsung/SPH-N400/VH27.rdf"/>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/sprint-pcs"><rdfs:label>sprint-pcs</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-P800-R101">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>P800</deli:deviceName>
+		<deli:release>R101</deli:release>
+		<deli:uaprofUri rdf:resource="http://wtaserv.aur.se/Roxette/UAProfileLinnea/P800R101.xml"/>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/wtaserv.aur.se"><rdfs:label>wtaserv.aur.se</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+
+
+  	<deli:Profile rdf:about="urn:x-hp-deli:devices/Alcatel-BF4-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Alcatel"><rdfs:label>Alcatel</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>BF4</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Alcatel_OT512.rdf"/>
+		<deli:useragent>Alcatel-BF4/2.0 UP.Browser/5.0.1</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Alcatel-BF3-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Alcatel"><rdfs:label>Alcatel</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>BF3</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Alcatel_OT311.rdf"/>
+		<deli:useragent>Alcatel-BF3/1.0 UP/4.1.23.a</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Alcatel-BE5-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Alcatel"><rdfs:label>Alcatel</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>BE5</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Alcatel_OT501.rdf"/>
+		<deli:useragent>Alcatel-BE5/1.0 UP/4.1.19e</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Alcatel-BE4-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Alcatel"><rdfs:label>Alcatel</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>BE4</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Alcatel_OT301.rdf"/>
+		<deli:useragent>Alcatel-BE4/1.0 UP/4.1.8d</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-R380-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>R380</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Ericsson_R380.rdf"/>
+		<deli:useragent>R380 2.0 WAP1.1</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-R320-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>R320</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Ericsson_R320.rdf"/>
+		<deli:useragent>EricssonR320/R1A</deli:useragent>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-T20-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T20</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Ericsson_T20.rdf"/>
+		<deli:useragent>EricssonT20</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+		<deli:Profile rdf:about="urn:x-hp-deli:devices/Ericsson-A2628-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Ericsson"><rdfs:label>Ericsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>A2628</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Ericsson_A2628.rdf"/>
+		<deli:useragent>EricssonA2628/R2A</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-T191-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T191</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_T191.rdf"/>
+		<deli:useragent>MOT-D5/4.1.5 UP.Browser/4.1.23c</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-T192-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T192</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_T192.rdf"/>
+		<deli:useragent>MOT-F5/4.1.9 UP.Browser/4.1.23c</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-T2288-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T2288</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_T2288.rdf"/>
+		<deli:useragent>MOT-C4/0.0.23 UP/4.0.5o</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-P7389-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>P7389</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_P7389.rdf"/>
+		<deli:useragent>MOT-CB/4.1.6 UP/4.1.16g</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-T280-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T280</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_T280.rdf"/>
+		<deli:useragent>MOT-PAN4 /11.03 UP/4.1.23c</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-Ti250-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Ti250</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_Ti250.rdf"/>
+		<deli:useragent>MOT-D8/4.1.8 UP/4.1.16s</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-Ti260-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>Ti260</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_Ti260.rdf"/>
+		<deli:useragent>MOT-AF/4.1.8 UP/4.1.216s</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-V66-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>V66</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_V66.rdf"/>
+		<deli:useragent>MOT-SAP4 /11.03 UP.Browser/4.1.23c</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-V2288-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>V2288</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_V2288.rdf"/>
+		<deli:useragent>MOT-C4/0.0.23 UP/4.0.5o</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-V50-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>V50</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_V50.rdf"/>
+		<deli:useragent>MOT-F0/4.1.5 UP/4.1.16f</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-A008-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>A008</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Motorola_A008.rdf"/>
+		<deli:useragent>MOT-F8/10.36.32 UP.Browser/4.1.23d</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/NEC-21i-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/NEC"><rdfs:label>NEC</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>21i</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/NEC_21i.rdf"/>
+		<deli:useragent>n21i-10</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7110-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7110</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_7110.rdf"/>
+		<deli:useragent>Nokia7110/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-7110-4.94">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>7110</deli:deviceName>
+		<deli:release>4.94</deli:release>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_7110_4.94.rdf"/>
+		<deli:useragent>Nokia7110/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3320-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3320</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_3320.rdf"/>
+		<deli:useragent>Nokia3320/1.2.1</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3330-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3330</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_3330.rdf"/>
+		<deli:useragent>Nokia3330/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6510-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6510</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_6510.rdf"/>
+		<deli:useragent>Nokia6510/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6340-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6340</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_6340.rdf"/>
+		<deli:useragent>Nokia6340/1.2.1</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6310i-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6310i</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_6310i.rdf"/>
+		<deli:useragent>Nokia6310i</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6250-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6250</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_6250.rdf"/>
+		<deli:useragent>Nokia6250/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6210-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>6210</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_6210.rdf"/>
+		<deli:useragent>Nokia6210/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-5510-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5510</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_5510.rdf"/>
+		<deli:useragent>Nokia5510/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-9290-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>9290</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_9290.rdf"/>
+		<deli:useragent>Nokia9290/Symbian-Crystal/6.0 (1.00)</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-9210i-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>9210i</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_9210i_WML.rdf"/>
+		<deli:useragent>Nokia9210i/1.0 Symbian-Crystal/6.0 (1.0)</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-9210-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>9210</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_9210_WML.rdf"/>
+		<deli:useragent>Nokia9210/1.0 Symbian-Crystal/6.0 (1.0)</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-9110i-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>9110i</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_9110i.rdf"/>
+		<deli:useragent>Nokia9110/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-8910-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>8910</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_8910.rdf"/>
+		<deli:useragent>Nokia8910</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-8390-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>8390</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_8390.rdf"/>
+		<deli:useragent>Nokia8390/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-8310-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>8310</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_8310.rdf"/>
+		<deli:useragent>Nokia8310/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-5210-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>5210</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_5210.rdf"/>
+		<deli:useragent>Nokia5210/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3350-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3350</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_3350.rdf"/>
+		<deli:useragent>N3350</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3360-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3360</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_3360.rdf"/>
+		<deli:useragent>Nokia3360/1.2.1</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3410-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3410</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_3410.rdf"/>
+		<deli:useragent>Nokia3410/1.0</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3610-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>3610</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Nokia_3610.rdf"/>
+		<deli:useragent>N3610</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-S35-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>S35</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Siemens_S35.rdf"/>
+		<deli:useragent>SIE-S35/3.0 UP/4.1.16m</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-C35i-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>C35i</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Siemens_C35i.rdf"/>
+		<deli:useragent>SIE-C3I/1.0 UP/4.1.8c</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-S45-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>S45</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Siemens_S45.rdf"/>
+		<deli:useragent>SIE-S45/05 UP.Browser/5.0.1.1.102 (GUI)</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Siemens-S35i-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Siemens"><rdfs:label>Siemens</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>S35i</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Siemens_S35.rdf"/>
+		<deli:useragent>SIE-S35I</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/Sony-CMD-Z5-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Sony"><rdfs:label>Sony</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>CMD-Z5</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Sony_CMD-Z5.rdf"/>
+		<deli:useragent>Sony CMD-Z5</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-T20-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>T20</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Ericsson_T20.rdf"/>
+		<deli:useragent>EricssonT20/R1A</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/SonyEricsson-A2628-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/SonyEricsson"><rdfs:label>SonyEricsson</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>A2628</deli:deviceName>
+		<deli:uaprofUri rdf:resource="http://www.w3development.de/rdf/uaprof_repository/Ericsson_A2628.rdf"/>
+		<deli:useragent>EricssonA2628/R2A</deli:useragent>
+		<deli:supportsUAProf>false</deli:supportsUAProf>
+		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
+	</deli:Profile>
+
+
+
+	<deli:Profile rdf:about="urn:x-hp-deli:devices/DELI-MSIE-">
+		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/DELI"><rdfs:label>DELI</rdfs:label></rdf:Description></deli:manufacturedBy>
+		<deli:deviceName>MSIE</deli:deviceName>
+                <deli:file>msie.rdf</deli:file>
+                <deli:useragent>Mozilla</deli:useragent>
+                <deli:deviceName>Internet Explorer</deli:deviceName>
+        </deli:Profile>
+</rdf:RDF>

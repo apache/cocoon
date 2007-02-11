@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<xconf xpath="/cocoon" unless="programming-languages">
+  <!--+
+      | Programming Languages for the XSP pages
+      +-->
+  <programming-languages>
+    <java-language name="java" logger="core.language.java">
+
+      <!--+ Specifies which formatter to use to format source code.
+          | This parameter is optional.
+          | At the moment there is no implementation of a code formatter available.
+          +-->
+      <!--parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.NullFormatter"/-->
+
+      <!-- A singleton-like implementation of a ClassLoader -->
+      <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+
+      <!--+
+          | Specifies which Java compiler to use. Possible variants are:
+          |
+          |  - EclipseJavaCompiler: the Eclipse JTD java compiler
+          |  - Javac: the java compiler that comes with JDK
+          |  - Jikes: the Jikes java compiler
+          |  - Pizza: the Pizza java compiler (deprecated. Support will be removed in 2.2)
+          |
+          | NOTE: the Eclipse JTD is the only java compiler that is capable
+          |       of imports classes thru the context classloader. All other
+          |       compilers import classes from the JVM classpath and might
+          |       normally result in ClassNotFound problems at compilation
+          |       time. It is *HIGHLY* suggested that you use this compiler
+          |       or you might experience problems in some servlet containers.
+          +-->
+      <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.EclipseJavaCompiler"/>
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/-->
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Jikes"/-->
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Pizza"/--> <!-- deprecated-->
+
+      <!--+
+          | Specifies the java code source version used to compile the XSP code.
+          |
+          | Posible values:
+          | 1.3 = Java version 1.3 
+          | 1.4 = Java version 1.4
+          | 1.5 = Java version 1.5
+          | auto = The version of the JVM where cocoon is running. (Default value).
+          |
+          | NOTE: The parameter is optional to keep backward compatibility.
+          |       The parameter currently works only with Sun Javac compiler.
+          |       The eclipse compiler version 3.0.1 currently does not support java 1.5.
+          |       The pizza compiler does not support java 1.5.
+          +-->
+      <!-- <parameter name="compiler-compliance-level" value="auto"/> -->
+    </java-language>
+
+    <!-- Interpreted JavaScript language -->
+    <js-language name="js" logger="core.language.js"/>
+  </programming-languages>
+</xconf>

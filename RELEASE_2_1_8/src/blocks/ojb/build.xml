@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="main">
+
+  <property name="jdoEnhancer" value="com.sun.jdori.enhancer.Main"/>
+  <property name="build.blocks.ojb.samples" value="${build.blocks}/ojb/samples"/>
+
+  <path id="ojb.classpath">
+    <pathelement path="${build.blocks.ojb.samples}"/>
+    <fileset dir="${basedir}/lib/optional">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${basedir}/lib/local">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${basedir}/lib/endorsed">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <available classname="${jdoEnhancer}"
+             classpathref="ojb.classpath"
+             property="jdo.present"/>
+
+  <target name="main" unless="unless.exclude.webapp.samples" depends="jdo"/>
+
+  <target name="prepare">
+    <mkdir dir="${build.blocks.ojb.samples}"/>
+    <copy file="${block.dir}/conf/package.jdo" tofile="${build.blocks.ojb.samples}/package.jdo"/>
+    <copy file="${block.dir}/conf/repository.dtd" tofile="${build.webapp.classes}/repository.dtd"/>
+    <copy file="${block.dir}/conf/repository.xml" tofile="${build.webapp.classes}/repository.xml"/>
+    <copy file="${block.dir}/conf/repository_database.xml" tofile="${build.webapp.classes}/repository_database.xml"/>
+    <copy file="${block.dir}/conf/repository_internal.xml" tofile="${build.webapp.classes}/repository_internal.xml"/>
+    <copy file="${block.dir}/conf/repository_user.xml" tofile="${build.webapp.classes}/repository_user.xml"/>
+    <copy file="${block.dir}/conf/OJB.properties" tofile="${build.webapp.classes}/OJB.properties"/>
+    <copy file="${block.dir}/conf/OJB-logging.properties" tofile="${build.webapp.classes}/OJB-logging.properties"/>
+  </target>
+
+  <!-- unfortunately this build.xml is called before the samples are compiled,
+       so we have to do it here "by hand" -->
+  <target name="compile" unless="unless.exclude.webapp.samples">
+    <javac compiler="${compiler}" nowarn="${compiler.nowarn}"
+           target="${target.vm}" deprecation="${compiler.deprecation}"
+           optimize="${compiler.optimize}" debug="${compiler.debug}"
+           destdir="${build.blocks.ojb.samples}">
+      <src path="${blocks}/ojb/java"/>
+      <classpath refid="ojb.classpath"/>
+      <include name="**/samples/bean/*.java"/>
+    </javac>
+  </target>
+
+  <target name="jdo" depends="prepare, compile"
+          if="jdo.present" unless="unless.exclude.webapp.samples">
+    <property name="build.blocks.ojb.samples.package" value="${build.blocks.ojb.samples}/org/apache/cocoon/ojb/samples/bean"/>
+    <!-- Run the JDO Enhancer -->
+    <echo>Running JDO Enhancer ...</echo>
+    <java fork="yes" failonerror="yes" classname="${jdoEnhancer}" classpathref="ojb.classpath">
+      <arg line="-f -d ${build.blocks.ojb.samples} ${build.blocks.ojb.samples}/package.jdo ${build.blocks.ojb.samples.package}/Employee.class ${build.blocks.ojb.samples.package}/Department.class"/>
+    </java>
+  </target>
+</project>
