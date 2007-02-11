@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+  <head>
+    <osm:pageTitle>
+      <osm:text>othello</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">Τα π�?ώτα βήματα</p>
+    <p class="paratitle">Mini Howto</p>
+    <p>πως να στηθεί ένα web site με cocoon και othelo.</p>
+    <p class="notes">Work in progress ..</p>
+    <p class="paratitle">Π�?οσθήκη πε�?ιεχομένου</p>
+    <p class="parasubtitle">XHTML</p>
+    <ul>
+      <li>Create a .xhtml file (MyContet.xhtml) with your content.</li>
+      <li>add in body element an attribute "contentID"
+		<pre><![CDATA[<body contentID="content" ...]]></pre>
+      </li>
+      <li>Put this file in content directory c_en.</li>
+      <li>as for http:// .... /samples/scratchpad/othello/MyContent </li>
+    </ul>
+    <p class="notes"/>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<page>
+  <title>Editing successful</title>
+  <content>
+    Editing was successful:<br/>
+    <br/>
+    ${data}
+  </content>
+</page>

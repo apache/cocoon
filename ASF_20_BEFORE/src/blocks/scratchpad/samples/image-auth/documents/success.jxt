@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<html xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+<head>
+    <title>image authentication</title>
+</head>
+<body>
+
+    <h1>Success!</h1>
+    <p>The code was obviously ${secret}</p>
+    <p>This sample demonstrates how you would implement an image-based
+        authentication using flow and the intercepted flowscript.</p>
+    <p>This is most commonly used to keep robots or spiders out of an area, but 
+        you don't neccesarily care about humans.</p>
+    
+    
+</body>
+</html>

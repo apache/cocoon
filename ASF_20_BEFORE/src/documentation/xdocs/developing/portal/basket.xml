@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>The Portal Basket</title>
+  <subtitle>Overview</subtitle>
+  <authors>
+   <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+  <s1 title="Overview">
+   <p>This document describes the basket portlet. This is a special functionality that can
+      be used inside your portal application to implement a per user basket.
+   </p>
+   <p>
+     The sample portal that comes with the Cocoon distribution contains a working sample
+     for the basket. So, you can test it out of the box and skip the next chapter. 
+   </p>
+   <p>
+     If you don't need the basket functionality have a look at the end of the next chapter
+     to see what you can remove from the portal.
+   </p>
+  </s1>
+  <s1 title="Generel Configuration">
+   <p>
+     Each coplet that is able to be added to the basket, gets a button "add" in the
+     window title. For rendering this title, you need to add the <em>basket</em>
+     renderer to the render that is rendering your window. Add the following aspect to your
+     <em>window</em> renderer:
+   </p>
+   <source>
+&lt;aspect type="basket"/&gt;
+   </source>
+   <p>
+      The basket uses a manager component that manages the persistence of the baskets. You
+      have to add this component to your cocoon.xconf and configure the directory that
+      is used to store the baskets accordingly:
+   </p>
+   <source>
+      &lt;component class="org.apache.cocoon.portal.coplets.basket.BasketManager" 
+                 role="org.apache.cocoon.portal.coplets.basket.BasketManager"&gt;
+        &lt;parameter name="directory" value="D:/baskets"/&gt;
+      &lt;/component&gt;
+   </source>
+   <p>
+    The default directory is the work directory.
+   </p>
+   <p>
+    If you need a different persistence strategy, subclass this component and configure
+    it accordingly.
+   </p>
+   <p>
+    If you don't need the basket functionality, remove the above component definition,
+    remove the aspect renderer usage and configuration.
+   </p>
+  </s1>
+  <s1 title="Coplets as Basket Content">
+   <p>
+    The basket allows to add a coplet or the content of a coplet to the basket. If a
+    coplet should be able to be added to the basket, it has to be configured accordingly.
+    Add one of the following two attributes to the coplet to either allow to add the coplet
+    or the content of the coplet to a basket:
+   </p>
+<source>
+&lt;attribute&gt;
+  &lt;name&gt;basket-link&lt;/name&gt;
+  &lt;value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;true&lt;/value&gt;
+&lt;/attribute&gt;
+&lt;attribute&gt;
+  &lt;name&gt;basket-content&lt;/name&gt;
+  &lt;value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;true&lt;/value&gt;
+&lt;/attribute&gt;
+</source>
+   <p>
+    The attributes have to be added to the coplet data configuration of a coplet.
+   </p>
+  </s1>
+  <s1 title="URLs as Basket Content">
+   <p>
+    The basket allows to add a URL or the content of a URL to the basket. You can add this
+    feature to your coplet by using the <em>basket transformer</em>. This transformer listens
+    for the <em>add-item</em> element and transform this into an html link:
+   </p>
+<source>
+&lt;p xmlns:basket="http://apache.org/cocoon/portal/basket/1.0"&gt;
+&lt;basket:add-item href="http://cocoon.apache.org"&gt;Add&lt;/basket:add-item&gt;
+&lt;/p&gt;
+</source>
+   <p>
+    With the example from above you add the link to a URI to the basket. If you add
+    the attribute <em>content</em> with the value <em>true</em> to the <em>add-item</em>
+    element, not the URI but the content of the URI is added to the basket.
+   </p>
+  </s1>
+  <s1 title="Viewing the content of the basket">
+   <p>
+    The <em>basket</em> generator streams out the contents of the basket as XML.
+    You can use this generator in your pipeline to render the content of the
+    current user basket.
+   </p>
+   <p>
+    This generator has also a management functionality buildin. By adding the
+    parameter <em>admin-mode</em> with the value <em>true</em> to the generator,
+    the generator streams out the admin functions as XML. These functions allow
+    to delete a basket for a user and to see all user baskets.
+   </p>
+  </s1>
+  <s1 title="Persistence">
+   <p>
+    Each basket is persisted using the basket manager component. The default
+    installation persists each basket of a user into a separate file in the   
+    temporary directory. You can change the location of the directory by
+    configuring the basket manager in the cocoon.xconf.
+   </p>
+   <p>
+    If you need a different persistence strategy, you can subclass the
+    basket manager and for example store the baskets in a database etc.
+   </p>
+  </s1>
+  <s1 title="Viewing items">
+   <p>
+     The user is able to select a single item and display the contents in
+     a different coplet. Therefore the <em>basket generator</em> needs
+     two additional parameters: the <em>show-coplet</em> and the
+     <em>show-layout</em> parameter.
+   </p>
+   <p>
+     The <em>show-layout</em> parameter defines a coplet layout element in
+     the portal layout of the user that will display the selected item.
+   </p>
+   <p>
+     The <em>show-coplet</em> parameter defines a coplet data that will
+     be used to create an instance that will display the content.
+   </p>
+  </s1>
+ </body>
+</document>

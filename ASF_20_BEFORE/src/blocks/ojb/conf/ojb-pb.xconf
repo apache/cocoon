@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="ojb-pb">
+  <!-- PersistenceBroker Interface -->
+  <ojb-pb logger="core.ojb-pb"/>
+</xconf>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+  <head>
+    <osm:pageTitle>
+      <osm:text>Apache Cocoon</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content" xmlns:cinclude="http://apache.org/cocoon/include/1.0">
+    <p class="title">The Apache Cocoon Project</p>
+    <p class="paratitle">Apache Cocoon</p>
+    <osm:block-copy select="dynamic"/>
+  </body>
+</html>

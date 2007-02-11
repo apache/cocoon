@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<p xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
+This is a sample for the basket portlet.<br/>
+<basket:add-item href="context://samples/portal/coplets/basket/sample.xml">Add a link to the content of this coplet.</basket:add-item><br/>
+<basket:add-item href="context://samples/portal/coplets/basket/sample.xml" content="true">Add the content of this coplet.</basket:add-item><br/>
+</p>

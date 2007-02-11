@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<j:jelly
+  xmlns:j="jelly:core"
+  xmlns:log="jelly:log">
+
+<root>
+ <a>Hi Cocoon! I am Jelly generating XML for you!!</a>
+</root>
+
+</j:jelly>

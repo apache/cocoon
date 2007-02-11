@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+  <head>
+    <osm:pageTitle>
+      <osm:text>XHTML Example</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">XHTML Example</p>
+    <p>Αυτή η σελίδα δημιου�?γήθηκε με χ�?ήση σ�?μανσης XHTML από α�?χείο .xhtml.</p>
+    <p>Για κάθε αίτηση (request) για πα�?άδειγμα: "http://.../TestPage" ο generator ψάχνει το α�?χείο TestPage.xml για να πά�?ει πε�?ιεχόμενο. Αν το α�?χείο  TestPage.xml δεν υπα�?χει τότε ο generator ψάχνει για το TestPage.xhtml. Αν το  .xhtml υπά�?χει τότε το πε�?ιεχόμενο των elements με attribute contentID τοποθετείτε στη σωστή θέση μέσα στο template.</p>
+    <p>Μέσα στο  main.xhtml template α�?χείο υπά�?χει για πα�?άδειγμα: <![CDATA[ <osm:content-copy select="content"/>]]></p>
+    <p class="paratitle">Πίνακας (Table)</p>
+    <table>
+      <tr>
+        <th>col1</th>
+        <th>col2</th>
+        <th>col3</th>
+      </tr>
+      <tr>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
+      </tr>
+      <tr>
+        <td>d</td>
+        <td>e</td>
+        <td>f</td>
+      </tr>
+    </table>
+  </body>
+</html>
