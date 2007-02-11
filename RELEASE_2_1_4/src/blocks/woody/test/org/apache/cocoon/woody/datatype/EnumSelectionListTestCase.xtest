@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<testcase>
+ <annotation>
+  Test Cases: Woody Enum Selection List
+ </annotation>
+
+ <logkit>
+  <factories>
+   <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
+  </factories>
+  <targets>
+   <stream id="root">
+    <stream>System.out</stream>
+    <format type="extended">
+     %7.7{priority} %5.5{time}   [%9.9{category}] (%{context}): %{message}\n%{throwable}
+    </format>
+   </stream>
+  </targets>
+  <categories>
+   <category name="test" log-level="ERROR">
+    <log-target id-ref="root"/>
+   </category>
+  </categories>
+ </logkit>
+
+ <context/>
+
+ <roles>
+
+  <role name="org.apache.cocoon.woody.datatype.DatatypeManager"
+    shorthand="woody-datatype"
+    default-class="org.apache.cocoon.woody.datatype.DefaultDatatypeManager"/>
+
+  <role name="org.apache.cocoon.woody.expression.ExpressionManager"
+    shorthand="woody-expression"
+    default-class="org.apache.cocoon.woody.expression.DefaultExpressionManager"/>
+
+  <role name="org.apache.excalibur.xmlizer.XMLizer"
+        shorthand="xmlizer"
+        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
+
+  <role name="org.apache.excalibur.xml.sax.SAXParser"
+        shorthand="xml-parser"
+        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
+
+ </roles>
+
+ <components>
+  <woody-datatype logger="woody">
+    <datatypes>
+      <datatype name="string" src="org.apache.cocoon.woody.datatype.typeimpl.StringTypeBuilder">
+        <convertors default="dummy" plain="dummy">
+          <convertor name="dummy" src="org.apache.cocoon.woody.datatype.convertor.DummyStringConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="long" src="org.apache.cocoon.woody.datatype.typeimpl.LongTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainLongConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingLongConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="decimal" src="org.apache.cocoon.woody.datatype.typeimpl.DecimalTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainDecimalConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingDecimalConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="date" src="org.apache.cocoon.woody.datatype.typeimpl.DateTypeBuilder">
+        <convertors default="formatting" plain="millis">
+          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingDateConvertorBuilder"/>
+          <convertor name="millis" src="org.apache.cocoon.woody.datatype.convertor.MillisDateConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="boolean" src="org.apache.cocoon.woody.datatype.typeimpl.BooleanTypeBuilder">
+        <convertors default="plain" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainBooleanConvertorBuilder"/>
+        </convertors>
+      </datatype>  
+      <datatype name="integer" src="org.apache.cocoon.woody.datatype.typeimpl.IntegerTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainIntegerConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingIntegerConvertorBuilder"/>
+        </convertors>
+      </datatype>  
+    </datatypes>
+    <validation-rules>
+      <validation-rule name="length" src="org.apache.cocoon.woody.datatype.validationruleimpl.LengthValidationRuleBuilder"/>
+      <validation-rule name="email" src="org.apache.cocoon.woody.datatype.validationruleimpl.EmailValidationRuleBuilder"/>
+      <validation-rule name="value-count" src="org.apache.cocoon.woody.datatype.validationruleimpl.ValueCountValidationRuleBuilder"/>
+      <validation-rule name="range" src="org.apache.cocoon.woody.datatype.validationruleimpl.RangeValidationRuleBuilder"/>
+      <validation-rule name="assert" src="org.apache.cocoon.woody.datatype.validationruleimpl.AssertValidationRuleBuilder"/>
+      <validation-rule name="mod10" src="org.apache.cocoon.woody.datatype.validationruleimpl.Mod10ValidationRuleBuilder"/>
+      <validation-rule name="regexp" src="org.apache.cocoon.woody.datatype.validationruleimpl.RegExpValidationRuleBuilder"/>
+    </validation-rules>
+  </woody-datatype>
+
+  <woody-expression logger="woody.expression"/>
+
+ </components>
+
+</testcase>

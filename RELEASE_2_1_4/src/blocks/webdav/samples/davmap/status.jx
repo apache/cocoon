@@ -1,0 +1,4 @@
+<response>
+  <status>${parameters.getParameter("status")}</status>
+  <message>${message}</message>
+</response>

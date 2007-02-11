@@ -1,0 +1,30 @@
+<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+	<head>
+		<osm:pageTitle>
+			<osm:text>XHTML Example</osm:text>
+		</osm:pageTitle>
+	</head>
+	<body contentID="content">
+		<p class="title">XHTML Example</p>
+		<p>This page is created using simple XHTML markup.</p>
+		<p class="paratitle">Table</p>
+		<table>
+			<tr>
+				<th>col1</th>
+				<th>col2</th>
+				<th>col3</th>
+			</tr>
+			<tr>
+				<td>a</td>
+				<td>b</td>
+				<td>c</td>
+			</tr>
+			<tr>
+				<td>d</td>
+				<td>e</td>
+				<td>f</td>
+			</tr>
+		</table>
+	</body>
+</html>

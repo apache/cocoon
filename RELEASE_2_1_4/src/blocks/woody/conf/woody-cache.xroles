@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.woody.CacheManager']">
+
+  <role name="org.apache.cocoon.woody.CacheManager"
+        shorthand="woody-cachemanager"
+        default-class="org.apache.cocoon.woody.DefaultCacheManager"/>
+</xroles>

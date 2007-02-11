@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+ <header>
+  <title>Wiki example</title>
+  <tab title="back" href="."/>
+ </header>
+ <body>
+  <row>
+   <column title="Wiki content">
+ 
+    <form action="${cocoon.continuation.id}.kont" method="post">
+     <textarea name="text" type="textarea" cols="100" rows="23" style="width: 100%">${text}</textarea><br/>
+     <input value="Save" type="submit" class="submit"/>
+    </form>
+
+   </column>
+  </row>
+ </body>
+</document>

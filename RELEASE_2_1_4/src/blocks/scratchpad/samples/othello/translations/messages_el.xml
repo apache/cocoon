@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with STYLEVISION v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
+<!-- CVS $Id: messages_el.xml,v 1.1 2003/12/15 20:31:47 tony Exp $ -->
+<!-- Default English message catalogue file for cocoon2 sample webapp -->
+<catalogue xml:lang="el">
+	<message key="locale_lang">el</message>
+	<message key="docs">Τεκμηρίωση</message>
+	<message key="installation">Εγκατάσταση</message>
+	<message key="examples">Παραδείγματα</message>
+</catalogue>

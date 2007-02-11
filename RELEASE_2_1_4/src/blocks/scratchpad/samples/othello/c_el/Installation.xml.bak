@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+	<head>
+		<osm:pageTitle>
+			<osm:text>install</osm:text>
+		</osm:pageTitle>
+	</head>
+	<body contentID="content">
+		<p class="title">Εγκατάσταση</p>
+		<p class="notes">This version of othello is designed for Cocoon 2.1 and is tested in both unix and winXP</p>
+		<p>How to install othello.</p>
+		<ul>
+			<li>dowload the zip file</li>
+			<li>extract and put [othello.gr] directory somewhere in your disk</li>
+			<li>mount othello sitemap.xmap in cocoon main sitemap.xmap
+<pre><![CDATA[
+for example if the path to your othello.gr directory:
+c:\server\xwww\othello.gr\
+
+then
+
+<map:pipeline>
+ <map:match pattern="*.gr/**">
+   <map:mount check-reload="yes" 
+             src="file://c:/Server/xwww/{1}.gr/conf/sitemap.xmap" 
+             uri-prefix="{1}.gr"/>
+ </map:match>
+</map:pipeline>
+
+or
+
+<map:pipeline>
+ <map:match pattern="othello.gr/**">
+  <map:mount check-reload="yes" 
+           src="file://c:/Server/xwww/othello.gr/conf/sitemap.xmap" 
+           uri-prefix="othello.gr"/>
+ </map:match>
+</map:pipeline>
+]]></pre>
+			</li>
+			<li>test othello at: [http://localhost:8080/cocoon/othello.gr/]
+</li>
+		</ul>
+	</body>
+</html>

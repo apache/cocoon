@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!-- CVS $Id: explain-test.xml,v 1.1 2004/02/06 12:17:16 bdelacretaz Exp $ -->
+
+<page>
+    <title>internal-request test pages</title>
+    <content>
+        <para>
+            This is used by the internalRequest anteater test
+        </para>
+        <para>
+            Test links:
+            <ul>
+                <li><link href="simpletest">simpletest</link></li>
+                <li><link href="simpletest-mounted/includer">includer</link></li>
+                <li><link href="simpletest-content/a.xml">simpletest-content/a.xml</link></li>
+            </ul>
+        </para>
+    </content>
+</page>

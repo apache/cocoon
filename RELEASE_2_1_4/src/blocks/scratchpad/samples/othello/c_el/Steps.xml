@@ -1,0 +1,14 @@
+<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+	<head>
+		<osm:pageTitle>
+			<osm:text>othello</osm:text>
+		</osm:pageTitle>
+	</head>
+	<body contentID="content">
+		<p class="title">A site in few steps</p>
+		<p class="paratitle">Mini Howto</p>
+		<p>how to create a web site in few steps using cocoon and othelo.</p>
+		<p class="notes">work in progress</p>
+	</body>
+</html>

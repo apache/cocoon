@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<privileges xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:forEach var="privilege" items="${privileges}">
+    <privilege>
+      <uri>${privilege}</uri>
+    </privilege>
+  </jx:forEach>
+</privileges>

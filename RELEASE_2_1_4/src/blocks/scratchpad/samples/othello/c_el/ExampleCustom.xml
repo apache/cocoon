@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with STYLEVISION v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Stavros Kounis (private) -->
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+	<head>
+		<osm:pageTitle>
+			<osm:text>Custom Example</osm:text>
+		</osm:pageTitle>
+	</head>
+	<body contentID="content">
+		<p class="title">
+			<osm:text>Παράδειγμα Custom</osm:text>
+		</p>
+		<p class="paratitle">Custom elements</p>
+		<p>It is possible to create any custom element. This element have to belong to osm: namespace</p>
+		<p class="paratitle">For example</p>
+		<p>We want to create an element that display an alert msg on click.</p>
+		<p>The element:</p>
+		<pre><![CDATA[<button 
+	caption="click here"
+	msg="this is an alert message!!!"/> ]]></pre>
+		<p>The xslt transformation saved in custombutton.xsl [osml/plugins/custombuttom.xsl]</p>
+		<pre><![CDATA[
+	<xsl:template match="osm:custombutton">
+		<input type="button">
+		<xsl:attribute name="value"><xsl:value-of select="@caption"/></xsl:attribute>
+		<xsl:attribute name="onclick">alert('<xsl:value-of select="@msg"/>')</xsl:attribute>
+		</input>
+	</xsl:template>	
+	]]></pre>
+		<p>and our button:</p>
+		<osm:custombutton caption="click here" msg="this is an alert message!!!"/>
+		<p>to include these transformation instructions to othello we have to modify core.xsl</p>
+		<pre><![CDATA[	
+	...
+	<xsl:include href="../plugins/custombutton.xsl"/>	
+	...	
+	]]></pre>
+	</body>
+</html>
