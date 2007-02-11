@@ -37,7 +37,7 @@
 
       <map:match pattern="save-user-profile">
         <map:act type="portal-save-profile"/>
-        <map:redirct-to uri="cocoon:/main"/>
+        <map:redirect-to uri="cocoon:/main"/>
       </map:match>
 
       <map:match pattern="i18n/**">
