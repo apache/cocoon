@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<root>
+  <x>X</x>
+  <a>A</a>
+  <a b="c">d</a>
+  <a href="x">x</a>
+  <img src="img/src must not be encoded"/>
+  <a href="href must be encoded"/>
+  <form action="action must be encoded"/>
+</root>

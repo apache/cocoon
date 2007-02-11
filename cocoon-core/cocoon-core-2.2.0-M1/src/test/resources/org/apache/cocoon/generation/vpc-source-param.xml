@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test source="${cocoon.parameters.source}" foo2="${cocoon.parameters.foo2}"/>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
+<components>
+
+  <!--+
+      | Runnable manager
+      |
+      | This component manages commands (Runnables) executed in background using
+      | preconfigured pools of worker threads
+      +-->
+  <runnable-manager logger="core.runnable">
+    <!--+
+        | This is the default configuration of the runnable-manager. More
+        | indepth information can be found at
+        | http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html
+        | The following elements can be used:
+        |
+        | thread-factory:        specifies the fully qualified class name of an
+        |                        org.apache.cocoon.components.thread.ThreadFactory
+        |                        implementation. It is responsible to create Thread
+        |                        classes.
+        | thread-pools:          container element for thread-pool elements.
+        | name:                  required name of the pool.
+        | priority:              optional priority all threads of the pool will
+        |                        have (the ThreadFactory will be set to this
+        |                        priority).The possible values  are:
+        |                          MIN:  corresponds to Thread#MIN_PRIORITY
+        |                          NORM: corresponds to Thread#NORM_PRIORITY (default)
+        |                          MAX:  corresponds to Thread#MAX_PRIORITY
+        | daemon:                whether newly created Threads should run in
+        |                        daemon mode or not. Default to false.
+        | queue-size:            optional size of a queue to hold Runnables if the
+        |                        pool is full. Possible values are:
+        |                          less than 0:    unbounded (default)
+        |                          equal to 0:     no queue at all
+        |                          greater than 0: size of the queue
+        | max-pool-size:         optional maximum number of threads in the pool.
+        |                        Defaults to 5.
+        |                        NOTE: if a queue is specified (queue-sie != 0)
+        |                              this value will be ignored.
+        | min-pool-size:         optional minimum number of threads in the pool.
+        |                        Defaults to 5.
+        |                        NOTE: if a queue has been specified (queue-sie != 0)
+        |                              this value will be used as the maximum of
+        |                              thread running concurrently.
+        | keep-alive-time-ms:    The time in ms an idle thread should keep alive
+        |                        before it might get garbage collected. This
+        |                        defaults to 60000 ms.
+        | block-policy;          The policy to be used if all resources (thread in
+        |                        the pool and slots in the queue) are exhausted.
+        |                        Possible values are:
+        |                          ABORT:         Throw a RuntimeException
+        |                          DISCARD:       Throw away the current request
+        |                                         and return.
+        |                          DISCARDOLDEST: Throw away the oldest request
+        |                                         and return.
+        |                          RUN (default): The thread making the execute
+        |                                         request runs the task itself.
+        |                                         This policy helps guard against
+        |                                         lockup.
+        |                          WAIT:          Wait until a thread becomes
+        |                                         available. This policy should, in
+        |                                         general, not be used if the
+        |                                         minimum number of threads is zero,
+        |                                         in which case a thread may never
+        |                                         become available.
+        | shutdown-graceful:     Terminate thread pool after processing all
+        |                        Runnables currently in queue. Any Runnable entered
+        |                        after this point will be discarded. A shut down
+        |                        pool cannot be restarted. This also means that a
+        |                        pool will need keep-alive-time-ms to terminate.
+        |                        The default value not to shutdown graceful.
+        | shutdown-wait-time-ms: The time in ms to wait before issuing an
+        |                        immediate shutdown after a graceful shutdown
+        |                        has been requested.
+        +-->
+    <thread-factory>org.apache.cocoon.components.thread.DefaultThreadFactory</thread-factory>
+    <thread-pools>
+      <!--+
+          | This is the default thread pool. It's use fits best for short
+          | running background tasks.
+          +-->
+      <thread-pool>
+        <name>default</name>
+        <priority>NORM</priority>
+        <daemon>false</daemon>
+        <queue-size>-1</queue-size>
+        <max-pool-size>5</max-pool-size>
+        <min-pool-size>5</min-pool-size>
+        <keep-alive-time-ms>60000</keep-alive-time-ms>
+        <block-policy>ABORT</block-policy>
+        <shutdown-graceful>false</shutdown-graceful>
+        <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
+      </thread-pool>
+      <!--+
+          | This thread pool should be used for daemons (permanently running
+          | threads).
+          +-->
+      <thread-pool>
+        <name>daemon</name>
+        <priority>NORM</priority>
+        <daemon>true</daemon>
+        <queue-size>0</queue-size>
+        <max-pool-size>-1</max-pool-size>
+        <min-pool-size>1</min-pool-size>
+        <keep-alive-time-ms>60000</keep-alive-time-ms>
+        <block-policy>ABORT</block-policy>
+        <shutdown-graceful>false</shutdown-graceful>
+        <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
+      </thread-pool>
+    </thread-pools>
+  </runnable-manager>
+
+</components>
