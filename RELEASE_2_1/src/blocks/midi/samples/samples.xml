@@ -1,0 +1,52 @@
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+  <group name="Main examples page.">
+    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  </group>
+  <group name="What is the MIDI block?">
+    <note>The MIDI block currently gives you a component (the XMidiGenerator)
+    to generate an XML representation from any MIDI file (called XMidi by its
+    author Peter Loeb). There is also a component (the XMidiSerializer) to
+    render XMidi back as a MIDI file. In due course I will add some
+    transformers to perform basic musical manipulations such as transposition,
+    inversion and retrograde. Hopefully I shall also add some transformers to
+    generate SVG visualisations of the XMidi, starting with normal western
+    musical notation.</note>
+    <sample name="MIDI Documentation"
+    href="http://wiki.cocoondev.org/Wiki.jsp?page=MIDI">Documentation available
+    on the Cocoon Wiki.</sample>
+  </group>
+  <group name="A Cocoon signature tune">
+    <sample name="A Short MIDI File" href="raw/cocoon.mid">This is a little
+    ditty I wrote on the notes you get if you take the letters of the word
+    "Cocoon" (using A=A, B=B, ... G=G, H=A, I=B etc.) You get C-A-C-A-A-G: very
+    catchy.</sample>
+    <sample name="The XMidi Generator" href="cocoon.xmi">The previous file
+    rendered as XMidi, using the XMidiGenerator.</sample>
+    <sample name="The XMidi Serializer" href="cocoon.mid">The XMidi output of
+    the previous pipeline rendered again as MIDI, using the
+    XMidiSerializer.</sample>
+  </group>
+  <group name="Bach's Prelude No.1 in C, BWV846a">
+    <sample name="A Longer MIDI File" href="raw/prelude.mid">Bach's Prelude
+    No.1 in C, BWV846a , sequenced by B.R.Guillaud and available from The
+    Classical Music Archives (see below).</sample>
+    <sample name="The XMidi Generator" href="prelude.xmi">The previous file
+    rendered as XMidi, using the XMidiGenerator. Be warned, your browser may
+    take some time to render the XML. As the emperor of Austria supposedly said
+    to Mozart, "Too many notes!"</sample>
+    <sample name="The XMidi Serializer" href="prelude.mid">The XMidi output of
+    the previous pipeline rendered again as MIDI, using the
+    XMidiSerializer.</sample>
+  </group>
+  <group name="Reference">
+    <sample name="The Original XMidi Home Page"
+    href="http://www.palserv.com/XMidi/">This is the origin of a lot of the
+    source code in the generator and serializer. This code, and the XMidi
+    format itself were created by Peter Loeb. Many thanks to Peter for
+    permission to use his source code.</sample>
+    <sample name="The Classical Music Archives"
+    href="http://www.classicalarchives.com">A large site offering classical
+    music in MIDI and audio formats.</sample>
+  </group>
+</samples>
+

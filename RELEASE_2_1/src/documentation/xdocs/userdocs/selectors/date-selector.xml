@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<!--
+  <![CDATA[ CVS Version: $Id: date-selector.xml,v 1.1 2003/07/14 20:16:01 joerg Exp $ 
+  ]]>
+-->
+<document>
+  <header>
+    <title>DateSelector in Cocoon</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Your Name" email="your-email"/>
+    </authors>
+    <abstract>This document describes the DateSelector of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="DateSelector">
+      <table>
+        <tr>
+          <td>NAME</td><td>date</td>
+        </tr>
+        <tr>
+          <td>WHAT</td><td>The <code>DateSelector</code> component is used to 
+            select...
+          </td>
+        </tr>
+        <tr>
+          <td>TYPE</td><td>Selector, Sitemap Component</td>
+        </tr>
+        <tr>
+          <!-- choose Core, the block name, or Scratchpad 
+            depending on where DateSelector sources live
+          -->
+          <td>BLOCK</td><td>Scratchpad</td>
+        </tr>
+        <tr>
+          <td>CLASS</td><td>org.apache.cocoon.reading.DateSelector</td>
+        </tr>
+        <!-- uncomment following tr if DateSelector is deprecated -->
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
+        </tr-->
+        <tr>
+          <td>SINCE</td><td>Cocoon X.Y</td>
+        </tr>
+        <tr>
+          <td>CACHEABLE</td><td>not applicable</td>
+        </tr>
+      </table>
+    </s1>
+    <s1 title="Description">
+      <p>
+        A general description of DateSelector
+      </p>
+    </s1>
+    <s1 title="Usage">
+      <p>
+        A usage scenario of DateSelector
+      </p>
+      <s2 title="Sitemap pipeline examples">
+        <p></p>
+        <source><![CDATA[
+<map:match pattern="*.xyz">
+  <map:read type="date" src="{1}" mime-type="type/sub-type">
+    <!-- option sitemap parameters -->
+  </map:read>
+</map:match>
+        ]]></source>
+      </s2>
+      
+      <s2 title="Sitemap component configuration example">
+        <p></p>
+        <source><![CDATA[
+<map:selectors...
+  <map:selector name="date" 
+    src="org.apache.cocoon.reading.DateSelector"
+    logger="sitemap.selector.date" 
+  />
+    <!-- optional selector configuration -->
+    ...
+  </map:selectors>
+...
+]]></source>
+      </s2>
+      <s2 title="Configuration">
+        <p>
+          Explain the sitemap selector configuration, options when declaring date selector
+        </p>
+      </s2>
+      <s2 title="Setup">
+        <p>
+          Explain the sitemap selector setup, ie options when using date selector
+        </p>
+      </s2>
+      <s2 title="Effect on Object Model and Sitemap Parameters">
+        <p>
+        
+        </p>
+      </s2>
+    </s1>
+    <s1 title="Bugs/Caveats">
+      <p>
+        Describe limitation, bugs of DateSelector 
+      </p>
+    </s1>
+    <s1 title="History">
+      <p>
+        MM-DD-YY: initial creation
+      </p>
+    </s1>
+    <s1 title="Copyright">
+      <p>
+        Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
+      </p>
+    </s1>
+    <s1 title="See also">
+      <p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <link href="../concepts/matchers_selectors.html">Matchers and Selectors</link>.
+      </p>
+    </s1>
+  </body>
+</document>
+

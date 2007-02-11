@@ -1,0 +1,36 @@
+<!-- =================================================================== -->
+<!-- CVS: $Id: pagesheet.dtd,v 1.1 2003/06/27 20:10:42 stefano Exp $     -->
+<!--                                                                     -->
+<!--     Pagesheet DTD (Version 0.1)                                     -->
+<!--                                                                     -->
+<!-- =================================================================== -->
+
+<!ELEMENT pagesheet (items?, rules)*>
+<!ATTLIST pagesheet xmlns CDATA #IMPLIED>
+
+<!ELEMENT items (group)>
+
+<!ELEMENT group EMPTY >
+<!ATTLIST group 
+   name CDATA #IMPLIED 
+   element CDATA #IMPLIED >
+
+<!ELEMENT rules (link?, count?)*>
+
+<!ELEMENT link EMPTY >
+<!ATTLIST link 
+   type ( unit | range ) #REQUIRED 
+   num CDATA #REQUIRED 
+ >
+ 
+ <!ELEMENT count EMPTY >
+ <!ATTLIST count 
+   type ( element | char ) #REQUIRED 
+   num CDATA #REQUIRED 
+   name CDATA #IMPLIED 
+   namespace CDATA #IMPLIED 
+ >
+
+<!-- =================================================================== -->
+<!-- End of DTD                                                          -->
+<!-- =================================================================== -->

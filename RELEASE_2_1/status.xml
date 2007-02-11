@@ -1,0 +1,2803 @@
+<?xml version="1.0"?>
+<!DOCTYPE status [
+<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT developers (person+)>
+<!ELEMENT person EMPTY>
+<!ATTLIST person
+	name CDATA #REQUIRED
+	email CDATA #REQUIRED
+	id CDATA #REQUIRED
+>
+<!ELEMENT todo (actions+)>
+<!ELEMENT actions (action+)>
+<!ATTLIST actions
+	priority (high | medium | low) #REQUIRED
+>
+<!ELEMENT action (#PCDATA | link | br | code)*>
+<!ATTLIST action
+	context (build | code | docs) #IMPLIED
+	assigned-to CDATA #IMPLIED
+	dev CDATA #IMPLIED
+	type (add | fix | remove | update) #IMPLIED
+	fixes-bug CDATA #IMPLIED
+	due-to CDATA #IMPLIED
+	due-to-email CDATA #IMPLIED
+>
+<!ELEMENT changes (release+)>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT br EMPTY>
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link
+	href CDATA #REQUIRED
+>
+<!ELEMENT release (action+)>
+<!ATTLIST release
+	version CDATA #REQUIRED
+	date CDATA #REQUIRED
+>
+<!ENTITY eacute           "&#x000E9;">
+<!ENTITY ouml             "&#x000F6;">
+<!ENTITY uuml             "&#x000FC;">
+]>
+<!-- CVS $Id: status.xml,v 1.114 2003/08/11 21:54:09 joerg Exp $:-->
+<status>
+
+ <developers>
+    <!-- in strict alphabetical order -->
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Nicola Ken Barozzi" email="nicolaken@apache.org" id="NKB"/>
+  <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
+  <person name="Mark Butler" email="butlermh@apache.org" id="MB"/>
+  <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
+  <person name="David Crossley" email="crossley@apache.org" id="DC"/>
+  <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
+  <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
+  <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
+  <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
+  <person name="Christian Haul" email="haul@apache.org" id="CH"/>
+  <person name="J&#246;rg Heinicke" email="joerg@apache.org" id="JH"/>
+  <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
+  <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
+  <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
+  <person name="Matthew Langham" email="mlangham@apache.org" id="BL"/>
+  <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Michael Melhem" email="michaelm@apache.org" id="MM"/>
+  <person name="Stephan Michels" email="stephan@apache.org" id="SMS"/>
+  <person name="John Morrison" email="morrijr@apache.org" id="JM"/>
+  <person name="Steven Noels" email="stevenn@apache.org" id="SN"/>
+  <person name="Christopher Oliver" email="coliver@apache.org" id="CO"/>
+  <person name="Giacomo Pati" email="giacomo@apache.org" id="GP"/>
+  <person name="Konstantin Piroumian" email="kpiroumian@apache.org" id="KP"/>
+  <person name="Ovidiu Predescu" email="ovidiu@apache.org" id="OP"/>
+  <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
+  <person name="Reinhard P&#246;tz" email="reinhard@apache.org" id="RP"/>
+  <person name="Gianugo Rabellino" email="gianugo@apache.org" id="GR"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Peter Royal" email="proyal@apache.org" id="PAR"/>
+  <person name="Paul Russell" email="prussell@apache.org" id="PR"/>
+  <person name="Andrew Savory" email="asavory@apache.org" id="AS"/>
+  <person name="Diana Shannon" email="shannon@apache.org" id="DS"/>
+  <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
+  <person name="Jeff Turner" email="jefft@apache.org" id="JT"/>
+  <person name="Upayavira" email="upayavira@apache.org" id="UV"/>
+  <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
+  <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
+  <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
+ </developers>
+  
+  <todo>
+   <actions priority="high">
+    <action context="code" assigned-to="all">
+      Test, test, test :-)
+    </action>   
+ 
+    <action context="docs" assigned-to="open">
+      For 2.1: Attend to any high+ issues in the
+      <link href="plan/todo-doc.html">Documentation To Do List</link>
+    </action>
+
+    <action context="code" assigned-to="open">
+      Attend to the general issues in the
+      <link href="plan/release.html">release plan</link>
+    </action>
+
+    <action context="code" assigned-to="open">
+      For 2.1: use (only) released versions of excalibur 
+      (source, store, xmlutil). This requires a release of those
+      components in excalibur.
+    </action>
+
+    <action context="build" assigned-to="open">
+      Complete (means put all allowed constructs and combinations)
+      the lint/sitemap.xmap file. Enhance the RELAX NG grammar for sitemap.
+    </action>
+
+    <action context="code" assigned-to="SW">
+      For 2.1: Views must start not from the first encountered label, but from the last one
+      (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172&amp;w=2)
+    </action>
+
+    <action context="code" assigned-to="NKB">
+      For 2.1: Make comprehensive samples with the handle-errors sitemap and real world
+      use cases. Add also specific Selector and a FaqBuilder to be used by the
+      NotifyingBuilder.
+    </action>
+
+    <action context="code" assigned-to="open">
+      Finish the design and contracts of flow. Add more tests and samples and
+      documentation.
+    </action>
+
+    <action context="code" assigned-to="open">
+      Finish the document
+      <link href="installing/updating.html">Updating Cocoon</link>
+      which describes the major changes since 2.0.2
+    </action>
+
+    <action context="code" assigned-to="open">
+      Finish the
+      <link href="plan/samples.html">refactoring of samples</link>
+    </action>
+
+    <action context="code" assigned-to="open">
+      Finish moving the scratchpad stuff in main trunk.
+    </action>
+
+    <action context="code" assigned-to="open">
+      There are some deprecated classes being used in 'build test'. (Note: The testcase for
+      the resolver should be moved to the Excalibur XMLUtil, since there is the
+      default resolver).
+    </action>
+
+    <action context="code" assigned-to="open">
+      Test that the new Catalog Entity Resolver works on all platforms, following
+      its move from Cocoon to Excalibur. See
+      <link href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=104814093018956">email discussion</link>.
+    </action>
+
+    <action context="code" assigned-to="SMS">
+      For 2.1: Enable the 'use-store' parameter of the XSLT processor component. Test for occuring
+      memory leaks. Seems only occuring if the xalan transformer is used. There also seems to be
+      a problem during the serialization of the transient store, if the servlet container were
+      stopped.
+    </action>
+   </actions>
+
+   <actions priority="medium">
+    <action context="code">
+      XMLize exception handling so that error pages can become more
+      semantically meaningful. Currently all XSP compilation errors are
+      stored in a single string. With XMLized exceptions we could display
+      especially XSP errors much nicer.
+    </action>
+
+    <action context="code">
+      Remove all useless blank strings in XSP-generated code that hinder performances.
+      This should be configurable (through an attribute?) to be able to keep them when
+      needed.
+    </action>
+
+    <action context="code">
+      Lucene is writing info to stdout when searching.
+    </action>
+
+    <action context="code">
+      For 2.1: Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
+      server: store fragments in the session rather than in a local store. <br/>
+      This couldn't work, because if you working with caching pipelines, you cannot be sure
+      that the entries are in the session(Stephan).
+    </action>
+
+    <action context="code">
+      Examples are broken, if you went first to precept example
+      (samples/precept/app/example1.html)
+      and then to the xmlform example (samples/xmlform/wizard).
+    </action>
+   </actions>
+  </todo>
+
+  <changes>
+
+ <release version="@version@" date="@date@">
+  <action dev="JH" type="update" fixes-bug="22288" due-to="Mark Leicester" due-to-email="mark.leicester@energyintellect.com">
+    midi block refactoring applied.
+  </action>
+  <action dev="CZ" type="add" fixes-bug="22270" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
+   Patch for allowing to specify a cocoon-view for internal requests in the query string.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="19839">
+    Instrumentation support: Updated client libraries to make instrumentation work again.
+    Added a target "start-instrumentation-client" to Cocoon's ant files and removed "runclient" shell scripts.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="22064" due-to="Nicolas Maisonneuve" due-to-email="nicoo_@hotmail.com">
+    XMLDBTransformer: retrieving auto-generated resource id.
+  </action>
+  <action dev="BD" type="add" due-to="Mark Leicester" due-to-email="mark.leicester@energyintellect.com">
+    midi block added
+  </action>
+  <action dev="BD" type="add">
+    slop block added (Simple Line Oriented Parser)
+  </action>
+  <action dev="JH" type="fix" fixes-bug="21931, 22173" due-to="Unico Hommes"
+    due-to-email="unico@hippo.nl">
+    LDAPTransformer now handles multiple attribute values.
+    The filter element is also configurable via a sitemap parameter.
+  </action>
+  <action dev="JH" type="add" fixes-bug="20033, 22042" due-to="Yury Mikhienko"
+    due-to-email="yuryx@mobicomk.donpac.ru">
+    LDAPTransformer: Added attribute modification methods: add, replace, modify, append.
+  </action>
+  <action dev="BRD" type="fix">
+    IMPORTANT: Flow: cleaned up the situation with regards to the "uri" argument to the
+    sendPage, sendPageAndWait, and processPipelineTo functions.  URI's starting
+    with a slash are resolved against the root sitemap, URI's not starting with
+    a slash are resolved against the current sitemap. Specifying a scheme is not
+    allowed.
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="19841">
+    I18nTransformer: if content of i18n:text is empty and translation is not
+    found, use untranslated-text.
+  </action>
+  <action dev="CH" type="fix" fixes-bug="22050" due-to="Gildas Guillemot"
+    due-to-email="gguillemot@rennes.jouve.fr">
+    ESQL: explicitly release database resources.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="21213" due-to="Frank Taffelt"
+    due-to-email="frank.taffelt@interface-business.de">
+    Paginator now caches dynamic pagesheet correctly.
+  </action>  
+  <action dev="CZ" type="add">
+    Configuration logkit.xconf can now be read from any location.
+  </action>
+  <action dev="CZ" type="fix">
+    Fix the ignoreErrors handling in the cinclude transformer.
+  </action>
+ </release>
+ <release version="2.1rc1" date="July 29 2003">
+  <action dev="VG" type="update">
+    Updated FOP to the latest released version, 0.20.5.
+  </action>
+  <action dev="GR" type="add">
+    Added delete capabilities to the SourceWritingTransformer.
+  </action>
+  <action dev="GR" type="add" fixes-bug="21881" due-to="Guido Casper"
+    due-to-email="g.casper@s-und-n.de">
+    Add a defaultContentType parameter to StreamGenerator, to comply
+    with misbehaving clients.
+  </action>  
+  <action dev="GR" type="add" fixes-bug="21778" due-to="Guido Casper"
+    due-to-email="g.casper@s-und-n.de">
+    Add a new set of WebDAV samples, with the capability of serving
+    WebDAV content straight from Cocoon.
+  </action>  
+  <action dev="DC" type="fix" fixes-bug="21557" due-to="Conal Tuohy" due-to-email="conal@nzetc.org">
+    Various fixes and enhancements to Lucene search. Propagate the lucene:*
+    elements to the result tree and add "elapsed-time" attribute, so now
+    possible to transform the results into a useful report about indexing.
+    Fix "incremental" indexing.
+  </action>
+  <action dev="GR" type="add">
+    Added CLOB support in SQLTransformer.
+  </action>
+  <action dev="GR" type="add">
+    Added an (unstable) HTMLTransformer to the html block, to parse and
+    tidy an XML containing escaped (and possibly incorrect) HTML
+  </action>
+  <action dev="GR" type="update">
+    Added URL encoding of user/password in the WebDAV source 
+    (webdav://user:password@host/path)
+  </action>
+  <action dev="VG" type="update">
+    Decouple core XSP logicsheet from database classes to allow XSP deployment
+    without excalibur datasource JAR file. If your XSP pages use datasources
+    directly (and not through ESQL logicsheet), add xsp:include.
+  </action>
+  <action dev="CZ" type="update">
+   The authentication framework now uses a configurable component to try to authenticate a user.
+   This allows to drop in own authentication services or e.g. the servlet authentication mechanism.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="4934" due-to="Ryder Rishel" due-to-email="	ryderblue@yahoo.com">
+   Made JSPs working in Resin that don't end on *.jsp.
+  </action>
+  <action dev="JH" type="update">
+   All Reader accessing Avalon components now extend the ServiceableReader
+   instead of deprecated ComposerReader. It pertains the JSPReader, the
+   DatabaseReader and the AxisRPCReader.
+  </action>
+  <action dev="GR" type="add">
+   Added a WebDAV block, with an initial implementation of
+   a modifiable and traversable WebDAV source.
+  </action>
+  <action dev="GR" type="add">
+   Added a DirectoryGenerator implementation on scratchpad 
+   working on any Traversable Source.
+  </action>
+  <action dev="CZ" type="add">
+   Adding global request lifecycle component.
+  </action>
+  <action dev="CZ" type="update">
+   The cache used by the caching processing pipeline is now configurable
+   allowing to use different caches in different pipelines.
+  </action>
+  <action dev="CZ" type="update">
+   The cache uses now a configured store. This allows to use differently
+   configured caches at the same time.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="14327">
+  	Reverted the encoding changes in the JSP engine. The fix should be done in
+  	the JSPReader, that already contains a TODO.
+  </action>
+  <action dev="RP" type="fix">
+    Web3: The stylesheets in the examples use Xalan as transformer and work correctly now
+    as XSLTC has problems with the 'rfc' namespace.
+  </action>  
+  <action dev="RP" type="update">
+    Changed namespace for Web3RfcTransformer to 'http://apache.org/cocoon/Web3-Rfc/1.0'.
+  </action> 
+  <action dev="CZ" type="add">
+    ParanoidCocoonServlet can optionally configured with a file containing the classpath.
+  </action>
+  <action dev="CZ" type="add">
+    Configuration cocoon.xconf can now be read from any location.
+  </action>
+  <action dev="SW" type="fix">
+    Flow view can now be in "internal-only" pipelines.
+  </action>
+  <action dev="JH" type="update">
+   Updated FOP to 0.20.5rc3a.
+  </action>
+  <action dev="JH" type="update">
+   Moved WebServiceProxyGenerator + some samples into the proxy block.
+  </action>
+  <action dev="JH" type="update" fixes-bug="12216">
+   Updated common-httpclient from CVS checkout of 2003-02-10 to 2.0 beta 2.
+   This hopefully fixes also the bug. Moved it into core because of dependencies.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="21340" due-to="Peter Ross" due-to-email="peter@emailross.com">
+   Refactored the WebServiceProxyGenerator: "host parameter is null" fixed, replaced deprecated
+   stuff, removed all work arounds (hopefully no longer needed), removed the buggy "&lt;?xml" test,
+   replaced getResponseBodyAsString() with getResponseBody() (but encoding issue is still not fixed).
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="20115" due-to="Tim Goodwin" due-to-email="tjg@star.le.ac.uk">
+    Applied patch for implementing exists for the xmldb source.
+  </action>
+ </release>
+ <release version="2.1m3" date="July 5 2003">
+  <action dev="JH" type="update">
+    Refactored the XPathDirectoryGenerator: provides all the functionality of DirectoryGenerator now,
+    parameter xpath added replacing the xpointer-ish syntax, additional parameter xmlFiles for specifying
+    a pattern for XML files, removed docid attribute on dir:xpath + some minor fixes.
+  </action>
+  <action dev="BRD" type="add" fixes-bug="15150" due-to="Danny Mui" due-to-email="danny@muibros.com">
+    Added merged region support to HSSF (= Excel) Serializer.
+  </action>
+  <action dev="JH" type="update" fixes-bug="21248" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
+    Updated POI from 1.7.0-dev to 1.10.0-dev. Patched code accordingly. Fixed usage of deprecated methods.
+  </action>
+  <action dev="CH" type="fix" due-to="Michael Gerzabek" due-to-email="michael.gerzabek@aon.at">
+    Web3: Fix extra close element on connectivity loss.
+  </action>
+  <action dev="CH" type="update">
+    SimpleFormTransformer: Make complete form protectable, ability to use more
+    than one transformation with different fixed attributes, optionally let
+    error elements pass, configure prefix, suffix, separator at configuration
+    time, add optional use of form name, formating.
+  </action>
+  <action dev="CH" type="update">
+    Added feature to allow a database action (i.e. delete) not to fail if no
+    row was affected. Formating. Use toString() to convert to String rather
+    than cast.
+  </action>
+  <action dev="CH" type="add">
+    Added SimpleSelector that operates just on Strings. Useful in conjunction
+    with a sitemap variable or input module.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="19104" due-to="Johan Stuyts" due-to-email="johan@hippo.nl">
+    Fixed SchematronValidator.evalRule() in xmlforms block: create a relative context instead of an absolute one.
+    This allows to refer to another form field by using relative paths (../password) instead of choosing a common root.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="20682" due-to="Wolfgang Kowarschick" due-to-email="kowa@fh-augsburg.de">
+    Fixed return of different DirValidity objects on multiple calls on getValidity() in the DirectoryGenerator.
+  </action>
+  <action dev="DC" type="update">
+    The DTDs are now completely handled by the catalog entity resolver.
+    The old copies of DTDs at xdocs/dtd/ have been removed. If you are
+    editing the Cocoon xdocs with an xml editor, then point it to the
+    WEB-INF/entities/catalog or catalog.xcat file. If your editor cannot
+    utilise an entity resolver, then get a better editor.
+  </action>
+  <action dev="UV" type="add">
+    Added support for permanent redirects in &lt;map:redirect-to&gt;
+  </action>
+  <action dev="JH" type="fix">
+    Fixed some caching (added missing parameters and changed algorithm for cache key generation)
+    and logging issues in the DirectoryGenerator. Fixed the root pattern handling (if not matching
+    directory found leave out the ancestors). Fixed empty src attribute handling.
+  </action>
+  <action dev="GP" type="update">
+    Upgraded to new Axis 1.1 release
+  </action>
+  <action dev="CZ" type="add">
+    Adding concept of parent-aware components, making e.g. the usage of 
+    selectors with a component manager hierarchy much easier.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="15365" due-to="Maciek Kaminski" due-to-email="maciejka@tiger.com.pl">
+    Added/fixed internationalization support for HSSFSerializer by setting the output encoding
+    hardcoded to UTF-16. It's obviously only a hack, but so it is at least usable for more people.
+  </action>
+  <action dev="JH" type="fix" fixes-bug="20658" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
+    Fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/&gt;
+  </action>
+  <action dev="JH" type="fix" fixes-bug="14977" due-to="Tony Culshaw" due-to-email="tony@cultech.com.au">
+    Fixed NPE in SQLTransformer.serializeData()
+  </action>
+  <action dev="JH" type="add" fixes-bug="20477" due-to="Arje Cahn" due-to-email="arje@hippo.nl">
+   Added cHTML/iMode "Hello World!" sample (provided by Arje Cahn)
+  </action>
+  <action dev="BRD" type="update">
+    Upgraded Xalan (includes XSLTC) from a CVS snapshot (20030506) to version 2.5.1.
+  </action>
+  <action dev="SW" type="update">
+    Updated ParanoidCocoonServlet, which is now an easy solution to the
+    well-known endorsed library problem (incompatible version of Xalan in
+    Cocoon and in JDK 1.4+).
+  </action>
+  <action dev="DC" type="fix" fixes-bug="14327">
+    Encoding-related change to the JSP engine: the response charset is now
+    retrieved from the Content-Type, and if not found ISO-8859-1 is used as
+    default (previously UTF-8 was the default).
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="11533">
+    The deprecated source implementations are now wrapped by proxies.
+    Modified patch from Jens Lorenz (jens.lorenz@interface-business.de)
+  </action>
+  <action dev="JH" type="fix" fixes-bug="15302">
+   For non-existent files XSPUtil.relativeFilename() now throws FileNotFoundException instead of NPE.
+  </action>
+  <action dev="JH" type="add" fixes-bug="13559" due-to="Robert E. Parrott" due-to-email="parrott@fas.harvard.edu">
+    Getter for jxcontext_ property added for subclassing reasons.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="17623" due-to="Alex Romayev" due-to-email="alex@romayev.com">
+    Fixing incorrect caching behaviour when internal pipelines are used.
+  </action>
+  <action dev="JT" type="fix">
+    Command-line will no longer add a 'null' suffix to files with an unknown MIME type.
+  </action>
+  <action dev="CZ" type="add">
+    The object model and the components stored in the object model are now available
+    via the component context.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="20159" due-to="Hugh Leather" due-to-email="hughleat@hotmail.com">
+   Logicsheets:
+   Changed scope of and renamed temporary 'soap:call' XScript variable in &lt;soap:call&gt;.
+   Fixed compilation problem with &lt;xscript-get as="object"&gt; expression.
+  </action>
+  <action dev="BRD" type="add" fixes-bug="19894" due-to="Michael Enke" due-to-email="michael.enke@wincor-nixdorf.com">
+    I18nTransformer: support a currency attribute on i18n:number. This allows
+    to take the currency symbol and formatting from one locale and the decimal
+    and grouping separation symbols from another locale.
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="19881" due-to="Michael Enke" due-to-email="michael.enke@wincor-nixdorf.com">
+    Fixed synchronisation problem in I18nTransformer when retrieving catalogues.
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="19423, 15525">
+    Improved XPointer support in the XIncludeTransformer. Meanwhile improved the way xml:base
+    attributes are handled, added support for the xi:fallback element, do XInclude processing
+    on included content, and added XInclude samples.
+  </action>
+  <action dev="BRD" type="update" fixes-bug="15312" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
+    Dispose the parent Component Manager if it implements Disposable. Happens when the
+    Cocoon servlet shuts down or when Cocoon is reloaded.
+  </action>
+ </release>
+ <release version="2.1m2" date="May 20 2003">
+  <action dev="SMS" type="update">
+   Changed namespace for the RequestGenerator to 'http://apache.org/cocoon/request/2.0'.
+  </action>
+  <action dev="SMS" type="update">
+   Changed namespace for XMLForm components to 'http://apache.org/cocoon/xmlform/1.0'.
+  </action>
+  <action dev="SMS" type="update" fixes-bug="19786" due-to="Torsten Knodt" due-to-email="torstenknodt@datas-world.de">
+   Extended the ExtendedXLinkPipe to be more extensible. Prepared is html and p3p.
+  </action>
+  <action dev="SMS" type="update" fixes-bug="14986" due-to="Michael Homeijer" due-to-email="m.homeijer@devote.nl">
+   Patch velocity generator, so that the scope of objects can be specified (request, session, sitemap).
+  </action>
+  <action dev="GR" type="update" fixes-bug="19978" due-to="Ciro Mondueri" due-to-email="cmr@adinet.com.uy">
+   Fixed namespace handling in XMLDBSource.
+  </action>
+  <action dev="VG" type="add" fixes-bug="16003">
+   Added XHTML 1.1 DTD to the entity catalog. Added XHTML 1.1 serializer into the sitemap.
+   Explained different XHTML 1.0 serializer options.
+  </action>
+  <action dev="SMS" type="update" fixes-bug="18466" due-to="Yury Mikhienko" due-to-email="yuryx@mobicomk.donpac.ru">
+   Enable the LDAPTransformer to obtain attribute values from LDAP using various encoding
+   schemes for stored values.
+  </action>
+  <action dev="SMS" type="update" fixes-bug="19885" due-to="Torsten Knodt" due-to-email="torstenknodt@datas-world.de">
+   Cleaned up MIMEUtils.
+  </action>
+  <action dev="SW" type="update">
+   The DirectoryGenerator is now cacheable. A new "refreshDelay" parameter defines the delay between two checks
+   on the filesystem for modified files.
+  </action>
+  <action dev="TC" type="add" fixes-bug="19772" due-to="Daniel Fagerstrom" due-to-email="danielf@nada.kth.se">
+   Added STX block. (alternative to XSLT)
+  </action>
+  <action dev="VG" type="fix" fixes-bug="19526" due-to="Tony Collen" due-to-email="tc@hist.umn.edu">
+   Throw InvalidContinuationException when flow continuation is not found or not valid,
+   instead of forwarding to hard-coded 'invalidContinuation' page.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="14564">
+   Fixing NPE in JspEngineImpl.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="14117">
+   Obtain handler and application name from parameters for internal requests if
+   handler could not be resolved from the request object.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="17612">
+   Delaying getting of the output stream from the http response until it is really needed.
+  </action>
+  <action dev="CZ" type="add">
+    Adding new portal framework.
+  </action>
+  <action dev="BRD" type="update">
+    Updated Xalan to a CVS snapshot (2003-05-06), fixes bug with incorrect
+    namespaces in endElement SAX events.
+  </action>
+  <action dev="BD" type="add" fixes-bug="16523" due-to="Bart Guijt" due-to-email="b.guijt1@chello.nl">
+   QDox block added, parses Java source code and javadoc tags, includes samples.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="19683">
+   Fixing the problem with eating spaces in custom transformers.
+  </action>
+  <action dev="BD" type="add" fixes-bug="19619" due-to="Joerg Heinicke" due-to-email="joerg.heinicke@gmx.de">
+   Hello World sample added for the SWF block (although page2swf.xsl contains incomplete font definition).
+  </action>
+  <action dev="CZ" type="update">
+   Redesign/modularizing the authentication and session framework.
+  </action>
+  <action dev="GR" type="add" fixes-bug="19206" due-to="Miles Elam" due-to-email="miles@geekspeak.org">
+    Added 304 support to cacheable pipelines
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="17763">
+    DTD comment events are now dropped after parsing by default.
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="13186">
+    When an exception occured in a pipeline containing an XSL, the contents of
+    the pipeline was appended to the error page. Now this only happens anymore
+    when the incremental-processing of Xalan is enabled (which is unavoidable
+    for now).
+  </action>
+  <action dev="BRD" type="fix" fixes-bug="13186">
+    Disabled incremental-processing of Xalan by default.
+  </action>
+  <action dev="BD" type="add">
+    standalone-demo build target added
+  </action>
+  <action dev="BD" type="fix">
+    cacheable.xsp sample reworked, did not work in M1
+  </action>
+  <action dev="BD" type="fix">
+    new FOP serializer samples, accessible from the "blocks with samples" page
+  </action>
+  <action dev="TC" type="fix" fixes-bug="15820" due-to="John R. Daily" due-to-email="john@geekhavoc.com">
+    Fixed NPE if ESQL does not get a connection
+  </action>
+  <action dev="TC" type="fix" fixes-bug="14286" due-to="Geoff Howard" due-to-email="javageoff@yahoo.com">
+    Fixed SQL injection vulnerability of DatabaseAuthenticatorAction
+  </action>
+  <action dev="TC" type="fix" fixes-bug="18547" due-to="Neil Bacon" due-to-email="nbacon@pinnaclesoftware.com.au">
+    ESQL "Auto" support for sybase ASE. New database detection method.
+  </action>
+  <action dev="CZ" type="fix">
+    Removing dependency from the Cocoon core to JTidy.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="18683">
+    Sync XML:DB source with 2.0 branch: Conect to the XML:DB once, from the
+    XMLDBSourceFactory.
+  </action>
+ </release>
+ <release version="2.1-M1" date="April 29 2003">
+  <action dev="VG" type="fix" fixes-bug="10242">
+    TextSerializer now can handle absence of root element in the incoming XML.
+  </action>
+  <action dev="SW" type="add">
+    'handle-errors' sections in the sitemap now do not have an implicit
+    generator: any generator can now be used, whereas previously it was
+    implied and produced an XML representation of the error).
+    <br/>
+    To ensure backwards compatibility, 'handle-errors' sections can have a
+    'type' attribute to continue the implicit-generator behaviour, but are
+    now to be considered as deprecated.
+    <br/>
+    A new ExceptionSelector is also available to drive the error-handling
+    pipeline constuction depending on the error type.
+  </action>
+  <action dev="TC" type="update">
+    EsqlConnection no longer implements java.sql.Connection.
+    No jvm dependency any more.
+  </action>
+  <action dev="CZ" type="update">
+    Refactored SitemapConfigurable. A sitemap configurable component can
+    now be ThreadSafe and has access to the sitemap configuration at any time
+    through a SitemapConfigurationHolder.
+  </action>
+  <action dev="CZ" type="update">
+    Correcting method names of new CacheableProcessingComponent interface.
+    It's now possible to write components that support the 2.0.x and the
+    2.1.x caching algorithm.
+  </action>
+  <action dev="CZ" type="update">
+    Setting minimum JDK version from 1.2 to 1.3.
+  </action>
+  <action dev="CZ" type="update">
+   Updating to the latest official Avalon and Excalibur releases.
+  </action>
+  <action dev="NKB" type="add" fixes-bug="17671" due-to="Upayavira" due-to-email="uv@upaya.co.uk">
+    Enhancements to the CLI to reduce the number of times it 
+    needs to render a page. Using the option to prevent checking of extensions, it 
+    is now possible to generate a site generating each page only once. 
+
+    Allow the configuration of the CLI using 
+    an xconf file.
+
+    Switch cli to using the Jakarta Commons CLI package.
+  </action>
+  <action dev="MC" type="add">
+   Added support for the LogFactor5 graphical log event browser.
+  </action>
+  <action dev="JT" type="fix">
+   XMLFileModule: rename 'cachable' to 'cacheable' in configation.
+  </action>
+  <action dev="VG" type="update">
+    FOP serializer's &lt;user-config&gt; relative path now resolves relative
+    to sitemap's directory. All Cocoon URIs are supported too.
+  </action>
+  <action dev="PF" type="fix"> 
+    The CVS repository for Cocoon 2.1 is now called "cocoon-2.1" (no branches, just HEAD).
+  </action>
+  <action dev="TC" type="add">
+   Added support for Pervasive db to ESQL.
+  </action>
+  <action dev="SMS" type="fix" fixes-bug="16695" due-to="Leszek Gawron" due-to-email="ouzo@vip.net.pl">
+   Changed category for Log logicsheets.
+  </action>
+  <action dev="GR" type="add">
+   Extended the HTMLGenerator so that it can handle HTML snippets
+   provided as request parameter or as POST data, passing them through
+   Tidy to ensure well-formedness.
+  </action>
+  <action dev="CZ" type="add">
+   New caching cinclude transformer. The cinclude transformer can now cache
+   the aggregated content for a distinct period of time. In addition it can
+   fetch the content in parallel or pre-emptive.
+  </action>
+  <action dev="PF" type="update">   
+   The repository for Cocoon 2.1 is now called "cocoon-2-historical" (the old      
+   "xml-cocoon2" repository is deprecated).     
+  </action>   
+  <action dev="PF" type="update">
+    The "javadocs" build target now links offline to the appropriate JavaDOC
+    repositiories available on the web.
+  </action>
+  <action dev="PF" type="add">
+    Added proxy generator block for remote HTTP-base generation of XML
+    (will deprecate the WSProxyGenerator).
+  </action>
+  <action dev="PF" type="add">
+    Added subrequest processing via the sitemap to the Cocoon flow.
+  </action>
+  <action dev="SM" type="update">
+    Moved the asciiart stuff from the scratchpad into a block.
+  </action>
+  <action dev="SM" type="update">
+    Moved the SendmailAction and the mail-related stuff from the scratchpad
+    into the mail block.
+  </action>
+  <action dev="SM" type="update">
+    Removed the MaybeUploadRequestFactory since we have our own and the less
+    dependencies the better
+  </action>
+  <action dev="CZ" type="update">
+    Moving core properties of the build system into a separate properties file.
+  </action>
+  <action dev="GR" type="add">
+    The "expires" pipeline parameter is honored even by the internal Cocoon
+    cache, i.e. the caching algorithms are overridden if an expires
+    parameter is present and still fresh.
+  </action>
+  <action dev="TC" type="fix" fixes-bug="15401" due-to-email="maciejka@tiger.com.pl">
+    Set "Last-Modified" header
+  </action>
+  <action dev="TC" type="fix" fixes-bug="17324" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
+    Fixed the ResourceExistAction to return null instead of EMPTYMAP on
+    not existing resources.
+  </action>
+  <action dev="SM" type="update">
+    Refactored the build system.
+  </action>
+  <action dev="TC" type="fix" fixes-bug="17261" due-to-email="phantom@jhu.edu">
+    Put the exceptions into esql namespace so the variable named "e" is still
+    available in XSP.
+  </action>
+  <action dev="DC" type="update" fixes-bug="17127" due-to="Bruno Dumon" due-to-email="bruno@outerthought.org">
+    Now i18n transformer has support for multiple catalogues and can now use
+    "input modules" in catalogue name and catalogue location. Fixed bug with
+    getting content for the translation key in certain circumstances. Fixed
+    bug with accidental removal of translation text in certain circumstances.
+  </action>
+  <action dev="PAR" type="add">
+    Optional 'global' parameter on map:redirect-to when giving a URI.
+  </action>
+  <action dev="PAR" type="update">
+    Make getParentComponentManager in CocoonServlet protected so alternate methods to getting the
+    parent CM can be used.
+  </action>
+  <action dev="PAR" type="add">
+    Optional "depth" attribute on the cocoon log format to control how deep to go in stacktrace
+    reporting.
+  </action>
+  <action dev="PAR" type="fix">
+    Do not specify a default to the "class-loader" parameter in JavaLanguage
+  </action>
+  <action dev="PAR" type="add">
+    Add a NonStaticClassLoaderManager that does not keep internal static variables. Useful when
+    putting cocoon.jar outside the WEB-INF/lib directory and have multiple XSP pages of the same
+    name in multiple webapps
+  </action>
+  <action dev="VG" type="fix" fixes-bug="16267">
+    Improve default exception handling behavior in CocoonServlet: show exception stacktrace
+    only when log level is INFO or DEBUG, and add exception message to "Not Found" page.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="16264">
+    Use Environment.tryResetResponse() instead of HttpServletResponse.reset() in CocoonServlet
+    to avoid IllegalStateException if response was already committed.
+  </action>
+  <action dev="VG" type="update" fixes-bug="11861" due-to="Michael Homeijer" due-to-email="m.homeijer@devote.nl">
+    Add support for Collection objects to the CastorTransformer.
+    Upgrade to the SAX2 API, improve logging, and use SourceResolver to load mappings.
+  </action>
+  <action dev="VG" type="update" fixes-bug="15748" due-to="Upayavira" due-to-email="uv@upaya.co.uk">
+    Refactor Main class into two classes, Main and CocoonBean. CocoonBean provides simple
+    programmatic interface to the Cocoon.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="16490" due-to="Upayavira" due-to-email="uv@upaya.co.uk">
+    Add image dimensions to the ImageReader's cache key.
+  </action>
+  <action dev="CH" type="add" due-to="Geoff Howard" due-to-email="cocoon@leverageweb.com">
+    modular.DatabaseActions: added ability to store FileParts from uploads to
+    "ascii", "clob", "blob", and "binary" columns. Added getSize() method to FilePart.
+  </action>
+  <action dev="CH" type="add" fixes-bug="9075"
+          due-to="Michael Gerzabek" due-to-email="michael.gerzabek@at.efp.cc">
+    SAP R/3 connectivity components added.
+  </action>
+  <action dev="CH" type="update">
+    Moved block samples to own category, modified build system to merge
+    .xsample files to block-samples.xml.
+  </action>
+  <action dev="CZ" type="update">
+    Renaming components section for pipeline implementations to "pipes" and "pipe".
+  </action>
+  <action dev="CZ" type="update">
+    Updated to latest versions of excalibur sourceresolve and xmlutil.
+  </action>
+  <action dev="SMS" type="update" due-to="Michael Enke"
+          due-to-email="michael.enke@wincor-nixdorf.com" fixes-bug="14700">
+    Patch IOUtils to recognize '..' in Path
+  </action>
+  <action dev="SW" type="update">
+    The "mime-type" attribute on &lt;map:read&gt; and &lt;map:serialize&gt; is now
+    expanded if it contains sitemap variables.
+  </action>
+  <action dev="CH" type="add">
+    InputModule to access XMLForm instances.
+  </action>
+  <action dev="CH" type="add">
+    (modular) DatabaseAction: added ability to use arbitrary path separators
+    instead of "." (e.g. "/"), added ability to count rows from 1, added
+    documentation.
+  </action>
+  <action dev="CH" type="add">
+    Created additional isolation level for some OutputModules.
+  </action>
+  <action dev="CH" type="add"
+	  due-to="Jeff Turner"
+	  due-to-email="jefft@apache.org"
+      fixes-bug="15611">
+    Added LinkRewriterTransformer.
+  </action>
+  <action dev="OP" type="add"
+	  due-to="Michael Melhem"
+	  due-to-email="michaelm@ffzd0yt3.bank.dresdner.net">
+    Added support for expiring continuations.
+  </action>
+  <action dev="OP" type="update" due-to="Ugo Cei" due-to-email="u.cei@cbim.it">
+    Fixed the way complex Java objects are passed from the control
+    flow to the XSP view layer.
+  </action>
+  <action dev="CZ" type="update">
+    Added ant-contrib library with some optional ant tasks and started cleaning
+    up the build system.
+  </action>
+  <action dev="SW" type="update">
+    ZipArchiveSerializer now accepts inline content for entries of the zip archive
+    and not only source URLs.
+  </action>
+  <action dev="TC" type="update">
+    ImageReader extends now ResourceReader and therefor the
+    "expire-time" parameter is now "expires". Also removed the
+    setting of the byte range header for on-the-fly images.
+    (did not support it anyway)
+  </action>
+  <action dev="TC" type="update">
+    Moved the byte range support from the ByteRangeReader in scratchpad
+    into the ResourceReader. Added the optional parameters "buffer-size"
+    and "byte-range". Byte range support is enable by default.
+  </action>
+  <action dev="TC" type="update">
+    Move the image inspection into a ImageUtils class
+  </action>
+  <action dev="TC" type="update">
+    Major cleanup of the ImageDirectoryGenerator, removed the RuntimeExceptions,
+    added support for the JPEG comment marker
+  </action>
+  <action dev="BH" type="add">
+    Added reader user documentation section, including readers documentation;
+    added BrowserSelector, and HostSelector documentation, plus template-selector
+    usable as template for writing more selector docs;
+    added WildcardURIMatcher, and WildcardHeaderMatcher, plus template-matcher
+    usable as template for writing more matcher docs.
+  </action>
+  <action dev="TC" type="fix" due-to="Antonio Gallardo" due-to-email="agallardo@agsoftware.dnsalias.com">
+    Fixed the esql:more-results tag for non-JDBC limit methods
+  </action>
+  <action dev="NKB" type="update">
+    Moved all classes marked @deprecated to the src/deprecated directory.
+    Since Many classes are still a dependency for the core, while this is fixed
+    the build process still copies them with the core during compilation.
+    To compile with the deprecation separation, do "build -Ddeprecate=true".
+  </action>
+  <action dev="NKB" type="update">
+    Moved code to new blocks: profiler, velocity.
+  </action>
+  <action dev="BH" type="update">
+    Update XML Serializer, HTML Serializer , and Text Serializer documentation,
+    added XHTML Serializer documentation in the serializer user documentation section.
+  </action>
+  <action dev="BH" type="update">
+    Update SVG Serializer, SVG JPEG, and SVG PNG documentation, added
+    SVG TIFF documentation in the serializer user documentation section.
+  </action>
+  <action dev="BH" type="fix" due-to-email="jefft@apache.org"
+   due-to="Jeff Turner" fixes-bug="15609">
+   XMLFileModule checks result of SitemapSource.getValidity() as it may return null
+  </action>
+  <action dev="DC" type="add">
+   Integrated the validation targets into the build ("validate-config" and
+   "validate-xdocs") also still available at the command-line. Validation
+   happens automatically unless you switch it off. See document
+   <link href="userdocs/concepts/validation.html">XML Validation Facilities</link>.
+  </action>
+  <action dev="CH" type="fix" due-to-email="michael.enke@wincor-nixdorf.com"
+   due-to="Michael Enke" fixes-bug="15064">
+   Postgresql 7.3: LIMIT x,y no longer supported. Added new class for
+   postgresql-old limit method that still uses LIMIT x,y while postgresql
+   uses the LIMIT x OFFSET y syntax which has been used by postgresql for
+   some time now.
+  </action>
+  <action dev="NKB" type="update">
+    Created .src/deprecated directory to contain all deprecated classes.
+    This will help in maintaining Cocoon free from deprecated classes.
+    Started by moving some deprecated caching stuff.
+  </action>
+  <action dev="NKB" type="update">
+    Moved code to new blocks: html, php, lucene, bsf
+  </action>
+  <action dev="NKB" type="update">
+    Now module.xml is named project.info.xml
+  </action>
+  <action dev="CH" type="fix" due-to-email="frank.ridderbusch@gmx.de"
+   due-to="Frank Ridderbusch" fixes-bug="15005">
+   Extension to sendmail.xsp: lists for sendmail:cc
+  </action>
+  <action dev="CH" type="fix" due-to-email="artur@digitalfairway.com"
+   due-to="Artur Bialecki" fixes-bug="14835">
+   Added container/form-encoding init-params to web.xml
+  </action>
+  <action dev="CH" type="fix" due-to-email="stuart.roebuck@adolos.co.uk"
+   due-to="Stuart Roebuck" fixes-bug="15136">
+   Fixing various inefficient logging calls.
+  </action>
+  <action dev="CH" type="update">
+    Make all "meta" modules ThreadSafe
+  </action>
+  <action dev="KP" type="fix" fixes-bug="15431" due-to="Michael Gerzabek" due-to-email="michael.gerzabek@gmx.net">
+    Perform correct source resolution in XMLResourceBundle.
+    Now i18n transformer can obtain dictionaries using any supported source (e.g. 'cocoon:/').
+  </action>
+  <action dev="KP" type="update">
+    Added Greek translation, thanks to Stavros Kounis (gounis.at.osmosis.gr).
+    Corrected Armenian translation to be real Unicode and be
+    readable without additional plug-ins (on Win).
+  </action>
+  <action dev="GR" type="update">
+    Updated the XML:DB Source. Now it will accept, in cocoon.xconf,
+    optional authentication attributes, called "user" and "password".
+  </action>
+  <action dev="CH" type="add">
+    New transformer extracts fragments to documents and stores them using an
+    OutputModule. Tags that start fragment are configurable.
+  </action>
+  <action dev="CH" type="add">
+    New output module puts everything in a map in a request attribute.
+  </action>
+  <action dev="CH" type="update">
+    AbstractJXPathModule / JXPathMetaModule default to lenient mode i.e. do not
+    throw an exception on unsupported attributes but return null instead. Made
+    this a configuration option.
+  </action>
+  <action dev="CH" type="add">
+    XMLMetaModule returns DocumentWrapper instead of String.
+  </action>
+  <action dev="CH" type="add">
+    Wrapper for org.w3c.dom.Document that implements XMLizable and provides
+    a useful toString() method.
+  </action>
+  <action dev="CH" type="add">
+    SimpleMappingMetaModule: added feature to remove a prefix / suffix.
+  </action>
+  <action dev="CH" type="fix">
+    "meta" input modules: configuring a different module locally did not
+    override the default one in all circumstances.
+  </action>
+  <action dev="CH" type="fix">
+    input.xml: renaming mixed up called template names from logicsheet-util.xsl
+  </action>
+  <action dev="CH" type="fix">
+    SimpleFormTransfomer: fixed error tags when no validation data available.
+  </action>
+  <action dev="NKB" type="update">
+    Moved the sample classes and confs to the samples block.
+  </action>
+  <action dev="TC" type="update">
+    Cleaned up the esql logicsheet and helper classes.
+    Created classes for db specific stuff.
+    Improved the limit/paging features.
+  </action>
+  <action dev="NKB" type="update">
+    Moved the jsp components to the jsp block, using hand-made-to-be-cleaned
+    mock objects for the weblogic specific imports.
+    Had also to move some definitions from the cocoon roles and xconf file.
+    This moving of the blocks is indeed cleaning the core! :-)
+  </action>
+  <action dev="NKB" type="update">
+    Updated block build system to compile and use mock objects in
+    the "mocks" subdir of the blocks if present.
+  </action>
+  <action dev="CH" type="add">
+   New InputModule to access contents of
+   an XMLFile using JXPath, based on patch from Jeff Turner (jefft.at.apache.org).
+  </action>
+  <action dev="NKB" type="update">
+    Moved endorsed libs in ./lib/endorsed, so that they can be added in the build file
+    easily as java jvm args, or in the future copied to the webserver or Java endorsed dir.
+    Currently it enables Jetty to run easily in 1.4 JVMs without need to copy libs to
+    the endorsed dir.
+  </action>
+  <action dev="NKB" type="add">
+    Added jetty webserver for fast and easy Cocoon test and evaluation.
+    To run launch "build run" and point the browser to http://localhost:8888/
+    Since it seems there is a bug somewhere, ATM point to
+    http://localhost:8888/documentation/index.html to see the page.
+  </action>
+  <action dev="NKB" type="update">
+    Removed ./tools/build-i.xml and moved the interactive targets in main build.
+    Removed ./tools/build-s.xml and removed all references to scratchpad builds (not used).
+  </action>
+  <action dev="NKB" type="update">
+    Removed JTidyTask that was not used and switched to using the Ant input task from UserInputTask.
+  </action>
+  <action dev="NKB" type="fix" fixes-bug="14795">
+    Added useexternalfile="yes" attribute makes Ant collect all package names in a temporary
+    file and give that to Javadoc, thus going round the Wintel long command truncation issue.
+  </action>
+  <action dev="NKB" type="update">
+   Moved LDAPTransformer to a block called "naming".
+  </action>
+  <action dev="DC" type="update" fixes-bug="14581" due-to="Colin Paul Adams" due-to-email="colin@colina.demon.co.uk">
+   New build target "validate-schematron" to conduct build-time validation
+   (currently only the sitemaps) using RELAX NG grammars with embedded
+   Schematron rules.
+   This uses <link href="http://www.ascc.net/xml/schematron/">Schematron</link>
+   stylesheets from Rick Jelliffe and Academia Sinica Computing Center, Taiwan.
+  </action>
+  <action dev="DC" type="add" due-to="Colin Paul Adams" due-to-email="colin@colina.demon.co.uk">
+   Enhanced the RELAX NG grammar for sitemap.xmap files and added embedded
+   Schematron rules.
+  </action>
+  <action dev="BH" type="fix">
+   Fix setOutputStream throwing IOExeption in XMLSerializer, and TextSerializer.
+  </action>
+  <action dev="NKB" type="fix">
+   Make the CLI report errors correctly to the screen when a page generation fails.
+  </action>
+  <action dev="NKB" type="update" fixes-bug="12975" due-to="Philipp Schmidt" due-to-email="Philipp.Schmidt@it-care.de">
+   Moved POI to a block. Applied patch without moving the core elementprocessor
+   classes in the block.
+  </action>
+  <action dev="NKB" type="fix" due-to="Hussayn Dabbous" due-to-email="dabbous@saxess.com">
+    When a part of a pipeline aggregation fails, cocoon will no more silently return
+    without reporting an error.
+    Now, upon request of an erroneous page, the result is that I can see all parts, that have been processed so
+    far on the screen and I see the error infos positioned at the bottom of the page.
+  </action>
+  <action dev="JQ" type="update">
+   Added 'query' sitemap parameter to SearchTransformer. Added configuration parameters to
+   SimpleLuceneXMLIndexerImpl for choosing the content-view and which tags you want stored
+   as fields by the indexer. Added field storage implementation to LuceneIndexContentHandler.
+  </action>
+  <action dev="DC" type="add">
+   New build target "validate-xdocs" to conduct build-time validation of core
+   xml documentation (call it manually with:
+   <code>./build.sh validate-xdocs</code>).
+  </action>
+  <action dev="KP" type="add">
+      Added SystemPropertyModule input module to enable environment variables
+      in sitemap attributes. E.g.:
+      &lt;map:transform src="{system-property:user.home}/style.xsl"&gt;
+  </action>
+  <action dev="KP" type="add">
+      Added resource bundle component interfaces to allow different
+      implementations to be used for i18n.
+  </action>
+  <action dev="KP" type="update" due-to="Matthieu Sozeau" due-to-email="mattam@netcourrier.com">
+      Extended implementation of i18n transformer to allow markup in translations,
+      inline translations (conditional processing) and named parameters.
+      Now i18n transformer is cachable, this will affect on dynamic markup,
+      e.g. i18n:date-time.
+
+      WARN: The namespace of i18n markup is changed to "http://apache.org/cocoon/i18n/2.1".
+      i18n samples are updated to demonstrate the new features.
+  </action>
+  <action dev="IAI" type="update">
+    XMLForm Howto to reflect the fact that there is no
+    need for manual handling of unchecked check-boxes.
+  </action>
+  <action dev="IAI" type="update">
+    Updated Xalan to 2.4.1
+  </action>
+  <action dev="TC" type="update">
+    Renamed the AbstractMethodAction into AbstractMultiAction and
+    moved it from scratchpad into the maintrunk. Using it helps
+    reducing the amount of custom actions for a webapp.
+  </action>
+  <action dev="DC" type="add" due-to="Colin Paul Adams" due-to-email="colin@colina.demon.co.uk">
+   Added RELAX NG grammar for sitemap.xmap files and removed old draft sitemap
+   DTD.
+  </action>
+  <action dev="CH" type="update">
+   Started moving database related stuff (actions, transformers, readers) as well as HSQLDB to a new blocks.
+   Samples have not yet moved to new block, datasource declaration has.
+  </action>
+  <action dev="DC" type="update" due-to="Colin Paul Adams" due-to-email="colin@colina.demon.co.uk">
+    Updated the draft DTD for sitemap.
+  </action>
+  <action dev="KP" type="add">
+    Added a draft W3C XML Schema for sitemap.
+  </action>
+  <action dev="NKB" type="remove">
+    Removed deprecated notification classes in org.apache.cocoon.* and in
+    org.apache.cocoon.sitemap.* and the deprecated methods in
+    org.apache.cocoon.components.notification.Notifier.
+  </action>
+  <action dev="TC" type="add">
+    Added support for sitemap variable anchors {#name:variable}.
+    This introduces a new "name" attribute for matchers and actions
+  </action>
+  <action dev="TC" type="add">
+    Added support for direct access of root level sitemap variables {/1}
+  </action>
+  <action dev="SW" type="add" fixes-bug="12780" due-to="Michael Melhem" due-to-email="Michael.Melhem@managesoft.com">
+   New pipeline hint attribute to allow pipeline components (i.e. map:generate, map:transform
+   and map:serialize) to hold some pipeline-specific parameters. The first usage of this feature
+   is to drive manual cache points for the CachingPointProcessingPipeline.
+  </action>
+  <action dev="GP" type="update">
+   Removed all references to Loggable in favor of LogEnabled (this includes
+   references to common abstract classes as AbstractLoggable and
+   AbstractDualLogEnabled)
+  </action>
+  <action dev="MC" type="update">
+   Added support for using Avalon components as Axis service objects
+   with the AxisRPCReader.
+  </action>
+  <action dev="CZ" type="update">
+   Enhancing cinclude transformer with configuration possiblities, lie
+   POST requests and flexible parameter handling.
+  </action>
+  <action dev="SMS" type="update" fixes-bug="12799" due-to="Philipp Schmidt" due-to-email="Philipp.Schmidt@it-care.de">
+   Enabled the RTF serializer and SWF serializer as block.
+  </action>
+  <action dev="SMS" type="update">
+   Enabled the chaperon text parser as block.
+  </action>
+  <action dev="NKB" type="add">
+   Added initial support for compilation of Cocoon blocks, and migrated
+   Fop and Batik classes and configuration to the src/blocks dir.
+   Blocks that need Avalon components not yet supported.
+  </action>
+  <action dev="MC" type="add">
+   Added support for Avalon Excalibur instrumentation.
+  </action>
+  <action dev="CZ" type="add">
+   Added CascadingIOException to wrap other exceptions when an IOException is thrown.
+  </action>
+  <action dev="CZ" type="add">
+   Added configurable buffering of the output. This removes all the problems
+   with error handler and already committed responses etc. A new pipeline
+   parameter "outputBufferSize" controlls the behaviour.
+  </action>
+  <action dev="MC" type="add" fixes-bug="12304">
+    Added AxisRPCReader to scratchpad. This reader essentially allows you
+    to serve SOAP requests from your Cocoon application. Sample webapp with
+    status page is also included.
+  </action>
+  <action dev="MC" type="update" fixes-bug="12236">
+    Updated Jakarta Commons HTTP client jar. Fixes problems with SOAP XSP
+    taglib.
+  </action>
+  <action dev="MC" type="add" fixes-bug="12122">
+    Added new ComposerReader class with various Reader refactorings.
+  </action>
+  <action dev="OP" type="update" due-to="Ramy Mamdouh" due-to-email="ramy@imkenberg.net">
+    Don't explicitly redirect to the cocoon:/ pipeline in
+    AbstractInterpreter.forwardTo(), do it instead in
+    system.js.
+  </action>
+  <action dev="OP" type="update" due-to="Per-Olof Noren" due-to-email="pelle@alma.nu">
+    Fixed code generation problem in the jpath.xsl. Patch from.
+  </action>
+  <action dev="OP" type="add">
+   New user login and preferences sample to show the control flow
+   layer.
+  </action>
+  <action dev="OP" type="update">
+   The control flow layer can now save the global JavaScript scope in
+   the servlet session object. This allows the value of global
+   variables to be saved between different top-level function
+   invocations.
+  </action>
+  <action dev="SMS" type="update">
+   Profiler components extended to store intermediate SAX
+   fragments, and also the some informations about the
+   environment, thanks to Bruno Dumon.
+  </action>
+  <action dev="NKB" type="update">
+   Made Commandline Cocoon (Main.java) verbose output (-V option)
+   less cluttered and grouped the log and output methods.
+  </action>
+  <action dev="NKB" type="update">
+   Commandline Cocoon (Main.java) now doesn't stop anymore on broken links,
+   but inserts an error page instead and correctly notifies it in the
+   broken links file if requested.
+  </action>
+  <action dev="SMS" type="update">
+   Add the methods 'copy', 'move' and 'delete' to the WriteableSource
+   interface.
+  </action>
+  <action dev="SMS" type="add">
+   Added the Chaperon components, examples and docs into the main tree.
+  </action>
+  <action dev="SMS" type="update">
+    Replaced implementation from Loggable by LogEnabled to use
+    the Avalon Logger instead of the LogKit Logger.
+  </action>
+  <action dev="TC" type="add">
+    Moved the SWF generator and serializer from the scratchpad into the main trunk.
+    Added a hello-world sample for SWF
+  </action>
+  <action dev="TC" type="add">
+    Added a new PDF serializer. iText seems to be good and fast alternative with many features
+    iText also provides support for RTF and HTML
+  </action>
+  <action dev="TC" type="update">
+    Updated xerces, xalan, xml-apis jars to their latest CVS versions. Especially due to some xerces bugs in the 2.0 release
+  </action>
+  <action dev="NKB" type="update">
+    Made docs target use logging to file via the logkit.xconf and added informative System.out messages for the
+    commandline cocoon (Main.java).
+  </action>
+  <action dev="CZ" type="update" due-to="Leo Sutic" due-to-email="leo.sutic@inspireinfrastructure.com">
+    Allow parent component manager to be LogEnabled.
+  </action>
+  <action dev="CZ" type="add" fixes-bug="10284" due-to="Michael Melhem" due-to-email="michaelm@bank.dresdner.net ">
+    Extended pipeline handling for CachingPoint caching algorithm.
+  </action>
+  <action dev="NKB" type="update" due-to="Andrew C. Oliver" due-to-email="acoliver@apache.org">
+    New samples for HSSF Serializer.
+  </action>
+  <action dev="NKB" type="update" fixes-bug="8058" due-to="Andrew C. Oliver" due-to-email="acoliver@apache.org">
+   This adds get-bigdecimal to ESQL (see java.math.BigDecimal for details as to why
+   you need BigDecimals).
+  </action>
+  <action dev="NKB" type="update" fixes-bug="8056" due-to="Andrew C. Oliver" due-to-email="acoliver@apache.org">
+   The SQL Transformer does those nastly looking exponents for large values.  By
+   calling "getBigDecimal()" instead of getObject we can call an overridden
+   toString and avoid those nasty things.
+  </action>
+  <action dev="VG" type="add">
+    Python language support for the XSP pages.
+  </action>
+  <action dev="VG" type="add">
+    Python programming language using jython interpreter.
+  </action>
+  <action dev="SW" type="add" due-to="Marcus Crafter" due-to-email="crafterm@apache.org">
+    New SwitchSelector that uses a common context object for all map:when tests.
+  </action>
+  <action dev="SM" type="fix">
+    Fixed the use of roles in TraxTransformer which was incorrect. Now it sets
+    the factory explicitly in the XSLTProcessor component without using
+    any special avalon component management capacity.
+  </action>
+  <action dev="SM" type="fix">
+    Uniformed the configurations used by the Avalon XSLTProcessor component
+    and the TraxTransformer to specify the TransformationFactory to use.
+  </action>
+  <action dev="SMS" type="update" fixes-bug="9521" due-to="Andrew Timberlake" due-to-email="andrew@timberlake.co.za">
+   Applied patch to add javascript support for the mozilla browser for transforming xml
+   to html.
+  </action>
+<!--  <action dev="SMS" type="update" fixes-bug="5973" due-to="Sven Kitschke" due-to-email="kicke@web.de">
+   Resolved the problem of the additional comments from used DTD's, thanks to Sven Kitschke.
+   Problem was located in IncludeXMLConsumer and XMLByteStreamCompiler.
+  </action> -->
+  <action dev="CZ" type="update">
+   The OASIS Catalog and the entities (DTDs, entity sets, etc.) have moved
+   to WEB-INF/entities and the CatalogManager.properties file has moved to
+   WEB-INF/classes
+  </action>
+  <action dev="IAI" type="add">
+   New Cocoon Generator. Allows Embedding One Web Site in Another.
+   WebServiceProxyGenerator Demo.
+  </action>
+  <action dev="IAI" type="add">
+   XMLForm framework. Allows client independent form handling.
+   See <link href="howto/xmlform-wizard/howto-xmlform-wizard.html">Documentation</link>.
+  </action>
+  <action dev="NKB" type="add" due-to="Tim Myers" due-to-email="phantom@stserv.hcf.jhu.edu">
+   Added "userhomes" in the webapp, that automounts the sitemaps
+   found in *nix user homes.
+   To remove it, just delete the dir.
+  </action>
+  <action dev="CH" type="add">
+   Added support for actions and In-/OutputModules to the JavaScript
+   Flow. Caveat: Modifications of the Redirector object are ignored.
+  </action>
+  <action dev="CH" type="add">
+   Support for writing xLOBs to database through modular.DatabaseActions. Does
+   not include a required InputModule that returns a JDBCxlobHelper to be
+   passed to the action.
+  </action>
+  <action dev="CH" type="add">
+   New DatabaseAction: DatabaseQueryAction. It works like the other modular
+   DatabaseActions but does not auto-generate the query. The query has to be
+   provided conforming to PreparedStatement syntax. Unlike the name might
+   suggest, it can be a select, update, or delete query.
+  </action>
+  <action dev="JQ" type="update">
+   Updated SourceWritingTransformer. Changed the tag set so that source:write and source:insert each share the same way of taking parameters.
+   Added results from source:insert tag like source:write.
+   Changed the implementation of the source:write tag so it now buffers to DOM Fragment like source:insert.
+   Added new tests, updated slash-edit to use new tags.
+  </action>
+  <action dev="VG" type="remove">
+   Removed (long time deprecated) matcher and selector factories. Use
+   appropriate matchers and selectors instead.
+  </action>
+  <action dev="CZ" type="update">
+   Updated the profiler code, removed the need of SAXConnectors.
+  </action>
+  <action dev="DC" type="add">
+   Encourage people to help with the refactoring of Cocoon samples.
+   Provide a
+   <link href="plan/samples.html">refactoring guidelines</link> document.
+  </action>
+  <action dev="DC" type="update">
+   Moved the old sample for Catalog Entity Resolver in to the new
+   webapp/samples structure. Added new sample for Simplified DocBook DTDs
+   configuration. Added section for other miscellaneous samples.
+  </action>
+  <action dev="NKB" type="update">
+    Moved linkstatus sample and LinkStatusGenerator to core from scratchpad;
+    added a link to test the documentation links on the Cocoon demo webapp frontpage.
+  </action>
+  <action dev="CH" type="add" due-to="Roger I Martin PhD" due-to-email="hypernexdev@hypernexinc.com">
+   ESQL: Added support for reading BLOBs from database.
+  </action>
+  <action dev="CH" type="update">
+   DatabaseActions, changed behaviour: Tables are used in order of appearance
+   in tableset, before they were used in order of appearance in tables section.
+  </action>
+  <action dev="VG" type="remove">
+   Removed XT XSLT transformer.
+  </action>
+  <action dev="CZ" type="add">
+    Added custom component configuration to map:pipelines section.
+  </action>
+  <action dev="CZ" type="add">
+    Added global parameters to map:pipelines section.
+  </action>
+  <action dev="CH" type="update">
+   Changed modules to use objectModel instead of just the request object.
+  </action>
+  <action dev="CH" type="update">
+   Modular database actions now don't inherit from original database actions
+   anymore. Some custom datatypes got lost during this process as they should
+   be handled be specialized input modules instead.
+  </action>
+  <action dev="CZ" type="add">
+    Replaced event pipeline and stream pipeline with one single component,
+    the processing pipeline. Added configurable pipelines to sitemap.
+  </action>
+  <action dev="GR" type="add">
+   Added an "expires" directive to map:pipeline in order to
+   manually set an "Expires:" HTTP header following Apache's
+   mod_expires syntax.
+  </action>
+  <action dev="JM" type="add">
+   Modified check-jars.xsl to dynamically create the jars.xml for
+   documentation.
+   Need to copy the generated file over the static placeholder...
+   Help - where to in the build.xml?
+  </action>
+  <action dev="GF" type="add" due-to="Stephan Michels" due-to-email="stephan@vern.chem.tu-berlin.de">
+   ResourceReader gets the mime type from the source now,
+   instead of declaring the mime type in the sitemap.
+  </action>
+  <action dev="CH" type="add">
+   Moved mod-db stuff from scratchpad to trunk.
+  </action>
+  <action dev="CH" type="add">
+   Util logicsheet: get-source and include-source tags. E.g. to include XHTML
+   generated by another pipeline as email.
+  </action>
+  <action dev="CH" type="fix">
+   Esql: multiple results can now have different result blocks, position
+   determines matching result position. Last one is default if more results
+   arrive. call-results now evaluated after other results to comply with JDBC
+   specs.
+  </action>
+  <action dev="NKB" type="add" due-to="Stephan Michels" due-to-email="stephan@vern.chem.tu-berlin.de">
+    Added Jakarta Slide Source components and examples in scratchpad.
+  </action>
+  <action dev="OP" type="add">
+   Added continuations-based control flow support to Cocoon. It is
+   currently based on a modified Rhino JavaScript implementation with
+   continuations support, courtesy of <link
+   href="mailto:coliver@seebeyond.com">Christopher Oliver</link>:
+   <link href="ftp://ftp.primaryinterface.com/pub/rhino">ftp://ftp.primaryinterface.com/pub/rhino</link>.
+  </action>
+  <action dev="JM" type="update">
+   Added size attribute and sorting to directory-generator.  Thanks to
+   Frank Ridderbusch for original code [BUGZILLA: 8531]
+  </action>
+  <action dev="CH" type="fix">
+   Changed error behaviour in esql: all exceptions now result in error-results
+   being evaluated. If error-results is present, exceptions are caught,
+   otherwise a processing exception is thrown.
+  </action>
+  <action dev="CH" type="fix">
+   Complete rewrite of grouping code in esql (footer still not supported),
+   group-on available through esql:param
+  </action>
+  <action dev="CH" type="fix">
+   Esql fix for get-columns with PostgreSQL and getObject not working with all
+   datatypes
+  </action>
+  <action dev="CH" type="fix">
+   CLOB support in esql logicsheet, esp. in get-xml
+  </action>
+  <action dev="TC" type="add">
+    changed the LanguageException and the JavaLanguage to expose more than
+    just the compilation error. Now it also shows the actual code from the
+    repository +/- a few lines around that error.
+  </action>
+  <action dev="TC" type="add">
+    restructured the ProgramGenerator and
+    added option "watchSource" (true/false). If turned on you can
+    make changes inside the generated source code (inside the repository)
+    and the ProgramGenerator will compile them for you. This eases XSP
+    debugging a lot! Turned off (same behaviour as before) by default.
+  </action>
+  <action dev="TC" type="fix">
+    Fixed esql getBytes() behaviour
+  </action>
+  <action dev="CZ" type="add">
+    Integrated the new Avalon Excalibur Store and StoreJanitor components.
+    This deprecates the Cocoon version.
+  </action>
+  <action dev="GF" type="add" due-to="Andy Oliver" due-to-email="acoliver@apache.org ">
+   Added formula support for HSSF Serializer.
+  </action>
+  <action dev="CZ" type="add">
+    Integrated the new Avalon Excalibur XSLT Processor. This deprecates the
+    Cocoon version.
+  </action>
+  <action dev="KP" type="update">
+    Locale selection for I18nTransformer changed to use parameter set from sitemap.
+    The old behavior (implicit locale selection using LocaleAction) is not supported any more.
+    i18n samples are refactored, redesigned, new translations are added.
+  </action>
+  <action dev="CZ" type="add">
+    Integrated the new Avalon Excalibur Source Resolving architecture. This deprecates
+    the now obsolete Cocoon source resolving. Wrapper classes etc. have been provided
+    for an easy upgrading. In addition the Excalibur XMLizer is added.
+  </action>
+  <action dev="CZ" type="add">
+    Added the sunShine contribution from S&amp;N AG, Germany (http://www.s-und-n.de). This
+    contribution consists of a session management framework, an authentication
+    framework and a portal engine.
+  </action>
+  <action dev="VG" type="update" fixes-bug="10697">
+   Changed default persistence store to the JispFilesystemStore.
+   To switch back to FilesystemStore, remove jisp.jar and rebuild Cocoon
+   (or simply edit cocoon.xconf)
+  </action>
+  <action dev="CZ" type="add" due-to="Ilya A. Kriveshko" due-to-email="ilya@kaon.com">
+   RequestGenerator does optionally output request parameters.
+  </action>
+  <action dev="BH" type="add">
+    Output extra locator info if included Throwable of ProcessingException is
+    SAXParseException or TransformerException.
+  </action>
+   <action dev="BH" type="fix">
+    FIX NPE in org.apache.cocoon.components.pipeline.impl.AbstractCachingProcessingPipeline,
+    if content is malformed, and there exists an cached response the
+    validity[] contains null entries.
+  </action>
+  <action dev="BH" type="fix" due-to="M. Kristian" due-to-email="m.kristian@gmx.net">
+    Fix CocoonCrawlerImpl, check if contentType is not null, and always close the BufferedReader at the end.
+  </action>
+  <action dev="KP" type="add">
+    Added JXPath based input modules for Request and Session properties.
+    Demonstration sample is also added.
+    RequestContextPathModule and RequestURIModules are obsolete now and
+    will be removed.
+  </action>
+  <action dev="GF" type="update">
+    Updated the Jisp store system to the new Jisp version and added the missing clear()
+    and keys() methods.
+  </action>
+  <action dev="IAI" type="add">
+    Added a more sophisticated example in samples/webserviceproxy/cocoonhive.
+    Demonstrates a small virtual portal which embeds functionality
+    from Amazon and OpenWiki.
+  </action>
+  <action dev="IAI" type="update">
+    XMLFormTransformer now saves a list of referenced model properties,
+    which is later used to automatically populate with default values
+    properties which were not addressed in the http request (like unchecked
+    checkboxes). This applies to session scope forms only.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="12915">
+    The resource reader now checks if for the same URI the same source is read
+    in order to test the if-last-modified header. This behaviour can be turned
+    of (for more performance) by the quick-modified-test.
+  </action>
+</release>
+<release version="2.0.4" date="December 06 2002">
+  <action dev="SW" type="update">
+   The HTMLGenerator now accepts a JTidy configuration file for fine-grained
+   control on the generated document.
+  </action>
+  <action dev="CH" type="fix">
+   New Logicsheet for use with InputModules.
+  </action>
+  <action dev="CH" type="add">
+   xsp.xsl now includes all xsp:init-page tags. Additional xsp:exit-page tag for
+   cleanup operations.
+  </action>
+  <action dev="CH" type="add">
+   New InputModule to map parameter names to / from another name. Uses translation
+   table and additional prefix / suffix.
+  </action>
+  <action dev="CH" type="fix" fixes-bug="14739">
+   Fixed SimpleFormTransformer: Malformed XML with textarea elements.
+  </action>
+  <action dev="KP" type="add">
+   Allow to set the i18n transformer's locale from the sitemap as a
+   parameter (ported from 2.1-dev). The old behavior, based on LocaleAction is preserved
+   only for 2.0.x versions and will be removed from the further releases (2.1 and higher).
+  </action>
+  <action dev="DC" type="add">
+   New build target "validate-config" to conduct build-time validation of some
+   core important configuration files using RELAX NG (call it manually with:
+   <code>./build.sh validate-config</code>). Currently doing: all sitemap.xmap,
+   all cocoon.roles, all *.xsl stylesheets, all book.xml files.
+  </action>
+  <action dev="SW" type="add">
+   Extend the syntax of sitemap variable substitution : variables can have a prefix which
+   indicates an InputModule where to get the value from. For example, the expression
+   "{request-param:foo}" will evaluate to the value of the "foo" request parameter (provided
+   of course that the "request-param" InputModule is correctly defined in cocoon.xconf).
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="12293">
+   RequestLifecycleComponents were not handled properly when the cocoon: protocol is used
+  </action>
+  <action dev="CH" type="update">
+   Changed SimpleFormTransformer to use InputModules.
+  </action>
+  <action dev="CH" type="update">
+   Changed InputModules to return Iterator instead of Enumeration. New abstract
+   "meta" module to make new meta modules easier. Stripped "meta" from defaults
+   module. Added JXPathMetaModule. Added extension classes and packages to all
+   modules that are based on JXPath.
+  </action>
+  <action dev="CH" type="update">
+   Improved support for CLOB and BLOB columns in modular database actions.
+  </action>
+  <action dev="CH" type="add">
+   New chaining InputModule that allows to use additional modules when an attribute is not
+   present or null.
+  </action>
+  <action dev="CH" type="update">
+   Changed defaults of InputModule names in many places to new names.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="14466" due-to="Luca Morandini" due-to-email="lmorandini@ieee.org">
+   Fixing namespace handling of SQLTransformer.
+  </action>
+  <action dev="SW" type="add">
+    New ZipArchiveSerializer to build zip files aggregating various sources
+    as archive entries. Can be used to generate zip files, sxw files (OpenOffice),
+    jar files, etc.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="13648" due-to="Geoff Howard" due-to-email="javageoff@yahoo.com">
+    CocoonServlet upload behavior now configurable from the web.xml.
+    Configuration parameters are: autosave-uploads, overwrite-uploads,
+    upload-max-size. See web.xml for description.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="13643" due-to="Leo Sutic" due-to-email="leo.sutic@inspireinfrastructure.com">
+    Remove the static factory variable in RequestFactory, and instead
+    pass it to the HttpRequest via the environment.
+  </action>
+  <action dev="VG" type="update">
+    ReadDOMSessionTransformer now can work with any types of object
+    (same mechanism as in &lt;xsp:expr&gt; now used). Configuration
+    parameter dom-name renamed to attribute-name.
+  </action>
+  <action dev="VG" type="update">
+    Src attribute can be used now with SessionAttributeGenerator to specify
+    session attribute name. Old syntax preserved.
+  </action>
+  <action dev="VG" type="update">
+    Local parameters in SessionStateAction still do override global parameters,
+    but do NOT change global parameters.
+  </action>
+  <action dev="VG" type="update">
+    Src attribute can be used now with ResourceExistsAction. Old parameter
+    syntax preserved.
+  </action>
+  <action dev="CZ" type="fix">
+    Fixed prefix mapping for the sql transformer.
+  </action>
+  <action dev="VG" type="update">
+    FOP user configuration can now be specified as URL or relative path
+    as the value of the &lt;user-config&gt; element.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="6533">
+    Load default FOP configuration only once, do not overwrite any user
+    configuration.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="11856" due-to="Stefan Seifert" due-to-email="sseifert@pro-vision.de">
+    Remove unnessesary code in SVGBuilder. This also fixes intermittent
+    ClassCastExceptions in Batik code.
+  </action>
+  <action dev="VG" type="fix">
+    Fix issue with cross-platform uploads. Uploaded file's name converted
+    to match destination platform's path separator.
+  </action>
+  <action dev="VG" type="update" fixes-bug="12131">
+    Absolute path now can be specified for work, cache, and upload directory.
+    Read comments in web.xml, and verify your settings.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="12328">
+    Set URI resolver for XSLT handler every time time templates are used,
+    because XSLT templates might reference disposed instance of XSLT processor.
+    Fixes some NPEs in XSLT processor when templates cache is used.
+  </action>
+  <action dev="VG" type="fix">
+    Fix sitemap reloading bug: When parent sitemap is modified, it is
+    recompiled and reloaded. All sub-sitemaps of this sitemap also has
+    to be reloaded because they have references to the parent sitemap's
+    ComponentSelectors. This bug is the cause of some NPEs in the XSLT
+    processor.
+  </action>
+  <action dev="VG" type="update" fixes-bug="11401">
+    Improve backward compatibility: FilePartFile needs toString() method to
+    work with code written for Cocoon 2.0.
+  </action>
+ <action dev="SW" type="fix">
+    AbstractServerPages used static fields for dependency tracking, which caused
+    either non-modified XSPs to be recompiled, or modified XSPs not to be recompiled.
+  </action>
+  <action dev="VG" type="update">
+    SearchGenerator now includes &lt;field name=""/&gt; elements into &lt;hit/&gt;
+    element. These elements contain stored fields of a found Document,
+    making it possible to provide additional info about document in the
+    search result list (only when index created with some stored fields).
+  </action>
+  <action dev="VG" type="update">
+    In addition to attributes in same namespace with elements,
+    link serializer reacts on non-namespaced attributes too. This allows
+    processing of (strict) XHTML.
+  </action>
+  <action dev="CH" type="add">
+   Backport usage of InputModules to compiled sitemap.
+  </action>
+  <action dev="CH" type="update">
+   Sync modules and related components between 2.0.x and HEAD.
+  </action>
+  <action dev="CH" type="add">
+   Added some more types understood by modular database actions.
+  </action>
+  <action dev="CH" type="fix">
+   Request logicsheet: Fix session tags.
+  </action>
+  <action dev="CH" type="add">
+   Added some more InputModules.
+  </action>
+  <action dev="CH" type="update">
+   Changed existing OutputModules to not use ":" to separate key prefix from
+   suffix if prefix is an empty string.
+  </action>
+  <action dev="CH" type="add">
+   Simple Formvalidation: FormValidatorAction sets attribute "*" to indicate
+   overall validation status. Added SimpleFormTransformer that fills XHTML form
+   fields with values from request parameters and allows conditional error tags
+   depending on validation result. This removes the requirement for
+   XSP. Changed ordering of error levels: "notpresent" (indicates that no
+   validation result is present for this parameter) moves between "ok" and
+   "error". New error level "maxerror" used in conjunction with the
+   transformer, is never set, used as upper bound.
+  </action>
+  <action dev="CH" type="fix">
+   (Modular) DatabaseActions: select produced wrong result if no rows were
+   found, query action returned broken result.
+  </action>
+  <action dev="CH" type="update">
+   ESQL: Allow arbitrary types for prepared and callable statements via
+   dynamically loading classes like the SQLTransformer does. Is-null now uses
+   dynamic colum specification. Fixed skip-row feature, which was off by one.
+   Added tag to get connection meta data.
+  </action>
+  <action dev="CZ" type="fix">
+    Fixed NPE in the recycling phase of content aggregation.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="9288">
+    Fixed bug in cocoon pseudo protocol involving aggregation of aggregated
+    resources spanning several sitemaps.
+  </action>
+  <action dev="VG" type="fix">
+    Conect to the XML:DB once, from the XMLDBSourceFactory.
+  </action>
+  <action dev="BH" type="update" fixes-bug="11447" due-to="Torsten Knodt" due-to-email="tk-cocoon@datas-world.de">
+    Added cocoon-docs mailinglist to mail-archives.xml.
+  </action>
+  <action dev="VG" type="fix">
+    &lt;xsp-util:include-expr/&gt; includes any object, converting it to string.
+  </action>
+  <action dev="VG" type="update">
+    XSP now verifies that value of attribute name on xsp:element does not
+    contains ':'. To create namespaced elements, uri and prefix attributes
+    must be used.
+  </action>
+  <action dev="VG" type="fix">
+    Request, response, and session logicsheet were incorrectly returning
+    result when as="xml" is specified.
+  </action>
+  <action dev="VG" type="update">
+    XScript now has better variable management: variables of request,
+    session, global, and page scope are stored not in the XScriptManager,
+    but as request, session, context attributes, or as XSP page field
+    (respectively). Chances of memory leaks are highly reduced.
+  </action>
+  <action dev="VG" type="fix">
+    Include all warnings and errors reported by the XSLT engine into the
+    TransformerException if transformation fails or terminated by the
+    stylesheet.
+  </action>
+  <action dev="VG" type="update">
+    Update HSQLDB to version 1.7.0. Now it properly shuts down with Cocoon.
+  </action>
+  <action dev="CZ" type="update">
+    All log messages from FOP now go into the logs instead of printing them to the screen.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="10254" due-to="Stuart Roebuck" due-to-email="stuart.roebuck@adolos.co.uk ">
+   Applied patch for MaybeUploadRequestFactoryImpl which sets the timeout for a session to
+   infinite during an upload and restores it afterwards.
+  </action>
+ </release>
+ <release version="2.0.3" date="July 15 2002">
+  <action dev="CZ" type="add">
+   When Cocoon is built, the build system automatically detects the current jvm and builds
+   a target for this virtual machine. This is eiter JVM 1.4 or JVM 1.2 upto 1.3.
+  </action>
+  <action dev="KP" type="fix">
+   Fixed current page indication in documentation menu (synced with HEAD).
+  </action>
+  <action dev="KP" type="update">
+   Internationalization and JSP samples are refactored.
+  </action>
+  <action dev="CZ" type="add" fixes-bug="10505" due-to="Stuart Roebuck" due-to-email="stuart.roebuck@adolos.co.uk">
+   When building Cocoon it is required to set the targetted JVM (either 1.3 (means 1.3 or lower) or 1.4.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="10311" due-to="Joachim Piketz" due-to-email="pik@uniquare.com">
+   Fixed NullPointerException in Notifier.
+  </action>
+  <action dev="CH" type="update">
+   Multiple results seem not to be supported by some DBMSs (i.e. Oracle and
+   Informix). Therefore this is made optional in ESQL. A new parameter
+   (esql:allow-multiple-results) to esql:connection re-enables it. See
+   EsqlConnection for details.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="9693" due-to="Vladimir Kralik" due-to-email="vladimir.kralik@asset.sk">
+   Properly escape (national) characters included in element's attributes
+   in XSP page.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="6934">
+   Add connect-attempts and connect-waittime parameters to the SQLTransformer.
+   Transformer tries to get a connection to the DB several times before
+   returning an error.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="8658" due-to="Michael Melhem" due-to-email="michaelm@fztig938.bank.dresdner.net">
+   Fixed sitemap compilation error when matchers are used within view
+   or resource.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="8509" due-to="Michael Melhem" due-to-email="michaelm@fztig938.bank.dresdner.net">
+   Fixed sitemap compilation error when actions are used within view.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="3782">
+   TraxTransformer and XSLTProcessor components now correctly handle
+   dependecies on imported (via xsl:include) XSLT stylesheets.
+  </action>
+  <action dev="NKB" type="fix">
+    Removed Java 1.3+ only method (URL.getPath()) from LinkStatusGenerator.
+  </action>
+  <action dev="SW" type="update">
+   CocoonServlet no longer builds its own classloader. Also, it no more sets the thread's context
+   classloader unless the "init-classloader" parameter is true. To have Cocoon use its own classloader,
+   use the ParanoidCocoonServlet.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="9539" due-to="Stuart Roebuck" due-to-email="stuart.roebuck@adolos.co.uk">
+   ResourceReader incorrectly advertised byte ranges support.
+  </action>
+  <action dev="NKB" type="add">
+    Added a "handle-exceptions" init argument in web.xml, used by CocoonServlet for the exceptions
+    that the core Cocoon class throws.
+    If true or not set, this class will try to catch and handle all Cocoon exceptions.
+    If false, it will rethrow them to the servlet container.
+  </action>
+  <action dev="NKB" type="fix">
+    Changed the Notifier notify() methods to accept a mimetype instead of returning it.
+    There is no way in which this method could understand what mime/type to use from the
+    notification info and the stream.
+    It was added to the method using a ContentHandler, since it could output svg for example.
+    The old methods were deprecated.
+  </action>
+  <action dev="NKB" type="fix" due-to="J.Pietschmann" due-to-email="j3322ptm@yahoo.de">
+    Fixed error reporting in CocoonServlet: stream is now closed at the end of the service method,
+    the content-type is sent before sending the error and the notification messages are now more
+    descriptive.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="8639">
+   Support Parameterizable URLFactories.
+  </action>
+  <action dev="GF" type="fix" fixes-bug="9064" due-to="Jeroen ter Voorde" due-to-email="j.tervoorde@home.nl">
+    Fixed multipart request problems with IE6.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="3372">
+   Added ability to run Cocoon on Novell OS.
+  </action>
+  <action dev="SM" type="add">
+   Make the multipart/form-data parser aware of the encoding used by the
+   processed request.
+  </action>
+  <action dev="SM" type="add">
+   Added support for StreamGenerator to read from 'multipart/form-data' as well.
+  </action>
+  <action dev="DC" type="add">
+   Started new documents for
+   <link href="plan/todo-doc.html">Documentation To Do List</link> and
+   <link href="plan/changes-doc.html">Documentation History of Changes</link>.
+  </action>
+  <action dev="GF" type="fix" fixes-bug="8881" due-to="Peter Royal" due-to-email="proyal@apache.org">
+    Fixed NPE in DefaultNotifyingBuilder.
+  </action>
+  <action dev="GF" type="fix" fixes-bug="8743" due-to="Michael Enke" due-to-email="michael.enke@wincor-nixdorf.com">
+   Fixed NPE in I18nTransformer.
+  </action>
+  <action dev="KP" type="update" due-to="Michael Enke">
+   i18n transformer changed to use shorter syntax for number formatting. Now 'type' attribute with
+   'number', 'currency' and 'percent' should be used instead of 'type' and 'sub-type'combination.
+  </action>
+  <action dev="CH" type="add">
+   New documents on databases and Cocoon, database actions and modules.
+  </action>
+  <action dev="CH" type="add">
+   Additional input modules: Date, Digest, ConstantString, Random, NullInput, Collection
+  </action>
+  <action dev="CH" type="fix" due-to="J&#252;rgen Ehms">
+   Sendmail logicsheet works again.
+  </action>
+  <action dev="CH" type="add">
+   Array support for original form validation and new constraint for strings:
+   "one-of" lists all allowed values, separated by "|"s. List should start
+   and end with "|".
+  </action>
+  <action dev="CH" type="fix">
+   Aliases in modular database actions now work correctly. All of them return
+   the number of affected rows as sitemap variable.
+  </action>
+  <action dev="GF" type="add" due-to="Maciek Kaminski" due-to-email="maciejka@tiger.com.pl">
+   added new Selector component.
+  </action>
+  <action dev="GF" type="fix" fixes-bug="6740">
+    Updated commons-httpclient.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="5772">
+    Fixing bug in NetUtils that altered in some cases the link reference in command-line mode.
+  </action>
+  <action dev="VG" type="fix">
+    XScript works now (and all XScript SOAP samples).
+  </action>
+  <action dev="VG" type="update">
+    XSP engine now correctly processes pages with any encoding.
+  </action>
+  <action dev="VG" type="fix">
+    Fixed error (NPE) in AbstractValidatorAction introduced in the 2.0.2.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="7510" due-to="Jeroen ter Voorde" due-to-email="j.tervoorde@home.nl">
+    Fixing ClassCastException when a multipart/form-data form is posted.
+  </action>
+  <action dev="CZ" type="update">
+    Rewrote SQLTransformer and added capability to store/fetch XML.
+  </action>
+  <action dev="CZ" type="add">
+    Added AbstractSAXTransformer for much easier implementation of custom
+    transformers.
+  </action>
+  <action dev="SW" type="add">
+    Handle request forwarding (aka internal redirects) using the "cocoon:"
+    pseudo-protocol : writing &lt;map:redirect-to uri="cocoon:/foo.bar"/&gt; makes
+    a recursive call on the current sitemap without going back to the browser
+    (as usual, "cocoon://foo.bar" uses the root sitemap). This also keeps any data
+    that have been stored as request attributes.
+
+    Note: this is only available in the interpreted sitemap engine for now, and
+    will come soon on the compiled engine.
+  </action>
+  <action dev="NKB" type="fix" fixes-bug="7251" due-to="Marcus Crafter" due-to-email="crafterm@fztig938.bank.dresdner.net">
+    Small optimization to XConfTool to check if the file is actually
+    an XConfTool file.
+  </action>
+  <action dev="NKB" type="add">
+    Added LinkStatusGenerator donated by Michael Homeijer and accompanying sample
+    sitemap to scratchpad.
+  </action>
+  <action dev="NKB" type="update">
+    Moved castor scratchpad sample from /samples to /mount as other samples.
+    Now the refactored sample page points to the mount dir, thus
+    showing available scratchpad components to test.
+  </action>
+  <action dev="NKB" type="update">
+    When including the scratchpad libs in the build,
+    all the scratchpad samples are copied too.
+  </action>
+ </release>
+ <release version="2.0.2" date="March 26 2002">
+   <action dev="SW" type="add">
+    New BootstrapServlet to allow Cocoon to run in non-compliant servlet
+    engines that don't handle correctly servlet contexts. This servlet
+    builds a class loader with the contents of WEB-INF/classes and
+    WEB-INF/lib and manages resource resolution.
+   </action>
+   <action dev="NKB" type="update">
+    Updated error reporting to add line, column and location
+    attributes specified in SAXException and
+    TransformerException.
+    The error page in the webapp examples shows the new
+    extra info.
+  </action>
+  <action dev="NKB" type="add">
+    Added new "gump" target to the build, to be used as a general
+    test of Cocoon code. To be used by Gump.
+    It calls docs, javadocs, test and package.
+    Gump descriptor has been modified to use it;
+    now we also have automatic javadoc creation.
+  </action>
+  <action dev="NKB" type="update">
+    cocoon.xconf is moved in WEB-INF for security reasons.
+    The documentation has been updated to reflect the change.
+  </action>
+  <action dev="NKB" type="update">
+   Partial commit of new samples structure.
+   Samples go in samples/ dir with their own sitemap.
+   All scratchpad samples that are in the samples/ subdir are
+   copied in webapp samples automatically by installscratchpadwar
+   target.
+  </action>
+  <action dev="SW" type="update">
+   New "set-content-length" configuration for FOPSerializer to allow
+   streaming of large PDFs (default is true for backwards compatibility).
+  </action>
+  <action dev="NKB" type="update">
+   The docs now have svg stuff removed and these enhancements:
+   menu items are in text,
+   page title is in text,
+   pages have new clean style courtesy of Stefano,
+   added Stefano's explanation on how to write mails,
+   the docs are generated with the TreeProcessor,
+   the docs generation uses JispStore.
+  </action>
+  <action dev="NKB" type="add">
+    Added new targets:
+    "installwar"  asks for the directory in which to put
+    the war and makes it.
+    "installscratchpadwar"  does the same but incudes
+    scratchpad libs ans samples.
+  </action>
+  <action dev="NKB" type="add">
+   New POI HSSF Serializer; outputs to the .xls (not .xsl) file format.
+   Added samples as legacy file format support.
+  </action>
+  <action dev="CH" type="add">
+   New module structure for input, output, and database specifica in
+   scratchpad. Thus it is possible to write generic components for one
+   task and replace input and output dynamically. As an example a
+   generic version of a WildcardMatcher is provided as well as a
+   sample action that uses it. DatabaseActions in scratchpad use this
+   structure as well.
+  </action>
+  <action dev="CH" type="update">
+   Moved ModularDatabase*Actions to new home in scratchpad and
+   reworked them. They now use new module structure. For sample
+   application, copy mod-db directory to cocoon/mount.
+  </action>
+  <action dev="CH" type="update">
+   Changed jdbc datasource to ResourceLimitingJdbcDataSource because
+   it does not require to be able to contact the datasource on
+   startup. Thus race condition with HSQLDB startup is eliminated.
+  </action>
+  <action dev="VG" type="add">
+   Added new Jisp based persistence cache, to improve (1) performance and (2)
+   to solve the problem with long filenames on Windows OS flavours.
+  </action>
+  <action dev="GF" type="add">
+   Added new Jisp based persistence cache, to improve (1) performance and (2)
+   to solve the problem with long filenames on Windows OS flavours.
+  </action>
+  <action dev="GF" type="update">
+   Removed explicit System.gc() call from StoreJanitor, because this
+   caused performance leaks.
+  </action>
+  <action dev="TC" type="update">
+   Added support for input type=image buttons
+  </action>
+  <action dev="TC" type="update">
+   Deprecated the old cocoon-action=ACTION syntax in favor of the new
+   cocoon-action-[ACTION]=whatever. Still supported though.
+  </action>
+  <action dev="BH" type="add">
+   Added encodeURL transformer for encoding URIs.
+  </action>
+  <action dev="CZ" type="update">
+   Using migrated XPath Processor from Avalon Excalibur instead of own component.
+  </action>
+  <action dev="CZ" type="fix">
+   Fixed endless loop bug in IncludeXMLConsumer.
+  </action>
+  <action dev="VG" type="update">
+   Added &lt;xsp:page create-session=""&gt; attribute now processed correctly,
+   as described in the xsp-session logicsheet documentation. Variable 'session'
+   declared and could be used in XSP page code.
+  </action>
+  <action dev="SW" type="add">
+   New implementation of the sitemap engine based on an evaluation tree. This provides
+   super-fast load times (no more compilation), and a slight gain in request processing
+   speed compared to the compiled engine thanks to the HotSpot VM.
+  </action>
+  <action dev="VG" type="add">
+   Added matchers: HeaderMatcher, ParameterMatcher.
+  </action>
+  <action dev="VG" type="add" due-to="Matteo Di Giovinazzo" due-to-email="matteodg@infinito.it">
+   Added CookieSelector.
+  </action>
+  <action dev="VG" type="add" due-to="Maciek Kaminski" due-to-email="maciejka@tiger.com.pl">
+   Added CookieMatcher.
+  </action>
+  <action dev="VG" type="add">
+   Request, response, and session XSP logicsheets in Javascript language are added.
+  </action>
+  <action dev="SM" type="add" due-to="Andreas Hartmann" due-to-email="ah@cocooncenter.de">
+   Added Cocoon link page.
+  </action>
+  <action dev="SM" type="add" due-to="Maxim Dominichenko" due-to-email="max@magic.kiev.ua">
+   Added 'cocoon.ico'.
+  </action>
+  <action dev="SM" type="update">
+   Cleaned up documentation and refactored it a little.
+  </action>
+  <action dev="GR" type="fix">
+   Started to clean up the XML:DB stuff. The XML:DB generators have been
+   deprecated, and a note has been written in the docs suggesting to switch
+   to the XML:DB pseudo-protocol. Configurations have been switched from dbXML
+   to Xindice.
+  </action>
+  <action dev="SW" type="add">
+   New WriteableSource interface that extends Source. Just as Source for reading,
+   it allows to transparently write to various destinations. The first implementation
+   is FileSource to write to files.
+  </action>
+  <action dev="JQ" type="add">
+   Added FileWritingTransformer and sample file editor to scratchpad.
+  </action>
+  <action dev="CZ" type="fix">
+   Fixed some bugs in the file URI resolving on windows plattforms.
+  </action>
+  <action dev="CZ" type="update">
+   Using migrated entity resolver from Avalon Excalibur instead of own component.
+  </action>
+  <action dev="VG" type="add">
+   Javascript language now supported by the XSP pages. Samples of Javascript
+   XSP pages are added.
+  </action>
+  <action dev="CZ" type="update">
+   Using migrated XML Parser from Avalon Excalibur instead of own component.
+  </action>
+  <action dev="CZ" type="update">
+   Added subprotocol "raw" to the cocoon: protocol. When the subprotocol is
+   appended, the request parameters of the original request are not
+   forwarded to the internal pipelines. Suggested by
+   Michael Hartle [mhartle.at.hartle-klug.com].
+  </action>
+  <action dev="VG" type="add">
+    Added Pizza Java compiler as another alternative to Sun javac and Jikes.
+  </action>
+  <action dev="VG" type="update">
+    ProgramLanguage is decoupled now from the languages compiled into Java.
+    Instead of Class object representing a program, Program interface has
+    been introduced.
+  </action>
+  <action dev="VG" type="fix">
+    Text located in XSP language logicsheets now properly quoted.
+  </action>
+  <action dev="CZ" type="fix" fixes-bug="6242">
+   SQL Transformer did enter Infinite Loop. This is fixed now.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="4117">
+    Sitemap engine verifies that root element is the &lt;sitemap&gt; element
+    in the 'http://apache.org/cocoon/sitemap/1.0' namespace.
+  </action>
+  <action dev="VG" type="fix">
+    Move commonalities between sitemap markup language and XSP markup language
+    into CocoonMarkupLanguage.
+  </action>
+  <action dev="CZ" type="update">
+    Minor rewrite of the LogTransformer. The logfile is now resolved using
+    the standard source resolver. The component is now recycled properly.
+  </action>
+  <action dev="CZ" type="update">
+    Minor rewrite of the SQLTransformer. Removed several parameters tests
+    and the use of Properties objects - instead the Parameters object
+    is used directly.
+  </action>
+  <action dev="VG" type="update" due-to="Konstantin Piroumian" due-to-email="KPiroumian@flagship.ru">
+    Action LangSelect has been deprecated in favor of LocaleAction.
+  </action>
+  <action dev="VG" type="update">
+    Allow sitemap components to be declared in the cocoon.xconf. Enhance
+    SitemapComponentSelector to store label information provided in
+    the configuration.
+  </action>
+  <action dev="GR" type="add">
+    Added the XPath-enabled DirectoryGenerator (XPathDirectoryGenerator)
+    to scratchpad.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="4117">
+    XSP engine verifies that root element is the &lt;page&gt; element in the
+    'http://apache.org/xsp' namespace.
+  </action>
+  <action dev="VG" type="fix">
+    Markup language logicsheets in general and XSP logicsheets in particular
+    are now looked up by their namespace URI, not prefix.
+  </action>
+  <action dev="VG" type="update">
+    xsp-request and xsp-response logicsheets got more tags, and now are
+    (almost) backward compatible with the logicsheets in Cocoon 1.8.
+  </action>
+  <action dev="VG" type="update">
+    Cache relies on two types of store components: (1) transient cache,
+    with cache-transient shorthand, and (2) persistent cache, with
+    cache-persistent shorthand.
+  </action>
+  <action dev="VG" type="update">
+    FilesystemStore (used as programs repository) now is created as all other
+    components from the cocoon.xconf, and can be configured to use working
+    directory, cache directory, or any other directory.
+  </action>
+  <action dev="SW" type="update">
+    Calling getInputStream() on a "cocoon:" source now returns the same output
+    as an external call instead of always using an XML serializer.
+    This also allows to get internally data produced by a Reader.
+  </action>
+  <action dev="VG" type="fix">
+    Fixed memory leaks in XScript engine. Fixed global and session scope
+    variables: now they are shared between XScript pages as it should be.
+    Page scope variables now visible for all instances of the same page.
+  </action>
+  <action dev="VG" type="add">
+    Added size() method to the Store interface.
+  </action>
+  <action dev="GP" type="fix">
+    Prevent PostInputStream from looping if the available() method of the base
+    InputStream is returning 0.
+  </action>
+  <action dev="VG" type="add">
+    Added X-Cocoon-Version header to all responses generated by Cocoon.
+  </action>
+  <action dev="VG" type="update">
+    SystemID for cocoon: pseudo-protocol URIs changed from the form of
+    &lt;schema&gt;:\\&lt;host&gt;:&lt;port&gt;\path\to\resource\from\the\root\sitemap
+    to the form cocoon:\\path\to\resource\from\the\root\sitemap. This provides
+    portability for compiled resources generated from the cocoon: sources.
+  </action>
+  <action dev="CH" type="add">
+    Stored Procedure support for esql plus ability to obtain and use a result
+    set from any column just like a nested query.
+  </action>
+ </release>
+ <release version="2.0.1" date="January 31, 2002">
+  <action dev="SW" type="update" due-to="Stephan Michels" due-to-email="stephan@vern.chem.tu-berlin.de">
+    The FragmentExtractorTransformer is now configurable to extract any fragment
+    identified by an element name and namespace URI, and no more limited to
+    SVG images only.
+  </action>
+  <action dev="VG" type="fix">
+    XSP engine now correctly works with dynamically generated sources
+    with last modification date of 0, and it is correctly reloaded on Cocoon
+    reload.
+  </action>
+  <action dev="VG" type="update">
+    Logicsheets are resolved using instance of url factory source resolver
+    (URLFactorySourceResolver), and not the current request resolver (which
+    is temporary object).
+  </action>
+  <action dev="VG" type="update">
+    Improve Lucene indexing. Only one Lucene document is created for one
+    Cocoon resource. Document consists from 'body' field with all the text,
+    'element' field for every &lt;element&gt;, and 'element@attribute' for
+    every attribute of the &lt;element&gt;.
+  </action>
+  <action dev="GF" type="fix">
+   Fixed performance issues in the Store implementation:
+   (1) removed the FilesystemQueueImpl, one thread less now, (2) changed swapping
+   alghorithm in the MRUMemoryStore towards less serialization, (3) Cache entries
+   will be saved to the filesystem, when the System is shutdown cleanly, (4) fixed
+   bug submitted by Peter Hargreaves [pdh.at.totalise.co.uk] in StoreJanitor
+   (GC hangs in endless loop).
+  </action>
+  <action dev="VG" type="update">
+    Serializers do not write namespace attributes for prefixes starting with
+    xml anymore (these are reserved by XML spec).
+  </action>
+  <action dev="GF" type="update">
+   Removed Event Cache and Stream Cache. For all possible Caching Piplines there
+   is only one Store implementation behind.
+  </action>
+  <action dev="GF" type="update">
+   Added new log targets. (1) access.log, (2) core.log, (3) error.log and
+   (4) sitemap.log.
+  </action>
+  <action dev="VG" type="update">
+    Perform substitution in the sitemap only when it is required (improves
+    performace).
+  </action>
+  <action dev="VG" type="add">
+    Additions to sitemap syntax: (1) allow all elements at root level, not
+    only matchers, (2) perform some validation checks, (3) perform attribute
+    substitution on all attributes except @type and @label.
+  </action>
+  <action dev="DC" type="add">
+    Added &quot;List of Docs&quot; which automatically generates a list
+    of all Cocoon documentation by aggregating each xdocs/**/book.xml
+  </action>
+  <action dev="DC" type="fix" fixes-bug="5060">
+    The Catalog Entity Resolver is now fully operational on all platforms
+    in both the webapp context and the commandline context of build docs.
+    The verbosity level is now set low - if you want to see messages, then
+    raise the verbosity via cocoon.xconf or CatalogManager.properties
+  </action>
+  <action dev="CZ" type="update">
+    Separated the jars into core and optional. For compiling only the
+    core jars are necessary. However, the sample webapp still needs some
+    optional jars.
+  </action>
+  <action dev="VG" type="add">
+    Added matchers:
+    RegexpHeaderMatcher, RegexpRequestAttributeMatcher,
+    RegexpRequestParameterMatcher, RegexpSessionAttributeMatcher,
+    RequestAttributeMatcher, SessionAttributeMatcher,
+    WildcardHostMatcher, WildcardRequestAttributeMatcher.
+  </action>
+  <action dev="BL" type="fix" fixes-bug="5791">
+    Address issue about how RegexpURIMatcher matches the "" pattern.
+    Because it is so different from WildcardURIMatcher, the "" pattern
+    is rewritten as "^$" which matches an empty string.  The event is
+    logged, along with the hint that if you really want to match
+    everything, the pattern ".*" works as advertised.
+  </action>
+  <action dev="BL" type="update">
+    Fix command line generation so that a broken link was not a fatal
+    error, and processing will continue after the link is reported as
+    bad.
+  </action>
+  <action dev="BL" type="add">
+    Add ability to serialize all broken links to a file when running in
+    command line mode.  This helps debug sites.
+  </action>
+  <action dev="VG" type="update">
+    Rename some of the matchers/serializers (new added, old deprecated):
+    RequestSelector to RequestParameterSelector,
+    RequestParamMatcher to RequestParameterMatcher,
+    WildcardParameterValueMatcher to WildcardRequestParameterMatcher,
+    RegexpTargetHostMatcher to RegexpHostMatcher.
+  </action>
+  <action dev="VG" type="update">
+    Wap serializer renamed to wml serializer in the sitemap shipped with
+    Cocoon, to be consistent with the names of other serializers.
+  </action>
+  <action dev="CZ" type="update">
+    FilterTransformer is now Cacheable.
+  </action>
+  <action dev="CZ" type="update">
+    Added CACHE_VALIDITY singleton object to NOPCacheValidity and changed all
+    components to use constant instead of creating new instances each time.
+  </action>
+  <action dev="VG" type="fix">
+    Fix lifecycle related bugs in i18n transformer. Now transformers handles
+    only lifecycle of resource bundle factory, which handles lifecycle of all
+    resource bundles.
+  </action>
+  <action dev="CZ" type="add">
+    Added special lifecycle interface for Cocoon components: RequestLifecycle.
+    A component marked by this interface has the lifecycle of one request,
+    so looking up the role twice during the same request results in the same
+    component.
+  </action>
+  <action dev="SW" type="update">
+    The "namespace-prefixes" feature is no more set on parsers. It can be set if
+    needed in the configuration.
+  </action>
+  <action dev="VG" type="add">
+    Added ability to use XPath expressions to query XML:DB collections using
+    XML:DB pseudo protocol. URL should be in form:
+    xmldb:dbxml://host:port/db/collection/#/xpath
+  </action>
+  <action dev="VG" type="add">
+    Enabled XML:DB support (generators and pseudo protocol) by default.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="4239">
+    JSPEngine returns result in UTF-8 charset.
+  </action>
+  <action dev="CH" type="add">
+    Changed invokation syntax of sitemap resources. Now &lt;call resource/&gt;
+    is used instead of &lt;redirect-to resource/&gt;. Affects only resources,
+    other redirections still use "old" syntax. New syntax does not take "target"
+    attribute but allows to set arbitrary parameters by using
+    &lt;map-parameter/&gt; Always creates new map while old syntax only did
+    when "target" was present. Old syntax still available but deprecated.
+  </action>
+  <action dev="VG" type="fix" due-to="Eisert, Wolfram" due-to-email="Wolfram.Eisert@Dresdner-Bank.com">
+    XSP page were called twice if used as a source of XSLT stylesheet due to multiple calls to
+    Source.getInputSource() in XSLProcessorImpl.
+  </action>
+  <action dev="VG" type="update">
+    Changed default upload directory from "image-dir" to "upload-dir".
+  </action>
+  <action dev="VG" type="add" due-to="MIYABE Tatsuhiko" due-to-email="miyabe@jzf.co.jp">
+    RequestGenerator accepts container-encoding and form-encoding parameters.
+  </action>
+  <action dev="CZ" type="update">
+    Added support for configurable URLFactories.
+  </action>
+  <action dev="SW" type="fix">
+    Made the cache work again by updating cocoon.roles, sitemap.roles and making EventPipeline
+    and StreamPipeline implement Recomposable instead of just Composable.
+  </action>
+  <action dev="GR" type="add">
+    Added the XML:DB pseudo protocol
+  </action>
+  <action dev="SW" type="add">
+    Status generator outputs a detailed description of what's in the cache. Patch submitted by
+    Sebastien Koechlin [skoechlin.at.ivision.fr]
+  </action>
+  <action dev="CZ" type="update">
+    Applied patch adding advanced error handling to SQLTransformer plus escape-string element
+    from Peter Seiderer [Peter.Seiderer.at.ciselant.de]
+  </action>
+  <action dev="CZ" type="update">
+    The JaxpParser is now poolable and configurable.
+  </action>
+  <action dev="SW" type="update">
+    The sitemap engine is now a regular component available through Processor.ROLE. This allows
+    alternative implementations of Processors (e.g. interpreted sitemap, flowmap, statemap) to
+    be plugged through cocoon.xconf. Note : to ensure compatibility with existing cocoon.xconf
+    files, the shorthand for the Processor role is "sitemap".
+  </action>
+  <action dev="CZ" type="update">
+    Added support for configurable SourceFactories.
+    Patch submitted by Gianugo Rabellino [gianugo.at.rabellino.it].
+  </action>
+  <action dev="CZ" type="add">
+    Added RTF serialization of XSL-FO documents (requires jfor).
+    Patch submitted by Bertrand Delacretaz [bdelacretaz.at.codeconsult.ch].
+    Applied patch for the SQLTransformer to output namespaces for the
+    generated elements. Patch submitted by Per-Olof Nor&eacute;n [pelle.at.alma.nu].
+  </action>
+  <action dev="SW" type="add">
+   New ServerPagesAction and associated "action" and "capture" logicsheets
+   that allow actions to be written in XSP and parts of the generated XML
+   to be captured in XMLFragment or DOM objects.
+  </action>
+ </release>
+ <release version="2.0" date="November 29, 2001">
+  <action dev="CZ" type="update">
+    Restructured build system. A new ant task (SitemapToolTask) adds entries
+    of optional components to the sitemap. Warnings for not available
+    optional components are printed out.
+  </action>
+  <action dev="GP" type="update">
+    Made the concept of views work as proposed in the original proposal. There
+    is now the possibility to attach a label attribute with multiple values separated
+    by blanks or commas to the following elements: map:generator, map:transformer,
+    map:generate, map:transform, map:aggregate and map:part.
+  </action>
+  <action dev="CZ" type="update">
+    Applied patch for session-info for TraxTransformer from J&ouml;rn Heid
+    [heid.at.fh-heilbronn.de].
+  </action>
+  <action dev="CZ" type="update">
+    Applied patch for the SQLTransformer to output namespaces for the
+    generated elements. Patch submitted by Per-Olof Nor&eacute;n [pelle.at.alma.nu].
+  </action>
+  <action dev="OP" type="update">
+    Applied patch for incremental XSLT processing from J&ouml;rn Heid
+    [heid.at.fh-heilbronn.de].
+  </action>
+ </release>
+ <release version="2.0rc2" date="November 7, 2001">
+  <action dev="SW" type="add">
+    Deprecation of CodeFactory in preparation of the tree traversal implementation of the sitemap.
+    All factory-based matchers have been rewritten using the new PreparableMatcher interface, and
+    all factory-based selectors have been rewritten as regular implementations of Selector.
+    For patterns whose syntax uses '{' like regexp, sitemap substitution can be avoided by escaping the
+    brace character (example : "pat\{2}ern" will match "pattern").
+  </action>
+  <action dev="SW" type="fix">
+    Reduce exception nesting in case of sitemap setup errors, and display all nested exceptions
+    in the error page (avoids searching the logs for the failure cause).
+  </action>
+  <action dev="SW" type="update">
+    Added attribute management methods to environment Context and its implementations.
+  </action>
+  <action dev="SW" type="update">
+    Updated TraxTransformer and XSLTProcessor to allow simultaneous use of several
+    TRAX processors (e.g. xalan and saxon) in a controlled way.
+  </action>
+  <action dev="CZ" type="fix">
+    Updated session handling of commandline interface and fixed
+    parameter handling.
+  </action>
+  <action dev="CZ" type="fix">
+    Fixed missing prefix in elements generated by the directory and image
+    directory generator.
+  </action>
+  <action dev="CZ" type="fix">
+   Throw exception for internal requests instead of using the error handler and
+   fixed component handling in subsitemaps when invoked internally. Components only
+   defined in a subsitemap were not found as for internal requests the parent
+   component manager was used.
+  </action>
+  <action dev="CZ" type="update">
+    When Cocoon is reloaded, the logkit configuration is now also reloading.
+    This enables changing the logkit settings during runtime.
+  </action>
+  <action dev="CZ" type="update">
+    The documentation build system now uses Cocoon itself to generate the
+    html documentation.
+  </action>
+  <action dev="CZ" type="fix">
+    Applied NPE fix in certain conditions in ServerPagesGenerator.
+    Submitted by: Ovidiu Predescu [ovidiu.at.cup.hp.com]
+  </action>
+  <action dev="CZ" type="fix">
+    Applied NPE fix for MRUMemoryStore Submitted by: Ovidiu Predescu [ovidiu.at.cup.hp.com]
+  </action>
+  <action dev="CZ" type="fix">
+    Fixed (hopefully) dependency to the http environment in StreamGenerator.
+  </action>
+  <action dev="CZ" type="fix">
+    Optional setting of the lexical-handler for XMLReader. This patch allows to use
+    Crimson instead of Xerces. Submitted by: Ovidiu Predescu [ovidiu.at.cup.hp.com]
+  </action>
+  <action dev="CZ" type="update">
+    Added xml compiler and interpreter to cocoon.xconf
+  </action>
+  <action dev="CZ" type="fix">
+    Applied Patch for entity catalogs: accept parameters from xconf.
+    Submitted by: David Crossley [crossley.at.indexgeo.com.au]
+  </action>
+  <action dev="CZ" type="fix">
+    Applied fix for missing "User-Agent" header in BrowserSelectorFactory.
+    Submitted by: Joerg Henne [j.henne.at.levigo.de]
+  </action>
+  <action dev="CZ" type="fix">
+    Enhanced Command Line Interface by adding background attribute to ExtendedXLinkPipe
+    and fixing bugs: "mailto:" and "news:" are now ignored for traversing and links
+    containing anchors are handled properly
+  </action>
+  <action dev="CZ" type="update">
+    Applied patch for default value support for RequestParamAction.
+    Submitted by: Sergio Carvalho [sergio.carvalho.at.acm.org]
+  </action>
+  <action dev="CZ" type="fix">
+    Applied fix for a bug in the WriteDOMSessionTransformer for handling xml documents
+    with namespaces correctly. Submitted by: Greg Weinger [gweinger.at.itmedicine.net]
+  </action>
+ </release>
+ <release version="2.0rc1" date="September 24, 2001">
+  <action dev="SW" type="add">
+   New "capture" logicsheet that allows parts of XSP-generated XML to be captured
+   as XMLFragment or DOM objects.
+  </action>
+   <action dev="GP" type="add">
+   Added LogKit management functionality.
+  </action>
+  <action dev="SW" type="add">
+   Removed ThreadSafe from the Action interfaces : the decision to be ThreadSafe
+   is left to each implementation. Consequently, existing actions now explictly
+   implement ThreadSafe.
+  </action>
+  <action dev="CZ" type="add">
+   Redesigned the handling of the cocoon: protocol. Removed the pushURI
+   and popURI methods. It is now possible to load cocoon: resources
+   parallel in several tasks.
+  </action>
+  <action dev="VG" type="fix" fixes-bug="2737">
+   Fixed package name generation for subsitemap components and external components.
+  </action>
+  <action dev="VG" type="add">
+   Added ability to specify custom 404 error page for pipelines using
+   map:handle-errors element with attribute type="404".
+  </action>
+  <action dev="VG" type="fix">
+   Catch NoClassDefFoundError and throw ResourceNotFoundException
+   if XSP was requested with different case.
+  </action>
+  <action dev="SW" type="add">
+   New log formatter outputs the caller class and request URI in the log file.
+  </action>
+  <action dev="CZ" type="add">
+   Added patch by Stuart Roebuck (stuart.roebuck.at.adolos.com)
+   fixing the byte handling of the ImageDirectoryGenerator.
+  </action>
+  <action dev="DM" type="add">
+   Added capability to resolve external XML entities using an entity resolver.
+   See the documentation for "Entity Catalogs".
+  </action>
+ </release>
+ <release version="2.0b2" date="July 23, 2001">
+  <action dev="CZ" type="add">
+    When a resource is not found (ResourceNotFoundException) the
+    servlet sets only the status 404 and doesn't write to the output.
+  </action>
+  <action dev="SW" type="add">
+    In http environment, reset the response if it hasn't been committed
+    before executing the handle-errors pipeline.
+  </action>
+  <action dev="CZ" type="add">
+    Added reloading of jar files. When cocoon is reloaded by specifying
+    cocoon-reload parameter, the class-path is new build and used.
+  </action>
+  <action dev="CZ" type="add">
+    Added caching of cocoon: urls.
+  </action>
+  <action dev="CZ" type="add">
+    Redirects are handled when the cocoon: url points to a redirect in
+    the sitemaps.
+  </action>
+  <action dev="CZ" type="fix">
+    Fixed proper setting of content length for pdf and images.
+  </action>
+  <action dev="VG" type="fix">
+    Fixed parsing and reporting of Java compilation errors using Javac
+    and Jikes compilers.
+  </action>
+  <action dev="VG" type="add" due-to="John Morrison" due-to-email="John.Morrison@uk.experian.com">
+    Added documentation on libraries used in Cocoon.
+  </action>
+  <action dev="CZ" type="add">
+    Redesigned the source handling and added the source handler
+    and source factory components.
+  </action>
+  <action dev="CZ" type="add">
+    Added the cocoon: protocol to access pipelines. cocoon:/ resolves
+    to the current sitemap and cocoon:// to the root sitemap.
+  </action>
+  <action dev="VG" type="fix">
+    Offline site generation now allows recursive links and
+    works for site of any complexity (limited by capabilities of your
+    filesystem).
+  </action>
+  <action dev="CZ" type="add">
+    Removed XInclude/CIncludeSAXConnectors and added LoggingSAXConnector.
+  </action>
+  <action dev="CZ" type="add">
+    Added CIncludeTransformer.
+  </action>
+  <action dev="BL" type="fix" fixes-bug="2182">
+    Fixed the sub-sitemap issue experienced after a code merge
+    between 2.0 and 2.1
+  </action>
+  <action dev="BL" type="add">
+    Added the automatic announcement generation utility from
+    Avalon.
+  </action>
+  <action dev="BL" type="fix" fixes-bug="2172">
+    Fixed typo that created an element &lt;xsp-request:get-user/&gt;
+    instead of &lt;xsp-request:get-host/&gt; in XSPRequestHelper.
+  </action>
+  <action dev="BL" type="fix" fixes-bug="2166">
+    Made sure the _static_ classes did not inherit from each other,
+    and made all calls to XSPObjectHelper that handled XML elements
+    explicitly call with URI and PREFIX as parameters to the methods.
+  </action>
+  <action dev="BL" type="fix" fixes-bug="2142">
+    Applied fix to URLFactoryImpl donated by wangtun.at.staff.yam.com.
+  </action>
+  <action dev="BL" type="add">
+    Added support for fine-grained pool size control for Excalibur Component
+    Architecture.
+  </action>
+  <action dev="BL" type="fix">
+    Fixed component release errors in ContentAggregator (thanks to Vadim
+    Gritsenko for the patch).  Also fixed potential race conditions in
+    the ComponentManager architecture in Avalon Excalibur.
+  </action>
+  <action dev="GP" type="add">
+   Integrated new StreamGenerator from Kinga Dziembowski &lt;kingadziembowska.at.msn.com&gt;
+   Documentation is available in the webapp/docs/samples/stream/ReadMeAdd.txt (not yet converted to xdocs)
+  </action>
+  <action dev="CZ" type="update">
+   Fixed ClassCastException in CommandLineEnvironment.
+   Added Redirector interface to the CommandLineEnvironment to avoid class cast exceptions
+  </action>
+  <action dev="CZ" type="update">
+   Fixed NPE in browser detection.
+   Applied patch to the BrowserImpl. from Ovidiu Predescu (ovidiu.at.cup.hp.com). It
+   fixes a NPE if the browser is not described.
+  </action>
+  <action dev="CZ" type="update">
+   The TraxTransformer resolves now the uri used inside a stylesheet (e.g. xsl:include).
+   Applied the patch from Rick Tessner (rick.at.myra.com).
+  </action>
+  <action dev="CZ" type="update">
+   SQLTransformer is now recycled properly.
+   Applied patch from Ovidiu Predescu (ovidiu.at.cup.hp.com).
+  </action>
+ </release>
+ <release version="Cocoon 2.0b1" date="June 7, 2001">
+  <action dev="CZ" type="update">
+   Removed setContentHandler and setLexicalHandler from the XMLProducer interface.
+  </action>
+  <action dev="CZ" type="add">
+   The sitemap components now use the new SourceResolver to resolve
+   resources instead of the old EntityResolver approach.
+  </action>
+  <action dev="GP" type="add">
+   Added a internal-only attribute to the map:pipeline element to protect them
+   from being accessed by normal user request. The only way to access them by
+   use of the src attribute of the map:part element or the xinclude:href of
+   the XIncludeSAXConnector which implements transparent xinclude capability
+  </action>
+  <action dev="GP" type="add">
+   Added a prefix attribute to both map:aggregate and map:part to have a
+   namespace prefix available.
+  </action>
+  <action dev="GP" type="add">
+   Added an optional strip-root attribute to the map:part element of the
+   map:aggregate element to indicate that the aggregator should strip off
+   the root element of the aggregated content. The values can be "yes" or "true"
+   to strip off and anything else to not.
+  </action>
+  <action dev="GP" type="update">
+   Made element attribute of map:part element in map:aggregate element optional
+  </action>
+  <action dev="GP" type="add">
+   Also added substitution for test/pattern attribute.
+  </action>
+  <action dev="GP" type="add">
+   Implementation of content aggregation at sitemap level.
+  </action>
+  <action dev="GP" type="add">
+   Enable a parallel calling path into the sitemap for internal requests
+   of resource.
+  </action>
+  <action dev="GP" type="fix">
+   Added missing methods on CommandLineRequest.
+  </action>
+  <action dev="CZ" type="update">
+   Finished cleanup of the environment. We are now as independant of
+   the javax.servlet package as possible.
+  </action>
+  <action dev="CZ" type="add">
+   Creating wrappers for Session and Cookie.
+   The creation of these wrapper classes allow us to be independent
+   of the javax.servlet classes.
+  </action>
+  <action dev="CZ" type="add">
+    Added reload-method and check-reload configuration attributes for
+    the sitemap to allow asynchron/synchron sitemap reloading.
+  </action>
+  <action dev="CZ" type="add">
+    Added initial caching algorithm for StreamPipelines. The caching system
+    is pluggable and offers caching of the whole response.
+  </action>
+  <action dev="CZ" type="add">
+    Added initial caching algorithm for EventPipelines. The caching system
+    is pluggable and includes caching of generators and transformers.
+  </action>
+  <action dev="BL" type="remove">
+    Moved ComponentManagement infrastructure to Avalon where more eyes
+    can keep it working well, and it can benefit more people.
+  </action>
+  <action dev="GP" type="update">
+    Decoupled the RoleUtils class from the component management system.
+    Implemented RoleInfo proposed by Ricardo Rocha
+  </action>
+  <action dev="GP" type="update">
+    Split up ResourcePipeline into the Component EventPipeline and StreamPipeline
+    and put them in the components package.
+    it.
+  </action>
+  <action dev="RB" type="update">
+    Added a TranscoderFactory for Batik, and updated the SVG Serializer to use
+    it.
+  </action>
+  <action dev="PR" type="add">
+    Added support for SAXConnectors. This is the first stage in the
+    implementation of content aggregation. SAXConnectors could also
+    be used for profiling and pipeline logging.
+  </action>
+  <action dev="BL" type="add">
+    Added form to database Actions.  Using these Actions, you can quickly
+    generate a webapp that functions in _very_ little time.
+  </action>
+  <action dev="DM" type="update">
+    Added command line code generation and compilation of XSP's and the Sitemap.
+  </action>
+  <action dev="DM" type="update">
+    Eliminated dependency on Xalan. Updated sitemap.xsl and the Extension functions to
+    work both on Xalan and SAXON. SAXON should work from version 6.2.2 onwards.
+  </action>
+  <action dev="DM" type="update">
+    Eliminated dependency on Xerces for the serializers by using TRaX Serializers.
+  </action>
+ </release>
+ <release version="Cocoon 2.0a" date="March 2001">
+  <action dev="BL" type="update">
+    Made Cocoon load classpath independent of Servlet Engine Classpath
+    Attribute.
+  </action>
+  <action dev="BL" type="update">
+    Changed the Xerces Specific code in the parser to JAXP 1.1 code.
+    The JAXP 1.1 code will work with any compliant parser.  Unfortunately
+    we still need Xerces for the serializers.
+  </action>
+  <action dev="BL" type="update">
+    Put meat on the Action Framework for the ManageEmployees form.
+  </action>
+  <action dev="RB" type="update">
+   SVG serializer now uses Batik.
+  </action>
+  <action dev="BL" type="add">
+    I did a first stab at importing the util logicsheet from Cocoon 1.8.1.
+  </action>
+  <action dev="BL" type="add">
+    I added some simple forms that make use of the xsp-request and esql
+    logicsheets.
+  </action>
+  <action dev="BL" type="update">
+    Clean up a lot of classloader issues.  RepositoryClassLoader is quicker and
+    more stable accross installations.  ClassUtils takes care of getting resources.
+  </action>
+  <action dev="BL" type="update">
+    Updated avalonapi to implement hierarchical logging, and added many more
+    log entries to get a handle on where the problems lay.
+  </action>
+  <action dev="DB" type="add">
+   added esql logicsheet to c2
+  </action>
+  <action dev="DB" type="fix">
+   patched xsp generator to use proper namespace for automatic text elements
+  </action>
+  <action dev="BL" type="update">
+    Updated Cocoon to be Avalon 3.0a4 compliant.  Introduced ComponentManager and
+    ComponentSelector patterns correctly in code.  Updated sitemap to create
+    Configuration trees directly.
+  </action>
+  <action dev="RB" type="add">
+   Added a more complete SVG serializer.
+  </action>
+  <action dev="SM" type="update">
+   Distribution cleanup and creation of a decent live demo, also to test the new sitemap.
+  </action>
+  <action dev="GP" type="update">
+   Major update to implement the new compiled sitemap subsystem.
+  </action>
+  <action dev="DB" type="update">
+   Patched XSLTFilter to pass request parameters into stylesheet like cocoon1
+  </action>
+  <action dev="DB" type="add">
+   Added ImageDirectoryGenerator - this oughta be pluggable though, so other file types can have extra attributes added easily
+  </action>
+  <action dev="SM" type="add">
+   Improved the samples and the webapp sitemap.
+  </action>
+  <action dev="SM" type="update">
+   Cleaned build system in order to be friendly to ASF-wide build procedures.
+  </action>
+  <action dev="SM" type="update">
+   Updated installation section (JServ no longer supported).
+  </action>
+  <action dev="SM" type="update">
+   Updated Xerces and FOP to latest versions.
+  </action>
+  <action dev="SM" type="fix">
+   Patched for final SAX2 compatibility.
+  </action>
+  <action dev="SM" type="update" due-to="Sven K&uuml;nzler" due-to-email="svenk@tzi.org">
+   Improved installation documentation.
+  </action>
+  <action dev="DB" type="add" due-to="Zvi" due-to-email="thezvi@ifrance.com">
+   Patched SQLFilter so VJ++ was happy
+  </action>
+  <action dev="DB" type="add">
+   Officially added XincludeFilter
+  </action>
+  <action dev="DB" type="add">
+   Officially added SQLFilter
+  </action>
+  <action dev="SM" type="add" due-to="Sebastien Sahuc" due-to-email="ssahuc@imediation.com">
+   Fixed order of filters that was backwards.
+  </action>
+  <action dev="GP" type="add">
+   Fixed typo in DirectoryGenerator.
+  </action>
+  <action dev="SM" type="add">
+   Distribution cleanup, early documentation.
+  </action>
+  <action dev="PF" type="add">
+   Initial code implementation.
+  </action>
+ </release>
+
+  </changes>  
+
+</status>
+

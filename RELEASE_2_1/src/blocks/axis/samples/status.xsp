@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp-request="http://apache.org/xsp/request/2.0"
+  xmlns:xscript="http://apache.org/xsp/xscript/1.0"
+  xmlns:soap="http://apache.org/xsp/soap/3.0">
+<page>
+  <soap:call method="AdminService" url="rpcrouter">
+    <m:list xmlns:m="http://xml.apache.org/axis/wsdd/"/>
+  </soap:call>
+</page>
+</xsp:page>

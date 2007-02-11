@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="woody-binding">
+       
+  <woody-binding logger="woody.binding"/>
+
+</xconf>

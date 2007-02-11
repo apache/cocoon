@@ -1,0 +1,45 @@
+#parse ("view/templates/IncludeTop.vm")
+
+<form action="${continuation.id}.kont" styleId="workingOrderForm" method="post" >
+
+<TABLE align="center" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
+<TR bgcolor="#FFFF88"><TD colspan="2">
+<FONT color="GREEN" size="4"><B>Shipping Address</B></FONT>
+</TD></TR>
+
+
+
+<TR bgcolor="#FFFF88"><TD>
+First name:</TD><TD><input type="text" name="shipToFirstName" />
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+Last name:</TD><TD><input type="text" name="shipToLastName" />
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+Address 1:</TD><TD><input type="text" size="40" name="shipAddress1" />
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+Address 2:</TD><TD><input type="text" size="40" name="shipAddress2" />
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+City: </TD><TD><input type="text" name="shipCity" />
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+State:</TD><TD><input type="text" size="4" name="shipState" />
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+Zip:</TD><TD><input type="text" size="10" name="shipZip" />
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+Country: </TD><TD><input type="text" size="15" name="shipCountry" />
+</TD></TR>
+
+
+
+</TABLE>
+<P><center>
+<input type="image" src="images/button_submit.gif"/>
+</center></P>
+</form>
+
+#parse("view/templates/IncludeBottom.vm")

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+        <form method="POST" styleId="workingOrderForm" action="#{$continuation/id}.kont">
+        <panel>
+            <panel label="Payment Details">
+                <select name="order.cardType" label="Card Type">
+                    <c:forEach select="#{creditCardTypes}" >
+                        <option value="#{.}">#{.}</option>
+                    </c:forEach>
+                </select>
+                <input type="text" name="creditCard" label="Card Number" />
+                <input type="text" name="expiryDate" label="Expiry Date (MM/YYYY)" />
+            </panel>
+            <panel label="Billing Address">
+                <input type="text" name="billToFirstName" label="First name" value="#{order/billToFirstName}"/>
+                <input type="text" name="billToLastName" label="Last name" value="#{order/billToLastName}"/>
+                <input type="text" size="40" name="billAddress1"  label="Address 1" value="#{order/billAddress}"/>
+                <input type="text" size="40" name="billAddress2" label="Address 2" value="#{order/billAddress2}"/>
+                <input type="text" name="billCity" label="City" value="#{order/billCity}"/>
+                <input type="text" name="billState" label="State" value="#{order/billState}"/>
+                <input type="text" name="billZip" label="Zip" value="#{order/billZip}"/>
+                <input type="text" size="15" name="billCountry" label="Country" value="#{order/billCountry}"/>
+                <input type="checkbox" name="shippingAddressRequired" label="Ship to different address..."/>
+            </panel>
+        </panel>
+        </form>
+    </site>
+
+</page>
+
+
+
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+  Automatically detects all the Anteater tests in the current
+  directory and runs them.
+
+  Author: Ovidiu Predescu "ovidiu@apache.org"
+  Date: April 4, 2002
+
+  Description:
+
+  To write a new Anteater test, just create a new Ant XML file and
+  define a target whose name is the same as the filename, except for
+  the .xml suffix. Then go in the top level directory of Cocoon and
+  type:
+
+  ./build.sh test
+
+  The newly added test file will be picked up and executed
+  auto-magically.
+
+  -->
+
+<project name="all-tests" default="all">
+
+  <taskdef resource="META-INF/Anteater.tasks"/>
+  <typedef resource="META-INF/Anteater.types"/>
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <target name="init">
+    <property name="port" value="8100"/>
+    <property name="cocoon" value="http://${host}:${port}/${base}"/>
+    <property name="src-webapp-dir" value="../../webapp"/>
+    <property name="deploy-dir" value="../../../build/cocoon/webapp"/>
+  </target>
+
+  <target name="deploy">
+    <servletContainer port="${port}"/>
+    <deploy path="/cocoon" webapp="${deploy-dir}"/>
+    <sleep seconds="5"/>
+  </target>
+
+  <target name="all" depends="init">
+    <foreach target="runtest" param="name">
+      <fileset dir=".">
+        <include name="*.xml"/>
+        <exclude name="all-tests.xml"/>
+      </fileset>
+    </foreach>
+  </target>
+
+  <target name="runtest" depends="init">
+    <basename property="target" file="${name}" suffix=".xml"/>
+    <echo message="running test ${target} in dir ${basedir}"/>
+    <ant antfile="${target}.xml" dir="${basedir}" target="${target}" inheritAll="yes"/>
+  </target>
+</project>

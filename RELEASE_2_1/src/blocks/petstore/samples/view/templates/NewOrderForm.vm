@@ -1,0 +1,62 @@
+#parse ("view/templates/IncludeTop.vm")
+
+
+<form action="${continuation.id}.kont" styleId="workingOrderForm" method="post" >
+
+<TABLE border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
+<TR bgcolor="#FFFF88"><TD colspan="2">
+<FONT color="GREEN" size="4"><B>Payment Details</B></FONT>
+</TD></TR><TR bgcolor="#FFFF88"><TD>
+Card Type:</TD><TD>
+<select name="order.cardType">
+#foreach ($cardType in $creditCardTypes)
+  <option value="$cardType">$cardType</option>
+#end
+</select>
+</TD></TR>
+<TR bgcolor="#FFFF88"><TD>
+Card Number:</TD><TD><input type="text" name="creditCard"/> <font color="red" size="2">* Use a fake number!</font>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Expiry Date (MM/YYYY):</TD><TD><input type="text" name="expiryDate" />
+</TD></TR>
+<TR bgcolor="FFFF88"><TD colspan="2">
+<FONT color="GREEN" size="4"><B>Billing Address</B></FONT>
+</TD></TR>
+
+<TR bgcolor="FFFF88"><TD>
+First name:</TD><TD><input type="text" name="billToFirstName" value="$order.billToFirstName"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Last name:</TD><TD><input type="text" name="billToLastName" value="$order.billToLastName" />
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Address 1:</TD><TD><input type="text" size="40" name="billAddress1" value="$order.billAddress" />
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Address 2:</TD><TD><input type="text" size="40" name="billAddress2" value="$order.billAddress2"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+City: </TD><TD><input type="text" name="billCity" value="$order.billCity"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+State:</TD><TD><input type="text" size="4" name="billState" value="$order.billState"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Zip:</TD><TD><input type="text" size="10" name="billZip" value="$order.billZip"/>
+</TD></TR>
+<TR bgcolor="FFFF88"><TD>
+Country: </TD><TD><input type="text" size="15" name="billCountry" value="$order.billCountry"/>
+</TD></TR>
+
+<TR bgcolor="FFFF88"><TD colspan="2">
+<input type="checkbox" name="shippingAddressRequired" /> Ship to different address...
+</TD></TR>
+
+</TABLE>
+<P><center>
+  <input type="image" src="images/button_submit.gif"/>
+</center></P>
+</form>
+
+#parse ("view/templates/IncludeBottom.vm")

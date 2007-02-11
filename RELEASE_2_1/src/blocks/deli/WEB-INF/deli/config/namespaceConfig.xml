@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<namespaceConfig>
+
+ <namespaceDeclaration>
+
+  <!-- There are errors in this schema. Leave out for now
+
+  <namespace>
+   <uri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20020710#</uri>
+   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20020710.rdfs</schemaVocabularyFile>
+  </namespace>
+  -->
+
+  <namespace>
+   <!-- MMS -->
+   <uri>http://www.wapforum.org/profiles/MMS/ccppschema-20010111#</uri>
+   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20010111.rdfs</schemaVocabularyFile>
+  </namespace>
+
+  <namespace>
+   <uri>http://www.wapforum.org/UAPROF/ccppschema-20000405#</uri>
+   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20000405.rdfs</schemaVocabularyFile>
+  </namespace>
+  
+  <namespace>
+   <uri>http://www.wapforum.org/UAPROF/ccppschema-20010330#</uri>
+   <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20010430#</aliasUri>
+   <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20010330#</aliasUri>   
+   <aliasUri>http://www.wapforum.org/UAPROF/ccppschema-19991014#</aliasUri>
+   <aliasUri>http://www.wapforum.org/UAPROF/ccppschema-20010430#</aliasUri>
+   <schemaVocabularyFile>WEB-INF/deli/config/vocab/ccppschema-20010330.rdfs</schemaVocabularyFile>
+  </namespace>
+ 
+  <!-- example of using a vocabulary config xml file
+  <namespace>
+   <uri>http://www.wapforum.org/UAPROF/ccppschema-20000405#</uri>
+   <vocabularyFile>WEB-INF/deli/config/vocab/uaprof_vocab_05apr2000.xml</vocabularyFile>
+  </namespace>
+  -->
+  
+ </namespaceDeclaration>
+
+</namespaceConfig>

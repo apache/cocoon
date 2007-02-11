@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+ <map:components>
+
+  <map:generators default="file">   
+    <map:generator name="woody" src="org.apache.cocoon.woody.generation.WoodyGenerator" logger="woody"/>
+    <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
+  </map:generators>
+
+  <map:transformers default="xalan">    
+    <map:transformer name="woody" src="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer" logger="woody"/>
+    <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+      <catalogues default="other">
+        <catalogue id="other" name="OtherMessages" location="messages"/>
+        <catalogue id="woody" name="WoodyMessages" location="messages"/>
+      </catalogues>
+      <cache-at-startup>true</cache-at-startup>
+    </map:transformer>
+  </map:transformers>
+
+  <map:selectors default="browser">
+    <map:selector name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
+  </map:selectors>
+
+  <map:actions>
+    <map:action name="woody-make-form" src="org.apache.cocoon.woody.acting.MakeFormAction" logger="woody"/>
+    <map:action name="init-form1" src="org.apache.cocoon.woody.samples.InitForm1Action" logger="woody"/>
+    <map:action name="woody-handle-form-submit" src="org.apache.cocoon.woody.acting.HandleFormSubmitAction" logger="woody"/>
+  </map:actions>
+
+  <map:pipes default="caching">
+  </map:pipes>
+
+ </map:components>
+
+ <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+
+  <map:view from-label="content" name="pretty-content">
+   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:serialize type="html"/>
+  </map:view>
+
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
+  </map:view>
+ </map:views>
+
+  <!-- indicates what flowscript to attach to this sitemap -->
+  <map:flow language="javascript">
+    <map:script src="flow/woody_flow_example.js"/>
+    <map:script src="flow/binding_example.js"/>
+  </map:flow>
+
+ <map:pipelines>
+   <map:pipeline>
+
+     <map:match pattern="">
+      <map:generate src="welcome.xml"/>
+      <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
+      <map:serialize/>
+     </map:match>
+
+     <!--
+        | "Form1" example, demonstrates all kinds of features
+        -->
+     <map:match pattern="form1">
+       <!-- Here we use the HTTP method, GET or POST, to make distinction between
+       the initial form display and a form submit. In both cases the same publishing
+       pipeline will be used, which is below the selector. -->
+       <map:select type="request-method">
+         <map:when test="GET">
+           <!-- Here we use an action especially created for the "form1" example
+           which will initialise the form with some data. -->
+           <map:act type="init-form1">
+             <map:parameter name="form-definition" value="forms/form1.xml"/>
+             <map:parameter name="attribute-name" value="form1"/>
+           </map:act>
+         </map:when>
+         <map:when test="POST">
+           <map:act type="woody-handle-form-submit">
+             <map:parameter name="form-definition" value="forms/form1.xml"/>
+             <map:parameter name="attribute-name" value="form1"/>
+             <map:parameter name="formhandler" value="org.apache.cocoon.woody.samples.Form1Handler"/>
+
+             <!-- the content of this action is only executed in case validation
+                  succeeded, thus if the form handling is completed -->
+             <map:generate type="serverpages" src="forms/form1_success.xsp"/>
+             <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+               <map:parameter name="contextPath" value="{request:contextPath}"/>
+               <map:parameter name="servletPath" value="{request:servletPath}"/>
+               <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+               <map:parameter name="file" value="forms/form1_success.xsp"/>
+               <map:parameter name="remove" value="{../0}"/>
+             </map:transform>
+             <map:serialize/>
+           </map:act>
+         </map:when>
+         <map:otherwise>
+           <!-- todo: do something here -->
+         </map:otherwise>
+       </map:select>
+
+       <!-- pipeline to show the form -->
+       <map:generate src="forms/form1_template_action.xml"/>
+       <map:transform type="woody">
+         <map:parameter name="attribute-name" value="form1"/>
+       </map:transform>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_template_action.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+        
+    <!-- Flowscript Sample -->
+
+     <map:match pattern="form1.flow">
+       <map:call function="woody">
+         <map:parameter name="function" value="form1"/>
+         <map:parameter name="form-definition" value="forms/form1.xml"/>
+         <map:parameter name="attribute-name" value="form1"/>
+       </map:call>
+     </map:match>
+
+     <map:match pattern="*.continue">
+       <map:call continuation="{1}"/>
+     </map:match>
+
+     <map:match pattern="form1-display-pipeline">
+       <!-- pipeline to show the form -->
+       <map:generate src="forms/form1_template_flow.xml"/>
+       <map:transform type="woody"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_template_flow.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform> 
+       <map:serialize/>
+     </map:match>
+
+     <map:match pattern="form1-success-pipeline">
+       <map:generate type="serverpages" src="forms/form1_success.xsp"/>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_success.xsp"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+
+
+     <!--
+        | Binding form sample, using flowscript
+        -->
+
+     <map:match pattern="form2xml.flow">
+       <map:call function="woody">
+         <map:parameter name="function" value="form2xml"/>
+         <map:parameter name="form-definition" value="forms/form2_model.xml"/>
+         <map:parameter name="documentURI" value="forms/form2_data.xml"/>
+         <map:parameter name="bindingURI" value="forms/form2_bind_xml.xml"/>
+       </map:call>
+     </map:match>
+
+     <map:match pattern="form2bean.flow">
+       <map:call function="woody">
+         <map:parameter name="function" value="form2bean"/>
+         <map:parameter name="form-definition" value="forms/form2_model.xml"/>
+         <map:parameter name="bindingURI" value="forms/form2_bind_bean.xml"/>
+       </map:call>
+     </map:match>
+
+     <map:match pattern="form2-display-pipeline">
+       <!-- pipeline to show the form -->
+       <map:generate src="forms/form2_template.xml"/>
+       <map:transform type="woody"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_template.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform> 
+       <map:serialize/>
+     </map:match>
+
+     <map:match pattern="form2-success-pipeline">
+       <map:generate src="forms/form2_data-result.xml"/>
+       <map:serialize type="xml"/>
+     </map:match>
+
+     <map:match pattern="form2bean-success-pipeline">
+       <map:generate type="jx" src="forms/form2_jx.xml"/>
+       <map:serialize/>
+     </map:match>
+
+     <!--
+        | Registration form example (used in the documentation)
+        -->
+     <map:match pattern="registration">
+       <map:select type="request-method">
+         <map:when test="GET">
+           <map:act type="woody-make-form">
+             <map:parameter name="form-definition" value="forms/registration.xml"/>
+             <map:parameter name="attribute-name" value="registrationform"/>
+           </map:act>
+         </map:when>
+         <map:otherwise>
+           <map:act type="woody-handle-form-submit">
+             <map:parameter name="form-definition" value="forms/registration.xml"/>
+             <map:parameter name="attribute-name" value="registrationform"/>
+
+             <map:generate type="serverpages" src="forms/registration_success.xsp"/>
+             <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+               <map:parameter name="contextPath" value="{request:contextPath}"/>
+               <map:parameter name="servletPath" value="{request:servletPath}"/>
+               <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+               <map:parameter name="file" value="forms/registration_success.xsp"/>
+               <map:parameter name="remove" value="{../0}"/>
+             </map:transform>
+             <map:serialize/>
+           </map:act>
+         </map:otherwise>
+       </map:select>
+
+       <map:generate src="forms/registration_template.xml"/>
+       <map:transform type="woody">
+         <map:parameter name="attribute-name" value="registrationform"/>
+       </map:transform>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/registration_template.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+
+
+     <!--
+         | Car selector sample.
+         -->
+
+     <map:match pattern="cars">
+       <map:generate src="forms/car-db.xml"/>
+       <map:transform src="xsl/carfilter.xsl">
+         <map:parameter name="type" value="makes"/>
+       </map:transform>
+       <map:serialize type="xml"/>
+     </map:match>
+
+     <map:match pattern="cars/*">
+       <map:generate src="forms/car-db.xml"/>
+       <map:transform src="xsl/carfilter.xsl">
+         <map:parameter name="type" value="models"/>
+         <map:parameter name="make" value="{1}"/>
+       </map:transform>
+       <map:serialize type="xml"/>
+     </map:match>
+
+     <map:match pattern="carselector">
+       <map:select type="request-method">
+         <map:when test="GET">
+           <map:act type="woody-make-form">
+             <map:parameter name="form-definition" value="forms/carselector_form.xml"/>
+             <map:parameter name="attribute-name" value="carselectorform"/>
+           </map:act>
+         </map:when>
+         <map:when test="POST">
+           <map:act type="woody-handle-form-submit">
+             <map:parameter name="form-definition" value="forms/carselector_form.xml"/>
+             <map:parameter name="attribute-name" value="carselectorform"/>
+             <map:parameter name="formhandler" value="org.apache.cocoon.woody.samples.CarSelectorHandler"/>
+
+             <map:generate type="serverpages" src="forms/carselector_success.xsp"/>
+             <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+               <map:parameter name="contextPath" value="{request:contextPath}"/>
+               <map:parameter name="servletPath" value="{request:servletPath}"/>
+               <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+               <map:parameter name="file" value="forms/registration_success.xsp"/>
+               <map:parameter name="remove" value="{../0}"/>
+             </map:transform>
+             <map:serialize/>
+           </map:act>
+         </map:when>
+         <map:otherwise>
+           <!-- todo: do something here -->
+         </map:otherwise>
+       </map:select>
+
+       <map:generate src="forms/carselector_template.xml"/>
+       <map:transform type="woody">
+         <map:parameter name="attribute-name" value="carselectorform"/>
+       </map:transform>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+
+   </map:pipeline>
+ </map:pipelines>
+
+</map:sitemap>
