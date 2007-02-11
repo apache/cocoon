@@ -43,7 +43,7 @@
 
             <map:match pattern="directory.xml">
                 <map:generate type="directory" src=".">
-                    <depth>1</depth>
+                  <map:parameter name="depth" value="1"/>
                 </map:generate>
                 <map:serialize type="xml"/>
             </map:match>
