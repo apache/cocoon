@@ -1,0 +1,16 @@
+build
+dist
+prj.el
+.project
+.classpath
+cocoon.launch
+local.build.properties
+local.blocks.properties
+cocoon.sampledata
+.DS_Store
+*.ipr
+*.iws
+*.iml
+mount-table.xml
+tomcat
+tomcat.bat

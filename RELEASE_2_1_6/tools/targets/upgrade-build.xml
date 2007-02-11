@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="upgrade">
+  <description>
+    Upgrade targets that help to convert between different Cocoon versions
+  </description>
+
+  <tstamp>
+    <format property="timestamp" pattern="yyyyMMdd_kkmmss"/>
+  </tstamp>
+
+  <target
+    name="Woody2CocoonForms"
+    description="Updates from Woody to CocoonForms">
+
+<echo>
+-----------------------------------------------------------------------------
+Woody 2 Cocoon Forms update
+-----------------------------------------------------------------------------
+This target is now going to update your Woody files to Cocoon Forms files.
+Therefore you have to specify a source and a target dir.
+
+All .xml, .xsl, .xslt, .xmap and .js/.flow files found in the source directory
+(and any subdirectory) will be copied to the target dir and updated there. The
+source directory itself remains untouched.
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Please enter the source dir with the files that should be updated:"
+           addproperty="src.dir"
+           defaultvalue="./src/blocks/woody/samples"/>
+    <available file="${src.dir}" type="dir" property="src.dir.exists"/>
+    <fail unless="src.dir.exists" message="The entered directory doesn't exist!"/>
+
+<echo>
+-----------------------------------------------------------------------------
+For the target directory a default directory name is given, you can specify
+another one of course if you want.
+The default directory name for the target directory is:
+./build/woody2cforms_${timestamp}
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Please enter the target directory in which the output should be stored:"
+           addproperty="target.dir"
+           defaultvalue="./build/woody2cforms_${timestamp}"/>
+
+<echo>
+-----------------------------------------------------------------------------
+The update process is now going to start.
+-----------------------------------------------------------------------------
+</echo>
+
+    <property name="temp.dir" value="${target.dir}_temp"/>
+
+    <copy todir="${target.dir}">
+      <fileset dir="${src.dir}">
+        <include name="**/*.xml"/>
+        <include name="**/*.xsl"/>
+        <include name="**/*.xslt"/>
+        <include name="**/*.xmap"/>
+        <include name="**/*.js"/>
+        <include name="**/*.flow"/>
+      </fileset>
+    </copy>
+
+    <!-- namespace changes from Woody to CocoonForms
+         * from xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+           to   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         * from xmlns:wb="http://apache.org/cocoon/woody/binding/1.0"
+           to   xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+         * from xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+           to   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+         * from xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
+           to   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+    -->
+    <replace dir="${target.dir}">
+      <include name="**/*.xml"/>
+      <include name="**/*.xsl"/>
+      <include name="**/*.xslt"/>
+      <replacefilter
+        token="http://apache.org/cocoon/woody/instance/1.0"
+        value="http://apache.org/cocoon/forms/1.0#instance"/>
+      <replacefilter
+        token="http://apache.org/cocoon/woody/binding/1.0"
+        value="http://apache.org/cocoon/forms/1.0#binding"/>
+      <replacefilter
+        token="http://apache.org/cocoon/woody/template/1.0"
+        value="http://apache.org/cocoon/forms/1.0#template"/>
+      <replacefilter
+        token="http://apache.org/cocoon/woody/definition/1.0"
+        value="http://apache.org/cocoon/forms/1.0#definition"/>
+      <replacefilter token="wi:" value="fi:"/>
+      <replacefilter token="wb:" value="fb:"/>
+      <replacefilter token="wt:" value="ft:"/>
+      <replacefilter token="wd:" value="fd:"/>
+      <replacefilter token="xmlns:wi" value="xmlns:fi"/>
+      <replacefilter token="xmlns:wb" value="xmlns:fb"/>
+      <replacefilter token="xmlns:wt" value="xmlns:ft"/>
+      <replacefilter token="xmlns:wd" value="xmlns:fd"/>
+    </replace>
+
+    <replace dir="${target.dir}">
+      <include name="**/*.xsl"/>
+      <include name="**/*.xslt"/>
+      <replacetoken><![CDATA[exclude-result-prefixes="wi"]]></replacetoken>
+      <replacevalue><![CDATA[exclude-result-prefixes="fi"]]></replacevalue>
+    </replace>
+
+    <!-- references to stylesheets in sitemap and stylesheets -->
+    <replace dir="${target.dir}">
+      <include name="**/*.xmap"/>
+      <include name="**/*.xsl"/>
+      <include name="**/*.xslt"/>
+      <replacefilter token="woody-advanced-field-styling.xsl"
+                     value="forms-advanced-field-styling.xsl"/>
+      <replacefilter token="woody-calendar-styling.xsl"
+                     value="forms-calendar-styling.xsl"/>
+      <replacefilter token="woody-field-styling.xsl"
+                     value="forms-field-styling.xsl"/>
+      <replacefilter token="woody-htmlarea-styling.xsl"
+                     value="forms-htmlarea-styling.xsl"/>
+      <replacefilter token="woody-page-styling.xsl"
+                     value="forms-page-styling.xsl"/>
+      <replacefilter token="woody-samples-styling.xsl"
+                     value="forms-samples-styling.xsl"/>
+    </replace>
+
+    <!-- updating sitemaps -->
+    <replace dir="${target.dir}">
+      <include name="**/*.xmap"/>
+      <!--+
+          | - flow function
+          +-->
+      <replacetoken><![CDATA[function="woody"]]></replacetoken>
+      <replacevalue><![CDATA[function="handleForm"]]></replacevalue>
+    </replace>
+    <replace dir="${target.dir}">
+      <include name="**/*.xmap"/>
+      <!--+
+          | - Woody(Generator|TemplateTransformer|Messages)
+          | -> Forms(Generator|TemplateTransformer|Messages)
+          +-->
+      <replacefilter token="Woody" value="Forms"/>
+      <!--+
+          | - hints for actions (removing woody "prefix")
+          +-->
+      <replacefilter token="woody-" value=""/>
+      <!--+
+          | - package name: o.a.c.woody.* -> o.a.c.forms.*
+          | - hints for FormsTemplateTransformer and FormsGenerator
+          | - logger
+          | - i18n catalogue
+          +-->
+      <replacefilter token="woody" value="forms"/>
+    </replace>
+
+    <!-- updating flowscripts -->
+    <replace dir="${target.dir}">
+      <include name="**/*.js"/>
+      <include name="**/*.flow"/>
+      <include name="**/*.xml"/>
+      <!-- Java packages -->
+      <replacefilter
+        token="resource://org/apache/cocoon/woody/flow/javascript/woody2.js"
+        value="resource://org/apache/cocoon/forms/flow/javascript/Form.js"/>
+      <replacefilter
+        token="org.apache.cocoon.woody.datatype.ValidationError"
+        value="org.apache.cocoon.forms.validation.ValidationError"/>
+      <replacefilter
+        token="org/apache/cocoon/woody"
+        value="org/apache/cocoon/forms"/>
+      <replacefilter
+        token="org.apache.cocoon.woody"
+        value="org.apache.cocoon.forms"/>
+    </replace>
+
+<echo>
+-----------------------------------------------------------------------------
+Please read carefully!
+In the next step you can update the repeater binding syntax in your binding
+files. This can only be done by an XSLT and this transformation can neither
+preserve possibly available DocType declarations nor every layout detail
+(e.g. attribute order).
+You will be asked for a directory for the binding files.
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Do you want to update the repeater binding syntax in your binding files automatically? (yes|no)"
+           addproperty="updateRepeaterSyntaxInput"
+           defaultvalue="no"/>
+
+    <condition property="updateRepeaterSyntax">
+      <or>
+        <equals arg1="yes" arg2="${updateRepeaterSyntaxInput}" casesensitive="false" trim="true"/>
+        <equals arg1="y" arg2="${updateRepeaterSyntaxInput}" casesensitive="false" trim="true"/>
+      </or>
+    </condition>
+
+    <antcall target="Woody2CocoonForms-repeater-syntax"/>
+
+<echo>
+-----------------------------------------------------------------------------
+The update was successful so far. You can now choose whether you want to copy
+the updated files from the target directory back to the source directory.
+
+Before copying you can have a look into the files in the target directory. You
+are also asked for a backup directory if you choose to copy.
+-----------------------------------------------------------------------------
+</echo>
+
+    <input message="Do you want to copy the files from the target dir back to the src dir? (yes|no)"
+           addproperty="copyFilesInput"
+           defaultvalue="no"/>
+
+    <condition property="copyFiles">
+      <or>
+        <equals arg1="yes" arg2="${copyFilesInput}" casesensitive="false" trim="true"/>
+        <equals arg1="y" arg2="${copyFilesInput}" casesensitive="false" trim="true"/>
+      </or>
+    </condition>
+
+    <antcall target="Woody2CocoonForms-copy-files"/>
+
+<echo>
+-----------------------------------------------------------------------------
+The update is now complete. Have much fun with the new Cocoon Forms.
+
+                                                  The Apache Cocoon Team
+-----------------------------------------------------------------------------
+</echo>
+
+  </target>
+
+  <target name="Woody2CocoonForms-repeater-syntax" if="updateRepeaterSyntax">
+
+    <input message="Please enter the binding dir *relative* to the above entered source dir ${target.dir}:"
+           addproperty="binding.dir"
+           defaultvalue="."/>
+
+    <xslt basedir="${target.dir}/${binding.dir}" destdir="${temp.dir}"
+          includes="**/*.xml" extension=".xml"
+          style="tools/src/cforms-repeater-syntax.xsl"/>
+    <move todir="${target.dir}/${binding.dir}">
+      <fileset dir="${temp.dir}"/>
+    </move>
+  </target>
+
+  <target name="Woody2CocoonForms-copy-files" if="copyFiles"
+          depends="Woody2CocoonForms-do-not-copy-files">
+    <input message="Please enter the backup dir (default is ${target.dir}_orig):"
+           addproperty="backup.dir"
+           defaultvalue="${target.dir}_orig"/>
+
+    <copy todir="${backup.dir}">
+      <fileset dir="${src.dir}"/>
+    </copy>
+<!--
+    <copy todir="${src.dir}">
+      <fileset dir="${target.dir}"/>
+    </copy>
+-->
+  </target>
+
+  <target name="Woody2CocoonForms-do-not-copy-files" unless="copyFiles">
+<echo>
+You chosed not to copy the updated files. Either do this by hand or restart
+this update process. The updated files can be found at:
+${target.dir}
+</echo>
+  </target>
+</project>

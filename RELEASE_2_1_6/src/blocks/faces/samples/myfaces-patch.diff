@@ -1,0 +1,44 @@
+Index: src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java
+===================================================================
+RCS file: /cvsroot/myfaces/myfaces/src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java,v
+retrieving revision 1.29
+diff -u -r1.29 JspViewHandlerImpl.java
+--- src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	5 Oct 2004 08:22:55 -0000	1.29
++++ src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	5 Oct 2004 11:53:57 -0000
+@@ -207,7 +207,7 @@
+ 
+         String viewId = facesContext.getViewRoot().getViewId();
+         ServletMapping servletMapping = getServletMapping(externalContext);
+-        if (servletMapping.isExtensionMapping())
++        if (servletMapping != null && servletMapping.isExtensionMapping())
+         {
+             String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
+             String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
+@@ -296,6 +296,12 @@
+         ExternalContext externalContext = facescontext.getExternalContext();
+         ServletMapping servletMapping = getServletMapping(externalContext);
+ 
++        if (servletMapping == null)
++        {
++            // If no servlet mappings found, return viewID as is.
++            return viewId;
++        }
++
+         if (servletMapping.isExtensionMapping())
+         {
+             // extension mapping
+@@ -372,10 +378,11 @@
+                 }
+             }
+         }
+-        log.error("could not find pathMapping for servletPath = " + servletPath +
+-                  " requestPathInfo = " + requestPathInfo);
+-        throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
++
++        // No mappings found, return null
++        log.warn("could not find pathMapping for servletPath = " + servletPath +
+                   " requestPathInfo = " + requestPathInfo);
++        return null;
+     }
+ 
+ }

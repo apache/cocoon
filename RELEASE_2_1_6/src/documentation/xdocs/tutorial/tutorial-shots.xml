@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+ <header>
+  <title>Tutorial screenshots</title>
+  <authors>
+   <person name="Berin Loritsch" email="bloritsch@apache.org"/>
+   <person name="John Morrison" email="morrijr@apache.org"/>
+  </authors>
+ </header>
+
+<body>
+ <s1 title="Some example screen snapshots">
+  <figure src="images/create-dept.jpg" alt="Create Department"
+          width="809" height="588"/>
+  <figure src="images/edit-dept.jpg" alt="Update Department"
+          width="819" height="594"/>
+  <figure src="images/create-empl.jpg" alt="Create Employee"
+          width="809" height="642"/>
+  <figure src="images/edit-empl.jpg" alt="Update Employee"
+          width="814" height="654"/>
+  <figure src="images/search-dept.jpg" alt="Find Department"
+          width="835" height="580"/>
+  <figure src="images/results-dept.jpg" alt="Find Department Results"
+          width="835" height="790"/>
+  <figure src="images/search-empl.jpg" alt="Find Employee"
+          width="819" height="594"/>
+  <figure src="images/results-empl.jpg" alt="Find Employee Results"
+          width="819" height="912"/>
+ </s1>
+</body>
+</document>

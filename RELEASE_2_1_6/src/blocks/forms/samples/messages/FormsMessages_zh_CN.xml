@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This catalogue file contains translations for built-in CForms messages. -->
+<catalogue>
+  <message key="general.field-required">æ­¤åŸŸæ˜¯å¿…é¡»çš„</message>
+
+  <message key="datatype.conversion-failed">ä¸æ˜¯ä¸€ä¸ªæœ‰æ•ˆçš„{0}ç±»åž‹.</message>
+  <message key="datatype.decimal">å°æ•°</message> 
+  <message key="datatype.integer">æ•´æ•°</message> 
+  <message key="datatype.long">æ•´æ•°</message>
+  <message key="datatype.float">å°æ•°</message> 
+  <message key="datatype.double">å°æ•°</message> 
+  <message key="datatype.date.date">æ—¥æœŸ</message>
+  <message key="datatype.date.time">#time#</message>
+  <message key="datatype.date.datetime">#date-time#</message>
+
+  <message key="validation.string.exact-length">åº”ä¸º{0}ä¸ªå­—ç¬¦.</message>
+  <message key="validation.string.range-length">åº”åŒ…å«{0}åˆ°{1}ä¸ªå­—ç¬¦.</message>
+  <message key="validation.string.min-length">åº”åŒ…å«è‡³å°‘{0}ä¸ªå­—ç¬¦.</message>
+  <message key="validation.string.max-length">ä¸åº”è¶…è¿‡{0}ä¸ªå­—ç¬¦.</message>
+  <message key="validation.string.regexp">ä¸èƒ½æ»¡è¶³å¦‚ä¸‹è¡¨è¾¾å¼: {0}</message>
+
+  <message key="validation.string.invalidemail">åŸŸä¸åŒ…å«æœ‰æ•ˆçš„é‚®ä»¶åœ°å€</message>
+
+  <message key="validation.array.exact-valuecount">åº”æœ‰{0}ä¸ªé¡¹ç›®è¢«é€‰ä¸­.</message>
+  <message key="validation.array.range-valuecount">è‡³å°‘{0}ä¸ªå’Œæœ€å¤š{1}ä¸ªé¡¹ç›®åº”è¢«é€‰ä¸­.</message>
+  <message key="validation.array.min-valuecount">è‡³å°‘{0}ä¸ªé¡¹ç›®åº”è¢«é€‰ä¸­.</message>
+  <message key="validation.array.max-valuecount">è‡³å¤š{0}ä¸ªé¡¹ç›®åº”è¢«é€‰ä¸­.</message>
+
+  <message key="multivaluefield.conversionfailed">é€‰ä¸­çš„å€¼å½“ä¸­æœ‰ä¸€ä¸ªç±»åž‹ä¸æ­£ç¡®.</message>
+
+  <message key="validation.numeric.range">æ•°å­—èŒƒå›´åº”åœ¨{0}åˆ°{1}ä¹‹é—´.</message>
+  <message key="validation.numeric.min">æ•°å­—åº”å¤§äºŽç­‰äºŽ{0}.</message>
+  <message key="validation.numeric.max">æ•°å­—åº”å°äºŽç­‰äºŽ{0}.</message>
+
+  <message key="validation.mod10">Mod 10 æ£€æŸ¥å¤±è´¥.</message>
+
+
+  <message key="aggregatedfield.split-failed">åŸŸçš„å†…å®¹ä¸èƒ½æ»¡è¶³å¦‚ä¸‹è¡¨è¾¾å¼: {0}</message>
+  <message key="upload.invalid-type">å†…å®¹ç±»åž‹ä¸æ­£ç¡®.</message>
+</catalogue>

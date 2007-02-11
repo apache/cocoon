@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- CVS $Id: svgtest.fo.xml,v 1.1 2004/03/06 02:34:33 joerg Exp $ -->
+<fo:root xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:fo="http://www.w3.org/1999/XSL/Format">
+  <fo:layout-master-set>
+    <fo:simple-page-master margin-right="0.5in" margin-left="0.5in" margin-bottom="0.5in" margin-top="0.5in" page-width="8.5in" page-height="11.5in" master-name="all">
+      <fo:region-body margin-bottom="0.25in" margin-top="0.25in"/>
+      <fo:region-before extent="0.25in"/>
+      <fo:region-after extent="0.25in"/>
+    </fo:simple-page-master>
+  </fo:layout-master-set>
+  <fo:page-sequence master-reference="all">
+    <fo:flow flow-name="xsl-region-body">
+      <fo:block text-align="center">
+        <fo:instream-foreign-object text-align="center">
+          <svg:svg xmlns:xlink="http://www.w3.org/1999/xlink" width="6in" height="6in" viewBox="0 0 1400 1400">
+            <svg:defs>
+              <svg:g style="stroke:green;fill:green" id="greenRect">
+                <svg:rect x="0" y="0" width="100" height="100"/>
+              </svg:g>
+              <svg:g id="yellowGreenRect">
+                <svg:rect x="0" y="0" width="200" height="200" style="stroke:yellow;fill:yellow"/>
+                <svg:use transform="translate(400,400)" xlink:href="#greenRect"/>
+              </svg:g>
+            </svg:defs>
+            <svg:rect x="0" y="0" width="1600" height="1600" style="stroke-width:1;stroke:black;fill:red"/>
+            <svg:use xlink:href="#yellowGreenRect"/>
+          </svg:svg>
+        </fo:instream-foreign-object>
+      </fo:block>
+    </fo:flow>
+  </fo:page-sequence>
+</fo:root>

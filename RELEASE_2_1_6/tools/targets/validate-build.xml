@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="validation">
+
+  <description>
+    Validation targets
+  </description>
+
+  <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
+  <target name="validate-jars" depends="prepare" unless="internal.exclude.validate.jars">
+    <path id="all.jars">
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="${blocks}">
+        <include name="*/lib/*.jar"/>
+      </fileset>
+    </path>
+
+    <property name="all.jars" refid="all.jars"/>
+    <copy file="${tools.src}/jars.xml.tmpl" 
+          tofile="${build.temp}/current-jars.xml" 
+          filtering="yes" overwrite="yes">
+      <filterset>
+        <filter token="JARS" value="${all.jars}"/>
+      </filterset>
+    </copy>
+
+    <!-- split the path in 'jar' XML elements -->
+    <replace file="${build.temp}/current-jars.xml"
+             token="${path.separator}" 
+             value="&lt;/jar&gt;&#xA; &lt;jar&gt;"/>
+
+    <!-- relativize file names by removing the current directory -->
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${user}${file.separator}lib${file.separator}" 
+             value=""/>
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${user}${file.separator}${blocks}${file.separator}" 
+             value=""/>
+
+    <!-- and incase that fails, remove the base directory -->
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${basedir}${file.separator}lib${file.separator}" 
+             value=""/>
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${basedir}${file.separator}${blocks}${file.separator}" 
+             value=""/>
+
+    <!-- replace platform-dependent path separator by '/' -->
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${file.separator}" 
+             value="/"/>
+
+    <xslt in="${lib}/jars.xml" out="${build.temp}/jars.xml"
+          processor="trax"
+          style="${tools}/src/check-jars.xsl">
+      <param name="stylesheet-path" expression="${tools}/src"/>
+      <param name="current-jars-path" expression="${build.temp}"/>
+      <param name="current-jars-file" expression="current-jars.xml"/>
+    </xslt>
+  </target>
+
+  <!-- Validate configuration files.
+    This needs to be done at the end of the build, because the cocoon.xconf
+    and cocoon.roles are automatically constructed.
+  -->
+  <target name="validate-config" depends="prepare" unless="internal.exclude.validate.config">
+    <echo message="Validating some important configuration files"/>
+
+    <echo message="Validating cocoon.xconf using a very basic RELAX NG grammar ..."/>
+    <jing rngfile="${webapp}/WEB-INF/entities/any.rng">
+      <fileset dir="${build.webapp}/WEB-INF" includes="cocoon.xconf"/>
+    </jing>
+  </target>
+
+  <!-- Validation of xdocs  -->
+  <target name="validate-xdocs" depends="prepare-docs" unless="internal.exclude.validate.xdocs">
+<!--
+    <echo message="Conducting validation of core XML documentation."/>
+-->
+    <echo message="Not conducting validation of core XML documentation."/>
+    <echo message="Use 'forrest validate-xdocs' instead."/>
+
+<!-- FIXME: 
+    <echo message="Validating all **/book.xml instances using RELAX NG ..."/>
+    <jing rngfile="${webapp}/WEB-INF/entities/book-v01.rng">
+      <fileset dir="${build.context}" includes="**/book.xml"/>
+    </jing>
+-->
+
+<!--
+    <echo message="Validating all xdocs/**/*.xml instances using DTDs ..."/>
+    <xmlvalidate failonerror="true" lenient="no" warn="yes">
+-->
+      <!-- FIXME: we can use xmlcatalog/catalogpath with Ant-1.6 -->
+<!--
+      <xmlcatalog>
+        <catalogpath>
+          <pathelement location="${webapp}/WEB-INF/entities/catalog.xcat"/>
+        </catalogpath>
+      </xmlcatalog>
+-->
+<!--
+      <fileset dir="${build.context}/xdocs" includes="**/*.xml"
+               excludes="status.xml,drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml,tabs.xml,dtd/**"/>
+    </xmlvalidate>
+-->
+
+  </target>
+
+  <target name="validate-sitemaps" depends="init-tasks"
+          description="Standalone target to validate all sitemaps">
+    <echo message="Validating all sitemap.xmap using RELAX NG ..."/>
+    <echo>Note: This is experimental.
+You may need to tweak the sitemap-v*.rng to handle stuff that is truly valid.
+Blocks sitemaps are deliberately excluded.
+    </echo>
+    <jing rngfile="${webapp}/WEB-INF/entities/sitemap-v06.rng">
+<!--
+      <fileset dir="${blocks}" includes="**/sitemap.xmap"/>
+-->
+      <fileset dir="${webapp}" includes="**/sitemap.xmap"/>
+      <fileset dir="${documentation}" includes="sitemap*.xmap"/>
+      <fileset dir="${docs}" includes="**/drafts/sitemap-allowed.xmap"/>
+<!--
+      <fileset dir="${docs}" includes="**/drafts/sitemap-working-draft.xmap"/>
+-->
+    </jing>
+  </target>
+
+  <target name="validate-stylesheets" depends="init-tasks"
+          description="Standalone target to validate all stylesheets">
+    <echo message="Validating all XSLT stylesheets using RELAX NG ..."/>
+    <jing rngfile="${webapp}/WEB-INF/entities/xslt-20020523.rng">
+      <fileset dir="${src}" includes="**/*.xsl*"
+        excludes="webapp/samples/catalog/*.xsl"/>
+    </jing>
+  </target>
+</project>

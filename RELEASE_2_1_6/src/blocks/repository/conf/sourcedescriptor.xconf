@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceDescriptor']">
+
+  <component role="org.apache.cocoon.components.source.SourceDescriptor" 
+             class="org.apache.cocoon.components.source.impl.SourceDescriptorManager" 
+             logger="core.source.sourcedescriptor">
+    
+    <sourceinspector class="org.apache.cocoon.components.source.impl.XPathSourceInspector">
+      <parameter name="namespace" value="http://xml.apache.org/cocoon/xdoc/1.0"/>
+      <parameter name="name"      value="title"/>
+      <parameter name="extension" value=".xdoc"/>
+      <parameter name="xpath"     value="/document/header/title"/>
+    </sourceinspector>
+    
+    <sourceinspector class="org.apache.cocoon.components.source.impl.JPEGSourceInspector"/>
+    <sourceinspector class="org.apache.cocoon.components.source.impl.GIFSourceInspector"/>
+    
+    <!-- You need to have databases block included to use this feature
+    <sourcedescriptor class="org.apache.cocoon.components.source.impl.SimpleJdbcSourceDescriptor">
+      <property name="author" namespace="meta" />
+      <property name="keyword" namespace="meta" />
+      <datasource>personnel</datasource>
+    </sourcedescriptor>
+    -->
+    
+  </component>
+ 
+</xconf>

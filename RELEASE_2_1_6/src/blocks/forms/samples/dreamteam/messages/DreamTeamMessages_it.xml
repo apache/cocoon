@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This catalogue file contains translations for DreamTeam messages. -->
+<catalogue>
+    <message key="GK">Portiere</message>
+    <message key="MD">Centrocampista</message>
+    <message key="FW">Attaccante</message>
+    <message key="DF">Difensore</message>
+    <message key="EN">Inghilterra</message>
+    <message key="NL">Paesi Bassi</message>
+    <message key="DK">Danimarca</message>
+    <message key="DE">Germania</message>
+    <message key="SE">Svezia</message>
+    <message key="LV">Lettonia</message>
+    <message key="CZ">Repubblica Ceca</message>
+    <message key="RU">Russia</message>
+    <message key="BG">Bulgaria</message>
+    <message key="GR">Grecia</message>
+    <message key="HR">Croazia</message>
+    <message key="CH">Svizzera</message>
+    <message key="IT">Italia</message>
+    <message key="ES">Spagna</message>
+    <message key="FR">Francia</message>
+    <message key="PT">Portogallo</message>
+</catalogue>
