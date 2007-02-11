@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Documentation - Concepts" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../../index.html"/>
+    <menu-item label="User Documentation" href="../index.html"/>
+  </menu>
+
+  <menu label="Concepts">
+    <menu-item label="Overview" href="index.html"/>
+    <menu-item label="Sitemap" href="sitemap.html"/>
+    <menu-item label="Views" href="views.html"/>
+    <menu-item label="Caching" href="caching.html"/>
+    <menu-item label="Actions" href="actions.html"/>
+    <menu-item label="Matchers and Selectors" href="matchers_selectors.html"/>
+    <menu-item label="Entity Catalogs" href="catalog.html"/>
+    <menu-item label="MRUMemoryStore" href="mrustore.html"/>
+    <menu-item label="Persistence" href="persistence.html"/>
+    <menu-item label="StoreJanitor" href="storejanitor.html"/>
+    <menu-item label="XMLSearching" href="xmlsearching.html"/>
+    <menu-item label="XML Validation" href="validation.html"/>
+    <menu-item label="Databases" href="databases.html"/>
+    <menu-item label="Modules" href="modules.html"/>
+    <menu-item label="Modules Reference" href="modules-ref.html"/>
+    <menu-item label="Redirection" href="redirection.html"/>
+    <menu-item label="Profiler" href="profiler.html"/>
+    <menu-item label="Error Handling" href="errorhandling.html"/>
+  </menu>
+
+</book>
+
+

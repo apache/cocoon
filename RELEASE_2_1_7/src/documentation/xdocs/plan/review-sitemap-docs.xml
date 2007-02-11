@@ -1,0 +1,3084 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2005 The Apache Software Foundation or its licensors,
+  as applicable.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+<document>
+  <header>
+    <title>Review of sitemap component documentation</title>
+    <authors>
+      <person name="Cocoon Developers" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+
+  <body>
+    <s1 title="Introduction">
+      <p>
+        This is a coordination table to assist the systematic review of the
+        "sitemap component documentation" which is the set of documentation
+        available at 
+        <link href="../userdocs/">/userdocs/</link>
+        for each sitemap component
+        (actions generators matchers readers selectors serializers transformers).
+      </p>
+      <p>
+        This review focusses only on this set of documentation, as part of
+        the overall documentation
+        <link href="http://wiki.apache.org/cocoon/22NewDocuments">review</link>.
+        This set is a key part, because it
+        addresses the heart of Cocoon - the sitemap components. Having a
+        well-defined "User Guide" will assist both users and developers to
+        be more productive.
+      </p>
+      <p>
+        Please assist by sending discussion to the dev mailing list and
+        patches of xdocs and java code via the issue tracker.
+        See the <link href="#To+Do">To Do</link> section at the bottom.
+      </p>
+      <p>
+        This documentation is generated as part of the Cocoon 'build docs' process.
+        An anttask (tools/anttasks/SitemapTask) scans the java code looking
+        for javadoc-like tags (e.g. @cocoon.sitemap.component.name) and
+        extracts that information. For each component there is also a default
+        document at src/documentation/xdocs/userdocs/ which contains additional
+        manual content. The two sources are merged to form each final xdoc, with
+        two new sections being added (Description and Info). Then Forrest builds
+        the final set of documents as part of the normal 'build docs' process.
+      </p>
+      <p>These are the SitemapTask attributes that are used in the code:</p>
+      <ul>
+        <li>@cocoon.sitemap.component.documentation - The documentation (optional)</li>
+        <li>@cocoon.sitemap.component.name - The name of the component in the sitemap (required)</li>
+        <li>@cocoon.sitemap.component.logger - The logger category (optional)</li>
+        <li>@cocoon.sitemap.component.label - The label for views (optional)</li>
+        <li>@cocoon.sitemap.component.mimetype - The mime type for serializers and readers (optional)</li>
+        <li>@cocoon.sitemap.component.hide - If this tag is specified, the component is not added to the sitemap (optional)</li>
+        <li>@cocoon.sitemap.component.documentation.disabled - If this tag is specified, no documentation is generated (optional)</li>
+        <li>@cocoon.sitemap.component.configuration - Configuration (optional)</li>
+        <li>@cocoon.sitemap.component.documentation.caching - Caching info (optional)</li>
+        <li>@cocoon.sitemap.component.pooling.min - Pooling min (optional)</li>
+        <li>@cocoon.sitemap.component.pooling.max - Pooling max (optional)</li>
+        <li>@cocoon.sitemap.component.pooling.grow - Pooling grow (optional)</li>
+      </ul>
+    </s1>
+
+    <s1 title="Coordination table">
+      <p>The table columns are:</p>
+      <ul>
+        <li>Java source - The name of the Java source file and link to javadoc.</li>
+        <li>Document - The name of the generated document and a link to it.
+        This is also the @cocoon.sitemap.component.name</li>
+        <li>A - The xdoc is available to supply additional manual content.</li>
+        <li>B - The java code is in "core" or as a "block".</li>
+        <li>C - The javadoc-like tags (SitemapTask attributes) are available in the code.</li>
+        <li>D - The component parameters are properly described.</li>
+        <li>E - The code and xdoc are synchronised between Cocoon trunk and 2.1 branch.</li>
+      </ul>
+      <p>Cell values are:</p>
+      <ul>
+        <li>blank - Not yet investigated.</li>
+        <li>y - Yes.</li>
+        <li>n - No.</li>
+        <li>- - Not relevant.</li>
+        <li>* - Has issues, needs more work.</li>
+      </ul>
+      <p>There are 314 entries.</p>
+
+    <s2 title="Actions">
+      <table><!-- table: actions -->
+<tr>
+  <th>Java source</th>
+  <th>Document</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractAction.html">AbstractAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractComplementaryConfigurableAction.html">AbstractComplementaryConfigurableAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractConfigurableAction.html">AbstractConfigurableAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractDatabaseAction.html">AbstractDatabaseAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/acting/AbstractFormsAction.html">AbstractFormsAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>forms</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractMultiAction.html">AbstractMultiAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractValidatorAction.html">AbstractValidatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/AuthAction.html">AuthAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>authentication-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/portal/acting/AuthAction.html">AuthAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/BookmarkAction.html">BookmarkAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CacheEventAction.html">CacheEventAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>eventcache</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ClearCacheAction.html">ClearCacheAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ClearPersistentStoreAction.html">ClearPersistentStoreAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CommandAction.html">CommandAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ComposerAction.html">ComposerAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ConfigurableComposerAction.html">ConfigurableComposerAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ConfigurableServiceableAction.html">ConfigurableServiceableAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CookieCreatorAction.html">CookieCreatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CookieValidatorAction.html">CookieValidatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/CopletSetDataAction.html">CopletSetDataAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CopySourceAction.html">CopySourceAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseAddAction.html">DatabaseAddAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseAuthenticatorAction.html">DatabaseAuthenticatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseCookieAuthenticatorAction.html">DatabaseCookieAuthenticatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseDeleteAction.html">DatabaseDeleteAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseSelectAction.html">DatabaseSelectAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseUpdateAction.html">DatabaseUpdateAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DbXMLAuthenticatorAction.html">DbXMLAuthenticatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xmldb</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/faces/FacesAction.html">FacesAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>faces</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ExpiresPipelineAction.html">ExpiresPipelineAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/FormManagerAction.html">FormManagerAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/FormValidatorAction.html">FormValidatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/acting/HandleFormSubmitAction.html">HandleFormSubmitAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>forms</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/HelloAction.html">HelloAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/HttpCacheAction.html">HttpCacheAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/HttpHeaderAction.html">HttpHeaderAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/InputModuleAction.html">InputModuleAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/JMSPublisherAction.html">JMSPublisherAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>jms</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/LinkTranslatorMapAction.html">LinkTranslatorMapAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/LocaleAction.html">LocaleAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LoggedInAction.html">LoggedInAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>authentication-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LoginAction.html">LoginAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>authentication-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/LoginAction.html">LoginAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LogoutAction.html">LogoutAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>authentication-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/LogoutAction.html">LogoutAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/mail/MailAction.html">MailAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>mail</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/acting/MakeFormAction.html">MakeFormAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>forms</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseAction.html">modular/DatabaseAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseAddAction.html">modular/DatabaseAddAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseDeleteAction.html">modular/DatabaseDeleteAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseSelectAction.html">modular/DatabaseSelectAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseQueryAction.html">modular/DatabaseQueryAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseUpdateAction.html">modular/DatabaseUpdateAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/ObjectModelAction.html">ObjectModelAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/OraAddAction.html">OraAddAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/OraUpdateAction.html">OraUpdateAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/PropagatorAction.html">PropagatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/RequestParamAction.html">RequestParamAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/RequestParameterExistsAction.html">RequestParameterExistsAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ResourceExistsAction.html">ResourceExistsAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/SaveAction.html">SaveAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ScriptAction.html">ScriptAction</link></td>
+  <!-- 2 --><td><link href="../userdocs/actions/script-action.html">script</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>bsf</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SectionCutterAction.html">SectionCutterAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SendmailAction.html">SendmailAction</link></td>
+  <!-- 2 --><td><link href="../userdocs/actions/sendmail-action.html">sendmail</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>mail</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ServerPagesAction.html">ServerPagesAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ServiceableAction.html">ServiceableAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/SessionAction.html">SessionAction</link></td>
+  <!-- 2 --><td><link href="../userdocs/actions/session-action.html">session</link></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/SessionFormAction.html">SessionFormAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionInvalidatorAction.html">SessionInvalidatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionIsValidAction.html">SessionIsValidAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionPropagatorAction.html">SessionPropagatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionStateAction.html">SessionStateAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionValidatorAction.html">SessionValidatorAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SetCharacterEncodingAction.html">SetCharacterEncodingAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/taglib/test/acting/TagtestAction.html">TagtestAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>taglib</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/TestAction.html">modular/TestAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core/samples</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/samples/castor/TestBeanAction.html">castor/TestBeanAction</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+      </table>
+    </s2>
+
+    <s2 title="Generators">
+      <table><!-- table: generators -->
+<tr>
+  <th>Java source</th>
+  <th>Document</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/generation/AbstractCopletGenerator.html">AbstractCopletGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/AbstractGenerator.html">AbstractGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/ant/AntBuildGenerator.html">AntBuildGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/asciiart/AsciiArtSVGGenerator.html">AsciiArtSVGGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>asciiart</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/coplets/basket/BasketContentGenerator.html">BasketContentGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/coplets/basket/BasketGenerator.html">BasketGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/CalendarGenerator.html">CalendarGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/calendar-generator.html">calendar</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/flow/ws/ClientBindingGenerator.html">ClientBindingGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad/flow</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ComposerGenerator.html">ComposerGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/generation/ConfigurationGenerator.html">ConfigurationGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>authentication-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/portal/generation/ConfigurationGenerator.html">ConfigurationGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/DirectoryGenerator.html">DirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/directory-generator.html">directory</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/error-generator.html">error</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/EventCacheGenerator.html">EventCacheGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>eventcache</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/samples/errorhandling/ExceptionGenerator.html">ExceptionGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core/samples</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/extractor-generator.html">extractor</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/FileGenerator.html">FileGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/file-generator.html">file</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/generation/FormsGenerator.html">FormsGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>mail</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/FragmentExtractorGenerator.html">FragmentExtractorGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>batik</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/GarbageGenerator.html">GarbageGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/GenericProxyGenerator.html">GenericProxyGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>proxy</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/HTMLGenerator.html">HTMLGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/html-generator.html">html</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>html</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/HttpProxyGenerator.html">HttpProxyGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>proxy</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ImageDirectoryGenerator.html">ImageDirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/imagedirectory-generator.html">imagedirectory</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/IMAPGenerator.html">IMAPGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>mail</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/JellyGenerator.html">JellyGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/JSGenerator.html">JSGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/JSPGenerator.html">JSPGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/jsp-generator.html">jsp</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>jsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/JXTemplateGenerator.html">JXTemplateGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/jx-generator.html">jx</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/LinkStatusGenerator.html">LinkStatusGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/linkstatus-generator.html">linkstatus</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/LogicsheetCodeGenerator.html">LogicsheetCodeGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/MarkupCodeGenerator.html">MarkupCodeGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/MP3DirectoryGenerator.html">MP3DirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/mp3directory-generator.html">mp3directory</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/NekoHTMLGenerator.html">NekoHTMLGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>html</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/sitemap/NotifyingGenerator.html">NotifyingGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ParseExceptionGenerator.html">ParseExceptionGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>chaperon</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/PauseGenerator.html">PauseGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core/test</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/PhpGenerator.html">PhpGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/php-generator.html">php</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>php</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/generation/PortalGenerator.html">PortalGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/portal/generation/PortalGenerator.html">PortalGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/profile-generator.html">profile</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ProfilerGenerator.html">ProfilerGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>profiler</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">ProgramGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/PythonGenerator.html">xsp/PythonGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>python</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/RequestAttributeGenerator.html">RequestAttributeGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/RequestGenerator.html">RequestGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/request-generator.html">request</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/RequestParameterGenerator.html">RequestParameterGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ScriptGenerator.html">ScriptGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/script-generator.html">script</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>bsf</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/SearchGenerator.html">SearchGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/search-generator.html">search</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>lucene</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ServerPagesGenerator.html">ServerPagesGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/serverpages-generator.html">serverpages</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ServiceableGenerator.html">ServiceableGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ServletGenerator.html">ServletGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/SessionAttributeGenerator.html">SessionAttributeGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/slop/generation/SlopGenerator.html">SlopGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>slop</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/StatusGenerator.html">StatusGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/status-generator.html">status</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/StreamGenerator.html">StreamGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/stream-generator.html">stream</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/SWFGenerator.html">SWFGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>swf</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TextGenerator.html">TextGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>chaperon</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraversableGenerator.html">TraversableGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>repository</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraversableSourceDescriptionGenerator.html">TraversableSourceDescriptionGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>repository</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraxGenerator.html">TraxGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/VelocityGenerator.html">VelocityGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/velocity-generator.html">velocity</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>velocity</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/wsproxy-generator.html">wsproxy</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/WebServiceProxyGenerator.html">WebServiceProxyGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>proxy</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XMidiGenerator.html">XMidiGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>midi</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XMLDBGenerator.html">XMLDBGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/xmldb-generator.html">xmldb</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>xmldb</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XMLDBCollectionGenerator.html">XMLDBCollectionGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/xmldbcollection-generator.html">xmldbcollection</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>xmldb</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XPathDirectoryGenerator.html">XPathDirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/xpathdirectory-generator.html">xpathdirectory</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XPathTraversableGenerator.html">XPathTraversableGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>repository</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/XSPGenerator.html">XSPGenerator</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+      </table>
+    </s2>
+
+    <s2 title="Matchers">
+      <table><!-- table: matchers -->
+<tr>
+  <th>Java source</th>
+  <th>Document</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/AbstractPreparableMatcher.html">AbstractPreparableMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/AbstractRegexpMatcher.html">AbstractRegexpMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/AbstractWildcardMatcher.html">AbstractWildcardMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/CookieMatcher.html">CookieMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/HeaderMatcher.html">HeaderMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/LocaleMatcher.html">LocaleMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/modular/CachingRegexpMatcher.html">modular/CachingRegexpMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/modular/CachingWildcardMatcher.html">modular/CachingWildcardMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/modular/WildcardMatcher.html">modular/WildcardMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/MountTableMatcher.html">MountTableMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/ParameterMatcher.html">ParameterMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/PreparableMatcher.html">PreparableMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpHeaderMatcher.html">RegexpHeaderMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpHostMatcher.html">RegexpHostMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpParameterMatcher.html">RegexpParameterMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpRequestAttributeMatcher.html">RegexpRequestAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpRequestParameterMatcher.html">RegexpRequestParameterMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpSessionAttributeMatcher.html">RegexpSessionAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpURIMatcher.html">RegexpURIMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpURIDefaultsMatcher.html">RegexpURIDefaultsMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RequestAttributeMatcher.html">RequestAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RequestParameterMatcher.html">RequestParameterMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/SessionAttributeMatcher.html">SessionAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardHeaderMatcher.html">WildcardHeaderMatcher</link></td>
+  <!-- 2 --><td><link href="../userdocs/matchers/wildcardheader-matcher.html">wildcardheader</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardHostMatcher.html">WildcardHostMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardParameterMatcher.html">WildcardParameterMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardRequestAttributeMatcher.html">WildcardRequestAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardRequestParameterMatcher.html">WildcardRequestParameterMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardSessionAttributeMatcher.html">WildcardSessionAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardURIMatcher.html">WildcardURIMatcher</link></td>
+  <!-- 2 --><td><link href="../userdocs/matchers/wildcarduri-matcher.html">wildcarduri</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+      </table>
+    </s2>
+
+    <s2 title="Readers">
+      <table><!-- table: readers -->
+<tr>
+  <th>Java source</th>
+  <th>Document</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/AbstractReader.html">AbstractReader</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/AxisRPCReader.html">AxisRPCReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/axisrpc-reader.html">axisrpc</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>axis</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ComposerReader.html">ComposerReader</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/DatabaseReader.html">DatabaseReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/database-reader.html">database</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/DirectoryZipArchiver.html">DirectoryZipArchiver</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/directoryziparchiver-reader.html">directoryziparchiver</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ImageReader.html">ImageReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/image-reader.html">image</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/JSPReader.html">JSPReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/jsp-reader.html">jsp</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>jsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/reading/ProxyReader.html">ProxyReader</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ResourceReader.html">ResourceReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/resource-reader.html">resource</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ServiceableReader.html">ServiceableReader</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+      </table>
+    </s2>
+
+    <s2 title="Selectors">
+      <table><!-- table: selectors -->
+<tr>
+  <th>Java source</th>
+  <th>Document</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/AbstractRegexpSelector.html">AbstractRegexpSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/AbstractSwitchSelector.html">AbstractSwitchSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/BrowserSelector.html">BrowserSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/browser-selector.html">browser</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/CookieSelector.html">CookieSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/treeprocessor/sitemap/ComponentsSelector.html">ComponentsSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/DateSelector.html">DateSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/date-selector.html">date</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/ExceptionSelector.html">ExceptionSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/generator/GeneratorSelector.html">GeneratorSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xsp</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/HeaderSelector.html">HeaderSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/HostSelector.html">HostSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/host-selector.html">host</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/mail/MailCommandSelector.html">MailCommandSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>mail</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/selection/MediaSelector.html">MediaSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/NamedPatternsSelector.html">NamedPatternsSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/pipeline/OutputComponentSelector.html">OutputComponentSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/ParameterSelector.html">ParameterSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/parameter-selector.html">parameter</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RegexpHeaderSelector.html">RegexpHeaderSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/regular-expression-header-selector.html">regular-expression-header</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RegexpRequestParameterSelector.html">RegexpRequestParameterSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RequestAttributeSelector.html">RequestAttributeSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/requestattribute-selector.html">requestattribute</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RequestMethodSelector.html">RequestMethodSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/requestmethod-selector.html">requestmethod</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RequestParameterSelector.html">RequestParameterSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/requestparameter-selector.html">requestparameter</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/ResourceExistsSelector.html">ResourceExistsSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/SessionAttributeSelector.html">SessionAttributeSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/SimpleSelector.html">SimpleSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/sitemap/SitemapComponentSelector.html">SitemapComponentSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/SwitchSelector.html">SwitchSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/XPathExceptionSelector.html">XPathExceptionSelector</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+      </table>
+    </s2>
+
+    <s2 title="Serializers">
+      <table><!-- table: serializers -->
+<tr>
+  <th>Java source</th>
+  <th>Document</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/AbstractSerializer.html">AbstractSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/AbstractSerializer.html">AbstractSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad/garbage</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/AbstractTextSerializer.html">AbstractTextSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/ElementProcessorSerializer.html">ElementProcessorSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>poi</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/EncodingSerializer.html">EncodingSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>serializers</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/EncodingSerializer.html">EncodingSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad/garbage</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/FOPSerializer.html">FOPSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>fop</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/HSSFSerializer.html">HSSFSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>poi</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/HTMLSerializer.html">HTMLSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/html-serializer.html">html</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/HTMLSerializer.html">HTMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>serializers</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/HTMLSerializer.html">HTMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad/garbage</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/serialization/IncludingHTMLSerializer.html">IncludingHTMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/iTextSerializer.html">iTextSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>itext</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/LinkSerializer.html">LinkSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/link-serializer.html">link</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/pcl-serializer.html">pcl</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/pdf-serializer.html">pdf</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/POIFSSerializer.html">POIFSSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>poi</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/ps-serializer.html">ps</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/RTFSerializer.html">RTFSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>jfor</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/Serializer.html">Serializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad/garbage</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/SVGSerializer.html">SVGSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svg-serializer.html">svg</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>batik</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgjpeg-serializer.html">svgjpeg</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgpng-serializer.html">svgpng</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgtiff-serializer.html">svgtiff</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgxml-serializer.html">svgxml</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/SWFSerializer.html">SWFSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>swf</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/TextSerializer.html">TextSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/text-serializer.html">text</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/vrml-serializer.html">vrml</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/wap-serializer.html">wap</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/xhtml-serializer.html">xhtml</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/XHTMLSerializer.html">XHTMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>serializers</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/XHTMLSerializer.html">XHTMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad/garbage</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/xls-serializer.html">xls</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/XMidiSerializer.html">XMidiSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>midi</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/XMLSerializer.html">XMLSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/xml-serializer.html">xml</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/sax/XMLSerializer.html">sax/XMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>serializers</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/XMLSerializer.html">XMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>serializers</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/XMLSerializer.html">XMLSerializer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad/garbage</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/ZipArchiveSerializer.html">ZipArchiveSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/ziparchive-serializer.html">ziparchive</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+</table>
+    </s2>
+
+    <s2 title="Transformers">
+      <table><!-- table: transformers -->
+<tr>
+  <th>Java source</th>
+  <th>Document</th>
+  <th>A</th>
+  <th>B</th>
+  <th>C</th>
+  <th>D</th>
+  <th>E</th>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/constrained/AbstractConstrainedTransformer.html">AbstractConstrainedTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/AbstractCopletTransformer.html">AbstractCopletTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractDOMTransformer.html">AbstractDOMTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractExtractionTransformer.html">AbstractExtractionTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractSAXTransformer.html">AbstractSAXTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/AbstractSessionTransformer.html">AbstractSessionTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractTransformer.html">AbstractTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AugmentTransformer.html">AugmentTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/augment-transformer.html">augment</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/coplets/basket/BasketTransformer.html">BasketTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/BetwixtTransformer.html">BetwixtTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/CastorTransformer.html">CastorTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/CIncludeTransformer.html">CIncludeTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/cinclude-transformer.html">cinclude</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/CopletTransformer.html">CopletTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/DASLTransformer.html">DASLTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>webdav</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/DeliTransformer.html">DeliTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>deli</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/EncodeURLTransformer.html">EncodeURLTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/encodeurl-transformer.html">encodeurl</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ErrorAwareTraxTransformer.html">ErrorAwareTraxTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/EventLinkTransformer.html">EventLinkTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ExtendedParserTransformer.html">ExtendedParserTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>chaperon</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/extractor-transformer.html">extractor</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td></td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/FragmentExtractorTransformer.html">FragmentExtractorTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>batik</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/FilterTransformer.html">FilterTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/filter-transformer.html">filter</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/transformation/FormsTemplateTransformer.html">FormsTemplateTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>forms</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/HTMLEventLinkTransformer.html">HTMLEventLinkTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/HTMLRootTransformer.html">HTMLRootTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/HTMLTransformer.html">HTMLTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>html</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/I18nTransformer.html">I18nTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/i18n-transformer.html">i18n</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/IncludeTransformer.html">IncludeTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/include-transformer.html">include</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>scratchpad</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/JPathTransformer.html">JPathTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/JXTemplateTransformer.html">JXTemplateTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/jx-template-transformer.html">jx-template</link></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LDAPTransformer.html">LDAPTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/ldap-transformer.html">ldap</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>naming</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LuceneIndexTransformer.html">LuceneIndexTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>lucene</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LexicalTransformer.html">LexicalTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/lexer-transformer.html">lexer</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>chaperon</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/LinkTransformer.html">LinkTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LinkRewriterTransformer.html">LinkRewriterTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>linkrewriter</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LogTransformer.html">LogTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/log-transformer.html">log</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/NewEventLinkTransformer.html">NewEventLinkTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ParserTransformer.html">ParserTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/parser-transformer.html">parser</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>chaperon</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/PatternTransformer.html">PatternTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/pattern-transformer.html">pattern</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>chaperon</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/ProxyTransformer.html">ProxyTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ReadDOMSessionTransformer.html">ReadDOMSessionTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/readdomsession-transformer.html">readdomsession</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/RoleFilterTransformer.html">RoleFilterTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/RSSTransformer.html">RSSTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>portal</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/mail/transformation/SendMailTransformer.html">SendMailTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>mail</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ServiceableTransformer.html">ServiceableTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionTransformer.html">SessionTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionPostTransformer.html">SessionPostTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionPreTransformer.html">SessionPreTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>session-fw</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SimpleFormInstanceExtractionTransformer.html">SimpleFormInstanceExtractionTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SimpleFormTransformer.html">SimpleFormTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SourcePropsWritingTransformer.html">SourcePropsWritingTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>repository</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SourceWritingTransformer.html">SourceWritingTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/sourcewriting-transformer.html">sourcewriting</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SQLTransformer.html">SQLTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/sql-transformer.html">sql</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>databases</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/TagTransformer.html">TagTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>taglib</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/Transformer.html">TraxTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/VariableRewriterTransformer.html">VariableRewriterTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>linkrewriter</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/Web3RfcTransformer.html">Web3RfcTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>web3</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/WriteDOMSessionTransformer.html">WriteDOMSessionTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/writedomsession-transformer.html">writedomsession</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/XIncludeTransformer.html">XIncludeTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/xinclude-transformer.html">xinclude</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/XMLDBTransformer.html">XMLDBTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>xmldb</td>
+  <!-- C --><td>n</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/TraxTransformer.html">TraxTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/xslt-transformer.html">xslt</link></td>
+  <!-- A --><td>y</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+      </table>
+    </s2>
+    </s1>
+
+    <s1 title="To Do">
+      <p>Not a list of everything to be done, just a few notes ...</p>
+      <ul>
+        <li>
+          Ask everyone to check the current table to see if any components
+          were missed. Before we do anything, we need to be sure that the
+          table is complete.
+        </li>
+        <li>
+           Perhaps there are some superfluous entries.
+        </li>
+        <li>
+          Create some complete entries to serve as examples and time estimates.
+        </li>
+        <li>
+          Review the
+          <link href="http://reports.linkalarm.com/855893764719/">LinkAlarm report</link> and fix broken links.
+        </li>
+        <li>
+          Document the procedure for reviewing a document/code and for
+          amending this table.
+        </li>
+        <li>
+          Enhance the SitemapTask.java
+        </li>
+        <li>
+          Add basic SitemapTask attributes to the java code for each compoent.
+          This could be
+          automated. Check if the SitemapTask.java copes with empty default
+          values. Add to column C.
+        </li>
+        <li>
+          Does SitemapTask scan the src/blocks/*.java ?
+        </li>
+        <li>
+          Some trouble with names (e.g. EncodeURLTransformer) needs doc name
+          lowercase (encodeurl-transformer). Perhaps need extra SitemapTask attribute or do toLower().
+        </li>
+        <li>
+          Investigate docs in blocks. The "mail" block has some.
+        </li>
+        <li>
+          Reduce the length of labels in the left-hand-panel of the documents,
+          e.g. "Transformer" => "Tr" or delete the word entirely.
+          In the generated */book.xml files.
+        </li>
+        <li>
+          Develop tools to analyse the table and ensure that it remains
+          synchronised. See the script in the repository at:
+          tools/review-sitemap-docs/correlate-table.sh
+        </li>
+        <li>
+          Monitor the email discussion on the cocoon-dev mailing list:
+          <link href="http://thread.gmane.org/gmane.text.xml.cocoon.devel/44203">review of sitemap component documentation</link>
+        </li>
+<!--
+        <li>
+        </li>
+-->
+      </ul>
+      <p>Other notes...</p>
+      <p>The "@cocoon.sitemap.component.documentation.caching" tag cannot be
+       the last element or it will suck the rest of the javadoc description
+       in with it.</p>
+      <p>Be careful with "@cocoon.sitemap.component.name" - it is also used
+      for another purpose.</p>
+    </s1>
+  </body>
+</document>

@@ -1,0 +1,43 @@
+#*
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*#
+#parse ("view/velocity/IncludeTop.vm")
+
+<p>
+<center>
+<h2>My Orders</h2>
+</center>
+<table cellpadding="3" cellspacing="2" border="0" bgcolor="#008800" align="center">
+<tr bgcolor="#CCCCCC">
+  <td><b>Order ID</b></td>
+  <td><b>Date</b></td>
+  <td><b>Total Price</b></td>
+  <td><b>Status</b></td>
+</tr>
+#foreach ($order in $orderList)
+<tr bgcolor="#FFFF88">
+  <td><b><a href="viewOrder.do?orderId=${order.orderid}"><font color="BLACK">$order.orderid</font></a></b></td>
+  <td>$order.orderdate</td>
+  <td>$fmt.formatNumber($order.totalprice, '$#,##0.00')</td>
+  <td><b>$order.status</b></td>
+</tr>
+#end
+</table>
+</p>
+
+
+#parse("view/velocity/IncludeBottom.vm")
+
+

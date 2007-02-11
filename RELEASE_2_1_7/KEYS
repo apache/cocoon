@@ -1,0 +1,321 @@
+(instructions copied from forrest's KEYS file)
+
+This file contains the PGP keys of various developers.
+Please don't use them for email unless you have to. Their main
+purpose is code signing.
+
+Users: pgp < KEYS
+Developers:
+        pgp -kxa <your name> and append it to this file.
+        (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+        (gpg --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: PGPfreeware 7.0.3 for non-commercial use <http://www.pgp.com>
+
+mQGiBDsd2gsRBADkQvPBl87SQ1PJ02EwTYx1gt/2X/m9QJXOIPKZB2q9iY0cOkov
+PHds3KxCnRvXaYjXbglCtmeghOfnZOag9egC5LHbf935OApTXnOKQ1lcPLeV7v7S
+l5itzLIlSe+MRbJZfm3dTNAHQE0C6O3ZhXCYa+NxZj1p8vhuq3Wtl3ZCQwCg/4df
+j9CKnBtTL1BKqLD7uG4b7xUD/RnqAC0qnApjjfWl+63BlG/ReSk1KXZZDd/LgybL
+HHEiRyz1Eli/riVNqbDQnOqJ6Q341OmFQ/MVIlXZ3i1uDxdflTMWSmQHiJixZfdy
++mxf0T7kewBq5AUw9flXjBvOrTp+s7EH4nFbcAvALJY2zWXdod1F83ECcOXQc2xV
+QLliBACH+Ui8/r1VxRIR4GbHB/U526majO1NA0/+h3vEiS3NMIx/uHtupQEZIHb0
+hgQVRQSHy0pU+qPg83M11CtkWJi+I1zuJO2hFGA3rbsM5j6ZniesasJguec3QeLO
+7ZmAFPUQMBx9XoU05J+W6+HkJYzm56tL0OwOxfCoZ59/8gwz0LQnQ2Fyc3RlbiBa
+aWVnZWxlciA8Y3ppZWdlbGVyQGFwYWNoZS5vcmc+iQBYBBARAgAYBQI7HdoLCAsD
+CQgHAgEKAhkBBRsDAAAAAAoJEP5i/e/24Kj4vioAoISacsH1y/mTEyOSJcjFFtwJ
+3BinAKCxEREbhP3wxcQ5jIJD7WJyEibWV7kCDQQ7HdoLEAgA9kJXtwh/CBdyorrW
+qULzBej5UxE5T7bxbrlLOCDaAadWoxTpj0BV89AHxstDqZSt90xkhkn4DIO9ZekX
+1KHTUPj1WV/cdlJPPT2N286Z4VeSWc39uK50T8X8dryDxUcwYc58yWb/Ffm7/ZFe
+xwGq01uejaClcjrUGvC/RgBYK+X0iP1YTknbzSC0neSRBzZrM2w4DUUdD3yIsxx8
+Wy2O9vPJI8BD8KVbGI2Ou1WMuF040zT9fBdXQ6MdGGzeMyEstSr/POGxKUAYEY18
+hKcKctaGxAMZyAcpesqVDNmWn6vQClCbAkbTCD1mpF1Bn5x8vYlLIhkmuquiXsNV
+6TILOwACAggAs+uzrncWLDkHktfCeZoMR3s9IZAre2jswQsbMTt0tldoZA/JKaUl
+1uptQ1jPv1O6t3bgSgk/AwFqxZ1gj+nBu5Qqg+dHWAv9m9gSzDzGdsTv4/N0o7eW
+j9lSfrH2RggUU5vCUfGiMbmPrxw08H+P2KJ5tvR8ktBJ3N49G2KQc+P9Aicg6nZ/
+/UFyxTEzqu0HFaGuRZP4B1W8IcfM85N8X1hzrTp60scwwVYyvYBJuRXHtbFri2AR
+rvGJPOBMrsAtAkPinLbBf1x3qb264MKVjCuQzqBR62vEwndgGVBEF3LGnG+XLlkB
+KMGnpP2lb18yU+XElXluq1+iKZwEC5Od84kATAQYEQIADAUCOx3aCwUbDAAAAAAK
+CRD+Yv3v9uCo+JJAAJ9iavozzPXJXQgayU+cpcMMpqaHLACdFSL31xxtNaFBvLGM
+1Ah+fwVH39M=
+=ASjg
+-----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/154462C0 2003-09-24 Steven Noels <stevenn@apache.org>
+sig 3       154462C0 2003-09-24   Steven Noels <stevenn@apache.org>
+uid                            Steven Noels <stevenn@cocoondev.org>
+sig 3       154462C0 2003-09-24   Steven Noels <stevenn@apache.org>
+uid                            Steven Noels <stevenn@outerthought.org>
+sig 3       154462C0 2003-09-24   Steven Noels <stevenn@apache.org>
+sub  1024g/DEB50537 2003-09-24
+sig         154462C0 2003-09-24   Steven Noels <stevenn@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.2 (Darwin)
+
+mQGiBD9x7i4RBACh9zAGHT/Pk0cLhHBG6J7hkbrRoir6m2BbMAEVqpghT9F4kjxq
+Fuj8adWi3Ui7F1MVSrGR4mAWnYvS5KixKhsu0HQPwwqO593v+rxISSS752D59Ewq
+rWxW7rgDd+L3FdhVPHOYOcDLPitNesSU03/95XyDvfm/Z+WakAMfCIkoywCgydm0
+eL0VnZowR94zngfVW/rfpScD/iG6H9f0Yif0qG34iAuzzouyyPBkqKWLvjH8/nSU
+wmOhE0PZCb7sNSQBLtfhce5sPiRan7Rntf6cThY9vVLqx5CK59rYkxoXmM4RZeaE
+6rufSd6lWV2Cg+wRNVpr699n+A7oCPRUokFecvh+FfN9n9wjvv+F1+YHjSd0jnju
+1tdOA/9yh8mwdicvFlJmBPKM/kW6k4kTu2DmiMe2kCD+Z5iBeR1jTWMnDs0C7tcQ
+Lddhl775KftqgOQisXovmwWkHHN+uSJStqkQpXuv+v0lEVMSe7H2CQjSrmxlczWZ
+2e9bqxrF4Oq3ZpNpifqZAdJ8uBrION/Ir6KFqqUbeP6SaVaqMLQkU3RldmVuIE5v
+ZWxzIDxzdGV2ZW5uQGNvY29vbmRldi5vcmc+iF4EExECAB4FAj9x8x8CGwMGCwkI
+BwMCAxUCAwMWAgECHgECF4AACgkQMIHvjhVEYsCkWgCfaTKWN/gokK8+qWqvVixL
+kx7dPVsAnRDo9+oaJ6tqIomDc84P0wMzmKu+tCFTdGV2ZW4gTm9lbHMgPHN0ZXZl
+bm5AYXBhY2hlLm9yZz6IXgQTEQIAHgYLCQgHAwIDFQIDAxYCAQIeAQIXgAUCP3H0
+fAIZAQAKCRAwge+OFURiwBzWAJ92ldSiOyiEvx1T0h4r7Wn8MHmfUACdEon19pnF
+hfm0fm9bSPjGb4Kcoia0J1N0ZXZlbiBOb2VscyA8c3RldmVubkBvdXRlcnRob3Vn
+aHQub3JnPoheBBMRAgAeBQI/cfL+AhsDBgsJCAcDAgMVAgMDFgIBAh4BAheAAAoJ
+EDCB744VRGLA6wEAoK8oR/uUTCqA63yT2IWiGVSRLHZ5AKCp3D1azq5LtHRGILOR
+HVlgJH5JZ7kBDQQ/ce40EAQA1ZSZ6NcOMNoDTXyGnJpKp1AOCdqGvh/V5LzIqekX
+0I2++TOYJ0nINT30zeXJl2zDw3l5gzasl3FtfD8Oq/7MuMRFN2iOoFwef8/bGwTS
+Sll4QL24MCN2jjyaGjvUIDG0pp7bwbJO26giQ25Xd/zDePcyPVvFoG2h21gxu2Ry
+px8AAwUEANAgbxio4jClRl9QsQOFR/jdi6E1hC33ApfoEgsIlr1w3MhezwvhDJD8
+dpv1CvHGfkdYrDiOIhPz0UfOOszfGh3ItmHbhKt68c7zUujVDpvBPWS3RVyoPMVQ
+yIQaXNu76CJMk9S641yfLEZANqWPK9jjnOUJWs53+TAsUHKdz7ztiEYEGBECAAYF
+Aj9x7jQACgkQMIHvjhVEYsDVYACgnuuUwKhLCHYMCBi5B5+p1/LhrmEAn3CKf5E/
+OSMKxqUanA0+hCP5QSK3
+=bmPL
+-----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/E41EDC7E 2003-09-26 Carsten Ziegeler <cziegeler@apache.org>
+sig 3       E41EDC7E 2003-09-26   Carsten Ziegeler <cziegeler@apache.org>
+sig 3       EE56550E 2003-12-01   Cliff Schmidt <cliff@alum.mit.edu>
+sig 3       CC78C893 2003-11-18   Rich Bowen <rbowen@rcbowen.com>
+sig 3       EE65E321 2003-11-24   Martin Kraemer <martin@apache.org>
+sig         40581837 2003-11-27   Nick Kew <nick@webthing.com>
+sig 3       142B509B 2003-11-25   Glenn L. Nielsen (Sign jakarta.apache.org distributions) <glenn@apache.org>
+sig 3       CE19D5C6 2003-11-18   Jamie Wallingford (legobuff) <jamie@legobuff.com>
+sig 3       D147B776 2003-11-28   Mitch Comstock (RAID) <mcomstock@raidworks.com>
+sig 2       65FDCDEE 2003-11-20   James Howison <james@freelancepropaganda.com>
+sig         FD093C41 2003-11-23   James M. Turner <turner@blackbear.com>
+sig 2       A1D69759 2003-11-24   Michael Kellen <idsfa@visi.com>
+sig 2       76D83CC6 2003-11-22   Manoj Kasichainula <manoj@apache.org>
+sig 3       A54DA2DF 2003-11-18   Erin Mulder <meara@alumni.princeton.edu>
+sig         152924AF 2003-11-22   Sander Temme <sander@temme.net>
+sig         964F31D9 2003-11-22   [User id not found]
+sig         B6B45F1F 2003-11-19   Chengetai Masango <chengetai@masango.net>
+sig 2       4C9165B6 2003-11-18   Aaron Mulder <ammulder@alumni.princeton.edu>
+sig 3       F5FC4B42 2003-11-21   Theodore W. Leung <twl@sauria.com>
+sig 2       F88341D9 2003-11-30   Lars Eilebrecht <lars@eilebrecht.org>
+sig 3       A11D56FB 2003-12-03   Geoffrey Young (http://www.modperlcookbook.org/~geoff/) <geoff@modperlcookbook.org>
+sub  1024g/0F6ED732 2003-09-26
+sig         E41EDC7E 2003-09-26   Carsten Ziegeler <cziegeler@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.3 (MingW32)
+
+mQGiBD90V4MRBAC1lbNdQ9fvvooWXlFx9u/C3Vtsgc+ZsukqBRQRuSEBNZKQr3XC
+NmOy6rlLKan0brlr8L+6xmkQgJCgsNGnjqwIHRe8irMLEqK+uGhpoQ9z4zgc6JVl
+CLarZPvqe7GOifOKlheadWrkkRQMOuKjDF8Nuy10S4jaIEVMhPcorakbYwCgqXzA
+GD/327IVU2SEfL2ezVC1nc0D/Rj43bqn/GzB6pBUIaG2LNAfPtVfdmnqjKa/0PDF
+/hxyGN2Pb5BBlBAZe/ysNRNpGi+kVqGxweccugco6atDRv/INPVQ1dSKAoX/zuuE
+rMeTCaXYE45uBXYhvSsGM2iNJYcS/VW10ZW5RD3F5eWVSo50Xin4obmJmlfr8BTp
+VoxNBACjYrCo9f2MI30fxCgKu9ugyz/rFA7Zja/Hq18jyUWUA8oIQ6VonNvnEu80
+9jf1c23HtKQu+f4yHBDKR6RKsas5kCQDZJncQCn8PHRqSkLWRsAnl2e8fY72QnVI
+pSL7HZ4AnOAaO9sMONQMADq3q9muQofNQDS79IRAWXP7kDT5pbQnQ2Fyc3RlbiBa
+aWVnZWxlciA8Y3ppZWdlbGVyQGFwYWNoZS5vcmc+iF4EExECAB4FAj90V4MCGwMG
+CwkIBwMCAxUCAwMWAgECHgECF4AACgkQEy5J1OQe3H4aLwCdEP8ARIZxOvFITQ7I
+nee1qC85BbsAnjnKXQaUm1unAnNHwN7fNyZnnIuEiEYEExECAAYFAj/K5J0ACgkQ
+aFp3yu5WVQ43XwCfahn9RObiYcvqRFXPtze303XMRQIAoIvStwGIypv7YrjeS/70
+EpaQMPn5iEYEExECAAYFAj+6hk0ACgkQXP03+sx4yJOqUwCg17eCYJCnmzDw9GTe
+/BKGPZj12LYAoMnIahWcyIFLlLOP9ISlMKlr5EkWiJwEEwECAAYFAj/Cd1AACgkQ
+N+P0X+5l4yE+dQQArTUZsgHjZE1M9DRQhZQkU20/WzW4NVxWaYdW2/tIy/a293Zd
+RWG9QDe1VPT7KUoAT306N5HqM4TUjg2QjAyg6ou6J76yk62j1Hsj0RJskf0IMXiF
+NZICn7z+y6FsCI60flgpOKI11GZeAI6FLGppcsF5NCnAP9PKv20EQ07kUeqIRgQQ
+EQIABgUCP8YSFAAKCRBtC8c6QFgYN2IOAJ4lgeI6pvXBeEM13xq9WSplyS9z7gCc
+CO/dGO4i7M9rcDp9B79sy/Qpnk6IRgQTEQIABgUCP8OFGQAKCRD6PI0mFCtQm93V
+AKCMJi0mWq0PLehrhpGwJKrzdt6DSgCgiRqkfD1u4lj6rezjCxH9GR6b9HqIRgQT
+EQIABgUCP7mp+AAKCRCoHuZJzhnVxkHGAJ4moSSBBtV6ynXFk+k26ca1M5Lx5QCd
+G8MrlXJ5ThRD4ZecP79x5x8CmTeIRgQTEQIABgUCP8e9LgAKCRCkdA850Ue3dsVa
+AJ9h8CF7Tj68kwbzhY0/RjkA2pA94gCfQH1azsf2LYhOvObOrknpk1ZALOGIRgQS
+EQIABgUCP7xjvgAKCRDsmT1jZf3N7jUmAJ41pjcLgAkHvGnfv9jZYz4CqvrGfgCd
+ERE/EX2IX0bYOraPIcuhcHaHCQ2IRgQQEQIABgUCP8BjyAAKCRAaCdGD/Qk8QVAN
+AKCMesKnneWni3IardexYlkChRaLXACgtmgMT0KWnWAwk3zji3zkVgk72HqIRgQS
+EQIABgUCP8FOvQAKCRDMITAgodaXWbO0AKCPOmm3BjK/OrGzsu+04g6SfuV8fQCf
+b0SDGLgnslcqkzU02ZxT+hHWAbCJARwEEgECAAYFAj+/wxYACgkQBurPqnbYPMbJ
+ugf/X7I18RgC6uFsPXsCMQh/EQdDO3Cll8SnmCmNz08jlE89cDiHAgJZ6b7n+p+G
+v44DaO5Ofkb+iwtTHuFuvG50qY45X2/oyBJHllXlbxMEyjWfhny6hD84WYnM7PS2
+a6gww0+beCz77ESw6RdHgIFNvZnn0Ca58QLKixlKfNxqaqrR6EG6zUI9qdNX1XVc
+Wfu70EZfaZ0Kx5jTDz4h7TGw59oH+NBDRpGvU213NFyckbcGav11GgLBCwR6Iyzx
+nFTrowWXR2QXfX8akSFg6Oz1k818Pjwolr1l3JF5YAaDxwJ4qZo/ldHSF4/+fAmC
+JLJfRco6ndv8rFr6FV0+SVv5dIhGBBMRAgAGBQI/uaDwAAoJEBD6TIilTaLfcHoA
+oOl0OsrJQ1JAgtyCXTs0VxJAXshnAKDXdDvK0ZevnovRoZvMW6RYv0+STYhGBBAR
+AgAGBQI/v6F3AAoJELK+vEAVKSSvF/8AnjieEHBnFWQQNrZtknhXQeyzkS9eAJ9U
+I6CHLstOQAIQj6dgQIfXS6oaHohGBBARAgAGBQI/v6OIAAoJEMEee0eWTzHZlWIA
+oLPh3TMdnARqbnzFpHQV0BN1Y+53AKDm7WOQM+PUUOcXrlYw63CVC9QPP4hGBBAR
+AgAGBQI/u6D5AAoJEKRZJPC2tF8fWigAoMOg9N7DfgZCaMDH/uiZPeVDYLx1AKD4
+H4Cv3wOrBC9gsfOz8vPc+psGu4hGBBIRAgAGBQI/uc+fAAoJELkkUqxMkWW2D0oA
+nilUs/fdruISz7OcUHSYoFb5lxxpAJ0SbzM82p96RMGjtMtLWdDNm3AKz4hGBBMR
+AgAGBQI/vcjeAAoJEL66K4f1/EtCILwAn2x9+QkXNkfTt5LEHmJAXXzkr2aFAJ9l
+vz17ctX04GyH0E2p7lMU9qJvWoiZBBIBAgAGBQI/ym6tAAoJED6Pt/L4g0HZKPED
+51Q8rmnCha+FQi8+42sTbBjWSkYmsB/84mjddFlK40AfmKpXNnF5lpHCPBfdtuG7
+/r3mnQrT/T5PBlWA088zyQhzBTsCNObNQE/5cwoKv2sOuWMZ/HW5JFYJgfQoqb4b
+hTkSy7d0ncIW4Rq+heZc/E8xWmUpQH1CrFzvB2bsiEYEExECAAYFAj/N+agACgkQ
+CVpF3KEdVvtdTwCgtbh65s6vDfxmgVqxdkqsi3Nak20AmgM7hfMHhUcn+Y8PAyYv
+0OrVvODkuQENBD90V4QQBACNBis1jev/dbIOmVHw096OO2p/R0tuXSx2q0wfjRtE
+qkBOBz/Wdr0gCTJMMOWAYlKhM3ZPbs3bcrT8HXYK5GCpvWQj5SGe2E/Mreolvl+i
+1U4GGhZVVDQziZdImmSDsqCHPj4s5KWJhnkSrE3asWennYqLAEuv62SF/rOawEfr
+2wADBQP9EmVJEG9mDpwj4SZ0kFbBbbqc6t1ntRjx8PkW49znU0NOCM2lIaOM3leM
+8bm5zgbnD4kS7gDItOwzPaHepLrh7a7OVUTpf/HxUgtLAjazF445mjKk1/KQ7oU5
+SR5j3nJZwaI6wTBoI94fk/BBZtxZ4EcdgcJhQABI9LoKr+vTa2eISQQYEQIACQUC
+P3RXhAIbDAAKCRATLknU5B7cfgWMAJ9w/IX0FwxyOhwCveM1PDrVWxT4dQCfaG22
+PDGaBFWsUIyQDUGS56dkC0k=
+=4pJn
+-----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/015AFC8A 2004-06-18 Bertrand Delacretaz <bdelacretaz@apache.org>
+sig 3       015AFC8A 2004-06-18   Bertrand Delacretaz <bdelacretaz@apache.org>
+uid                            Bertrand Delacretaz <bdelacretaz@codeconsult.ch>
+sig 3       015AFC8A 2004-06-18   Bertrand Delacretaz <bdelacretaz@apache.org>
+sub  2048g/AC136A02 2004-06-18
+sig         015AFC8A 2004-06-18   Bertrand Delacretaz <bdelacretaz@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.4 (Darwin)
+
+mQGiBEDSjpsRBAC6qu/5vv5ETRaTEwrZI1gbepp2tNNBqIVfYEZlF8jnWhUk1sdm
++bvqNMPf1B+ZQqjmctLoa+OKVd4vQEgdxclUYCkjuk2iWRX/iRJ61Zm1myuaBfhN
+v0mRBduoSG+2+cIBq3ODQld/BPFotfL+giLdHF6SMjMl0BYcCOqZZGhhGwCg88wL
+wNpY/ZPBtiUXzozD0wCDs6MD/ApczG73dG9H3BCPmp7y41ZbYZHpxiS9Mz9mLJNk
+HMcx4iOzZnptX71UGG58nnBc+VDPooJdzzZywYhHhyz4uSrvMqS5DYquH5HEzMLE
+jKNf0EGay9SHbpbT808YJIKogLgUhuUXe/MrzOdhEEfj+c8Q0iLEmOnNYjFRvakV
+ei8gA/wKwnnQbQvgHyanZsus4WQRRRhbIZFM/qsmM4+McnI9TveDRYjoNwI5tbwY
+aKF+FS9XAbMTBfXZggdjlyYy7J8LZyfm/yyb7BBq6++Owpj3Y/6DPgg1jqJ9Lenc
+04uJATQiXNFS4k38eUtxWQ8lutc4W+3gy4M86mTFwfYVikRr7rQwQmVydHJhbmQg
+RGVsYWNyZXRheiA8YmRlbGFjcmV0YXpAY29kZWNvbnN1bHQuY2g+iF4EExECAB4F
+AkDSjpsCGwMGCwkIBwMCAxUCAwMWAgECHgECF4AACgkQN/aP9QFa/Ip0DwCgyqeU
+b6ClVLmPOnsHeikXUeyuHOYAn2WW/Gq9kk5vOfJ2bv/lS5sH+lRgtCxCZXJ0cmFu
+ZCBEZWxhY3JldGF6IDxiZGVsYWNyZXRhekBhcGFjaGUub3JnPoheBBMRAgAeBQJA
+0o/yAhsDBgsJCAcDAgMVAgMDFgIBAh4BAheAAAoJEDf2j/UBWvyKoVIAoLZIjDpT
+DUQb99MWGAIhd5hKbwlGAJ9QG+DT2qEF1vtgOHucWg1ljhPpUbkCDQRA0o6rEAgA
+8P1i9oUjHzQVfneNgWA3QTuWwbfmd6OKgPR7FHkmPpZBOCmNby65lB9St1aQxtp9
+jBm2TjyO8JDbJzL1K2TYXRI6iE1lh2btoCng7v6jr8lXyJkYtVB4IZe9l5mnslSR
+a17asd+8aJSqY4vz+vVP9cng2SXpxWAaEjrwujyuPYqy9aUtY/L9eQNuA+nKcvFl
+iwCHJhfUqMYaKd7IUoz5fP4XPki5kuLvb0VTvBcq7aqmr9SMxjhkUI0ijaGGk72t
+KdgHKarsAcl5/BZioRtxiAlM8VLz+tycxcxb12e+SLb3BE+Grg6KSqK3PuhHnsf7
+7rFwEFuuvtZabIIYq7l6YwADBgf9H47O3taUb9VFmiV7D6j7Yjcxka2qbtu7NIdG
+XwGlbLts6zoCzoOwFaPbw9Ieo3Uscw5jnmb+wkaZXkz5UrCjObsHaW0V/rm2XVvj
+dginu8IDClmwK1q8ifYY4oc671Prm/B1ms1Rqmm/duVFzSSncUK5YsiC2QJ29f+c
+JU5Prbq+LaHipHoVPg59fm3hxMza1mtbeFyIIyISBPawEAD4tu0SARsAcvNEKkAu
+r6Cr/BZ1C2MPkc51kJVBf0EHO+7bpoJmDeG9ZZ3lnfKo1ciTnXbOvAO7z/AO0i4G
+4tJPxFro065inGT1GMwxEWyY+fYHiVlc7RCB2WBGa347FKe5PohJBBgRAgAJBQJA
+0o6rAhsMAAoJEDf2j/UBWvyKRWsAoMxSxAZfW7xkuy5Szp3zCwV0XCq4AJwMkBVz
+cq5NWtNY2fQF2m3CfZAq8g==
+=9k02
+-----END PGP PUBLIC KEY BLOCK-----
+
+pub  1024D/23CB7A2A 2004-04-17 David Crossley <crossley@apache.org>
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+mQGiBECAyjURBADmJ6lx3nq7Chjk4xuLxJW8Jnt53a+alQJe7eQPTHaiwXHMVG3N
+woA3BA+5Ceg5S8jE3/1HpEyjG6tIi/P/O7JbRp1GnNAuPzwLvjUQrq8UpzGFZziy
+6eVkEhphh5jaEDSotQY7zkmXCPeVJFr4Kfm++TItDZrHv4Lr4lt1HsfLfwCgjJZ8
+0js5OYuAXi8qI6LDQKxEK2EEAIz+iMJnFZ9n07XZFnliO0U3oS20qZH4V0Ulr6MZ
+hJB4JAcqhp0SP23qCXTpTZq/nE0lg5FosBkwnyxsefEy8oO6h5VKNkHJH1HsCQge
+3kagwNgfKvb5IR3VTwdm+LscQK8omdngC8c7L4g5LUZguDIWmFW/gueTjIgPtG1V
+uIktA/95sS1InaDfu3NplUR1bN+/r6ZZdh30oGxVlfgEfQkGN/8lh0n6JWFGhfZZ
+xkp6A0UNhOCJK6gMfkylXRNyLnkKUFgk5SpLPjhmbA34sexMe5nPDA/VRQyT1wml
+ZsmbU+s9fSYoOiwLZAa944PI9xLHsD65AFQApPWWk9R14REqzLQkRGF2aWQgQ3Jv
+c3NsZXkgPGNyb3NzbGV5QGFwYWNoZS5vcmc+iFkEExECABkFAkCAyjUECwcDAgMV
+AgMDFgIBAh4BAheAAAoJEME58VMjy3oqJKIAn17b13eo2uN81+UYLPPf+jN/Du1D
+AJ9Hj3IS8voY3o5qNZRRqjfOu76PYYhGBBMRAgAGBQJAjaIvAAoJEARjOld8IAlB
+n0MAoIKjPJQm2BukjeZukgfWkiYWfrdQAJ4t2qEHudtpdKEaZo3YlLnwgpmvNYhG
+BBMRAgAGBQJBHwQdAAoJEDm+UaEITJETAPsAoIUl1BXOxf5R3Sghw80xK1LIGDkB
+AKCrh21pNIgWaU06NKj0hRRe2aPCyIhGBBMRAgAGBQJBKZHaAAoJEDf2j/UBWvyK
+bcIAn2SNhLZo068xmflhuiJbukEBj4b8AJwLWN5VMlkOLceqrlWxxHUGm+lIT7Qq
+RGF2aWQgQ3Jvc3NsZXkgPGRjcm9zc2xleUBpbmRleGdlby5jb20uYXU+iFwEExEC
+ABwFAkCNFIUCGwMECwcDAgMVAgMDFgIBAh4BAheAAAoJEME58VMjy3oqzuoAnjm4
+yuR3urHOzPH5OJaWz9Dl1AfAAJ0SF4scmOEFaO3sP94ycLQN6/cP+4hGBBMRAgAG
+BQJBHwQYAAoJEDm+UaEITJET2RcAoIWrz1BeS5unSuH9//NIYwmvDqkmAJ4wwm52
+WwSRg5ttVMNL0Bv24/XgzIhGBBMRAgAGBQJBKZHQAAoJEDf2j/UBWvyKlkYAn2D0
+jMFnrjjFXpFRq4NyN/3gPF8aAJ9HToEvWEUsgmUZlePs2LsGn/XBN7kBDQRAgMo4
+EAQAo4MUVKU/V11pIXCFzt7V8MFu/k4702CNmpo5JMHQxtPhfc2Y254aPFgarZBi
+uttB/+iH4+BMMItSDVu7T+l89hfmzy277oV9QkwouSTLLK+g6ansueA+JTLXoiEb
+WIAkK+DAXTztvaixPq8rAfHvyFLFl2cUfvk2wJNW9aZPcccABA0D/31AixMfHl5b
+e054qWxkjcZJBNs/SkjQvOGgYLpf3qzP1YwYjjP1EJa4MEPeWTggu3yk6xtbexK4
+ujzLZZ9XjiCk3x6yfoF4nNb3cIuA2xMkDU8/qhGtbM9+J3qQArCVBF0MUelJXHCM
+T3rs8e0pd5LmNqJpWLOjihNLPWpC1PrMiEYEGBECAAYFAkCAyjgACgkQwTnxUyPL
+eipZzgCeIaSVLRsyuTVMbAjdxKnRoyp0F08An1kkI/x5gP0X4cHbcUAGTbLqdzJP
+=wNYp
+-----END PGP PUBLIC KEY BLOCK-----
+pub  1024D/7C200941 2004-04-24 Torsten Curdt <tcurdt@apache.org>
+sig 3       7C200941 2004-09-25   Torsten Curdt <tcurdt@apache.org>
+sig 3       23CB7A2A 2004-04-27   David Crossley <dcrossley@indexgeo.com.au>
+sig         C4C57B42 2004-06-23   Marcus Crafter <crafterm@debian.org>
+sig 3       7C200941 2004-04-24   Torsten Curdt <tcurdt@apache.org>
+sig 3       015AFC8A 2004-10-16   Bertrand Delacretaz <bdelacretaz@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+sig 3       E41EDC7E 2004-10-30   Carsten Ziegeler <cziegeler@apache.org>
+uid                            Torsten Curdt <tcurdt@vafer.org>
+sig 3       7C200941 2004-09-25   Torsten Curdt <tcurdt@apache.org>
+sig 3       7C200941 2004-06-23   Torsten Curdt <tcurdt@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+sig 3       E41EDC7E 2004-10-30   Carsten Ziegeler <cziegeler@apache.org>
+uid                            Torsten Curdt <tcurdt@web.de>
+sig 3       7C200941 2004-06-23   Torsten Curdt <tcurdt@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+uid                            Torsten Curdt <tcurdt@managesoft.com>
+sig 3       7C200941 2004-06-23   Torsten Curdt <tcurdt@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+sig 3       E41EDC7E 2004-10-30   Carsten Ziegeler <cziegeler@apache.org>
+sub  1024g/87C5307C 2004-04-24
+sig         7C200941 2004-04-24   Torsten Curdt <tcurdt@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+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
+SaIPhA==
+=ruBc
+-----END PGP PUBLIC KEY BLOCK-----

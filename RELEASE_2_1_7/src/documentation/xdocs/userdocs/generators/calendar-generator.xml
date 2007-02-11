@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <!-- This document will be enhanced by information taken from the javadoc -->
+  <header>
+    <title>Description of the calendar generator</title>
+    <version>current</version>
+    <type>Reference</type>
+    <authors>
+      <person email="users@cocoon.apache.org" name="The Cocoon Community"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Calendar Generator">
+     <p>Here is a sample output:</p>
+<source>
+  &lt;calendar:calendar xmlns:calendar="http://apache.org/cocoon/calendar/1.0"
+      year="2004" month="January" prevMonth="12" prevYear="2003"
+      nextMonth="02" nextYear="2004"&gt;
+    &lt;calendar:week number="1"&gt;
+      &lt;calendar:day number="1" date="January 1, 2004"/&gt;
+      &lt;calendar:day number="2" date="January 2, 2004"/&gt;
+      &lt;calendar:day number="3" date="January 3, 2004"/&gt;
+      &lt;calendar:day number="4" date="January 4, 2004"/&gt;
+    &lt;/calendar:week&gt;
+    ...
+  &lt;/calendar:calendar&gt;
+</source>
+ <p>The <em>src</em> parameter is ignored.</p>
+   </s1>
+  <s1 title="Configuration">
+   <p>Configuration options:</p>
+    <ul>
+     <li><em>month</em> (optional) : Sets the month for the calendar (January is 1). Default is the current month.</li>
+     <li><em>year</em> (optional) : Sets the year for the calendar. Default is the current year.</li>
+     <li><em>dateFormat</em> (optional) : Sets the format for the date attribute of each node, as described in 
+          java.text.SimpleDateFormat. If unset, the default format for the current locale will be used.</li>
+     <li><em>lang</em> (optional) : Sets the ISO language code for determining the locale.</li>
+     <li><em>country</em> (optional) : Sets the ISO country code for determining the locale.</li>
+    </ul>
+    </s1>
+  </body>
+</document>

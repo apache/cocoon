@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<htmlcleaner>
+  <cleanup>
+    <!-- Span elements will only be retained if they have one of the classes listed belowed. -->
+    <allowed-span-classes>
+    </allowed-span-classes>
+
+    <!-- Div elements will only be retained if they have one of the classes listed belowed. -->
+    <allowed-div-classes>
+    </allowed-div-classes>
+
+    <!-- The class attribute of p elements will only be retained if they have one of the classes listed belowed. -->
+    <allowed-para-classes>
+      <class>note</class>
+      <class>warn</class>
+      <class>fixme</class>
+    </allowed-para-classes>
+
+    <!-- The class attribute of pre elements will only be retained if they have one of the classes listed belowed. -->
+    <allowed-pre-classes>
+      <class>query</class>
+      <class>include</class>
+      <class>query-and-include</class>      
+    </allowed-pre-classes>
+
+    <img-alternate-src-attr name="title"/>
+
+    <!-- Lists the allowed elements and their allowed attributes.
+
+         For the correct worker of the cleaner, some elements cannot be removed,
+         usch as html, body, p, some others...
+     -->
+    <allowed-elements>
+      <element name="html"/>
+      <element name="body"/>
+
+      <element name="div">
+        <attribute name="class"/>
+      </element>
+      <element name="span">
+        <attribute name="class"/>
+      </element>
+
+      <element name="p">
+        <attribute name="align"/>
+        <attribute name="class"/>
+      </element>
+      <element name="br"/>
+      <element name="pre">
+        <attribute name="class"/>
+      </element>
+
+      <!-- titles -->
+      <element name="h1"/>
+      <element name="h2"/>
+      <element name="h3"/>
+      <element name="h4"/>
+      <element name="h5"/>
+
+      <!-- linking -->
+      <element name="a">
+        <attribute name="href"/>
+      </element>
+
+      <!-- inline styles -->
+      <element name="strong"/>
+      <element name="em"/>
+      <element name="sup"/>
+      <element name="sub"/>
+
+      <!-- lists -->
+      <element name="ul"/>
+      <element name="ol"/>
+      <element name="li"/>
+
+      <element name="img">
+        <attribute name="src"/>
+        <attribute name="align"/>
+      </element>
+
+      <!-- tables -->
+      <element name="table">
+        <attribute name="class"/>
+      </element>
+      <element name="tbody"/>
+      <element name="tr"/>
+      <element name="td">
+        <attribute name="colspan"/>
+        <attribute name="rowspan"/>
+        <attribute name="valign"/>
+      </element>
+      <element name="th">
+        <attribute name="colspan"/>
+        <attribute name="rowspan"/>
+        <attribute name="valign"/>
+      </element>
+      <element name="hr"/>
+    </allowed-elements>
+  </cleanup>
+
+  <serialization>
+    <linewidth value="80"/>
+    <elements>
+      <!-- Note: to avoid unexpected results, mention all block-type tags here,
+           and NO inline tags. -->
+      <element name="html" afterOpen="1" beforeClose="1"/>
+      <element name="body" afterOpen="1" beforeClose="1"/>
+      <element name="p" beforeOpen="1" afterClose="1"/>
+      <element name="h1" beforeOpen="1" afterClose="1"/>
+      <element name="h2" beforeOpen="1" afterClose="1"/>
+      <element name="h3" beforeOpen="1" afterClose="1"/>
+      <element name="h4" beforeOpen="1" afterClose="1"/>
+      <element name="h5" beforeOpen="1" afterClose="1"/>
+      <element name="pre" beforeOpen="1" afterClose="1"/>
+      <element name="div" beforeOpen="1" afterClose="1"/>
+      <element name="ul" beforeOpen="1" beforeClose="1" afterClose="1"/>
+      <element name="ol" beforeOpen="1" beforeClose="1" afterClose="1"/>
+      <element name="li" beforeOpen="1"/>
+      <element name="table" beforeOpen="1" beforeClose="1" afterClose="1"/>
+      <element name="tbody" beforeOpen="1" beforeClose="1"/>
+      <element name="tr" beforeOpen="1" beforeClose="1"/>
+      <element name="td" beforeOpen="1"/>
+      <element name="th" beforeOpen="1"/>
+      <element name="br" afterClose="1"/>
+
+    </elements>
+  </serialization>
+
+</htmlcleaner>

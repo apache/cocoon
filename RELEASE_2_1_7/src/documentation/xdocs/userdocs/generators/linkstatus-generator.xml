@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <!-- This document will be enhanced by information taken from the javadoc -->
+ <header>
+  <title>LinkStatus Generator</title>
+  <version>0.9</version>
+  <type>Technical document</type>
+  <authors>
+   <person name="Bernhard Huber" email="huber@apache.org"/>
+  </authors>
+  <abstract>This document describes the LinkStatus generator.</abstract>
+ </header>
+ <body>
+  <s1 title="LinkStatus Generator">
+   <p>
+    The LinkStatus Generator emits a list of links that are reachable. 
+   </p>
+   <p>
+    The LinkStatusGenerator has serveral configuration options.
+   </p>
+   <dl>
+     <dt>include-name</dt>
+     <dd>RE pattern for including links
+       <br/>
+       By default <code>include-name</code> is empty.
+     </dd>
+     <dt>exclude-name</dt>
+     <dd>RE pattern for excluding links.
+       <br/>
+       By default <code>exclude-name</code> is defined as
+       <code>.*\.gif(\?.*)?$,
+         .*\.png(\?.*)?$,
+         .*\.jpe?g(\?.*)?$,
+         .*\.js(\?.*)?$,
+         .*\.css(\?.*)?$
+       </code>.
+     </dd>
+     <dt>link-content-type</dt>
+     <dd>expected MIME type of xml document requested on view
+       <em>link-query-view</em>
+       <br/>
+       By default <code>link-content-type</code> is set to 
+       <code>application/x-cocoon-links</code>.
+     </dd>
+     <dt>link-view-query</dt>
+     <dd>A query-string appended to the crawling URL
+       <br/>
+       By default <code>link-view-query</code> is set to
+       <code>cocoon-view=links</code>.
+     </dd>
+     <dt>user-agent</dt>
+     <dd>HTTP user-agent for requesting links,
+       By default <code>user-agent</code> is set to
+       value of <code>org.apache.cocoon.Constants.COMPLETE_NAME</code>,
+       ie. <code>Apache Cocoon 2.1-dev</code>
+     </dd>
+     <dt>accept</dt>
+     <dd>Not currently used</dd>
+   </dl>
+   <p>
+    A simple example might help to use the LinkStatusGenerator effectivly:
+   </p>
+   <p>
+    Add the LinkStatusGenerator to the components in your sitemap.xmap
+   </p>
+<source><![CDATA[
+...
+<map:components>
+...
+  <map:generators default="file">
+  ...
+    <map:generator name="linkStatus"
+      src="org.apache.cocoon.generation.LinkStatusGenerator"/>
+  </map:generators>
+  <map:serialize default="html">
+    <map:serializer name="links"
+      src="org.apache.cocoon.serialization.LinkSerializer"/>
+  </map:serialize>
+</map:components>
+<map:views>
+  <map:view>
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+    ...
+</map:view>
+]]></source>
+   <p>
+     Next define in your pipeline to use the LinkStatusGenerator
+   </p>
+<source><![CDATA[
+<map:match pattern="/linkStatus">
+  <map:generate type="linkStatus" name="my-root"/>
+  ...
+  <map:serialize/>
+</map:match>
+]]></source>
+
+  </s1>
+ </body>
+</document>

@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<!--
+  <![CDATA[ CVS Version: $Id$ 
+  ]]>  
+-->
+<document>
+  <header>
+    <title>RequestMethodSelector in Cocoon</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Cocoon Community" email="dev@cocoon.apache.org"/>
+    </authors>
+    <abstract>This document describes the RequestMethodSelector of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="RequestMethodSelector">
+      <table>
+        <tr>
+          <td>NAME</td><td>RequestMethod</td>
+        </tr>
+        <tr>
+          <td>WHAT</td><td>The <code>RequestMethodSelector</code> component is used to 
+            select appropriate sitemap processing depending on the request method, 
+            for example, <code>GET</code> or <code>POST</code>.
+          </td>
+        </tr>
+        <tr>
+          <td>TYPE</td><td>Selector, Sitemap Component</td>
+        </tr>
+        <tr>
+          <td>BLOCK</td><td>Core</td>
+        </tr>
+        <tr>
+          <td>CLASS</td><td>org.apache.cocoon.selection.RequestMethodSelector</td>
+        </tr>
+        <tr>
+          <td>CACHEABLE</td><td>not applicable</td>
+        </tr>
+      </table>
+    </s1>
+    <s1 title="Description">
+      <p>
+        The RequestMethodSelector allows pipeline creation to be influenced by the method of
+        the request. For example, in a Cocoon Forms environment, a <code>GET</code> request
+        could be forwarded to a new FlowScript function, whilst a <code>POST</code> could be 
+        forwarded to a continuation, for example:
+      </p>
+      <source><![CDATA[
+<map:match pattern="myform">
+  <map:select type="request-method">
+    <map:when test="GET">
+       <map:call function="myform"/>
+    </map:when>
+    <map:when test="POST">
+      <map:call continuation="request-param:continuation-id"/>
+    </map:when>
+  </map:select>
+</map:match>
+]]></source>
+    </s1>
+    <s1 title="Configuration">
+      
+      <s2 title="Sitemap component configuration example">
+        <p></p>
+        <source><![CDATA[
+<map:selectors...
+  <map:selector name="request-method" 
+                logger="sitemap.selector.request-method" 
+                src="org.apache.cocoon.selection.RequestMethodSelector"/>
+  ...
+</map:selectors>
+]]></source>
+      </s2>
+      <s2 title="Configuration">
+        <p>
+          The request method selector does not require any specific configuration, other than
+          specifying a name and an implementing class, as in the example above.
+        </p>
+      </s2>
+    </s1>
+    <s1 title="History">
+      <p>
+        2004-12-16: Created this document
+      </p>
+    </s1>
+    <s1 title="See also">
+      <p>
+        General documentation about selectors is available at
+        <link href="../concepts/matchers_selectors.html">Matchers and Selectors</link>.
+      </p>
+    </s1>
+  </body>
+</document>
+

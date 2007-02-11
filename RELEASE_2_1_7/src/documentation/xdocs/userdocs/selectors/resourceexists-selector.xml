@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<!--
+  <![CDATA[ $Id$ 
+  ]]>
+
+-->
+<document>
+  <header>
+    <title>ResourceExistsSelector in Cocoon</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Andrew Savory" email="asavory@apache.org"/>
+    </authors>
+    <abstract>This document describes the ResourceExistsSelector of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="ResourceExistsSelector">
+      <table>
+        <tr>
+          <td>NAME</td><td>resource-exists</td>
+        </tr>
+        <tr>
+          <td>WHAT</td><td>The <code>ResourceExistsSelector</code> component is used to 
+            select appropriate sitemap processing depending on the existence of a set of resources.
+          </td>
+        </tr>
+        <tr>
+          <td>TYPE</td><td>Selector, Sitemap Component</td>
+        </tr>
+        <tr>
+          <td>BLOCK</td><td>Core</td>
+        </tr>
+        <tr>
+          <td>CLASS</td><td>org.apache.cocoon.selection.ResourceExistsSelector</td>
+        </tr>
+        <tr>
+          <td>SINCE</td><td>Cocoon 2.1</td>
+        </tr>
+        <tr>
+          <td>CACHEABLE</td><td>not applicable</td>
+        </tr>
+      </table>
+    </s1>
+    <s1 title="Description">
+      <p>
+        The <code>ResourceExistsSelector</code> selects the first of a set of
+        Resources (usually files) that exists in the context.
+      </p>
+    </s1>
+    <s1 title="Usage">
+      <p>
+        Pipelines can be built based on the existence of files, for example
+        building a PDF from XSL-FO or a higher-level XML format.
+      </p>
+      <s2 title="Sitemap pipeline examples">
+        <p></p>
+        <source><![CDATA[
+<map:match pattern="**.html"> 
+  <map:select type="resource-exists">
+    <map:when test="content/{1}.xml">
+      <map:generate src="content/{1}.xml" />
+      <map:transform src="stylesheets/page2html.xsl" />
+    </map:when>
+    <map:otherwise>
+      <map:generate src="resources/html/{1}.html" />
+    </map:otherwise>
+  </map:select>
+  <map:serialize type="html"/>
+</map:match>
+        ]]></source>
+      </s2>
+      
+      <s2 title="Sitemap component configuration example">
+        <p></p>
+        <source><![CDATA[
+<map:selectors...
+
+  <map:selector name="resource-exists" 
+    src="org.apache.cocoon.selection.ResourceExistsSelector"
+    logger="sitemap.selector.resource-exists"
+  >
+    <map:parameter src="prefix" value="/"/>
+  </map:selector>
+    ...
+  </map:selectors>
+...
+]]></source>
+      </s2>
+      <s2 title="Configuration">
+        <p>
+          The optional <code>prefix</code> parameter is prepended to all test
+          expressions before evaluation. The default prefix is '/', meaning that
+          all expressions are relative to the context root, unless explicitly
+          overridden.
+        </p>
+      </s2>
+      <s2 title="Setup">
+        <p>
+          Setting up a <code>ResourceExistsSelector</code> includes choosing the
+          <code>&lt;map:when&gt;</code> test expressions, and an optional 
+          <code>&lt;map:otherwise&gt;</code> clause.
+        </p>
+      </s2>
+<!--      <s2 title="Effect on Object Model and Sitemap Parameters">
+        <p>
+        
+        </p>
+      </s2>-->
+    </s1>
+<!--    <s1 title="Bugs/Caveats">
+      <p>
+        Describe limitation, bugs of ResourceExistsSelector 
+      </p>
+    </s1>-->
+    <s1 title="History">
+      <p>
+        03-19-03: initial creation
+      </p>
+    </s1>
+    <s1 title="See also">
+      <p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <link href="../concepts/matchers_selectors.html">Matchers and Selectors</link>.
+      </p>
+    </s1>
+  </body>
+</document>
+

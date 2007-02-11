@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+ <header>
+  <title>EncodeURL Transformer</title>
+  <subtitle>in @doctitle@</subtitle>
+  <version>0.9</version>
+  <type>Technical document</type>
+  <authors>
+   <person name="Bernhard Huber" email="huber@apache.org"/>
+  </authors>
+  <abstract>This document describes the EncodeURL transformer.</abstract>
+ </header>
+ <body>
+  <s1 title="EncodeURL Transformer">
+   <p>
+    The encodeURL transformer emits encoded URLs.
+    This transformer applies encodeURL method to URLs.
+    You may want to use this transform to avoid doing the manually
+    encodeURL() call.
+   </p>
+   <p>
+    Usually this transformer is appended as last transformer before
+    the serialization process. In this case it is possible to encode
+    URLs introduced in the generator, and xslt transformer phase.
+   </p>
+   <p>
+    You can specify which attributes hold URL values in order to restrict
+    URL rewriting to specific attributes and values only. In the current implementation
+    you specify include, and exclude patterns as regular expressions, concatting
+    element-name-regexp + "/@" + attribute-name-regexp [ + "=" + attribute-value-regexp ] 
+    whereas the part in brackets [] are optional.
+   </p>
+   <p>
+    The EncodeURLTransformer has several configuration options. These options
+    may be specified in the sitemap, or by each request.
+   </p>
+   <dl>
+     <dt>include-name</dt>
+     <dd>RE pattern for including attributes for encode URL rewriting, 
+       The attribute values are encoded, if an 
+       expressions of the form 
+       <code>element-name-regexp/@attribute-name-regexp[=attribute-value-regexp]</code>
+       matches.
+       <br/>
+       By default <code>include-name</code> is defined as
+       <code>.*/@href|.*/@action|frame/@src</code>.
+     </dd>
+     <dt>exclude-name</dt>
+     <dd>RE pattern for excluding attributes from encode URL rewriting,
+       The attribute values are not encoded, if an 
+       expressions of the form 
+       <code>element-name-regexp/@attribute-name-regexp[=attribute-value-regexp]</code>
+       matches.
+       <br/>
+       By default <code>exclude-name</code> is defined as
+       <code>img/@src</code>.
+     </dd>
+   </dl>
+   <ul>
+    <li>Name : encodeURL</li>
+    <li>Class: org.apache.cocoon.transformation.EncodeURLTransformer</li>
+    <li>Cacheable: yes.</li>
+   </ul>
+   <p>
+    A simple example might help to use the EncodeURLTransformer effectivly:
+   </p>
+   <p>
+    Add the EncodeURLTransformer to the components in your sitemap.xmap
+   </p>
+<source><![CDATA[
+...
+<map:components>
+...
+  <map:transformers default="xslt">
+  ...
+    <map:transformer name="encodeURL"
+      src="org.apache.cocoon.transformation.EncodeURLTransformer">
+      <!-- default configuration, explicitly defined -->
+      <include-name>.*/@href|.*/@action|frame/@src</include-name>
+      <exclude-name>img/@src|(a/@href|iframe/@src)=.*adserver</exclude-name>
+    </map:transformer>
+  ...
+]]></source>
+   <p>
+     Next define in your pipeline to use the EncodeURLTransformer
+   </p>
+<source><![CDATA[
+<map:match pattern="*.xsp">
+  <map:generate type="serverpages" name="docs/samples/xsp/{1}.xsp"/>
+  <map:transform src="stylesheets/page/simple-page2html.xsl"/>
+  
+  <map:transform type="encodeURL"/>
+  <map:serialize/>
+</map:match>
+]]></source>
+
+   <p>
+    In this example pipeline it is assumed that the attribute
+    <code>href</code> of element <code>a</code> contains an URL which should get 
+    encoded.
+    Moreover the attribute <code>action</code> of any element contains an URL
+    which should get encoded, too.
+    Finally the attribute <code>src</code> of element 
+    <code>frame</code> should get encoded, too.
+   </p>
+   <p>
+    The attribute <code>src</code> of element <code>img</code> is excluded from
+    encoding.
+   </p>
+   <p>
+     In other words, images are served regardless of the current session, in contrast
+     anchor links, form actions, and frame src are served depending on the current session.
+   </p>
+   <p>
+    The encoding itself applies the servlet method <code>response.encodeURL()</code>
+    upon the URL.
+   </p>
+  </s1>
+ </body>
+</document>

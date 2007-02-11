@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+ <header>
+  <title>Testing your Apache Cocoon</title>
+  <version>1.1</version>
+  <type>Technical document</type>
+  <authors>
+   <person name="Bernhard Huber" email="huber@apache.org"/>
+   <person name="Stephan Michels" email="stephan@apache.org"/>
+   <person name="David Crossley" email="crossley@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="Overview of testing procedures">
+  <p>
+   There are some initial procedures available for you to ensure that
+   Apache Cocoon can run properly on your particular computing platform
+   and that the components do function properly.
+  </p>
+  <p>
+   You can build upon this infrastructure to add your own tests, and to
+   ensure that development work proceeds smoothly. The tests are located
+   in the <code>src/test/</code> directory.
+  </p>
+ </s1>
+
+ <s1 title="JUnit tests">
+  <p>
+   Run &quot;<code>build test</code>&quot; to conduct an initial set of
+   automated JUnit test cases,
+   e.g. Test various transformers;
+   Test the methods for getting platform-dependent filesystem pathnames; etc.
+  </p>
+
+  <s2 title="How to add more tests">
+   <p>
+    As there is already a nice junit framework available, it is not that
+    difficult to add junit tests for any transformer. In short:
+   </p>
+   <ul>
+    <li>Create XYTransformerTestCase.java</li>
+    <li>Create XYTransformerTestCase.xconf</li>
+    <li>Edit the transformers section in XYTransformerTestCase.xtest
+     for XYTransformerTestCase</li>
+    <li>Add testABC() methods to XYTransformerTestCase.java</li>
+   </ul>
+  </s2>
+ </s1>
+
+ <s1 title="Other tests">
+  <ul>
+    <li>
+      Some Anteater Functional Tests at <code>src/test/anteater</code>
+    </li>
+    <li>
+      <link href="../catalog-test.html">Testing: Catalog Entity Resolver</link>
+      which conducts some additional tests for resolving external entities.
+    </li>
+  </ul>
+ </s1>
+
+ </body>
+</document>

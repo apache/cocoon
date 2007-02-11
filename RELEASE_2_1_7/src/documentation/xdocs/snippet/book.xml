@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon Code Snippets" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../index.html"/>
+  </menu>
+
+  <menu label="Snippets">
+    <menu-item label="Index" href="index.html"/>
+  </menu>
+
+  <menu label="Using Cocoon">
+    <menu-item label="Internal Pipeline" href="snippet-internal-pipeline.html"/>
+  </menu>
+  
+  <menu label="XSLT">
+    <menu-item label="Processor Options" href="snippet-xslt-options.html"/>
+  </menu>
+  
+  
+</book>

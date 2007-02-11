@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+<document>
+  <header>
+    <title>Generators in Cocoon</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+    </authors>
+    <abstract>This document describes all of the available generators of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Goal">
+     <p>This document lists all of the available generators of Apache Cocoon and describes their
+       purpose.</p>
+    </s1>
+    <s1 title="Overview">
+      <p>A generator is the starting point of an xml pipeline. It generates XML content as SAX
+        events and initializes pipeline processing. Every pipeline match containing a generator
+        must be terminated by a serializer.
+      </p>
+      <p>In the sitemap file, each generator has a unique name which is mapped to a Java class. One
+        generator name must be declared as the default generator. Each generator may have additional
+        configuration information specified in child elements.
+      </p>
+      <p>On the left you see all generators that are available in Cocoon. The list is separated into
+        the core generators, belonging to the Cocoon core, and optional generators that are part of
+        specific blocks.
+      </p>        
+      <p>For conceptual information on generators see the user's guide document
+        <link href="../concepts/sitemap.html">The Sitemap</link>.
+      </p>
+    </s1>
+  </body>
+</document>
