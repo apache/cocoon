@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Components ================================ -->
+  <map:components> 
+    <map:transformers default="xslt">
+      <map:transformer name="xmlform" src="org.apache.cocoon.transformation.XMLFormTransformer" logger="xmlform.sitemap.transformer"/>
+      <map:transformer name="jx" src="org.apache.cocoon.transformation.JXTemplateTransformer" logger="jx.sitemap.transformer"/>
+    </map:transformers>
+    <map:generators default="file">
+        <map:generator label="content,data" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.FlowVelocityGenerator"/>
+        <map:generator label="content,data" logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
+    </map:generators>
+    <map:flow-interpreters default="JavaScript"/>
+    <map:serializers default="html"/>
+    <map:matchers default="wildcard"/>
+  </map:components>
+
+
+<!-- =========================== Views =================================== -->
+
+<!--
+  The debug view can be used to output an intermediate 
+  snapshot of the pipeline.
+  Pass cocoon-view=debug as a URL parameter to see
+  the pipeline output produced by the transofrmer
+  labeled "debug". You can move the label to different
+  transformers to understand each processing
+  stage better.
+-->
+<map:views>
+  <map:view name="debug" from-label="debug">
+    <map:serialize type="xml"/>
+  </map:view>
+  <map:view name="debug1" from-label="debug1">
+    <map:serialize type="xml"/>
+  </map:view>
+  <map:view name="debug2" from-label="debug2">
+    <map:serialize type="xml"/>
+  </map:view>
+  <map:view name="xml" from-label="xml">
+    <map:serialize type="xml"/>
+  </map:view>
+</map:views>
+
+  <!-- =========================== Resources ================================= -->
+
+  <map:resources>
+  </map:resources>
+
+  <!-- =========================== Pipelines ================================= -->
+    <map:flow language="JavaScript">
+      <map:script src="flow/PetStoreImpl.js"/>
+      <map:script src="flow/petstore.js"/>
+    </map:flow>
+  <map:pipelines> 
+
+    <map:pipeline>
+      <map:match pattern="*.kont">
+        <map:call continuation="{1}"/> <!-- 
+               This handles sendPage*() continuations.
+           -->
+      </map:match>
+      <map:match pattern="*.do">
+        <map:call function="main">
+          <map:parameter name="page" value="{1}"/>
+        </map:call>
+      </map:match>
+      <map:match pattern="petstore"> 
+        <map:call function="xmlForm"/> <!-- 
+              Without parameters xmlForm() handles XMLForm continuations:
+	      The pattern I'm matching here, "petstore", must match the value 
+              of the "action" attribute in the view's <xf:submit> elements
+           -->
+      </map:match>
+      <map:match pattern="">
+        <map:call function="index"/>
+      </map:match>
+      <map:match pattern="editAccount.form">
+        <map:call function="xmlForm">
+          <map:parameter name="xmlform-function" value="editAccountForm"/>
+	  <map:parameter name="xmlform-id" value="petstore-edit-account"/> <!--
+                  The value I supply here, "petstore-edit-account", must match 
+                  the "id" attribute of the view's <xf:form> element
+             -->
+          <map:parameter name="xmlform-validator-schema-ns"/> <!-- no validator -->
+          <map:parameter name="xmlform-validator-schema"/> <!-- no validator -->
+          <map:parameter name="xmlform-scope" value="session"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="view/xmlform/*.xml">
+	      <!-- original XMLForm document -->
+	      <map:generate src="view/xmlform/{1}.xml"/>
+	      
+	      <!-- populating the document with model instance data -->
+
+	      <map:transform type="xmlform"  label="debug"/>
+	      <map:transform type="xalan" src="stylesheets/site2html.xsl"  label="debug1"/>
+	      <map:serialize type="html" />
+	</map:match>	      
+    </map:pipeline>
+   <map:pipeline>
+     <map:match pattern="view/*.xsp">
+        <map:generate src="view/xsp/{1}.xsp" type="serverpages"/>
+        <map:transform src="stylesheets/site2html.xsl" />
+        <map:serialize type="html"/>
+     </map:match>
+     <map:match pattern="view/Cart.jxpath">
+        <map:generate src="view/jxpath/Cart.xml" type="jx" />
+        <map:serialize type="html"/>
+     </map:match>
+     <map:match pattern="view/*.jxpath">
+        <map:generate src="view/jxpath/{1}.xml" type="file" />
+        <map:transform type="jx" />
+        <map:transform src="stylesheets/site2html.xsl" />
+        <map:serialize type="html"/>
+     </map:match>
+     <map:match pattern="view/Cart.jexl">
+        <map:generate src="view/jexl/Cart.xml" type="jx" />
+        <map:serialize type="html"/>
+     </map:match>
+     <map:match pattern="view/*.jexl">
+        <map:generate src="view/jexl/{1}.xml" type="jx" />
+        <map:transform src="stylesheets/site2html.xsl" />
+        <map:serialize type="html"/>
+     </map:match>
+     <map:match pattern="view/*.vm">
+      <map:generate src="view/templates/{1}.vm" type="velocity"/>
+      <map:serialize type="html"/>
+     </map:match>
+   </map:pipeline>
+
+   <map:pipeline>
+   <map:match pattern="images/*.gif">
+    <map:read mime-type="images/gif" src="images/{1}.gif"/>
+   </map:match>
+   </map:pipeline>
+
+
+  </map:pipelines> 
+  
+</map:sitemap>
+<!-- end of file -->
+
+
+
+
+
+
+
+

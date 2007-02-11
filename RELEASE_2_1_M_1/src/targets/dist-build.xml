@@ -1,0 +1,75 @@
+<!-- === Distribution targets ============================================== -->
+
+  <target name="dist" depends="init, forrest" description="[admin] Builds the distribution">
+
+    <mkdir dir="${dist.root}"/>
+    <mkdir dir="${dist}"/>
+
+    <copy todir="${dist}/tools">
+      <fileset dir="${tools}">
+        <exclude name="anttasks/**"/>
+        <exclude name="loader/**"/>
+        <exclude name="lib/xalan*"/> 
+        <exclude name="lib/xerces*"/> 
+        <exclude name="lib/jtidy*"/> 
+        <exclude name="lib/xml-apis.jar"/> 
+      </fileset>
+    </copy>
+    
+    <copy todir="${dist}/lib">
+      <fileset dir="${lib}"/>
+    </copy>
+
+    <copy todir="${dist}/src">
+      <fileset dir="${src}"/>
+    </copy>
+
+    <copy todir="${dist}/legal">
+      <fileset dir="${legal}"/>
+    </copy>
+
+    <copy todir="${dist}" filtering="on">
+     <fileset dir=".">
+      <include name="README.txt"/>
+      <include name="INSTALL.txt"/>
+      <include name="CREDITS.txt"/>
+      <include name="*.bat"/>
+      <include name="*.sh"/>
+      <include name="KEYS"/>
+      <include name="*.xml"/>
+      <include name="*.properties"/>
+      <include name="*.xconf"/>
+      <exclude name="local.*"/>
+      <exclude name="announcement.xml"/>
+     </fileset>
+    </copy>
+
+    <chmod perm="+x" file="${dist}/cocoon.sh"/>
+    <chmod perm="+x" file="${dist}/build.sh"/>
+    <chmod perm="+x" file="${dist}/tools/bin/antRun"/>
+    <fixcrlf srcdir="${dist}" includes="**.sh" eol="lf"/>
+    <fixcrlf srcdir="${dist}" includes="antRun" eol="lf"/>
+    <fixcrlf srcdir="${dist}" includes="**.bat" eol="crlf"/>
+
+    <zip zipfile="${dist.target}/${dist.name}.zip" 
+         basedir="${dist.root}" 
+         includes="${dist.name}/**">
+    </zip>
+
+    <tar tarfile="${dist.target}/${dist.name}.tar" 
+         longfile="gnu"
+         basedir="${dist.root}"
+         includes="${dist.name}/**">
+    </tar>
+    <gzip zipfile="${dist.target}/${dist.name}.tar.gz" src="${dist.target}/${dist.name}.tar"/>
+    <delete file="${dist.target}/${dist.name}.tar"/>
+  </target>
+  
+  <target name="clean-dist" depends="clean" description="Cleans everything and brings back to original 'CVS checkout' state">
+    <delete dir="${build.root}"/>
+    <delete dir="${tools.tasks.dest}"/>
+    <delete dir="${tools.loader.dest}"/>
+    <delete file="${dist.target}/${dist.name}.tar.gz"/>
+    <delete file="${dist.target}/${dist.name}.zip"/>
+    <delete dir="${dist.root}"/>
+  </target>  

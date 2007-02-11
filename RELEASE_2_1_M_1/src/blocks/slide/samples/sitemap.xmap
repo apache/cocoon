@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Components =================================== -->
+
+ <map:components>
+  <map:generators default="file">
+   <map:generator name="sourcedescription" 
+                  src="org.apache.cocoon.generation.SourceDescriptionGenerator" 
+                  logger="sitemap.generator.sourcedescription"
+                  label="content"/>
+   <map:generator name="principallist"
+                  src="org.apache.cocoon.generation.PrincipalListGenerator"
+                  logger="sitemap.generator.principallist"
+                  label="content"/>
+  </map:generators>
+
+  <map:transformers default="xslt">
+   <map:transformer name="session" logger="sitemap.transformer.session"
+                    src="org.apache.cocoon.webapps.session.transformation.SessionTransformer"/>
+   <map:transformer logger="sitemap.transformer.write-source" name="write-source"
+                    src="org.apache.cocoon.transformation.SourceWritingTransformer"/>
+   <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" 
+                    src="org.apache.cocoon.transformation.XIncludeTransformer"/>
+   <map:transformer name="log" src="org.apache.cocoon.transformation.LogTransformer"/>
+  </map:transformers>
+
+  <map:readers default="resource"/>
+  <map:serializers default="html">
+   <map:serializer logger="sitemap.serializer.xml" mime-type="text/xml" name="xml"
+                   src="org.apache.cocoon.serialization.XMLSerializer"/>
+
+   <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" 
+                   pool-grow="4" pool-max="32" pool-min="4" 
+                   src="org.apache.cocoon.serialization.HTMLSerializer">
+    <buffer-size>1024</buffer-size>
+   </map:serializer>
+  </map:serializers>
+
+
+  <map:matchers default="wildcard"/>
+  <map:selectors default="browser"/>
+
+  <map:actions>
+   <map:action logger="sitemap.action.slide" name="source-actions"
+               src="org.apache.cocoon.acting.SourceMultiAction"/>
+   <map:action logger="sitemap.action.slide" name="principal-actions"
+               src="org.apache.cocoon.acting.PrincipalMultiAction"/>
+
+   <map:action name="auth-protect" logger="sitemap.action.auth-protect" 
+               src="org.apache.cocoon.webapps.authentication.acting.AuthAction"/>
+
+   <map:action name="auth-login" logger="sitemap.action.auth-login"
+               src="org.apache.cocoon.webapps.authentication.acting.LoginAction"/>
+   <map:action name="auth-logout" logger="sitemap.action.auth-logout"
+               src="org.apache.cocoon.webapps.authentication.acting.LogoutAction"/>
+   <map:action name="auth-loggedIn" logger="sitemap.action.auth-loggedIn"
+               src="org.apache.cocoon.webapps.authentication.acting.LoggedInAction"/>
+  </map:actions>
+
+ </map:components>
+
+<!-- =========================== Views =================================== -->
+
+ <map:views>
+ 
+     <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+     </map:view>
+
+     <map:view name="pretty-content" from-label="data">
+       <map:transform src="context://stylesheets/system/xml2html.xsl"/>
+       <map:serialize type="html"/>
+     </map:view>
+
+     <map:view name="xml" from-label="content">
+       <map:serialize type="xml"/>
+     </map:view>
+     
+ </map:views>
+
+<!-- =========================== Resources =================================== -->
+
+ <map:resources>
+  <map:resource name="description">
+   <map:generate type="sourcedescription" src="slide://{1}?cocoon-source-principal={../../ID}">
+    <map:parameter name="repository" value="slide"/>
+    <map:parameter name="namespace" value="myrepository"/>
+    <map:parameter name="properties" value="true"/>
+       <map:parameter name="permissions" value="true"/>
+       <map:parameter name="locks" value="true"/>
+       <map:parameter name="depth" value="1"/>
+      </map:generate>
+  </map:resource>
+ </map:resources>
+
+<!-- =========================== Pipelines ================================= -->
+
+ <map:pipelines>
+  <map:component-configurations>
+   <authentication-manager>
+    <handlers>
+     <handler name="slidehandler" xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+      <redirect-to    uri="cocoon://samples/slide/login.html"/>
+      <authentication uri="cocoon:raw:/authenticate"/>
+     </handler>
+    </handlers>
+   </authentication-manager>
+  </map:component-configurations>
+
+  <map:pipeline internal-only="true">
+
+   <map:match pattern="principallist">
+    <map:generate type="principallist">
+     <map:parameter name="principalprovider" value="slide"/>
+     <map:parameter name="principalcaller" value="root"/>
+    </map:generate>
+    <map:serialize type="xml"/>
+   </map:match>
+
+   <map:match pattern="authenticate">
+    <map:generate src="cocoon:/principallist"/>
+
+    <map:transform type="xslt" src="principal2auth.xsl"> <!-- stylesheets seems to have a problem with XSLTC -->
+     <map:parameter name="use-request-parameters" value="true"/>
+    </map:transform>
+
+    <map:serialize type="xml"/>
+   </map:match>
+
+   <!-- =============  Source description ============= -->
+   <map:match pattern="description/*/**">
+    <map:generate type="sourcedescription" src="slide://{2}?cocoon-source-principal={1}">
+     <map:parameter name="repository" value="slide"/>
+     <map:parameter name="namespace" value="myrepository"/>
+     <map:parameter name="properties" value="true"/>
+     <map:parameter name="permissions" value="true"/>
+     <map:parameter name="locks" value="true"/>
+     <map:parameter name="depth" value="1"/>
+    </map:generate>
+
+    <map:serialize type="xml"/>
+   </map:match>
+
+  </map:pipeline>
+
+  <map:pipeline>
+
+   <map:match pattern="">
+	  <map:redirect-to uri="content/"/>
+	 </map:match>
+ 
+   <map:match pattern="login.html">
+    <map:generate src="login.xhtml"/>
+    <map:transform src="redirect4login.xsl">
+     <map:parameter name="destination" value="{request-param:resource}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="login">
+    <map:act type="auth-login">
+     <map:parameter name="handler" value="slidehandler"/>
+     <map:parameter name="parameter_name" value="{request-param:userid}"/>
+     <map:parameter name="parameter_password" value="{request-param:password}"/>
+     <map:redirect-to uri="{request-param:resource}"/>
+    </map:act>
+
+    <map:generate src="login-failed.xhtml"/>
+    <map:transform src="redirect4login.xsl">
+     <map:parameter name="destination" value="{request-param:resource}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="logout.html">
+    <map:act type="auth-logout">
+     <map:parameter name="handler" value="slidehandler"/>
+
+     <map:read src="logout.xhtml"/>
+    </map:act>
+
+    <map:redirect-to uri="login.html"/>
+   </map:match>
+
+   <map:match pattern="**">
+    <map:act type="auth-protect">
+     <map:parameter name="handler" value="slidehandler"/>
+
+     <!-- ============= Source content ================== -->
+     <map:match pattern="content/**">
+      <map:act type="source-actions">
+       <map:parameter name="method" value="{request-param:method}"/>
+       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
+      </map:act>
+
+      <map:generate src="cocoon:/description/{../ID}/{1}"/>
+      <map:transform src="description2html4content.xsl">
+       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
+      </map:transform>
+      <map:transform type="xinclude"/>
+      <map:serialize type="html"/>
+     </map:match>
+
+     <!-- ============= Source properties =============== -->
+     <map:match pattern="properties/**">
+      <map:act type="source-actions">
+       <map:parameter name="method" value="{request-param:method}"/>
+       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
+      </map:act>
+
+      <map:generate src="cocoon:/description/{../ID}/{1}"/>
+      <map:transform src="description2html4properties.xsl"/>
+      <map:serialize type="html"/>
+     </map:match>
+
+     <!-- ============= Source permissions ============== -->
+     <map:match pattern="permissions/**">
+      <map:act type="source-actions">
+       <map:parameter name="method" value="{request-param:method}"/>
+       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
+      </map:act>
+
+      <map:aggregate element="document">
+       <map:part src="cocoon:/description/{../ID}/{1}"/>
+       <map:part src="cocoon:/principallist"/>
+      </map:aggregate>
+
+      <map:transform src="description2html4permissions.xsl"/>
+      <map:serialize type="html"/>
+     </map:match>
+
+     <!-- ============= Source locks ==================== -->
+     <map:match pattern="locks/**">
+      <map:act type="source-actions">
+       <map:parameter name="method" value="{request-param:method}"/>
+       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
+      </map:act>
+
+      <map:generate src="cocoon:/description/{../ID}/{1}"/>
+      <map:transform src="description2html4locks.xsl"/>
+      <map:serialize type="html"/>
+     </map:match>
+
+     <!-- ============= Source direct ================== -->
+
+     <map:match pattern="view/**">
+      <map:read src="slide://{1}?cocoon-source-principal={../ID}"/>
+     </map:match>
+
+     <!-- ============= Repository users =============== -->
+     <map:match pattern="users/**">
+      <map:act type="principal-actions">
+       <map:parameter name="method" value="{request-param:method}"/>
+       <map:parameter name="cocoon-caller-principal-name" value="{../ID}"/>
+      </map:act>
+
+      <map:generate type="principallist">
+       <map:parameter name="principalprovider" value="slide"/>
+       <map:parameter name="principalcaller" value="{../ID}"/>
+      </map:generate>
+      <map:transform src="principal2html4users.xsl"/>
+      <map:serialize type="html"/>
+     </map:match>
+
+    </map:act>
+   </map:match>
+			
+	</map:pipeline>
+
+ </map:pipelines>
+</map:sitemap>

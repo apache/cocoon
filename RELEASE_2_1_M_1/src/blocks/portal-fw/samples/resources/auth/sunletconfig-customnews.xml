@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- $Id: sunletconfig-customnews.xml,v 1.1 2003/03/09 00:05:29 pier Exp $ 
+
+-->
+<page xmlns:session="http://cocoon.apache.org/session/1.0">
+	<session:form name="customnews" method="POST">
+		<session:action><session:getxml context="portal" path="/configuration/uri"/></session:action>
+		<session:content>
+			<session:inputxml context="portal" path="/coplet-data/feed" name="Newsfeed" type="text"/>
+		</session:content>
+            <input type="submit" value="Change"/>
+	</session:form>
+</page>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon Links Overview</title>
+  <subtitle>Overview</subtitle>
+  <authors>
+   <person name="Andreas Hochsteger" email="e9625392@student.tuwien.ac.at"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="Cocoon Links Overview">
+  <p>
+   There is a wealth of information about Cocoon from external sources.
+   This is a collection of links to some of them.
+  </p>
+
+  <p>
+   Come back often ... this collection is being updated regularly via the
+   <code>cocoon-users</code> mailing list.
+  </p>
+
+  <p>The actual link category pages are available from the side-panel.
+  </p>
+
+ </s1>
+
+  <s1 title="How to get listed">
+   <p>
+    Find out in which section of the Cocoon Links your site/page fits, 
+    go there and use the email link at the bottom of the corresponding section.
+    Enter a meaningful title after the required words in the subject,
+    provide a short summary of your site/page, and do not forget to tell us
+    the URL.
+    You could also follow the <link href="../contrib.html">Contributing</link>
+    page to make it easier for everyone.
+   </p>
+  </s1>
+
+ </body>
+</document>

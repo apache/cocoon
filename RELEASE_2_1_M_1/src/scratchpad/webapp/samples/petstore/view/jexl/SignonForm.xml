@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<page xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
+    <site signOn="${accountForm.signOn}" view="jexl">
+        <form method="POST" label="signon" action="${continuation.id}.kont">
+            <message type="warning">${message}</message>
+            <input type="text" name="username" value="j2ee" label="Username" />
+            <input type="password" name="password" value="j2ee" label="Password" />
+            <input type="image" src="images/button_submit.gif" name="update" />
+        </form>
+        <register/>
+    </site>
+</page>
+
+
+
+

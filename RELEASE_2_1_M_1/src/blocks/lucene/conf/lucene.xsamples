@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='lucene']">
+
+  <group name="lucene">
+    <sample name="Search with Lucene" href="lucene/welcome">
+      Examples showing use of Apache Lucene to search.
+   </sample>
+  </group>
+</xsamples>

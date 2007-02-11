@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!--
+  Author: Ovidiu Predescu "ovidiu@apache.org"
+
+  Date: October 1, 2002
+ -->
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+  
+  <document>
+    <header>
+      <title>Show String</title>
+    </header>
+    <body>
+      <s1 title="String">
+        <p><jpath:value-of select="replaceme"/></p>
+        <p><jpath:value-of select="parameter"/></p>
+      </s1>
+    </body>
+  </document>
+
+</xsp:page>

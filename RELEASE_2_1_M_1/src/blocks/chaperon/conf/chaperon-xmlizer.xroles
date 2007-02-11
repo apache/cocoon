@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<xroles xpath="/role-list" unless="role[@name='org.apache.excalibur.xml.sax.SAXParser/Text']">
+
+  <role name="org.apache.excalibur.xml.sax.SAXParser/Text"
+        shorthand="text-parser"
+        default-class="org.apache.cocoon.xml.TextXMLizer"/>
+</xroles>

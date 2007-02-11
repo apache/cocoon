@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Components ================================ -->
+
+ <map:components>
+
+<!-- =========================== Generators ================================= -->
+
+  <map:generators default="file">
+
+   <map:generator label="content,data" logger="sitemap.generator.file" name="file"
+                  src="org.apache.cocoon.generation.FileGenerator"/>
+
+   <map:generator name="serverpages" logger="sitemap.generator.serverpages" label="content,data"
+                  src="org.apache.cocoon.generation.ServerPagesGenerator"/>
+
+   <map:generator label="content,data" logger="sitemap.generator.directory" name="directory"
+                  src="org.apache.cocoon.generation.DirectoryGenerator"/>
+
+ <map:generator name="text" 
+                src="org.apache.cocoon.generation.TextGenerator" 
+                logger="sitemap.generator.textgenerator"/>
+  </map:generators>
+
+<!-- =========================== Transformers ================================= -->
+
+  <map:transformers default="xslt">
+   <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"
+                    logger="sitemap.transformer.xsltc">
+    <use-request-parameters>true</use-request-parameters>
+    <use-browser-capabilities-db>false</use-browser-capabilities-db>
+    <transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory>
+   </map:transformer>
+
+   <map:transformer logger="sitemap.transformer.log" name="log" 
+                    src="org.apache.cocoon.transformation.LogTransformer"/>
+
+   <map:transformer name="pattern" 
+                    src="org.apache.cocoon.transformation.PatternTransformer" 
+                    logger="sitemap.transformer.pattern">
+    <parameter name="groups" value="true"/>
+   </map:transformer>
+   <map:transformer name="lexer" 
+                    src="org.apache.cocoon.transformation.LexicalTransformer" 
+                    logger="sitemap.transformer.lexer"/>
+   <map:transformer name="parser" 
+                    src="org.apache.cocoon.transformation.ParserTransformer" 
+                    logger="sitemap.transformer.parser">
+    <parameter name="flatten" value="true"/>
+    <parameter name="recovery" value="true"/>
+   </map:transformer>
+
+  </map:transformers>
+
+<!-- =========================== Serializers ================================= -->
+
+  <map:serializers default="html">
+   <map:serializer logger="sitemap.serializer.xml" mime-type="text/xml" name="xml"
+                   src="org.apache.cocoon.serialization.XMLSerializer">
+    <indent>yes</indent>
+   </map:serializer>
+
+   <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" 
+                   src="org.apache.cocoon.serialization.HTMLSerializer">
+    <buffer-size>1024</buffer-size>
+   </map:serializer>
+
+   <map:serializer logger="sitemap.serializer.links" name="links"
+                   src="org.apache.cocoon.serialization.LinkSerializer"/>
+
+  </map:serializers>
+
+<!-- =========================== Readers ================================= -->
+
+  <map:readers default="resource">
+   <map:reader logger="sitemap.reader.resource" name="resource" 
+                src="org.apache.cocoon.reading.ResourceReader"/>
+  </map:readers>
+
+<!-- =========================== Matchers ================================= -->
+
+  <map:matchers default="wildcard">
+   <map:matcher logger="sitemap.matcher.wildcard" name="wildcard"
+                src="org.apache.cocoon.matching.WildcardURIMatcher"/>
+  </map:matchers>
+
+<!-- ====================== Pipelines defintions ============================= -->
+
+  <map:pipes default="caching">
+   <map:pipe name="caching"    src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
+   <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
+   
+  </map:pipes>
+
+ </map:components>
+
+<!-- =========================== Views =================================== -->
+
+ <map:views>
+  <map:view from-label="content" name="content">
+   <map:serialize type="xml"/>
+  </map:view>
+
+  <map:view from-label="parser-output" name="parser-output">
+   <map:serialize type="xml"/>
+  </map:view>
+  
+  <map:view from-label="xdoc" name="xdoc">
+   <map:serialize type="xml"/>
+  </map:view>
+  
+  <map:view from-position="last" name="links">
+   <map:serialize type="links"/>
+  </map:view>
+
+ </map:views>
+
+<!-- =========================== Pipelines ================================= -->
+
+ <map:pipelines>
+
+  <map:pipeline type="caching" internal-only="true">
+   <!-- Hint: During development you could expose this pipeline, to help
+     with writing your grammars. Use a text grammar myapp.grm and request
+     the myapp.xlex and myapp.xgrm URLs and then view source.
+   -->
+   <map:match pattern="*.xlex">
+    <map:generate                src="grammars/{1}.grm"/>
+    <map:transform type="lexer"  src="grammars/grm.xlex"/>
+    <map:transform type="parser" src="grammars/grm.xgrm"/>
+    <map:transform               src="stylesheets/text4regex.xsl"/>
+    <map:transform type="lexer"  src="grammars/regex.xlex"/>
+    <map:transform type="parser" src="grammars/regex.xgrm"/>
+    <map:transform               src="stylesheets/grm2xlex.xsl"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
+   <map:match pattern="*.xgrm">
+    <map:generate                src="grammars/{1}.grm"/>
+    <map:transform type="lexer"  src="grammars/grm.xlex"/>
+    <map:transform type="parser" src="grammars/grm.xgrm"/>
+    <map:transform               src="stylesheets/text4regex.xsl"/>
+    <map:transform type="lexer"  src="grammars/regex.xlex"/>
+    <map:transform type="parser" src="grammars/regex.xgrm"/>
+    <map:transform               src="stylesheets/grm2xgrm.xsl"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
+
+   <map:match pattern="packages.xml">
+    <map:generate  type="directory"   src="misc/">
+     <map:parameter name="depth" value="6"/>
+    </map:generate>
+    <map:transform src="stylesheets/index4java.xsl"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
+  </map:pipeline>
+
+  <map:pipeline type="caching">  
+   <map:match pattern="">
+    <map:redirect-to uri="welcome"/>
+   </map:match>
+   
+   <map:match pattern="welcome">
+    <map:generate src="misc/samples.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <!-- ========================= Chaperon ================================ -->
+
+   <map:match pattern="mathexp.html">
+    <map:generate type="serverpages" src="misc/mathexp.xsp"/>
+    <map:transform                src="stylesheets/mathexp.xsl"/>
+    <map:transform type="lexer"   src="grammars/mathexp.xlex"/>
+    <map:transform type="parser"  src="grammars/mathexp.xgrm"/>
+    <map:transform                src="stylesheets/mathexp2html.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="wiki.html">
+    <map:generate type="serverpages" src="misc/wiki.xsp"/>
+    <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
+    <map:transform type="parser"  src="cocoon:/wiki.xgrm"/>
+    <map:transform                src="stylesheets/wiki2xdoc.xsl"/>
+    <map:transform                src="stylesheets/xdoc2html.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="wikitest/*.html">
+    <map:generate src="wikitest/{1}.txt"/>
+    <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
+    <map:transform type="parser"  src="cocoon:/wiki.xgrm"         label="parser-output"/>
+    <map:transform                src="stylesheets/wiki2xdoc.xsl" label="xdoc"/>
+    <map:transform                src="stylesheets/xdoc2html.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="quote.html">
+    <map:generate type="text" src="misc/quote.txt"/>
+<!--
+    <map:transform type="lexer"   src="cocoon:/quote.xlex"/>
+    <map:transform type="parser"  src="cocoon:/quote.xgrm"/>
+-->
+    <map:transform type="lexer"   src="grammars/quote.xlex"/>
+    <map:transform type="parser"  src="grammars/quote.xgrm"/>
+    <map:transform                src="stylesheets/quote2html.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="pattern.html">
+    <map:generate                 src="misc/patterntext.xhtml"/>
+    <map:transform type="pattern" src="grammars/link.xlex"/>
+    <map:transform                src="stylesheets/pattern2link.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="**/index.html">
+    <map:generate                 src="cocoon:/packages.xml"/>
+    <map:transform                src="stylesheets/package2html.xsl">
+     <map:parameter name="package" value="{1}"/>
+    </map:transform>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="**/*.java.html">
+    <map:aggregate element="java">
+     <map:part                    src="cocoon:/packages.xml"/>
+     <map:part                    src="misc/{1}/{2}.java"/>
+    </map:aggregate>
+    <!--<map:transform type="lexer"  src="cocoon:/java.xlex"/>-->
+    <map:transform type="lexer"   src="grammars/java.xlex"/>
+    <map:transform                src="stylesheets/text4javadoc.xsl"/>
+    <!--<map:transform type="lexer" src="cocoon:/javadoc.xlex"/>-->
+    <map:transform type="lexer"   src="grammars/javadoc.xlex"/>
+    <map:transform                src="stylesheets/java2html.xsl">
+     <map:parameter name="package" value="{1}"/>
+     <map:parameter name="class"   value="{2}"/>
+    </map:transform>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="**/*.class.html">
+    <map:aggregate element="java">
+     <map:part                    src="cocoon:/packages.xml"/>
+     <map:part                    src="misc/{1}/{2}.java"/>
+    </map:aggregate>
+    <!--<map:transform type="lexer"  src="cocoon:/java.xlex"/>-->
+    <map:transform type="lexer"   src="grammars/java.xlex"/>
+    <map:transform                src="stylesheets/remove4class.xsl"/>
+    <!--<map:transform type="parser" src="cocoon:/java.xgrm"/>-->
+    <map:transform type="parser"  src="grammars/java.xgrm"/>
+    <map:transform                src="stylesheets/text4javadoc2.xsl"/>
+    <!--<map:transform type="lexer"  src="cocoon:/javadoc.xlex"/>-->
+    <map:transform type="lexer"   src="grammars/javadoc.xlex"/>
+    <!--<map:transform type="parser" src="cocoon:/javadoc.xgrm"/>-->
+    <map:transform type="parser"  src="grammars/javadoc.xgrm"/>
+    <map:transform                src="stylesheets/class2html.xsl">
+     <map:parameter name="package" value="{1}"/>
+     <map:parameter name="class"   value="{2}"/>
+    </map:transform>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="*.css">
+    <map:read src="misc/{1}.css"/>
+   </map:match>
+
+   <map:match pattern="**/*.css">
+    <map:read src="misc/{2}.css"/>
+   </map:match>
+
+  </map:pipeline>
+
+ </map:pipelines>
+
+</map:sitemap>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+
+ <group name="XML Entity Catalogs">
+  <sample name="Entity Resolution Using Catalogs" href="catalog-demo">
+   Catalog entity resolver. External entities (e.g. DTDs, symbols,
+   character entity sets, images) are resolved to local copies of the
+   resources. The catalog manager facilitates the mapping between public
+   identifiers or system identifiers and other system identifiers.
+  </sample>
+ </group>
+
+ <group name="DocBook">
+  <sample name="Simplified DocBook" href="sdocbook-demo.html">
+   You will need the DocBook DTDs installed locally and the catalog
+   properly configured. We show you how to set up a quick minimal test.
+  </sample>
+ </group>
+
+</samples>

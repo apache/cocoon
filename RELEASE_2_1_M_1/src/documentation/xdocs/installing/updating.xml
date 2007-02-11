@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Updating Cocoon</title>
+  <authors>
+   <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="Updating Cocoon">
+  <p>
+   This is a brief discussion of the changes between the latest official release @released.version@
+   and the current development version of Apache Cocoon. So, if you are interested in
+   installing the official release, ignore this document. But if you want to know what is going
+   on in the development of Cocoon, have a look...
+  </p>
+  <p>
+   Cocoon has developed many Avalon components which are of a more general nature. So, the best
+   solution was to donate these components to the Avalon Excalibur project and move them out 
+   of Cocoon. This move has lead to some changes in configuration etc. which are described
+   by this document.
+  </p>
+  <p>In addition there were some disadvantages in the internal architecture of Cocoon. The
+    new version removes these bottlenecks and gives more flexibility, usability and performance.
+   </p>
+ </s1>
+  <s1 title="Sitemap">
+  <p>There are some changes in the sitemap and the configuration of some components in
+     the sitemap.</p>
+  <s2 title="FOP Serializer">
+  <p>FOP serializer's &lt;user-config&gt; relative path now resolves relative
+    to sitemap's directory. All Cocoon URIs are supported too.
+  </p>
+  </s2>
+  </s1>
+  <s1 title="Components">
+  <p>
+    The Cocoon architecture has had some significant changes. However, great care has been
+    taken that all changes are in a compatible way. This effort has been successful except
+    one change which shouldn't affect anybody (see below).
+  </p>
+  <s2 title="Source Resolving">
+<p>Under Cocoon 2.0.x, the SourceResolver was not an Avalon component, so it could not be looked up using a component manager. Under 2.1, the SourceResolver is now an Avalon component and can be requested using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em></p>  
+  </s2>
+  <s2 title="XSLT Processor">
+    <p>Mention changes and update strategy...</p>
+  </s2>
+  <s2 title="XML Parser">
+    <p>The XML parser has also been moved to Excalibur.
+     In the cocoon.xconf the hint name has therefore changed from <em>parser</em> to
+     <em>xml-parser</em>. The configuration has not changed, so if you want to
+     manually update swap the hint names.</p>
+    <p>From within your source code you should not lookup the
+      <em>org.apache.cocoon.components.parser.Parser.ROLE</em> anymore; use
+      <em>org.apache.excalibur.xml.sax.SAXParser.ROLE</em> instead.
+    </p>
+  </s2>
+  <s2 title="XML Entity Resolver">
+    <p>The resolver used for resolving XML entities has also been moved to Excalibur.
+     In the cocoon.xconf the hint name has therefore changed from <em>resolver</em> to
+     <em>entity-resolver</em>. The configuration has not changed, so if you want to
+     manually update swap the hint names and the implementation.</p>
+    <p>From within your source code you should not lookup the
+      <em>org.apache.cocoon.components.resolver.Resolver.ROLE</em> anymore; use
+      <em>org.apache.excalibur.xml.EntityResolver.ROLE</em> instead.
+    </p>
+  </s2>
+  <s2 title="Stores">
+    <p>The Store and StoreJanitor components and implementations have moved to
+       Avalon Excalibur.</p>
+    <p>TODO:Changes in cocoon.xconf...</p>
+    <p>In general the packages changed from org.apache.cocoon.components.store
+       to org.apache.excalibur.store (resp. org.apache.excalibur.store.impl). So
+       if you have custom java code using this components, you have to change
+       your imports.</p>
+    <p>The roles PERSISTENT_CACHE and TRANSIENT_CACHE have been renamed to
+       PERSISTENT_STORE and TRANSIENT_STORE. The hold() method has been removed
+       from the Store interface.</p>
+  </s2>
+  <s2 title="SAXConnectors, Stream and Event Pipeline">
+    <p>This is the only real incompatible change (But don't panic, this will
+       not affect you, well at least only a little bit :). The internal architecture of Cocoon
+       has changed. In the older version, the processing pipeline - constructed by
+       a generator, the transformers and a serializer - was represented by two components,
+       called stream and event pipeline.</p>
+    <p>For a simpler architecture, enhanced functionality and improved performance,
+       these components have been combined into one: the processing pipeline.
+       The very rarely used feature of SAXConnectors has been removed,
+       to avoid overcomponentization.</p>
+    <p>In addition the map:pipeline element of the sitemap has gained more meaning
+      as it is now possible to configure each map:pipeline section in the sitemap
+      differently. So there can be one section using caching, another one not 
+      caching at all and a third one using a different caching implementation etc.
+    </p>
+    <s3 title="Changed Configuration">
+     <p>
+      The configuration of the pipelines has moved from the cocoon.xconf to the sitemap.
+      So, for updating you have to remove the "event-pipeline" and "stream-pipeline" section
+      from your cocoon.xconf and add the map:pipes section to the map:components section
+      in your sitemap. You can find the pipelines components definition in the sample
+      sitemap of Cocoon. Here is an example:
+     </p>
+     <source><![CDATA[
+<map:sitemap>
+ <map:components>
+      ...
+  <map:pipes default="caching">
+     <map:pipe name="caching" 
+                   src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
+     <map:pipe name="noncaching" 
+                   src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
+  </map:pipes>
+ </map:components>
+   ...
+</map:sitemap>
+     ]]></source>
+     <p>The configuration is similar to the configuration of other sitemap components, like
+       generators or actions. You can choose these different implementations of pipelines
+       in the map:pipeline section by specifying the type attribute:
+     </p>
+     <source><![CDATA[
+<map:sitemap>
+   ...
+  <map:pipelines>
+     <map:pipeline type="noncaching">
+           <map:match pattern="welcome">
+                  ...
+           </map:match>
+            ..
+     </map:pipeline>
+  </map:pipelines>
+</map:sitemap>
+     ]]></source>
+     <p>So again, this is similar to choosing the type of the generator or any other sitemap
+       component. If you omit the type attribute the default configuration from the components
+       section is used.
+     </p>
+     <p>The SAXConnectors have been removed, so if you manually upgrade you have to remove
+        the <em>sax-connectors</em> configuration from the <em>cocoon.xconf</em>.</p>
+     <p>So you see, although this is an incompatible change in the Java code, you have only
+       little to do to update your Cocoon installation.</p>
+    </s3>
+  </s2>
+ </s1>
+ 
+</body>
+</document>

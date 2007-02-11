@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS $Id: samples.xml,v 1.2 2003/03/27 14:16:22 stefano Exp $ -->
+
+<samples>
+
+  <group name="Sites">
+   <sample name="jakarta.apache.org" href="jakarta.apache.org/">
+    This is a snapshot of the jakarta.apache.org web site and then 
+    XML-ized.
+   </sample>
+   <sample name="java.apache.org" href="java.apache.org/">
+    This is a snapshot of the java.apache.org web site and then 
+    XML-ized.    
+   </sample>
+  </group>
+   
+</samples>

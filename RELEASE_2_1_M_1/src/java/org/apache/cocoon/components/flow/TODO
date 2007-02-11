@@ -1,0 +1,28 @@
+
+- replace <map:parameter> in sitemap with <map:argument>
+
+- pass the bizData and the continuation as arguments to the Request
+instead of Environment, to prevent clashes with the SourceResolver.
+
+- allow the ability to specify the continuation handler function in
+cocoon.xconf, or even better in <map:continue>.
+
+- [in progress] implement a transformer for JPath, in addition to the jpath.xsl
+logicsheet. This should allow template pages to be created without the
+need for XSP, which requires a Java compiler.
+
+WISH LIST:
+==========
+
+- [ADVANCED] implement leaky bucket algorithm or similar to protect
+the server from creating too many continuations.
+
+- [ADVANCED] define a boolean parameter, to be set in either
+cocoon.xconf or web.xml, that specifies that session affinity is to be
+used when creating continuations. This means that when the root node
+in a WebContinuation tree is created, a session object is also
+created. This allows for continuations to be created and looked up on
+the same app server in clustered servers.
+
+- [ADVANCED] add support for serializing continuations in a database,
+for long-lived transactions.

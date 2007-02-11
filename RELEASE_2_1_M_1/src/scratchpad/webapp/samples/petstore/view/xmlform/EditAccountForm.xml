@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<site xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+	<xf:form id="petstore-edit-account" view="edit-account" action="petstore" method="GET">
+		<error>
+			<xf:violations class="error"/>
+		</error>
+		
+		<xf:group ref="/">
+			<xf:caption>User Information</xf:caption>
+			<xf:textbox ref="/username">
+				<xf:caption>User ID:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:password ref="/password">
+				<xf:caption>Password:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:password>
+			<xf:password ref="/password2">
+				<xf:caption>Repeat Password:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:password>
+		</xf:group>
+		
+		<xf:group ref="/account">
+			<xf:caption>Account Information</xf:caption>
+			<xf:textbox ref="/account/firstName">
+				<xf:caption>First Name:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/lastName">
+				<xf:caption>Last Name:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/email">
+				<xf:caption>Email:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/phone">
+				<xf:caption>Phone:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/address1">
+				<xf:caption>Address 1:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/address2">
+				<xf:caption>Address 2:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/city">
+				<xf:caption>City:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/state">
+				<xf:caption>State:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/zip">
+				<xf:caption>Zip:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+			<xf:textbox ref="/account/country">
+				<xf:caption>Country:</xf:caption>
+				<xf:violations class="error"/>
+			</xf:textbox>
+		</xf:group>
+		
+		<xf:group ref="/account">
+			<xf:caption>Profile Information</xf:caption>
+			<xf:selectOne ref="/account/favCategory">
+			   <xf:caption>Favorite Category:</xf:caption>
+			   <xf:itemset nodeset="/categoryList">
+				<xf:caption><xf:output ref="name"/></xf:caption>
+				<xf:value><xf:output ref="name"/></xf:value>
+			   </xf:itemset>
+			</xf:selectOne>
+			<xf:selectBoolean ref="/account/listOption">
+				<xf:caption>Enable MyList</xf:caption>
+			</xf:selectBoolean>
+			<xf:selectBoolean ref="/account/bannerOption">
+				<xf:caption>Enable MyBanner</xf:caption>
+			</xf:selectBoolean>
+		</xf:group>
+
+		<xf:submit id="next" continuation="forward" class="button">
+			<xf:caption>Submit</xf:caption>
+			<xf:hint>Submit Account Information</xf:hint>
+		</xf:submit>
+	</xf:form>
+</site>

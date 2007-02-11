@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<page xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+            <welcome>
+                <c:if test="#{not(accountForm/signOn)}">
+                    <firstName>#{accountForm/account/firstName}</firstName>
+                </c:if>
+                <menu>
+                    <c:forEach select="#{categoryList}" >
+                        <category name="#{name}" id="#{catId}"/>
+                    </c:forEach>
+                </menu>
+            </welcome>
+    </site>
+</page>
+
+
+
+
+

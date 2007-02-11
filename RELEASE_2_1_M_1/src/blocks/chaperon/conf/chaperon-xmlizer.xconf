@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon/xmlizer" unless="parser[@mime-type='text/plain']">
+      <parser role="org.apache.excalibur.xml.sax.SAXParser/Text" mime-type="text/plain"/>
+</xconf>

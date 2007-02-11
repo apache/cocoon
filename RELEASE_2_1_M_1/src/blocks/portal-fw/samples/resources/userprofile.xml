@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- $Id: userprofile.xml,v 1.1 2003/03/09 00:05:27 pier Exp $ 
+
+-->
+<userdelta xmlns:session="http://cocoon.apache.org/session/1.0"
+           xmlns:cinclude="http://apache.org/cocoon/include/1.0">
+
+    <cinclude:includexml ignoreErrors="true">
+		<cinclude:src>profiles/userprofile-<session:getxml context="request" path="/parameter/ID"/>.xml</cinclude:src>
+    </cinclude:includexml>
+</userdelta>

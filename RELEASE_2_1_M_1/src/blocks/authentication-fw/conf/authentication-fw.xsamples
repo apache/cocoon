@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='authentication-fw']">
+
+  <group name="authentication-fw">
+    <sample name="Authentication Framework" href="authentication-fw/login">
+    This is a demo of the authentication framework integrated into Cocoon.
+   </sample>
+  </group>
+  
+</xsamples>

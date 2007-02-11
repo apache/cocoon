@@ -1,0 +1,54 @@
+<t:template xmlns:t="http://cocoon.apache.org/templates/jx/1.0">
+
+<table background="images/bkg-topbar.gif" border="0" cellspacing="0" cellpadding="5" width="100%">
+  <tbody>
+  <tr>
+    <td>
+      <form method="post" action="index.do">
+        <input type="image" border="0" src="images/logo-topbar.gif"/>
+        <select name="view" width="14" align="left" value="Jexl" onChange="document.forms[0].submit()">
+          <option value="Jexl">Jexl</option>
+          <option value="Velocity">Velocity</option>
+          <option value="JXPath">JXPath</option>
+          <option value="Xsp">Xsp</option>
+        </select>
+      </form>
+    </td>
+    <td align="right"><a href="viewCart.do"><img border="0" name="img_cart" src="images/cart.gif" /></a>
+      <img border="0" src="images/separator.gif" />
+
+<t:choose>
+  <t:when test="${accountForm.signOn}"> 
+      <a href="signonForm.do">
+      <img border="0" name="img_signin" src="images/sign-in.gif" /></a>
+  </t:when>
+  <t:otherwise>
+      <a href="signonForm.do?signoff=true">
+      <img border="0" name="img_signout" src="images/sign-out.gif" /></a>
+      <img border="0" src="images/separator.gif" />
+      <a href="editAccount.form">
+      <img border="0" name="img_myaccount" src="images/my_account.gif" /></a>
+  </t:otherwise>
+</t:choose>
+
+    <img border="0" src="images/separator.gif" /><a href="../help.html"><img border="0" name="img_help" src="images/help.gif" /></a>
+    </td>
+    <td align="left" valign="bottom">
+      <form method="post" action="searchProducts.do">
+        <input name="keyword" size="14" /> <input border="0" src="images/search.gif" type="image" />
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<t:import uri="view/jexl/IncludeQuickHeader.xml"/>
+
+<!-- Support for non-traditional but simpler use of errors... -->
+<t:if test="${errors != null}">
+  <t:forEach select="${errors}">
+    <B><FONT color="RED">
+      <BR>{.}</BR>
+    </FONT></B>
+  </t:forEach>
+</t:if>
+</t:template>

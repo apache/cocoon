@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='slide']">
+
+  <group name="slide">
+    <sample name="Slide Integration" href="slide/">
+      Shows an example of how it could be possible to integrate a
+      Content Management System, like Jakarta Slide, into Cocoon.
+    </sample>
+  </group>
+</xsamples>

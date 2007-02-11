@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<html xmlns:wt="http://cocoon.apache.org/woody/template/1.0">
+  <head>
+    <title>Registration form</title>
+  </head>
+  <body>
+    <h1>Registration</h1>
+    <form action="registration" method="POST">
+      <wt:widget-label id="name"/>
+      <wt:widget id="name"/>
+      <br/>
+      <wt:widget-label id="email"/>
+      <wt:widget id="email"/>
+      <br/>
+      <wt:widget-label id="age"/>
+      <wt:widget id="age"/>
+      <br/>
+      <wt:widget-label id="password"/>
+      <wt:widget id="password"/>
+      <br/>
+      <wt:widget-label id="confirmPassword"/>
+      <wt:widget id="confirmPassword"/>
+      <br/>
+      <wt:widget id="spam"/>
+      <wt:widget-label id="spam"/>
+      <br/>
+
+      <input type="submit"/>
+    </form>
+  </body>
+</html>

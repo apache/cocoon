@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Books about Cocoon</title>
+  <authors>
+   <person name="Andreas Hochsteger" email="e9625392@student.tuwien.ac.at"/>
+  </authors>
+ </header>
+
+ <body>
+
+<s1 title="Books about Cocoon">
+<p>
+These are books about Cocoon, Version 2.x, which are already available or planned.
+</p>
+<ul>
+<li><link href="http://www.newriders.com/books/product.asp?product_id={C3C05052-BE3B-4E06-A60A-13FB40AF58F6}">Cocoon: Building XML Applications</link> (Carsten Ziegeler, Matthew Langham)<br/>
+<strong>Availability:</strong> July 2002<br/>
+<strong>Paperback:</strong> 504 pages<br/>
+<strong>Publisher:</strong> New Riders Publishing<br/>
+<strong>ISBN:</strong> 0735712352<br/>
+Please note that you can download several <link href="http://www.newriders.com/books/product.asp?product_id={C3C05052-BE3B-4E06-A60A-13FB40AF58F6}" >free chapters</link> at the New Riders web site.
+</li>
+<li><link href="http://www.amazon.com/exec/obidos/ASIN/0672322579/">Cocoon Developer's Handbook</link> (Jeremy Aston, Lajos Moczar)<br/>
+<strong>Availability:</strong> September 2002<br/>
+<strong>Paperback:</strong> 500 pages<br/>
+<strong>Publisher:</strong> Sams<br/>
+<strong>ISBN:</strong> 0672322579
+</li>
+<li><link href="http://www.amazon.com/exec/obidos/ASIN/0782141315/">Cocoon 2 Programming: Web Publishing with XML and Java</link> (Bill Brogden, Conrad D'Cruz, Mark Gaither)<br/>
+<strong>Availability:</strong> October 2002<br/>
+<strong>Paperback:</strong> 368 pages<br/>
+<strong>Publisher:</strong> Sybex<br/>
+<strong>ISBN:</strong> 0782141315
+</li>
+</ul>
+</s1>
+
+  <s1 title="How to get listed">
+   <p>
+    If you do not find your book here, make sure you
+    <link href="mailto:cocoon-users@xml.apache.org?subject=Link: Book:">tell us</link>.
+    Enter the title after the words &quot;Link: Book:&quot; in the subject, and
+    provide a short summary of your book. Do not forget to tell us the URL if
+    possible (preferably direct to the publisher, rather than any particular
+    bookshop).
+    You could also follow the <link href="../contrib.html">Contributing</link>
+    page to make it easier for everyone.
+   </p>
+  </s1>
+
+</body>
+</document>

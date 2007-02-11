@@ -1,0 +1,86 @@
+<!-- === Test targets =========================================================== -->
+
+  <!-- Runs all tests -->
+  <target name="test" depends="junit-tests, anteater-tests, block-tests" description="Runs all tests"/>
+
+  <target name="compile-tests" depends="compile-core, compile-deprecated">
+    <mkdir dir="${build.test}"/>
+    
+    <!-- Copy test files to build test dir -->
+    <copy todir="${build.test}" filtering="on">
+      <fileset dir="${test}" excludes="**/*.java"/>
+    </copy>
+
+    <path id="test.classpath">
+      <path refid="classpath"/>
+
+      <pathelement location="${build.dest}" />
+       <!-- FIXME Resolver tests depend on deprecated stuff -->
+      <pathelement location="${build.deprecated}" />
+
+      <pathelement location="${build.test}" />
+
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+    
+    <!-- Compile tests -->
+    <javac srcdir="${test}"
+           destdir="${build.test}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           fork="true">
+      <classpath refid="test.classpath"/>
+    </javac>
+
+    <jar jarfile="${build}/${name}-tests.jar">
+      <fileset dir="${build.test}" includes="**/*.class"/>
+    </jar>
+  </target>
+
+  <!-- Runs JUnit tests -->
+  <target name="junit-tests" depends="compile-tests">
+    <junit printsummary="yes" haltonfailure="yes" fork="yes">
+      <classpath refid="test.classpath"/>
+      <formatter type="plain" usefile="no" />
+      <batchtest>
+        <fileset dir="${build.test}">
+          <include name="**/*TestCase.class"/>
+          <include name="**/*Test.class" />
+          <exclude name="**/AllTest.class" />
+          <exclude name="**/*$$*Test.class" />
+          <exclude name="**/Abstract*.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Anteater tests  -->
+  <target name="anteater-tests">
+    <property name="host" value="localhost"/>
+    <property name="port" value="8888"/>
+    <property name="base" value="/"/>
+
+    <!-- FIXME: Anteater invocation is platform specific
+    <exec executable="cmd">
+      <arg line="/C C:\Java\anteater-0.9.15\bin\anteater.bat -f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+    </exec>
+    <exec executable="anteater">
+      <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+    </exec>
+    -->
+  </target>
+
+  <!-- Block tests -->
+  <target name="block-tests" depends="compile-tests, prepare-blocks">
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="tests"/>
+
+  </target>
+

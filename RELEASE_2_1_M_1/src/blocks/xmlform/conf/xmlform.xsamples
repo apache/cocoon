@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<xsamples xpath="/samples" unless="group[@name='XMLForm: Form Handling and Web Services']">
+
+  <group name="XMLForm: Form Handling and Web Services">
+    <sample name="Documentation" href="xmlform/overview.html">
+    Introduction to Cocoon's form handling framework,
+    which provides W3C XForms based markup, Schematron instance validation,
+    and automated binding to JavaBeans and DOM instances.
+    Also shows that XMLForm based applications are readily available as Web Services (REST style).
+   </sample>
+    <sample name="Example" href="xmlform/wizard">
+    Presents a sophisticated form handling demo ...
+    multi-page wizard with two-way navigation.
+   </sample>
+   <sample name="WSDL" href="xmlform/UsageFeedbackService/WSDL">
+    Example WSDL descriptor for the same application,
+    exposed as a Web Service.
+   </sample>
+  </group>
+</xsamples>

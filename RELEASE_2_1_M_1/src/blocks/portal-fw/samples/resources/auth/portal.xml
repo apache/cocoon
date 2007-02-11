@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!-- $Id: portal.xml,v 1.1 2003/03/09 00:05:29 pier Exp $ 
+-->
+<page xmlns:session="http://cocoon.apache.org/session/1.0">
+	<pageset columns="*" rows="118,*">
+		<part title="Header" scrolling="no">
+			<url>sunspotdemo-header</url>
+		</part>
+		<pageset columns="*" rows="*,15">
+			<part title="Content">
+				<url>sunspotdemo-portlets<session:getxml context="request" path="/querystring"/></url>
+			</part>
+			<part name="bottom" scrolling="no">
+  				<url>sunspotdemo-bottom</url> 
+	  		</part>
+		</pageset>
+	</pageset>
+</page>

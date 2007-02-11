@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+
+  <resources>
+     <resource type="file" href="descriptor.xml">Descriptor</resource>
+     <resource type="doc" href="userdocs/xsp/logicsheet-forms.html">Action &amp; Logicsheet</resource>
+  </resources>
+
+  <title>Formvalidation and -prefilling</title>
+  <content>
+
+    <para>
+      This page demonstrates the use of the following components:
+      <ul>
+         <li>FormValidatorAction</li>
+         <li>SimpleFormTransformer</li>
+         <li>SimpleFormInstanceTransformer</li>
+      </ul>
+    </para>
+
+    <para>
+      In general, there is no need to use this particular combination of
+      components to achive form validation. Actually, you should consider to
+      use the XMLForms components for this rather than the components listed
+      above. However, if you feel that XMLForms does not match your
+      requirements, this simpler model may be of interest to you. 
+    </para>
+
+    <para>
+      more
+    </para>
+
+    <form name="person" method="get">
+       <form-instance>
+          <name>Doe</name>    
+          <firstname>John</firstname>
+          <address>
+            <street>Hollywood Boulevard</street>
+            <place>Los Angeles</place>
+          </address>
+       </form-instance>
+       
+       <para>
+         Please enter your name: <input type="text" size="20" name="person/firstname"/>
+         <input type="text" size="20" name="person/name"/>
+       </para>
+
+       <para>
+         Your address: <input type="text" size="30" name="person/address/street"/>
+       </para>
+       <para>
+         <input type="text" size="30" name="person/address/place"/>
+       </para>
+       <para>
+         <input type="submit" name="validate" value="validate input"/>
+       </para>
+
+       <error name="*" when="ok"><para>All went <b>well.</b></para></error>
+       <error name="*" when-ge="error"><para>An <b>error</b> occurred.</para></error>
+
+    </form>
+
+  </content>
+</page>

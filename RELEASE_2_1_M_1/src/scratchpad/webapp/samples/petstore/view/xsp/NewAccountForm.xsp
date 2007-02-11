@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+
+    <site>
+        <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
+        <form method="POST" styleId="workingAccountForm">
+            <xsp:attribute name="action"><jpath:continuation/>.kont</xsp:attribute>
+<!--
+        <input type="hidden" name="validate" value="editAccount" />
+        <input type="hidden"  name="account.username" /> -->
+            <panel label="User Information">
+                <input name="workingAccountForm.account.username" label="User ID" />
+                <input type="password" name="workingAccountForm.account.password" label="New password" />
+                <input type="password" name="workingAccountForm.repeatedPassword" label="Repeat password" />
+            </panel>
+            
+            <panel label="Account Information">
+                <input type="text" label="First name"/>
+                <input type="text" label="Last name" />
+                <input type="text" size="40" name="workingAccountForm.email" label="Email" />
+                <input type="text" name="workingAccountForm.phone" label="Phone" />
+                <input type="text" size="40" name="workingAccountForm.address1" label="Address 1" />
+                <input type="text" size="40" name="workingAccountForm.address2" label="Address 2" />
+                <input type="text" name="workingAccountForm.city" label="City" />
+                <input type="text" name="workingAccountForm.state" label="State" />
+                <input type="text" name="workingAccountForm.zip" label="Zip" />
+                <input type="text" size="15" name="workingAccountForm.country" label="Country" />
+            </panel>
+            
+            <panel label="Profile Information">
+                <select name="workingAccountForm.languagePreference" label="Language Preference">
+                    <option value="English">English</option>
+                    <option value="Japanese">Japanese</option>
+                </select>
+                <select name="workingAccountForm.account.favouriteCategoryId" label="Favourite Category">
+                    <jpath:for-each select="categoryList" >
+                        <option><xsp:attribute name="value"><jpath:value-of select="name" /></xsp:attribute><jpath:value-of select="name" /></option>
+                    </jpath:for-each>
+                </select>
+                <input type="checkbox" name="workingAccountForm.account.listOption" label="Enable MyList"/> 
+                <input type="checkbox" name="workingAccountForm.account.bannerOption" label="Enable MyBanner"/>
+            </panel>
+            
+        </form>
+    </site>
+
+</xsp:page>
+
+
+
+

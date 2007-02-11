@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<!-- CVS: $Id: hello.xml,v 1.2 2003/03/27 14:10:25 stefano Exp $ -->
+
+<page>
+ <title>Hello</title>
+ <content>
+  <para>This is my first Cocoon page!</para>
+ </content>
+</page>

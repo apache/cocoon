@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- $Id: saveuserstatus.xml,v 1.1 2003/03/09 00:05:26 pier Exp $ 
+
+ Description: This resource save the user status profile to a file with the name of the user.
+
+-->
+<userdelta xmlns:source="http://apache.org/cocoon/source/1.0"
+           xmlns:session="http://cocoon.apache.org/session/1.0">
+    <source:insert>
+    	  <source:source>profiles/userstatus-<session:getxml context="request" path="/parameter/ID"/>.xml</source:source>
+    	  <source:path>/</source:path>
+    	  <source:fragment><session:getxml context="request" path="/parameter/content"/></source:fragment>
+	  <source:replace>status-profile</source:replace>
+    </source:insert>
+</userdelta>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<page xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+        <backpointer name="Main Menu" do="index.do" />
+        <form method="POST" styleId="workingOrderForm" action="#{$continuation/id}.kont">
+        <panel>
+            <panel label="Shipping Address">
+                <input type="text" name="shipToFirstName" label="First name" />
+                <input type="text" name="shipToLastName" label="Last name" />
+                <input type="text" name="shipAddress1" size="40" label="Address 1" />
+                <input type="text" name="shipAddress2" size="40" label="Address 2" />
+                <input type="text" name="shipCity" label="City" />
+                <input type="text" name="shipState" label="State" />
+                <input type="text" name="shipZip" label="Zip" />
+                <input type="text" name="shipCountry" size="15" label="Country" />
+            </panel>
+        </panel>
+        </form>
+    </site>
+</page>
+
+
+
+

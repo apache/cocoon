@@ -1,0 +1,19 @@
+%ignore          "^#(.*)";
+%token Comma     "\,";
+%token Value     "[^\n\r\,]+";
+%token SoftBreak "\r(\n?) | \n";
+
+%start document;
+
+%%
+
+document
+  : document SoftBreak row
+  | row SoftBreak
+  | row
+  ;
+
+row
+  : row Comma Value 
+  | Value
+  ;

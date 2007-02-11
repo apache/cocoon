@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<!--
+  Author: Ovidiu Predescu "ovidiu@cup.hp.com"
+
+  Date: March 23, 2002
+ -->
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+  
+  <document>
+    <header>
+      <title>Calculator</title>
+    </header>
+    <body>
+      <s1 title="Calculator">
+        <form method="post"><xsp:attribute name="action"><xsp:expr><jpath:continuation/></xsp:expr></xsp:attribute>
+          <p>a = <strong><jpath:value-of select="a"/></strong></p>
+          <p>Enter value of <strong>b</strong>: <input type="text" name="b"/></p>
+          <input type="submit" name="submit" value="Enter"/>
+        </form>
+      </s1>
+    </body>
+  </document>
+</xsp:page>
+

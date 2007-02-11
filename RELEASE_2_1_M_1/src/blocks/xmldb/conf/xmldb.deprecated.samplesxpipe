@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<samplesxpipe xpath="/sitemap/pipelines/pipeline[@id='optional']"
+       unless="match[@pattern='xmldb-generator/db/**/']">
+
+    <!-- =================== XML:DB Generators ========================= -->
+    <!-- BEWARE: the following examples use the unmaintained XML:DB      -->
+    <!-- generators, going to be deprecated soon.                        -->
+    <!-- You might want  to use the XML:DB pseudo protocol instead.      -->
+    <map:match pattern="xmldb-generator/db/**/">
+      <map:generate type="xmldbcollection" src="/{1}"/>
+      <map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="xmldb-generator/db/**">
+      <map:generate type="xmldb" src="/{1}"/>
+      <map:serialize type="xml"/>
+    </map:match>
+</samplesxpipe>

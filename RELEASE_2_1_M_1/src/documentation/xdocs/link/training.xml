@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon Training</title>
+  <authors>
+   <person name="Andreas Hochsteger" email="e9625392@student.tuwien.ac.at"/>
+  </authors>
+ </header>
+
+ <body>
+<s1 title="Cocoon Training">
+<ul>
+<li><link href="http://www.galatea.com/training/index.html">Galatea Information Strategies</link><br/>
+	They have two classes now available: Cocoon Fundamentals and Advanced Cocoon.
+	Both courses are two days each and are offered in Denver, Colorado.
+	It is also possible to arrange on-site training if there are sufficient participants.
+</li>
+<li><link href="http://www.s-und-n.de/sunshine/services-training-cocoonschulungen_english">S&amp;N AG</link><br/>
+S&amp;N offers Cocoon training. Two courses are available -
+"Introducing Cocoon" (3 days) for beginners and "Unraveling Cocoon" for
+developers (2 days). The courses are available in English or German.
+	It is also possible to arrange on-site training.
+</li>
+<li><link href="http://www.anyware-tech.com">Anyware Technologies</link><br/>
+Anyware Technologies offers <link href="http://www.anyware-tech.com/french/sce_training.html">Cocoon
+training</link> in France. Course are organized in two classes (3 day introduction and 2 day advanced),
+but can be mixed with our other XML and Java training material to meet specific needs.
+Courses are held in French and can be on-site.
+</li>
+<li><link href="http://www.oio.de/">Orientation in Objects</link><br/>
+You can learn how to develop web applications using Cocoon and XSPs in a three
+day training course. Courses will take place every 2 months in Mannheim,
+Germany.
+See <link href="http://www.oio.de/seminar/xml/cocoon-schulung.htm">course
+description</link>. We also offer on-site training in English.
+</li>
+</ul>
+</s1>
+  
+  <s1 title="How to get listed">
+   <p>
+    If you do not find your site here, make sure you
+    <link href="mailto:cocoon-users@xml.apache.org?subject=Link: Training:">tell us</link>.
+    Enter a meaningful title after the words &quot;Link: Training:&quot;
+    in the subject, provide a short summary of your site, and do not forget
+    to tell us the URL.
+    You could also follow the <link href="../contrib.html">Contributing</link>
+    page to make it easier for everyone.
+   </p>
+  </s1>
+
+</body>
+</document>

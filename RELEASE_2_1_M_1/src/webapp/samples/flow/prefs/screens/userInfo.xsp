@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+<!--
+  Author: Ovidiu Predescu "ovidiu@apache.org"
+
+  Page to show the user information.
+
+  This page is used for both user registration and editing the user
+  information, depending on the information passed down in the page.
+
+  Date: August 30, 2002
+ -->
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+  
+  <document>
+    <header>
+      <title><jpath:value-of select="title"/></title>
+    </header>
+    <body>
+      <s1>
+        <xsp:attribute name="title"><jpath:value-of select="title"/></xsp:attribute>
+        <jpath:choose>
+          <jpath:when test="errorMsg">
+            <p><strong><jpath:value-of select="errorMsg"/></strong></p>
+          </jpath:when>
+          <jpath:otherwise>
+            <p>Please enter the following data</p>
+          </jpath:otherwise>
+        </jpath:choose>
+
+        <form method="post"><xsp:attribute name="action"><xsp:expr>"kont/" + <jpath:continuation/></xsp:expr></xsp:attribute>
+
+          <p>
+            <jpath:choose>
+              <jpath:when test="check and firstName = ''">
+                <strong>First name cannot be empty</strong>
+              </jpath:when>
+              <jpath:otherwise>
+                First name:
+              </jpath:otherwise>
+            </jpath:choose>
+            <input type="text" name="firstName">
+              <xsp:attribute name="value"><jpath:value-of select="firstName"/></xsp:attribute>
+            </input>
+          </p>
+
+          <p>
+            <jpath:choose>
+              <jpath:when test="check and lastName = ''">
+                <strong>Last name cannot be empty</strong>
+              </jpath:when>
+              <jpath:otherwise>
+                Last name:
+              </jpath:otherwise>
+            </jpath:choose>
+            <input type="text" name="lastName">
+              <xsp:attribute name="value"><jpath:value-of select="lastName"/></xsp:attribute>
+            </input>
+          </p>
+
+          <p>
+            <jpath:choose>
+              <jpath:when test="check and email = ''">
+                <strong>Email address cannot be empty</strong>
+              </jpath:when>
+              <jpath:otherwise>
+                Email address:
+              </jpath:otherwise>
+            </jpath:choose>
+            <input type="text" name="email">
+              <xsp:attribute name="value"><jpath:value-of select="email"/></xsp:attribute>
+            </input>
+          </p>
+
+          <p>
+            <jpath:choose>
+              <jpath:when test="check and login = ''">
+                <strong>Login name cannot be empty</strong>
+              </jpath:when>
+              <jpath:otherwise>
+                Login name:
+              </jpath:otherwise>
+            </jpath:choose>
+            <input type="text" name="login">
+              <xsp:attribute name="value"><jpath:value-of select="login"/></xsp:attribute>
+            </input>
+          </p>
+
+
+          <p>
+            <jpath:choose>
+              <jpath:when test="check and password = ''">
+                <strong>Password cannot be empty</strong>
+              </jpath:when>
+              <jpath:otherwise>
+                Password:
+              </jpath:otherwise>
+            </jpath:choose>
+            <input type="password" name="password">
+              <xsp:attribute name="value"><jpath:value-of select="password"/></xsp:attribute>
+            </input>
+          </p>
+
+
+          <input type="submit" name="submit">
+            <xsp:attribute name="value"><jpath:value-of select="button"/></xsp:attribute>
+          </input>
+
+          <jpath:if test="cancel">
+            <input type="submit" name="cancel" value="Cancel"/>
+          </jpath:if>
+
+        </form>
+      </s1>
+    </body>
+
+  </document>
+
+</xsp:page>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!--
+  Release Announcement Template
+  CVS $Id: announcement.xml,v 1.2 2003/03/17 00:47:42 vgritsenko Exp $
+-->
+
+<announcement site="http://cocoon.apache.org">
+  <project>Apache Cocoon @version@</project>
+  <abstract>
+   The Apache Cocoon team is proud to announce the new release
+   of Apache Cocoon.
+  </abstract>
+  <body>
+   <p>
+    Apache Cocoon is an XML framework that raises the usage of
+    XML and XSLT technologies for server applications to a new level.
+    Designed for performance and scalability around pipelined SAX
+    processing, Cocoon offers a flexible environment based on the
+    separation of concerns between content, logic and style.
+    A centralized configuration system and sophisticated caching
+    top this all off and help you to create, deploy and maintain
+    rock-solid XML server applications.
+   </p>
+
+   <p>
+    Today, most web engineers consider XML as the key for an improved
+    web model and web site managers see XML as a way to reduce costs
+    and ease production. In an era where services rather than software
+    will be key for economic success, a better and less expensive model
+    for web publishing will be a winner, especially one based on open
+    standards.
+   </p>
+
+   <p>
+    This release of Cocoon is a maintainance release focusing on
+    improved performance and robustness. In addition some bugs were
+    fixed and new features were added. See the following changes list
+    for more information.
+   </p>
+
+  </body>
+  <changes version="@version@" file="changes.xml"/>
+</announcement>
+

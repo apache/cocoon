@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS $Id: samples.xml,v 1.2 2003/03/30 12:48:57 ghoward Exp $ -->
+
+<samples>
+
+  <group name="Multichannel Hello World!">
+   <sample name="HTML" href="hello.html">
+    This page shows how a simple XML page can be presented in HTML.
+   </sample>
+   <sample name="XHTML" href="hello.xhtml">
+    This is the same page above, but rendered in XHTML (which is the 
+    well-formed XML version of HTML). Note that both the page and the
+    stylesheet used to transform it didn't change from the previous
+    example, Cocoon does everything for you by setting a different serializer.
+   </sample>
+   <sample name="WML" href="hello.wml">
+    By changing the stylesheet, it's possible to render the same content
+    for consumption on different devices. Here, for example, is rendered
+    in WML (Wireless Markup Language) which is the markup language used
+    in WAP-enabled agents (such as PDA or cell phones).
+   </sample>
+   <sample name="SVG" href="hello.svg">
+    Given the power of XSLT and the fact that many presentation languages are
+    based on the XML syntax, it is possible to generate even vector graphics
+    from your content. Here is an example that renders to 
+    SVG (Scalable Vector Graphics). (you need an SVG plugin, or an SVG-capable
+    browser to see this)
+   </sample>   
+   <sample name="Plain Text" href="hello.txt">
+    Sometimes you don't need to be very fancy, so here is a plain text
+    version of your content.
+   </sample>
+   <sample name="VRML" href="hello.wrl">
+    But sometimes you need to ve fancy to impress people, so here is a 3D
+    version of your content (you need a VRML plugin in your browser to visualize
+    this)
+   </sample>
+   <sample name="VoiceML" href="hello.vml">
+    Or sometimes you don't even have a display in front of you, so you want to
+    hear your content, so here is a VoiceML representation of your content (you 
+    need a VoiceML-capable agent to hear this).
+   </sample>
+  </group>
+  
+  <group name="Hello World Web Service">
+   <sample name="Web Service" href="hello.service">
+    Here is a super-simple web service that says hi!
+   </sample>
+   <sample name="Web Service WSDL Descriptor" href="hello.service/WSDL">
+    And this is its WSDL descriptor.
+   </sample>
+  </group>
+   
+</samples>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<page xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+        <backpointer name="Main Menu" do="index.do" />
+        <category name="#{category/name}">
+            <c:forEach select="#{productList}" >
+                <product name="#{name}" id="#{productId}"/>
+            </c:forEach>
+            <situation firstPage="#{firstPage}" lastPage="#{lastPage}" continuation="#{$continuation/id}"/>
+        </category>
+    </site>
+</page>
+
+
+
+

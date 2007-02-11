@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!--
+  Author: Ovidiu Predescu "ovidiu@apache.org"
+
+  Date: August 30, 2002
+ -->
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+  
+  <document>
+    <header>
+      <title>Welcome!</title>
+    </header>
+    <body>
+      <s1 title="Welcome back!">
+        <p>Welcome back, <strong><jpath:value-of select="user/firstName"/> <jpath:value-of select="user/lastName"/></strong>!</p>
+        <p>| <link href="../edit">Edit my preferences</link> | <link href="../logout">Logout</link> |</p>
+      </s1>
+    </body>
+  </document>
+  
+</xsp:page>

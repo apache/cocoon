@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../WEB-INF/entities/document-v10.dtd">
+
+<document>
+  <header>
+    <title>404 Error</title>
+    <authors>
+      <person name="Ovidiu Predescu" email="ovidiu@apache.org"/>
+    </authors>
+  </header>
+
+  <body>
+    <s1 title="Error">
+      <p>You have reached an inexistent page: either your session has
+      expired or the page you were referred to was invalid.</p>
+    </s1>
+  </body>
+</document>

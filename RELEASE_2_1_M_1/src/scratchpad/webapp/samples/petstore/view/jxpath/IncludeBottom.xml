@@ -1,0 +1,23 @@
+<c:template xmlns:c="http://cocoon.apache.org/templates/jx/1.0">
+<br />
+<c:if test="#{accountForm/account}">
+  <c:if test="#{accountForm/account/username}">
+    <c:if test="#{accountForm/account/bannerOption}">
+      <table align="center" background="images/bkg-topbar.gif" cellpadding="5" width="100%">
+      <tr><td>
+<c:if test="#{accountForm/account/bannerName}"> 
+      <center>
+          <image>
+          #{accountForm/account/bannerName}
+	  </image>
+      </center>
+</c:if>
+      </td></tr>
+      </table>
+    </c:if>
+  </c:if>
+</c:if>
+<p align="center">
+<a href="http://cocoon.apache.org"><img border="0" align="center" src="images/cocoon.gif" /></a>
+</p>
+</c:template>
