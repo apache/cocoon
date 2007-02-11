@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  Binding for the Swan xreport editor.
+
+  @version $Id$
+-->
+
+<fb:context
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  path="/report"
+  lenient="true">
+
+  <fb:new id="id-class"/>
+  <fb:new id="name-class"/>
+  <fb:new id="description-class"/>
+  <fb:new id="req-ds-type-class"/>
+  <fb:new id="catalogs-class"/>
+  <fb:new id="flow-class"/>
+  <fb:new id="output-class"/>
+
+  <fb:class id="catalog-class">
+    <fb:value id="catalog" path="catalog"/>
+  </fb:class>
+
+  <fb:class id="catalogs-class">
+    <fb:temp-repeater id="catalogs"
+      parent-path="catalogs"
+      row-path="*" row-path-insert="."
+      virtual-rows="true">
+      <fb:on-bind><fb:new id="catalog-class"/></fb:on-bind>
+    </fb:temp-repeater>
+  </fb:class>
+
+  <fb:class id="database-class">
+    <fb:group id="database" path="database">
+      <fb:new id="sql-class"/>
+    </fb:group>
+  </fb:class>
+
+  <fb:class id="datatype-id-class">
+    <fb:value id="datatype-id" path="@datatype-id"/>
+  </fb:class>
+
+  <fb:class id="description-class">
+    <fb:value id="description" path="description"/>
+  </fb:class>
+
+  <fb:class id="dialect-class">
+    <fb:temp-repeater id="dialect"
+      parent-path="dialect"
+      row-path="*" row-path-insert="."
+      virtual-rows="true">
+      <fb:on-bind>
+        <fb:javascript id="sql-type-selector" path="." direction="load">
+          <fb:load-form>
+            widget.value = jxpathPointer.getNode().getFirstChild().getLocalName();
+            // Next line can be removed after the importPackage()
+            // "Ambiguous import" bug gets fixed.
+            widget.state = WidgetState.ACTIVE;
+          </fb:load-form>
+        </fb:javascript>
+        <fb:union id="type" path=".">
+          <fb:new id="literal-class"/>
+          <fb:new id="sql-parameter-class"/>
+        </fb:union>
+      </fb:on-bind>
+    </fb:temp-repeater>
+  </fb:class>
+
+  <fb:class id="flow-class">
+    <fb:temp-repeater id="flow"
+      parent-path="flow"
+      row-path="*" row-path-insert="."
+      virtual-rows="true">
+      <fb:on-bind><fb:new id="step-class"/></fb:on-bind>
+    </fb:temp-repeater>
+  </fb:class>
+
+  <fb:class id="id-class">
+    <fb:value id="id" path="@id"/>
+  </fb:class>
+
+  <fb:class id="interaction-class">
+    <fb:temp-repeater id="interaction"
+      parent-path="interaction"
+      row-path="*" row-path-insert="."
+      virtual-rows="true">
+      <fb:on-bind><fb:new id="step-parameter-class"/></fb:on-bind>
+    </fb:temp-repeater>
+  </fb:class>
+
+  <fb:class id="name-class">
+    <fb:value id="name" path="name"/>
+  </fb:class>
+
+  <fb:class id="req-ds-type-class">
+    <fb:value id="req-ds-type" path="required-datasource-type"/>
+  </fb:class>
+
+  <fb:class id="label-class">
+    <fb:value id="label" path="fd:label"/>
+  </fb:class>
+
+  <fb:class id="literal-class">
+    <fb:value id="literal" path="literal"/>
+  </fb:class>
+
+  <fb:class id="output-class">
+    <fb:group id="output" path="output">
+      <fb:new id="database-class"/>
+    </fb:group>
+  </fb:class>
+
+  <fb:class id="required-class">
+    <fb:value id="required" path="@required">
+      <fd:convertor datatype="boolean"/>
+    </fb:value>
+  </fb:class>
+
+  <fb:class id="sql-class">
+    <fb:group id="sql" path="sql">
+      <fb:new id="dialect-class"/>
+    </fb:group>
+  </fb:class>
+
+  <fb:class id="sql-parameter-class">
+    <fb:value id="sql-parameter" path="parameter/@idref"/>
+  </fb:class>
+
+  <fb:class id="step-class">
+    <fb:insert-node><step/>
+</fb:insert-node>
+    <fb:group id="step" path="step">
+      <fb:new id="id-class"/>
+      <fb:new id="interaction-class"/>
+    </fb:group>
+  </fb:class>
+
+  <fb:class id="step-parameter-class">
+    <fb:insert-node><parameter/>
+</fb:insert-node>
+    <fb:group id="step-parameter" path="parameter">
+      <fb:new id="id-class"/>
+      <fb:new id="required-class"/>
+      <fb:new id="datatype-id-class"/>
+    </fb:group>
+  </fb:class>
+
+  <fb:class id="view-selector-class">
+    <fb:javascript id="view-selector" path="." direction="load">
+      <fb:load-form>
+        widget.value = "edit";
+      </fb:load-form>
+    </fb:javascript>
+  </fb:class>
+
+</fb:context>

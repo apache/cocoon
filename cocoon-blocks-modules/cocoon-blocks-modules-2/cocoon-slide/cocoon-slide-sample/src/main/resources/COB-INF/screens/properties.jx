@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<document xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
+          xmlns:xi="http://www.w3.org/2001/XInclude">
+  <header>
+    <title>Jakarta Slide example</title>
+    <tab title="users"       href="viewusers.do"/>
+    <tab title="content"     href="viewcontent.do?path=${source.path}"/>
+    <tab title="properties"  href="viewproperties.do?path=${source.path}"/>
+    <tab title="permissions" href="viewpermissions.do?path=${source.path}"/>
+    <tab title="locks"       href="viewlocks.do?path=${source.path}"/>
+    <tab title="logout"      href="logout.do"/>
+  </header>
+  <body>
+    <row> 
+      <column title="Navigation">
+        <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
+          <jx:forEach var="source" items="${source.children}">
+            <tr>
+              <td width="100%" align="left">
+                <a href="viewproperties.do?path=${source.path}">
+                  ${source.name}
+                </a>
+              </td>
+            </tr>
+          </jx:forEach>
+          <jx:if test="${source.parent}">
+            <tr>
+              <td width="100%" align="left">
+                <br/>
+                  <a href="viewproperties.do?path=${source.parent.path}">
+                    ..
+                  </a>
+              </td>
+            </tr>
+          </jx:if>
+        </table>
+      </column>
+      <column title="Properties">
+        <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
+          <tr>
+            <td align="left">
+              <b>Namespace</b>
+            </td>
+            <td align="left">
+              <b>Name</b>
+            </td>
+            <td align="left">
+              <b>Value</b>
+            </td>
+            <td align="right"/>
+          </tr>
+          <jx:forEach var="property" items="${source.sourceProperties}">
+            <tr>
+              <td align="left">
+                ${property.namespace}
+              </td>
+              <td align="left">
+                ${property.name}
+              </td>
+              <td align="left">
+                ${property.value}
+              </td>
+              <td align="right">
+                <jx:if test="${property.namespace != 'DAV:'}">
+                  <form action="removeproperty.do" method="post">
+                    <input type="hidden" name="resourcePath" value="${source.path}"/>
+                    <input type="hidden" name="namespace" value="${property.namespace}"/>
+                    <input type="hidden" name="name" value="${property.name}"/>
+                    <input type="submit" name="doDeleteProperty" value="Delete"/>
+                  </form>
+                </jx:if>
+              </td>
+            </tr>
+          </jx:forEach>
+          <tr>
+            <form action="addproperty.do" method="post">
+              <input type="hidden" name="resourcePath" value="${source.path}"/>
+              <td align="left">
+                <input name="namespace" type="text" size="15" maxlength="40"/>
+              </td>
+              <td align="left">
+                <input name="name" type="text" size="15" maxlength="40"/>
+              </td>
+              <td align="left">
+                <input name="value" type="text" size="15" maxlength="40"/>
+              </td>
+              <td align="right">
+                <input type="submit" name="doAddProperty" value="Add/Modify"/>
+              </td>
+            </form>
+          </tr>
+        </table>
+      </column>
+    </row>
+  </body>
+</document>  
