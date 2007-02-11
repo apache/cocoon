@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+
+  <h4 class="samplesGroup">CAPTCHA widget</h4>
+  <title>CAPTCHA validation sample form</title>
+  <content>
+    <p>This is a demonstration of <a href="http://www.captcha.net/">CAPTCHA</a>
+    validation.</p>
+    <ft:form-template action="#{$cocoon/continuation/id}.cont" method="POST">
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="f1"/>
+        </fi:items>
+      </fi:group>
+      After entering the string, press Enter.
+    </ft:form-template>
+    <p>
+      <a href="../">Back to Forms samples</a>
+    </p>
+  </content>
+</page>
+

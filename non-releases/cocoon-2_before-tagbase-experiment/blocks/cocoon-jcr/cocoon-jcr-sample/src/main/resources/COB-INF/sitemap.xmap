@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - $Id$
+  -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components>
+    <map:generators default="file">
+      <map:generator name="traversable"
+                     logger="sitemap.generator.traversable"
+                     src="org.apache.cocoon.generation.TraversableGenerator"/>
+    </map:generators>
+  </map:components>
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+   
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="populate">
+        <map:generate src="populate.xml"/>
+        <map:transform type="cinclude"/>
+        <map:transform type="write-source"/>
+        <map:serialize/>
+      </map:match>
+
+      <!-- WildcardURISelector would be just perfect here -->
+      <map:match pattern="browse/">
+        <map:generate type="traversable" src="jcr://"/>
+        <map:transform src="dir2samples.xsl"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+      <map:match pattern="browse/**/">
+        <map:generate type="traversable" src="jcr://{1}/"/>
+        <map:transform src="dir2samples.xsl"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+      <map:match pattern="browse/**">
+        <map:generate src="jcr://{1}"/>
+        <map:transform src="dir2samples.xsl"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="repository/">
+        <map:generate type="traversable" src="jcr://"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="repository/**/">
+        <map:generate type="traversable" src="jcr://{1}/"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="repository/**">
+        <map:generate src="jcr://{1}"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <!-- Mount sitemap from repository -->
+      <map:match pattern="mount/**">
+        <map:mount uri-prefix="mount" src="jcr://cocoon/sitemap"/>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

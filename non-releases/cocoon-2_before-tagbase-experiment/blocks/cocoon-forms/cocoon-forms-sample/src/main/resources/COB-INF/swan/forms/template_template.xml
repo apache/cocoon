@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  Template for the Swan form-template editor.
+
+  @version $Id$
+-->
+
+<page
+  xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+  xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+
+  <title>Swan Form Template Editor</title>
+
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+
+      <ft:class id="id-class">
+        <ft:widget-label id="id"/>:<ft:widget id="id"/>
+      </ft:class>
+
+      <ft:class id="label-class">
+        <ft:widget-label id="label"/>:<ft:widget id="label"/>
+      </ft:class>
+
+      <ft:class id="output-id-class">
+        <b><ft:widget-label id="id"/>:</b>
+        <ft:widget id="id">
+          <fi:styling type="output"/>
+        </ft:widget>
+      </ft:class>
+
+      <ft:class id="output-label-class">
+        <b><ft:widget-label id="label"/>:</b>
+        <ft:widget id="label">
+          <fi:styling type="output"/>
+        </ft:widget>
+      </ft:class>
+
+      <ft:class id="std-id-class">
+        <ft:choose path="../../view-selector">
+          <ft:when value="fold">
+            <ft:group id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:group>
+          </ft:when>
+          <ft:when value="view">
+            <ft:group id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:group>
+          </ft:when>
+          <ft:when value="edit">
+            <ft:group id="stuff">
+              <ft:new id="id-class"/>
+            </ft:group>
+          </ft:when>
+        </ft:choose>
+      </ft:class>
+
+      <ft:class id="std-label-class">
+        <ft:choose path="../../view-selector">
+          <ft:when value="fold">
+            <ft:group id="stuff">
+              <ft:new id="output-label-class"/>
+            </ft:group>
+          </ft:when>
+          <ft:when value="view">
+            <ft:group id="stuff">
+              <ft:new id="output-label-class"/>
+            </ft:group>
+          </ft:when>
+          <ft:when value="edit">
+            <ft:group id="stuff">
+              <ft:new id="label-class"/>
+            </ft:group>
+          </ft:when>
+        </ft:choose>
+      </ft:class>
+
+      <ft:class id="std-items-class">
+        <ft:choose path="../../view-selector">
+          <ft:when value="fold">
+            <ft:group id="stuff">
+            </ft:group>
+          </ft:when>
+          <ft:when value="view">
+            <ft:group id="stuff">
+            </ft:group>
+            <ft:new id="items-class"/>
+          </ft:when>
+          <ft:when value="edit">
+            <ft:group id="stuff">
+            </ft:group>
+            <ft:new id="items-class"/>
+          </ft:when>
+        </ft:choose>
+      </ft:class>
+
+      <ft:class id="std-id-items-class">
+        <ft:choose path="../../view-selector">
+          <ft:when value="fold">
+            <ft:group id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:group>
+          </ft:when>
+          <ft:when value="view">
+            <ft:group id="stuff">
+              <ft:new id="output-id-class"/>
+            </ft:group>
+            <ft:new id="items-class"/>
+          </ft:when>
+          <ft:when value="edit">
+            <ft:group id="stuff">
+              <ft:new id="id-class"/>
+            </ft:group>
+            <ft:new id="items-class"/>
+          </ft:when>
+        </ft:choose>
+      </ft:class>
+
+      <ft:class id="union-class">
+        <ft:union id="union">
+
+          <ft:case id="">
+          </ft:case>
+
+          <ft:case id="case">
+            <ft:group id="case">
+              <ft:new id="std-id-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="class">
+            <ft:group id="class">
+              <ft:new id="std-id-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="content">
+            <ft:group id="content">
+              <ft:new id="std-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="default">
+            <ft:group id="default">
+              <ft:new id="std-id-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="form-template">
+            <ft:group id="form-template">
+              <ft:new id="std-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="group">
+            <ft:group id="group">
+              <ft:new id="std-id-class"/>
+              <ft:new id="std-label-class"/>
+              <ft:new id="std-id-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="input">
+            <ft:group id="input">
+              <ft:new id="std-id-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="new">
+            <ft:group id="new">
+              <ft:new id="std-id-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="p">
+            <ft:group id="p">
+              <ft:new id="items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="page">
+            <ft:group id="page">
+              <ft:new id="items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="repeater-size">
+            <ft:group id="repeater-size">
+              <ft:new id="std-id-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="repeater-widget">
+            <ft:group id="repeater-widget">
+              <ft:new id="std-id-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="struct">
+            <ft:group id="struct">
+              <ft:new id="std-id-class"/>
+              <ft:new id="std-label-class"/>
+              <ft:new id="std-id-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="table">
+            <ft:group id="table">
+              <ft:new id="std-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="td">
+            <ft:group id="td">
+              <ft:new id="std-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="title">
+            <ft:group id="title">
+              <ft:new id="std-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="tr">
+            <ft:group id="tr">
+              <ft:new id="std-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="union">
+            <ft:group id="union">
+              <ft:new id="std-id-items-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="widget">
+            <ft:group id="widget">
+              <ft:new id="std-id-class"/>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="widget-label">
+            <ft:group id="widget-label">
+              <ft:new id="std-id-class"/>
+            </ft:group>
+          </ft:case>
+
+        </ft:union>
+      </ft:class>
+
+      <ft:class id="type-selector-class">
+        <ft:choose path="view-selector">
+          <ft:when value="fold">
+            <b>[<ft:widget id="type-selector"><fi:styling type="output"/></ft:widget>]</b>&#160;
+          </ft:when>
+          <ft:when value="view">
+            <b>[<ft:widget id="type-selector"><fi:styling type="output"/></ft:widget>]</b>&#160;
+          </ft:when>
+          <ft:when value="edit">
+            <ft:widget id="type-selector">
+              <fi:styling list-type="dropdown" submit-on-change="true"/>
+            </ft:widget>
+          </ft:when>
+        </ft:choose>
+      </ft:class>
+
+      <ft:class id="view-selector-class">
+        <ft:choose path="view-selector">
+          <ft:when value="fold">
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/forms/img/view.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/forms/img/edit.gif"/></ft:widget>
+          </ft:when>
+          <ft:when value="view">
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/forms/img/fold.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/forms/img/edit.gif"/></ft:widget>
+          </ft:when>
+          <ft:when value="edit">
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/forms/img/fold.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/forms/img/view.gif"/></ft:widget>
+          </ft:when>
+        </ft:choose>
+      </ft:class>
+
+      <ft:class id="item-row-class">
+        <span class="actions">
+          <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
+          <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
+          <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+          &#160;<ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
+        </span>
+        <ft:new id="view-selector-class"/>
+        <ft:new id="type-selector-class"/>
+        <ft:new id="union-class"/>
+      </ft:class>
+
+      <ft:class id="items-class">
+        <ft:widget id="addItem"><fi:styling type="image" src="resources/forms/img/new_child.gif"/></ft:widget>
+        <ft:repeater-size id="items"/>
+        <ft:repeater-widget id="items">
+          <div class="section"><ft:new id="item-row-class"/></div>
+        </ft:repeater-widget>
+      </ft:class>
+
+      <p>
+        <ft:new id="items-class"/>
+      </p>
+      <ft:widget id="messages"/><br/>
+      <input type="submit"/>
+
+    </ft:form-template>
+  </content>
+
+</page>

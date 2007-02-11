@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <fd:widgets>
+
+    <fd:import prefix="common" uri="../libraries/common-types/types_model.xml"/>
+    
+    <fd:field id="room" required="true">
+      <fd:label>Choose a room:</fd:label>
+      <fd:datatype base="string"/>
+      <fd:selection-list>
+        <fd:item value="SR"><fd:label>Single Room</fd:label></fd:item>
+        <fd:item value="DR"><fd:label>Double Room</fd:label></fd:item>
+        <fd:item value="TR"><fd:label>Twin Room</fd:label></fd:item>
+        <fd:item value="2S"><fd:label>2-room Suite</fd:label></fd:item>
+        <fd:item value="3S"><fd:label>3-room Suite</fd:label></fd:item>
+        <fd:item value="PS"><fd:label>Presidential Suite</fd:label></fd:item>
+      </fd:selection-list>
+    </fd:field>
+    
+    <fd:field id="nrrooms" required="true">
+      <fd:label>Number of Rooms</fd:label>
+      <fd:datatype base="integer"/>
+      <fd:selection-list>
+        <fd:item value="1"/>
+        <fd:item value="2"/>
+        <fd:item value="3"/>
+        <fd:item value="4"/>
+        <fd:item value="5"/>
+        <fd:item value="6"/>
+        <fd:item value="7"/>
+        <fd:item value="8"/>
+        <fd:item value="9"/>
+        <fd:item value="10"/> 
+      </fd:selection-list>
+    </fd:field>
+    
+    <fd:group id="booking" extends="common:duration"/>
+    
+    <fd:repeater id="persons" extends="common:genericRepeater" intial-size="1">
+      <fd:widgets>
+        <fd:expand id="common:person"/>
+        <fd:booleanfield id="child">
+          <fd:label>Child</fd:label>
+          <fd:help>Check this field if this person is of age 12 or younger.</fd:help>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:repeater>
+    <fd:repeater-action repeater="persons" command="add-row" id="personsAddRow">
+      <fd:label>Add person</fd:label>
+      <fd:help>Add a new record.</fd:help>
+    </fd:repeater-action>
+    
+    <fd:multivaluefield id="extras">
+      <fd:label>Choose your extras:</fd:label>
+      <fd:datatype base="string"/>
+      <fd:selection-list>
+        <fd:item value="Extra Bed"/>
+        <fd:item value="Airconditioning"/>
+        <fd:item value="Breakfast"/>
+        <fd:item value="Lunch"/>
+        <fd:item value="Dinner"/>
+      </fd:selection-list>
+    </fd:multivaluefield>
+    
+    <fd:expand id="common:address"/>
+    
+    
+  </fd:widgets>
+</fd:form>

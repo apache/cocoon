@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+    XSP event-based cache sample.
+
+    Cvs $Id$
+ -->
+
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+
+    <page>
+        <title>Uninstall Database Triggers with HSQLDB</title>
+        <para>This page tries to remove triggers with the demo database that
+              comes with Apache Cocoon.</para>
+        <esql:connection>
+            <esql:pool>personnel</esql:pool>
+
+        <xsp:logic>
+            for (int i = 0; i&lt;3; i++) {
+
+              <para>Removing myTrigger<xsp:expr>i</xsp:expr>.</para>
+              <esql:execute-query>
+                <esql:query>drop trigger myTrigger<xsp:expr>i</xsp:expr></esql:query>
+                <esql:error-results>
+                  <para>Failed installing myTrigger<xsp:expr>i</xsp:expr>: <esql:get-message/></para>
+                  <para>Trigger already removed?</para>
+                </esql:error-results>
+              </esql:execute-query>
+            }
+        </xsp:logic>
+        </esql:connection>
+
+        <para>
+            <a href="install?what=http">Install HTTP triggers</a>,
+            <a href="install?what=jms">Install JMS triggers</a>,
+            or go back to <a href="eventcache">sample page.</a></para>
+    </page>
+
+</xsp:page>
