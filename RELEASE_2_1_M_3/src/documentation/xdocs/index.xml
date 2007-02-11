@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Apache Cocoon</title>
+    <subtitle>XML Publishing Framework</subtitle>
+    <authors>
+      <person name="cocoon-dev" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <figure src="images/cocoon.gif" alt="Cocoon"/>
+    <s1 title="What is Cocoon?">
+      <p>
+   Apache Cocoon is an XML publishing framework that raises the usage of
+   XML and XSLT technologies for server applications to a new
+   level. Designed for performance and scalability around pipelined SAX
+   processing, Cocoon offers a flexible environment based on a separation
+   of concerns between content, logic, and style. To top this all off, 
+   Cocoon's centralized configuration system and sophisticated caching help
+   you to create, deploy, and maintain rock-solid XML server applications.
+ </p>
+      <p>
+   Cocoon interacts with most data sources, including filesystems, RDBMS,
+   LDAP, native XML databases, and network-based data sources. It adapts
+   content delivery to the capabilities of different devices like HTML, WML,
+   PDF, SVG, and RTF, to name just a few. You can run Cocoon as a Servlet as well as
+   through a powerful, commandline interface. The deliberate design of its abstract 
+   environment gives you the freedom to extend its functionality to meet your 
+   special needs in a highly modular fashion.
+ </p> 
+    </s1>
+    <s1 title="Where can I find it?">
+      <p>
+   To download the latest release @released.version@ of Apache Cocoon, go to the 
+   <link href="http://cocoon.apache.org/mirror.cgi">download area.</link>
+      </p>
+      <p>
+   If you are looking for a past generation of Cocoon (no longer supported but still available), 
+   go to the <link href="http://xml.apache.org/cocoon1/">Cocoon 1.x area</link>.  
+          </p>
+    </s1>
+    <s1 title="More News about Cocoon">
+      <p>
+Check out our <link href="http://cocoon.apache.org/news/">news page</link> for more up-to-date news about Cocoon.
+          </p>
+    </s1>
+    <figure src="images/cocoon-built.gif" alt="Built with Apache Cocoon"/>
+  </body>
+</document>

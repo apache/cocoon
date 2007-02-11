@@ -1,0 +1,10 @@
+build
+dist
+prj.el
+.project
+.classpath
+local.build.properties
+local.blocks.properties
+cocoon.sampledata
+.DS_Store
+

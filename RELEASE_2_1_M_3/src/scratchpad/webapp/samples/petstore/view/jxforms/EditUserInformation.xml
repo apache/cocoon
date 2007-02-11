@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<site xmlns:xf="http://apache.org/cocoon/jxforms/1.0" 
+   signOn="false" view="xsp">
+  <editAccountForm>
+	<xf:form id="petstore-edit-account" view="edit-user-info" action="petstore" method="GET" class="petstore-form">
+		<error>
+			<xf:violations class="error"/>
+		</error>
+		
+		<xf:group class="panel" ref="/">
+			<xf:label class="header">User Information</xf:label>
+			<xf:input ref="/username">
+				<xf:label>User ID:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:secret ref="/password">
+				<xf:label>Password:</xf:label>
+				<xf:violations class="error"/>
+			</xf:secret>
+			<xf:secret ref="/password2">
+				<xf:label>Repeat Password:</xf:label>
+				<xf:violations class="error"/>
+			</xf:secret>
+		</xf:group>
+		
+
+		<xf:submit id="next" continuation="forward" class="button">
+			<xf:label>Next</xf:label>
+			<xf:hint>Continue</xf:hint>
+		</xf:submit>
+	</xf:form>
+</editAccountForm>
+</site>

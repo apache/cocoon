@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="woody-formmanager">
+  <!--
+     | Woody's FormManager component
+     |-->
+  <woody-formmanager>
+    <widgets>
+      <widget name="field" factory="org.apache.cocoon.woody.formmodel.FieldDefinitionBuilder"/>
+      <widget name="repeater" factory="org.apache.cocoon.woody.formmodel.RepeaterDefinitionBuilder"/>
+      <widget name="booleanfield" factory="org.apache.cocoon.woody.formmodel.BooleanFieldDefinitionBuilder"/>
+      <widget name="multivaluefield" factory="org.apache.cocoon.woody.formmodel.MultiValueFieldDefinitionBuilder"/>
+      <widget name="button" factory="org.apache.cocoon.woody.formmodel.ButtonDefinitionBuilder"/>
+      <widget name="aggregatefield" factory="org.apache.cocoon.woody.formmodel.AggregateFieldDefinitionBuilder"/>
+    </widgets>
+  </woody-formmanager>
+
+  <!--
+     | Woody's datatypes and validation rules.
+     |-->
+  <woody-datatype>
+    <datatypes>
+      <datatype name="string" factory="org.apache.cocoon.woody.datatype.typeimpl.StringTypeBuilder"/>
+      <datatype name="long" factory="org.apache.cocoon.woody.datatype.typeimpl.LongTypeBuilder"/>
+    </datatypes>
+    <validation-rules>
+      <validation-rule name="length" factory="org.apache.cocoon.woody.datatype.validationruleimpl.LengthValidationRuleBuilder"/>
+      <validation-rule name="email" factory="org.apache.cocoon.woody.datatype.validationruleimpl.EmailValidationRuleBuilder"/>
+      <validation-rule name="value-count" factory="org.apache.cocoon.woody.datatype.validationruleimpl.ValueCountValidationRuleBuilder"/>
+      <validation-rule name="range" factory="org.apache.cocoon.woody.datatype.validationruleimpl.RangeValidationRuleBuilder"/>
+      <validation-rule name="assert" factory="org.apache.cocoon.woody.datatype.validationruleimpl.AssertValidationRuleBuilder"/>
+      <validation-rule name="mod10" factory="org.apache.cocoon.woody.datatype.validationruleimpl.Mod10ValidationRuleBuilder"/>
+    </validation-rules>
+  </woody-datatype>
+</xconf>

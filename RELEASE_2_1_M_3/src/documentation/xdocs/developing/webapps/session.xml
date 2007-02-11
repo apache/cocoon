@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+<document>
+    <header>
+        <title>Session Management</title>
+        <authors>
+            <person name="Carsten Ziegeler" email="cziegeler@s-und-n.de"/>
+        </authors>
+    </header>
+    <body>
+  <s1 title="Introduction">
+     <p>A session is a data storage which resides on the server and records
+        information about one single user. Cocoon creates a session on demand and
+        from that point of time the user is tracked and information can be stored
+        inside the session. Each following request of this user is linked to the one
+        specific session, so there is always only one session per user on the
+        server.</p>
+     <p>To avoid a fast growing amount of sessions on the server and the
+        overcome potential security problems, a session has usually a valid period of
+        time. If during this period no new request comes in from the user, the session
+        object on the server will be destroyed by the server (this period of time is
+        called session timeout). The web application often allows a user to explictly
+        destroy a session.</p>
+     <p>The usual web applications create sessions during login of a user and
+        destroy them when the user logs out.</p>
+     <p>This document describes the basic Cocoon session management using
+        the session transformer.</p>
+     <p>The chapter "Special Contexts" explains some special
+        contexts which do not require a session. They are available everytime. These
+        special contexts are the request context, the response context and the
+        temporary context.</p>
+  </s1>
+  <s1 title="Session Tracking">
+    <p>If a user has a session, Cocoon is able to connect new requests from this user
+       to the session of the user. This is done by session tracking. Basically,
+       the session tracking of Cocoon uses the session tracking of the environment,
+       which is usually the servlet engine.
+    </p>
+    <p>There are two methods for session tracking: cookies and url rewriting. If you
+       use cookies, you don't have to care about session tracking. Just refer to
+       the documentation of your servlet engine on how to turn on cookies for session
+       handling.</p>
+    <p>URL rewriting instead is a little bit complicated. For url rewriting, each link
+       the user can select, needs a special session ID appended to this link. 
+       Unfortunately, this is not done automatically by Cocoon or the servlet engine.
+       You can either do this by hand or you can use the <em>encodeURL</em> transformer
+       just before the <em>html serializer</em>.
+    </p>
+  </s1>
+  <s1 title="Sessions">
+     <p>The session action is responsible for creating and
+        terminating a session. It is controlled by a sitemap parameter named "action".
+        This parameter can have the values "create" and "terminate". If no parameter is
+        set, it defaults to "create".</p>
+     <p>The action either creates a new session immediately (if not already
+        available), or terminates it (if available).</p>
+  </s1>
+  <s1 title="Contexts">
+     <s2 title="session Transformer">
+        <p>The session transformer is responsible for interpreting the tags
+          and performing the actions required. The session transformer is configured
+          in the sitemap and can be used inside a document. All tags must be prefixed
+          with the session namespace. So the actual tag used in the document will read
+          <em>&lt;session:xxxx&gt;</em>. The current namespace URI for the session 
+          transformer is <em>"http://apache.org/cocoon/session/1.0"</em>.</p>
+     </s2>
+     <s2 title="Context-Tags">
+        <p>A context is basically an application specific block of XML data in
+          the users session. Each context has a unique name.</p>
+        <p>The command <em>createcontext</em> is used to create a new context.
+          A <em>name</em> attribute must be given to the context in order to identify it.
+          The following names may not be used: request, response, session,
+          context, temp, portal or authentication. If a context of the same name already exists
+          then this command will have no effect.</p>
+        <p><em>&lt;createcontext name="mycontext"/&gt;</em></p>
+        <p>In order to delete a context the command <em>deletecontext</em> is
+          provided. Again a <em>name</em> attribute must be provided.</p>
+        <p><em>&lt;deletecontext name="mycontext"/&gt;</em></p>
+        <p>Once created, XML data can then be stored inside or read from a
+          given context.</p>
+     </s2>
+     <s2 title="Accessing context data">
+        <p>The data in a context can be dynamically accessed using the
+          following commands.</p>
+        <p></p>
+        <p><em>getxml</em> allows data to be read out of a context. A
+          <em>path</em> attribute describes the source of the data inside the context and
+          consists of an XPath expression. All <em>path</em> values must be absolute and
+          only nodes and attributes can be accessed. </p>
+        <p>An optional default value can also be provided to allow for the
+          nonexistence of the requested data.</p>
+        <p><em>&lt;getxml context="mycontext"
+          path="/User/Name"/&gt;</em></p>
+        <p><em>&lt;getxml context="mycontext"
+          path="/User/Name"&gt;Matthew&lt;/getxml&gt;</em></p>
+        <p>Attributes can also be accessed.</p>
+        <p><em>&lt;getxml context="mycontext"
+          path="/User/Name/@Age"/&gt;</em></p>
+        <p><em></em></p>
+        <p>Data can be written into a context using the <em>setxml</em>
+          command. It is possible to set values or nodes as the following examples
+          show.</p>
+        <p><em>&lt;setxml context="mycontext"
+          path="/User/Name"/&gt;Carsten&lt;/setxml&gt;</em></p>
+        <p><em>&lt;setxml context="mycontext"
+          path="/User/"/&gt;&lt;Name&gt;Carsten&lt;/Name&gt;&lt;/setxml&gt;</em></p>
+        <p></p>
+        <p>Using the <em>setxml</em> command causes all the nodes below the
+          target node to be deleted. If you wish to maintain the nodes and manipulate
+          individual branches of the XML tree - then the session transformer offers the
+          <em>mergexml</em> command.</p>
+        <p></p>
+        <p>Use the <em>removexml</em> command to remove nodes from the
+          context.</p>
+        <p><em>&lt;removexml context="mycontext"
+          path="/User/"/&gt;</em></p>
+        <s3 title="Example">
+          <p>The following example shows the use of several commands and in
+             particular how the <em>mergexml</em> command can be used to manipulate context
+             data.</p>
+          <source>&lt;resource xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
+  &lt;session:createcontext name="trackdemo"/&gt;
+  &lt;!-- build context data --&gt;
+  &lt;session:setxml context="trackdemo" path="/"&gt;
+    &lt;context&gt;
+      &lt;users&gt;
+        &lt;user id="1"&gt;
+          &lt;name&gt;Carsten&lt;/name&gt;
+        &lt;/user&gt;
+      &lt;/users&gt;
+    &lt;/context&gt;
+  &lt;/session:setxml&gt;
+  &lt;session:mergexml context="trackdemo" path="/context"&gt;
+    &lt;users&gt;
+      &lt;user id="1"&gt;
+        &lt;name&gt;Ziegeler&lt;/name&gt;
+        &lt;developer&gt;true&lt;/developer&gt;
+      &lt;/user&gt;
+      &lt;user id="2"&gt;
+        &lt;name&gt;Walter&lt;/name&gt;
+      &lt;/user&gt;
+    &lt;/users&gt;
+  &lt;/session:mergexml&gt;
+  &lt;session:getxml context="trackdemo" path="/"/&gt;
+&lt;/resource&gt;</source>
+          <p>In the above example, a context for storing data is added. Using
+             the <em>setxml</em> command data is then stored into the context. The following
+             <em>mergexml</em> command then changes the name of user-1 and adds a further
+             tag. As there is no original user-2 the complete subtree is then added to the
+             context.</p>
+        </s3>
+     </s2>
+     <s2 title="Reading and writing contexts">
+        <p>Aside from the described means of accessing data in a context,
+          the session transformer also provides for the reading and writing of contexts. This can be
+          used to write an application context out to a database or to read an
+          application context in from a file.</p>
+        <p>The session transformer offers a very flexible way of defining the source of the
+          context data. It is possible to specify a resource (defined in the sitemap) or
+          a Java class. Using a resource allows for example the context data to be read
+          from a database using the SQL Transformer. As this source is a Cocoon
+          pipeline, the data can be generated and transformed before passing into the
+          context. </p>
+        <p>When a context is created, it can get additional save and load URIs
+          which are used for loading/saving to/from the context:</p>
+        <p><em>&lt;createcontext name="mycontext" load="cocoon://load-from-db"
+          save="cocoon://save-to-db"/&gt;</em></p>
+        <p>These URIs can then be used inside a document to load data into a
+          context:</p>
+        <p><em>&lt;loadxml context="mycontext"/&gt;</em></p>
+        <p>This example would then load the context data via the resource
+          <em>load-from-db</em> which must be defined in the sitemap.</p>
+        <p>Parameters can be passed to and interpreted by the uri or the Java
+          class. This allows the context data to be read dependent on say the current
+          user.</p>
+        <p><em>&lt;loadxml
+          context="mycontext"&gt;&lt;user&gt;ben&lt;/user&gt;&lt;/loadxml&gt;</em></p>
+
+        <p>The resource addressed by the uri will receive the parameters as
+          request-parameters. In addition the name of the context will always be passed
+          as <em>contextname</em>.</p>
+        <p>Writing context data works in the same manner.</p>
+        <p><em>&lt;savexml context="mycontext"/&gt;</em></p>
+        <p>Both commands can use the optional <em>path</em> attribute:</p>
+        <p><em>&lt;loadxml context="mycontext" path="/user"/&gt;</em></p>
+        <p><em>&lt;savexml context="mycotnext" path="/user"/&gt;</em></p>
+        <p>The first command will read xml from the uri and store it in the
+          context under the node <em>user</em>, the second one saves only the xml subtree
+          under the node <em>user</em> to the uri. The resource addressed by the uri will
+          be passed in addition to the <em>contextname</em> parameter the <em>path</em>
+          parameter with the corresponding value. If the <em>path</em> attribute is not
+          present the <em>path</em> parameter will get the value <em>"/"</em>.</p>
+     </s2>
+  </s1>
+  <s1 title="Special Contexts">
+     <p>Cocoon creates and maintains special contexts that allow the
+        applications to access the environment. This allows the read-only access
+        to such things as the current request or the response using the same XPath
+        commands previously described. These context do not require any session, they
+        are always available and change on every request.</p>
+     <s2 title="The Request Context - Accessing the Environment, Part One">
+        <p>The request context is an XML description of the current
+          (HTTP) request. This context is a special read only context that
+          can be accessed with the usual commands:</p>
+        <p><em>&lt;getxml context="request" path="/parameter"/&gt;</em></p>
+
+        <p>For example, if you want to get the value of a parameter with the
+          name <em>username</em> you can include the following command in your XML and it
+          will be replaced with the value of the parameter:</p>
+        <p><em>&lt;getxml context="request"
+          path="/parameter/username"/&gt;</em></p>
+        <p>If you wish to obtain the complete querystring as it was
+          passed into Cocoon - without converting the data to XML - then you can use
+          the "/querystring" path:</p>
+        <p><em>&lt;getxml context="request"
+          path="/querystring"/&gt;</em></p>
+        <p>The result will be a string in the format
+          "?param=aaa&amp;...".</p>
+        <p>The complete context you can access via these commands has the
+          following XML format:</p>
+        <source>&lt;parameter&gt;
+  &lt;!-- All parameters: parameter names build the elements with the value of the first parameter with
+                          this name as text node child --&gt;
+  &lt;firstparameter&gt;value of parameter&lt;/firstparameter&gt;
+  &lt;secondparameter&gt;value of parameter&lt;/secondparameter&gt;
+&lt;/parameter&gt;
+
+&lt;querystring&gt;the querystring with a leading '?' or empty&lt;querystring&gt;
+  (The querystring contains only parameters send by the GET method)
+
+&lt;parametervalues&gt;
+  &lt;!-- All parameters. The tags are all inside the cinclude transformer namespace.
+    The generated XML can be used without modification for the
+    cinclude:includexml command. --&gt;
+  &lt;cinclude:parameters&gt;
+    &lt;cinclude:parameter&gt;
+      &lt;cinclude:name&gt;1st parameter name&lt;/cinclude:name&gt;
+      &lt;cinclude:value&gt;1st parameter value&lt;/cinclude:value&gt;
+    &lt;/cinclude:parameter&gt;
+             ...
+    &lt;cinclude:parameter&gt;
+      &lt;cinclude:name&gt;2nd parameter name&lt;/cinclude:name&gt;
+      &lt;cinclude:value&gt;2nd parameter value&lt;/cinclude:value&gt;
+    &lt;/cinclude:parameter&gt;
+  &lt;/cinclude:parameters&gt;
+  &lt;!-- If a parameter has more than one value, for each value a
+      &lt;session:param&gt; block is generated. --&gt;
+&lt;/parametervalues&gt;
+
+&lt;attributes&gt;
+  &lt;!-- lists all attributes, attribute names build the elements
+        with the values as text node childs --&gt;
+&lt;/attributes&gt;
+
+&lt;headers&gt;
+  &lt;!-- lists all headers, header names build the elements
+       with the values as text node childs --&gt;
+&lt;/headers&gt;
+
+&lt;cookies&gt;
+  &lt;!-- lists all cookies --&gt;
+  &lt;cookie name="..."&gt;
+    &lt;value&gt;the cookie value&lt;/value&gt;
+    &lt;name&gt;the name of the cookie&lt;/name&gt;
+    &lt;comment&gt;value&lt;/comment&gt;
+    &lt;domain&gt;value&lt;/domain&gt;
+    &lt;path&gt;value&lt;/path&gt;
+    &lt;maxAge&gt;value&lt;/maxAge&gt;
+    &lt;secure&gt;value&lt;/secure&gt;
+    &lt;version&gt;value&lt;/version&gt;
+  &lt;/cookie&gt;
+&lt;/cookies&gt;
+
+&lt;characterEncoding&gt;value&lt;/characterEncoding&gt;
+&lt;contentLength&gt;value&lt;/contentLength&gt;
+&lt;contentType&gt;value&lt;/contentType&gt;
+&lt;protocol&gt;value&lt;/protocol&gt;
+&lt;remoteAddress&gt;value&lt;/remoteAddress&gt;
+&lt;remoteHost&gt;value&lt;/remoteHost&gt;
+&lt;scheme&gt;value&lt;/scheme&gt;
+&lt;serverName&gt;value&lt;/serverName&gt;
+&lt;serverPort&gt;value&lt;/serverPort&gt;
+&lt;method&gt;value&lt;/method&gt;
+&lt;contextPath&gt;value&lt;/contextPath&gt;
+&lt;pathInfo&gt;value&lt;/pathInfo&gt;
+&lt;pathTranslated&gt;value&lt;/pathTranslated&gt;
+&lt;remoteUser&gt;value&lt;/remoteUser&gt;
+&lt;requestedSessionId&gt;value&lt;/requestedSessionId&gt;
+&lt;requestURI&gt;value&lt;/requestURI&gt;
+&lt;servletPath&gt;value&lt;/servletPath&gt;
+&lt;isRequestedSessionIdFromCookie&gt;value&lt;/isRequestedSessionIdFromCookie&gt;
+&lt;isRequestedSessionIdFromCookie&gt;value&lt;/isRequestedSessionIdFromCookie&gt;
+&lt;isRequestedSessionIdValid&gt;value&lt;/isRequestedSessionIdValid&gt;</source>
+     </s2>
+     <s2 title="The Response Context - Accessing the Environment, Part Two">
+        <p>The response context is an XML description of the current
+          (HTTP) response. This context is a special write only context that can be
+          accessed with the usual commands:</p>
+        <p><em>&lt;session:setxml context="response"
+          path="/header"/&gt;</em></p>
+        <p>This command will be removed from the XML and the information will
+          be added to the response. Headers and cookies can be
+          added using the response context .</p>
+        <s3 title="Adding headers">
+          <p>Headers can be added either by <em>setxml</em> or by
+             <em>appendxml</em>. If <em>setxml</em> is used, the header with the name gets
+             the given value, regardless if the header had any value beforehand or not. If
+             <em>appendxml</em> is used the value will be added.</p>
+          <source>&lt;session:setxml context="response" path="/header/headername"&gt;The value&lt;/session:setxml&gt;
+
+   or
+
+&lt;session:appendxml context="response" path="/header/headername"&gt;The value&lt;/session:appendxml&gt;</source>
+        </s3>
+        <s3 title="Adding cookies">
+          <p>Cookies can be added either by setxml or by appendxml. There is
+             no difference between these commands.</p>
+          <source>&lt;session:setxml context="response" path="/cookie"&gt;
+  &lt;!-- Now follows the cookie definition --&gt;
+  &lt;name&gt;The cookie name&lt;/name&gt;
+  &lt;value&gt;The value of the cookie&lt;/value&gt;
+  &lt;!-- The following are optional --&gt;
+  &lt;path&gt;value&lt;/path&gt;
+  &lt;domain&gt;value&lt;/domain&gt;
+  &lt;secure&gt;true or false&lt;/secure&gt;
+  &lt;comment&gt;value&lt;/comment&gt;
+  &lt;maxAge&gt;value&lt;/maxAge&gt;
+  &lt;version&gt;value&lt;/version&gt;
+&lt;/session:setxml&gt;</source>
+        </s3>
+     </s2>
+     <s2 title="The Temporary Context">
+        <p>The temporary context with the name <em>"temp"</em> is available on
+          each request. It is independent from the session and has no content when a new
+          request starts. It can be used like any other context except that the content
+          is lost/deleted when the current response is finished.</p>
+        <p>Using the tempory context it is possible to store any XML
+          information for processing the current request.</p>
+     </s2>
+  </s1>
+  <s1 title="Form Handling">
+     <p>To get feedback or information from a user, forms are commonly used
+        to present input field in the browser. The usual approach for form handling in
+        web application consists of two steps. The first request presents the form to
+        the user. This form initiates a second request that processes the form
+        values.</p>
+     <p>Cocoon supports this two step process, in addition Cocoon offers
+        a single step approach.</p>
+     <s2 title="The common approach">
+        <p>The common approach consists of two steps or of creating two
+          resources. The first resource defines the form: All input fields are declared,
+          each gets a unique name. This form invokes the second resource.</p>
+        <p>This resource uses the session transformer to get the values
+          provided by the user. The values are added by the browser to the parameters of
+          the request. So using the request context and <em>getxml</em>, the values can
+          be fetched.</p>
+        <p>If you want to create a form with two values - forename and surname
+          of the user, you could generate a base xml file with the information about this
+          form:</p>
+        <source>&lt;page&gt;
+  &lt;form&gt;
+    &lt;action&gt;form-handling-page&lt;/action&gt;
+    &lt;input name="forename" type="text"/&gt;
+    &lt;input name="surname" type="text"/&gt;
+  &lt;/form&gt;
+&lt;/page&gt;</source>
+        <p>A stylesheet can transform this into valid html. The action tag
+          indicates that the "form-handling-page" should be invoked by submitting the
+          values.</p>
+        <p>The "form-handling-page" is a pipeline which is declared in the
+          sitemap and uses the session transformer. It could also read the following
+          xml:</p>
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
+  &lt;forename&gt;
+    &lt;session:getxml context="request" path="/parameter/forename"/&gt;
+  &lt;/forename&gt;
+  &lt;surname&gt;
+    &lt;session:getxml context="request" path="/parameter/surname"/&gt;
+  &lt;/surname&gt;
+&lt;/page&gt;</source>
+        <p>As the form values are appended to the request, <em>getxml</em>
+          with specifying the path (which is the parameter name used for the input field)
+          inserts the value submitted by the user into the xml stream.</p>
+        <p>If you want to write the information in a session context, you must
+          wrap the whole xml inside a setxml:</p>
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
+  &lt;session:setxml context="userdata" path="/user"&gt;
+    &lt;forename&gt;
+      &lt;session:getxml context="request" path="/parameter/forename"/&gt;
+    &lt;/forename&gt;
+    &lt;surname&gt;
+      &lt;session:getxml context="request" path="/parameter/surname"/&gt;
+    &lt;/surname&gt;
+  &lt;/session:setxml&gt;
+&lt;/page&gt;</source>
+        <p>The user data is now stored inside the session context "userdata",
+          so the context has the following content:</p>
+        <source>&lt;user&gt;
+  &lt;forename&gt;Walter&lt;/forename&gt;
+  &lt;surname&gt;Walterson&lt;/surname&gt;
+&lt;/user&gt;</source>
+     </s2>
+     <s2 title="The Session Framework approach">
+        <p>The previous chapter showed the common approach for handling form
+          values. It forces the user to create two resources for a single form
+          handling.</p>
+        <p>Cocoon offers an advanced approach. Only one single resource is
+          created. This resources contains the information about the input fields used
+          and in addition the information about where the submitted values should be
+          stored inside the session.</p>
+        <p>The example from the previous chapter could look like this:</p>
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
+  &lt;session:form name="myform"&gt;
+    &lt;session:action&gt;the-next-page&lt;/session:action&gt;
+    &lt;session:content&gt;
+      &lt;session:inputxml name="forename" type="text" context="userdata" path="/user/forename"/&gt;
+      &lt;session:inputxml name="surname" type="text" context="userdata" path="/user/surname"/&gt;
+    &lt;/session:content&gt;
+  &lt;/session:form&gt;
+&lt;/page&gt;</source>
+        <p>The form tag starts the form definition. The name attribute is
+          required to distinct between different forms on the same page. The action tag
+          defines the url invoked by the form and the content tag describes the content
+          of the form: its input fields.</p>
+        <p>The <em>inputxml</em> tag tells Cocoon that the following request
+          contains form values which should be stored in the specified context under the
+          given path. The session transformer transforms by removing the namespace and
+          the context attribute:</p>
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
+  &lt;form action="the-next-page"&gt;
+    &lt;inputxml name="forename" type="text"/&gt;
+    &lt;inputxml name="surname" type="text"/&gt;
+  &lt;/form&gt;
+&lt;/page&gt;</source>
+        <p>A stylesheet can now generate the appropriate html (or any other
+          format). The main difference is, that the resource invoked by submitting the
+          values has not to care about the form as Cocoon maintains the form handling.
+          The only prerequisit is that a session for the current user and a session
+          context to store the information exists.</p>
+        <p>The Cocoon approach allows a very easy way of form handling where
+          the resource which creates the form also handles the form.</p>
+        <p>For editing values - if the context already contains information
+          about the user - <em>inputxml</em> inserts the current value inside the tag. So
+          the xml streamed would after a second run would look like this:</p>
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
+  &lt;form action="the-next-page"&gt;
+    &lt;inputxml name="forename" type="text"&gt;Walter&lt;/inputxml&gt;
+    &lt;inputxml name="surname" type="text"&gt;Walterson&lt;/inputxml&gt;
+  &lt;/form&gt;
+&lt;/page&gt;</source>
+        <p>Like <em>getxml</em> it is also possible to provide default values
+          for the input field, if the context does not contain any information:</p>
+        <source>&lt;session:inputxml name="forename" context="userdata" path="/user/forename"&gt;
+     Defaultname
+&lt;/session:inputxml&gt;</source>
+     </s2>
+  </s1>
+</body>
+</document>

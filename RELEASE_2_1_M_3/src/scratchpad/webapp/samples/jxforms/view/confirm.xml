@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<document xmlns:xf="http://apache.org/cocoon/jxforms/1.0">
+  <xf:form id="form-feedback" view="confirm" action="" method="GET">
+    <xf:label>Confirm Input</xf:label>
+    <!-- from page1 -->
+    <xf:output ref="firstName">
+      <xf:label>First Name</xf:label>
+    </xf:output>
+    <xf:output ref="lastName">
+      <xf:label>Last Name</xf:label>
+    </xf:output>
+    <xf:output ref="email">
+      <xf:label>Email</xf:label>
+    </xf:output>
+    <xf:output ref="age">
+      <xf:label>Age</xf:label>
+      <xf:violations class="error"/>
+    </xf:output>
+    <xf:group ref="/">
+      <xf:label>Professional roles</xf:label>
+      <xf:repeat nodeset="role">
+        <xf:output ref="."/>
+      </xf:repeat>
+    </xf:group>
+    <xf:group ref="/">
+      <xf:label>Personal hobbies</xf:label>
+      <xf:repeat nodeset="hobby">
+        <xf:output ref="."/>
+      </xf:repeat>
+    </xf:group>
+    <xf:output ref="hidden">
+      <xf:label>Hidden attribute</xf:label>
+    </xf:output>
+    <!-- from page2 -->
+    <xf:output ref="number">
+      <xf:label>Number of installations</xf:label>
+    </xf:output>
+    <xf:output ref="liveUrl">
+      <xf:label>Live URL</xf:label>
+    </xf:output>
+    <xf:output ref="publish">
+      <xf:label>Publish URL</xf:label>
+    </xf:output>
+    <!-- from page3 -->
+    <xf:output ref="system/os">
+      <xf:label>OS</xf:label>
+    </xf:output>
+    <xf:output ref="system/processor">
+      <xf:label>Processor</xf:label>
+    </xf:output>
+    <xf:output ref="system/@ram">
+      <xf:label>RAM</xf:label>
+    </xf:output>
+    <xf:output ref="system/servletEngine">
+      <xf:label>Servlet Engine</xf:label>
+    </xf:output>
+    <xf:output ref="system/javaVersion">
+      <xf:label>Java Version</xf:label>
+    </xf:output>
+    <xf:group ref="/" id="favorites_group">
+      <xf:label>Favorite web sites</xf:label>
+      <xf:repeat nodeset="favorite[position() &lt;= 3]" id="favorites">
+        <xf:output ref="." class="info">
+          <xf:label>URL: </xf:label>
+        </xf:output>
+      </xf:repeat>
+    </xf:group>
+    <!-- submit -->
+    <xf:submit id="prev" continuation="back" class="button">
+      <xf:label>Prev</xf:label>
+      <xf:hint>Go to previous page</xf:hint>
+    </xf:submit>
+    <xf:submit id="next" continuation="forward" class="button">
+      <xf:label>Finish</xf:label>
+      <xf:hint>Finish the wizard</xf:hint>
+    </xf:submit>
+  </xf:form>
+  <xf:output ref="count" id="show_count" form="form-feedback" class="info">
+    <xf:label>Visits Count</xf:label>
+  </xf:output>
+</document>

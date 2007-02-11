@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<site xmlns:xf="http://apache.org/cocoon/jxforms/1.0" 
+   signOn="false" view="xsp">
+  <editAccountForm>
+	<xf:form id="petstore-edit-account" view="edit-account-info" action="petstore" method="GET" class="petstore-form">
+		<error>
+			<xf:violations class="error"/>
+		</error>
+		
+		<xf:group class="panel" ref="/account">
+			<xf:label class="header" >Account Information</xf:label>
+			<xf:input ref="/account/firstName">
+				<xf:label>First Name:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="lastName">
+				<xf:label>Last Name:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="email">
+				<xf:label>Email:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="phone">
+				<xf:label>Phone:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="address1">
+				<xf:label>Address 1:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="address2">
+				<xf:label>Address 2:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="city">
+				<xf:label>City:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="state">
+				<xf:label>State:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="zip">
+				<xf:label>Zip:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+			<xf:input ref="country">
+				<xf:label>Country:</xf:label>
+				<xf:violations class="error"/>
+			</xf:input>
+		</xf:group>
+
+		<xf:submit id="prev" continuation="back" class="button">
+			<xf:label>Back</xf:label>
+			<xf:hint>Go Back</xf:hint>
+		</xf:submit>
+		<xf:submit id="next" continuation="forward" class="button">
+			<xf:label>Next</xf:label>
+			<xf:hint>Continue</xf:hint>
+		</xf:submit>
+	</xf:form>
+</editAccountForm>
+</site>

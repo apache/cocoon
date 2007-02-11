@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.10 2003/07/01 13:51:59 ghoward Exp $ -->
+
+<samples>
+
+ <group name="Main examples page">
+  <sample name="Back" href="../samples/">to Cocoon examples main page</sample>
+ </group>
+
+ <group name="Pet Store">
+    <sample name="Pet Store" href="petstore/">
+      The Cocoon flowscript version of the J2EE PetStore.
+    </sample>
+  </group>
+
+ <group name="JXForms">
+    <sample name="JXForms" href="jxforms/">
+      JXForms Feedback Wizard Sample 
+    </sample>
+  </group>
+
+ <group name="Garbage">
+    <sample name="Garbage" href="garbage/">
+      Flowscript Calculator Sample using Garbage Template Generator
+    </sample>
+  </group>
+  
+  <group name="Castor">
+    <sample name="CastorTransformer" href="castor/">
+      Show the usage of the Castor Transformer.
+    </sample>
+  </group>
+
+  <group name="Jelly">
+    <sample name="Test 1" href="jelly/test1">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+    <sample name="Test 2" href="jelly/test2">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+  </group>
+  <group name="Event Based Cache">
+  	<sample name="Event Based Cache" href="eventcache/?pageKey=one">
+  	  A sample demonstrating a new system of cache invalidation based on 
+  	  events usually external to Cocoon.  Example uses include cache content 
+  	  until a back-end database is updated, or EJB signals an update.
+  	</sample>
+  </group>
+</samples>

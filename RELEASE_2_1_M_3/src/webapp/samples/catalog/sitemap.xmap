@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<!-- CVS $Id: sitemap.xmap,v 1.2 2003/05/07 04:57:13 vgritsenko Exp $ -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+ <map:pipelines>
+  <map:pipeline>
+ 
+   <map:match pattern="">
+    <map:redirect-to uri="welcome"/>
+   </map:match>
+
+   <map:match pattern="welcome">
+    <map:generate src="samples.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <!-- Catalog entity resolver =========================== -->
+
+   <map:match pattern="catalog-demo">
+    <map:generate src="catalog-demo.xml"/>
+    <map:transform src="style.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="entity-test.html">
+    <map:generate src="catalog-test.xml"/>
+    <map:transform src="style.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="sdocbook-demo">
+    <map:generate src="article.xml"/>
+    <map:transform src="sdocbook2body.xsl"/>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <!-- ========================= Resources ================================ -->
+
+   <map:match pattern="sites/styles/**.css">
+    <map:read src="context://samples/resources/styles/{1}.css" mime-type="text/css"/>
+   </map:match>
+
+   <map:match pattern="images/**.gif">
+    <map:read src="context://samples/resources/images/{1}.gif" mime-type="image/gif"/>
+   </map:match>
+
+   <map:match pattern="images/**.jpg">
+    <map:read src="context://samples/resources/images/{1}.jpg" mime-type="image/jpg"/>
+   </map:match>
+
+   <map:match pattern="images/**.png">
+    <map:read src="context://samples/resources/images/{1}.png" mime-type="image/png"/>
+   </map:match>
+    
+   <!-- delegate to parent sitemap 
+   <map:handle-errors/> -->
+
+  </map:pipeline>
+ </map:pipelines>
+
+</map:sitemap>
+
+<!-- end of file -->
