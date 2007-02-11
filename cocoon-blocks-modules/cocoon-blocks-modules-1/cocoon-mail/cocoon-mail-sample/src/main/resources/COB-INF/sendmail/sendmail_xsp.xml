@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:sendmail="http://apache.org/cocoon/sendmail/1.0"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+<page>
+  <resources>
+    <resource type="doc" href="userdocs/actions/sendmail-action.html">Actions</resource>
+    <resource type="doc" href="userdocs/xsp/sendmail.html">Logicsheet</resource>
+  </resources>
+
+  <title>Send EMail</title>
+
+  <sendmail:send-mail>
+    <sendmail:smtphost><xsp-request:get-parameter name="smtphost"/></sendmail:smtphost>
+    <sendmail:smtpuser><xsp-request:get-parameter name="smtpuser"/></sendmail:smtpuser>
+    <sendmail:smtppassword><xsp-request:get-parameter name="smtppassword"/></sendmail:smtppassword>
+    <sendmail:from><xsp-request:get-parameter name="from"/></sendmail:from>
+    <sendmail:to><xsp-request:get-parameter name="to"/></sendmail:to>
+    <sendmail:cc><xsp-request:get-parameter name="cc"/></sendmail:cc>
+    <sendmail:bcc><xsp-request:get-parameter name="bcc"/></sendmail:bcc>
+    <sendmail:subject><xsp-request:get-parameter name="subject"/></sendmail:subject>
+    <sendmail:body><xsp-request:get-parameter name="body"/></sendmail:body>
+    <sendmail:attachment>
+      <sendmail:param name="object"><xsp:expr>request.get("attachment")</xsp:expr></sendmail:param>
+    </sendmail:attachment>
+    <sendmail:attachment url="context://welcome.xml" mime-type="text/plain" name="foo.txt"/>
+    <sendmail:attachment url="cocoon:///"            mime-type="text/html"  name="welcome.html"/>
+
+    <sendmail:on-success>
+      <p>Email successfully sent.</p>
+    </sendmail:on-success>
+    <sendmail:on-error>
+      <p style="color:red;">
+        An error occurred: <sendmail:error-message/>
+      </p>
+    </sendmail:on-error>
+  </sendmail:send-mail>
+
+  <form>
+    <input type="hidden" name="smtphost"/>
+    <input type="hidden" name="smtpuser"/>
+    <input type="hidden" name="smtppassword"/>
+    <input type="hidden" name="from"/>
+    <input type="hidden" name="to"/>
+    <input type="hidden" name="cc"/>
+    <input type="hidden" name="bcc"/>
+    <input type="hidden" name="subject"/>
+    <input type="hidden" name="body"/>
+    <input type="hidden" name="attachment"/>
+    <input type="submit" name="retry" value="retry"/>
+  </form>
+
+</page>
+</xsp:page>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"  xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+   <!-- Import the macros that define CForms template elements -->
+   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <fi:init>
+	<script type="text/javascript">
+	  // Uncomment this to see Dojo debug
+	  // var djConfig = { isDebug: true };
+    </script>	
+  </fi:init>
+  <h4 class="samplesGroup">AJAX sample</h4>
+  <title>Cocoon suggests</title>
+  <content>
+      
+    <para>This simple example illustrates the &lt;fd:suggestion-list&gt; feature, that allows
+	      to provide suggestions on the fly to the user.
+    </para>
+
+    <ft:form-template action="continue" method="POST" ajax="true">
+      <ft:continuation-id/>
+      Choose a file in Cocoon's samples. The suggestion-list is written in JavaScript
+      (server side) and scans the samples directory with the input given.
+      <br/>
+      <ft:widget id="path" type="suggest"/>
+      <small>To view suggestions, you can either start typing, hit the down arrow on your keyboard
+      or click on the down arrow icon. To choose a suggestion, select it with the mouse, or
+      use the up/down arrow and press space. Hitting escape hides the suggestion list.</small>
+      <br/>
+      <br/>
+      <ft:widget id="ok"/>
+    </ft:form-template>
+
+    <p>
+      <a href="./">Back to Forms samples</a>
+    </p>
+  </content>
+</page>

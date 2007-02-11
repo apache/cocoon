@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:choose>
+    <jx:when test="${false}">
+      <when/>
+    </jx:when>
+    <jx:when test="${true}">
+      <when/>
+    </jx:when>
+    <jx:otherwise>
+      <otherwise/>
+    </jx:otherwise>
+  </jx:choose>
+  <jx:choose>
+    <jx:when test="${false}">
+      <when/>
+    </jx:when>
+    <jx:otherwise>
+      <otherwise/>
+    </jx:otherwise>
+  </jx:choose>
+</root>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- $Id: messages.xml 54581 2004-10-11 13:30:17Z jeremy $ -->
+<catalogue>
+
+	<!-- these keys are bound to your Index Field names -->
+	<!-- these keys are used for the Field Menu -->
+  <message key="field.abstract.label">Document Abstract</message>
+  <message key="field.answer.label">FAQ Answer</message>
+  <message key="field.any.label">Any Document field</message>
+  <message key="field.code.label">Document Code</message>
+  <message key="field.link.label">Document Link</message>
+  <message key="field.p.label">Document Paragraph</message>
+  <message key="field.person@name.label">Author Name</message>
+  <message key="field.question.label">FAQ</message>
+  <message key="field.s1@title.label">Level 1 Section Title</message>
+  <message key="field.s2@title.label">Level 2 Section Title</message>
+  <message key="field.source.label">Sample Source Code</message>
+  <message key="field.title.label">Document Title</message>
+
+	<!-- these keys are bound to your Index Field names -->
+	<!-- these keys are used to describe the queries -->
+  <message key="search.abstract.field">document abstract</message>
+  <message key="search.answer.field">faq answer</message>
+  <message key="search.any.field">any field</message>
+  <message key="search.code.field">document code</message>
+  <message key="search.link.field">document link</message>
+  <message key="search.p.field">document paragraph</message>
+  <message key="search.person@name.field">author name</message>
+  <message key="search.question.field">faq question</message>
+  <message key="search.s1@title.field">section 1 title </message>
+  <message key="search.s2@title.field">section 2 title</message>
+  <message key="search.source.field">sample source</message>
+  <message key="search.title.field">document title</message>
+  
+  <!-- advanced query -->
+  <message key="advanced.criterion.label">Criterion</message>
+  <message key="advanced.page.note">You can edit and save this query for later use.</message>
+  <message key="advanced.page.title">An advanced query</message>
+  <message key="advanced.query.label">Query</message>
+	<!-- cancel button -->
+  <message key="cancel.hint">cancel this edit</message>
+  <message key="cancel.label">Cancel</message>
+	<!-- editing criteria -->
+  <message key="criterion.add.hint">add a new criterion</message>
+  <message key="criterion.add.label">Add Criterion</message>
+  <message key="criterion.delete.hint">delete this criterion</message>
+  <message key="criterion.delete.label">-</message>
+  <message key="criterion.field.hint">which fields to search in</message>
+  <message key="criterion.field.label">Search Field</message>
+  <message key="criterion.match.hint">the way your search term is matched</message>
+  <message key="criterion.match.label">Match</message>
+  <message key="criterion.term.hint">the word or words you are searching for</message>
+  <message key="criterion.term.label">Word or Words</message>
+	<!-- displaying history -->
+  <message key="history.date.label">Time</message>
+  <message key="history.edit.hint">edit this query</message>
+  <message key="history.edit.label">Edit</message>
+  <message key="history.hits.label">Hits</message>
+  <message key="history.none">No History</message>
+  <message key="history.page.title">Query Bean : History</message>
+  <message key="history.queries.title">Queries</message>
+  <message key="history.query.label">Query</message>
+  <message key="history.search.hint">re-search this query</message>
+  <message key="history.search.label">Search</message>
+  <message key="history.title.label">Title</message>
+  <message key="history.cleared.note">Your query history has been cleared.</message>
+  <message key="history.save.label">Save</message>
+  <message key="history.save.hint">save this query in your favourites</message>
+  <!-- displaying favourites -->
+  <message key="favourites.page.title">Search Favourites</message>
+  <message key="favourites.queries.title">Queries</message>
+  <message key="favourites.date.label">Date</message>
+  <message key="favourites.query.label">Query</message>
+  <message key="favourites.title.label">Title</message>
+  <message key="favourites.search.label">Search</message>
+  <message key="favourites.search.hint">perform a search using this favourite</message>
+  <message key="favourites.delete.label">Delete</message>
+  <message key="favourites.delete.hint">permanently delete this favourite</message>
+  <message key="cancel.save.note">you cancelled your save</message>
+  <message key="history.title.label">Title</message>
+  <message key="search.fave.hint">one of your favourite searches</message>  
+	<!-- linking -->
+  <message key="link.home.hint">the query bean samples home page</message>
+  <message key="link.home.label">Home</message>
+	<!-- new queries -->
+  <message key="new.advanced.hint">perform complex multi-criteria searches</message>
+  <message key="new.advanced.label">New Advanced Query</message>
+  <message key="new.simple.hint">perform simple single-criteria searches</message>
+  <message key="new.simple.label">New Simple Query</message>
+	<!-- query paging -->
+  <message key="paging.page.hint">the page to start from</message>
+  <message key="paging.page.label">Page</message>
+  <message key="paging.size.hint">how many hits per page</message>
+  <message key="paging.size.label">Hits</message>
+  <message key="paging.total.hint">how many hits this query gave last time it was used</message>
+  <message key="paging.total.label">Results</message>
+	<!-- bool field -->
+  <message key="query.bool.hint">the way your criteria match</message>
+  <message key="query.bool.label">Search Criteria</message>
+  <!-- name field -->
+  <message key="query.name.hint">the name this query will have in the history</message>
+  <message key="query.name.label">Query Name</message>
+	<!-- these keys are bound to values in the SimpleLuceneQuery -->
+  <message key="search..bool">that match</message>
+  <message key="search.and.bool">that match all of</message>
+  <message key="search.or.bool">that match some of</message>
+	<!-- titles -->
+  <message key="search.advanced.title">Advanced Query</message>
+  <message key="search.edit.title">Edit this Query</message>
+  <message key="search.favourites.title">Favourites</message>
+  <message key="search.history.title">History</message>
+  <message key="search.clearhistory.title">Clear History</message>
+  <message key="search.new.title">New Query</message>
+  <message key="search.page.title">Query Bean</message>
+  <message key="search.query.title">Query</message>
+  <message key="search.section.title">Documents</message>
+  <message key="search.simple.title">Simple Query</message>
+  <message key="search.subject.title">Documents</message>
+	<!-- these keys are bound to values in the SimpleLuceneCriterion -->
+  <message key="search.all.match">contains all words in</message>
+  <message key="search.any.match">contains any word in</message>
+  <message key="search.like.match">is somthing like</message>
+  <message key="search.not.match">does not contain</message>
+  <message key="search.phrase.match">contains the phrase</message>
+	<!-- labels -->
+  <message key="search.criteria.label">these criteria</message>
+  <message key="search.criterion.label">this criterion</message>
+  <message key="search.next.label">next</message>
+  <message key="search.pagecount.label">Number of pages</message>
+  <message key="search.pagenumber.label">Page</message>
+  <message key="search.pagesize.label">Hits per page</message>
+  <message key="search.previous.label">previous</message>
+  <message key="search.rank.label">Rank</message>
+  <message key="search.recordcount.label">Total hits</message>
+  <message key="search.score.label">Score</message>
+  <message key="search.title.label">Title</message>
+  <message key="search.uri.label">URI</message>
+	<!-- hints -->
+  <message key="search.edit.hint">you can edit this Query or save it for future use</message>
+  <message key="search.favourites.hint">view and edit your favourite queries</message>
+  <message key="search.history.hint">view your search history</message>
+  <message key="search.new.hint">create a new query of the same type as this one</message>
+	<!-- notes -->
+  <message key="search.norecords.note">no results from your search, please try again</message>
+  <message key="simple.page.note">Enter some words and hit submit.</message>
+  <message key="simple.page.title">A simple query</message>
+	<message key="required.note">* required</message>
+	<message key="cancel.note">you cancelled your edit</message>
+	<!-- tips -->
+	<message key="query.tip.title">Query Tips</message>
+	<message key="query.tip.high">
+		<p>You can reduce the number of hits like this:
+			<ul>
+				<li>Try adding one or more criteria that match using "does not contain", to remove unwanted hits.</li>
+				<li>Try searching in specific fields instead of all fields.</li>
+				<li>Try requiring that all of your search criteria are matched, instead of just some of them.</li>
+				<li>Try increasing the number of required criteria.</li>
+				<li>Try using the match "contains the phrase" or "contains all words in".</li>
+			</ul>
+		</p>
+	</message>
+	<message key="query.tip.low">
+		<p>You can increase the number of hits like this:
+			<ul>
+				<li>Try searching in all fields rather than a specific field.</li>
+				<li>Try matching your words using "is somthing like" or "contains any word in".</li>
+				<li>Try allowing the query to only match some of your criteria, instead of all of them.</li>
+				<li>Try increasing the number of non-required criteria.</li>
+			</ul>
+		</p>
+	</message>
+	<message key="query.tip.prohibited">
+		<p>All of your criteria are matched using  "does not contain", this query will not work until you add at least one criterion that positively finds something, then the prohibiting criteria can filter hits from that one.</p>
+	</message>	
+	<!-- errors -->
+  <message key="search.error.noquery">There was no query</message>
+  <message key="search.error.nohistory">You have no history at the moment</message>
+  <message key="search.error.noindex">You need to make a Lucene Index first (click <a href="create.html">here</a> to make one)</message>
+  <message key="error.invalid.content">The content you wanted indexed did not exist, this sample indexes 'docs/xdocs', please ensure you have built Cocoon's documentation.</message>
+  
+	<!-- submit button -->
+  <message key="submit.hint">save changes and search</message>
+  <message key="submit.label">Submit</message>
+	
+</catalogue>

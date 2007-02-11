@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<menu>
+  <item title="Find Department" link="search-dept.html"/>
+  <item title="New Department" link="create-dept.html"/>
+  <item title="Find Employee" link="search-empl.html"/>
+  <item title="New Employees" link="create-empl.html"/>
+</menu>

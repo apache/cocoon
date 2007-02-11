@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+ <map:components>
+
+  <map:transformers default="xslt">    
+    <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+      <catalogues default="other">
+        <catalogue id="other" name="OtherMessages" location="messages"/>
+        <catalogue id="forms" name="FormsMessages" location="messages"/>
+      </catalogues>
+      <cache-at-startup>true</cache-at-startup>
+    </map:transformer>
+  </map:transformers>
+
+  <map:actions>
+    <map:action name="make-form" src="org.apache.cocoon.forms.acting.MakeFormAction" logger="forms"/>
+    <map:action name="init-form" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms"/>
+    <map:action name="handle-form-submit" src="org.apache.cocoon.forms.acting.HandleFormSubmitAction" logger="forms"/>
+  </map:actions>
+ </map:components>
+
+ <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+
+  <map:view from-label="content" name="pretty-content">
+   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:serialize type="html"/>
+  </map:view>
+
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
+  </map:view>
+ </map:views>
+ 
+ <map:resources>
+   <!-- this will later become a virtual transformer -->
+   <map:resource name="simple-page2html">
+     <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+       <map:parameter name="servletPath" value="{request:servletPath}"/>
+       <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+       <map:parameter name="file" value="{file}"/>
+       <map:parameter name="remove" value="{../0}"/>
+     </map:transform> 
+   </map:resource>
+ </map:resources>
+
+  <!-- indicates what flowscript to attach to this sitemap -->
+  <map:flow language="javascript">
+    <map:script src="flow/form_model_gui.js"/>
+  </map:flow>
+
+ <map:pipelines>
+   <map:pipeline>
+
+     <map:match pattern="">
+      <map:generate src="index.xml"/>
+      <map:serialize/>
+     </map:match>
+
+     <map:match pattern="*.continue">
+       <map:call continuation="{1}"/>
+     </map:match>
+
+     <map:match pattern="*-display-pipeline">
+       <!-- pipeline to show the form -->
+       <map:generate src="forms/{1}_template.xml"/>
+       <map:transform type="forms"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:call resource="simple-page2html">
+         <map:parameter name="file" value="forms/{1}_template.xml"/>
+       </map:call>
+       <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:serialize/>
+     </map:match>
+
+     <map:match pattern="*-success-pipeline.jx">
+       <map:generate type="jx" src="forms/{1}_success_jx.xml"/>
+       <map:call resource="simple-page2html">
+         <map:parameter name="file" value="forms/{1}_success_jx.xml"/>
+       </map:call>
+       <map:serialize/>
+     </map:match>
+
+     <map:match pattern="resources/**">
+       <map:read src="{0}"/>
+     </map:match>
+
+     <!--
+        | Sample building a forms-form-gui editor in forms
+        | Doubles as a showcase for class, new, struct, union widgets
+        -->
+
+     <map:match pattern="binding.flow">
+       <map:call function="handleForm">
+         <map:parameter name="function" value="binding_gui"/>
+         <map:parameter name="form-definition" value="forms/binding_model.xml"/>
+         <map:parameter name="attribute-name" value="form_binding_gui"/>
+         <map:parameter name="bindingURI" value="forms/binding_binding.xml"/>
+         <!--
+         <map:parameter name="documentURI" value="data/form_template_gui_data.xml"/>
+         -->
+         <!-- TODO: Fix edit-any-file security hole! -->
+         <!-- TODO: Fix file-name-is-not-url-encoded bug -->
+         <map:parameter name="documentURI" value="data/{request-param:file}"/>
+       </map:call>
+     </map:match>
+
+     <map:match pattern="model.flow">
+       <map:call function="handleForm">
+         <map:parameter name="function" value="model_gui"/>
+         <map:parameter name="form-definition" value="forms/model_model.xml"/>
+         <map:parameter name="attribute-name" value="form_model_gui"/>
+         <map:parameter name="bindingURI" value="forms/model_binding.xml"/>
+         <!--
+         <map:parameter name="documentURI" value="data/form_model_gui_data.xml"/>
+         -->
+         <!-- TODO: Fix edit-any-file security hole! -->
+         <!-- TODO: Fix file-name-is-not-url-encoded bug -->
+         <map:parameter name="documentURI" value="data/{request-param:file}"/>
+       </map:call>
+     </map:match>
+
+     <map:match pattern="sitemap.flow">
+       <map:call function="handleForm">
+         <map:parameter name="function" value="sitemap_gui"/>
+         <map:parameter name="form-definition" value="forms/sitemap_model.xml"/>
+         <map:parameter name="attribute-name" value="form_sitemap_gui"/>
+         <map:parameter name="bindingURI" value="forms/sitemap_binding.xml"/>
+         <!--
+         <map:parameter name="documentURI" value="data/form_template_gui_data.xml"/>
+         -->
+         <!-- TODO: Fix edit-any-file security hole! -->
+         <!-- TODO: Fix file-name-is-not-url-encoded bug -->
+         <map:parameter name="documentURI" value="data/{request-param:file}"/>
+       </map:call>
+     </map:match>
+
+     <map:match pattern="template.flow">
+       <map:call function="handleForm">
+         <map:parameter name="function" value="template_gui"/>
+         <map:parameter name="form-definition" value="forms/template_model.xml"/>
+         <map:parameter name="attribute-name" value="form_template_gui"/>
+         <map:parameter name="bindingURI" value="forms/template_binding.xml"/>
+         <!--
+         <map:parameter name="documentURI" value="data/form_template_gui_data.xml"/>
+         -->
+         <!-- TODO: Fix edit-any-file security hole! -->
+         <!-- TODO: Fix file-name-is-not-url-encoded bug -->
+         <map:parameter name="documentURI" value="data/{request-param:file}"/>
+       </map:call>
+     </map:match>
+
+     <map:match pattern="xreport.flow">
+       <map:call function="handleForm">
+         <map:parameter name="function" value="xreport_gui"/>
+         <map:parameter name="form-definition" value="forms/xreport_model.xml"/>
+         <map:parameter name="attribute-name" value="form_xreport_gui"/>
+         <map:parameter name="bindingURI" value="forms/xreport_binding.xml"/>
+         <!--
+         <map:parameter name="documentURI" value="data/form_template_gui_data.xml"/>
+         -->
+         <!-- TODO: Fix edit-any-file security hole! -->
+         <!-- TODO: Fix file-name-is-not-url-encoded bug -->
+         <map:parameter name="documentURI" value="data/{request-param:file}"/>
+       </map:call>
+     </map:match>
+
+    <map:match pattern="*">
+        <map:redirect-to uri="{1}/"/>
+    </map:match>
+
+    <map:match pattern="*/**">
+     <map:mount src="{1}/" uri-prefix="{1}"/>
+   </map:match>
+
+   </map:pipeline>
+ </map:pipelines>
+
+</map:sitemap>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<one>
+		<jx:attribute name="foo" value="bar"/>
+	</one>
+	<jx:set var="a" value="dd"/>
+	<two>
+		<jx:if test="${a == 'dd'}">
+			<jx:attribute name="second" value="twoAttr"/>
+		</jx:if> xyz </two>
+	<three foo="bar">
+		<jx:attribute name="foo2" value="bar2"/>
+		<jx:attribute name="${a}" value="${a}"/>
+		<abc>def</abc>
+	</three>
+	<nestedjx>
+		<jx:attribute name="value"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="pl_PL"/></jx:attribute>
+	</nestedjx>
+</root>
