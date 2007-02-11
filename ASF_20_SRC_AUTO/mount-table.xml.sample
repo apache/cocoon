@@ -1,0 +1,31 @@
+<mount-table>
+  <!--
+    The mount table allows to mount directories external to the Cocoon webapp without
+    changing the main sitemap. To activate the mount-table, just copy or rename this file
+    to "mount-table.xml" to see it automatically activated.
+    
+    Each mount below will direct requests starting with the given uri-prefix to the corresponding
+    sitemap. The syntax is exactly the same as the one of <map:mount>.
+    
+    The mount-table is especially useful for two purposes:
+    - for all users, to mount into Cocoon external directories (demos, prototypes, projects) without
+      having to change the main Cocoon sitemap. This allows these mounts to "survive" a update to a
+      more recent version of Cocoon.
+    
+    - for cocoon contributors, to mount the source of Cocoon examples instead of their copy placed in
+      build/webapp by the build process. This avoids many of the hassles related to editing a copy of
+      the sources, often leading to sync problems.
+  -->
+  
+  <!--
+      example: mount the woody source samples at "woody-samples/"     
+      (don't forget the / at the end of the path name)
+   -->
+  <mount uri-prefix="woody-samples/" src="../../src/blocks/woody/samples/"/>
+
+  
+  <!-- example: mount a prototype located elsewhere on the filesystem at "proto/"
+       (kept commented as the path is not likely to exist on your filesystem) -->
+  <mount uri-prefix="proto/" src="file://c:/my/projects/prototype/"/>
+  
+</mount-table>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
+"../../dtd/document-v10.dtd">
+<!--
+  <![CDATA[ CVS Version: $Id: script-action.xml,v 1.1 2003/12/11 09:23:40 huber Exp $ 
+  ]]>  
+--><document>
+  <header>
+    <title>ScriptAction in Cocoon</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person email="huber@apache.org" name="Bernhard Huber" />
+    </authors>
+    <abstract>This document describes the ScriptAction of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="ScriptAction">
+      <table>
+        <tr>
+          <td>NAME</td>
+          <td>script</td>
+        </tr>
+        <tr>
+          <td>WHAT</td>
+          <td>The <code>ScriptAction</code> component is used to executes any
+          script that can be run by the BSF.</td>
+        </tr>
+        <tr>
+          <td>TYPE</td>
+          <td>Action</td>
+        </tr>
+        <tr>
+          <td>BLOCK</td>
+          <td>bsf</td>
+        </tr>
+        <tr>
+          <td>CLASS</td>
+          <td>org.apache.cocoon.action.ScriptAction</td>
+        </tr>
+        <tr>
+          <td>SINCE</td>
+          <td>Cocoon 2.1</td>
+        </tr>
+        <tr>
+          <td>CACHEABLE</td>
+          <td>not applicable</td>
+        </tr>
+      </table>
+    </s1>
+    <s1 title="Description">
+      <p>A simple action that executes any script that can be run by the BSF
+      system. BSF supports script languages like javascript, python, etc.</p>
+    </s1>
+    <s1 title="Usage">
+      <p>This Action is used for quick prototyping of Action, realizing an
+      Action in a script language instead of java language.</p>
+      <s2 title="Sitemap pipeline examples">
+        <p>The following sample executes the <code>script action/my-action.js</code>
+        for each URI matching pattern <code>*.vm</code>. If the ScriptAction
+        succeeds, the pipeline continues, invoking the VelocityGenerator, and
+        serializing the XML stream.</p>
+        <source>&#60;map:match pattern=&#34;*.vm&#34;&#62;
+  &#60;map:action type=&#34;script&#34; src=&#34;action/my-action.js&#34;&#62;
+    &#60;map:generate type=&#34;velocity&#34; src=&#34;{1}.vm&#34;/&#62;
+    &#60;map:serialize/&#62;
+  &#60;/map:action&#62;
+&#60;/map:match&#62;
+</source>
+      </s2>
+      <s2 title="Sitemap component configuration example">
+        <p>The following sample configures an ScriptAction, naming it
+        <code>script</code>.</p>
+        <source>&#60;map:actions...
+  &#60;map:action name=&#34;script&#34;
+    src=&#34;org.apache.cocoon.acting.ScriptAction&#34;&#62; 
+    logger=&#34;sitemap.action.script&#34;/&#62;    
+    &#60;!-- optional action configuration --&#62;
+    ...
+&#60;/map:actions&#62;
+</source>
+      </s2>
+      <s2 title="Configuration">
+        <p>ScriptAction has no configuration options.</p>
+      </s2>
+      <s2 title="Setup">
+        <p>ScriptAction determines the name of the script getting executed
+        from its <code>src</code> attribute.</p>
+        <p>The language of the script file is auto-detected by the BSF system
+        from the extension of the script.
+        </p>
+        <p>The next table lists the default mapping of BSF:</p>
+        <table>
+          <tr>
+            <th>Extension</th>
+            <th>Script language</th>
+          </tr>
+          <tr>
+            <td>javascript</td>
+            <td>js</td>
+          </tr>
+          <tr>
+            <td>jacl</td>
+            <td>jacl</td>
+          </tr>
+          <tr>
+            <td>netrexx</td>
+            <td>nrx</td>
+          </tr>
+          <tr>
+            <td>java</td>
+            <td>java</td>
+          </tr>
+          <tr>
+            <td>javaclass</td>
+            <td>class</td>
+          </tr>
+          <tr>
+            <td>bml</td>
+            <td>bml</td>
+          </tr>
+          <tr>
+            <td>vbscript</td>
+            <td>vbs</td>
+          </tr>
+          <tr>
+            <td>jscript</td>
+            <td>jss</td>
+          </tr>
+          <tr>
+            <td>jscript</td>
+            <td>jss</td>
+          </tr>
+          <tr>
+            <td>perlscript</td>
+            <td>pls</td>
+          </tr>
+          <tr>
+            <td>perl</td>
+            <td>pl</td>
+          </tr>
+          <tr>
+            <td>jpython</td>
+            <td>py</td>
+          </tr>
+          <tr>
+            <td>lotusscript</td>
+            <td>lss</td>
+          </tr>
+          <tr>
+            <td>xslt</td>
+            <td>xslt</td>
+          </tr>
+          <tr>
+            <td>pnuts</td>
+            <td>pnut</td>
+          </tr>
+          <tr>
+            <td>beanbasic</td>
+            <td>bb</td>
+          </tr>
+        </table>
+        <p>ScriptAction registers following objects before invoking the
+        script:</p>
+        <table>
+          <tr>
+            <th>name</th>
+            <th>Object Typ</th>
+            <th>Comment</th>
+          </tr>
+          <tr>
+            <td>resolver</td>
+            <td>SourceResolver</td>
+            <td>Cocoon&#39;s source resolver</td>
+          </tr>
+          <tr>
+            <td>objectModel</td>
+            <td>Map</td>
+            <td>Cocoon&#39;s object model</td>
+          </tr>
+          <tr>
+            <td>parameters</td>
+            <td>Parameters</td>
+            <td>Cocoon&#39;s action parameter</td>
+          </tr>
+          <tr>
+            <td>actionMap</td>
+            <td>Map</td>
+            <td>Used for passing objects from the script back to the
+            ScriptAction, and to Cocoon&#39;s sitemap</td>
+          </tr>
+          <tr>
+            <td>logger</td>
+            <td>Logger</td>
+            <td>Cocoon&#39;s logger of this ScriptAction</td>
+          </tr>
+          <tr>
+            <td>request</td>
+            <td>Request</td>
+            <td>Request provided by the object model</td>
+          </tr>
+          <tr>
+            <td>scriptaction</td>
+            <td>Action</td>
+            <td>The instance of this ScriptAction</td>
+          </tr>
+          <tr>
+            <td>manager</td>
+            <td>Manager</td>
+            <td>Cocoon&#39;s manager of this ScriptAction</td>
+          </tr>
+        </table>
+        <p>These objects are accessible from within the script.</p>
+      </s2>
+      <s2 title="Effect on Object Model and Sitemap Parameters">
+        <p>ScriptAction checks the existence of the key <code>scriptaction-continue</code>
+        in the <code>actionMap</code>. If this key exists ScriptAction returns
+        <code>actionMap</code>, otherwise <code>null</code> is returned.</p>
+        <p>Objects available in the <code>actionMap</code> are available in
+        the sitemap.</p>
+      </s2>
+    </s1>
+    <s1 title="Bugs/Caveats">
+      <p>Using ScriptAction relies heavily on the setting of the key
+      <code>scriptaction-continue</code> in the <code>mapAction</code>.</p>
+      <p>Be aware to provide script language implementation, beside BSF implementation.
+      </p>
+    </s1>
+    <s1 title="History">
+      <p>07-24-03: initial creation</p>
+    </s1>
+    <s1 title="Copyright">
+      <p>Copyright (C) 1999-2003 The Apache Software Foundation. All rights
+      reserved.</p>
+    </s1>
+    <s1 title="See also">
+      <p><!-- Links to related components pages. -->A general documentation
+      about actions is available at <link href="../concepts/actions.html">Actions</link>.</p>
+      <p>Further Documentation about BSF is available <link
+      href="http://www-124.ibm.com/developerworks/projects/bsf">here</link>.</p>
+    </s1>
+  </body>
+</document>

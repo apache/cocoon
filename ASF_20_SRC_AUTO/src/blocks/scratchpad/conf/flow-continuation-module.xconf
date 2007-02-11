@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon/input-modules" unless="component-instance[@class='org.apache.cocoon.components.modules.input.FlowContinuationModule']">
+
+      <component-instance logger="core.modules.input" name="flow-continuation"  class="org.apache.cocoon.components.modules.input.FlowContinuationModule"/>
+
+</xconf>

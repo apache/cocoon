@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<wd:form
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0">
+
+  <wd:widgets>
+  
+    <wd:field id="anyfield" >
+      <wd:label>String - Only one, bound to various paths in the model</wd:label>
+      <wd:datatype base="string" />
+    </wd:field>
+    
+  </wd:widgets>
+  
+</wd:form>

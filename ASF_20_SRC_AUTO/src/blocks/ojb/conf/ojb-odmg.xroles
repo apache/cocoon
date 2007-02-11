@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.ojb.odmg.components.OdmgImplementation']">
+
+  <role name="org.apache.cocoon.ojb.odmg.components.OdmgImplementation" shorthand="ojb-odmg" default-class="org.apache.cocoon.ojb.odmg.components.OdmgImplementationImpl"/>
+</xroles>

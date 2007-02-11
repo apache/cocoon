@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='XML:DB']">
+
+  <group name="XML:DB">
+    <sample name="XML:DB" href="xmldb/">
+      XML database samples.
+    </sample>
+  </group>
+  
+</xsamples>

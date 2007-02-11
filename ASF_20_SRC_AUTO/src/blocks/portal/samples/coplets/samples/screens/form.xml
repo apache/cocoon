@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<!--+
+    | CVS: $Id: form.xml,v 1.1 2004/02/12 09:32:00 cziegeler Exp $
+    | Author: Carsten Ziegeler (cziegeler@apache.org)
+    +-->
+
+<page>
+    <title>Form</title>
+    <content>
+      <form method="post" action="form">
+        <para>Please enter your <strong>name</strong>: <input type="text" name="name"/></para>
+        <input type="submit" name="submit" value="Enter"/>
+      </form>
+    </content>
+</page>

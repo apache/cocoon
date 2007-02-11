@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+
+<root
+  xmlns:inc="incl-ns"
+>
+  <p>P1</p>
+  <p>P2</p>
+
+<inc-root>
+  <p>include 3</p>
+</inc-root>
+
+  <p>P3</p>
+  <p>P4</p>
+</root>

@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>Various methods to handle long lines of text</title>
+</head>
+<body>
+<h1>Various methods to handle long lines of text</h1>
+
+<p>
+Sometimes the lines inside &lt;source&gt; elements are too wide,
+which can make the resulting pages too wide to view on screen or to print.
+The width of the long source line causes the whole page layout to be that
+same width. A web page that is wider than the screen is a complete bastard to
+read - you have to scroll right and left all the time. And printing in 
+landscape orientation is not very nice either.
+(See Bugzilla report
+<a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23796">23796</a>.)
+</p>
+
+<p>
+If everyone followed code conventions for Java and XML then this
+would not happen. However, there is no way to guarantee that.
+</p>
+
+<p>
+Of course, there is the workaround solution to edit the offending source
+elements to specifically break long lines. Not good for automated solutions
+or separation of concerns.
+</p>
+
+<p>
+We need to find a way to consistently split lines that are too wide.
+Here are demonstrations of various solutions. Each one has pros and cons.
+Please help to enhance these solutions so that one can soon be implemented.
+(See <a href="#notes">Notes</a> below.)
+</p>
+
+<p>
+The following examples are deliberately extreme to ensure that the issues
+are triggered.
+</p>
+                                                                            
+<h2>Using no special handling</h2>
+<p>No special handling was done for the
+&lt;source&gt; elements. The content is wrapped with a &lt;pre&gt; element.
+Note the long right-left scrollbar.
+</p>
+<ul>
+<li>
+<a href="raw/with-word-boundaries">Long Line With Word Boundaries</a>
+</li>
+<li>
+<a href="raw/without-word-boundaries">Long Line Without Word Boundaries</a>
+</li>
+<li>
+<a href="raw/cdata-model">CDATA and deeply embedded xml content model</a>
+</li>
+<li>
+<a href="raw/cdata-model-2">CDATA and deeply embedded xml content model with long names</a>
+</li>
+</ul>
+
+<h2>Using the "split.xsl" stylesheet</h2>
+<p>All &lt;source&gt; elements had their long lines wrapped at a defined
+width (72) by the included split.xsl stylesheet. Lines with no whitespace
+(such as long URLs) are forcefully split at 72 characters.
+The content is wrapped with a &lt;pre&gt; element.
+</p>
+<p>Note: In past Cocoons this stylesheet has been reported to be a memory
+hog on certain JVMs. How does it go for you?
+</p>
+<ul>
+<li>
+<a href="split/with-word-boundaries">Long Line With Word Boundaries</a>
+</li>
+<li>
+<a href="split/without-word-boundaries">Long Line Without Word Boundaries</a>
+</li>
+<li>
+<a href="split/cdata-model">CDATA and deeply embedded xml content model</a>
+</li>
+<li>
+<a href="split/cdata-model-2">CDATA and deeply embedded xml content model with long names</a>
+</li>
+</ul>
+
+<h2>Using the "wrap2para.xsl" stylesheet</h2>
+<p>Only &lt;source&gt; elements that contain an xml content model had their
+lines handled by the included wrap2para.xsl stylesheet. It does not intend to
+address all cases of source, only type=xml source.
+Lines are each wrapped with a styled &lt;p&gt; element.
+</p>
+<ul>
+<li>
+<a href="wrap2para/cdata-model">CDATA and deeply embedded xml content model</a>
+</li>
+<li>
+<a href="wrap2para/cdata-model-2">CDATA and deeply embedded xml content model with long names</a>
+</li>
+</ul>
+
+<h2>Using the "docnbsp.xsl" stylesheet</h2>
+<p>
+Sequences of two consecutive spaces are replaced by a non-breaking space
+and a regular space.
+Each line is encased in a &lt;code&gt;&lt;br/&gt;
+This method keeps the text indentation that would be obtained with a &lt;pre&gt; 
+while still allowing line wrapping by the browser.
+This utilises the <a href="http://exslt.org/">exslt extension</a> for strings.
+</p>
+<ul>
+<li>
+<a href="nbsp/with-word-boundaries">Long Line With Word Boundaries</a>
+</li>
+<li>
+<a href="nbsp/without-word-boundaries">Long Line Without Word Boundaries</a>
+</li>
+<li>
+<a href="nbsp/cdata-model">CDATA and deeply embedded xml content model</a>
+</li>
+<li>
+<a href="nbsp/cdata-model-2">CDATA and deeply embedded xml content model with long names</a>
+</li>
+</ul>
+
+<a name="notes" />
+<h2>Other notes</h2>
+<p>
+Suggested enhancements include: using the @type attribute; "content sniff"; ...
+</p>
+
+<p>
+There may be some other solutions. Suggestions include the Chaperon Block
+and maybe the Slop Block.
+</p>
+
+<p>
+See the Bugzilla report
+(<a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=23796">23796</a>)
+and the links to the cocoon-dev and forrest-dev mail discussion.
+</p>
+
+<p>
+Some testcase documents ...
+</p>
+<ul>
+<li><a href="http://xml.apache.org/forrest/your-project.html">Using Forrest</a></li>
+<li><a href="http://cocoon.apache.org/2.1/userdocs/concepts/modules.html">Modules</a></li>
+</ul>
+
+</body>
+</html>

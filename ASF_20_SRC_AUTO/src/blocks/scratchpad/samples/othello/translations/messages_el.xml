@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CVS $Id: messages_el.xml,v 1.2 2004/02/18 22:30:17 joerg Exp $ -->
+<!-- Default English message catalogue file for cocoon2 sample webapp -->
+<catalogue xml:lang="el">
+  <message key="locale_lang">el</message>
+  <message key="docs">Τεκμη�?ίωση</message>
+  <message key="installation">Εγκατάσταση</message>
+  <message key="examples">Πα�?αδείγματα</message>
+</catalogue>
