@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../../dtd/book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon Webapps Developer Documentation" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../../index.html"/>
+    <menu-item label="Dev Guide" href="../index.html"/>
+  </menu>
+
+  <menu label="Webapps">
+    <menu-item label="Overview" href="index.html"/>
+    <menu-item label="Session Contexts" href="session.html"/>
+    <menu-item label="Authentication" href="authentication.html"/>
+    <menu-item label="Form Handling" href="../../userdocs/concepts/xmlform.html"/>
+    <menu-item label="Portal" href="portal.html"/>
+  </menu>
+
+</book>
+
+
+

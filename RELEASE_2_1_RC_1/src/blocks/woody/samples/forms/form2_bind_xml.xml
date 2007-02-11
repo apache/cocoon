@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+    | Binding template between 
+    |   - form_data file (backend)
+    |   - and form_model file
+     -->
+<wb:context 
+  xmlns:wb="http://apache.org/cocoon/woody/binding/1.0" 
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0" 
+	path="/data/wrapper/context" >
+
+  <wb:context path="info">
+  	<!-- the email value will not be saved because of the @readonly -->
+    <wb:field id="email"   path="email"         readonly="true"/>
+
+		<!-- jxpath binds to nodes as well as to attributes -->
+    <wb:field id="number" path="number/@value">
+      <!-- for non-string datatypes, a convertor must be specified. These are
+      the same convertors as can be used in form definitions, but require an
+      extra datatype attribute. Here we use the default convertor for longs. -->
+      <wd:convertor datatype="long"/>
+    </wb:field>
+
+	  <!-- one entry field in the client maps through aggregate fields -->
+    <wb:aggregate id="phone" path="phone" >
+    	<!-- to multiple fields in the XML file -->
+      <wb:field id="number" path="number" />
+      <wb:field id="zone"   path="zone"   />
+      <wb:field id="cntr"   path="@cntr"  />
+    </wb:aggregate>
+    
+  </wb:context>
+  
+  
+  <wb:field id="ipaddress" path="ipaddress">
+    <wb:on-update>
+    	<!-- if the value has changed, the attribute will be set -->
+      <wb:set-attribute name="changed" value="true"/>
+    </wb:on-update>
+  </wb:field>
+
+  <wb:field id="birthday" path="birthday">
+    <wd:convertor datatype="date" type="formatting">
+      <wd:patterns>
+        <wd:pattern>yyyy-MM-dd</wd:pattern>
+      </wd:patterns>
+    </wd:convertor>
+  </wb:field>
+
+
+  <!-- repeater requires unique identification mechanism of the row-nodes -->
+  <wb:repeater id="contacts"
+    parent-path="contacts"
+    row-path="contact"
+    unique-row-id="id"
+    unique-path="@id"
+    >
+    <!-- important note: the row-path is used inside jxpath-createPath context,
+         as a consequence it cannot have dependent children or predicates -->
+
+    <wb:on-bind>
+    	<!-- executed on updates AND right after the insert -->
+      <wb:field id="firstname" path="firstname" />
+      <wb:field id="lastname"  path="lastname"  />
+      <wb:field id="phone"     path="phone/@nr" />
+      <wb:field id="email"     path="email"     />
+    </wb:on-bind>
+
+    <wb:on-delete-row>
+    	<!-- chose on of these to test -->
+    	<!--
+      <wb:set-attribute name="row-state" value="deleted" />
+      -->
+      <wb:delete-node />
+    </wb:on-delete-row>
+
+    <wb:on-insert-row>
+      <wb:insert-node>
+      	<!-- template inserted by the binding for new rows (mapping new nodes) -->
+        <contact id="" row-state="new">
+          <firstname/><lastname/><phone nr=""/><email/>
+        </contact>      	
+      </wb:insert-node>
+    </wb:on-insert-row>
+  </wb:repeater>
+
+</wb:context>

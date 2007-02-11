@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS $Id: samples.xml,v 1.1 2003/07/06 23:27:25 coliver Exp $ -->
+
+<samples>
+
+  <group name="Back">
+   <sample name="Back" href="../">
+   Back to the samples home page.
+   </sample>
+  </group>
+
+  <group name="Flowscript">
+    <sample name="Calculator" href="calc/">
+    A simple web-based calculator that uses javascript on the server side
+    to describe the web application flow between screens in a coherent 
+    unique location and continuations to maintain state between requests.
+   </sample>
+  </group>
+  
+</samples>

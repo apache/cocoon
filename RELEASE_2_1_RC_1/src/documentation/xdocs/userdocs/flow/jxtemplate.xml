@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<document>
+	<header>
+		<title>Advanced Control Flow</title> 
+		<authors>
+			<person name="Christopher Oliver" email="coliver@apache.org" />
+		</authors>
+	</header>
+<body>
+	<s1 title="JXTemplate Generator">
+  <p>
+The JXTemplate Generator is a page template processor that allows you to inject data from Java and JavaScript objects passed by a Cocoon Flowscript into a Cocoon pipeline. It provides a set of tags (similar to the <link href="http://java.sun.com/products/jsp/jstl/">JSTL</link> core tags) that allow you to iterate over Java collections (and Java or JavaScript arrays) and to test for the presence of optional or alternate bean properties, as well as embedded expressions to specify conditions and to access the properties of objects. The <em>JX</em>Template Generator gets its name from the embedded expression languages it supports, namely <link href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</link> and <link href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>X</em>l</link>. 
+  </p>
+<p>To use the JXTemplate Generator, add a generator entry to your <link href="../concepts/sitemap.html">sitemap</link> with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXTemplateGenerator</code>, for example like this:</p>
+<source>
+&lt;map:generators&gt;
+  &lt;map:generator label="content,data" 
+      logger="sitemap.generator.jx" name="jx" 
+         src="org.apache.cocoon.generation.JXTemplateGenerator"/&gt;
+&lt;/map:generators&gt;
+</source>
+  <p/>
+         </s1>
+         <s1 title="Expression Languages">
+  <p>
+The JXTemplate Generator supports two embedded expression languages: <link href="http://jakarta.apache.org/commons/jexl">Jexl</link> and <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>. Apache <link href="http://jakarta.apache.org/commons/jexl">Jexl</link> provides an extended version of the expression language of the <link href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JSTL.html">JSTL</link>. Apache <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link> provides an interpreter of the <link href="http://www.w3.org/TR/xpath">XPath</link> expression language that can apply XPath expressions to graphs of Java objects of all kinds: JavaBeans, Maps, Servlet contexts, DOM etc, including mixtures thereof.
+ </p>
+  <p>
+ Having an embedded expression language allows a page author to access an object using a simple syntax such as
+ </p>
+<source>
+ &lt;site signOn="${accountForm.signOn}"&gt;
+ </source>
+<p>Embedded Jexl expressions are contained in <code>${}</code>.</p>
+<p>Embedded JXPath expressions are contained in <code>#{}</code>.</p>
+<p>The referenced objects may be Java Beans, DOM, JDOM, or JavaScript objects 
+from a Flowscript. In addition the following implicit objects are available as
+both JXPath and Jexl variables in a template:</p>
+<dl>
+<dt><link href="../../../api/java/org/apache/cocoon/environment/Request.html"><code>org.apache.cocoon.environment.Request</code></link><code> request</code></dt>
+<dd><br/>The current Cocoon request<br/></dd>
+ 
+<dt><br/><link href="../../../api/java/org/apache/cocoon/environment/Response.html"><code>org.apache.cocoon.environment.Response</code></link><code> response</code></dt>
+<dd><br/>The Cocoon response associated with the current request<br/></dd>
+ 
+<dt><br/><link href="../../../api/java/org/apache/cocoon/environment/Session.html"><code>org.apache.cocoon.environment.Session</code></link><code> session</code></dt>
+<dd><br/>The Cocoon session associated with the current request<br/></dd>
+ 
+<dt><br/><link href="../../../api/java/org/apache/cocoon/environment/Context.html"><code>org.apache.cocoon.environment.Context</code></link><code> context</code></dt>
+<dd><br/>The Cocoon context associated with the current request<br/></dd>
+ 
+<dt><br/><code>org.apache.avalon.framework.parameter.Parameter[]</code><code> parameters</code></dt>
+<dd><br/>Any parameters passed to the generator in the pipeline<br/></dd>
+</dl>
+<p>
+Jexl Example:</p>
+<source>
+  The content type of the current request is ${request.contentType}
+</source>
+<p>
+JXPath Example:</p>
+<source>
+  The content type of the current request is #{$request/contentType}
+</source>
+<p> 
+The current Web Continuation from the Flowscript 
+is also available as a variable named <code>continuation</code>. You would 
+typically access its <code>id</code>:</p>
+<source>
+   &lt;form action="${continuation.id}"&gt;
+</source>
+<p>You can also reach previous continuations by using the <code>getParent()</code> function:</p>
+<source>
+    &lt;form action="${continuation.getParent().id}" >
+</source>
+<p>or using an XPath expression:</p>
+<source>
+    &lt;form action="#{getParent($continuation)/id}" >
+</source>
+</s1>
+<s1 title ="Tags">
+<p>The JXTemplate Generator tags are defined in the namespace</p>
+<source>
+http://apache.org/cocoon/templates/jx/1.0
+</source>
+<s2 title ="template">
+<p>The <code>template</code> tag defines a new template:</p><source>
+   &lt;t:template xmlns:t="http://apache.org/cocoon/templates/jx/1.0"&gt;
+       body
+   &lt;/t:template&gt;
+</source>
+ <p/>
+</s2>
+<s2 title ="import"/>
+<p>The <code>import</code> tag allows you to include another template within the current template. The content of the imported template is compiled and will be executed in place of the <code>import</code> tag:</p><source>
+   &lt;import uri="URI" [context="Expression"]/&gt;
+</source><p>The Cocoon source resolver is used to resolve <code>uri</code>. If <code>context</code> is present, then its value is used as the context for evaluating the imported template, otherwise the current context is used.</p>
+<s2 title ="set">
+<p>The <code>set</code> tag creates a local alias of an object. The <code>var</code> attribute specifies the name of a variable to assign the object to. The <code>value</code> attribute specifies the object (defaults to <code>body</code> if not present):</p><source>
+   &lt;set var="Name" [value="Value"]&gt;
+       [body]
+   &lt;/set&gt;
+</source><p>If used within a <code>macro</code> definition (see below) variables created by <code>set</code> are only visible within the body of the <code>macro</code>.</p>
+<p>Jexl Example:</p>
+<source>
+&lt;set var="greeting" value="Hello ${user}"/&gt;
+The value of greeting is ${greeting}
+</source>
+<p>JXPath Example:</p>
+<source>
+&lt;set var="greeting" value="Hello #{user}"/&gt;
+The value of greeting is #{$greeting}
+</source>
+ <p/>
+</s2>
+<s2 title ="if">
+<p>The <code>if</code> tag allows the conditional execution of its body 
+according to value of its <code>test</code> attribute:</p>
+<source>
+  &lt;if test="Expression"&gt;
+      body
+  &lt;/if&gt;
+</source>
+<p>Jexl Example:</p>
+<source>
+&lt;if test="${cart.numberOfItems == 0}"&gt;
+  Your cart is empty
+&lt;/if&gt;
+</source>
+<p/>
+<p>JXPath Example:</p>
+<source>
+&lt;if test="#{cart/numberOfItems = 0}"&gt;
+  Your cart is empty
+&lt;/if&gt;
+</source>
+ <p/>
+</s2>
+<s2 title ="choose">
+<p>The <code>choose</code> tag performs conditional block execution by its 
+embedded <code>when</code> sub tags. It renders the body of the first 
+<code>when</code> tag whose <code>test</code> condition evaluates to true. 
+If none of the <code>test</code> conditions of its nested <code>when</code> tags
+evaluate to <code>true</code>, then the body of its <code>otherwise</code> 
+tag is evaluated, if present:</p>
+<source>
+ &lt;choose&gt;
+   &lt;when test="Expression"&gt;
+      body
+   &lt;/when&gt;+
+   &lt;otherwise&gt;
+      body
+   &lt;/otherwise&gt;?
+ &lt;/choose&gt;
+</source>
+<p>Jexl Example:</p>
+<source>
+&lt;choose&gt;
+  &lt;when test="${!user.loggedIn}"&gt;
+    &lt;set var="label" value="Log in"&gt;
+  &lt;/when&gt;
+  &lt;otherwise&gt;
+    &lt;set var="label" value="Log out"&gt;
+  &lt;/otherwise&gt;
+&lt;/choose&gt;
+</source>
+ <p/>
+<p>JXPath Example:</p>
+<source>
+&lt;choose&gt;
+  &lt;when test="#{not(user/loggedIn)}"&gt;
+    &lt;set var="label" value="Log in"&gt;
+  &lt;/when&gt;
+  &lt;otherwise&gt;
+    &lt;set var="label" value="Log out"&gt;
+  &lt;/otherwise&gt;
+&lt;/choose&gt;
+</source>
+ <p/>
+</s2>
+<s2 title="out">
+<p>The <code>out</code> tag evaluates an expression and outputs 
+the result of the evaluation:</p>
+<source>
+&lt;out value="Expression"/&gt;
+</source>
+<p>Jexl Example:</p>
+<source>
+&lt;out value="${cart.numberOfItems}"&gt;
+</source>
+<p>JXPath Example:</p>
+<source>
+&lt;out value="#{cart/numberOfItems}"&gt;
+</source>
+ <p/>
+</s2>
+<s2 title="forEach">
+<p>The <code>forEach</code> tag allows you to iterate over a collection 
+of objects:</p>
+<source>
+  &lt;forEach [var="Name"] [items="Expression"] [begin="NumExpr"] [end="NumExpr"] [step="NumExpr"]&gt;
+    body
+ &lt;/forEach&gt;
+</source>
+<p>The <code>items</code> attribute specifies the list of items to iterate over. The <code>var</code> attribute specifies the name of a variable to hold the current item. The <code>begin</code> attribute specifies the element to start with 
+(<code>0</code> = first item, <code>1</code> = second item, ...). 
+If unspecified it defaults to <code>0</code>. The <code>end</code> 
+attribute specifies the item to end with (<code>0</code> = first item, 
+<code>1</code> = second item, ...). If unspecified it defaults to the last item in the list. Every <code>step</code> items are
+processed (defaults to <code>1</code> if <code>step</code> is absent). Either <code>items</code> or both <code>begin</code> and <code>end</code> must be present.</p>
+<p>An alternate form of <code>forEach</code> is supported for convenience when using XPath (since you can specify the selection criteria for the collection using XPath itself):</p>
+<source>
+&lt;forEach select="XPathExpression"&gt;
+  body
+&lt;/forEach&gt;
+</source>
+<p>When using XPath expressions within <code>forEach</code> the current element is the context node and can be referenced with: 
+<code>#{.}</code></p>
+<p>Jexl Example:</p>
+<source>
+&lt;forEach var="item" items="${cart.cartItems} begin="${start}" end="${count-start}" step="1""&gt;
+   &lt;td&gt;${item.productId}&lt;/td&gt;
+&lt;/forEach&gt;
+</source>
+ <p/>
+<p>JXPath Example:</p>
+<source>
+&lt;forEach select="#{cart/cartItems[position() &amp;lt;= $count]}}&gt;
+   &lt;td&gt;#{./productId}&lt;/td&gt;
+&lt;/forEach&gt;
+</source>
+ <p/>
+</s2>
+<s2 title="macro"> 
+<p>The <code>macro</code> tag allows you define a new custom tag.</p><source>
+&lt;macro name="Name" [targetNamespace="Namespace"]&gt;
+  &lt;parameter name="Name" [optional="Boolean"] [default="Value"]/&gt;*
+  body
+
+&lt;/macro&gt;
+</source>
+ <p> For example:</p><source>
+&lt;c:macro name="d"&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/c:macro&gt;
+</source>
+<p>The tag being defined in this example is <code>&lt;d&gt;</code> and it 
+can be used like any other tag:</p><source>
+  &lt;d/&gt;
+</source>
+<p>However, when this tag is used it will be replaced with a row containing a single empty data cell.</p>
+<p> When such a tag is used, the attributes and content of the tag become available as variables in the body of the <code>macro</code>'s definition, for example:</p><source>
+&lt;c:macro name="tablerows"&gt;
+  &lt;c:parameter name="list"/&gt;
+  &lt;c:parameter name="color"/&gt;
+  &lt;c:forEach var="item" items="${list}"&gt;
+    &lt;tr&gt;&lt;td bgcolor="${color}"&gt;${item}&lt;/td&gt;&lt;/tr&gt;
+  &lt;/c:forEach&gt;
+&lt;/c:macro&gt;
+</source>
+<p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used. The content of the tag is also available as a special variable <code>${content}</code>.</p><p>Assuming you had this code in your flowscript:</p>
+   <source>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];
+   sendPage(uri, {greatlakes: greatlakes});</source>
+<p>and a template like this:</p><source>
+&lt;table&gt;
+   &lt;tablerows list="${greatlakes}" color="blue"/&gt;
+&lt;/table&gt;
+</source>
+<p>When the <code>tablerows</code> tag is used in this situation the following output would be generated:
+</p>
+ <source>
+&lt;table&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Superior&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Michigan&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Huron&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Erie&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Ontario&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+</source>
+</s2>
+</s1>
+</body>
+</document>

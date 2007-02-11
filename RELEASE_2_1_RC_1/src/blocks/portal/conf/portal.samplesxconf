@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+
+<samplesxconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.profile.ProfileManager']">
+
+ <component class="org.apache.cocoon.portal.profile.impl.AuthenticationProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Auth">
+ </component>
+
+ <!-- Renderer configuration -->
+ <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.RendererSelector">
+     <renderer name="column" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="{global:skin}styles/column.xsl"/>
+             </aspect>
+             <aspect type="composite-content">
+                 <parameter name="tag-name" value="column-layout"/>
+             </aspect>
+         </aspects>
+     </renderer>
+     <renderer name="row" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="{global:skin}styles/row.xsl"/>
+             </aspect>
+             <aspect type="composite-content">
+                 <parameter name="tag-name" value="row-layout"/>
+             </aspect>
+         </aspects>
+     </renderer>
+     <renderer name="tab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="{global:skin}styles/tab.xsl"/>
+             </aspect>
+             <aspect type="tab-content">
+                 <parameter name="tag-name" value="tab-layout"/>
+                 <parameter name="store"    value="session"/>
+             </aspect>
+         </aspects>
+     </renderer>
+     <renderer name="window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="{global:skin}styles/window.xsl"/>
+             </aspect>
+             <aspect type="window">
+                 <parameter name="tag-name" value="window"/>
+             </aspect>
+             <aspect type="coplet-removing"/>
+             <aspect type="coplet-full-screen"/>
+             <aspect type="coplet-sizing"/>
+             <aspect type="coplet-cinclude"/>
+         </aspects>
+     </renderer>
+     <renderer name="frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="frame">
+                 <parameter name="store" value="request"/>
+             </aspect>
+         </aspects>
+     </renderer>
+     <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="coplet"/>
+         </aspects>
+     </renderer>
+     <renderer name="link" class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" logger="portal"/>
+     <renderer name="decorated-frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
+         <aspects>
+            <aspect type="xslt">
+                <parameter name="style" value="{global:skin}styles/frame.xsl"/>
+            </aspect>
+            <aspect type="parameter">
+                <parameter name="tag-name" value="frame"/>
+            </aspect>
+            <aspect type="frame">
+                <parameter name="store" value="request"/>
+            </aspect>
+         </aspects>
+    </renderer>
+ </component>
+ 
+<!-- Layout factory configuration -->
+<component class="org.apache.cocoon.portal.layout.impl.DefaultLayoutFactory"
+           role="org.apache.cocoon.portal.layout.LayoutFactory">
+    <layouts>
+        <layout name="column" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+            <renderers default="column">
+                <renderer name="column"/>
+            </renderers>
+        </layout>
+        <layout name="row" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+            <renderers default="row">
+                <renderer name="row"/>
+            </renderers>
+        </layout>
+        <layout name="tab" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+            <renderers default="tab">
+                <renderer name="tab"/>
+            </renderers>
+        </layout>
+        <layout name="frame" 
+                class="org.apache.cocoon.portal.layout.impl.FrameLayout"
+                create-id="true">
+            <renderers default="frame">
+                <renderer name="frame"/>
+            </renderers>
+        </layout>
+        <layout name="coplet" 
+                class="org.apache.cocoon.portal.layout.impl.CopletLayout">
+            <renderers default="window">
+                <renderer name="window"/>
+            </renderers>
+        </layout>
+        <layout name="link"
+                class="org.apache.cocoon.portal.layout.impl.LinkLayout"
+                create-id="true">
+            <renderers default="link">
+                <renderer name="link"/>
+            </renderers>
+            <aspects>
+               <aspect name="link-layout-key"
+                       class="java.lang.String"
+                       store="session"
+                       auto-create="false">
+               </aspect>
+               <aspect name="link-layout-id"
+                       class="java.lang.String"
+                       store="session"
+                       auto-create="false">
+               </aspect>
+            </aspects>
+         </layout>
+    </layouts>
+</component>
+
+<!-- Coplet factory configuration -->
+<component class="org.apache.cocoon.portal.coplet.impl.DefaultCopletFactory"
+           role="org.apache.cocoon.portal.coplet.CopletFactory">
+    <coplets>
+        <coplet name="standard"
+                class="org.apache.cocoon.portal.coplet.CopletData">
+            <coplet-data-aspects>
+                <aspect name="sizable"
+                        class="java.lang.Boolean"
+                        store="persistent"
+                        auto-create="true"
+                        value="true"/>
+                <aspect name="mandatory"
+                        class="java.lang.Boolean"
+                        store="persistent"
+                        auto-create="true"
+                        value="false"/>
+            </coplet-data-aspects>
+            
+            <coplet-instance-data-aspects>
+                <aspect name="size"
+                        class="java.lang.Integer"
+                        store="session"
+                        auto-create="true"
+                        value="1"/>
+            </coplet-instance-data-aspects>
+        </coplet>
+    </coplets>
+</component>
+
+</samplesxconf>

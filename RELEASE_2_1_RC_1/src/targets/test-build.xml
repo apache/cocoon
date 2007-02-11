@@ -1,0 +1,48 @@
+<!-- === Test targets =========================================================== -->
+
+  <!-- Runs all tests -->
+  <target name="test" depends="junit-tests, anteater-tests, block-tests" description="Runs all tests"/>
+
+  <!-- Runs JUnit tests -->
+  <target name="junit-tests" depends="compile-tests">
+    <junit printsummary="yes" haltonfailure="yes" fork="yes">
+      <classpath refid="test.classpath"/>
+      <formatter type="plain" usefile="no" />
+      <batchtest>
+        <fileset dir="${build.test}">
+          <include name="**/*TestCase.class"/>
+          <include name="**/*Test.class" />
+          <exclude name="**/AllTest.class" />
+          <exclude name="**/*$$*Test.class" />
+          <exclude name="**/Abstract*.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Anteater tests  -->
+  <target name="anteater-tests">
+    <property name="host" value="localhost"/>
+    <property name="port" value="8888"/>
+    <property name="base" value="/"/>
+
+    <!-- FIXME: Anteater invocation is platform specific
+    <exec executable="cmd">
+      <arg line="/C C:\Java\anteater-0.9.15\bin\anteater.bat -f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+    </exec>
+    <exec executable="anteater">
+      <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+    </exec>
+    -->
+  </target>
+
+  <!-- Block tests -->
+  <target name="block-tests" depends="compile-tests, prepare-blocks">
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="tests"/>
+
+  </target>
+

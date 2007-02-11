@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" 
+	   unless="component[@class='org.apache.cocoon.caching.impl.DefaultEventRegistryImpl']">
+	<!-- The event registry which maps Cache events to Pipeline keys -->
+	<component role="org.apache.cocoon.caching.EventRegistry"
+        	   class="org.apache.cocoon.caching.impl.DefaultEventRegistryImpl"/>
+</xconf>

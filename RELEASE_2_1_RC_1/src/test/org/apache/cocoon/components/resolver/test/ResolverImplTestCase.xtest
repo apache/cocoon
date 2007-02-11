@@ -1,0 +1,120 @@
+<?xml version="1.0" ?>
+
+<!DOCTYPE testcase [
+
+<!ELEMENT testcase (annotation?,logkit,context?,roles,components)>
+
+<!-- annotation describes the testcase -->
+<!ELEMENT annotation (#PCDATA)>
+
+<!-- logkit define the logkit in use -->
+<!ELEMENT logkit (factories, targets, categories)>
+<!ELEMENT factories (factory+)>
+
+<!ELEMENT factory EMPTY>
+<!ATTLIST factory 
+  type CDATA #REQUIRED
+  class CDATA #REQUIRED
+>
+<!ELEMENT targets ANY>
+<!ELEMENT file ANY>
+<!ATTLIST file
+  id ID #REQUIRED>
+<!ELEMENT filename (#PCDATA)>
+<!ELEMENT format (#PCDATA)>
+<!ATTLIST format
+  type (extended|raw)  "extended"
+>
+<!ELEMENT categories (category+)>
+<!ELEMENT category ANY>
+<!ATTLIST category
+  name CDATA #REQUIRED
+  log-level (DEBUG|INFO|WARN|ERROR) "INFO"
+>
+<!ELEMENT log-target EMPTY>
+<!ATTLIST log-target
+  id-ref CDATA #REQUIRED
+>
+
+<!-- the context used by the components -->
+<!ELEMENT context (entry*)>
+<!ELEMENT entry EMPTY>
+<!ATTLIST entry
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED
+>
+
+<!-- the roles of the components -->
+<!ELEMENT roles (role+)>
+<!ELEMENT role (hint*)>
+<!ATTLIST role
+  name CDATA #IMPLIED
+  class CDATA #IMPLIED
+  shorthand CDATA #REQUIRED
+  default-class CDATA #REQUIRED
+>
+<!ELEMENT hint EMPTY>
+<!ATTLIST hint
+  shorthand CDATA #REQUIRED
+  class CDATA #REQUIRED
+>
+
+<!-- define components element, attributes, and its children -->
+<!ELEMENT components (resolver)>
+<!ATTLIST components 
+  logger CDATA #IMPLIED
+>
+  
+<!ELEMENT resolver (parameter*)>
+<!ATTLIST resolver 
+  logger CDATA #IMPLIED
+>
+
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED
+>
+]>
+
+
+<testcase>
+  <annotation>
+    Test Cases: Catalog Entity Resolver 
+  </annotation>
+  <logkit>
+    <factories>
+      <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
+    </factories>
+    <targets>
+       <stream id="root">
+        <stream>System.out</stream>
+        <format type="extended">
+          %7.7{priority} %5.5{time}   [%9.9{category}] (%{context}): %{message}\n%{throwable}
+        </format>
+       </stream>
+     </targets>
+     <categories>
+       <category name="test" log-level="WARN">
+         <log-target id-ref="root"/>
+       </category>
+     </categories>
+  </logkit>
+  <context>
+    <entry name="foo" value="bar"/>
+  </context>
+  <roles>
+    <role name="org.apache.excalibur.xml.EntityResolver"
+      shorthand="entity-resolver"
+      default-class="org.apache.cocoon.components.resolver.ResolverImpl">
+    </role>
+  </roles>
+
+  <!-- -->
+  <components>
+    <entity-resolver>
+      <parameter name="verbosity" value="10"/>
+      <parameter name="catalog" value="/catalog"/>
+    </entity-resolver>
+  </components>
+</testcase>

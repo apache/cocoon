@@ -1,0 +1,19 @@
+ 
+ What is left to do?
+ -------------------
+
+Tons of stuff, but here is a list of the things that I think are most important at the moment:
+
+ 1) IE compatibility. Currently linotype works only on Mozilla 1.3 or greater because it needs the Midas editor. IE has an equivalent editing mode since version 5.0. The client-side javascript was written with some portability in mind but there is a long way to go, expecially for non-standard features like image-handling/resizing and a bunch of other UI fanciness. Why should we care about IE? well, if you want to update your blog from an internet cafe', you can bet your ass they won't have mozilla 1.3 installed. that's mostly why.
+ 
+ 2) consider using slide or an alternative content repository instead of plain file system.
+ 
+ 3) write different rendering stylesheets for mozilla or IE since IE is *really* poor at CSS2 compatibility. Why? well, again, 90% of the browsers are IE and this is going to take a while to change.
+ 
+ 4) allow the ability to write essays and not only news and while you do this, considering adding pagination capabilities, also at the editing level (for example, a button that can trigger the presence of a tag that indicates page break)
+ 
+ 5) improve the ability to redeploy linotype without having to hardwire URLs around the sitemap and flowscript.
+ 
+ 6) consider adding the ability to sinchronize two different linotypes. For example, if you have one installed in your laptop and you are offline for a while, you might want to synchronize it with the one online.
+
+ 7) multi-user setup to host multiple weblogs or weblogs authored by multiple authors.

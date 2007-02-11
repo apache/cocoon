@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<xmap xpath="/sitemap/components/generators" unless="generator[@name='sourcedescription']">
+
+    <map:generator label="content"
+                   logger="sitemap.generator.sourcedescription"
+                   name="sourcedescription"
+                   src="org.apache.cocoon.generation.SourceDescriptionGenerator"/>
+
+    <map:generator label="content"
+                   logger="sitemap.generator.principallist"
+                   name="principallist"
+                   src="org.apache.cocoon.generation.PrincipalListGenerator"/>
+</xmap>

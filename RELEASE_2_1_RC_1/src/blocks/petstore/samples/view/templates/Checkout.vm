@@ -1,0 +1,64 @@
+#parse("view/templates/IncludeTop.vm")
+
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr><td valign="top" width="20%" align="left">
+<table align="left" bgcolor="#008800" border="0" cellspacing="2" cellpadding="2">
+<tr><td bgcolor="#FFFF88">
+<a href="viewCart.do"><b><font color="BLACK" size="2">&lt;&lt; Shopping Cart</font></b></a>
+</td></tr>
+</table>
+</td>
+
+<td valign="top" align="center">
+<h2 align="center">Checkout Summary</h2>
+
+<table align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="5">
+  <tr bgcolor="#cccccc">  <td><b>Item ID</b></td>  <td><b>Product ID</b></td>  <td><b>Description</b></td>  <td><b>Quantity</b></td>  <td><b>List Price</b></td>  </tr>
+
+#foreach ($cartItem in $cartForm.cart.cartItems) 
+  <tr bgcolor="#FFFF88">
+  <td><b>
+
+ <a href="viewItem.do?itemId=$cartItem.item.itemId">
+ $cartItem.item.itemId</a></b></td>
+  <td>$cartItem.item.productId</td>
+  <td>
+	$!cartItem.item.attr1
+	$!cartItem.item.attr2
+	$!cartItem.item.attr3
+	$!cartItem.item.attr4
+	$!cartItem.item.attr5
+	$!cartItem.item.product.name
+   </td>
+  <td align="center">
+  $cartItem.quantity.intValue()
+  </td>
+  <td align="right">$fmt.formatNumber($cartItem.item.listPrice, '$#,##0.00')</td>
+  </tr>
+#end
+<tr bgcolor="#FFFF88">
+<td colspan="5" align="right">
+
+<b>Sub Total: $fmt.formatNumber($cartForm.cart.subTotal, '$#,##0.00')</b><br />
+
+</td>
+</tr>
+</table>
+<br />
+<center><a href="${continuation.id}.kont"><img border="0" src="images/button_continue.gif" /></a></center>
+</td>
+
+
+<td valign="top" width="20%" align="right">
+
+</td>
+
+</tr>
+</table>
+
+#parse("view/templates/IncludeBottom.vm")
+
+
+
+

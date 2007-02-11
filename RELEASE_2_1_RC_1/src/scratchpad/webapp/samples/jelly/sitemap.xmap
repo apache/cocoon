@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<!--
+  CVS $Id: sitemap.xmap,v 1.2 2003/03/17 13:25:07 stefano Exp $
+  
+  Jelly Sample
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components>
+    <map:generators default="file">
+        <map:generator name="jelly" src="org.apache.cocoon.generation.JellyGenerator"/>
+    </map:generators>
+    <map:transformers default="xslt"/>
+    <map:readers default="resource"/>
+    <map:serializers default="html"/>
+    <map:matchers default="wildcard"/>
+    <map:selectors default="browser"/>
+  </map:components>
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="test1"/>
+      </map:match>
+ 
+      <map:match pattern="*">
+        <map:generate src="{1}.xml" type="jelly">
+           <map:parameter name="name" value="Cocoon Jelly"/>
+           <map:parameter name="background" value="#003366"/>
+           <map:parameter name="hobbies" value="Reading"/>
+        </map:generate>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>
+

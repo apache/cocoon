@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+
+    <site>
+        <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
+            <welcome>
+<!-- doesn't work
+                <jpath:if test="accountForm/signOn = 'false'">
+                    <firstName><jpath:value-of select="accountForm/account/firstName"/></firstName>
+                </jpath:if>
+-->         
+                <menu>
+                    <jpath:for-each select="categoryList" >
+                        <category>
+                            <xsp:attribute name="name"><jpath:value-of select="name"/></xsp:attribute>
+                            <xsp:attribute name="id"><jpath:value-of select="catId"/></xsp:attribute>
+                        </category>
+                    </jpath:for-each>
+                </menu>
+            </welcome>
+    </site>
+
+</xsp:page>
+
+
+
+

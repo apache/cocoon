@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="profiler">
+
+  <!-- Profiler:
+    The profiler facilitates the gathering of statistics about timings of
+    different steps of pipelines. Profiler consists of several components:
+     profiling pipeline and profiler generator
+    which are used to generate the profile report. You need to enable all of
+    these components to use profiler.
+    -->
+  <profiler results="10"/>
+</xconf>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<xmap xpath="/sitemap/components/readers"
+      unless="reader[@name='jsp']">
+    <map:reader name="jsp" src="org.apache.cocoon.reading.JSPReader"/>
+</xmap>

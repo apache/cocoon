@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<!--+
+    | Authentiction block samples sitemap.
+    |
+    | CVS $Id: sitemap.xmap,v 1.5 2003/07/29 03:15:45 vgritsenko Exp $
+    +-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Pipelines ================================= -->
+  <map:pipelines>
+    <map:component-configurations>
+      <authentication-manager>
+        <handlers>
+          <handler name="demohandler">
+            <redirect-to uri="cocoon:/login"/>
+            <authentication uri="cocoon:raw:/authenticate"/>
+          </handler>
+        </handlers>
+      </authentication-manager>
+    </map:component-configurations>
+
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="login"/>
+      </map:match>
+
+      <!-- ================= -->
+      <!-- Simple login page -->
+      <!-- ================= -->
+      <map:match pattern="login">
+        <!-- if we are already logged in, redirect to the protected document -->
+        <map:act type="auth-loggedIn">
+          <map:parameter name="handler" value="demohandler"/> 
+          <map:redirect-to uri="protected"/>
+        </map:act> 
+        <map:generate src="docs/login.xml"/>
+        <map:transform src="stylesheets/simple-page2html.xsl"/>
+        <map:transform type="encodeURL"/>
+        <map:serialize/>
+      </map:match>
+
+      <!-- ========================================= -->
+      <!-- Form target which performs auth service   -->
+      <!-- ========================================= -->
+      <map:match pattern="do-login">
+        <!-- try to login -->
+        <map:act type="auth-login">
+          <map:parameter name="handler" value="demohandler"/>
+          <map:parameter name="parameter_name" value="{request-param:username}"/>
+          <map:redirect-to uri="protected"/>
+        </map:act>
+        <!-- something was wrong, try it again -->
+        <map:redirect-to uri="login"/>
+      </map:match>
+
+      <!-- ================ -->
+      <!-- Protected area   -->
+      <!-- ================ -->
+      <map:match pattern="protected">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="demohandler"/> 
+
+          <map:generate src="docs/protected.xml"/>
+          <map:transform type="session"/>
+          <map:transform src="stylesheets/simple-page2html.xsl"/>
+          <map:transform type="encodeURL"/>
+          <map:serialize/>
+        </map:act>
+        <!-- something was wrong, redirect to login page -->
+        <map:redirect-to uri="login"/>
+      </map:match>
+
+      <!-- ========================================= -->
+      <!-- Logout link which invalidates the session -->
+      <!-- ========================================= -->
+      <map:match pattern="do-logout">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="demohandler"/> 
+
+          <map:act type="auth-logout"/>
+        </map:act>
+        <map:redirect-to uri="login"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline internal-only="true">
+      <!-- This is the authentication respource -->
+      <map:match pattern="authenticate">
+        <map:generate src="docs/userlist.xml"/>
+        <map:transform src="stylesheets/authenticate.xsl">
+          <map:parameter name="use-request-parameters" value="true"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+  </map:pipelines>
+</map:sitemap>
