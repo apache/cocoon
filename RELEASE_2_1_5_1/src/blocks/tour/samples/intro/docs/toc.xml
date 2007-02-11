@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- supersonic tour: table of contents -->
+
+<toc>
+    <copyright>
+        <line>Copyright 1999-2004 The Apache Software Foundation</line>
+    </copyright>
+
+    <toc-section name="Introduction">
+        <toc-item id="toc" name="Supersonic Tour of Apache Cocoon" href="intro/docs/index"/>
+        <toc-item name="What is Cocoon" href="intro/docs/what-is-cocoon"/>
+        <toc-item name="Use cases" href="intro/docs/use-cases"/>
+        <toc-item name="Facts" href="intro/docs/facts"/>
+        <toc-item name="Resources" href="intro/docs/resources"/>
+        <toc-item name="Business layer options" href="intro/docs/bizlayer"/>
+    </toc-section>
+
+    <toc-section name="Pipelines">
+        <toc-item name="Pipelines overview" href="pipelines/docs/index"/>
+        <toc-item name="Basic pipelines" href="pipelines/docs/basic-pipelines"/>
+        <toc-item name="Generating graphics" href="pipelines/docs/graphics"/>
+        <toc-item name="XML news source" href="pipelines/docs/xmlnews"/>
+    </toc-section>
+
+    <toc-section name="Multi-channel publishing">
+        <toc-item name="Output formats" href="multi-channel/docs/formats"/>
+        <toc-item name="PDF example" href="multi-channel/docs/pdf"/>
+    </toc-section>
+
+    <toc-section name="The Flow subsystem">
+        <toc-item name="Flow examples" href="flow/docs/index"/>
+        <toc-item name="Number guessing game" href="flow/docs/number-guess"/>
+        <toc-item name="Multi-page form" href="flow/docs/multi-page"/>
+    </toc-section>
+
+    <toc-section name="Cocoon Forms sample application">
+        <toc-item name="The Bean Editor application" href="bean-editor/docs/index"/>
+        <toc-item name="Java beans" href="bean-editor/docs/javabeans"/>
+        <toc-item name="Tasks list" href="bean-editor/docs/tasklist"/>
+        <toc-item name="Single task" href="bean-editor/docs/singletask"/>
+        <toc-item name="Forms" href="bean-editor/docs/forms"/>
+        <toc-item name="Flowscript" href="bean-editor/docs/flowscript"/>
+    </toc-section>
+
+</toc>

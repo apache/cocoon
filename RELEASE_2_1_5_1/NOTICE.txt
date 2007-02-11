@@ -1,0 +1,8 @@
+This product includes software developed by
+The Apache Software Foundation (http://www.apache.org/).
+
+It consists of voluntary contributions made by many individuals
+on behalf of the Apache Software Foundation. Please visit the
+project homepage (http://cocoon.apache.org) for more information.
+
+Cocoon was originally created by Stefano Mazzocchi <stefano@apache.org>.

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- sitemap for flow examples -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+    <!-- make sure we have the required components -->
+    <map:components>
+        <map:generators id="generators" default="file">
+            <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator" label="content" logger="sitemap.generator.jx"/>
+        </map:generators>
+    </map:components>
+
+    <!-- declare flowscript code files -->
+    <map:flow id="flow" language="javascript">
+        <map:script src="number-guess/guess-number.js"/>
+        <map:script src="multi-page/multi-page.js"/>
+    </map:flow>
+
+    <!-- reusable parts of pipelines -->
+    <map:resources>
+        <map:resource id="html" name="html">
+            <map:transform src="../intro/presentation/page2html.xsl"/>
+            <map:serialize type="html"/>
+        </map:resource>
+    </map:resources>
+
+    <!-- pipelines -->
+    <map:pipelines>
+        <map:pipeline>
+            <!-- flowscript startup with optional parameter -->
+            <map:match pattern="*/start*-*">
+                <map:call function="public_start{2}">
+                    <map:parameter name="maxValue" value="{3}"/>
+                </map:call>
+            </map:match>
+
+            <!-- flowscript startup -->
+            <map:match id="start" pattern="*/start*">
+                <map:call function="public_start{2}">
+                    <map:parameter name="maxValue" value="10"/>
+                </map:call>
+            </map:match>
+
+            <!-- handle continuations -->
+            <map:match id="continue" pattern="**/*.continue">
+              <map:call continuation="{2}"/>
+            </map:match>
+
+            <!-- JXtemplate views -->
+            <map:match id="views" pattern="*/views/*">
+                <map:generate src="{1}/{2}.xml" type="file"/>
+                <map:transform type="jx"/>
+                <map:call resource="html"/>
+            </map:match>
+
+        </map:pipeline>
+    </map:pipelines>
+
+</map:sitemap>

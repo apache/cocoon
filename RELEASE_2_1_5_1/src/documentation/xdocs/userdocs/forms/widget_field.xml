@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: field widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Concept">
+      <p>The field widget is the most common widget. It is used both for
+      text boxes or selection lists. It can be associated with different
+      datatypes such as string, long or date to ask for different types of data.</p>
+
+      <figure src="images/forms_field_datatype_relation.png" alt="Diagram showing the associations between field, datatype, convertor, selection list and validators."/>
+
+      <s2 title="Datatypes">
+        <p>A datatype represents a certain type of data, such as a
+        string, integer, decimal or date. Each datatype matches to a certain
+        Java class. If you associate a field widget with a datatype, its
+        setValue(Object) and getValue() methods will take, respectively
+        return objects that are instances of that Java class (or subclasses
+        thereof).</p>
+
+        <p>Each datatype is associated with a <strong>convertor</strong>.
+        The task of the convertor is to convert from string representation
+        to object representation, and vice versa.</p>
+
+        <p>The string to object conversion usually happens when converting
+        the value entered by the user to an object. This process can
+        fail if the user entered an incorrect string, for example
+        <code>abc</code> when a number is required. In this case
+        an appropriate validation error will be set on the widget.
+        String to object conversion also happens when parsing data
+        in selection lists (if the selection list is retrieved as XML)
+        and can also be used as part of the <link href="binding.html">binding</link>.</p>
+
+        <p>The object to string conversion happens when the state
+        of the widget is spit out as XML, this is mostly when injecting
+        the widget XML in the publishing pipeline.</p>
+
+        <p>By having a field widget associated with a datatype, you can be sure
+        that, after successful validation of the widget, retrieving the value
+        of the widget will give you an object of the correct type.</p>
+
+        <p>The available datatypes and their respective convertors are
+        documented in a <link href="datatypes.html">separate document</link>.</p>
+      </s2>
+
+      <s2 title="Selection lists">
+        <p>A field widget can furthermore be associated with a selection list.
+        This makes that the field widget could be rendered either as a textbox
+        or a list, depending on whether its datatype has a selection list.
+        The selection list is related with the datatype: the values in
+        the selection list should be of the same type as the datatype.</p>
+
+        <p>Selection list data can be specified directly in the form definition
+        (for short, unchanging lists), retrieved from external sources (i.e.
+        a Cocoon pipeline), or pulled from an oject structure. Full details on
+        selection lists are also in a <link href="datatypes.html">separate document</link>.</p>
+      </s2>
+
+      <s2 title="Conclusion">
+        <p>If we wouldn't make these datatype and selection list associations,
+        we would need to create specific widgets for each possible combination:
+        StringField, LongField, DateField, StringSelectionList, LongSelectionList, ...</p>
+      </s2>
+    </s1>
+
+    <s1 title="Configuration">
+      <p>Configuration example:</p>
+
+      <source><![CDATA[<fd:field id="..." required="true|false">
+  <fd:label>...</fd:label>
+  <fd:hint>...</fd:hint>
+  <fd:help>...</fd:help>
+  <fd:datatype base="...">
+     [...]
+  </fd:datatype>
+  <fd:selection-list .../>
+  <fd:validation>
+     [...]
+  </fd:validation>
+  <fd:on-value-changed>
+     [...]
+  </fd:on-value-changed>
+</fd:field>]]></source>
+
+      <p>The field element takes a required <strong>id</strong> attribute.
+      This id should be unique among all widgets in the same container (i.e. inside
+      the same fd:widgets element).</p>
+
+      <p>The <strong>required</strong> attribute is optional, by default it is false.
+      It indicates whether this field is required. This is a static property of the
+      widget. If you want the field to be "conditionally required", then set this
+      to false and use custom validation logic to check the requiredness of the field.</p>
+
+      <p>The <strong>fd:label</strong> element contains the label for this widget.
+      This element is optional. It can contain mixed content. For internationalised
+      labels, use i18n-tags in combination with Cocoon's I18nTransformer.</p>
+
+      <p>The <strong>fd:hint</strong> element contains a hint for the form control of this widget.
+      This element is optional. It can contain a hint about the input control.
+      For internationalised labels, use i18n-tags in combination with Cocoon's I18nTransformer.</p>
+
+      <p>The <strong>fd:help</strong> element contains more help for the form control of this widget.
+      This element is optional. It can contain text help about the input control.
+      For internationalised labels, use i18n-tags in combination with Cocoon's I18nTransformer.</p>
+
+      <p>The <strong>fd:datatype</strong> element indicates the datatype for
+      this field. This element is required. The base attribute specifies
+      on which built-in type this datatype should be based. The contents
+      of the fd:datatype element can contain further configuration
+      information for the datatype. The possible datatypes and their
+      configuration options are described <link href="datatypes.html">over here</link>.</p>
+
+      <p>The <strong>fd:selection-list</strong> element is used to associate
+      a selection list with this field. See <link href="datatypes.html">Datatypes</link>
+      for more details.</p>
+
+      <p>The <strong>fd:validation</strong> element specifies widget validators.
+      See <link href="validation.html">Validation</link> for more details.</p>
+
+      <p>The <strong>fd:on-value-changed</strong> element specifies event
+      handlers to be executed in case the value of this field changes.
+      See also <link href="eventhandling.html">Event Handling</link>. The interface to be implemented
+      for Java event listeners is <code>org.apache.cocoon.forms.event.ValueChangedListener</code>.
+      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ValueChangedEvent</code>.</p>
+
+      <p><strong>Note:</strong> Events used in &lt;fd:on-value-changed&gt;
+      require that the form instance is stored serverside (because otherwise
+      CForms doesn't know what the previous values of the fields were).
+      This is automatically the case when you use flowscript. If you don't use
+      flowscript you could store the form instance in e.g. the session.</p>
+    </s1>
+  </body>
+</document>

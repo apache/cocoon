@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="redirect-test" default="redirect-test">
+
+  <group id="default">
+    <property name="usetidy" value="false"/>
+  </group>
+
+  <target name="redirect-test">
+    <property name="redirect-test" value="${anteater.env.cocoon}/samples/test/redirect"/>
+    
+    <httpRequest href="${redirect-test}/redirect-to-from-sitemap">
+      <match>
+        <responseCode value="302"/>
+      </match>
+    </httpRequest>
+    
+    <httpRequest href="${redirect-test}/redirect-to-from-flow">
+      <match>
+        <responseCode value="302"/>
+      </match>
+    </httpRequest>
+    
+    <httpRequest href="${redirect-test}/send-status">
+      <match>
+        <responseCode value="204"/>
+      </match>
+    </httpRequest>
+    
+    <httpRequest href="${redirect-test}/send-page">
+      <match>
+        <responseCode value="200"/>
+      </match>
+    </httpRequest>
+    
+    <httpRequest href="${redirect-test}/donothing-from-sitemap">
+      <match>
+        <responseCode value="404"/>
+      </match>
+    </httpRequest>
+    
+    <httpRequest href="${redirect-test}/donothing-from-flow">
+      <match>
+        <responseCode value="404"/>
+      </match>
+    </httpRequest>
+    
+  </target>
+</project>

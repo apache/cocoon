@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <header>
+    <title>The persistent cache under Apache Cocoon</title>
+    <version></version>
+    <type>Technical document</type>
+    <authors><person name="Gerhard Froehlich" email="g-froehlich@gmx.de"/>
+    </authors>
+    <abstract>This document explains how the persistent cache under 
+    Cocoon operates.</abstract>
+  </header>
+  <body>
+  <s1 title="Goal">
+    <p>This document explains how the persistent cache under 
+    Cocoon operates.</p>
+  </s1>
+  <s1 title="Normal filesystem persistence:">
+  <p>When you configure this opportunity, then the Cocoon objects will be ordinarily
+  serialized to a specified directory. This method is okay for a small number
+  of objects and if your OS can handle long filenames. Some Windows OS
+  have problems when the filenames are very long.</p>
+  </s1>  
+  <s1 title="Jisp based persistence:">
+  <p>The aim of the <link href="http://www.coyotegulch.com/jisp/index.html">Jisp
+  based</link> persistence is to provide a more scalable persistence. The objects 
+  are stored in an indexed file, which uses a B-Tree alghorithm to store the objects. 
+  This is a more elegant and fast solution, especially when you need to handle many
+  objects.</p>
+  </s1>
+  <s1 title="Configuration:">
+  <source><![CDATA[
+ <persistent-store logger="core.store.persistent">
+    <!-- Configuration goes here -->
+ </persistent-store>]]>
+  </source> 
+  <p>Please refer to <code>cocoon.xconf</code> file for further configuration
+  explanation.</p>
+  </s1>
+  </body>
+</document>

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<files>
+  <file name="*.{js,html,cgi,css}" />
+</files>
+

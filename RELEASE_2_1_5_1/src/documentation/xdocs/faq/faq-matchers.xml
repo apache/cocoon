@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE faqs PUBLIC "-//APACHE//DTD FAQ V1.0//EN" "faq-v10.dtd">
+
+<faqs title="Cocoon Sitemap Matcher FAQs">
+
+<faq>
+ <question>
+  What is a matcher?
+ </question>
+
+ <answer>
+  <p>
+A matcher is a core sitemap component of Cocoon. Matchers are used to determine the flow, order, and components involved in request processing. Matchers typically contain a generator and a serializer. They may redirect requests to other pipelines or call other sitemap resources. Matchers may also be nested with other matchers.
+  </p>
+  <p>
+Matchers are executed during pipeline setup. They determine which pipeline will process a URI request. Most typically, the match is based on the requested URI string. However, a number of other matchers exist, for example, Session and Cookie matchers. 
+  </p>
+  <p>
+In the sitemap file, each matcher has a unique name which is mapped to a java class. One matcher name must be declared as the default matcher. Each matcher may have additional configuration information specified in child elements.
+  </p>
+  <p>
+ For more conceptual information about matchers see <link href="../userdocs/concepts/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>. For detailed descriptions about all of the available Cocoon matchers, see the user's guide document <link href="../userdocs/matchers/matchers.html">Matchers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
+  </p>
+</answer>
+
+</faq>
+
+<faq>
+ <question>
+  What is the difference between a selector and a matcher?
+ </question>
+
+ <answer>
+  <p>
+Both matchers and selectors can be used to determine the flow, order, and components involved in request processing. Their differences include the complexity of the decisions they can make about processing as well as the values they return to the sitemap. For a more detailed discussion of their similarities and differences, see <link href="../userdocs/concepts/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>.
+  </p>
+
+</answer>
+
+</faq>
+
+
+
+
+</faqs>

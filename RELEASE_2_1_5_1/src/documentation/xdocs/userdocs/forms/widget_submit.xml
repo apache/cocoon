@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: submit widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Concept">
+      <p>The submit widget, usually rendered as a button, is used by
+      the user to submit the form. The submit widget is a special kind
+      of action widget, thus also has the same functionality as an action
+      widget, however the submit widget does trigger validation and its
+      purpose is to end the form.</p>
+
+      <p>You don't need to use a submit widget to submit a form. For example,
+      in your HTML template you can simply put:</p>
+
+      <source><![CDATA[<input type="submit"/>]]></source>
+
+      <p>to be able to submit the form. Using a submit widget enables
+      some extra functionality. You can control whether validation
+      should be performed. You can put multiple submit widgets on
+      a form and add different event handlers to them.</p>
+
+      <p>While a submit widget has the explicit purpose to submit a
+      form, a form can also be submitted by other widgets. One example
+      is the already mentioned <link href="widget_action.html">action
+      widget</link>. It is however also possible to automatically submit
+      a form when a widget changes its value, so that server-side event
+      value-changed event listeners can be triggerd. This can be specified
+      using <code>&lt;fi:styling submit-on-change="true"/&gt;</code> in
+      the form template (see <link href="xslt.html">XSLT</link> for more
+      information on the <code>fi:styling</code> directive).</p>
+
+      <p>To know which widget caused the form to be submitted, use the
+      method <code>getSubmitWidget</code> of the <code>Form</code> object.</p>
+    </s1>
+
+    <s1 title="Configuration">
+      <source><![CDATA[<fd:submit id="..." action-command="..." validate="true|false">
+  <fd:label>...</fd:label>
+  <fd:help>...</fd:help>
+  <fd:hint>...</fd:hint>
+  <fd:on-action>
+    ...
+  </fd:on-action>
+</fd:submit>]]></source>
+
+      <p>The optional attribute validate, which is true by default, can
+      be used to disable validation. The difference between an action
+      widget and a submit widget with validate="false" is that a submit
+      widget with validate="false" will end form processing, thus the form
+      will not be redisplayed. Ultimately, it is of course the controller
+      who decides this, but the forms hint towards the controller is that
+      it shouldn't be redisplayed, and this is exactly what the flowscript
+      integration library does.</p>
+    </s1>
+  </body>
+</document>

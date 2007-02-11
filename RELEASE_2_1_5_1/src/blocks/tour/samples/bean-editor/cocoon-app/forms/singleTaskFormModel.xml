@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Cocoon Forms model used to edit a TaskBean -->
+
+<fd:form
+    id="form"
+    xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+    >
+
+    <fd:widgets>
+
+        <fd:output id="taskId" readonly="true" required="true">
+            <fd:label>Task ID</fd:label>
+            <fd:datatype base="integer"/>
+        </fd:output>
+
+        <fd:field id="taskName" required="true">
+            <fd:label>Task name</fd:label>
+            <fd:datatype base="string"/>
+        </fd:field>
+
+        <fd:field id="assignedTo" required="true">
+            <fd:label>Assigned to</fd:label>
+            <fd:datatype base="string"/>
+        </fd:field>
+
+        <!-- a TaskBean contains multiple TaskBeanComments -->
+        <fd:repeater id="comments">
+            <fd:label>Comments</fd:label>
+
+            <fd:widgets>
+                <!-- Forms requires a unique ID in repeaters -->
+                <fd:output id="id">
+                    <fd:datatype base="string"/>
+                </fd:output>
+
+                <!-- Make comments selectable for deletion -->
+                <fd:booleanfield id="select">
+                  <fd:label>Select</fd:label>
+                </fd:booleanfield>
+
+                <!-- Editable comment date -->
+                <fd:field id="date" required="true">
+                    <fd:label>Date</fd:label>
+                    <fd:datatype base="date">
+                      <fd:convertor>
+                        <fd:patterns>
+                          <fd:pattern>dd/MM/yyyy</fd:pattern>
+                        </fd:patterns>
+                      </fd:convertor>
+                    </fd:datatype>
+                </fd:field>
+
+                <!-- Editable comment with validation example -->
+                <fd:field id="comment" required="true">
+                    <fd:label>Comment</fd:label>
+                    <fd:datatype base="string">
+                        <fd:validation>
+                            <fd:length min="5" max="150">
+                                 <fd:failmessage>The comment length must be between 5 and 150 characters</fd:failmessage>
+                            </fd:length>
+                        </fd:validation>
+                    </fd:datatype>
+                </fd:field>
+
+            </fd:widgets>
+        </fd:repeater>
+
+        <!-- Forms action: add a new comment -->
+        <fd:repeater-action id="addcomment" action-command="add-row" repeater="comments">
+          <fd:label>Add comment</fd:label>
+        </fd:repeater-action>
+
+        <!-- Forms action: remove a comment -->
+        <fd:repeater-action id="removecomment" action-command="delete-rows" repeater="comments" select="select">
+          <fd:label>Remove selected comments</fd:label>
+        </fd:repeater-action>
+
+    </fd:widgets>
+
+</fd:form>

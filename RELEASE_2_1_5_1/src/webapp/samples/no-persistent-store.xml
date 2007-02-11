@@ -1,0 +1,4 @@
+<information>
+  You have no persistent store configured (This is no error if you're using
+  JCS or EHCache for your store).
+</information>

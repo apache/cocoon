@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | CForms aggregate sample binding. Represent values of two aggregate
+    | fields as multiple input fields.
+    |
+    | CVS $Id: template-split.xml,v 1.4 2004/03/09 13:54:23 reinhard Exp $
+    +-->
+
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0" 
+      xmlns:wi="http://apache.org/cocoon/woody/instance/1.0" 
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <title>Aggregate Field: Split</title>
+  <content>
+    <p>
+      On this form, you can enter phone and date, each as splitted on several fields.
+    </p>
+    <wt:form-template action="${cocoon.continuation.id}.continue" method="POST">
+      <table align="center">
+        <tr>
+          <th style="border-bottom: solid 1px black;">Explanation</th>
+          <th style="border-bottom: solid 1px black;">Form</th>
+          <th style="border-bottom: solid 1px black;">Data Model</th>
+        </tr>
+        <tr>
+          <td>
+            <p>
+              When you click submit, following happens:
+              <ul>
+                <li>Input values are validated</li>
+                <li>Input values are aggregated into one value</li>
+                <li>Each value is validated</li>
+                <li>Each value saved into the backend data model</li>
+              </ul>
+            </p>
+            <p>
+              Switch to another aggregation example:
+            </p>
+            <wt:widget id="switch"/>
+          </td>
+          <td>
+            <wi:group>
+              <wi:styling layout="columns"/>
+              <wi:items>
+                <wt:aggregate-widget id="phone">
+                  <wt:widget id="part1"/>
+                  <wt:widget id="part2"/>
+                  <wt:widget id="part3"/>
+                  <wt:widget id="part4"/>
+                </wt:aggregate-widget>
+
+                <wt:aggregate-widget id="date">
+                  <wt:widget id="day"/>
+                  <wt:widget id="month"/>
+                  <wt:widget id="year"/>
+                </wt:aggregate-widget>
+              </wi:items>
+            </wi:group>
+
+            <input type="submit" value="Submit"/>
+          </td>
+          <td>
+            <table cellpadding="3">
+              <tr>
+                <td>Phone</td><th>#{phone}</th>
+              </tr>
+              <tr>
+                <td>Date</td><th>#{date}</th>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </wt:form-template>
+  </content>
+</page>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This catalogue file contains translations for built-in Woody messages. -->
+<catalogue xml:lang="nl">
+  <message key="general.field-required">Dit veld moet ingevuld zijn.</message>
+  <message key="datatype.conversion-failed">Ongeldig {0}.</message>
+  <message key="datatype.long">integer getal</message>
+  <message key="datatype.date">datum</message>
+  <message key="validation.string.exact-length">Dit veld moet precies {0} tekens lang zijn.</message>
+  <message key="validation.string.range-length">Het aantal tekens moet tussen de {0} en {1} liggen.</message>
+  <message key="validation.string.min-length">Dit veld moet minimaal {0} tekens lang zijn.</message>
+  <message key="validation.string.max-length">Dit veld mag maximaal {0} tekens lang zijn.</message>
+  <message key="validation.string.regexp">De waarde komt niet overeen met deze reg. exp.: {0}</message>
+  <message key="validation.string.invalidemail">Dit is geen geldig email adres</message>
+  <message key="validation.array.exact-valuecount">Kies precies {0} elementen.</message>
+  <message key="validation.array.range-valuecount">Kies tussen de {0} en {1} elementen.</message>
+  <message key="validation.array.min-valuecount">Kies minimaal {0} elementen.</message>
+  <message key="validation.array.max-valuecount">Kies maximaal {0} elementen.</message>
+  <message key="multivaluefield.conversionfailed">Een van de gekozen waarden is ongeldig.</message>
+  <message key="validation.numeric.range">De waarde moet liggen tussen {0} en {1}.</message>
+  <message key="validation.numeric.min">De waarde is minimaal {0}.</message>
+  <message key="validation.numeric.max">De waarde is maximaal {0}.</message>
+  <message key="validation.mod10">De Mod 10 verificatie is mislukt.</message>
+  <message key="aggregatedfield.split-failed">De waarde komt niet overeen met deze reg. exp.: {0}</message>
+</catalogue>

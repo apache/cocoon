@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+ <header>
+  <title>Parser Transformer</title>
+  <version>0.1</version>
+  <type>Technical document</type>
+  <authors>
+   <person id="SMS" name="Stephan Michels" email="stephan@apache.org"/>
+  </authors>
+  <abstract>This document describes the parser transformer of Cocoon.</abstract>
+ </header>
+ <body>
+  <s1 title="Parser Transformer">
+   <p>The parser transformer builds a syntax tree of a list of lexemes
+      (tokens), by using a grammar file.</p>
+
+   <ul>
+    <li>Name: parser</li>
+    <li>Class: org.apache.cocoon.transformation.ParserTransformer</li>
+    <li>Cacheable: yes - uses the last modification date of the grammar
+      document for validation.</li>
+   </ul>
+
+   <p>The parser uses the following elements from the SAX stream, and
+      replaces them through a syntax tree.</p>
+
+   <source><![CDATA[
+<lexemes xmlns="http://chaperon.sourceforge.net/schema/lexemes/1.0">
+ <lexeme symbol="word" text="..."/>
+ <lexeme symbol="word" text="..."/>
+ <lexeme symbol="word" text="..."/>
+ <lexeme symbol="punctation" text="..."/>
+</lexemes>
+]]></source>
+
+   <p>The parser transformer will replace those elements with a syntax tree.
+   </p>
+
+   <source><![CDATA[
+<paragraph xmlns="http://chaperon.sourceforge.net/schema/syntaxtree/1.0">
+ <sentence>
+  <word>...</word>
+  <word>...</word>
+  <word>...</word>
+  <punctation>...</punctation>
+ </sentence>
+</paragraph>
+]]></source>
+
+   <p>A detailed explanation of function and the grammar format can be found at <link
+     href="http://chaperon.sourceforge.net/">Chaperon</link>.</p>
+
+  </s1>
+ </body>
+</document>

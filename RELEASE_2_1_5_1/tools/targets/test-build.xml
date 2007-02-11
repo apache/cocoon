@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="test">
+
+  <description>
+    Test targets
+  </description>
+
+  <!-- Runs all tests -->
+  <target name="test" depends="junit-tests, block-tests" description="Runs all JUnit tests (but no anteater tests)"/>
+
+  <target name="junit-prepare">
+    <delete dir="${build.test.output}"/>
+    <mkdir dir="${build.test.output}"/>
+  </target>
+
+  <!-- Runs JUnit tests -->
+  <target name="junit-tests" depends="compile-tests, junit-prepare">
+    <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
+      <classpath>
+        <path refid="test.classpath"/>
+      </classpath>
+      <formatter type="plain"/>
+      <formatter type="xml"/>
+      <batchtest todir="${build.test.output}">
+        <fileset dir="${build.test}">
+          <include name="**/*TestCase.class"/>
+          <include name="**/*Test.class" />
+          <exclude name="**/AllTest.class" />
+          <exclude name="**/CocoonBeanTestCase.class" />
+          <exclude name="**/*$$*Test.class" />
+          <exclude name="**/Abstract*.class" />
+          <exclude name="**/SitemapComponentTestCase*"/>
+        </fileset>
+      </batchtest>
+    </junit>
+    <antcall target="junit-report"/>
+  </target>
+
+  <!-- Runs JUnit tests in debug mode -->
+  <target name="junit-test-debug" depends="compile-tests, junit-prepare">
+    <fail unless="junit.testcase" message="Please set the property $${junit.testcase} to a JUnit testcase (package.Classname, e.g. org.test.MyTestCase)."/>
+    <echo message="The JVM will be suspended until you connect with your favourite debugger to port ${junit.test.debugport}."/>
+    <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
+      <jvmarg value="-Xdebug"/>
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=${junit.test.debugport}"/>
+      <classpath refid="test.classpath"/>
+      <formatter type="plain"/>
+      <formatter type="xml"/>
+      <test name="${junit.testcase}" todir="${build.test.output}"/>
+    </junit>
+    <antcall target="junit-report"/>
+  </target>
+
+  <target name="junit-report">
+    <junitreport todir="${build.test.output}">
+      <fileset dir="${build.test.output}">
+       <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${build.test.output}"/>
+    </junitreport>
+    <echo message="Unit report is at ${build.test.output}/index.html"/>
+    <fail if="junit.test.failed" message="One or more JUnit tests failed or caused errors. Please have a look into the report for details."/>
+  </target>
+
+  <!-- Anteater tests  -->
+  <target name="anteater-tests" depends="compile-tests,block-anteater-tests" description="Runs anteater tests (but no JUnit tests)">
+    <!-- anteater parameters are set in build.properties -->
+    <available file="${anteater.home}" property="anteater.present"/>
+    <fail unless="anteater.present"
+          message="To use anteater, please install it and set anteater.home (currently ${anteater.home}) in your local.build.properties"/>
+    <echo>*** anteater-tests notes ***************</echo>
+    <echo>a) To run these tests, another instance of Cocoon must be running at ${anteater.target.host}:${anteater.target.port} (base path=${anteater.target.base.path})</echo>
+    <echo>b) JDK 1.4.x is required to run these tests, but running them under 1.4.x to test Cocoon running under 1.3.x should be ok.</echo>
+    <echo>c) anteater options can be set in local.build.properties, and some tests only run if enabled there.</echo>
+    <java classname="org.apache.tools.ant.Main" fork="true">
+      <classpath>
+        <fileset dir="${anteater.home}">
+          <include name="lib/**/*.jar"/>
+          <include name="tomcat/**/*.jar"/>
+        </fileset>
+        <pathelement location="${anteater.home}/resources"/>
+      </classpath>
+      <jvmarg value="-Dant.home=${anteater.home}"/>
+      <jvmarg value="-Danteater.home=${anteater.home}"/>
+      <jvmarg value="-Danteater.resources=${anteater.home}/resources"/>
+      <jvmarg value="-Danteater.report=${anteater.home}/resources/scripts/report.xml"/>
+      <jvmarg value="-Djava.endorsed.dirs=${anteater.home}/lib"/>
+      <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${anteater.target.host} -Dport=${anteater.target.port} -Dbase=${anteater.target.base.path} -Ddefault.haltonerror=${anteater.option.haltonerror}"/>
+    </java>
+  </target>
+
+  <!-- Block tests -->
+  <target name="block-tests" depends="compile-tests, prepare-blocks">
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="tests"/>
+
+  </target>
+
+  <target name="block-anteater-tests" depends="prepare-blocks">
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="prepare-anteater-tests"/>
+
+  </target>
+</project>

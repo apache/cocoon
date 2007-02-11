@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Cocoon Forms template used to to edit a TaskBean -->
+<!-- Define the page contents of the form -->
+
+<page
+    id="page"
+    xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+    xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+    >
+
+    <title>TaskBean editing</title>
+
+    <content>
+        <ft:form-template action="#{$continuation/id}.continue" method="POST">
+
+            <!-- first table: general TaskBean info -->
+            <h2>Task info</h2>
+            <table>
+                <tr>
+                    <tr>
+                        <td class="legend">
+                            <ft:widget-label id="taskId"/>
+                        </td>
+                        <td>
+                            <ft:widget id="taskId"/>
+                        </td>
+                    </tr>
+                    <td class="legend">
+                        <ft:widget-label id="taskName"/>
+                    </td>
+                    <td>
+                        <ft:widget id="taskName">
+                            <fi:styling size="60"/>
+                        </ft:widget>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="legend">
+                        <ft:widget-label id="assignedTo"/>
+                    </td>
+                    <td>
+                        <ft:widget id="assignedTo">
+                            <fi:styling size="60"/>
+                        </ft:widget>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- submit button -->
+            <input type="submit" value="Save page"/>
+
+            <!-- Second table: list of comments -->
+            <h2><ft:widget-label id="comments"/></h2>
+            <ft:repeater-size id="comments"/>
+            <table>
+                <tr>
+                    <th>
+                        &#160;
+                    </th>
+                    <th>
+                        <ft:repeater-widget-label id="comments" widget-id="date"/>
+                    </th>
+                    <th>
+                        <ft:repeater-widget-label id="comments" widget-id="comment"/>
+                    </th>
+                </tr>
+
+                <!-- The contents of the repeater-widget element is a template that will
+                be applied to each row in the repeater. -->
+                <ft:repeater-widget id="comments">
+                    <tr>
+                        <td>
+                            <ft:widget id="select"/>
+                        </td>
+                        <td>
+                            <ft:widget id="date">
+                                <fi:styling size="10"/>
+                            </ft:widget>
+                        </td>
+                        <td>
+                            <ft:widget id="comment">
+                                <fi:styling size="60"/>
+                            </ft:widget>
+                        </td>
+                    </tr>
+                </ft:repeater-widget>
+
+                <tr>
+                    <td colspan="3" align="right">
+                        <ft:widget id="addcomment"/>
+                        <ft:widget id="removecomment"/>
+                    </td>
+                </tr>
+            </table>
+
+        </ft:form-template>
+    </content>
+</page>

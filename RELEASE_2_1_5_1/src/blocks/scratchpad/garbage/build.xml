@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="garbage" default="build">
+
+  <description>Apache Garbage Templating System</description>
+
+  <!--
+   | Project-related properties.
+   +-->
+  <property name="project.name"       value="garbage"/>
+  <property name="project.version"    value="0.0"/>
+  <property name="project.root"       value="org/apache/garbage"/>
+  <property name="project.title"      value="Apache Garbage ${project.version}"/>
+  <property name="project.copyright"  value="2003, The Apache Software Foundation"/>
+  <property name="project.jarfile"    value="apache-${project.name}-${project.version}.jar"/>
+
+  <!--
+   | Directory and location properties.
+   +-->
+  <property name="dir.libraries"      value="${basedir}/lib"/>
+  <property name="dir.tools"          value="${basedir}/tools"/>
+
+  <property name="dir.source"         value="${basedir}/source"/>
+  <property name="dir.source.java"    value="${dir.source}/java"/>
+  <property name="dir.source.docs"    value="${dir.source}/docs"/>
+  <property name="dir.source.webapp"  value="${dir.source}/webapp"/>
+  <property name="dir.source.root"    value="${dir.source.java}/${project.root}"/>
+  <property name="dir.source.javacc"  value="${dir.source.root}/parser"/>
+  <property name="dir.source.charset" value="${dir.source.root}/serializer/encoding"/>
+
+  <property name="dir.build"          value="${basedir}/build"/>
+  <property name="dir.build.classes"  value="${dir.build}/classes"/>
+  <property name="dir.build.apidocs"  value="${dir.build}/apidocs"/>
+  <property name="dir.build.webapp"   value="${dir.build}/webapp"/>
+
+  <!--
+   | JavaCC-related properties.
+   +-->
+  <property name="javacc.grammar"     value="${dir.source.javacc}/Parser.jj"/>
+
+  <!--
+   | Runtime classpath.
+   +-->
+  <path id="classpath">
+    <pathelement path="${java.class.path}"/>
+    <pathelement path="${dir.build.classes}/"/>
+    <fileset dir="${dir.libraries}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${dir.tools}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+
+  <!-- ========================================================================
+   | Prepare the main properties and the build directory.
+   +-->
+  <target name="prepare">
+
+    <echo message="Compiling with J2SDK version ${ant.java.version}"/>
+
+    <!--
+     | Set the "javacc.uptodate" property if the parser doesn't need to be
+     | rebuilt from its "JavaCC" grammar.
+     +-->
+    <uptodate property="javacc.uptodate" srcfile="${javacc.grammar}">
+      <mapper type="glob" from="*.jj" to="*.java"/>
+    </uptodate>
+
+    <!--
+     | Set the "javacc.available" property if the JavaCC class is available.
+     +-->
+    <available property="javacc.available" classname="javacc">
+      <classpath refid="classpath"/>
+    </available>
+
+    <!--
+     | Set the "javacc.required" property if JavaCC is not available in the
+     | current classpath, and a JavaCC recompilation is necessary.
+     +-->
+    <condition property="javacc.required">
+      <and>
+        <not><isset property="javacc.available"/></not>
+        <not><isset property="javacc.uptodate"/></not>
+      </and>
+    </condition>
+
+    <!--
+     | Set the "javadoc.uptodate" if the API documentation is up to date.
+     +-->
+    <uptodate property="javadoc.uptodate">
+      <srcfiles dir="${dir.source.java}" includes="**/*.java"/>
+      <mapper type="merge" to="${dir.build.apidocs}/index.html"/>
+    </uptodate>
+
+    <!--
+     | Set the "javadoc.param" property to contain "-breakiterator" if this
+     | build is being executed by J2SDK 1.4.x.
+     +-->
+    <condition property="javadoc.param" value="-breakiterator">
+      <equals arg1="1.4" arg2="${ant.java.version}"/>
+    </condition>
+    <condition property="javadoc.param" value="">
+      <not><isset property="javadoc.param"/></not>
+    </condition>
+
+    <!--
+     | Set the "javadoc.param" property to contain "-breakiterator" if this
+     | build is being executed by J2SDK 1.4.x.
+     +-->
+    <condition property="javac.exclude" value="serializer/encoding/Compiler">
+      <not><available classname="java.nio.charset.Charset"/></not>
+    </condition>
+
+    <!--
+     | Create the initial build directories.
+     +-->
+    <mkdir dir="${dir.build}"/>
+    <mkdir dir="${dir.build.classes}"/>
+    <mkdir dir="${dir.build.apidocs}"/>
+
+  </target>
+
+
+  <!-- ========================================================================
+   | Fail if JavaCC is required (and therefore we don't have it)
+   +-->
+  <target name="javacc.check" depends="prepare" if="javacc.required">
+    <echo message="The JavaCC-generated sources for the Garbage parser are"/>
+    <echo message="not up-to-date. The build system requires to re-generate"/>
+    <echo message="the parser Java sources, but it appears that JavaCC is"/>
+    <echo message="not currently available. Please check your classpath, and"/>
+    <echo message="if you need to download JavaCC, please visit:"/>
+    <echo message="    "/>
+    <echo message="    http://www.experimentalstuff.com/Technologies/JavaCC"/>
+    <echo message="    "/>
+    <echo message="Then place a copy of the 'javacc.jar' java archive your"/>
+    <echo message="'${dir.tools}' directory."/>
+    <fail message="JavaCC unavailable"/>
+  </target>
+
+
+  <!-- ========================================================================
+   | Invoke JavaCC to build the parser from the JJ Grammar.
+   +-->
+  <target name="javacc" depends="javacc.check" unless="javacc.uptodate">
+
+    <!--
+     | Compile the parser from the original JavaCC grammar if necessary.
+     +-->
+    <java classname="javacc" fork="true">
+      <arg value="-OUTPUT_DIRECTORY=${dir.source.javacc}"/>
+      <arg value="${javacc.grammar}"/>
+      <classpath refid="classpath"/>
+    </java>
+
+  </target>
+
+
+  <!-- ========================================================================
+   | Compile all Java source files (written or generated).
+   +-->
+  <target name="compile" depends="javacc,javac.include,javac.exclude"
+          description="  Compile all source code."/>
+
+  <target name="javac.include" depends="prepare" unless="javac.exclude">
+    <!--
+     | Subtarget of "javac", compile without exclusions for J2SDK 1.4.
+     +-->
+    <javac srcdir="${dir.source.java}"
+        destdir="${dir.build.classes}"
+        optimize="true"
+        debug="false">
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="javac.exclude" depends="prepare" if="javac.exclude">
+    <!--
+     | Subtarget of "javac", compile excluding J2SDK 1.4 charset compiler.
+     +-->
+    <echo message="Excluding ${javac.exclude}"/>
+    <javac srcdir="${dir.source.java}"
+        destdir="${dir.build.classes}"
+        includes="${project.root}/**/*.java"
+        excludes="${project.root}/${javac.exclude}.java"
+        optimize="true"
+        debug="false">
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+
+  <!-- ========================================================================
+   | Generate all charsets from Java 1.4 NIO encodings.
+   +-->
+  <target name="charsets" depends="compile" unless="javac.exclude"
+          description="  Generate charset classes">
+
+    <!--
+     | Invoke the charset compiler and hope for a good harvest...
+     +-->
+    <echo message="Generating default set of charsets"/>
+    <java classname="org.apache.garbage.serializer.encoding.Compiler">
+      <arg value="${dir.source.charset}"/>
+      <classpath refid="classpath"/>
+    </java>
+
+    <!--
+     | Rebuild the whole thing including the newly generated sources.
+     +-->
+    <antcall target="compile"/>
+
+  </target>
+
+
+  <!-- ========================================================================
+   | Generate API documentation.
+   +-->
+  <target name="apidocs" depends="prepare" unless="javadoc.uptodate"
+          description="  Create the API documentation">
+
+    <!--
+     | Invoke the charset compiler and hope for a good harvest...
+     +-->
+    <javadoc additionalparam="${javadoc.param}"
+        windowtitle="${project.title}"
+        sourcepath="${dir.source.java}"
+        destdir="${dir.build.apidocs}"
+        author="true"
+        version="true">
+
+      <!--
+       | Links to other JavaDocs on the web (J2SDK 1.4.2 and JXPATH).
+       +-->
+      <link href="http://jakarta.apache.org/commons/jxpath/apidocs/"/>
+      <link href="http://java.sun.com/j2se/1.4.2/docs/api"/>
+
+      <!--
+       | Visual extravaganza...
+       +-->
+      <doctitle>${project.title} API Documentation</doctitle>
+      <bottom>
+        &lt;div align=&quot;center&quot;&gt;&lt;small&gt;Copyright &amp;copy;
+        ${project.copyright}. All rights reserved.&lt;/small&gt;&lt;/div&gt;
+      </bottom>
+
+      <classpath refid="classpath"/>
+      <packageset dir="${dir.source.java}">
+        <include name="**"/>
+      </packageset>
+    </javadoc>
+
+  </target>
+
+
+  <!-- ========================================================================
+   | Build the whole thing.
+   +-->
+  <target name="jar" depends="compile">
+    <jar basedir="${dir.build.classes}"
+      destfile="${dir.build}/${project.jarfile}"/>
+  </target>
+
+
+  <!-- ========================================================================
+   | Build the whole thing.
+   +-->
+  <target name="build" depends="jar,apidocs"
+          description="* Build all targets"/>
+
+
+  <!-- ========================================================================
+   | Clean the whole thing.
+   +-->
+  <target name="clean"
+          description="  Clean up the whole thing">
+    <delete dir="${dir.build.classes}"/>
+    <delete dir="${dir.build.apidocs}"/>
+    <delete dir="${dir.build}"/>
+  </target>
+
+
+  <!-- ========================================================================
+   | Create the web application (servlet only).
+   +-->
+  <target name="servlet" depends="jar"
+      description="  Create a minimal deployable webapp">
+
+    <!--
+     | Create the idiotic webapp directory structure.
+     +-->
+    <mkdir dir="${dir.build.webapp}"/>
+    <mkdir dir="${dir.build.webapp}/WEB-INF"/>
+    <mkdir dir="${dir.build.webapp}/WEB-INF/lib"/>
+
+    <!--
+     | Copy everything in the webapp directory...
+     +-->
+    <copy todir="${dir.build.webapp}/WEB-INF/lib">
+      <fileset dir="${dir.libraries}"><include name="*.jar"/></fileset>
+    </copy>
+    <copy todir="${dir.build.webapp}/WEB-INF/lib">
+      <fileset dir="${dir.build}"><include name="${project.jarfile}"/></fileset>
+    </copy>
+    <copy todir="${dir.build.webapp}/">
+      <fileset dir="${dir.source.webapp}"/>
+    </copy>
+  </target>
+
+  <!-- ========================================================================
+   | Create the full web application
+   +-->
+  <target name="webapp" depends="servlet"
+      description="  Create the full web application">
+
+    <!--
+     | Create the idiotic webapp directory structure.
+     +-->
+    <mkdir dir="${dir.build.webapp}/apidocs"/>
+
+    <!--
+     | Copy everything in the WEB-INF directory...
+     +-->
+    <copy todir="${dir.build.webapp}/apidocs">
+      <fileset dir="${dir.build.apidocs}"/>
+    </copy>
+  </target>
+
+</project>
