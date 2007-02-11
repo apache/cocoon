@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2005 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id: compile-build.xml 193143 2005-06-23 14:18:06Z danielf $ -->
+<project name="osgi">
+
+  <description>OSGi Targets</description>
+  
+  <target name="osgi.init">
+    <property name="build.osgi" value="${build.root}/osgi"/>
+    <property name="build.osgi.webapp" value="${build.osgi}/webapp"/>
+    <property name="build.osgi.servlet" value="${build.osgi}/osgi-servlet"/>    
+    <property name="build.osgi.blocks" value="${build.osgi}/blocks"/>
+    <property name="build.osgi.blocks.template" value="${build.osgi.blocks}/template"/>
+    
+    <property name="build.osgi.bundles.cocoon" value="org.apache.cocoon_1.0.0.jar"/>
+    <property name="build.osgi.bundles.cocoon_webapp" value="org.apache.cocoon_webapp_1.0.0.jar"/>
+    <property name="build.osgi.bundles.cocoon_servlet" value="org.apache.cocoon_servlet_1.0.0.jar"/>    
+    <property name="build.osgi.bundles.template" value="org.apache.cocoon.template_1.0.0.jar"/>        
+    <property name="build.osgi.knopflerfish.fwdir" value="fwdir"/>
+
+    <property name="src.osgi.servlet" value="${src}/osgi-servlet"/>
+    <property name="src.blocks.template" value="${blocks}/template/trunk/java"/>    
+    
+    <mkdir dir="${build.osgi}"/>
+    <mkdir dir="${build.osgi.servlet}"/>    
+    <mkdir dir="${build.osgi.webapp}"/>  
+    <mkdir dir="${build.osgi.blocks}"/>  
+    <mkdir dir="${build.osgi.blocks.template}"/>      
+  </target>
+  
+  <target name="osgi" depends="osgi.bundle.core, osgi.bundle.osgi-servlet, osgi.bundle.webapp, osgi.bundle.block.template" 
+    description="Setup Cocoon to run within OSGi containers">
+  </target>
+  
+  <target name="osgi.clean" depends="osgi.init">
+    <delete dir="${build.osgi}"/>
+    <delete dir="${build.osgi.knopflerfish.fwdir}"/>
+  </target>
+  
+  <target name="osgi.compile-osgi-servlet" depends="osgi.init, compile-core">
+    <path id="osgi.osgi-servlet.classpath">
+      <fileset dir="${lib.core}">
+        <include name="knopflerfish-*.jar"/>
+      </fileset>      
+      <!-- include Cocoon core -->
+      <dirset dir="${build.dest}"/>
+      <pathelement location="${lib.core}/avalon-framework-api-4.3.jar"/>
+      <pathelement location="${lib.core}/avalon-framework-impl-4.3.jar"/>
+      <pathelement location="${lib.core}/commons-lang-2.1.jar"/>
+      <pathelement location="${lib.core}/excalibur-logger-2.1.jar"/>
+      <pathelement location="${lib.core}/servlet-2_3.jar"/>
+    </path>    
+    
+    <javac 
+      debug="${compiler.debug}"
+      optimize="${compiler.optimize}"
+      deprecation="${compiler.deprecation}"
+      target="${target.vm}"
+      source="${source.vm}"
+      nowarn="${compiler.nowarn}"
+      compiler="${compiler}"
+      srcdir="${src.osgi.servlet}"    
+      destdir="${build.osgi.servlet}"  
+      classpathref="osgi.osgi-servlet.classpath"/>
+  </target>
+  
+  <target name="osgi.prepare-webapp" depends="osgi.init">
+    <delete dir="${build.osgi.webapp}"/>
+    <copy file="${webapp}/welcome.xml" tofile="${build.osgi.webapp}/welcome.xml" filtering="on"/>
+    <copy file="${webapp}/not-found.xml" tofile="${build.osgi.webapp}/not-found.xml" filtering="on"/>
+    <copy file="${webapp}/welcome.xslt" tofile="${build.osgi.webapp}/welcome.xslt" filtering="on"/>
+    <copy file="${webapp}/sitemap.xmap" tofile="${build.osgi.webapp}/sitemap.xmap"/>
+    <copy file="${webapp}/wiring.xml" tofile="${build.osgi.webapp}/wiring.xml" filtering="on"/>
+      
+    <copy todir="${build.osgi.webapp}/stylesheets" filtering="on">
+      <fileset dir="${webapp}/stylesheets">
+        <include name="**/*.xslt"/>
+      </fileset>
+    </copy>
+      
+    <copy todir="${build.osgi.webapp}/resources" filtering="off">
+      <fileset dir="${webapp}/resources"/>
+    </copy>
+    
+    <copy todir="${build.osgi.webapp}/samples" filtering="off">
+      <fileset dir="${webapp}/samples"/>
+    </copy>    
+    
+    <!--
+    <delete>
+      <fileset dir="${build.osgi.webapp}/WEB-INF">
+        <include name="cocoon.xconf"/>
+        <include name="logkit.xconf"/>
+      </fileset>      
+    </delete>
+    -->  
+      
+    <copy todir="${build.osgi.webapp}/WEB-INF" filtering="on">
+      <fileset dir="${webapp}/WEB-INF">
+        <exclude name="compile/**"/>          
+      </fileset>
+    </copy>
+      
+    <replace file="${build.osgi.webapp}/sitemap.xmap">
+      <replacetoken><![CDATA[<map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/>]]></replacetoken>
+      <replacevalue><![CDATA[<!-- excluded by the OSGi Ant task!!!!
+        map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/-->
+        ]]></replacevalue>
+    </replace>  
+    
+    <replace file="${build.osgi.webapp}/WEB-INF/cocoon.xconf">
+      <replacetoken><![CDATA[<include dir="context://WEB-INF/xconf" pattern="*.xconf"/>]]></replacetoken>
+      <replacevalue><![CDATA[<!-- replaced by the OSGi Ant task
+        include dir="context://WEB-INF/xconf" pattern="*.xconf"/-->
+        
+        <include src="context://WEB-INF/xconf/cocoon-core-sitemap.xconf"/>
+        <include src="context://WEB-INF/sitemap-additions/cocoon-core-sitemap-additions.xconf"/>]]>
+      </replacevalue>
+    </replace> 
+    
+    <replace file="${build.osgi.webapp}/WEB-INF/cocoon.xconf">
+      <replacetoken><![CDATA[<include dir="context://WEB-INF/xconf" pattern="*.samplesxconf"/>]]></replacetoken>
+      <replacevalue><![CDATA[<!-- excluded by the OSGi Ant task!!!!
+        include dir="context://WEB-INF/xconf" pattern="*.samplesxconf"/-->]]></replacevalue>
+    </replace>  
+    
+    <replace file="${build.osgi.webapp}/WEB-INF/logkit.xconf">
+      <replacetoken><![CDATA[<include dir="context://WEB-INF/xconf" pattern="*.logkit"/>]]></replacetoken>
+      <replacevalue><![CDATA[<!-- excluded by the OSGi Ant task!!!!
+        include dir="context://WEB-INF/xconf" pattern="*.logkit"/-->]]></replacevalue>
+    </replace>
+
+    <replace file="${build.osgi.webapp}/WEB-INF/cocoon.xconf">
+      <replacetoken><![CDATA[</cocoon>]]></replacetoken>
+      <replacevalue><![CDATA[<!-- included by the OSGi Ant task!!!! -->
+          <include src="resource://org/apache/cocoon/components/expression/expression.roles"/>
+          <component role="org.apache.cocoon.template.script.ScriptManager" class="org.apache.cocoon.template.script.DefaultScriptManager"/>
+          <component role="org.apache.cocoon.template.script.InstructionFactory" class="org.apache.cocoon.template.script.DefaultInstructionFactory"/>      
+          <expression-compilers>
+            <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="default"/>
+            <component-instance class="org.apache.cocoon.components.expression.jexl.JexlCompiler" name="jexl"/>
+            <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="jxpath"/>
+          </expression-compilers>
+        </cocoon>]]></replacevalue>
+    </replace>          
+    
+  </target>
+  
+  <target name="osgi.block.template" depends="osgi.init, compile-core">
+    <path id="osgi.blocks.template.classpath">
+      <fileset dir="${lib.core}">
+        <include name="*.jar"/>
+      </fileset>   
+      <fileset dir="${lib.endorsed}">
+        <include name="*.jar"/>
+      </fileset>         
+      <!-- include Cocoon core -->
+      <dirset dir="${build.dest}"/>
+    </path>    
+    
+    <javac 
+      debug="${compiler.debug}"
+      optimize="${compiler.optimize}"
+      deprecation="${compiler.deprecation}"
+      target="${target.vm}"
+      source="${source.vm}"
+      nowarn="${compiler.nowarn}"
+      compiler="${compiler}"
+      srcdir="${src.blocks.template}"    
+      destdir="${build.osgi.blocks.template}"  
+      classpathref="osgi.blocks.template.classpath"/> 
+       
+    <copy todir="${build.osgi.blocks.template}" filtering="off">
+      <fileset dir="${src.blocks.template}">
+        <include name="**/*.roles"/>
+        <include name="**/*.xml"/>        
+      </fileset>
+    </copy>
+    
+  </target>
+  
+  <target name="osgi.bundle.core" depends="osgi.init, compile-core"> 
+    
+    <!-- note: packaging OSGI packages is only provisional; of course we will need a more generic build system in the future -->
+  
+    <!-- the Cocoon core bundle -->
+    <jar file="${build.osgi}/${build.osgi.bundles.cocoon}" manifest="${build.dest}/Manifest.mf">
+      <fileset dir="${build.dest}/">
+        <exclude name="Manifest.mf"/>
+        <include name="**"/>
+      </fileset>
+      <fileset dir="${lib.core}">
+        <include name="*.jar"/>
+        <exclude name="knopflerfish-*.jar"/>
+      </fileset>
+      <fileset dir="${lib.endorsed}">
+        <include name="*.jar"/>
+      </fileset>      
+    </jar>
+  </target>
+
+  <!-- the osgi-servlet bundle -->
+  <target name="osgi.bundle.osgi-servlet" depends="osgi.compile-osgi-servlet"> 
+    <jar file="${build.osgi}/${build.osgi.bundles.cocoon_servlet}" manifest="${src.osgi.servlet}/Manifest.mf">
+      <fileset dir="${build.osgi.servlet}"/>
+    </jar>
+  </target>
+
+  <!-- the Cocoon webapp bundle -->
+  <target name="osgi.bundle.webapp" depends="osgi.prepare-webapp"> 
+    <jar file="${build.osgi}/${build.osgi.bundles.cocoon_webapp}" manifest="${webapp}/Manifest.mf">
+      <fileset dir="${build.osgi.webapp}"/>
+    </jar>
+  </target>
+
+  <!-- the templating bundle -->
+  <target name="osgi.bundle.block.template" depends="osgi.block.template"> 
+    <jar file="${build.osgi}/${build.osgi.bundles.template}" manifest="${src.blocks.template}/Manifest.mf">
+      <fileset dir="${build.osgi.blocks.template}"/>
+    </jar>
+  </target>
+
+</project>

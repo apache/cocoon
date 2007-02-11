@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: multivaluefield widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>The fd:multivaluefield is similar to the
+      <a href="widget_field.html">field widget</a> but
+      can take multiple values. Its purpose is to handle those (HTML) form
+      controls which submit their multiple values as multiple (HTTP) request parameters
+      with the same name. A multivaluefield should always have
+      an fd:datatype element combined with a fd:selection-list, since
+      the user will have to select values from this list.</p>
+
+      
+<p>The fd:multivaluefield could be rendered as a list of checkboxes
+      or as a listbox in which the user can select multiple items.
+      The CForms stylesheets also include a styling option to render
+      them as a "double list", i.e. a list of available and selected
+      values.</p>
+
+      
+<p>The setValue and getValue methods of the multivaluefield take
+      respectively return arrays of objects (i.e. Object[]). The type
+      of the objects in these arrays should match the datatype declared
+      for the widget.</p>
+    
+
+    
+<h1>Configuration</h1>
+
+      
+<pre class="code">&lt;fd:multivaluefield id="..."&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+  &lt;fd:datatype base="..."&gt;
+    [...]
+  &lt;/fd:datatype&gt;
+  &lt;fd:selection-list&gt;
+    [...]
+  &lt;/fd:selection-list&gt;
+  &lt;fd:validation&gt;
+    [...]
+  &lt;/fd:validation&gt;
+  &lt;fd:on-value-changed&gt;
+     [...]
+  &lt;/fd:on-value-changed&gt;
+&lt;/fd:multivaluefield&gt;</pre>
+
+      
+<p>Most of the elements and attributes have the same meaning
+      as for the <a href="widget_field.html">field</a> widget.</p>
+
+      
+<p>Note: A multivaluefield cannot have a required attribute,
+      instead you should use the value-count validator to
+      check the number of values the user has selected.</p> 
+    
+  
+</body>
+</html>

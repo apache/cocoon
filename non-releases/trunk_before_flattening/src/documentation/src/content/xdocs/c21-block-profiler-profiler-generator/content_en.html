@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Profile Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bruno Dumon" name="DC.Creator">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document describes the profile generator of 
+Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Profile Generator</h1>
+      
+<p>The profile generator creates xml from the current profiler
+        measurement results of cocoon.</p>
+      
+<p>If you just want to use the Cocoon profiler, look at <a href="../concepts/profiler.html">this document</a>.</p>
+      
+<ul>
+        
+<li>Name : profile</li>
+        
+<li>Class: org.apache.cocoon.components.profiler.ProfilerGenerator</li>
+        
+<li>Cacheable: no</li>
+      
+</ul>
+
+      
+<p>When no parameters are specified, the profiler generator will simply
+        generate all available information. Here is some example output:</p>
+
+      
+<pre class="code">&lt;profilerinfo date="Mar 24, 2003 5:10:56 PM" xmlns="http://apache.org/cocoon/profiler/1.0"&gt;
+  &lt;pipeline count="2" key="4704447257427244431" processingTime="378" uri="caching-testsite.html"&gt;
+    &lt;average time="189"&gt;
+      &lt;component offset="0" role="file" source="test.xml" time="1"/&gt;
+      &lt;component offset="1" role="xslt" source="test2page.xsl" time="58"/&gt;
+      &lt;component offset="2" role="xslt" source="page2html.xsl" time="115"/&gt;
+      &lt;component offset="3" role="html" time="2"/&gt;
+    &lt;/average&gt;
+    &lt;result index="0" time="128"&gt;
+      &lt;component index="0" processing="0" role="file" setup="0"
+        source="test.xml" time="0"/&gt;
+      &lt;component index="1" processing="0" role="xslt" setup="59"
+        source="test2page.xsl" time="59"/&gt;
+      &lt;component index="2" processing="0" role="xslt" setup="65"
+        source="page2html.xsl" time="65"/&gt;
+      &lt;component index="3" processing="0" role="html" setup="0" time="0"/&gt;
+    &lt;/result&gt;
+    &lt;result index="1" time="250"&gt;
+      &lt;component index="0" processing="1" role="file" setup="1"
+        source="test.xml" time="2"/&gt;
+      &lt;component index="1" processing="1" role="xslt" setup="56"
+        source="test2page.xsl" time="57"/&gt;
+      &lt;component index="2" processing="21" role="xslt" setup="145"
+        source="page2html.xsl" time="166"/&gt;
+      &lt;component index="3" processing="5" role="html" setup="0" time="5"/&gt;
+    &lt;/result&gt;
+  &lt;/pipeline&gt;
+  &lt;pipeline count="1" key="-1812911851413592444" processingTime="190" uri="noncaching-testsite.html"&gt;
+    &lt;average time="190"&gt;
+      &lt;component offset="0" role="file" source="test.xml" time="1"/&gt;
+      &lt;component offset="1" role="xslt" source="test2page.xsl" time="86"/&gt;
+      &lt;component offset="2" role="xslt" source="page2html.xsl" time="70"/&gt;
+      &lt;component offset="3" role="html" time="19"/&gt;
+    &lt;/average&gt;
+    &lt;result index="0" time="190"&gt;
+      &lt;component index="0" processing="1" role="file" setup="0"
+        source="test.xml" time="1"/&gt;
+      &lt;component index="1" processing="3" role="xslt" setup="83"
+        source="test2page.xsl" time="86"/&gt;
+      &lt;component index="2" processing="7" role="xslt" setup="63"
+        source="page2html.xsl" time="70"/&gt;
+      &lt;component index="3" processing="19" role="html" setup="0" time="19"/&gt;
+    &lt;/result&gt;
+  &lt;/pipeline&gt;
+&lt;/profilerinfo&gt;</pre>
+
+      
+<p>The output consists of a <span class="codefrag">profilerinfo</span> element containing
+        a number of <span class="codefrag">pipeline</span> elements.  Each pipeline is
+        identified by a key. The pipeline element contains one
+        <span class="codefrag">average</span> element (containing the average results) and one
+        or more <span class="codefrag">result</span> elements for the individual results
+        (by default only the last 10 results are remembered). Each result element
+        contains a number of <span class="codefrag">component</span> elements, one for each
+        component (generator, transformer, serializer) in the pipeline.</p>
+
+      
+<p>All elements have the namespace
+        <span class="codefrag">http://apache.org/cocoon/profiler/1.0</span>.</p>
+
+      
+<p>On the component element, there are three attributes indicating timings:</p>
+      
+<dl>
+        
+<dt>setup</dt>
+        
+<dd>time spent in the component's setup method</dd>
+        
+<dt>processing</dt>
+        
+<dd>time spent processing the SAX events</dd>
+        
+<dt>time</dt>
+        
+<dd>sum of the processing and setup times</dd>
+      
+</dl>
+
+      
+<p>The output of the profiler generator can be tuned using the following
+        request parameters:</p>
+
+      
+<dl>
+        
+<dt>key</dt>
+        
+<dd>limit the output to the pipeline with this key</dd>
+        
+<dt>result</dt>
+        
+<dd>to be used in combination with key, causes only the result with
+          this index to be included. In this case some additional information
+          about the environment (request parameters and session attributes)
+          will be returned.</dd>
+        
+<dt>component</dt>
+        
+<dd>to be used in combination with key and result. When this parameter
+          is specified, the XML that was generated by the component with this
+          index will be included in the output (as child of the specified
+          component element).</dd>
+        
+<dt>fragmentonly</dt>
+        
+<dd>to be used in combination with key, result and component. If this
+          parameter is true, only the XML that was generated by the specified
+          component will be returned, without additional profiler information
+          around it.</dd>
+      
+</dl>
+    
+  
+</body>
+</html>

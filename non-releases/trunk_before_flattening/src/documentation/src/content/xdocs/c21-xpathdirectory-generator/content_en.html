@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XPath Directory Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="J&ouml;rg Heinicke" name="DC.Creator">
+<meta content="This document describes the XPath Directory Generator of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>XPath Directory Generator</h1>
+      
+<p>Generates an XML directory listing performing XPath queries on XML files.</p>
+      
+<ul>
+        
+<li>Name: xpathdirectory</li>
+        
+<li>Class: org.apache.cocoon.generation.XPathDirectoryGenerator</li>
+        
+<li>Cacheable: yes</li>
+      
+</ul>
+      
+<p>The XPath Directory Generator provides all the functionality of the
+        <a href="directory-generator.html">Directory Generator</a>. Additionaly it is possible
+        to get XML snippets out of the XML files the Directory Generator finds.</p>
+    
+    
+<h1>Additional Configuration</h1>
+      
+<pre class="code">
+  &lt;map:generate type="xpathdirectory" src="the/requested/directory"&gt;
+    &lt;map:parameter name="xpath" value="/article/title|/article/abstract"/&gt;
+    &lt;map:parameter name="xmlFiles" value="\.x.*$"/&gt;
+  &lt;/map:generate&gt;
+      </pre>
+      
+<p>The XPath Directory Generator has two additional parameters, both are optional.</p>
+      
+<ul>
+        
+<li>xpath: Sets the XPath the XPath Directory Generator should use for queries on XML files.
+            If you don't set this parameter it will behave like the Directory Generator.</li>
+        
+<li>xmlFiles: The xml files pattern. Specifies the files that should be handled as XML
+            files. XPath queries will only be tried on files matching this pattern. The XPath
+            Directory Generator does not fail on non-XML files or files that are not
+            well-formed or not valid. All Exceptions on parsing the files will be caught and
+            ignored. But of course, useless parsing, throwing and catching exceptions is very
+            time consuming, so the <span class="codefrag">xmlFiles</span> pattern should not be too generic.<br>
+            If you specify an empty pattern all files will be handled as XML files. The default
+            pattern when not specifying this parameter is <span class="codefrag">\.xml$</span>, so that all files
+            ending <span class="codefrag">.xml</span> are handled as XML files.<br>
+            The pattern is a regular expression as described in the API docs of the
+            <a class="external" href="http://jakarta.apache.org/regexp/apidocs/org/apache/regexp/RE.html">
+            Apache RegExp project</a>.</li>
+      
+</ul>
+    
+    
+<h1>Extended DTD</h1>
+      
+<pre class="code">
+  &lt;!ELEMENT directory (directory|file)*&gt;
+  &lt;!ATTLIST directory
+    name         CDATA #REQUIRED
+    lastModified CDATA #REQUIRED
+    date         CDATA #REQUIRED
+    size         CDATA #REQUIRED
+    requested    CDATA #IMPLIED
+    sort         CDATA #IMPLIED
+    reverse      CDATA #IMPLIED&gt;
+
+  &lt;!ELEMENT file (xpath?)&gt;
+  &lt;!ATTLIST file
+    name         CDATA #REQUIRED
+    lastModified CDATA #REQUIRED
+    date         CDATA #REQUIRED
+    size         CDATA #REQUIRED&gt;
+
+  &lt;!ELEMENT xpath #ALL&gt;
+  &lt;!ATTLIST xpath
+    query        CDATA #REQUIRED&gt;
+      </pre>
+    
+    
+<h1>Example</h1>
+      
+<p>The current XPath Directory Generator may generate following xml:</p>
+      
+<pre class="code">
+&lt;dir:directory xmlns:dir="http://apache.org/cocoon/directory/2.0"
+    name="articles" lastModified="1057183738609" date="03.07.03 00:08" size="0"
+    requested="true" sort="name" reverse="false"&gt;
+  &lt;dir:directory name="images" lastModified="1057183738609" date="03.07.03 00:08" size="0"/&gt;
+  &lt;dir:file name="article1.xml" lastModified="1057183738609" date="03.07.03 00:08" size="123"&gt;
+    &lt;dir:xpath query="/article/title"&gt;
+      &lt;title&gt;My first article!&lt;/title&gt;
+    &lt;/dir:xpath&gt;
+  &lt;/dir:file&gt;
+  &lt;dir:file name="article2.html" lastModified="1057183738609" date="03.07.03 00:08" size="345"/&gt;
+  &lt;dir:file name="article2.xml" lastModified="1057183738609" date="03.07.03 00:08" size="234"&gt;
+    &lt;dir:xpath query="/article/title"&gt;
+      &lt;title&gt;My second article!&lt;/title&gt;
+    &lt;/dir:xpath&gt;
+  &lt;/dir:file&gt;
+&lt;/dir:directory&gt;
+      </pre>
+    
+  
+</body>
+</html>

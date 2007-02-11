@@ -1,0 +1,375 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Sendmail Action</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Frank Ridderbusch" name="DC.Creator">
+<meta content="Jon Evans" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Description</h1>
+      
+<p>
+        The Sendmail action is an action which makes the capability of sending
+        an email message available to the sitemap. This includes attaching
+        binary files which come either from another Cocoon pipeline or from
+        HTML file uploads. The Sendmail action make the primary methods of the
+        <a class="external" href="http://java.sun.com/products/javamail/">Java Mail API</a>
+        available to the sitemap.
+      </p>
+      
+<p>
+        The Sendmail action is an alternative to the
+        <a href="../xsp/sendmail.html">Sendmail logicsheet</a>.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        Before the Sendmail action can be used, it must be activated - either in
+        Cocoon's main sitemap, or in a subsitemap which is used for your
+        application. Include the following <span class="codefrag">map:action</span> element
+        as child respectively grandchild of the <span class="codefrag">map:components</span>
+        -&gt; <span class="codefrag">map:actions</span> elements.
+      </p>
+      
+<pre class="code">
+
+&lt;map:components&gt;
+  &lt;map:actions&gt;
+     &lt;map:action name="sendmail" logger="sitemap.action.sendmail"
+                  src="org.apache.cocoon.acting.Sendmail"/&gt;
+  &lt;/map:actions&gt;
+&lt;/map:components&gt;
+
+      </pre>
+    
+    
+<h1>Example Code</h1>
+      
+<p>
+        This example uses a simple HTML form which provides entry fields for
+        <span class="codefrag">subject</span>, <span class="codefrag">cc</span>, <span class="codefrag">uploaded_file1</span> and
+        the email <span class="codefrag">body</span>.
+      </p>
+      
+<pre class="code">
+
+&lt;form action="/cocoon/mail/send-a-mail"
+      method="POST"
+     enctype="multipart/form-data"&gt;
+  &lt;input type="text" name="subject" size="56" /&gt;
+  &lt;input type="text" name="cc" size="56" /&gt;
+  &lt;input type="file" name="uploaded_file1" size="56" /&gt;
+  &lt;textarea name="body" rows="5" cols="72"&gt;
+  &lt;/textarea&gt;
+&lt;/form&gt;
+
+      </pre>
+      
+<p>
+        Please keep in mind that it is important to use
+        <span class="codefrag">enctype="multipart/form-data"</span> if you want to upload files
+        which should be attached to an email message.
+      </p>
+      
+<p>The posted HTTP request data is processed by this sitemap fragment.</p>
+      
+<pre class="code">
+
+&lt;map:match pattern="mail/*"&gt;
+  &lt;map:act type="sendmail"&gt;
+    &lt;!-- To override defaults specified in cocoon.xconf:
+    &lt;map:parameter name="smtp-host" value="localhost"/&gt;
+    &lt;map:parameter name="smtp-user" value="john"/&gt;
+    &lt;map:parameter name="smtp-password" value="john"/&gt;
+    --&gt;
+    &lt;map:parameter name="from" value="cocoon@localhost"/&gt;
+    &lt;map:parameter name="to" value="mailinglist@somewhere.com"/&gt;
+    &lt;map:parameter name="subject" value="{request-param:subject}"/&gt;
+    &lt;map:parameter name="body" value="{request-param:body}"/&gt;
+    &lt;map:parameter name="cc" value="{request-param:cc}"/&gt;
+    &lt;map:parameter name="bcc" value="censor@somewhere.com"/&gt;
+    &lt;map:parameter name="attachments"
+                   value="uploaded_file1 context://welcome.xml"/&gt;
+    &lt;map:generate src="mail/{status}.xml"/&gt;
+    &lt;map:serialize type="xml"/&gt;
+  &lt;/map:act&gt;
+&lt;/map:match&gt;
+
+      </pre>
+      
+<p>
+        The input modules are used to supply some of the input parameters for
+        the Sendmail action. In this example, apart from the
+        <span class="codefrag">uploaded_file1</span> request parameter, a second file is attached
+        to the email message, using the Cocoon protocol notation (the file
+        <span class="codefrag">welcome.xml</span> from the Cocoon context directory). The result
+        of sending the email message is passed back into the sitemap through the
+        <span class="codefrag">status</span> parameter and is used to provide the user with a
+        feedback. (The transformation is left as an exercise to the reader).
+      </p>
+      
+<p>
+        Please consider the security implications if you let a user specify an
+        email address in an input form. A malicious user might abuse this to
+        send SPAM emails. So, this example is probably only useful in an
+        intranet application, where users can mostly be considered well behaved.
+      </p>
+    
+    
+<a name="parameters"></a>
+    
+<h1>Input/Output Parameter Reference</h1>
+      
+<p>
+        The following is the list of parameters which can be passed from the
+        sitemap into the Sendmail action.
+      </p>
+      
+<table>
+        
+<tr>
+          
+<th colspan="1" rowspan="1">Name:</th>
+          <th colspan="1" rowspan="1">Required?</th>
+          <th colspan="1" rowspan="1">Description:</th>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">smtp-host</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            The IP address or the name of the host, which should deliver the
+            email message. Better known as the mail transfer agent or short MTA.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">smtp-user</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            User name
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">smtp-password</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            Password
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">to</td>
+          <td colspan="1" rowspan="1">yes</td>
+          <td colspan="1" rowspan="1">
+            Sets the destination/to address of the email message. This can be a
+            list of comma separated email addresses.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">cc</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            Sets the recipients of a carbon copy of this email. This can be a
+            list of comma separated email addresses.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">bcc</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            Sets the recipients of a black carbon copy of the email. This can be
+            a list of comma separated email addresses.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">from</td>
+          <td colspan="1" rowspan="1">yes</td>
+          <td colspan="1" rowspan="1">Sets the from address of the message.</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">subject</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">Sets the subject line of the message.</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">body</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            Sets the body text of the message. This parameter is ignored if the
+            <span class="codefrag">src</span> parameter is specified.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">src</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            A url specifying the source of the text body of the email. If
+            <span class="codefrag">src</span> is specified, the <span class="codefrag">body</span> parameter is
+            ignored.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">srcMimeType</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            The optional mime type of the source of the text body of the email
+            if you specified <span class="codefrag">src</span>.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">charset</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            Sets the character set for encoding the message. This tag has only
+            an effect if no attachments are send.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">attachment</td>
+          <td colspan="1" rowspan="1">no</td>
+          <td colspan="1" rowspan="1">
+            Sets the attachment for this email. This is a blank separated list.
+            If an argument contains a ":", it is assumed that a Cocoon internal
+            protocol is specified (ex: <span class="codefrag">context://welcome.xml</span>). This
+            means that the attachment comes from a Cocoon pipeline (internally
+            an <span class="codefrag">org.apache.excalibur.source.Source</span> object). If the
+            argument does not contain a colon, the argument names a request
+            parameter which is a file upload through a HTML form (internally an
+            <span class="codefrag">org.apache.cocoon.components.request.multipart.FilePart</span>
+            object).
+          </td>
+        
+</tr>
+<!-- [CH] I believe deleting attachments should be handled at a different place
+     [JH] Aren't uploads not already deleted by default?
+        <tr>
+          <td>keep-attachment</td>
+          <td>no</td>
+          <td>
+            This is a boolean parameter, which defaults to <code>false</code>.
+            This means, that any uploads are delete from Cocoons upload
+            directory.
+          </td>
+        </tr>
+-->
+      
+</table>
+      
+<p>
+        The following is the list of parameters which are passed from Sendmail
+        action back into the sitemap.
+      </p>
+      
+<table>
+        
+<tr>
+          
+<th colspan="1" rowspan="1">Name:</th>
+          <th colspan="1" rowspan="1">Description:</th>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">status</td>
+          <td colspan="1" rowspan="1">
+            This parameter can take three values: <span class="codefrag">success</span>,
+            <span class="codefrag">user-error</span> and <span class="codefrag">server-error</span>.
+            <span class="codefrag">success</span> means that the email message has been
+            successfully delivered to the mail transfer host.
+            <span class="codefrag">user-error</span> means that there was a problem with at least
+            one of the specified email addresses (to, cc, bcc or from).
+            <span class="codefrag">server-error</span> means that there was some problem
+            delivering the message to the mail transfer host. In effect, this
+            parameter can be used to inform the user about the outcome of
+            sending the email message.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">message</td>
+          <td colspan="1" rowspan="1">
+            This parameter contain some explanatory text if the message couldn't
+            be delivered. It is unset if the email message had been successfully
+            sent.
+          </td>
+        
+</tr>
+      
+</table>
+    
+    
+<a name="hint"></a>
+    
+<h1>Additional Hint</h1>
+      
+<p>
+        Cocoon provides the capability to automatically parse a file upload out
+        of an incoming HTTP request. Depending on the setting of the parameter
+        <span class="codefrag">autosave-uploads</span> (default is <span class="codefrag">false</span>) in
+        Cocoon's <span class="codefrag">web.xml</span> file, the file upload is either stored in
+        memory (<span class="codefrag">false</span>) for further processing or stuffed into
+        Cocoons upload directory (<span class="codefrag">true</span>).
+      </p>
+      
+<p>
+        In theory, it should be equal whether the file upload data comes from
+        memory of from file. In my particular setup (Linux, Tomcat 4.0.4,
+        Mozilla 1.3 and JDK 1.4.1_02) I was unable to get the file uploading
+        working with <span class="codefrag">autosave-upload=false</span>. Somehow the attached
+        binary data was distorted (a GIF file does not appear to be a GIF any
+        more).
+      </p>
+      
+<p>
+        With <span class="codefrag">autosave-upload=true</span> it worked flawlessly, even
+        attaching multiple files.
+      </p>
+    
+  
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>StoreJanitor in Apache Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Gerhard Froehlich" name="DC.Creator">
+<meta content="This document describes the usage of the StoreJanitor under Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>Goal</h1>
+<p>This document describes the usage of the StoreJanitor under 
+  Apache Cocoon.</p>
+  
+<h1>Description</h1>
+  
+<p>The implementation is quite simple! Every implementation of a Store can register in the 
+  StoreJanitor. It checks at a configurable interval if memory is running low. If low, 
+  it greps via Round Robin a victim (Store) and frees xx% of all elements in this Store. 
+  After that the StoreJanitor sleeps and waits for the next iteration.</p>
+  
+  
+<h1>Configuration</h1>
+  
+<pre class="code">
+&lt;store-janitor logger="root.store"&gt;
+  &lt;parameter name="freememory" value="1000000"/&gt;
+  &lt;parameter name="heapsize" value="60000000"/&gt;
+  &lt;parameter name="cleanupthreadinterval" value="10"/&gt;
+  &lt;parameter name="threadpriority" value="5"/&gt;
+  &lt;parameter name="percent_to_free" value="10"/&gt;
+&lt;/store-janitor&gt;
+  </pre> 
+  
+<p>The right configuration is very important, because wrong settings can cause a high system load.</p>
+  
+<h2>Example configuration</h2>
+<ul>
+<li>Tomcat settings in tomcat.sh or tomcat.bat:</li>
+</ul>
+<pre class="code">
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" \
+  -Xmx200000000 org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+    </pre>
+<ul>
+<li>StoreJanitor settings:</li>
+</ul>
+<p>The freememory and heapsize parameters always depend on the Xmx 
+    parameter.</p>
+<pre class="code">
+&lt;store-janitor logger="root.store"&gt;
+  &lt;parameter name="freememory" value="50000000"/&gt;
+  &lt;parameter name="heapsize" value="150000000"/&gt;
+  &lt;parameter name="cleanupthreadinterval" value="10"/&gt;
+  &lt;parameter name="threadpriority" value="5"/&gt;
+  &lt;parameter name="percent_to_free" value="10"/&gt;
+&lt;/store-janitor&gt;
+    </pre>
+<p>It is recommended to have <span class="codefrag">heapsize</span> equal to -Xmx, especially
+    on Sun's JVM which is unable to shrink its heap once it grows above the minimum. 
+    The <span class="codefrag">freememory</span> parameter should be greater than the amount
+    of memory necessary for normal application operation.
+    </p>
+<p> The <span class="codefrag">cleanupthreadinterval</span> defines the interval
+    (in seconds)of the background 
+    thread which checks memory. Also this parameter should configured wisely. 
+    A too short interval can also cause a high system load. The 
+    <span class="codefrag">threadpriority</span> defines the priority of the background thread
+    (1 is the lowest level and 10 the highest).</p>
+<p>
+    The <span class="codefrag">percent_to_free</span> parameter describes what percentage of the 
+    elements of each registered Store shall be removed when low on memory.
+    </p>
+  
+  
+</body>
+</html>

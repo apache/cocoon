@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>WML Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the WML serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>WML Serializer</h1>
+    
+<p>
+      The WML serializer serializes sax events to WML.
+      The output of the WML serializer is a WML document.
+    </p>
+    
+<ul>
+      
+<li>Name : wml</li>
+      
+<li>Class: org.apache.cocoon.serialization.XMLSerializer</li>
+      
+<li>Cacheable: yes</li>
+    
+</ul>
+    
+<h2>Sitemap Configuration</h2>
+<p>
+        The WML serializer is declared in the sitemap serializers section.
+      </p>
+<pre class="code">
+&lt;map:serializers ...
+...
+   &lt;map:serializer name="wml" 
+     src="org.apache.cocoon.serialization.XMLSerializer"
+     mime-type="text/vnd.wap.wml" 
+     logger="sitemap.serializer.wml"&gt;
+    &lt;doctype-public&gt;-//WAPFORUM//DTD WML 1.1//EN&lt;/doctype-public&gt;
+    &lt;doctype-system&gt;http://www.wapforum.org/DTD/wml_1.1.xml&lt;/doctype-system&gt;
+   &lt;/map:serializer&gt;
+...
+      </pre>
+<p>
+        The declaration of the WML serializer shall use following 
+        XML serializer configuration parameters
+      </p>
+<table>
+        
+<tr>
+<th colspan="1" rowspan="1">Name</th><th colspan="1" rowspan="1">Value</th><th colspan="1" rowspan="1">Comment</th>
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">doctype-public</td><td colspan="1" rowspan="1">-//WAPFORUM//DTD WML 1.1//EN</td>
+          <td colspan="1" rowspan="1">specifies the WML public document type</td>
+        
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">doctype-system</td><td colspan="1" rowspan="1">http://www.wapforum.org/DTD/wml_1.1.xml</td>
+          <td colspan="1" rowspan="1">specifies the WML system document type</td>
+        
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">mime-type</td><td colspan="1" rowspan="1">text/vnd.wap.wml</td>
+          <td colspan="1" rowspan="1">specifies mime-type of the serialized WML document.
+          </td>
+        
+</tr>
+      
+</table>
+    
+<h2>Pipeline Usage</h2>
+<p>
+        Using the WML Serializer in a pipeline is just setting the 
+        serializer type to wml. 
+        The following code snippet uses the WML Serializer:
+      </p>
+<pre class="code">
+&lt;map:match pattern="*.wml"&gt;
+...
+  &lt;map:serialize type="wml"/&gt;
+&lt;/map:match&gt;
+...
+      </pre>
+    
+<h2>Further Reading</h2>
+<p>
+        As WML serializer uses the XML serializer internally, you might 
+        want to read the complete list of valid XML configuration parameters.
+        It is available at <a href="xml-serializer.html">XML serializer</a>
+        user docuementation.
+      </p>
+  
+  
+</body>
+</html>

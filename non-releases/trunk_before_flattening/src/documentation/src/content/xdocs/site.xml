@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2002-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<site label="Apache Cocoon" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="docs">
+  
+  <docs label="Documentation" href="" tab="docs">
+    <index label="Overview" href="index.html"/>
+    <status label="Changes" href="changes.html"/>
+    <doc label="Core Technologies">
+      <doc label="Concepts" href="concepts.html"/>      
+      <doc label="Sitemap">
+        <doc label="sitemap.xmap"/>
+        <doc label="Aggregation"/>
+        <doc label="..."/>        
+        <doc label="Components">
+          <doc label="Generators">
+            <doc label="File Generator" href="sc_file-generator.html"/>
+          </doc>
+          <doc label="Transformers"/>
+          <doc label="..."/>          
+        </doc>        
+      </doc>
+      <doc label="Control Flow">
+        <doc label="Flowscript">
+          <doc label="..."/>          
+        </doc>
+        <doc label="Javaflow">
+          <doc label="..."/>         
+        </doc>
+      </doc>
+      <doc label="Cocoon Forms">
+        <doc label="Widgets"/>
+        <doc label="Binding"/>
+        <doc label="Flowscript API"/>
+        <doc label="..."/>        
+      </doc>
+    </doc>
+    
+    <doc label="Configuration">
+      <doc label="Overview"/>
+      <doc label="sitemap.xmap"/>
+      <doc label="cocoon.xconf"/>
+      <doc label="web.xml"/>
+      <doc label="Logging"/>
+      <doc label="Choosing implementations">
+        <doc label="XSLT Processor"/>
+        <doc label="Store"/>
+      </doc>
+      <doc label="Caching"/>
+      <doc label="Performance"/>
+      <doc label="..."/>            
+    </doc>
+    
+    <doc label="More technologies">
+      <doc label="Protocols"/>
+      <doc label="Input Modules"/>
+      <doc label="Internationalization"/>
+      <doc label="Encoding &amp; Entity resolution"/>
+      <doc label="..."/>      
+    </doc>
+
+    <doc label="Your own project">
+      <doc label="Building Cocoon"/>      
+      <doc label="Ant integration" href="custom-cocoon-based-project-using-ant.html"/>
+      <doc label="Maven integration"/>
+      <doc label="Eclipse integration"/>
+      <doc label="Deployment">
+        <doc label="Tomcat"/>
+        <doc label="Jetty"/>
+      </doc>
+      <doc label="..."/>
+    </doc>
+
+    <doc label="Extending Cocoon">
+      <doc label="Understanding the Cocoon Container"/>
+      <doc label="Custom sitemap components"/>
+      <doc label="Custom general components"/>
+      <doc label="..."/>
+    </doc> 
+    
+    <doc label="Cocoon Internals">
+      <doc label="Overview"/>
+      <doc label="How to work on Cocoon internals?"/>      
+      <doc label="From the request to the response"/>
+      <doc label="Cocoon container ('the core')"/>
+      <doc label="Pipeline machinery (Treeprocessor)"/>
+      <doc label="Flowscript integration"/>
+      <doc label="Javaflow integration"/>
+      <doc label="How does logging work?"/>    
+    </doc>
+    
+    <doc label="External resources">
+      <doc label="Articles"/>
+      <doc label="Books"/>
+      <doc label="Other resources"/>
+    </doc>   
+        
+  </docs>
+
+  <tutorials label="Tutorials" tab="tutorials">
+    <doc label="Getting started">
+      <doc label="Overview" href="getting-started.html"/>
+      <doc label="Run Cocoon in 2 Minutes"/>
+      <doc label="What can Cocoon do for you?"/>
+      <doc label="Overview Cocoon concepts"/>
+      <doc label="Publishing (pipelines)"/>
+      <doc label="Applications (control flow)"/>
+      <doc label="Form Handling (Ccooon Forms)"/>
+    </doc> 
+    <doc label="More Tutorials">
+      <doc label="..."/>
+    </doc>
+  </tutorials>
+
+  <doc label="Blocks" tab="blocks">
+    <doc label="Overview"  href="blocks.html"/>
+    <doc label="Core blocks">
+      <doc label="Cocoon Forms"/>      
+    </doc>
+    <doc label="Core blocks under heavy development">
+      <doc label="XML-Templating"/> 
+      <doc label="Javaflow"/>         
+    </doc>         
+    <doc label="Supported blocks">
+      <doc label="Cocoon Portal" href="http://forrest.zones.apache.org/fr/build/cocoon-doco-portal/"/>
+        <!-- later to be removed by http://cocoon.apache.org/blocks/portal/1.0/index.html" -->        
+      <doc label="OJB"/>        
+      <doc label="..."/>
+    </doc>
+    <doc label="Unsupported blocks">
+      <doc label="ASCII-Art"/>       
+    </doc>        
+    <doc label="External blocks">
+      <doc label="List"/>    
+    </doc>      
+  </doc>
+
+  <legacy label="Legacy" tab="legacy">
+	  <doc label="index" href="c21-index.html"/>
+	  <doc label="introduction" href="c21-introduction.html"/>
+	  <doc label="who" href="c21-who.html"/>  
+	  <snippet label="snippet">
+	    <doc label="snippet-internal-pipeline" href="c21-internal-pipelines.html"/>
+	    <doc label="snippet-xslt-options" href="c21-specifying-xslt-options.html"/>
+	  </snippet>
+	  <doc label="license" href="c21-block-global-license.html"/>
+		  <userdocs label="userdocs">
+		    <actions label="actions">
+		      <doc label="sendmail-action" href="c21-block-mail-sendmail-action.html"/>
+		      <doc label="session-action" href="c21-block-session-fw-session-action.html"/>
+		      <doc label="actions" href="c21-actions.html"/>
+		      <doc label="script-action" href="c21-block-bsf-script-action.html"/>
+		      <doc label="database-actions" href="c21-block-databases-database-actions.html"/>
+		    </actions>
+		    <xsp label="xsp">
+		      <doc label="xsp-internals" href="c21-block-xsp-internals.html"/>
+		      <doc label="session" href="c21-block-xsp-session.html"/>
+		      <doc label="logicsheet-forms" href="c21-block-xsp-logicsheet-forms.html"/>
+		      <doc label="logicsheet" href="c21-block-xsp-logicsheet.html"/>
+		      <doc label="request" href="c21-block-xsp-request.html"/>
+		      <doc label="esql" href="c21-block-xsp-esql.html"/>
+		      <doc label="sendmail" href="c21-block-xsp-sendmail.html"/>
+		      <doc label="index" href="c21-block-xsp-index.html"/>
+		      <doc label="sessions" href="c21-block-xsp-sessions.html"/>
+		      <doc label="logicsheet-concepts" href="c21-block-xsp-logicsheet-concepts.html"/>
+		    </xsp>
+		    <serializers label="serializers">
+		      <doc label="ziparchive-serializer" href="c21-ziparchive-serializer.html"/>
+		      <doc label="xhtml-serializer" href="c21-xhtml-serializer.html"/>
+		      <doc label="vrml-serializer" href="c21-vrml-serializer.html"/>
+		      <doc label="pdf-serializer" href="c21-block-fop-pdf-serializer.html"/>
+		      <doc label="serializers" href="c21-serializers.html"/>
+		      <doc label="svgxml-serializer" href="c21-block-batik-svgxml-serializer.html"/>
+		      <doc label="pcl-serializer" href="c21-block-fop-pcl-serializer.html"/>
+		      <doc label="link-serializer" href="c21-link-serializer.html"/>
+		      <doc label="svg-serializer" href="c21-block-batik-svg-serializer.html"/>
+		      <doc label="svgpng-serializer" href="c21-block-batik-svgpng-serializer.html"/>
+		      <doc label="xls-serializer" href="c21-block-poi-xls-serializer.html"/>
+		      <doc label="text-serializer" href="c21-text-serializer.html"/>
+		      <doc label="xml-serializer" href="c21-xml-serializer.html"/>
+		      <doc label="svgjpeg-serializer" href="c21-block-batik-svgjpeg-serializer.html"/>
+		      <doc label="ps-serializer" href="c21-block-fop-ps-serializer.html"/>
+		      <doc label="svgtiff-serializer" href="c21-block-batik-svgtiff-serializer.html"/>
+		      <doc label="wap-serializer" href="c21-wap-serializer.html"/>
+		      <doc label="html-serializer" href="c21-html-serializer.html"/>
+		    </serializers>
+		    <generators label="generators">
+		      <doc label="jsp-generator" href="c21-block-jsp-jsp-generator.html"/>
+		      <doc label="serverpages-generator" href="c21-block-xsp-serverpages-generator.html"/>
+		      <doc label="xpathdirectory-generator" href="c21-xpathdirectory-generator.html"/>
+		      <doc label="stream-generator" href="c21-stream-generator.html"/>
+		      <doc label="search-generator" href="c21-block-lucene-search-generator.html"/>
+		      <doc label="script-generator" href="c21-block-bsf-script-generator.html"/>
+		      <doc label="calendar-generator" href="c21-calendar-generator.html"/>
+		      <doc label="xmldb-generator" href="c21-block-xmldb-xmldb-generator.html"/>
+		      <doc label="xmldbcollection-generator" href="c21-block-xmldb-xmldbcollection-generator.html"/>
+		      <doc label="wsproxy-generator" href="c21-block-proxy-webserviceproxy-generator.html"/>
+		      <doc label="extractor-generator" href="c21-block-batik-extractor-generator.html"/>
+		      <doc label="profile-generator" href="c21-block-profiler-profiler-generator.html"/>
+		      <doc label="jx-generator" href="c21-jxtemplate-generator.html"/>
+		      <doc label="html-generator" href="c21-html-generator.html"/>
+		      <doc label="linkstatus-generator" href="c21-linkstatus-generator.html"/>
+		      <doc label="directory-generator" href="c21-directory-generator.html"/>
+		      <doc label="velocity-generator" href="c21-block-velocity-velocity-generator.html"/>
+		      <doc label="mp3directory-generator" href="c21-mp3directory-generator.html"/>
+		      <doc label="request-generator" href="c21-request-generator.html"/>
+		      <doc label="status-generator" href="c21-status-generator.html"/>
+		      <doc label="generators" href="c21-generators.html"/>
+		      <doc label="error-generator" href="c21-error-generator.html"/>
+		      <doc label="file-generator" href="c21-file-generator.html"/>
+		      <doc label="imagedirectory-generator" href="c21-imagedirectory-generator.html"/>
+		    </generators>
+		    <forms label="forms">
+		      <doc label="formsgenerator" href="c21-cforms-formgenerator.html"/>
+		      <doc label="templategenerator" href="c21-cforms-template-generator.html"/>
+		      <doc label="xslt" href="c21-cforms-xslt.html"/>
+		      <doc label="validation" href="c21-cforms-validation.html"/>
+		      <doc label="templatetransformer" href="c21-cforms-template-transformer.html"/>
+		      <doc label="widget_field" href="c21-cforms-field-widget.html"/>
+		      <doc label="widget_aggregatefield" href="c21-cforms-aggregatefield-widget.html"/>
+		      <doc label="binding" href="c21-cforms-binding.html"/>
+		      <doc label="index" href="c21-cforms.html"/>
+		      <doc label="widget_messages" href="c21-cforms-messages-widget.html"/>
+		      <doc label="widget_action" href="c21-cforms-action-widget.html"/>
+		      <doc label="api_java" href="c21-cforms-java-api.html"/>
+		      <doc label="sample" href="c21-cforms-sample.html"/>
+		      <doc label="widget_multivaluefield" href="c21-cforms-multivaluefield-widget.html"/>
+		      <doc label="api_javascript" href="c21-cforms-javascript.html"/>
+		      <doc label="widget_booleanfield" href="c21-cforms-booleanfield-widget.html"/>
+		      <doc label="widget_submit" href="c21-cforms-submit-widget.html"/>
+		      <doc label="widget_repeater" href="c21-cforms-repeater-widget.html"/>
+		      <doc label="widget_repeater_action" href="c21-cforms-repeateraction-widget.html"/>
+		      <doc label="widget_upload" href="c21-cforms-upload-widget.html"/>
+		      <doc label="widget_row_action" href="c21-cforms-row-action-widget.html"/>
+		      <doc label="widget_output" href="c21-cforms-output-widget.html"/>
+		      <doc label="eventhandling" href="c21-cforms-eventhandling.html"/>
+		      <doc label="datatypes" href="c21-cforms-datatypes.html"/>
+		    </forms>
+		    <selectors label="selectors">
+		      <doc label="requestattribute-selector" href="c21-requestattribute-selector.html"/>
+		      <doc label="requestparameter-selector" href="c21-requestparameter-selector.html"/>
+		      <doc label="resourceexists-selector" href="c21-resourceexists-selector.html"/>
+		      <doc label="selectors" href="c21-selectors.html"/>
+		      <doc label="requestmethod-selector" href="c21-requestmethod-selector.html"/>
+		      <doc label="host-selector" href="c21-host-selector.html"/>
+		      <doc label="browser-selector" href="c21-browser-selector.html"/>
+		      <doc label="regular-expression-header-selector" href="c21-regexpheader-selector.html"/>
+		      <doc label="date-selector" href="c21-date-selector.html"/>
+		      <doc label="parameter-selector" href="c21-parameter-selector.html"/>
+		    </selectors>
+		    <transformers label="transformers">
+		      <doc label="xinclude-transformer" href="c21-xinclude-transformer.html"/>
+		      <doc label="sql-transformer" href="c21-sql-transformer.html"/>
+		      <doc label="jx-template-transformer" href="c21-jxtemplate-transformer.html"/>
+		      <doc label="xslt-transformer" href="c21-xslt-transformer.html"/>
+		      <doc label="parser-transformer" href="c21-block-chaperon-parser-transformer.html"/>
+		      <doc label="log-transformer" href="c21-log-transformer.html"/>
+		      <doc label="lexer-transformer" href="c21-block-chaperon-lexer-transformer.html"/>
+		      <doc label="writedomsession-transformer" href="c21-writedomsession-transformer.html"/>
+		      <doc label="extractor-transformer" href="c21-block-batik-extractor-transformer.html"/>
+		      <doc label="readdomsession-transformer" href="c21-readdomsession-transformer.html"/>
+		      <doc label="filter-transformer" href="c21-filter-transformer.html"/>
+		      <doc label="augment-transformer" href="c21-augment-transformer.html"/>
+		      <doc label="cinclude-transformer" href="c21-cinclude-transformer.html"/>
+		      <doc label="pattern-transformer" href="c21-block-chaperon-pattern-transformer.html"/>
+		      <doc label="transformers" href="c21-transformers.html"/>
+		      <doc label="ldap-transformer" href="c21-block-naming-ldap-transformer.html"/>
+		      <doc label="encodeurl-transformer" href="c21-encodeurl-transformer.html"/>
+		      <doc label="sourcewriting-transformer" href="c21-sourcewriting-transformer.html"/>
+		    </transformers>
+		    <matchers label="matchers">
+		      <doc label="wildcarduri-matcher" href="c21-wildcarduri-matcher.html"/>
+		      <doc label="wildcardheader-matcher" href="c21-wildcardheader-matcher.html"/>
+		      <doc label="matchers" href="c21-matchers.html"/>
+		      <doc label="template-matcher" href="c21-template-matcher.html"/>
+		    </matchers>
+		    <concepts label="concepts">
+		      <doc label="redirection" href="c21-redirection.html"/>
+		      <doc label="modules" href="c21-modules.html"/>
+		      <doc label="views" href="c21-views.html"/>
+		      <doc label="mrustore" href="c21-mru-store.html"/>
+		      <doc label="profiler" href="c21-profiler.html"/>
+		      <doc label="storejanitor" href="c21-store-janitor.html"/>
+		      <doc label="caching" href="c21-caching.html"/>
+		      <doc label="matchers_selectors" href="c21-matchers-selectors.html"/>
+		      <doc label="errorhandling" href="c21-error-handling.html"/>
+		      <doc label="index" href="c21-concepts.html"/>
+		      <doc label="sitemap" href="c21-sitemap.html"/>
+		      <doc label="databases" href="c21-databases.html"/>
+		      <doc label="catalog" href="c21-catalog.html"/>
+		      <doc label="modules-ref" href="c21-modules-ref.html"/>
+		      <doc label="sitemap-examples" href="c21-sitemap-examples.html"/>
+		      <doc label="xmlsearching" href="c21-block-lucene-xml-searching.html"/>
+		      <doc label="actions" href="c21-actions2.html"/>
+		      <doc label="persistence" href="c21-persistent-store.html"/>
+		    </concepts>
+		    <flow label="flow">
+		      <doc label="tutor" href="c21-flow-tutorial.html"/>
+		      <doc label="sitemap" href="c21-flow-sitemap.html"/>
+		      <doc label="java" href="c21-flow-java.html"/>
+		      <doc label="how-does-it-work" href="c21-flow-workings.html"/>
+		      <doc label="views" href="c21-flow-views.html"/>
+		      <doc label="using" href="c21-flow-using.html"/>
+		      <doc label="velocity" href="c21-flow-velocity.html"/>
+		      <doc label="continuations" href="c21-flow-continuations.html"/>
+		      <doc label="api" href="c21-flow-api.html"/>
+		      <doc label="index" href="c21-flow.html"/>
+		      <doc label="jxtemplate" href="c21-flow-jxtemplate.html"/>
+		      <doc label="jpath" href="c21-flow-jpath.html"/>
+		    </flow>
+		    <offline label="offline">
+		      <doc label="cli" href="c21-cli.html"/>
+		      <doc label="bean" href="c21-cocoon-bean.html"/>
+		      <doc label="ant" href="c21-cocoon-ant-task.html"/>
+		      <doc label="configuration" href="c21-offline-configuration.html"/>
+		      <doc label="index" href="c21-offline.html"/>
+		    </offline>
+		    <readers label="readers">
+		      <doc label="readers" href="c21-readers.html"/>
+		      <doc label="database-reader" href="c21-block-databases-database-reader.html"/>
+		      <doc label="image-reader" href="c21-image-reader.html"/>
+		      <doc label="directoryziparchiver-reader" href="c21-directoryziparchiver-reader.html"/>
+		      <doc label="resource-reader" href="c21-resource-reader.html"/>
+		      <doc label="axisrpc-reader" href="c21-block-axis-axisrpc-reader.html"/>
+		      <doc label="jsp-reader" href="c21-block-jsp-jsp-reader.html"/>
+		    </readers>
+		  </userdocs>
+		  <doc label="overview" href="c21-overview.html"/>
+		  <installing label="installing">
+		    <doc label="requirements" href="c21-install-requirements.html"/>
+		    <doc label="tests" href="c21-tests.html"/>
+		    <doc label="jars" href="c21-jars.html"/>
+		    <doc label="updating" href="c21-updating.html"/>
+		    <doc label="index" href="c21-installing.html"/>
+		  </installing>
+		  <developing label="developing">
+		    <doc label="web3" href="c21-block-web3-sap-r3.html"/>
+		    <doc label="deli" href="c21-block-deli-index.html"/>
+		    <doc label="extending" href="c21-extending-cocoon.html"/>
+		    <doc label="datasources" href="c21-developing-with-datasources.html"/>
+		    <doc label="source" href="c21-sources.html"/>
+		    <doc label="stores" href="c21-stores.html"/>
+		    <doc label="deliquick" href="c21-block-deli-deli-quick.html"/>
+		    <doc label="avalon" href="c21-developing-with-avalon.html"/>
+		    <doc label="parent-component-manager" href="c21-parent-component-manager.html"/>
+		    <doc label="httprequest" href="c21-http-request.html"/>
+		    <webapps label="webapps">
+		      <doc label="contexts" href="c21-block-session-fw-session-contexts.html"/>
+		      <doc label="forms" href="c21-block-session-fw-webapp-forms.html"/>
+		      <doc label="authentication" href="c21-block-authentication-fw-authentication.html"/>
+		      <doc label="session" href="c21-block-session-fw-session-transformer.html"/>
+		    </webapps>
+		    <portal label="portal">
+		      <doc label="forms" href="c21-block-portal-forms.html"/>
+		      <doc label="basket" href="c21-block-portal-basket.html"/>
+		      <doc label="events" href="c21-block-portal-events.html"/>
+		      <doc label="profiles" href="c21-block-portal-profiles.html"/>
+		      <doc label="index" href="c21-block-portal-index.html"/>
+		      <doc label="coplets" href="c21-block-portal-coplets.html"/>
+		      <doc label="portal-block" href="c21-block-portal-portal-block.html"/>
+		    </portal>
+		    <doc label="index" href="c21-developing.html"/>
+		  </developing>
+		  <doc label="features" href="c21-features.html"/>
+		  <doc label="todo" href="c21-todo2.html"/>
+		  <doc label="performancetips" href="c21-performance-tips.html"/>
+		  <tutorial label="tutorial">
+		    <doc label="tutorial-rmi-generator" href="c21-tutorial-rmi-generator.html"/>
+		    <doc label="tutorial-generator" href="c21-tutorial-custom-generator.html"/>
+		    <doc label="index" href="c21-tutorials.html"/>
+		  </tutorial>
+		  <plan label="plan">
+		    <doc label="changes-doc" href="c21-changes.html"/>
+		    <doc label="release" href="c21-release.html"/>
+		    <doc label="updating" href="c21-updating-to-2.2.html"/>
+		    <doc label="review-sitemap-docs" href="c21-review-sitemap-docs.html"/>
+		    <doc label="samples" href="c21-plan-samples.html"/>
+		    <doc label="todo-doc" href="c21-todo.html"/>
+		    <doc label="doc" href="c21-doc-plan.html"/>
+		    <doc label="index" href="c21-plan.html"/>
+		    <doc label="roadmap" href="c21-roadmap.html"/>
+		  </plan>
+		  <howto label="howto">
+		    <doc label="howto-html-pdf-publishing" href="c21-howto-pdf-publishing.html"/>
+		    <doc label="howto-paginator-transformer" href="c21-paginator-transformer.html"/>
+		    <doc label="howto-patch" href="c21-block-global-howto-patch.html"/>
+		    <doc label="howto-author-core-docs" href="c21-howto-author-docs.html"/>
+		    <doc label="howto-explore-samples" href="c21-samples.html"/>
+		    <doc label="howto-bugzilla" href="c21-block-global-howto-bugzilla.html"/>
+		    <doc label="howto-flow-debugger" href="c21-howto-flow-debugger.html"/>
+		  </howto>
+	  </legacy>
+</site>

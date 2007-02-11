@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Christopher Oliver" name="DC.Creator">
+<meta content="Ovidiu Predescu" name="DC.Creator">
+</head>
+<body>
+   
+<h1>JPath Logic Sheet</h1>
+    
+<p>
+     The JPath Logic Sheet is an <a href="../xsp/index.html">XSP</a> logic sheet that allows
+     you to access data from a Cocoon Flowscript in an XSP page and inject it into a Cocoon
+     pipeline. It provides a set of tags (similar to the those defined by
+     <a class="external" href="http://www.w3.org/TR/xslt">XSLT</a>) that allow you to iterate over Java
+     collections (and Java or JavaScript arrays) and to test for the presence of optional or
+     alternate bean properties. It is based on
+     <a class="external" href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a>.
+    </p>
+    
+<p>Samples of this Logic Sheet are avaliable in the XSP implementation of the petstore block</p>
+   
+   
+<h1>Tags</h1>
+    
+<p>The JPath tags are defined in the namespace</p>
+    
+<pre class="code">http://apache.org/xsp/jpath/1.0</pre>
+    
+<h2>if</h2>
+<p>The <span class="codefrag">if</span> tag allows the conditional execution of its body according to value of its <span class="codefrag">test</span> attribute:</p>
+<pre class="code">
+&lt;if test="XPathExpression"&gt;
+  body
+&lt;/if&gt;
+     </pre>
+<p>Example:</p>
+<pre class="code">
+&lt;jpath:if test="cart/numberOfItems = 0"&gt;
+  Your cart is empty
+&lt;/jpath:if&gt;
+     </pre>
+    
+<h2>choose</h2>
+<p>The <span class="codefrag">choose</span> tag performs conditional block execution by its embedded
+        <span class="codefrag">when</span> sub tags. It renders the body of the first <span class="codefrag">when</span> tag whose
+        <span class="codefrag">test</span> condition evaluates to true. If none of the <span class="codefrag">test</span> conditions
+        of its nested <span class="codefrag">when</span> tags evaluate to <span class="codefrag">true</span>, then the body of its
+        <span class="codefrag">otherwise</span> tag is evaluated, if present:</p>
+<pre class="code">
+&lt;choose&gt;
+  &lt;when test="XPathExpression"&gt;
+    body
+  &lt;/when&gt;+
+  &lt;otherwise&gt;
+    body
+  &lt;/otherwise&gt;?
+&lt;/choose&gt;
+     </pre>
+<p>Example:</p>
+<pre class="code">
+&lt;choose&gt;
+  &lt;when test="not(user/loggedIn)"&gt;
+     You're not logged in
+  &lt;/when&gt;
+  &lt;otherwise&gt;
+     You're already logged in
+  &lt;/otherwise&gt;
+&lt;/choose&gt;
+     </pre>
+    
+<h2>value-of</h2>
+<p>The <span class="codefrag">value-of</span> tag evaluates an expression and outputs the result of the evaluation:</p>
+<pre class="code">
+&lt;value-of select="XPathExpression"/&gt;
+     </pre>
+<p>Example:</p>
+<pre class="code">
+&lt;value-of select="cart/numberOfItems"&gt;
+     </pre>
+    
+<h2>for-each</h2>
+<p>The <span class="codefrag">for-each</span> tag allows you to iterate over a collection of objects:</p>
+<pre class="code">
+&lt;for-each select="XPathExpression"&gt;
+  body
+&lt;/for-each&gt;
+     </pre>
+<p>When using XPath expressions within <span class="codefrag">for-each</span> the current element is the
+        context node and can be referenced with XPath dot operator:</p>
+<pre class="code">.</pre>
+<p>Example:</p>
+<pre class="code">
+&lt;for-each select="cart/cartItems[position() &lt;= $count]"&gt;
+   &lt;td&gt;&lt;value-of select="./productId"&gt;&lt;/td&gt;
+&lt;/for-each&gt;
+     </pre>
+    
+<h2>continuation</h2>
+<p>The <span class="codefrag">continuation</span> tag returns the id of the current web continuation of your
+        Flowscript. You can refer to previous continuations by supplying the optional
+        <span class="codefrag">level</span> attribute. Zero is the current level, <span class="codefrag">-1</span> refers to the
+        previous continuation, and so on.</p>
+<pre class="code">
+&lt;continuation [level="Number"]/&gt;
+     </pre>
+<p>Example:</p>
+<pre class="code">
+&lt;xsp:attribute name="action"&gt;&lt;xsp:expr&gt;&lt;jpath:continuation/&gt;+".form"&lt;/xsp:expr&gt;&lt;/xsp:attribute&gt;
+     </pre>
+    
+<h2>set-lenient</h2>
+<div class="note">Since Cocoon 2.1.6</div>
+<p>
+        The <span class="codefrag">set-lenient</span> tag switch the lenient setting of jxpath.
+        By default it is set to false. If set to true, xpaths that don't point to an 
+        object or a set of them will return null (Instead of that annoying exception). 
+        Saves all the checking if you can accept nulls and are sure there are no typos.
+      </p>
+<p>
+        If the tag contains child elements it will scope the setting for the enclosed
+        elements, otherwise it is a global setting. You can't nest &lt;jpath:set-lenient&gt;
+        tags.
+      </p>
+<pre class="code">
+        &lt;jpath:set-lenient lenient="true|false"&gt;
+      </pre>
+<p>Example:</p>
+<pre class="code">
+        &lt;jpath:set-lenient lenient="true"&gt;
+      </pre>
+   
+  
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PDF Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="John Morrison" name="DC.Creator">
+<meta content="This document describes the pdf serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+        
+<h1>PDF Serializer</h1>
+            
+<p>The PDF serializer takes
+                <a class="external" href="http://www.w3.org/TR/xsl">XSL FO</a> SAX events as input.
+                By using the <a class="external" href="http://xml.apache.org/fop/">FOP</a> project
+                it creates PDF out of the SAX events.</p>
+            
+<p>This serializer is optional and requires the FOP package in the lib
+                directory when building Cocoon 2. However, the distribution includes
+                this package already.</p>
+            
+<ul>
+                
+<li>Name : fo2pdf</li>
+                
+<li>Class: org.apache.cocoon.serialization.FOPSerializer</li>
+                
+<li>Cacheable: yes</li>
+            
+</ul>
+        
+        
+<h1>FOP and Embedding Fonts</h1>
+          
+<p>Dynamically generating a PDF file (with embedded fonts) in Cocoon
+            is basically 8 steps:</p>
+          
+<ol>
+            
+<li>Create the font(s) metric file(s).</li>
+            
+<li>Create a custom configuration file for FOP (Cocoons PDF renderer),
+              which tells it what fonts are available and where to find them.</li>
+            
+<li>Create your xml (left as an exercise for the reader ;)</li>
+            
+<li>Create your xslt (again, up to you)</li>
+            
+<li>In the sitemap, tell the fo2pdf serializer where your custom
+              configuration file is located.</li>
+            
+<li>Add a match for your PDF (I'm sure you can do the rest...).</li>
+            
+<li>Start Cocoon.</li>
+            
+<li>Request your PDF.</li>
+          
+</ol>
+          
+<p>Easy yeah? OK. Step-by-step...</p>
+
+          
+<h2>Create the font(s) metric file(s).</h2>
+<div class="note">All java calls have nothing else in the classpath or ext directory.
+                Also, instructions which have wrapped should be entered as one single
+                instruction.</div>
+<p>The instruction to generate a font metric file is:</p>
+<p>Windows:</p>
+<pre class="code">
+$ cd %PATH_TO_COCOON%\lib
+$ java -cp optional\fop-0.20.4.jar;core\xercesImpl-2.0.0.jar;core\xml-apis.jar \
+  org.apache.fop.fonts.apps.TTFReader \
+  %PATH_TO_FONT% %PATH_TO_METRICS_DIR%\%FONT_NAME%.xml
+            </pre>
+<p>Unix:</p>
+<pre class="code">
+$ cd $PATH_TO_COCOON/lib
+$ java -cp optional/fop-0.20.4.jar;core/xercesImpl-2.0.0.jar;core/xml-apis.jar \
+  org.apache.fop.fonts.apps.TTFReader \
+  $PATH_TO_FONT  $PATH_TO_METRICS_DIR/$FONT_NAME.xml
+            </pre>
+<h3>Example: Create the Arial metric files.</h3>
+<p>For the sake of the rest of this tutorial, I'm going to be using
+                Windows NT, converting the Arial family of fonts and storing the metrics
+                files in the location <span class="codefrag">D:\fop-fonts</span>.</p>
+<p>My TTF files are located in <span class="codefrag">C:\WINNT\Fonts</span>. If you are
+                running on Linux/Windows 9x/ME/2000/XP please alter as appropriate.</p>
+<div class="note">I normally use Cygwin; a Unix shell environment which runs on Windows.
+                If I slip some Unix into here, please excuse me (although I'd welcome
+                the feedback...).</div>
+<p>Start a command session (as appropriate to your env), then change
+                to Cocoon libs directory.</p>
+<pre class="code">$ cd %PATH_TO_COCOON%\lib</pre>
+<p>Create the metrics directory (D:\fop-fonts)</p>
+<pre class="code">$ mkdir d:\fop-fonts</pre>
+<p>Create the metrics for arial.ttf, arialb.ttf, arialbi.ttf, ariali.ttf</p>
+<pre class="code">
+$ java -cp optional\fop-0.20.4.jar;core\xercesImpl-2.0.0.jar;core\xml-apis.jar \
+  org.apache.fop.fonts.apps.TTFReader \
+  C:\WINNT\Fonts\arial.ttf D:\fop-fonts\arial.ttf.xml
+$ java -cp optional\fop-0.20.4.jar;core\xercesImpl-2.0.0.jar;core\xml-apis.jar \
+  org.apache.fop.fonts.apps.TTFReader \
+  C:\WINNT\Fonts\arialb.ttf  D:\fop-fonts\arialb.ttf.xml
+$ java -cp optional\fop-0.20.4.jar;core\xercesImpl-2.0.0.jar;core\xml-apis.jar \
+  org.apache.fop.fonts.apps.TTFReader \
+  C:\WINNT\Fonts\arialbi.ttf D:\fop-fonts\arialbi.ttf.xml
+$ java -cp optional\fop-0.20.4.jar;core\xercesImpl-2.0.0.jar;core\xml-apis.jar \
+  org.apache.fop.fonts.apps.TTFReader \
+  C:\WINNT\Fonts\ariali.ttf  D:\fop-fonts\ariali.ttf.xml
+</pre>
+<p>If everything went to plan, you should now have the metrics for
+                the Arial fonts in your fop-fonts directory.</p>
+          
+<h2>Create a custom configuration file</h2>
+<p>I normally store this with the metrics file in the fop-fonts
+              directory (called config.xml (ensure there's not a font called
+              config ;)) although I fully qualify all the filenames just incase I
+              move it ;)</p>
+<p>I also find it useful to retain the <span class="codefrag">.ttf</span> as it is also
+              possible to add other types of fonts (if you want to read the FOP
+              docs) and the <span class="codefrag">.ttf</span> tells me where to locate the font.</p>
+<pre class="code">
+&lt;configuration&gt;
+  &lt;fonts&gt;
+    &lt;font metrics-file="D:/fop-fonts/arial.ttf.xml" 
+          kerning="yes" embed-file="C:/WINNT/Fonts/arial.ttf"&gt;
+      &lt;font-triplet name="Arial" style="normal" weight="normal"/&gt;
+      &lt;font-triplet name="ArialMT" style="normal" weight="normal"/&gt;
+    &lt;/font&gt;
+    &lt;font metrics-file="D:/fop-fonts/arialb.ttf.xml" 
+          kerning="yes" embed-file="C:/WINNT/Fonts/arialb.ttf"&gt;
+      &lt;font-triplet name="Arial" style="normal" weight="bold"/&gt;
+      &lt;font-triplet name="ArialMT" style="normal" weight="bold"/&gt;
+    &lt;/font&gt;
+    &lt;font metrics-file="D:/fop-fonts/arialbi.ttf.xml"
+          kerning="yes" embed-file="C:/WINNT/Fonts/arialbi.ttf"&gt;
+      &lt;font-triplet name="Arial" style="italic" weight="bold"/&gt;
+      &lt;font-triplet name="ArialMT" style="italic" weight="bold"/&gt;
+    &lt;/font&gt;
+    &lt;font metrics-file="D:/fop-fonts/ariali.ttf.xml"
+          kerning="yes" embed-file="C:/WINNT/Fonts/ariali.ttf"&gt;
+      &lt;font-triplet name="Arial" style="italic" weight="normal"/&gt;
+      &lt;font-triplet name="ArialMT" style="italic" weight="normal"/&gt;
+    &lt;/font&gt;
+  &lt;/fonts&gt;
+&lt;/configuration&gt;
+</pre>
+<p>There are other things you can add to this file, look at the FOP
+              documentation for further information.</p>
+<p>If you are wondering why each font has been added twice, it has to do
+              with the font lookup. If the font is specified as 'Arial' and the
+              weight is 'bold' then FOP searches for a matching
+              <span class="codefrag">&lt;font-triplet/&gt;</span>, then uses the parent
+              <span class="codefrag">&lt;font/&gt;</span> tag to get the actual font information.
+              If the font is specified as 'ArialMT' (it's proper name) it will still
+              work. Think of it as an alias capability.</p>
+          
+<h2>Sitemap and fo2pdf serializer.</h2>
+<p>All that remains is to tell the serializer, where your config file is
+              located. Find the line in your sitemap which looks like:</p>
+<pre class="code">
+&lt;map:serializer name="fo2pdf"
+                src="org.apache.cocoon.serialization.FOPSerializer"
+                mime-type="application/pdf"/&gt;
+</pre>
+<p>and replace it with:</p>
+<pre class="code">
+&lt;map:serializer name="fo2pdf"
+                src="org.apache.cocoon.serialization.FOPSerializer"
+                mime-type="application/pdf"&gt;
+  &lt;user-config&gt;D:/fop-fonts/config.xml&lt;/user-config&gt;
+&lt;/map:serializer&gt;
+</pre>
+<p>You can use absolute paths like above or relative ones. The relative
+              paths will be resolved to the sitemap's directory. Furthermore it's possible
+              to use Cocoon protocols like <span class="codefrag">cocoon://</span> or
+              <span class="codefrag">context://</span>.</p>
+<div class="note">In an older version of Cocoon (2.0.3 and earlier) the config file
+              location was specified by using an attribute 'src' on
+              &lt;user-config/&gt;. If you still have this in your sitemap, it's
+              recommended to change it to the above provided configuration.</div>
+          
+<p>And that's it. Oh, one final thing to remember: the cache isn't aware
+            of your config file; <strong>always</strong> delete your cache-dir
+            after modifying your config file.</p>
+        
+    
+</body>
+</html>

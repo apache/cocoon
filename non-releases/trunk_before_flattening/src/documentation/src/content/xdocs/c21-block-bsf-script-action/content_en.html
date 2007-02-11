@@ -1,0 +1,350 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ScriptAction in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the ScriptAction of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>ScriptAction</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td>
+          <td colspan="1" rowspan="1">script</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td>
+          <td colspan="1" rowspan="1">The <span class="codefrag">ScriptAction</span> component is used to executes any
+          script that can be run by the BSF.</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td>
+          <td colspan="1" rowspan="1">Action</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">BLOCK</td>
+          <td colspan="1" rowspan="1">bsf</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td>
+          <td colspan="1" rowspan="1">org.apache.cocoon.action.ScriptAction</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td>
+          <td colspan="1" rowspan="1">Cocoon 2.1</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td>
+          <td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>A simple action that executes any script that can be run by the BSF
+      system. BSF supports script languages like javascript, python, etc.</p>
+    
+    
+<h1>Usage</h1>
+      
+<p>This Action is used for quick prototyping of Action, realizing an
+      Action in a script language instead of java language.</p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p>The following sample executes the <span class="codefrag">script action/my-action.js</span>
+        for each URI matching pattern <span class="codefrag">*.vm</span>. If the ScriptAction
+        succeeds, the pipeline continues, invoking the VelocityGenerator, and
+        serializing the XML stream.</p>
+<pre class="code">&lt;map:match pattern="*.vm"&gt;
+  &lt;map:action type="script" src="action/my-action.js"&gt;
+    &lt;map:generate type="velocity" src="{1}.vm"/&gt;
+    &lt;map:serialize/&gt;
+  &lt;/map:action&gt;
+&lt;/map:match&gt;
+</pre>
+      
+<h2>Sitemap component configuration example</h2>
+<p>The following sample configures an ScriptAction, naming it
+        <span class="codefrag">script</span>.</p>
+<pre class="code">&lt;map:actions...
+  &lt;map:action name="script"
+    src="org.apache.cocoon.acting.ScriptAction"&gt; 
+    logger="sitemap.action.script"/&gt;    
+    &lt;!-- optional action configuration --&gt;
+    ...
+&lt;/map:actions&gt;
+</pre>
+      
+<h2>Configuration</h2>
+<p>ScriptAction has no configuration options.</p>
+      
+<h2>Setup</h2>
+<p>ScriptAction determines the name of the script getting executed
+        from its <span class="codefrag">src</span> attribute.</p>
+<p>The language of the script file is auto-detected by the BSF system
+        from the extension of the script.
+        </p>
+<p>The next table lists the default mapping of BSF:</p>
+<table>
+          
+<tr>
+            
+<th colspan="1" rowspan="1">Script language</th>
+            <th colspan="1" rowspan="1">Extension</th>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">javascript</td>
+            <td colspan="1" rowspan="1">js</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">jacl</td>
+            <td colspan="1" rowspan="1">jacl</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">netrexx</td>
+            <td colspan="1" rowspan="1">nrx</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">java</td>
+            <td colspan="1" rowspan="1">java</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">javaclass</td>
+            <td colspan="1" rowspan="1">class</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">bml</td>
+            <td colspan="1" rowspan="1">bml</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">vbscript</td>
+            <td colspan="1" rowspan="1">vbs</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">jscript</td>
+            <td colspan="1" rowspan="1">jss</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">perlscript</td>
+            <td colspan="1" rowspan="1">pls</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">perl</td>
+            <td colspan="1" rowspan="1">pl</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">jpython</td>
+            <td colspan="1" rowspan="1">py</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">lotusscript</td>
+            <td colspan="1" rowspan="1">lss</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">xslt</td>
+            <td colspan="1" rowspan="1">xslt</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">pnuts</td>
+            <td colspan="1" rowspan="1">pnut</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">beanbasic</td>
+            <td colspan="1" rowspan="1">bb</td>
+          
+</tr>
+        
+</table>
+<p>ScriptAction registers following objects before invoking the
+        script:</p>
+<table>
+          
+<tr>
+            
+<th colspan="1" rowspan="1">name</th>
+            <th colspan="1" rowspan="1">Object Typ</th>
+            <th colspan="1" rowspan="1">Comment</th>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">resolver</td>
+            <td colspan="1" rowspan="1">SourceResolver</td>
+            <td colspan="1" rowspan="1">Cocoon's source resolver</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">objectModel</td>
+            <td colspan="1" rowspan="1">Map</td>
+            <td colspan="1" rowspan="1">Cocoon's object model</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">parameters</td>
+            <td colspan="1" rowspan="1">Parameters</td>
+            <td colspan="1" rowspan="1">Cocoon's action parameter</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">actionMap</td>
+            <td colspan="1" rowspan="1">Map</td>
+            <td colspan="1" rowspan="1">Used for passing objects from the script back to the
+            ScriptAction, and to Cocoon's sitemap</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">logger</td>
+            <td colspan="1" rowspan="1">Logger</td>
+            <td colspan="1" rowspan="1">Cocoon's logger of this ScriptAction</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">request</td>
+            <td colspan="1" rowspan="1">Request</td>
+            <td colspan="1" rowspan="1">Request provided by the object model</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">scriptaction</td>
+            <td colspan="1" rowspan="1">Action</td>
+            <td colspan="1" rowspan="1">The instance of this ScriptAction</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">manager</td>
+            <td colspan="1" rowspan="1">Manager</td>
+            <td colspan="1" rowspan="1">Cocoon's manager of this ScriptAction</td>
+          
+</tr>
+        
+</table>
+<p>These objects are accessible from within the script.</p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>ScriptAction checks the existence of the key <span class="codefrag">scriptaction-continue</span>
+        in the <span class="codefrag">actionMap</span>. If this key exists ScriptAction returns
+        <span class="codefrag">actionMap</span>, otherwise <span class="codefrag">null</span> is returned.</p>
+<p>Objects available in the <span class="codefrag">actionMap</span> are available in
+        the sitemap.</p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>Using ScriptAction relies heavily on the setting of the key
+      <span class="codefrag">scriptaction-continue</span> in the <span class="codefrag">mapAction</span>.</p>
+      
+<p>Be aware to provide script language implementation, beside BSF implementation.
+      </p>
+    
+    
+<h1>History</h1>
+      
+<p>07-24-03: initial creation</p>
+      
+<p>04-02-04: Updated to Jakarta BSF</p>
+    
+    
+<h1>Copyright</h1>
+      
+<p>Copyright (C) 1999-2004 The Apache Software Foundation. All rights
+      reserved.</p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+<!-- Links to related components pages. -->A general documentation
+      about actions is available at <a href="../concepts/actions.html">Actions</a>.</p>
+      
+<p>Further Documentation visit <a class="external" href="http://jakarta.apache.org/bsf/index.html">Jakarta BSF Project</a>.</p>
+    
+  
+</body>
+</html>

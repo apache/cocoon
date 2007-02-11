@@ -1,0 +1,729 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Christopher Oliver" name="DC.Creator">
+</head>
+<body>
+  
+<h1>JXTemplate Generator</h1>
+  
+<p>
+The JXTemplate Generator is a page template processor that allows you to inject data from Java and JavaScript objects passed by a Cocoon Flowscript into a Cocoon pipeline. It provides a set of tags (similar to the <a class="external" href="http://java.sun.com/products/jsp/jstl/">JSTL</a> core tags) that allow you to iterate over Java collections (and Java or JavaScript arrays) and to test for the presence of optional or alternate bean properties, as well as embedded expressions to specify conditions and to access the properties of objects. The <em>JX</em>Template Generator gets its name from the embedded expression languages it supports, namely <a class="external" href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> and <a class="external" href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>X</em>l</a>. 
+  </p>
+
+<p>To use the JXTemplate Generator, add a generator entry to your <a href="../concepts/sitemap.html">sitemap</a> with the <span class="codefrag">src</span> attribute set to <span class="codefrag">org.apache.cocoon.generation.JXTemplateGenerator</span>, for example like this:</p>
+
+<pre class="code">
+&lt;map:generators&gt;
+  &lt;map:generator label="content,data" 
+      logger="sitemap.generator.jx" name="jx" 
+         src="org.apache.cocoon.generation.JXTemplateGenerator"/&gt;
+&lt;/map:generators&gt;
+</pre>
+  
+<p></p>
+         
+         
+<h1>Expression Languages</h1>
+  
+<p>
+The JXTemplate Generator supports two embedded expression languages: <a class="external" href="http://jakarta.apache.org/commons/jexl">Jexl</a> and <a class="external" href="http://jakarta.apache.org/commons/jxpath">JXPath</a>. Apache <a class="external" href="http://jakarta.apache.org/commons/jexl">Jexl</a> provides an extended version of the expression language of the <a class="external" href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JSTL.html">JSTL</a>. Apache <a class="external" href="http://jakarta.apache.org/commons/jxpath">JXPath</a> provides an interpreter of the <a class="external" href="http://www.w3.org/TR/xpath">XPath</a> expression language that can apply XPath expressions to graphs of Java objects of all kinds: JavaBeans, Maps, Servlet contexts, DOM etc, including mixtures thereof.
+ </p>
+  
+<p>
+ Having an embedded expression language allows a page author to access an object using a simple syntax such as
+ </p>
+
+<pre class="code">
+&lt;site signOn="${accountForm.signOn}"&gt;
+ </pre>
+
+<p>Embedded Jexl expressions are contained in <span class="codefrag">${}</span>.</p>
+
+<p>Embedded JXPath expressions are contained in <span class="codefrag">#{}</span>.</p>
+
+<p>The referenced objects may be Java Beans, DOM, or JavaScript objects 
+from a Flowscript. In addition, a special <span class="codefrag">cocoon</span> object providing access to the Cocoon <a href="api.html#FOM">FOM</a> is available as
+both a JXPath and Jexl variable in a template. 
+</p>
+
+<p>The <span class="codefrag">cocoon</span> object contains the following properties:</p>
+
+
+<dl>
+
+<dt>
+<a href="api.html#request">request</a>
+</dt>
+
+<dd>
+<br>The current Cocoon request<br>
+</dd>
+ 
+
+<dt>
+<br>
+<a href="api.html#session">session</a>
+</dt>
+
+<dd>
+<br>The user session associated with the current request<br>
+</dd>
+ 
+
+<dt>
+<br>
+<a href="api.html#context">context</a>
+</dt>
+
+<dd>
+<br>The Cocoon context associated with the current request<br>
+</dd>
+ 
+
+<dt>
+<br>
+<span class="codefrag">parameters</span>
+</dt>
+
+<dd>
+<br>A map containing the parameters passed to the generator in the pipeline<br>
+</dd>
+
+<dt>
+<br>
+<a href="api.html#WebContinuation">continuation</a>
+</dt>
+
+<dd>
+<br>The current Web Continuation from your Flowscript<br>
+</dd>
+
+</dl>
+
+<p>
+Jexl Example:</p>
+
+<pre class="code">
+The content type of the current request is ${cocoon.request.contentType}
+</pre>
+
+<p>
+JXPath Example:</p>
+
+<pre class="code">
+The content type of the current request is #{$cocoon/request/contentType}
+</pre>
+
+<p> 
+You would typically access the <span class="codefrag">id</span> of the Web Continuation:</p>
+
+<pre class="code">
+&lt;form action="${cocoon.continuation.id}"&gt;
+</pre>
+
+<p>You can also reach previous continuations via its <span class="codefrag">parent</span> property:</p>
+
+<pre class="code">
+&lt;form action="${cocoon.continuation.parent.id}" &gt;
+</pre>
+
+<p>or using an XPath expression:</p>
+
+<pre class="code">
+&lt;form action="#{$cocoon/continuation/parent/id}" &gt;
+</pre>
+
+
+<p>Deprecated Variables:</p>
+
+<p>The following variables are deprecated but still supported:</p>
+
+
+<dl>
+
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/environment/Request.html">org.apache.cocoon.environment.Request</a> <span class="codefrag">request</span>
+</dt>
+
+<dd>
+<br>The current Cocoon request (deprecated: use <span class="codefrag">cocoon.request</span> instead)<br>
+</dd>
+
+
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/environment/Session.html">org.apache.cocoon.environment.Session</a> <span class="codefrag">session</span>
+</dt>
+
+<dd>
+<br>The current user session (deprecated: use <span class="codefrag">cocoon.session</span> instead)<br>
+</dd>
+ 
+
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/environment/Context.html">org.apache.cocoon.environment.Context</a> <span class="codefrag">context</span>
+</dt>
+
+<dd>
+<br>The current context (deprecated: use <span class="codefrag">cocoon.context</span> instead)<br>
+</dd>
+
+
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/components/flow/WebContinuation.html">org.apache.cocoon.components.flow.WebContinuation</a> <span class="codefrag">continuation</span>
+</dt>
+
+<dd>
+<br>The current Web Continuation (deprecated: use <span class="codefrag">cocoon.continuation</span> instead)<br>
+</dd>
+
+</dl>
+
+
+
+<h1>Parameters</h1>
+
+<h2>lenient-xpath</h2>
+<p>
+By default XPath evaluation throws an exception if the supplied XPath does not map to an existing property. This constraint can be relaxed by setting the parameter <span class="codefrag">lenient-xpath</span> to <span class="codefrag">true</span>. In the lenient mode evaluation simply returns null if the path maps to nothing.
+</p>
+<p>
+Example:
+</p>
+<pre class="code">
+
+    &lt;map:match pattern="*.jx"&gt;
+      &lt;map:generate type="jx" src="documents/{1}.jx"&gt;
+           &lt;map:parameter name="lenient-xpath" value="true"/&gt;
+      &lt;/map:generate&gt;
+      &lt;map:serialize type="xhtml"/&gt;
+    &lt;/map:match&gt;
+
+</pre>
+
+
+<h1>Tags</h1>
+
+<p>The JXTemplate Generator tags are defined in the namespace</p>
+
+<pre class="code">
+http://apache.org/cocoon/templates/jx/1.0
+</pre>
+
+<h2>template</h2>
+<p>The <span class="codefrag">template</span> tag defines a new template:</p>
+<pre class="code">
+&lt;jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"&gt;
+   body
+&lt;/jx:template&gt;
+</pre>
+
+<h2>import</h2>
+
+<p>The <span class="codefrag">import</span> tag allows you to include another template within the current template. The content of the imported template is compiled and will be executed in place of the <span class="codefrag">import</span> tag:</p>
+<pre class="code">
+&lt;jx:import uri="URI" [context="Expression"]/&gt;
+</pre>
+<p>The Cocoon source resolver is used to resolve <span class="codefrag">uri</span>. If <span class="codefrag">context</span> is present, then its value is used as the context for evaluating the imported template, otherwise the current context is used.</p>
+
+<h2>set</h2>
+<p>The <span class="codefrag">set</span> tag creates a local alias of an object. The <span class="codefrag">var</span> attribute specifies the name of a variable to assign the object to. The <span class="codefrag">value</span> attribute specifies the object (defaults to <span class="codefrag">body</span> if not present):</p>
+<pre class="code">
+&lt;jx:set var="Name" [value="Value"]&gt;
+   [body]
+&lt;/jx:set&gt;
+</pre>
+<p>If used within a <span class="codefrag">macro</span> definition (see below) variables created by <span class="codefrag">set</span> are only visible within the body of the <span class="codefrag">macro</span>.</p>
+<p>Jexl Example:</p>
+<pre class="code">
+&lt;jx:set var="greeting" value="Hello ${user}"/&gt;
+The value of greeting is ${greeting}
+</pre>
+<p>JXPath Example:</p>
+<pre class="code">
+&lt;jx:set var="greeting" value="Hello #{user}"/&gt;
+The value of greeting is #{$greeting}
+</pre>
+<p></p>
+
+<h2>if</h2>
+<p>The <span class="codefrag">if</span> tag allows the conditional execution of its body 
+according to value of its <span class="codefrag">test</span> attribute:</p>
+<pre class="code">
+&lt;jx:if test="Expression"&gt;
+  body
+&lt;/jx:if&gt;
+</pre>
+<p>Jexl Example:</p>
+<pre class="code">
+&lt;jx:if test="${cart.numberOfItems == 0}"&gt;
+  Your cart is empty
+&lt;/jx:if&gt;
+</pre>
+<p></p>
+<p>JXPath Example:</p>
+<pre class="code">
+&lt;jx:if test="#{cart/numberOfItems = 0}"&gt;
+  Your cart is empty
+&lt;/jx:if&gt;
+</pre>
+<p></p>
+
+<h2>choose</h2>
+<p>The <span class="codefrag">choose</span> tag performs conditional block execution by its 
+embedded <span class="codefrag">when</span> sub tags. It renders the body of the first 
+<span class="codefrag">when</span> tag whose <span class="codefrag">test</span> condition evaluates to true. 
+If none of the <span class="codefrag">test</span> conditions of its nested <span class="codefrag">when</span> tags
+evaluate to <span class="codefrag">true</span>, then the body of its <span class="codefrag">otherwise</span> 
+tag is evaluated, if present:</p>
+<pre class="code">
+&lt;jx:choose&gt;
+  &lt;jx:when test="Expression"&gt;
+    body
+  &lt;/jx:when&gt;+
+  &lt;jx:otherwise&gt;
+    body
+  &lt;/jx:otherwise&gt;?
+&lt;/jx:choose&gt;
+</pre>
+<p>Jexl Example:</p>
+<pre class="code">
+&lt;jx:choose&gt;
+  &lt;jx:when test="${!user.loggedIn}"&gt;
+    &lt;jx:set var="label" value="Log in"&gt;
+  &lt;/jx:when&gt;
+  &lt;jx:otherwise&gt;
+    &lt;jx:set var="label" value="Log out"&gt;
+  &lt;/jx:otherwise&gt;
+&lt;/jx:choose&gt;
+</pre>
+<p></p>
+<p>JXPath Example:</p>
+<pre class="code">
+&lt;jx:choose&gt;
+  &lt;jx:when test="#{not(user/loggedIn)}"&gt;
+    &lt;jx:set var="label" value="Log in"&gt;
+  &lt;/jx:when&gt;
+  &lt;jx:otherwise&gt;
+    &lt;jx:set var="label" value="Log out"&gt;
+  &lt;/jx:otherwise&gt;
+&lt;/jx:choose&gt;
+</pre>
+<p></p>
+
+<h2>out</h2>
+<p>The <span class="codefrag">out</span> tag evaluates an expression and outputs 
+the result of the evaluation:</p>
+<pre class="code">
+&lt;jx:out value="Expression"/&gt;
+</pre>
+<p>Jexl Example:</p>
+<pre class="code">
+&lt;jx:out value="${cart.numberOfItems}"&gt;
+</pre>
+<p>JXPath Example:</p>
+<pre class="code">
+&lt;jx:out value="#{cart/numberOfItems}"&gt;
+</pre>
+<p></p>
+
+<h2>forEach</h2>
+<p>The <span class="codefrag">forEach</span> tag allows you to iterate over a collection 
+of objects:</p>
+<pre class="code">
+&lt;jx:forEach [var="Name"] [varStatus="Name"] [items="Expression"] 
+               [begin="NumExpr"] [end="NumExpr"] [step="NumExpr"]&gt;
+  body
+&lt;/jx:forEach&gt;
+</pre>
+<p>The <span class="codefrag">items</span> attribute specifies the list of items to iterate over. The <span class="codefrag">var</span> attribute specifies the name of a variable to hold the current item. The <span class="codefrag">begin</span> attribute specifies the element to start with 
+(<span class="codefrag">0</span> = first item, <span class="codefrag">1</span> = second item, ...). 
+If unspecified it defaults to <span class="codefrag">0</span>. The <span class="codefrag">end</span> 
+attribute specifies the item to end with (<span class="codefrag">0</span> = first item, 
+<span class="codefrag">1</span> = second item, ...). If unspecified it defaults to the last item in the list. Every <span class="codefrag">step</span> items are
+processed (defaults to <span class="codefrag">1</span> if <span class="codefrag">step</span> is absent). Either <span class="codefrag">items</span> or both <span class="codefrag">begin</span> and <span class="codefrag">end</span> must be present.</p>
+<p>An alternate form of <span class="codefrag">forEach</span> is supported for convenience when using XPath (since you can specify the selection criteria for the collection using XPath itself):</p>
+<pre class="code">
+&lt;jx:forEach select="XPathExpression"&gt;
+  body
+&lt;/jx:forEach&gt;
+</pre>
+<p>When using XPath expressions within <span class="codefrag">forEach</span> the current element is the context node and can be referenced with: 
+<span class="codefrag">#{.}</span>
+</p>
+<p>Jexl Example:</p>
+<pre class="code">
+&lt;jx:forEach var="item" items="${cart.cartItems}" 
+               begin="${start}" end="${count-start}" step="1"&gt;
+   &lt;td&gt;${item.productId}&lt;/td&gt;
+&lt;/jx:forEach&gt;
+</pre>
+<p></p>
+<p>JXPath Example:</p>
+<pre class="code">
+&lt;jx:forEach select="#{cart/cartItems[position() &amp;lt;= $count]}}&gt;
+   &lt;td&gt;#{./productId}&lt;/td&gt;
+&lt;/jx:forEach&gt;
+</pre>
+<p>
+If the <span class="codefrag">varStatus</span> attribute is present a variable will be created to hold information about the current loop status. The variable named by the <span class="codefrag">varStatus</span> attribute will hold a reference to an object with the following properties:</p>
+<table>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       Property:
+       </td>
+       <td colspan="1" rowspan="1">
+       Description:
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       current
+       </td>
+       <td colspan="1" rowspan="1">
+       The item from the collection for the current round of iteration
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       index
+       </td>
+       <td colspan="1" rowspan="1">
+       The zero-based index for the current round of iteration
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       count
+       </td>
+       <td colspan="1" rowspan="1">
+       The one-based count for the current round of iteration
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       first
+       </td>
+       <td colspan="1" rowspan="1">
+       True if this is the first round of iteration
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       last
+       </td>
+       <td colspan="1" rowspan="1">
+       True if this is the last round of iteration
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       begin
+       </td>
+       <td colspan="1" rowspan="1">
+       The value of the <span class="codefrag">begin</span> attribute
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       end
+       </td>
+       <td colspan="1" rowspan="1">
+       The value of the <span class="codefrag">end</span> attribute
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       step
+       </td>
+       <td colspan="1" rowspan="1">
+       The value of the <span class="codefrag">step</span> attribute
+       </td>
+     
+</tr>
+    
+</table>
+<p>Jexl Example:</p>
+<pre class="code">
+&lt;jx:forEach items="${items}" varStatus="status"&gt;
+    index=${status.index},
+    count=${status.count},
+    current=${status.current},
+    first=${status.first},
+    last=${status.last},
+    begin=${status.begin},
+    end=${status.end}
+&lt;/jx:forEach&gt;
+</pre>
+<p></p>
+<p>JXPath Example:</p>
+<pre class="code">
+&lt;jx:forEach select="#{items}" varStatus="status"&gt;
+    index=#{$status/index},
+    count=#{$status/count},
+    current=#{$status/current},
+    first=#{$status/first},
+    last=#{$status/last},
+    begin=#{$status/begin},
+    end=#{$status/end}
+&lt;/jx:forEach&gt;
+</pre>
+
+<h2>formatNumber</h2>
+<p>
+The <span class="codefrag">formatNumber</span> tag is used to display numeric data, including currencies and percentages, in a locale-specific manner. It determines from the locale, for example, whether to use a period or a comma for delimiting the integer and decimal portions of a number. Here is its syntax: 
+</p>
+<pre class="code">
+&lt;jx:formatNumber value="Expression"
+    [type="Type"] [pattern="Expression"]
+    [currencyCode="Expression"] [currencySymbol="Expression"]
+    [maxIntegerDigits="Expression"] [minIntegerDigits="Expression"]
+    [maxFractionDigits="Expression"] [minFractionDigits="Expression"]
+    [groupingUsed="Expression"]
+    [var="Name"] [locale="Expression"]&gt;
+</pre>
+<p>
+Only the <span class="codefrag">value</span> attribute is required. It is used to specify the numeric value that is to be formatted.
+</p>
+<p>
+The value of the <span class="codefrag">type</span> attribute should be either "number", "currency", or "percent", and indicates what type of numeric value is being formatted. The default value for this attribute is "number". The <span class="codefrag">pattern</span> attribute takes precedence over the <span class="codefrag">type</span> attribute and allows more precise formatting of numeric values following the pattern conventions of the <span class="codefrag">java.text.DecimalFormat</span> class. 
+</p>
+<p>
+When the <span class="codefrag">type</span> attribute has a value of "currency", the <span class="codefrag">currencyCode</span> attribute can be used to explicitly specify the currency for the numerical value being displayed. As with language and country codes, currency codes are governed by an ISO standard. This code is used to determine the currency symbol to display as part of the formatted value. 
+</p>
+<p>
+Alternatively, you can use the <span class="codefrag">currencySymbol</span> attribute to explicitly specify the currency symbol. Note that as of JDK 1.4 and the associated introduction of the <span class="codefrag">java.util.Currency</span> class, the <span class="codefrag">currencyCode</span> attribute of <span class="codefrag">formatNumber</span> takes precedence over the <span class="codefrag">currencySymbol</span> attribute. For earlier versions of the JDK, however, the <span class="codefrag">currencySymbol</span> attribute takes precedence. 
+</p>
+<p>
+The <span class="codefrag">maxIntegerDigits</span>, <span class="codefrag">minIntegerDigits</span>, <span class="codefrag">maxFractionDigits</span>, and <span class="codefrag">minFractionDigits</span> attributes are used to control the number of significant digits displayed before and after the decimal point. These attributes require integer values. 
+</p>
+<p>
+The <span class="codefrag">groupingUsed</span> attribute takes a <span class="codefrag">Boolean</span> value and controls whether digits before the decimal point are grouped. For example, in English-language locales, large numbers have their digits grouped by threes, with each set of three delimited by a comma. Other locales delimit such groupings with a period or a space. The default value for this attribute is <span class="codefrag">true</span>. 
+</p>
+
+<h2>formatDate</h2>
+<p>The <span class="codefrag">formatDate</span> tag provides facilities to format Date values:</p>
+<pre class="code">
+&lt;jx:formatDate value="Expression" [dateStyle="Style"] 
+  [timeStyle="Style"] [pattern="Expression"] [type="Type"] [var="Name"] 
+  [locale="Expression"]&gt;
+</pre>
+<p>
+Only the value attribute is required. Its value should be an instance of the <span class="codefrag">java.util.Date</span> class, specifying the date and/or time data to be formatted and displayed.</p>
+<p>The optional <span class="codefrag">timeZone</span> attribute indicates the time zone in which the date and/or time are to be displayed. If not present, then the JVM's default time zone is used (that is, the time zone setting specified for the local operating system). </p>
+<p>
+The <span class="codefrag">type</span> attribute indicates which fields of the specified <span class="codefrag">Date</span> instance are to be displayed, and should be either "time", "date", or "both". The default value for this attribute is "date", so if no <span class="codefrag">type</span> attribute is present, the <span class="codefrag">formatDate</span> tag -- true to its name -- will only display the date information associated with the <span class="codefrag">Date</span> instance, specified using the tag's value attribute. 
+</p>
+<p>
+The <span class="codefrag">dateStyle</span> and <span class="codefrag">timeStyle</span> attributes indicate how the date and time information should be formatted, respectively. Valid styles are "default", "short", "medium", "long", and "full". The default value is, naturally, "default", indicating that a locale-specific style should be used. The semantics for the other four style values are as defined by the java.text.DateFormat class. 
+</p>
+<p>
+Rather than relying on the built-in styles, you can use the pattern attribute to specify a custom style. When present, the value of the pattern attribute should be a pattern string following the conventions of the java.text.SimpleDateFormat class. These patterns are based on replacing designated characters within the pattern with corresponding date and time fields. For example, the pattern MM/dd/yyyy indicates that two-digit month and date values and a four-digit year value should be displayed, separated by forward slashes. 
+</p>
+<p>
+If the <span class="codefrag">var</span> attribute is specified, then a String value containing the formatted date is assigned to the named variable. Otherwise, the <span class="codefrag">formatDate</span> tag will write out the formatting results.
+</p>
+
+<h2>macro</h2>
+<p>The <span class="codefrag">macro</span> tag allows you define a new custom tag.</p>
+<pre class="code">
+&lt;jx:macro name="Name" [targetNamespace="Namespace"]&gt;
+  &lt;jx:parameter name="Name" [optional="Boolean"] [default="Value"]/&gt;*
+  body
+&lt;/jx:macro&gt;
+</pre>
+<p> For example:</p>
+<pre class="code">
+&lt;jx:macro name="d"&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/jx:macro&gt;
+</pre>
+<p>The tag being defined in this example is <span class="codefrag">&lt;d&gt;</span> and it 
+can be used like any other tag:</p>
+<pre class="code">
+&lt;d/&gt;
+</pre>
+<p>However, when this tag is used it will be replaced with a row containing a single empty data cell.</p>
+<p> When such a tag is used, the attributes and content of the tag become available as variables in the body of the <span class="codefrag">macro</span>'s definition, for example:</p>
+<pre class="code">
+&lt;jx:macro name="tablerows"&gt;
+  &lt;jx:parameter name="list"/&gt;
+  &lt;jx:parameter name="color"/&gt;
+  &lt;jx:forEach var="item" items="${list}"&gt;
+    &lt;tr&gt;&lt;td bgcolor="${color}"&gt;${item}&lt;/td&gt;&lt;/tr&gt;
+  &lt;/jx:forEach&gt;
+&lt;/jx:macro&gt;
+</pre>
+<p>The <span class="codefrag">parameter</span> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used.</p>
+<p>Assuming you had this code in your flowscript:</p>
+<pre class="code">var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];
+   sendPage(uri, {greatlakes: greatlakes});</pre>
+<p>and a template like this:</p>
+<pre class="code">
+&lt;table&gt;
+   &lt;tablerows list="${greatlakes}" color="blue"/&gt;
+&lt;/table&gt;
+</pre>
+<p>When the <span class="codefrag">tablerows</span> tag is used in this situation the following output would be generated:
+</p>
+<pre class="code">
+&lt;table&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Superior&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Michigan&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Huron&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Erie&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td bgcolor="blue"&gt;Ontario&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+<h2>evalBody</h2>
+<p>Within the body of a macro the <span class="codefrag">evalBody</span> tag treats the content of the macro tag invocation as a <em>JX</em>Template and executes it. For example, the below macro uses this facility to implement the <a class="external" href="http://java.sun.com/products/jsp/jstl/">JSTL</a> <span class="codefrag">forTokens</span> tag:
+</p>
+<pre class="code">
+
+&lt;jx:macro name="forTokens"&gt;
+  &lt;jx:parameter name="var"/&gt;
+  &lt;jx:parameter name="items"/&gt;
+  &lt;jx:parameter name="delims"/&gt;
+  &lt;jx:forEach var="${var}" 
+         items="${java.util.StringTokenizer(items, delims)}"&gt;
+    &lt;jx:evalBody/&gt;
+  &lt;/jx:forEach&gt;
+&lt;/jx:macro&gt;
+ </pre>
+<p>
+The tag produced by this macro can be used like this:
+</p>
+<pre class="code">
+
+&lt;forTokens var="letter" items="a,b,c,d,e,f,g" delims=","&gt;
+  letter = ${letter} &lt;br/&gt;
+&lt;/forTokens&gt;
+ </pre>
+<p>
+which would create the following output:
+</p>
+<pre class="code">
+
+  letter = a  &lt;br/&gt;  
+  letter = b  &lt;br/&gt;  
+  letter = c  &lt;br/&gt;  
+  letter = d  &lt;br/&gt;  
+  letter = e  &lt;br/&gt;  
+  letter = f  &lt;br/&gt;  
+  letter = g  &lt;br/&gt;  
+ </pre>
+
+<h2>eval</h2>
+<p>
+The <span class="codefrag">eval</span> tag permits dynamic evaluation of custom tags. 
+</p>
+<pre class="code">
+&lt;jx:eval select="Expression"/&gt;
+</pre>
+<p>
+Within the body of a macro, information about the current invocation is available via a special variable <span class="codefrag">macro</span>. This variable contains the following properties:
+</p>
+<table>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       Property:
+       </td>
+       <td colspan="1" rowspan="1">
+       Description:
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       arguments
+       </td>
+       <td colspan="1" rowspan="1">
+       A map containing the all of the attributes from the tag invocation
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       body
+       </td>
+       <td colspan="1" rowspan="1">
+       A reference to the content of the tag invocation
+       </td>
+     
+</tr>
+   
+</table>
+<p>
+You can store the value of <span class="codefrag">body</span> in another variable and invoke it later using <span class="codefrag">jx:eval</span>. The <span class="codefrag">select</span> attribute of <span class="codefrag">jx:eval</span> specifies an expression that must evaluate to a macro invocation. For example:
+</p>
+<pre class="code">
+
+
+&lt;jx:set var="tags" value="${java.util.HashMap()}"/&gt;
+
+&lt;jx:macro name="dynamic-tag"&gt;
+  &lt;jx:parameter name="id"/&gt;
+  &lt;jx:set var="ignored" value="${tags.put(id, macro.body)}"/&gt;
+&lt;/jx:macro&gt;
+
+&lt;dynamic-tag id="example"&gt;
+  &lt;em&gt;This tag was invoked dynamically&lt;/em&gt;
+&lt;/dynamic-tag&gt;
+
+&lt;p&gt;I'm about to invoke a dynamic tag:&lt;/p&gt;
+&lt;jx:eval select="${tags.example}"/&gt; 
+
+ 
+
+</pre>
+<p>
+The above template produces the following output:
+</p>
+<pre class="code">
+
+&lt;p&gt;I'm about to invoke a dynamic tag:&lt;/p&gt;
+
+  
+&lt;em&gt;This tag was invoked dynamically&lt;/em&gt;
+ 
+</pre>
+
+
+</body>
+</html>

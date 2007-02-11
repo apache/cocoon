@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: repeater-action widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>This is a specific type of <a href="widget_action.html">action widget</a>
+      that handles the much
+      needed case of adding or removing rows from a repeater.</p>
+    
+
+    
+<h1>Configuration</h1>
+
+      
+<pre class="code">&lt;fd:repeater-action id="..." action-command="delete-rows|add-row" repeater="..." select="..."&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+  &lt;fd:on-action&gt;
+    ...
+  &lt;/fd:on-action&gt;
+&lt;/fd:repeater-action&gt;</pre>
+
+      
+<p>The <strong>action-command</strong> attribute should have either
+      the value <span class="codefrag">delete-rows</span> or <span class="codefrag">add-row</span>. If
+      <strong>add-row</strong> is specified, the attribute repeater is required.
+      If <strong>delete-rows</strong> is specified, both the repeater and
+      select attributes are required.</p>
+
+      
+<p>The <strong>repeater</strong> attribute should contain the id of the repeater widget
+      on which this repeater-action should act. This must be a sibling of
+      the repeater-action widget (see also row-action for actions inside a row).</p>
+
+      
+<p>The <strong>select</strong> attribute should contain the id of the
+      booleanfield widget (or any type of widget who's getValue() method
+      returns a boolean) that is part of the repeater and used to mark
+      the rows to be deleted.</p>
+
+      
+<p>
+<strong>fd:on-action</strong> allows additional event handlers
+      to be defined, see also <a href="eventhandling.html">Event Handling</a>. The interface to be
+      implemented for Java event listeners is <span class="codefrag">org.apache.cocoon.forms.event.ActionListener</span>.
+      The WidgetEvent subclass is <span class="codefrag">org.apache.cocoon.forms.event.ActionEvent</span>.
+    The event handlers are called <em>after</em> the action is performed except for the
+    <span class="codefrag">delete-rows</span> action where event handlers are called <em>before</em> the
+    selected rows are deleted.</p>
+    
+  
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>SVG/XML Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the svg/xml serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>SVG/XML Serializer</h1>
+    
+<p>
+      The SVG serializer serializes sax events to SVG XML.
+      The output of the SVG serializer is SVG XML; the SVG XML is not 
+      rasterized to any image format by this serializer.
+    </p>
+    
+<ul>
+      
+<li>Name : svgxml</li>
+      
+<li>Class: org.apache.cocoon.serialization.XMLSerializer</li>
+      
+<li>Cacheable: yes</li>
+    
+</ul>
+    
+<h2>Sitemap Configuration</h2>
+<p>
+        The SVG XML serializer is declared in the sitemap serializers section.
+      </p>
+<pre class="code">
+&lt;map:serializers ...
+...
+  &lt;map:serializer name="xml"
+    src="org.apache.cocoon.serialization.XMLSerializer"
+    mime-type="text/xml"  
+    doctype-public="-//W3C//DTD SVG 1.0//EN"
+    doctype-system="http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd";
+    logger="sitemap.serializer.xml" 
+    pool-max="32"&gt;
+    &lt;!-- serializer configurations --&gt;
+...    
+  &lt;/map:serializer&gt;
+...
+      </pre>
+<p>
+        The declaration of the SVG serializer shall use following 
+        XML serializer configuration parameters
+      </p>
+<table>
+        
+<tr>
+<th colspan="1" rowspan="1">Name</th><th colspan="1" rowspan="1">Value</th><th colspan="1" rowspan="1">Comment</th>
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">doctype-public</td><td colspan="1" rowspan="1">-//W3C//DTD SVG 1.0//EN</td>
+          <td colspan="1" rowspan="1">specifies the SVG XML public document type</td>
+        
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">doctype-system</td><td colspan="1" rowspan="1">http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</td>
+          <td colspan="1" rowspan="1">specifies the SVG XML system document type</td>
+        
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">mime-type</td><td colspan="1" rowspan="1">text/xml</td>
+          <td colspan="1" rowspan="1">Following mime-type may be used, too:
+            <span class="codefrag">image/svg+xml</span>, <span class="codefrag">application/xml</span>.
+            The mime-type <span class="codefrag">text/xml</span> is the most general one.
+          </td>
+        
+</tr>
+      
+</table>
+    
+<h2>Pipeline Usage</h2>
+<p>
+        Using the SVG XML serializer in a pipeline is just setting the 
+        serializer type to svgxml. The following code snippet uses the svxml serializer:
+      </p>
+<pre class="code">
+&lt;map:match pattern="svg"&gt;
+...
+  &lt;map:serialize type="svgxml"/&gt;
+&lt;/map:match&gt;
+...
+      </pre>
+    
+<h2>Further Reading</h2>
+<p>
+        As SVG serializer uses the XML serializer internally, you might 
+        want to read the complete list of valid XML configuration parameters.
+        It is available at <a href="xml-serializer.html">XML serializer</a>
+        user documentation.
+      </p>
+  
+  
+</body>
+</html>

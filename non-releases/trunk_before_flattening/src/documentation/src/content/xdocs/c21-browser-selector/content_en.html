@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Browser-Selector in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the BrowserSelector of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>BrowserSelector</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">browser</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">BrowserSelector</span> component is used to
+            select appropriate sitemap processing depending on the <span class="codefrag">User-Agent</span>
+            header value.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Selector, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          <!-- choose Core, the block name, or Scratchpad 
+            depending on where BrowserSelector sources live
+          -->
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.selection.BrowserSelector</td>
+        
+</tr>
+        <!-- uncomment folling tr iff BrowserSelector is deprecated -->
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
+        </tr-->
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.0</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The <span class="codefrag">BrowserSelector</span> tests the user agent header field against
+        the test attribute of the selectors when clause.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        The <span class="codefrag">BrowserSelector</span> allows to define brower specific sitemap
+        processing.
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p></p>
+<pre class="code">
+&lt;map:select type="browser"&gt;
+  &lt;map:when test="netscape"&gt;
+  ....
+  &lt;/map:when&gt;
+  &lt;map:when test="explorer"&gt;
+  ...
+  &lt;/map:when&gt;
+  ...
+  &lt;map:otherwise&gt;
+  ...
+  &lt;/map:otherwise&gt;
+&lt;/map:select&gt;
+        </pre>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p>
+        
+</p>
+<pre class="code">
+&lt;map:selectors...
+  &lt;map:selector name="browser" 
+    src="org.apache.cocoon.selection.BrowserSelector"
+    logger="sitemap.selector.browser" 
+    
+    &lt;browser name="explorer" useragent="MSIE"/&gt;
+    ...
+    &lt;browser name="mozilla5" useragent="Moziall/5"/&gt;
+    &lt;browser name="netscape" useragent="Mozilla"/&gt;
+    
+  &lt;/map:selectors&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          <!-- Explain the sitemap selector configuration, options when declaring browser selector -->
+          The configuration section of <span class="codefrag">BrowserSelector</span> specifies
+          a mapping from user-agent strings to symbolic browser names.
+        </p>
+<p>
+          Each browser element specifies a name attribute holding the symbolic browser name
+          used in the test attribute expression. The attribute useragent contains 
+          a matchable substring of some real user-agent values.
+        </p>
+<p>
+          It is allowed to specify for a browser name more than one entry. This way
+          a symbolic browser name is matched by different user-agent substrings.
+          The snippet belows will yield true for <span class="codefrag">test="wap-handset"</span> if 
+          the user-agent header contains <span class="codefrag">Nokia</span>, <span class="codefrag">UP</span>, or 
+          <span class="codefrag">Wapalizer</span>.
+        </p>
+<pre class="code">
+...
+  &lt;browser name="wap-handset" useragent="Nokia"/&gt;
+  &lt;browser name="wap-handset" useragent="UP"/&gt;
+  &lt;browser name="wap-handset" useragent="Wapalizer"/&gt;
+...
+        </pre>
+      
+<h2>Setup</h2>
+<p>
+          <!-- Explain the sitemap selector setup, ie options when using browser selector -->
+          Setting up a <span class="codefrag">BrowserSelector</span> includes choosing the 
+          <span class="codefrag">&lt;map:when&gt;</span> test expressions, and a 
+         optional <span class="codefrag">&lt;map:otherwise&gt;</span> clause.
+        </p>
+<p>
+          The test attribute of the <span class="codefrag">&lt;map:when&gt;</span> clause must match
+          a browser attribute name value. The value of the test attribute in a 
+          <span class="codefrag">&lt;map:when&gt;</span> clause must be declared in a 
+          <span class="codefrag">browser</span> name attribute.
+        </p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+          The <span class="codefrag">BrowserSelector</span> has no side effects on the object model, or 
+          any sitemap parameters. 
+        </p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+        The <span class="codefrag">BrowserSelector</span> adds the response header attribute
+        <span class="codefrag">Vary</span> having value <span class="codefrag">User-Agent</span> indicating
+        that the response differ for different user agents. This information
+        especially meaningfull for an http-proxy server.
+      </p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        28-12-02: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+    
+  
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CInclude Transformer</title>
+    <link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+    <meta content="Carsten Ziegeler" name="DC.Creator">
+    <meta content="This document describes the CInclude Transformer." name="DC.Description">
+  </head>
+  <body>
+
+    <font color="red"><b>SEE 2.1 DOCS FOR UP-TO-DATE VERSION</b></font>
+
+    <h1>CInclude Transformer</h1>
+
+    <p>This transformer includes XML in the current stream and acts therefore
+      as a kind of (dynamic) content aggregation. Two forms are supported by
+      the transformer: one verbose and flexible approach, and a simple approach.
+      We will first discuss the simple approach and
+      the more flexible is mentioned in the next chapter. In addition
+      the cinclude transformer provides a caching mechanism (for the
+      simple include form).</p>
+
+    <p>This transformer triggers for the element <span class="codefrag">include</span> in the
+    namespace "http://apache.org/cocoon/include/1.0".
+    The <span class="codefrag">src</span> attribute contains the url which points to
+    an xml resource which is included instead of the element.
+    With the attributes <span class="codefrag">element</span>, <span class="codefrag">ns</span> and
+    <span class="codefrag">prefix</span> it is possible to specify an element
+    which surrounds the included content.
+    </p>
+
+<ul>
+<li>Name : cinclude</li>
+<li>Class: org.apache.cocoon.transformation.CIncludeTransformer</li>
+<li>Cacheable: no.</li>
+</ul>
+
+   <p>
+    A simple example might help to use the CIncludeTransfomer effectively:
+   </p>
+
+   <p>
+    Add the CIncludeTransformer to the components in your sitemap.xmap
+   </p>
+
+<pre class="code">
+...
+&lt;map:components&gt;
+...
+  &lt;map:transformers default="xslt"&gt;
+  ...
+    &lt;map:transformer name="cinclude"
+      src="org.apache.cocoon.transformation.CIncludeTransformer"/&gt;
+  ...
+</pre>
+
+   <p>
+     Next define in your pipeline to use the CIncludeTransformer
+   </p>
+
+<pre class="code">
+&lt;map:match pattern="cinc/simple-cinc"&gt;
+  &lt;map:generate src="cinc/simple-cinc.xml"/&gt;
+  &lt;map:transform type="cinclude"/&gt;
+  &lt;map:transform src="stylesheets/page/simple-page2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+
+   <p>
+    In this example pipeline it assumed that simple-cinc.xml contains
+    the include element. Beside defining the include element
+    it defines the namespace URI "http://apache.org/cocoon/include/1.0".
+    This helps the CIncludeTransformer to find the tag to get replaced by
+    the xml content referenced via the src attribute.
+    The simple-cinc.xml may look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page
+  xmlns:cinclude="http://apache.org/cocoon/include/1.0"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+    &lt;cinclude:include src="include.xml" element="included"/&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre>
+
+   <p>
+    Next you should define the include.xml file which is included.
+    A simple include.xml might look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0"?&gt;
+&lt;p&gt;
+ I am &lt;strong&gt;included&lt;/strong&gt; by CIncludeTransformer.
+ I come from "include.xml".
+&lt;/p&gt;
+</pre>
+
+   <p>
+    Now finally we have everything put together the xml content after the
+    CIncludeTransformer processing will look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page
+  xmlns:cinclude="http://apache.org/cocoon/include/1.0"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+    &lt;included&gt;
+      &lt;p&gt;
+        I am &lt;strong&gt;included&lt;/strong&gt; by CIncludeTransformer.
+        I come from "include.xml".
+      &lt;/p&gt;
+    &lt;/included&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre>
+
+<h1>Including External XML (simple)</h1>
+
+<p>One feature of the cinclude transformer (this is currently not
+         supported by the caching cinclude transformer) is including XML from
+       external sources, e.g. files or from an HTTP server.
+       The <span class="codefrag">cinclude:includexml</span> tag starts including of XML:</p>
+
+<pre class="code">
+&lt;cinclude:includexml&gt;  &lt;!-- Include XML from HTTP server --&gt;
+     &lt;cinclude:src&gt;http://external.news.com/flashnews.xml&lt;/cinclude:src&gt;
+&lt;/cinclude:includexml&gt;
+</pre>
+
+<p> This would be a simple way of "get"ting XML data from an
+       external site. Using this method it is also possible to pass parameters in the
+       url - just as you would in a "get" sent from a browser.</p>
+
+<pre class="code">
+&lt;cinclude:includexml&gt;  &lt;!-- Include XML from HTTP server --&gt;
+    &lt;cinclude:src&gt;http://external.news.com/flashnews.xml?id=1234&amp;myname=matthew&lt;/cinclude:src&gt;
+&lt;/cinclude:includexml&gt;
+</pre>
+
+<p>If the external XML is not valid or not available, the
+       transformer signals an error to the pipeline and the document containing the
+       include command is not available.</p>
+
+<p>For this purpose the <span class="codefrag">ignoreErrors</span> attribute can be
+       used:</p>
+
+<pre class="code">
+&lt;cinclude:includexml ignoreErrors="true"&gt;
+...
+&lt;/cinclude:includexml&gt;</pre>
+
+
+<h1>Including External XML (advanced)</h1>
+
+<p>The above section shows you how to include XML data from an
+       external source such as an HTTP server using the simple "get" method supplied
+       in the HTTP protocol. For more advanced uses you will wish to be able to send
+       "Post" or other HTTP methods to the server. In addition you may want to
+       actually send XML data to the server - just as you would using an HTML form.
+       The format of this resource is slightly more complicated:</p>
+
+<pre class="code">
+&lt;?xml version="1.0"?&gt;
+&lt;data xmlns:cinclude="http://apache.org/cocoon/include/1.0"&gt;
+&lt;cinclude:includexml&gt;
+    &lt;cinclude:src&gt;http://itsunshine/tamino/blah&lt;/cinclude:src&gt;
+    &lt;cinclude:configuration&gt;
+  &lt;cinclude:parameter&gt;
+    &lt;cinclude:name&gt;method&lt;/cinclude:name&gt;
+    &lt;cinclude:value&gt;POST&lt;/cinclude:value&gt;
+  &lt;/cinclude:parameter&gt;
+    &lt;/cinclude:configuration&gt;
+    &lt;cinclude:parameters&gt;
+      &lt;cinclude:parameter&gt;
+    &lt;cinclude:name&gt;message&lt;/cinclude:name&gt;
+    &lt;cinclude:value&gt;Hi there&lt;/cinclude:value&gt;
+  &lt;/cinclude:parameter&gt;
+  &lt;cinclude:parameter&gt;
+    &lt;cinclude:name&gt;_Process&lt;/cinclude:name&gt;
+    &lt;cinclude:value&gt;&lt;name&gt;matti&lt;/name&gt;&lt;age&gt;36&lt;/age&gt;&lt;/cinclude:value&gt;
+  &lt;/cinclude:parameter&gt;
+    &lt;/cinclude:parameters&gt;
+&lt;/cinclude:includexml&gt;
+&lt;/data&gt;
+    </pre>
+
+<p>Lets look at the tags. The tag <span class="codefrag">cinclude:src</span> defines the address of the
+       resource we want to access and then comes a list of (optional)
+       connection-specific parameters (enclosed in the <span class="codefrag">cinclude:configuration</span> tag).
+       In this example the HTTP-method ("POST") is passed into the connection. The
+       format of these parameters is discussed next.</p>
+
+<p>Then comes the list of parameters we wish to pass into the
+       function. Each parameter defined has a name and a value. The value can either
+       be text or XML.</p>
+
+<p>The format of the parameters is the same as for the connection
+       configuration.</p>
+
+
+<h1>Caching</h1>
+
+<p>This transformer includes XML in the current stream and acts therefore
+      as a kind of (dynamic) content aggregation. However, the included content
+      might be very big or either it might take a lot of time to fetch
+      the content. If, in those cases, your content does not change too
+      frequently, you can turn on caching for these contents.</p>
+
+<p>
+    To turn on caching, this transformer triggers for the element <span class="codefrag">cached-include</span>
+    in the namespace "http://apache.org/cocoon/include/1.0/caching".
+    The <span class="codefrag">src</span> attribute contains the url which points to
+    an xml resource that is included instead of the element.
+    It is possible to mix the <span class="codefrag">cached-include</span> and the <span class="codefrag">include</span>
+    element, so only parts are cached and others are not.
+   </p>
+
+<p>
+    A simple example might help to use the caching effectively:
+   </p>
+
+<p>
+     First define your pipeline to use the CIncludeTransformer with
+     caching turned on; you turn on caching by setting the <span class="codefrag">expires</span>
+     parameter to a value greater than 0. The exact meaning of this
+     parameter is explained below.
+   </p>
+
+<pre class="code">
+&lt;map:match pattern="cinc/simple-cinc"&gt;
+  &lt;map:generate src="cinc/simple-cinc.xml"/&gt;
+  &lt;map:transform type="cinclude"&gt;
+      &lt;map:parameter name="expires" value="600"/&gt;
+  &lt;/map:transform&gt;
+  &lt;map:transform src="stylesheets/page/simple-page2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+
+
+<p>
+    In this example-pipeline it is assumed that simple-cinc.xml contains
+    the <span class="codefrag">cached-include</span> element. Beside defining the element
+    it uses the namespace URI "http://apache.org/cocoon/include/1.0".
+    This helps the transformer to find the tag to get replaced by
+    the xml content referenced via the src attribute.
+    The simple-cinc.xml may look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page
+  xmlns:cinclude="http://apache.org/cocoon/include/1.0"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+    &lt;cinclude:cached-include src="http://server/document1.xml"/&gt;
+    &lt;cinclude:cached-include src="http://server/document2.xml"/&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre>
+
+
+<p>
+    Now finally we have everything put together the xml content after the
+    CIncludeTransformer processing will look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page
+  xmlns:cinclude="http://apache.org/cocoon/include/1.0"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+    &lt;document1&gt;
+        CONTENT OF document 1
+    &lt;/document1&gt;
+    &lt;document2&gt;
+        CONTENT OF document 2
+    &lt;/document2&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre>
+
+<p>So, of course even with caching turned on, this transformer acts like the
+  usual cinclude transformer. But as you can see from the example above, you
+  can define an expires value. The fetched content is cached for the duration of
+  this value; in the example above the content is cached for 10 minutes. So, if
+  during the next 10 minutes after the first time this pipeline was processed,
+  someone else requests this pipeline, the content is not fetched again from a
+  distant server (or whereever the content is stored). It is directly delivered
+  from the cache. When the 10 minutes have expired, the next time the pipeline
+  is requested, the content is fetched again and stored in the cache for the
+  next 10 minutes.</p>
+
+<p>You can fine tune the behaviour of the transformer with several parameters.</p>
+
+<p>The <span class="codefrag">expires</span> parameter defines the expiration date of the
+    content in seconds from the time the pipeline is requested.</p>
+
+<p>Usually the content is cached in the common store, but you
+   can also define a writeable/modifiable source with the "source" parameter,
+ e.g. "file:/c:/temp". Then the cached content is written into this
+ directory.</p>
+
+<p>With the optional <span class="codefrag">purge</span> set to <span class="codefrag">true</span>
+  the cache is purged which means the cached content is regarded as
+  invalid nevertheless if it has expired or not.</p>
+
+<p>With the optional parameter <span class="codefrag">parallel</span> the various
+  included contents are processed (included) in parallel rather than
+  in a series.</p>
+
+<p>With the optional parameter <span class="codefrag">preemptive</span> set to <span class="codefrag">true</span>
+  a pre-emptive caching is activated. When a resource is requested with
+  pre-emptive caching, this transformer always attempts to get the
+  content from the cache. If the content is not in the cache, it is
+  of course retrieved from the original source and cached.
+  If the cached resource has expired, it is still provided. The cache
+  is updated by a background task. This task has to be started
+  beforehand.</p>
+
+<p>
+     Complete Example:
+   </p>
+
+<pre class="code">
+&lt;map:match pattern="cinc/simple-cinc"&gt;
+  &lt;map:generate src="cinc/simple-cinc.xml"/&gt;
+  &lt;map:transform type="cinclude"&gt;
+      &lt;map:parameter name="expires" value="600"/&gt;
+      &lt;map:parameter name="purge" value="false"/&gt;
+      &lt;map:parameter name="parallel" value="true"/&gt;
+      &lt;map:parameter name="preemptive" value="false"/&gt;
+      &lt;map:parameter name="source" value="file:/c:/temp"/&gt;
+  &lt;/map:transform&gt;
+  &lt;map:transform src="stylesheets/page/simple-page2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+
+
+<h1>Configuration</h1>
+
+<p>Besides the usual transformer configuration, this transformer requires some components.
+You have to add the following lines to the cocoon.xconf:</p>
+
+<pre class="code">
+ &lt;component class="org.apache.cocoon.transformation.helpers.DefaultIncludeCacheManager"
+            role="org.apache.cocoon.transformation.helpers.IncludeCacheManager"
+            logger="test"&gt;
+    &lt;!-- Specify this only if you use preemptive-caching --&gt;
+    &lt;parameter name="preemptive-loader-url" value="http://localhost:8080/cocoon/loader"/&gt;
+ &lt;/component&gt;
+</pre>
+
+<p>If you want to use preemptive caching, you have to specify a URI inside Cocoon that contains
+     the preemptive-loader action. This pipeline is automatically called, when
+     preemptive loading is actived and requried. It loads the content in the background.</p>
+
+<p>First you have to define the action:</p>
+
+<pre class="code">
+...
+&lt;map:components&gt;
+...
+  &lt;map:actions&gt;
+  ...
+      &lt;map:action name="preemptive"
+                  src="org.apache.cocoon.transformation.helpers.PreemptiveLoaderAction"/&gt;
+  ...
+</pre>
+
+<p>Then you must define a pipeline containing the action. This is the pipeline that
+   has to be configured in the cocoon.xconf:</p>
+
+<pre class="code">
+   &lt;map:match pattern="loader"&gt;
+       &lt;map:act type="preemptive"&gt;&lt;/map:act&gt;
+   &lt;/map:match&gt;
+</pre>
+
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<settings>
+  <localRepository>tempRepo</localRepository>
+  <mirrors>
+    <mirror>
+      <mirrorOf>central</mirrorOf>
+      <id>ibiblioEuropeanMirror</id>
+      <url>http://mirrors.dotsrc.org/maven2</url>
+    </mirror>
+    <!-- 
+    <mirror>
+      <mirrorOf>central</mirrorOf>
+      <id>ibiblioAustralianMirror</id>
+      <url>http://public.planetmirror.com/pub/maven2</url>
+    </mirror>    
+     -->
+  </mirrors>
+  <servers>
+    <server>
+      <id>apache-maven-snapshot</id>
+      <username>jheymans</username>
+    </server>
+  </servers>
+</settings>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Serializers</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes all of the available serializers of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Goal</h1>
+      
+<p>
+        This document lists all of the available serializers of Apache Cocoon and
+        describes their purpose.
+      </p>
+    
+    
+<h1>Overview</h1>
+      
+<p>
+        A serializer is the end point of an xml pipeline. 
+        It transforms SAX events into binary or char streams for 
+        final client consumption. 
+        Every pipeline match containing a generator must be terminated 
+        by a serializer. 
+      </p>
+      
+<p>
+        In the sitemap file, each serializer has a unique name which 
+        is mapped to a java class. 
+        One serializer name must be declared as the default serialzer. 
+        Each serializer may have additional configuration information 
+        specified in child elements.
+      </p>
+      
+<p>
+        For more conceptual information about serializers 
+        see <a href="../concepts/sitemap.html">the sitemap</a>.
+      </p>
+    
+    
+<h1>The Serializers in Apache Cocoon</h1>
+      
+<ul>
+        
+<li>
+<a href="html-serializer.html">HTML Serializer</a> (The default serializer)</li>
+        
+<li>
+<a href="xhtml-serializer.html">XHTML Serializer</a>
+</li>
+        
+<li>
+<a href="xml-serializer.html">XML Serializer</a>
+</li>
+        
+<li>
+<a href="text-serializer.html">Text Serializer</a>
+</li>
+        
+<li>
+<a href="xls-serializer.html">HSSF (XLS) Serializer</a> (optional)</li>
+        
+<li>
+<a href="pdf-serializer.html">PDF Serializer</a> (optional)</li>
+        
+<li>
+<a href="ps-serializer.html">PS Serializer</a> (optional)</li>
+        
+<li>
+<a href="pcl-serializer.html">PCL Serializer</a> (optional)</li>
+        
+<li>
+<a href="wap-serializer.html">WAP/WML Serializer</a>
+</li>
+        
+<li>
+<a href="svg-serializer.html">SVG Serializer</a>
+</li>
+        
+<li>
+<a href="svgxml-serializer.html">SVG/XML Serializer</a>
+</li>
+        
+<li>
+<a href="svgjpeg-serializer.html">SVG/JPEG Serializer</a>
+</li>
+        
+<li>
+<a href="svgpng-serializer.html">SVG/PNG Serializer</a>
+</li>
+        
+<li>
+<a href="svgtiff-serializer.html">SVG/TIFF Serializer</a>
+</li>
+        
+<li>
+<a href="vrml-serializer.html">VRML Serializer</a>
+</li>
+        
+<li>
+<a href="link-serializer.html">Link Serializer</a>
+</li>
+        
+<li>
+<a href="ziparchive-serializer.html">Zip archive Serializer</a>
+</li>
+      
+</ul>
+    
+  
+</body>
+</html>

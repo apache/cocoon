@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XSLT Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Sylvain Wallez" name="DC.Creator">
+<meta content="This document describes the xslt transformer of Cocoon." name="DC.Description">
+</head>
+<body>
+     
+<h1>Trax/XSLT Transformer</h1>
+      
+<p>The xslt transformer reads an xsl document from the local file system or from any url.
+                 It transforms the sax stream using this stylesheet.</p>
+              
+<p>The xslt transformer is the default transformer .</p>
+      
+<ul>
+        
+<li>Name : xslt</li>
+        
+<li>Class: org.apache.cocoon.transformation.TraxTransformer</li>
+        
+<li>Cacheable: yes - uses the last modification date of the xsl document for validation.</li>
+      
+</ul>
+      
+<p>The xslt transformer is configurable. You can specify one or more of 
+                     the following configuration information:</p>
+      
+<ul>
+        
+<li>use-request-parameters: true|false - Setting this to true makes all
+                        request parameters available in the XSLT stylesheet. Note that this might 
+                        have issues concerning cachability of the generated output of this transformer,
+                        the caching algorithm not only checks the last modification date but also
+                        all values of the request parameters.
+                        This property is false by default. If set to true the values of a request
+                        parameter is available using a variable in the xslt with the name of the parameter.</li>
+        
+<li>use-browser-capabilities-db: true|false - This configuration forces the transformer to make all
+                        properties from the browser capability database available in the XSLT stylesheet as.
+                        Note that this might have issues concerning cachability of the generated output of this
+                        transformer as the caching algorithm adds this values to the validation phase.
+                        The default for this property is false.</li>
+        
+<li>use-cookies: true|false - This configuration forces the transformer to make all
+                cookies from the request available in the XSLT stylesheetas.
+                Note that this might have issues concerning cachability of the generated output of this
+                transformer. This property is false by default.</li>
+        
+<li>xslt-processor-role: [role name] - This configuration allows to specify the XSLT processor (see below)
+           that will be used by its role name. This allows to have several XSLT processors in the configuration
+          (e.g. Xalan and Saxon) and choose one or the other depending on the needs of stylesheet
+          specificities. This property defaults to "org.apache.cocoon.components.xslt.XSLTProcessor"
+          which is the standard role name for an XSLTProcessor.</li>
+      
+</ul>
+      
+<p>The "use-request-parameters" and "use-browser-capabilities-db" configuration
+                     of a transformer can be changed for one single pipeline by specifying
+                     parameters with the same name:</p>
+
+<pre class="code">
+     
+  &lt;map:transform src="stylesheet.xsl" type="xslt"/&gt;
+  &lt;!-- The type attribute can be omitted as it is the default transformer. --&gt;
+     
+</pre>
+      
+<p>The "use-request-parameters" and "use-browser-capabilities-db" configuration
+                     of a transformer can be changed for one single pipeline by specifying
+                     parameters with the same name:</p>
+
+<pre class="code">
+     
+  &lt;map:transform src="stylesheet.xsl"&gt;
+  &lt;map:parameter name="use-request-parameters" value="true"/&gt;
+  &lt;/map:transform&gt;
+     
+</pre>
+      
+<p>In addition all other parameters to the transformer are
+                  available in the stylesheet as &lt;xsl:param/&gt;s (These values
+                  are also used in the caching algorithm.)</p>
+    
+            
+<h1>The XSLT Processor</h1>
+      
+<p>The XSLT Transformer uses a component called XSLTProcessor. This component is
+                     configured in the cocoon.xconf. You can configure it as follows:</p>
+      
+<ul>
+        
+<li>use-store: true|false -  If set to true it forces the xslt processor 
+                        to put the generated templates from the XSLT stylesheet into the
+         system store. This property is true by default.</li>
+        
+<li>transformer-factory: [class name] - tells the transformer to use a particular
+          implementation of javax.xml.transform.TransformerFactory. This allows to force the use of
+          a given TRAX implementation (e.g. xalan or saxon) if several are available in the classpath.
+          If this property is not set, the transformer uses the standard TRAX mechanism
+          (TransformerFactory.newInstance()).</li>
+      
+</ul>
+    
+  
+</body>
+</html>

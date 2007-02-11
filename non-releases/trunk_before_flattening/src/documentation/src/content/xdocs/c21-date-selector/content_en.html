@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>DateSelector in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the DateSelector of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>DateSelector</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">date</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">DateSelector</span> component is used to 
+            select appropriate sitemap processing depending on the current date, and time.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Selector, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Scratchpad</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.selection.DateSelector</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.1</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The <span class="codefrag">DateSelector</span> tests the current date, and time
+        against the test attribute of the selectors when clause.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        The <span class="codefrag">DateSelector</span> allows to define date, and time specific sitemap
+        processing. This way Cocoon can do date, and time specific sitemap processing.
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p></p>
+<pre class="code">
+&lt;map:select type="daytime"&gt;
+  &lt;map:when test="night"&gt;
+    &lt;!-- do something for night publishing --&gt;
+    &lt;map:read src="resources/{2}-night.css" mime-type="text/css&gt;
+  &lt;/map:when&gt;
+  &lt;map:when test="morning"&gt;
+    &lt;!-- do something for morning publishing --&gt;
+    &lt;map:read src="resources/{2}-morning.css" mime-type="text/css&gt;
+  &lt;/map:when&gt;
+  ...
+  &lt;map:otherwise&gt;
+    &lt;!-- define for completness, and if selecting fails due to errors --&gt;
+  &lt;/map:otherwise&gt;
+&lt;/map:select&gt;
+</pre>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p>
+          The following snippet defines a DateSelector named daytime. 
+          A day is partioned into four daytime areas: night, morning, afternoon, and evening.
+          These daytime names are used to define daytime specific pipeline processing for each
+          daytime area.
+        </p>
+<pre class="code">
+&lt;map:selectors default="browser"&gt;
+  ...
+  &lt;map:selector type="daytime" src="org.apache.cocoon.selection.DateSelector"&gt;
+    &lt;before name="night" date="06:00:00" dateformat="HH:mm:ss"/&gt;
+    &lt;before name="morning" date="12:00:00" dateformat="HH:mm:ss"/&gt;
+    &lt;before name="afternoon" date="18:00:00" dateformat="HH:mm:ss"/&gt;
+    &lt;before name="evening" date="23:59:59" dateformat="HH:mm:ss"/&gt;
+  &lt;/map:selector&gt;
+...
+&lt;/map:selectors&gt;
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          Explain the sitemap selector configuration, options when declaring date selector
+        </p>
+      
+<h2>Setup</h2>
+<p>
+          Explain the sitemap selector setup, ie options when using date selector
+        </p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+        
+        
+</p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+        Describe limitation, bugs of DateSelector 
+      </p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        11-28-03: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+    
+  
+</body>
+</html>

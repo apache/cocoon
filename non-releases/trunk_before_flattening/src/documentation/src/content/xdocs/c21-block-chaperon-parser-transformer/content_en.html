@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Parser Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Stephan Michels" name="DC.Creator">
+<meta content="This document describes the parser transformer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>Parser Transformer</h1>
+   
+<p>The parser transformer builds a syntax tree of a list of lexemes
+      (tokens), by using a grammar file.</p>
+
+   
+<ul>
+    
+<li>Name: parser</li>
+    
+<li>Class: org.apache.cocoon.transformation.ParserTransformer</li>
+    
+<li>Cacheable: yes - uses the last modification date of the grammar
+      document for validation.</li>
+   
+</ul>
+
+   
+<p>The parser uses the following elements from the SAX stream, and
+      replaces them through a syntax tree.</p>
+
+   
+<pre class="code">
+&lt;lexemes xmlns="http://chaperon.sourceforge.net/schema/lexemes/1.0"&gt;
+ &lt;lexeme symbol="word" text="..."/&gt;
+ &lt;lexeme symbol="word" text="..."/&gt;
+ &lt;lexeme symbol="word" text="..."/&gt;
+ &lt;lexeme symbol="punctation" text="..."/&gt;
+&lt;/lexemes&gt;
+</pre>
+
+   
+<p>The parser transformer will replace those elements with a syntax tree.
+   </p>
+
+   
+<pre class="code">
+&lt;paragraph xmlns="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"&gt;
+ &lt;sentence&gt;
+  &lt;word&gt;...&lt;/word&gt;
+  &lt;word&gt;...&lt;/word&gt;
+  &lt;word&gt;...&lt;/word&gt;
+  &lt;punctation&gt;...&lt;/punctation&gt;
+ &lt;/sentence&gt;
+&lt;/paragraph&gt;
+</pre>
+
+   
+<p>A detailed explanation of function and the grammar format can be found at <a class="external" href="http://chaperon.sourceforge.net/">Chaperon</a>.</p>
+
+  
+ 
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Configuring the Cocoon Portal</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Joel Greenyer" name="DC.Creator">
+<meta content="
+        This document describes the use and configuration 
+        of the (new) cocoon portal block.
+    " name="DC.Description">
+</head>
+<body> 
+    
+<h1>Introducing the Cocoon Portal</h1>
+      
+<p>
+        This document describes the use and configuration 
+        of the (new) cocoon portal that you can find in the "portal" block.
+        (Don't mix this with the older portal version that you can
+        find in the "portal-fw" block.)
+      </p>
+      
+<h2>Important parts of the Cocoon Portal</h2>
+<p>TBD
+        </p>
+      
+<h2>How is a portal page created by Cocoon?</h2>
+<p>TBD
+        </p>
+      
+<h2>I want to build my own portal! An approach</h2>
+<p>TBD
+        </p>
+    
+
+    
+<h1>Configuring the Portal contents</h1>
+      
+<p>
+        The configuration of a coplet is done in several steps that are outlined
+        in the next chapters.
+      </p>
+      
+<h2>Configuring Coplets</h2>
+<p>
+          Configuring coplets is like defining a class and creating their instances.
+          So in fact, you define the available coplets (= classes) and each portal
+          view gets some instances of these coplets. 
+        </p>
+<h3>Available Coplet Types</h3>
+<p>
+          Before you can define your available coplets, you have to define the
+          available coplet types, or the so called coplet base data. The current
+          sample contains an XML document for this:
+          </p>
+<pre class="code">
+...
+&lt;coplets&gt;
+   &lt;coplet-base-data id="URICoplet"&gt;
+      &lt;coplet-adapter&gt;uri&lt;/coplet-adapter&gt;
+   &lt;/coplet-base-data&gt;
+&lt;/coplets&gt;
+...
+          </pre>
+<p>In the example above, we define one coplet type, the <em>URICoplet</em>,
+             that uses the <em>uri coplet adapter</em>. By this we define a type,
+             that uses URIs to get the content of a coplet.</p>
+<p>You can add different coplet types with additional configuration here,
+             but rarely have to touch this file.</p>
+<h3>Available Coplets</h3>
+<p>
+          Based on the coplet types, you can define the available coplets in your
+          portal application (= classes). In the example portal an own configuration
+          file contains these so called coplet datas. Here is an excerpt:
+          </p>
+<pre class="code">
+...
+&lt;coplets&gt;
+   &lt;coplet-data id="CZ Weblog" name="standard"&gt;
+      &lt;title&gt;CZ's Weblog&lt;/title&gt;
+      &lt;coplet-base-data&gt;URICoplet&lt;/coplet-base-data&gt;
+      &lt;attribute&gt;
+      	&lt;name&gt;uri&lt;/name&gt;
+      	&lt;value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;cocoon:/news/liverss?feed=http://radio.weblogs.com/0107211/rss.xml&lt;/value&gt;
+      &lt;/attribute&gt;
+      &lt;attribute&gt;
+      	&lt;name&gt;buffer&lt;/name&gt;
+      	&lt;value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;true&lt;/value&gt;
+      &lt;/attribute&gt;
+      &lt;attribute&gt;
+      	&lt;name&gt;error-uri&lt;/name&gt;
+      	&lt;value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;cocoon:/news/CZ_weblog.rss&lt;/value&gt;
+      &lt;/attribute&gt;
+   &lt;/coplet-data&gt;
+&lt;/coplets&gt;
+...
+          </pre>
+<p>Each coplet data contains a unique id and additional configuration. A required
+          configuration is the underlying coplet base data. In the example above,
+          the <em>URICoplet</em> is used here.
+          </p>
+<p>The above configured coplet data requires some configuration, like the
+          URI to invoke to fetch the content for this coplet. This configuration is
+          passed in the different attributes you see above. Each attribute has
+          a name and value.
+          </p>
+<p>The set of coplet datas defines the set of available coplets a user can
+          choose from. If a user chooses to view a coplet, an instance of this coplet
+          data is created. If, e.g. the user chooses the same coplet twice,
+          two instances are created. This is useful for configurable coplets where
+          the user can choose the same coplet with different configurations.
+          </p>
+<h3>Selected Coplets</h3>
+<p>
+          The selected coplets are described by the set of coplet instance datas.
+          </p>
+<pre class="code">
+...
+&lt;coplets&gt;
+   &lt;coplet-instance-data id="CZ Weblog-1" name="standard"&gt;
+      &lt;coplet-data&gt;CZ Weblog&lt;/coplet-data&gt;
+   &lt;/coplet-instance-data&gt;
+&lt;/coplets&gt;
+...
+          </pre>
+<p>
+          The coplet instance data refers to its coplet data by specifying the
+          unique ID. The instance itself has a unique ID as well that is referenced
+          from the portal view.
+          </p>
+<p>
+          In addition, a coplet instance data could have own configuration information.
+          </p>
+      
+<h2>Configuring the arrangement of the defined Coplets</h2>
+<p>
+        The portal view defines the ordering and arrangement of the coplets. This
+        view is defined in a hierarchical manner by nesting layout objects. At
+        each place, a coplet is located, a reference to a coplet instance data
+        is included.
+        </p>
+<p>
+        The Cocoon portal provides several predefined layout elements you can use
+        for your portal view to create a nice layout:
+        </p>
+<ul>
+          
+<li>row - a row of items</li>
+          
+<li>column - a column of items</li>
+          
+<li>tab - a tab</li>
+        
+</ul>
+<p>
+        These are the "high-level" objects, you can use to define your
+        structure. You can nest them in any order to create a complex
+        layout. The layout is defined in an XML document as well, so let's
+        have a look at an example:
+        </p>
+<pre class="code">
+...
+&lt;composite-layout name="row"&gt;
+  &lt;item&gt;
+    &lt;coplet-layout name="coplet"&gt;
+      &lt;coplet-instance-data&gt;Portal-Intro-1&lt;/coplet-instance-data&gt;
+    &lt;/coplet-layout&gt;
+  &lt;/item&gt;
+  &lt;item&gt;
+    &lt;coplet-layout name="coplet"&gt;
+      &lt;coplet-instance-data&gt;Portal-Bottom-1&lt;/coplet-instance-data&gt;
+    &lt;/coplet-layout&gt;
+  &lt;/item&gt;
+&lt;/composite-layout&gt;
+...
+        </pre>
+<p>
+        In the example above, we define a row containing two coplets. This is done
+        by selecting the row layout and defining the childs (or items) of this
+        layout. In this case the items are two new layout objects, the coplet
+        layouts that can contain a coplet. The coplet layout has a reference
+        to the coplet instance data.
+        </p>
+      
+<h2>The Rendering Process</h2>
+<p>
+        Each layout object has a defined renderer that is used to render this
+        layout object. You can find the renderers in the cocoon.xconf. Each renderer
+        has a unique name that is used to identify this renderer.
+        </p>
+<p>
+        A central component, the layout factory (configured in the cocoon.xconf as
+        well), contains a list of all available layout objects, like the row,
+        the column etc. The configuration for each layout object contains also
+        the corresponding renderer information. So, here is the configuration
+        which renderer will be used to render the layout object.
+        </p>
+<p>
+        A renderer itself can be configured in various ways. The portal engine uses
+        so called aspects (don't mess them with AOP), that are used to enhance
+        to features of renderer, allowing - simplifying - a multiple inheritance
+        which is not possible in Java. Have a look at the cocoon.xconf for
+        the different renderer configurations.
+        </p>
+    
+
+    
+<h1>Create a new skin for your portal</h1>
+        
+<p>This section will explain the concepts of the portal layout, 
+        considering the <span class="codefrag">skins/basic/</span> skin provided with cocoon, 
+        and will describe how to create a new skin by extending the 
+        existing stylesheets.</p>
+        
+<div class="note">The skin path can be changed in the portal's sitemap. There is 
+        a <span class="codefrag">global-variable</span> specifying the path to the skin folder.</div>
+          
+<p>The basic cocoon portal skin    is a nice and simple example how to visualize a portal. 
+          There are several elements that allow to customize the look and feel of the portal.
+          A portal with the basic skin consists of </p>
+          
+<ul>
+              
+<li>a <em>header</em>
+</li>
+              
+<li>a <em>tab row</em>
+</li>
+              
+<li>a <em>content section</em> containing the coplet windows</li>
+              
+<li>and a <em>footer </em>
+</li>
+          
+</ul>
+        
+<div align="center">
+<img class="figure" alt="Parts of the portal" src="images/portal-parts.gif" height="300" width="400"></div>    
+        
+<p>The tab row is actually a part of the content section. As well, a tab row can
+        be provided to any coplet window.</p>
+          
+<h2>The skin's stylesheets</h2>
+<p>If we take a look at the <span class="codefrag">skins/basic/styles</span> directory, we 
+              find a number of stylesheets:
+              </p>
+<ul>
+                  
+<li>
+<span class="codefrag">portal-page.xsl</span>: Creates final HTML page</li>
+                  
+<li>
+<span class="codefrag">tab.xsl</span>: layout of the tab row.</li>
+                  
+<li>
+<span class="codefrag">window.xsl</span>: coplet window layout</li>
+                  
+<li>
+<span class="codefrag">column.xsl</span>: layout of a column</li>
+                  
+<li>
+<span class="codefrag">row.xsl</span>: layout of a row</li>
+                  
+<li>
+<span class="codefrag">login-page.xsl</span>: layout of the login page</li>
+              
+</ul>
+<p>The <span class="codefrag">window.xsl</span> stylesheet determines the layout of a
+              coplet window. Normally, a coplet window will contain a header row with a
+              title and buttons like minimize, close, etc.</p>
+<p>These coplet windows are arranged in rows and columns to create
+              the arrangement typical for portals. There can be several rows per column
+              and several columns in the content section. So the thinking is a little
+              different than in usual HTML tables.</p>
+<p>The content section or content row usually has a tab row located at the top 
+              and the coplet windows are arranged below. The layout of the tabs is
+              specified in the <span class="codefrag">tab.xsl</span> stylesheet.</p>
+<p>The <span class="codefrag">portal-page.xsl</span> stylesheet encapsulates the content section
+              with the tab row and allows to define a page header and a footer.
+              This is probably the first stylesheet we want to take a closer look at.
+              </p>
+<div class="note">The <span class="codefrag">tab.xsl</span>, <span class="codefrag">column.xsl</span>,
+              <span class="codefrag">row.xsl</span> and <span class="codefrag">window.xsl</span> stylesheets
+              are used by the portal components directly and won't be found 
+              anywhere in the sitemap. The <span class="codefrag">cocoon.xconf</span>
+              defines which stylesheets will be used by the portal.</div>
+              
+<h2>The portal-page.xsl</h2>
+<p>
+                      Here is the place to change the design of the header and footer row. 
+                      This stylesheet is used to construct the final HTML page, which displays
+                      the portal. The code sample here displays the main template match node of the
+                      stylesheet.
+                  </p>
+<pre class="code">
+...
+&lt;xsl:template match="/"&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;link type="text/css" rel="stylesheet" href="page.css"/&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;table bgColor="#ffffff" border="0" 
+  cellPadding="0" cellSpacing="0" width="100%"&gt;
+  &lt;tbody&gt; 
+
+  &lt;!-- header row --&gt;
+  &lt;tr&gt;
+  &lt;td colspan="2"&gt; 
+   &lt;table border="2" cellPadding="0" cellSpacing="0" width="100%"&gt;
+    &lt;tbody&gt; 
+     &lt;tr&gt; 
+      &lt;td colspan="2" noWrap="" height="10" bgcolor="#DDDDDD"&gt;
+      &lt;/td&gt;
+     &lt;/tr&gt;
+     &lt;tr&gt; 
+      &lt;td bgcolor="#CCCCCC" height="100" align="center" 
+      valign="middle" width="100%"&gt;
+      &lt;font size="80pt"&gt;Cocoon Portal&lt;/font&gt;
+      &lt;/td&gt;
+     &lt;/tr&gt;
+     &lt;tr&gt; 
+      &lt;td colspan="2" noWrap="" height="10" bgcolor="#DDDDDD"&gt;
+      &lt;/td&gt;
+     &lt;/tr&gt;
+    &lt;/tbody&gt;
+   &lt;/table&gt;
+  &lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;!-- content/tab row --&gt;
+  &lt;tr&gt;
+  &lt;td&gt;
+   &lt;xsl:apply-templates/&gt;
+  &lt;/td&gt;
+  &lt;/tr&gt;
+  
+  &lt;!-- footer row --&gt;
+  &lt;tr&gt;
+  &lt;td colspan="2"&gt; 
+   &lt;table border="2" cellPadding="0" cellSpacing="0" width="100%"&gt;
+    &lt;tbody&gt; 
+     &lt;tr&gt; 
+      &lt;td colspan="2" noWrap="" height="10" bgcolor="#DDDDDD"&gt;
+       &lt;img height="1" src="sunspotdemoimg-space.gif" width="1"/&gt;
+      &lt;/td&gt;
+     &lt;/tr&gt;
+     &lt;tr&gt; 
+      &lt;td colspan="2" noWrap="" height="30" bgcolor="#CCCCCC"&gt;
+       &lt;img height="1" src="sunspotdemoimg-space.gif" width="1"/&gt;
+      &lt;/td&gt;
+     &lt;/tr&gt;
+    &lt;/tbody&gt;
+   &lt;/table&gt;
+  &lt;/td&gt;
+  &lt;/tr&gt;
+ &lt;/tbody&gt;
+ &lt;/table&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+&lt;/xsl:template&gt;
+...
+            </pre>
+          
+<h2>The tab.xsl</h2>
+<p>From the <span class="codefrag">portal-page.xsl</span> stylesheet, we will now
+              move upwards in the XSL transformation steps and take a look at the
+              stylesheet that was processed before, the <span class="codefrag">tab.xsl</span>.</p>
+<p>Again, this source snippet shows the main template match node of the stylesheet:</p>
+<pre class="code">...
+&lt;!-- Process a tab  --&gt;
+&lt;xsl:template match="tab-layout"&gt;
+&lt;!-- ~~~~~ Begin body table ~~~~~ --&gt;
+&lt;table border="2" cellpadding="0" cellspacing="0" width="100%"&gt;
+ &lt;!-- ~~~~~ Begin tab row ~~~~~ --&gt;
+ &lt;tr&gt;
+ &lt;td&gt;
+ &lt;table summary="tab bar" border="2" cellpadding="0" 
+    cellspacing="0" width="100%"&gt;
+  &lt;tr vAlign="top"&gt;
+   &lt;xsl:for-each select="named-item"&gt;
+    &lt;xsl:choose&gt;
+     &lt;xsl:when test="@selected"&gt;
+     &lt;!-- ~~~~~ begin selected tab ~~~~~ --&gt;
+     &lt;td valign="middle" bgcolor="#DDDDDD"&gt;
+      &lt;b&gt;
+       &lt;a href="{@parameter}"&gt;
+        &lt;font color="#000000"&gt;
+         &lt;xsl:value-of select="@name"/&gt;
+        &lt;/font&gt;
+       &lt;/a&gt;
+      &lt;/b&gt;
+     &lt;/td&gt;
+     &lt;!-- ~~~~~ end selected tab ~~~~~ --&gt;
+    &lt;/xsl:when&gt;
+    &lt;xsl:otherwise&gt;
+     &lt;!-- ~~~~~ begin non selected tab ~~~~~ --&gt;
+     &lt;td valign="middle" bgcolor="#CCCCCC" &gt;
+      &lt;div class="tab"&gt;
+       &lt;a href="{@parameter}"&gt;
+        &lt;xsl:value-of select="@name"/&gt;
+       &lt;/a&gt;
+      &lt;/div&gt;
+     &lt;/td&gt;
+     &lt;!-- ~~~~~ end non selected tab ~~~~~ --&gt;
+    &lt;/xsl:otherwise&gt;
+   &lt;/xsl:choose&gt;
+   &lt;/xsl:for-each&gt;
+   &lt;!-- ~~~~~ last "blank" tab ~~~~~ --&gt;
+    &lt;td width="99%" bgcolor="#CCCCCC" align="right"&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;!-- ~~~~~ End tab row ~~~~~ --&gt;
+
+  &lt;!-- ~~~~~ Begin content row ~~~~~ --&gt;
+  &lt;tr&gt;
+   &lt;td bgcolor="#FFFFFF"&gt;
+    &lt;xsl:apply-templates/&gt;
+   &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;!-- ~~~~~ End content row ~~~~~ --&gt;
+&lt;/table&gt;
+&lt;/xsl:template&gt;
+...</pre>
+<p>The first row that is created here contains the definition of the tabs. 
+        The <span class="codefrag">&lt;xsl:choose&gt;</span> element differentiates between the
+        currently selected tab and all other tabs. The <span class="codefrag">@selected</span>
+        attribute is generated by the portal and can be accessed as shown
+        above. As well, the portal provides the tab's <span class="codefrag">@parameter</span>
+        (usually the tab's link) and <span class="codefrag">@name</span> attributes. </p>
+<div class="note">Depending on the configuration of the portal, it is possible
+        that tabbed areas are nested inside each other. So be careful how a tab
+        row might look in the middle of another content section.</div>
+<p>Nice looking tabs can become pretty complex, take a look at the 
+        <span class="codefrag">tab.xml</span> stylesheet in the <span class="codefrag">skins/common/</span>
+        skin to see another example.</p>
+<p>Below the tabs, another table cell is defined that will be filled 
+        with the contents of the tabbed area. This content will have been processed
+        by the <span class="codefrag">columns.xsl</span> stylesheet before - and before that by the 
+        <span class="codefrag">row.xsl</span> stylesheet.</p>
+      
+<h2>The column.xsl and row.xsl</h2>
+<p>The <span class="codefrag">column.xsl</span> and <span class="codefrag">row.xsl</span> stylesheets
+          define the look of the tables in which the coplet windows will be placed.
+          Usually, nothing exciting happens in these stylesheets. Here is a listing of the
+          important parts, just to give a complete overview.
+          </p>
+<p>The main template match node of the <span class="codefrag">column.xsl</span> stylesheet:</p>
+<pre class="code">...
+&lt;!-- Process a Column  --&gt;
+&lt;xsl:template match="column-layout"&gt;
+ 
+   ...
+ 
+ &lt;table border="{$border}" cellSpacing="0" cellpadding="0" 
+    width="100%"&gt;
+  &lt;xsl:if test="@bgcolor"&gt;
+   &lt;xsl:attribute name="bgcolor"&gt;
+    &lt;xsl:value-of select="@bgcolor" /&gt; 
+   &lt;/xsl:attribute&gt;
+  &lt;/xsl:if&gt;
+  &lt;tr vAlign="top"&gt;
+   &lt;xsl:for-each select="item"&gt;
+    &lt;td&gt;
+     &lt;xsl:if test="@bgcolor"&gt;
+      &lt;xsl:attribute name="bgcolor"&gt;
+       &lt;xsl:value-of select="@bgcolor" /&gt; 
+      &lt;/xsl:attribute&gt;
+     &lt;/xsl:if&gt;
+     &lt;xsl:if test="@width"&gt;
+      &lt;xsl:attribute name="width"&gt;
+       &lt;xsl:value-of select="@width" /&gt; 
+      &lt;/xsl:attribute&gt;
+     &lt;/xsl:if&gt;
+     &lt;xsl:apply-templates /&gt;
+    &lt;/td&gt;
+   &lt;/xsl:for-each&gt;
+  &lt;/tr&gt;
+ &lt;/table&gt;
+&lt;/xsl:template&gt;
+...</pre>
+<p>The main template match node of the <span class="codefrag">row.xsl</span> stylesheet:</p>
+<pre class="code">...
+&lt;!-- Process a row  --&gt;
+&lt;xsl:template match="row-layout"&gt;
+
+   ...
+   
+ &lt;table border="{$border}" cellSpacing="10" width="100%"&gt;
+  &lt;xsl:if test="@bgcolor"&gt;
+   &lt;xsl:attribute name="bgcolor"&gt;
+    &lt;xsl:value-of select="@bgcolor" /&gt; 
+   &lt;/xsl:attribute&gt;
+  &lt;/xsl:if&gt;
+  &lt;xsl:for-each select="item"&gt;
+   &lt;tr vAlign="top"&gt;
+    &lt;xsl:if test="@bgcolor"&gt;
+     &lt;xsl:attribute name="bgcolor"&gt;
+      &lt;xsl:value-of select="@bgcolor" /&gt; 
+     &lt;/xsl:attribute&gt;
+    &lt;/xsl:if&gt;
+    &lt;td&gt;
+     &lt;xsl:apply-templates /&gt;
+    &lt;/td&gt;
+   &lt;/tr&gt;
+  &lt;/xsl:for-each&gt;
+ &lt;/table&gt;
+&lt;/xsl:template&gt;
+...</pre>
+      
+<h2>The window.xsl</h2>
+<p>The <span class="codefrag">window.xsl</span> stylesheet determines the design of the coplet
+          windows and probably takes the most design effort compared to the other stylesheets.
+          A coplet window consists of a table header with the window title and a number
+          of buttons like close, minimize, maximize etc. The basic skin provides some
+          images in the <span class="codefrag">images/</span> subfolder. The rest of the window will
+          be filled with the coplet content, depending on the configuration of
+          the coplet.</p>
+<p>A slightly more complex example can be found in the 
+          <span class="codefrag">skins/common/</span> skin.</p>
+<p>The listing below shows the main template match node:</p>
+<pre class="code">...
+&lt;xsl:template match="window"&gt;
+
+   ...
+ 
+&lt;table border="2" cellSpacing="0" cellpadding="0" width="100%"&gt;
+ &lt;tr vAlign="top"&gt;
+  &lt;td bgColor="{$bgColor}" valign="middle"&gt;
+   &lt;font&gt;
+    &lt;xsl:attribute name="color"&gt;#ffffff&lt;/xsl:attribute&gt;
+    &lt;xsl:attribute name="face"&gt;Arial&lt;/xsl:attribute&gt;
+    &lt;xsl:attribute name="size"&gt;2&lt;/xsl:attribute&gt;    
+    &lt;xsl:choose&gt;
+     &lt;xsl:when test="@title"&gt;
+      &lt;b&gt;&lt;xsl:value-of select="@title"/&gt;&lt;/b&gt;
+     &lt;/xsl:when&gt;
+     &lt;xsl:otherwise&gt;
+      &lt;b&gt;&lt;xsl:value-of select="title"/&gt;&lt;/b&gt;
+     &lt;/xsl:otherwise&gt;
+    &lt;/xsl:choose&gt;    
+   &lt;/font&gt;
+  &lt;/td&gt;
+  &lt;td align="right" bgColor="{$bgColor}"&gt;
+   &lt;xsl:if test="fullscreen-uri"&gt;
+    &lt;a href="{fullscreen-uri}"&gt;
+     &lt;img src="customize.gif" border="0" alt="Full Screen"/&gt;
+    &lt;/a&gt;
+   &lt;/xsl:if&gt;
+   &lt;xsl:if test="maxpage-uri"&gt;
+    &lt;a href="{maxpage-uri}"&gt;
+     &lt;img src="show.gif" border="0" alt="Max Page"/&gt;
+    &lt;/a&gt;
+   &lt;/xsl:if&gt;
+   &lt;xsl:if test="maximize-uri"&gt;
+    &lt;a href="{maximize-uri}"&gt;
+     &lt;img src="maximize.gif" border="0" alt="Maximize"/&gt;
+    &lt;/a&gt;
+   &lt;/xsl:if&gt;
+   &lt;xsl:if test="minimize-uri"&gt;
+    &lt;a href="{minimize-uri}"&gt;
+     &lt;img src="minimize.gif" border="0" alt="Minimize"/&gt;
+    &lt;/a&gt;
+   &lt;/xsl:if&gt;
+   &lt;xsl:if test="remove-uri"&gt;
+    &lt;a href="{remove-uri}"&gt;
+     &lt;img src="delete.gif" border="0" alt="Delete"/&gt;
+    &lt;/a&gt;
+   &lt;/xsl:if&gt;
+  &lt;/td&gt;
+ &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td colSpan="2"&gt;
+    &lt;xsl:apply-templates select="content"/&gt;
+   &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+&lt;/xsl:template&gt;
+...</pre>
+  
+
+    
+<h1>Further topics</h1>
+      
+<p>
+      
+</p>
+    
+  
+</body>
+</html>

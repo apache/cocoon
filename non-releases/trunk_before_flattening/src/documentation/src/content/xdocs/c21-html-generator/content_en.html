@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>HTML Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Sylvain Wallez" name="DC.Creator">
+<meta content="Gianugo Rabellino " name="DC.Creator">
+<meta content="This document describes the html generator of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>HTML Generator</h1>
+      
+<p>The html generator reads an html document from the local file system or from any url.
+                 It acts similar to the file generator with the difference that it reads
+                     html documents and converts them using <a class="external" href="http://sourceforge.net/projects/jtidy">JTidy</a>
+                     to xhtml.</p>
+      
+<p>This generator is optional and requires the jtidy package
+                     in the lib directory when building Cocoon. However,
+                     the distribution includes this package already.</p>
+      
+<ul>
+        
+<li>Name : html</li>
+        
+<li>Class: org.apache.cocoon.generation.HTMLGenerator</li>
+        
+<li>Cacheable: yes - uses the last modification date of the html document for validation.</li>
+      
+</ul>
+      
+<p>The location of the source html document is specified in
+                     the pipeline by the src attribute.</p>
+  
+<pre class="code">
+   
+  &lt;map:generate src="document.html" type="html"/&gt;
+     
+</pre>
+      
+<p>The html generator, however, can operate also on a request
+      attribute or on a XML POST request. This can be done also by the
+      <a href="stream-generator.html">stream generator</a>, with whom
+      it shares the syntax: the added bonus here is that you can
+      "sanitize" a possibly non well-formed XML snippet for further
+      reuse later. In order to use this feature for request attributes, 
+      just omit the "src" attribute and set a parameter like the following 
+      one in the sitemap:</p>
+
+
+<pre class="code">
+
+  &lt;map:parameter name="form-name" value="my-request-attribute"/&gt;
+
+</pre>
+
+    
+    
+<h1>Configuring JTidy</h1>
+      
+<p>Without any configuration, the generator produces an XHTML document, with the proper namespace. However,
+         JTidy offers a full range of options for converting the HTML document to XML.</p>
+      
+<p>These options can be specified in a properties file (key=value pairs) whose location is given in the
+         component configuration :</p>
+      
+<pre class="code">
+        
+  &lt;map:generator name="html" src="org.apache.cocoon.generation.HTMLGenerator"&gt;
+    &lt;jtidy-config&gt;jtidy.properties&lt;/jtidy-config&gt;
+  &lt;/map:generator&gt;
+        
+      </pre>
+      
+<p>The <span class="codefrag">jtidy-config</span> URL can be either relative (to the application context), one of Cocoon's special
+         protocols such as <span class="codefrag">resouce:</span> which searches the file in the classpath.</p>
+      
+<p>For more information on the available configurations, please refer to the
+         <a class="external" href="http://www.w3.org/People/Raggett/tidy/">original Tidy page</a>. Beware that configuration
+         examples shown there use the ':' as a separator when JTidy requires a '=' as it is a standard Java properties file.
+      </p>
+    
+
+  
+</body>
+</html>

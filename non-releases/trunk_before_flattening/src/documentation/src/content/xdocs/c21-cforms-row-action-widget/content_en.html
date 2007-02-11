@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: row-action widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>This is a specific type of <a href="widget_action.html">action widget</a>
+      that handles frequent actions
+      occuring on a repeater row, such as adding/removing a row and moving
+      it up and down. These widgets should be placed inside a repeater and
+      act on the current row.</p>
+    
+
+    
+<h1>Configuration</h1>
+      
+<pre class="code">&lt;fd:row-action id="..." action-command="add-after|delete|move-up|move-down"&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+  &lt;fd:on-action&gt;
+    ...
+  &lt;/fd:on-action&gt;
+&lt;/fd:row-action&gt;</pre>
+
+      
+<p>The <strong>action-command</strong> attribute should have either the
+      value <span class="codefrag">add-after</span>, <span class="codefrag">delete</span>, <span class="codefrag">move-up</span>
+      or <span class="codefrag">move-down</span>.</p>
+
+      
+<p>
+<strong>fd:on-action</strong> allows additional event handlers to
+      be defined, see also <a href="eventhandling.html">Event Handling</a>. The interface to be implemented
+      for Java event listeners is <span class="codefrag">org.apache.cocoon.forms.event.ActionListener</span>.
+      The WidgetEvent subclass is <span class="codefrag">org.apache.cocoon.forms.event.ActionEvent</span>.
+    The event handlers are called <em>after</em> the action is performed except for the
+    <span class="codefrag">delete</span> row action where event handlers are called <em>before</em> the
+    row is deleted.</p>
+
+      
+<p>Where all you want to do is submit a specific row on a repeater,
+      simply add a fd:submit element to the widgets for the repeater.</p>
+
+      
+<p>Then, you can access the submitted row either using an event handler
+      with event.getSourceWidget().getParent(), or from the flow using
+      form.getWidget().getSubmitWidget().getParent(). The row itself has a
+      lookupWidget(widgetName) method that can be used to access specific
+      widgets for the row.</p>
+    
+  
+</body>
+</html>

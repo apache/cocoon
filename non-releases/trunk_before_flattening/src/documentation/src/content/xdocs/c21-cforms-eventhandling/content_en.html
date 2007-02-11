@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: Event Handling</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Intro</h1>
+      
+<p>Some types of widgets can emit events. For example, the
+      action widget produces ActionEvents and the field widget
+      produces ValueChangedEvents. Next to these events, there are
+      also ProcessingPhaseEvents, fired in between the various
+      phases of the processing of a request.</p>
+
+      
+<p>Handling events can be done in three ways:</p>
+
+      
+<ul>
+        
+<li>by defining event listeners in the form definition (as child
+        of wd:on-action for the action widget, or wd:on-value-changed for
+        the field widget, ...).</li>
+        
+<li>by adding event listeners dynamically on widget instances.</li>
+        
+<li>by registering a <span class="codefrag">FormHandler</span> on the
+        Form object. This FormHandler will receive all events from all widgets.</li>
+      
+</ul>
+    
+
+    
+<h1>When are events processed? (Request processing phases)</h1>
+      
+<p>To answer the question "When are events processed?", we have to
+      look a bit deeper into how a form request is handled. This is separated
+      in a couple of phases, more specifically the following ones:</p>
+
+      
+<ul>
+        
+<li>Any outstanding events are broadcasted to the event listeners.<br>
+        The reason this is done is because events might have been collected while
+        the form was loaded with values by the binding framework.</li>
+        
+<li>ProcessingPhaseListeners are informed that the <span class="codefrag">LOAD_MODEL</span> phase has ended.</li>
+        
+<li>All widgets in the widget tree read their value from the request.
+        If a widget decides it has to produce an event, it is added to a global
+        (i.e. form-level) list (but not yet executed).</li>
+        
+<li>Once all widgets had the opportunity to read their value from the request,
+        the events are broadcasted to the event listeners. This assures that event
+        listeners have access to the values of all widgets in the tree.</li>
+        
+<li>ProcessingPhaseListeners are informed that the <span class="codefrag">READ_FROM_REQUEST</span> phase has ended.</li>
+        
+<li>It is possible that processing ends now. This usually happens when
+        an action widget has caused an event.</li>
+        
+<li>All widgets in the widget tree validate themselves.</li>
+        
+<li>ProcessingPhaseListeners are informed that the <span class="codefrag">VALIDATE</span> phase has ended.</li>
+      
+</ul>
+    
+
+    
+<h1>Recursive event loops</h1>
+      
+<p>Event listeners themselves might call methods on widgets which cause
+      new events to be generated. You have to be careful not to cause recursive
+      event loops by doing this.</p>
+
+      
+<p>For example, calling setValue on a widget
+      in a ValueChangedEvent caused by that widget will schedule a new ValueChangedEvent,
+      which will then again cause the execution of the event listener
+      which will then again call setValue and thus again cause a new event
+      to be generated, and so on.</p>
+    
+
+    
+<h1>Defining event handlers in the form definition</h1>
+      
+<p>Event handlers can be specified as part of the form definition, as child
+      of the various wd:on-xxx elements, such as wd:on-action for the action widget.</p>
+
+      
+<p>Event handlers can be written in either javascript or java.
+      The form definition syntax is as follows:</p>
+
+      
+<pre class="code">&lt;fd:on-xxxx&gt;
+  &lt;javascript&gt;
+    ... some inline javascript code ...
+  &lt;/javascript&gt;
+  &lt;java class="..."/&gt;
+&lt;/fd:on-xxxx&gt;</pre>
+
+      
+<p>You can specify as many <span class="codefrag">&lt;javascript&gt;</span> and/or
+      <span class="codefrag">&lt;java&gt;</span> event listeners as you want.</p>
+
+      
+<h2>Javascript event listeners</h2>
+<p>Objects available in the Javascript snippet:</p>
+<ul>
+          
+<li>
+<span class="codefrag">event</span>: a subclass of WidgetEvent. The reference documentation
+          of the individual widgets mentions which WidgetEvent subclass they provide
+          in their events. You can then check the javadoc for those classes to see
+          what they provide.</li>
+          
+<li>
+<span class="codefrag">viewData</span>: any data that is normally passed from the flowlayer
+          to the view (pipeline). Exact contents depends on which flowscript API version you use.</li>
+          
+<li>if the form processing was started from a flowscript, then everything
+          available from the scope of that flowscript, such as global variables,
+          functions and the <span class="codefrag">cocoon</span> object (see also
+          <a href="../flow/api.html">Flow Object Model</a>).</li>
+        
+</ul>
+<div class="note">It does not make sense to create continuations from the Javascript event
+        handler. In other words, do not call <span class="codefrag">cocoon.sendPageAndWait</span> or <span class="codefrag">form.showForm</span>
+        from there.</div>
+
+      
+<h2>Java event listeners</h2>
+<p>The Java class specified in the class attribute on the java element should
+        implement a certain event listener interface. Which interface depends on the type of widget.
+        See the documentation of the individual widgets for more information.</p>
+    
+
+    
+<h1>Adding event listeners on widget instances</h1>
+      
+<p>Adding event listeners on widgets instances allows to dynamically
+      add event listeners at runtime. This is often convenient: as you
+      control the creation of the event listeners yourself, you can pass
+      them any information you need.</p>
+
+      
+<p>To add an event listener on a widget instance, simply call
+      the appropriate method on the widget (e.g. addValueChangedListener)
+      with an appropriate listener object as argument. You can of course also remove
+      the event listener afterwards (e.g. removeValueChangedListener).</p>
+
+      
+<p>When using flowscript, it is possible to simply assign Javascript
+      functions as event listeners. This is a very easy and powerful way
+      to create event listeners. See the <a href="api_javascript.html">flowscript
+      API section</a> for more information.</p>
+    
+
+    
+<h1>Handling events using the FormHandler</h1>
+      
+<p>To handle events using a FormHandler, write a class implementing the following interface:</p>
+
+      
+<pre class="code">org.apache.cocoon.woody.event.FormHandler</pre>
+
+      
+<p>Alternatively you can extend from the following abstract class:</p>
+
+      
+<pre class="code">org.apache.cocoon.woody.event.AbstractFormHandler</pre>
+
+      
+<p>which will split ActionEvents and ValueChangedEvents to two different methods.
+      See the javadocs of these interfaces and classes for more details.</p>
+
+      
+<p>Once you created the FormHandler, register it on a form instance by calling
+      the method <span class="codefrag">setFormHandler(FormHandler formHandler)</span> on it.</p>
+    
+
+    
+<h1>Overview of supported events</h1>
+      
+<p>The figure below shows the 3 types of events we currently support, each
+      extending from the common WidgetEvent class.</p>
+
+      
+<div align="center">
+<img class="figure" alt="Overview of event types" src="images/forms_event_types.png"></div>
+
+      
+<p>The full types of the event listeners and event objects are:</p>
+
+      
+<pre class="code">org.apache.cocoon.forms.event.ValueChangedListener
+org.apache.cocoon.forms.event.ValueChangedEvent
+
+org.apache.cocoon.forms.event.ActionListener
+org.apache.cocoon.forms.event.ActionEvent
+
+org.apache.cocoon.forms.event.ProcessingPhaseListener
+org.apache.cocoon.forms.event.ProcessingPhaseEvent</pre>
+
+      
+<p>The table below gives an overview of what events are supported on what widgets.</p>
+      
+<table>
+        
+<tr>
+          
+<th colspan="1" rowspan="1">Widget</th>
+          <th colspan="1" rowspan="1">Supports ValueChangedEvents</th>
+          <th colspan="1" rowspan="1">Supports ActionEvents</th>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">field</td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">multivaluefield</td>
+          <td colspan="1" rowspan="1">TODO</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">booleanfield</td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">repeater</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">output</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">submit</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">action</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">repeater-action</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">row-action</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">aggregatefield</td>
+          <td colspan="1" rowspan="1">TODO</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">upload</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">messages</td>
+          <td colspan="1" rowspan="1"></td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+      
+</table>
+    
+  
+</body>
+</html>

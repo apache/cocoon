@@ -1,0 +1,905 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Ovidiu Predescu" name="DC.Creator">
+<meta content="Christopher Oliver" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Flowscript</h1>
+    
+<p>Cocoon Flowscript is a JavaScript API to manage control flow based on an
+        <a class="external" href="http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino">extended</a>
+        version of the <a class="external" href="http://www.mozilla.org/rhino">Mozilla Rhino</a> JavaScript interpreter that supports continuations.</p>
+    
+    
+<a name="FOM"></a>
+<h1>Flow Object Model</h1>
+      
+<p>Cocoon provides a set of system objects for use by Flowscripts. We call this set of objects the <em>Flow Object Model</em> (FOM).
+      The Flow Object Model consists of the following objects:</p>
+    
+<ul>
+      
+<li>
+<a href="#cocoon">Cocoon</a>
+</li>
+      
+<li>
+<a href="#request">Request</a>
+</li>
+      
+<li>
+<a href="#response">Response</a>
+</li>
+      
+<li>
+<a href="#session">Session</a>
+</li>
+      
+<li>
+<a href="#context">Context</a>
+</li>
+      
+<li>
+<a href="#cookie">Cookie</a>
+</li>
+      
+<li>
+<a href="#log">Log</a>
+</li>
+      
+<li>
+<a href="#WebContinuation">WebContinuation</a>
+</li>
+    
+</ul>
+    
+<h2>Cocoon Object</h2>
+<a name="cocoon"></a>
+<p>The <span class="codefrag">Cocoon</span> object represents the current Cocoon Sitemap. This is the entry point into the FOM. There is one instance of <span class="codefrag">Cocoon</span> which you may access in your scripts as the global variable <span class="codefrag">cocoon</span>, for example like this:</p>
+<pre class="code">
+         var value = cocoon.request.getAttribute("blah");
+    </pre>
+<p>
+     The <span class="codefrag">Cocoon</span> object supports the following properties and functions:
+    </p>
+<h3>request</h3>
+<p>The current Cocoon request:</p>
+<p>
+    
+<em>Property</em> [<a href="#request">Request</a>] <span class="codefrag">request</span>
+    
+</p>
+<h3>response</h3>
+<p>The current Cocoon response:</p>
+<p>
+    
+<em>Property</em> [<a href="#response">Response</a>] <span class="codefrag">response</span>
+    
+</p>
+<h3>session</h3>
+<p>The current Cocoon session:</p>
+<p>
+    
+<em>Property</em> [<a href="#session">Session</a>] <span class="codefrag">session</span>
+    
+</p>
+<h3>context</h3>
+<p>The current Cocoon application context:</p>
+<p>
+    
+<em>Property</em> [<a href="#context">Context</a>] <span class="codefrag">context</span>
+    
+</p>
+<h3>log</h3>
+<p>A reference to the current logger:</p>
+<p>
+    
+<em>Property</em> [<a href="#log">Log</a>] <span class="codefrag">log</span>
+    
+</p>
+<h3>parameters</h3>
+<p>Any parameters passed to the script by the Cocoon Sitemap</p>
+<p>
+    
+<em>Property</em> <span class="codefrag">[Object] parameters</span>
+    
+</p>
+<h3>sendPage</h3>
+<a name="sendPage"></a>
+<p>
+      
+<em>Function</em> <span class="codefrag">sendPage([String] uri, [Object] bean)</span>
+      
+</p>
+<p>
+      Passes control to the Cocoon sitemap to generate the output page.
+      </p>
+<p>
+        
+<span class="codefrag">uri</span> is the sitemap URI of the page to be sent back to the client. If the URI starts with a slash, it is resolved starting at the root sitemap, otherwise it is resolved relative to the current sitemap. The URI should not contain a scheme (such as cocoon:).
+      </p>
+<p>
+       
+<span class="codefrag">bean</span> is a context object which can be accessed inside this page to extract
+       various values and place them in the generated page.
+      </p>
+<h3>sendPageAndWait</h3>
+<a name="sendPageAndWait"></a>
+<p>
+    
+<em>Function</em> <span class="codefrag">[WebContinuation] sendPageAndWait([String] uri, [Object] bean, [Function] postPipelineCode, [Number] timeToLive)</span>
+    
+</p>
+<p>
+     Passes control to the Cocoon sitemap to generate the output page.
+     </p>
+<p>The flow script is suspended after the page is generated and the whole execution stack
+        saved in the WebContinuation object returned from this function. </p>
+<p>
+<span class="codefrag">uri</span> is the relative URL of the page to be sent back to the client. If the URI starts with a slash, it is resolved starting at the root sitemap, otherwise it is resolved relative to the current sitemap. The URI should not contain a scheme (such as cocoon:).</p>
+<p>
+        
+<span class="codefrag">bean</span> is a context object which can be accessed inside this page to extract
+        various values and place them in the generated page.</p>
+<p>If provided, the <span class="codefrag">postPipelineCode</span> function will be executed after pipeline processing is complete but before the script is suspended. You can use this to release resources that are needed during the pipeline processing but should not become part of the continuation. For example:</p>
+<pre class="code">
+
+function processPage() {
+   var id = ...
+   var bizData = ...
+   var uri = ...
+   var comp = cocoon.getComponent(id);
+   // use comp
+   ...
+   cocoon.sendPageAndWait(uri, bizData, function() {
+      cocoon.releaseComponent(comp);
+      comp = null;
+   });
+}
+</pre>
+<p>
+<span class="codefrag">timeToLive</span> is the time to live in milliseconds for the continuation created.</p>
+<p>The return value is the <a href="#WebContinuation">continuation</a> object.</p>
+<h3>sendStatus</h3>
+<a name="sendStatus"></a>
+<p>
+    
+<em>Function</em> <span class="codefrag">sendStatus([Number] sc)</span>
+    
+</p>
+<p>
+     Sends an empty response with the provided HTTP status code.
+     </p>
+<h3>createPageLocal</h3>
+<a name="createPageLocal"></a>
+<p>
+      
+<em>Function</em> <span class="codefrag">[Object] createPageLocal()</span>
+      
+</p>
+<p>
+      Creates a <em>Page Local</em> object. The returned object behaves like a normal JavaScript object, but restores the property values it had when <a href="#sendPageAndWait">sendPageAndWait</a> was originally called, each time a page is resubmitted (e.g. after hitting the back button). Such objects can be used to associate state with one particular page sent to the browser.
+      </p>
+<h3>processPipelineTo</h3>
+<p>
+    
+<em>Function</em> <span class="codefrag">processPipelineTo([String] uri, [Object] bizData, [java.io.OutputStream] stream)</span>
+</p>
+<p>
+     Call the Cocoon sitemap for the given URI, sending the output of the
+     eventually matched pipeline to the specified <span class="codefrag">OutputStream</span>.</p>
+<p>
+<span class="codefrag">uri</span> is the URI for which the request should be generated. If the URI starts with a slash, it is resolved starting at the root sitemap, otherwise it is resolved relative to the current sitemap. The URI should not contain a scheme (such as cocoon:).</p>
+<p>
+<span class="codefrag">bizData</span> is the business data object
+     to be made available to the forwarded pipeline</p>
+<p>
+<span class="codefrag">stream</span> is an <span class="codefrag">OutputStream</span> where the output should be written to.</p>
+<h3>redirectTo</h3>
+<p>
+    
+<em>Function</em> <span class="codefrag">redirectTo([String] uri)</span>
+</p>
+<p>
+      Send a client-side redirect to the browser. The <span class="codefrag">uri</span> argument is the URI to which the browser should be redirected.
+    </p>
+<h3>createWebContinuation</h3>
+<a name="createWebContinuation"></a>
+<p>
+      
+<em>Function</em> <span class="codefrag">[WebContinuation] createWebContinuation()</span>
+      
+</p>
+<p>
+Creates a new "bookmark" <a href="#WebContinuation">WebContinuation</a> object. When invoked it will cause the script to resume right after the call. By calling this function prior to sendPageAndWait() you can be create a "bookmark" which will cause the page to be redisplayed in the browser. Note: the WebContinuation associated with sendPageAndWait() doesn't do this. Rather it resumes execution after the the page is submitted.
+</p>
+<p>For example:</p>
+<pre class="code">
+
+function processPage() {
+
+  var bkm = cocoon.createWebContinuation();
+  var biz = getBizData();
+  cocoon.sendPageAndWait("uri", 
+                         {bookmark: bkm, biz: biz}, 
+                         function() { releaseData(biz); });
+}
+</pre>
+<p></p>
+<h3>load</h3>
+<p>
+<em>Function</em> <span class="codefrag">load([String] uri)</span>
+</p>
+<p>
+      Load the JavaScript script specified by <span class="codefrag">uri</span>. The Cocoon
+     source resolver is used to resolve <span class="codefrag">uri</span>. 
+    </p>
+<h3>getComponent</h3>
+<p>
+<em>Function</em> <span class="codefrag">Object getComponent([String] id)</span>
+</p>
+<p>
+      Access an Avalon component. 
+    </p>
+<h3>releaseComponent</h3>
+<p>
+<em>Function</em> <span class="codefrag">releaseComponent([Object] component)</span>
+</p>
+<p>
+      Release a pooled Avalon component. 
+    </p>
+<h3>createObject</h3>
+<p>
+<em>Function</em> <span class="codefrag">createObject([JavaClass] componentClass)</span>
+</p>
+<p>
+     Create and setup an object so that it can access the information provided to regular components. This is done by calling the various Avalon lifecycle interfaces implemented by the object.
+    </p>
+<h3>disposeObject</h3>
+<p>
+<em>Function</em> <span class="codefrag">disposeObject([Object] object)</span>
+</p>
+<p>
+     Dispose an object that has been created using <span class="codefrag">createObject</span>.
+    </p>
+    
+<h2>Request Object</h2>
+<a name="request"></a>
+<p>The <span class="codefrag">Request</span> object represents the current Cocoon request. It provides the following functions and properties:</p>
+<h3>get</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] get([String] name)</span>
+</p>
+<p>
+      Get the request parameter or attribute with the specified <span class="codefrag">name</span>. 
+    </p>
+<h3>getAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getAttribute([String] name)</span>
+</p>
+<p>
+      Get the request attribute with the specified <span class="codefrag">name</span>. 
+    </p>
+<h3>getAttributeNames</h3>
+<p>
+<em>Function</em> <span class="codefrag">[java.util.Enumeration] getAttributeNames()</span>
+</p>
+<p>
+      Get an enumeration of request attribute names. 
+    </p>
+<h3>setAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">setAttribute([String] name, [Object] value)</span>
+</p>
+<p>
+      Set the value of a request attribute. 
+    </p>
+<h3>removeAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">removeAttribute([String] name)</span>
+</p>
+<p>
+      Remove the attribute with the name <span class="codefrag">name</span> from this request. 
+    </p>
+<h3>getCharacterEncoding</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String]getCharacterEncoding()</span>
+</p>
+<p>
+      Return the character encoding used by this request.
+    </p>
+<h3>setCharacterEncoding</h3>
+<p>
+<em>Function</em> <span class="codefrag">setCharacterEncoding([String] value)</span>
+</p>
+<p>
+      Set the character encoding used by this request.
+    </p>
+<h3>getContentLength</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Number] getContentLength()</span>
+</p>
+<p>
+      Get the content-length of this request
+    </p>
+<h3>getContentType</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getContentType()</span>
+</p>
+<p>
+      Get the content-type of this request
+    </p>
+<h3>getParameter</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getParameter([String] name)</span>
+</p>
+<p>
+      Get the request parameter with the specified <span class="codefrag">name</span>. 
+    </p>
+<h3>getParameterValues</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Array] getParameterValues([String] name)</span>
+</p>
+<p>
+      Get an array of request parameters with the specified <span class="codefrag">name</span>. 
+    </p>
+<h3>getParameterNames</h3>
+<p>
+<em>Function</em> <span class="codefrag">[java.util.Enumeration] getParameterNames()</span>
+</p>
+<p>
+      Get an enumeration of the parameter names in this request.
+    </p>
+<h3>getAuthType</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getAuthType()</span>
+</p>
+<p>
+      Get the authorization type used in this request.
+    </p>
+<h3>getProtocol</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getProtocol()</span>
+</p>
+<p>
+      Get the protocol used in this request.
+    </p>
+<h3>getScheme</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getScheme()</span>
+</p>
+<p>
+      Get the scheme used in this request.
+    </p>
+<h3>getMethod</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getMethod()</span>
+</p>
+<p>
+      Get the method used in this request.
+    </p>
+<h3>getServerName</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getServerName()</span>
+</p>
+<p>
+      Get the server name of this request.
+    </p>
+<h3>getServerPort</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Number] getServerPort()</span>
+</p>
+<p>
+      Get the server port of this request.
+    </p>
+<h3>getRemoteAddr</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getRemoteAddr()</span>
+</p>
+<p>
+      Get the remote address of this request.
+    </p>
+<h3>isSecure</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Boolean] isSecure()</span>
+</p>
+<p>
+      Get the <span class="codefrag">secure</span> property of this request.
+    </p>
+<h3>getLocale</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getLocale()</span>
+</p>
+<p>
+      Get the locale of this request.
+    </p>
+<h3>getLocales</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Array [String]] getLocales()</span>
+</p>
+<p>
+      Get the locales of this request.
+    </p>
+<h3>getCookies</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Array [Cookie]] getCookies()</span>
+</p>
+<p>
+      Get the cookies associated with this request.
+    </p>
+<h3>getHeader</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getHeader([String] name)</span>
+</p>
+<p>
+      Get the header with <span class="codefrag">name</span> from this request.
+    </p>
+<h3>getHeaders</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Array] getHeaders()</span>
+</p>
+<p>
+      Get the headers associated with this request.
+    </p>
+<h3>getHeaderNames</h3>
+<p>
+<em>Function</em> <span class="codefrag">[java.util.Enumeration] getHeaderNames()</span>
+</p>
+<p>
+      Get an enumeration of header names from this request.
+    </p>
+<h3>getRemoteUser</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getRemoteUser()</span>
+</p>
+<p>
+      Get the remote user associated with this request.
+    </p>
+<h3>getUserPrincipal</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getUserPrincipal()</span>
+</p>
+<p>
+      Get the user principal associated with this request.
+    </p>
+<h3>isUserInRole</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Boolean] isUserInRole([String] role)</span>
+</p>
+<p>
+      Returns whether the user associated with this request is in the specified <span class="codefrag">role</span>.
+    </p>
+<h3>Properties</h3>
+<p>
+    
+<span class="codefrag">Request</span> properties map to request parameters, i.e. <span class="codefrag">request.blah</span> is equivalent to <span class="codefrag">request.getParameter("blah")</span>.
+    </p>
+    
+<h2>Response Object</h2>
+<a name="response"></a>
+<p>The <span class="codefrag">Response</span> object represents the Cocoon response associated with the current request.</p>
+<p>
+     The response object contains hooks only to the cookies and to the response headers. Everything else will be controlled by the rest of the cocoon pipeline machinery (like output encoding, for example, which should *NOT* be determined by the flow).
+     </p>
+<p>It provides the following functions and properties:</p>
+<h3>createCookie</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Cookie] createCookie([String] name, [String] value)</span>
+</p>
+<p>
+      Creates a new <a href="#cookie">Cookie</a>. 
+    </p>
+<h3>addCookie</h3>
+<p>
+<em>Function</em> <span class="codefrag">addCookie([Cookie] cookie)</span>
+</p>
+<p>
+      Adds <span class="codefrag">cookie</span> to the current response. 
+    </p>
+<h3>containsHeader</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Boolean] containsHeader([String] name)</span>
+</p>
+<p>
+      Returns whether the current response contains a header with the specified <span class="codefrag">name</span>.
+    </p>
+<h3>setHeader</h3>
+<p>
+<em>Function</em> <span class="codefrag">setHeader([String] name, [String] value)</span>
+</p>
+<p>
+      Replaces the value of the header with <span class="codefrag">name</span> with <span class="codefrag">value</span>.
+    </p>
+<h3>addHeader</h3>
+<p>
+<em>Function</em> <span class="codefrag">addHeader([String] name, [String] value)</span>
+</p>
+<p>
+      Creates a new header in the current response with the specified <span class="codefrag">name</span> and <span class="codefrag">value</span>.
+    </p>
+<h3>setStatus</h3>
+<p>
+<em>Function</em> <span class="codefrag">setStatus([Number] sc)</span>
+</p>
+<p>
+      Sets the status code for this response.
+    </p>
+    
+<h2>Session Object</h2>
+<a name="session"></a>
+<p>The <span class="codefrag">Session</span> object represents the user session associated with the current Cocoon request.</p>
+<p>It provides the following functions and properties:</p>
+<h3>getAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Object] getAttribute([String] name)</span>
+</p>
+<p>
+      Get the value of the session attribute with the specified <span class="codefrag">name</span>.
+    </p>
+<h3>setAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">setAttribute([String] name, [Object] value)</span>
+</p>
+<p>
+      Set the value of the session attribute with the specified <span class="codefrag">name</span> to <span class="codefrag">value</span>.
+    </p>
+<h3>removeAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">removeAttribute([String] name)</span>
+</p>
+<p>
+      Remove the session attribute with the specified <span class="codefrag">name</span>.
+    </p>
+<h3>invalidate</h3>
+<p>
+<em>Function</em> <span class="codefrag">invalidate()</span>
+</p>
+<p>
+      Invalidate this session, releasing all resources associated with it.
+    </p>
+<h3>isNew</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Boolean] isNew()</span>
+</p>
+<p>
+      Returns <span class="codefrag">true</span> if the client does not yet know about the
+      session or if the client chooses not to join the session.  For
+      example, if the server used only cookie-based sessions, and
+      the client had disabled the use of cookies, then a session would
+      be new on each request.
+    </p>
+<h3>getId</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getId()</span>
+</p>
+<p>
+      Returns the unique id associated with this session.
+    </p>
+<h3>getCreationTime</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Number] getCreationTime()</span>
+</p>
+<p>
+      Returns the time when this session was created, measured
+      in milliseconds since midnight January 1, 1970 GMT.
+    </p>
+<h3>getLastAccessedTime</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Number] getLastAccessedTime()</span>
+</p>
+<p>
+      Returns the last time the client sent a request associated with
+      this session, as the number of milliseconds since midnight
+      January 1, 1970 GMT.
+    </p>
+<h3>setMaxInactiveInterval</h3>
+<p>
+<em>Function</em> <span class="codefrag">setMaxInactiveInterval([Number] interval)</span>
+</p>
+<p>
+      Specifies the time, in seconds, between client requests before the
+      contextcontainer will invalidate this session.  A negative time
+      indicates the session should never timeout.
+    </p>
+<h3>getMaxInactiveInterval</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Number] getMaxInactiveInterval()</span>
+</p>
+<p>
+     Returns the maximum time interval, in seconds, that
+     the context container will keep this session open between
+     client accesses. After this interval, the context container
+     will invalidate the session.  The maximum time interval can be set
+     with the <span class="codefrag">setMaxInactiveInterval</span> method.
+     A negative time indicates the session should never timeout.
+    </p>
+<h3>Properties</h3>
+<p>
+      
+<span class="codefrag">Session</span> properties map to session attributes, i.e. <span class="codefrag">session.blah</span> is equivalent to <span class="codefrag">session.getAttribute("blah")</span>.</p>
+    
+<h2>Context Object</h2>
+<a name="context"></a>
+<p>The <span class="codefrag">Context</span> object represents the client context associated with the current Cocoon request.</p>
+<p>It provides the following functions and properties:</p>
+<h3>getAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Object] getAttribute([String] name)</span>
+</p>
+<p>
+      Get the value of the context attribute with the specified <span class="codefrag">name</span>.
+    </p>
+<h3>setAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">setAttribute([String] name, [Object] value)</span>
+</p>
+<p>
+      Set the value of the context attribute with the specified <span class="codefrag">name</span> to <span class="codefrag">value</span>.
+    </p>
+<h3>removeAttribute</h3>
+<p>
+<em>Function</em> <span class="codefrag">removeAttribute([String] name)</span>
+</p>
+<p>
+      Remove the context attribute with the specified <span class="codefrag">name</span>.
+    </p>
+<h3>getInitParameter</h3>
+<p>
+<em>Function</em> <span class="codefrag">getInitParameter([String] name)</span>
+</p>
+<p>
+      Get the value of the context initialization parameter with the specified <span class="codefrag">name</span>.
+    </p>
+<h3>Properties</h3>
+<p>
+      
+<span class="codefrag">Context</span> properties map to context attributes, i.e. <span class="codefrag">context.blah</span> is equivalent to <span class="codefrag">context.getAttribute("blah")</span>. 
+    </p>
+    
+<h2>Cookie Object</h2>
+<a name="cookie"></a>
+<p>
+<span class="codefrag">Cookie</span> provides the following functions and properties:</p>
+<h3>getName</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getName()</span>
+</p>
+<p>
+       Get the name of this cookie.
+    </p>
+<h3>getVersion</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getVersion()</span>
+</p>
+<p>
+       Get the version of this cookie.
+    </p>
+<h3>setVersion</h3>
+<p>
+<em>Function</em> <span class="codefrag">setVersion([String] version)</span>
+</p>
+<p>
+       Set the version of this cookie.
+    </p>
+<h3>getValue</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getValue()</span>
+</p>
+<p>
+       Get the value of this cookie.
+    </p>
+<h3>setValue</h3>
+<p>
+<em>Function</em> <span class="codefrag">setValue([String] value)</span>
+</p>
+<p>
+       Set the value of this cookie.
+    </p>
+<h3>getComment</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getComment()</span>
+</p>
+<p>
+       Get the comment of this cookie.
+    </p>
+<h3>setComment</h3>
+<p>
+<em>Function</em> <span class="codefrag">setComment([String] comment)</span>
+</p>
+<p>
+       Set the comment of this cookie.
+    </p>
+<h3>getDomain</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getDomain()</span>
+</p>
+<p>
+       Get the domain of this cookie.
+    </p>
+<h3>setDomain</h3>
+<p>
+<em>Function</em> <span class="codefrag">setDomain([String] domain)</span>
+</p>
+<p>
+       Set the domain of this cookie.
+    </p>
+<h3>getPath</h3>
+<p>
+<em>Function</em> <span class="codefrag">[String] getPath()</span>
+</p>
+<p>
+       Get the path of this cookie.
+    </p>
+<h3>setPath</h3>
+<p>
+<em>Function</em> <span class="codefrag">setPath([String] path)</span>
+</p>
+<p>
+       Set the path of this cookie.
+    </p>
+<h3>getSecure</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Boolean] getSecure()</span>
+</p>
+<p>
+       Get the secure property of this cookie.
+    </p>
+<h3>setSecure</h3>
+<p>
+<em>Function</em> <span class="codefrag">setSecure([Boolean] value)</span>
+</p>
+<p>
+       Set the secure property of this cookie.
+    </p>
+    
+<h2>Log Object</h2>
+<a name="log"></a>
+<p> The <span class="codefrag">Log</span> object provides an interface to the Cocoon logging system.
+    </p>
+<p>
+        It supports the following functions:
+    </p>
+<h3>error</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">error([String] message, [java.lang.Throwable] exception)</span>
+    
+</p>
+<p>
+      Log an error message. If <span class="codefrag">exception</span> is provided its stack trace will also be logged.
+    </p>
+<h3>debug</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">debug([String] message, [java.lang.Throwable] exception)</span>
+    
+</p>
+<p>
+      Log a debug message. If <span class="codefrag">exception</span> is provided its stack trace will also be logged.
+    </p>
+<h3>warn</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">warn([String] message, [java.lang.Throwable] exception)</span>
+    
+</p>
+<p>
+      Log a warning message. If <span class="codefrag">exception</span> is provided its stack trace will also be logged.
+    </p>
+<h3>info</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">info([String] message, [java.lang.Throwable] exception)</span>
+    
+</p>
+<p>
+      Log an information message. If <span class="codefrag">exception</span> is provided its stack trace will also be logged.
+    </p>
+<h3>isErrorEnabled</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">[Boolean] isErrorEnabled()</span>
+    
+</p>
+<p>
+      Returns whether error message logging is enabled.
+    </p>
+<h3>isDebugEnabled</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">[Boolean] isDebugEnabled()</span>
+    
+</p>
+<p>
+      Returns whether debug message logging is enabled.
+    </p>
+<h3>isWarnEnabled</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">[Boolean] isWarnEnabled()</span>
+    
+</p>
+<p>
+      Returns whether warning message logging is enabled.
+    </p>
+<h3>isInfoEnabled</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">[Boolean] isInfoEnabled()</span>
+    
+</p>
+<p>
+      Returns whether information message logging is enabled.
+    </p>
+    
+<h2>WebContinuation</h2>
+<a name="WebContinuation"></a>
+<p>A <span class="codefrag">WebContinuation</span> represents a continuation of a Flowscript. Because a user may click on the back button in the browser and restart a saved computation in a continuation, each <span class="codefrag">WebContinuation</span> becomes the parent of a subtree of continuations.
+    </p>
+<p>
+       If there is no parent <span class="codefrag">WebContinuation</span>, the created continuation becomes the root of a tree of <span class="codefrag">WebContinuation</span>s.
+    </p>
+<p>
+       
+<span class="codefrag">WebContinuation</span> objects support the following functions and properties:
+    </p>
+<h3>id</h3>
+<p>
+<em>Property</em> <span class="codefrag">[String] id</span>
+</p>
+<p>Returns the unique string identifier of this Web Continuation.</p>
+<h3>continuation</h3>
+<p>
+<em>Property</em> <span class="codefrag">[Continuation] continuation</span>
+</p>
+<p>Returns the JavaScript continuation associated with this Web Continuation.</p>
+<h3>previousBookmark</h3>
+<p>
+<em>Property</em> <span class="codefrag">[WebContinuation] previousBookmark</span>
+</p>
+<p>Returns a reference to the first bookmark continuation among the pages preceding the one associated with this object, or null if no such bookmark continuation exists. The returned object is the continuation you would invoke to implement a "Back" button.</p>
+<h3>isBookmark</h3>
+<p>
+<em>Function</em> <span class="codefrag">[Boolean] isBookmark()</span>
+</p>
+<p>Returns <span class="codefrag">true</span> if this continuation was <em>not</em> created by <a href="#sendPageAndWait">sendPageAndWait</a>.</p>
+<h3>getParent</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">[WebContinuation] getParent()</span>
+    
+</p>
+<p>
+     Get the parent continuation of this continuation.
+    </p>
+<h3>getChildren</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">[Array [WebContinuation]] getChildren()</span>
+    
+</p>
+<p>
+     Get the child continuations of this continuation.
+    </p>
+<h3>invalidate</h3>
+<p>
+        
+<em>Function</em> <span class="codefrag">invalidate()</span>
+    
+</p>
+<p>
+      Invalidates a <span class="codefrag">WebContinuation</span>. This effectively
+      means that the continuation object associated with it will no
+      longer be accessible from Web pages. Invalidating a
+      <span class="codefrag">WebContinuation</span> invalidates all the
+      <span class="codefrag">WebContinuation</span>s which are children of it.    
+    </p>
+    
+  
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ScriptGenerator in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the ScriptGenerator of
+    Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>ScriptGenerator</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td>
+          <td colspan="1" rowspan="1">script</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td>
+          <td colspan="1" rowspan="1">The <span class="codefrag">ScriptGenerator</span> component is used to generate
+          XML by invoking a script.</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td>
+          <td colspan="1" rowspan="1">Generator, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">BLOCK</td>
+          <td colspan="1" rowspan="1">bsf</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td>
+          <td colspan="1" rowspan="1">org.apache.cocoon.generation.ScriptGenerator</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td>
+          <td colspan="1" rowspan="1">Cocoon 2.1</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td>
+          <td colspan="1" rowspan="1">no</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>The ScriptGenerator executes arbitrary scripts using the Apache BSF
+      framework and additional interpreter (Rhino, Jython, etc.) as a Cocoon
+      Generator.</p>
+    
+    
+<h1>Usage</h1>
+      
+<p>The ScriptGenerator is used primarily for prototyping a Cocoon
+      generator. Moreover if the generator's XML output is low and the
+      logic processing is high.</p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p>The following sample uses the ScriptGenerator for generating XML
+        content for URIs matching the pattern <span class="codefrag">*.js</span>. The output of
+        the script invoked by ScriptGenerator is serialized by the default
+        serializer.</p>
+<pre class="code">
+&lt;map:match pattern="*.js"&gt;
+  &lt;map:generate type="script" src="{0}" &gt;
+  &lt;/map:generate&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+        </pre>
+      
+<h2>Sitemap component configuration example</h2>
+<p>The following sample declares the ScriptGenerator in the
+        sitemap's component section. The ScriptGenerator can be used in
+        the sitemap's section using <span class="codefrag">type</span> value <span class="codefrag">script</span>.
+        In this sample no extra script language is declared.</p>
+<pre class="code">
+&lt;map:generators...
+  &lt;map:generator name="script" 
+    src="org.apache.cocoon.generation.ScriptGenerator"
+    logger="sitemap.generation.scriptgenerator" 
+  /&gt;
+    &lt;!-- optional generator configuration --&gt;
+    ...
+&lt;/map:generators&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>The ScriptGenerator allows registering additional script languages.</p>
+<p>List the newly registered language inside the <span class="codefrag">add-language</span>
+        element, each language is defined in <span class="codefrag">language</span> element, by
+        specifying the name of the language using the <span class="codefrag">name</span>
+        attribute, and the language BSF adaptor using the attribute
+        <span class="codefrag">src</span>.</p>
+<p>Each registered language should be mapped to at least one
+        extension, as the language detection of ScriptGenerator is based on
+        the script's extension.</p>
+<p>The following sample register an new language foobar, the BSF
+        adaptor class is <span class="codefrag">foo.bar.ScriptLanguage</span>, and it is
+        associated with the extensions <span class="codefrag">foo</span>, and <span class="codefrag">bar</span>.</p>
+<pre class="code">&lt;add-language&gt;
+  &lt;language name="foobar" src="foo.bar.ScriptLanguage"&gt;
+    &lt;extension&gt;foo&lt;/extension&gt;
+    &lt;extension&gt;bar&lt;/extension&gt;
+  &lt;/language&gt;
+  ...
+&lt;/add-language&gt;
+</pre>
+<p>The next table lists the default mapping of BSF:</p>
+<table>
+          
+<tr>
+            
+<th colspan="1" rowspan="1">Extension</th>
+            <th colspan="1" rowspan="1">Script language</th>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">javascript</td>
+            <td colspan="1" rowspan="1">js</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">jacl</td>
+            <td colspan="1" rowspan="1">jacl</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">netrexx</td>
+            <td colspan="1" rowspan="1">nrx</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">java</td>
+            <td colspan="1" rowspan="1">java</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">javaclass</td>
+            <td colspan="1" rowspan="1">class</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">bml</td>
+            <td colspan="1" rowspan="1">bml</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">vbscript</td>
+            <td colspan="1" rowspan="1">vbs</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">jscript</td>
+            <td colspan="1" rowspan="1">jss</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">jscript</td>
+            <td colspan="1" rowspan="1">jss</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">perlscript</td>
+            <td colspan="1" rowspan="1">pls</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">perl</td>
+            <td colspan="1" rowspan="1">pl</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">jpython</td>
+            <td colspan="1" rowspan="1">py</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">lotusscript</td>
+            <td colspan="1" rowspan="1">lss</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">xslt</td>
+            <td colspan="1" rowspan="1">xslt</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">pnuts</td>
+            <td colspan="1" rowspan="1">pnut</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">beanbasic</td>
+            <td colspan="1" rowspan="1">bb</td>
+          
+</tr>
+        
+</table>
+<p></p>
+      
+<h2>Setup</h2>
+<p>ScriptGenerator registers following objects before invoking the
+        script:</p>
+<table>
+          
+<tr>
+            
+<th colspan="1" rowspan="1">Name</th>
+            <th colspan="1" rowspan="1">Object Typ</th>
+            <th colspan="1" rowspan="1">Comment</th>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">resolver</td>
+            <td colspan="1" rowspan="1">Resolver</td>
+            <td colspan="1" rowspan="1">Cocoon's resolver</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">source</td>
+            <td colspan="1" rowspan="1">Source</td>
+            <td colspan="1" rowspan="1">src attribute of this ScriptGenerator</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">objectModel</td>
+            <td colspan="1" rowspan="1">Map</td>
+            <td colspan="1" rowspan="1">Cocoon's objectModel</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">parameters</td>
+            <td colspan="1" rowspan="1">Parameters</td>
+            <td colspan="1" rowspan="1">paramters of this ScriptGenerator</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">output</td>
+            <td colspan="1" rowspan="1">StringBuffer</td>
+            <td colspan="1" rowspan="1">XML content, forwarded into Cocoon's XML pipeline</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">logger</td>
+            <td colspan="1" rowspan="1">Logger</td>
+            <td colspan="1" rowspan="1">logger of this ScriptGenerator</td>
+          
+</tr>
+        
+</table>
+<p>The script shall write XML content into the StringBuffer object
+        <span class="codefrag">output.</span> The content of <span class="codefrag">output</span> is parsed by
+        the ScriptGenerator and forwarded into the sitemap pipeline.</p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>none</p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>ScriptGenerator expects the script to write the XML content into the
+      passed object <span class="codefrag">output</span>.</p>
+      
+<p>Be aware to provide script language implementation, beside BSF
+      implementation.</p>
+    
+    
+<h1>History</h1>
+      
+<p>07-24-03: initial creation</p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+<!-- Links to related components pages. -->A general documentation
+      about generators is available at <a href="../concepts/sitemap.html">generators</a>.</p>
+      
+<p>Further Documentation about Apache BSF is available <a class="external" href="http://jakarta.apache.org/bsf/index.html">here</a>.</p>
+    
+  
+</body>
+</html>

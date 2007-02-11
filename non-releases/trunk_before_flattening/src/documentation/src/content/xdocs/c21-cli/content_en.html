@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Offline Page Generation with the Command Line Interface</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Upayavira" name="DC.Creator">
+<meta content="This document explains how to use the Cocoon Command Line Interface for offline page and site generation." name="DC.Description">
+</head>
+<body>
+    
+<h1>Overview</h1>
+      
+<p>The Command Line Interface provides access to Cocoon's offline generation capabilities.</p>
+      
+<p>This page gives details of how configure and use the CLI. Details of the concepts behind
+         offline page generation are given on the offline generation 
+         <a href="index.html">overview</a> page.</p>
+    
+    
+<h1>Invoking the CLI</h1>
+      
+<p>The CLI can be invoked from the command line. Change to the root directory of your 
+         Cocoon distribution, and then, on Unix use: <span class="codefrag">./cocoon.sh cli &lt;parameters&gt;</span> 
+         and on Windows use <span class="codefrag">cocoon.bat cli &lt;parameters&gt;</span>
+</p>
+      
+<p>The relevant parameters are detailed in the following sections.</p>
+    
+    
+<h1>Configuring the CLI</h1>
+      
+<p>The CLI has two methods of configuration, with an <span class="codefrag">xconf</span> file, and using 
+         command line parameters.</p>
+      
+<p>The <span class="codefrag">xconf</span> method is the newer, and gives access to a wider range of 
+         features, and is thus explained first.</p>
+      
+<div class="note">Whilst the xconf method provides access to more features, the command line 
+            parameter method is more stable, as there are currently plans to improve
+            the xconf format to allow greater flexibility. If you require a stable and
+            consistent method for accessing the CLI, it is recommended that you use the 
+            command line parameter method.</div>
+
+<p>Copy <code>$COCOON/lib/optional/servlet-2_3.jar</code> to your lib directory
+  (for example, WEB-INF/lib).</p>
+      
+<h2>Using an Xconf file</h2>
+<p>To start the CLI using an xconf file, on Unix do <span class="codefrag">./cocoon.sh cli -x &lt;xconf file&gt;</span>
+           or on Windows: <span class="codefrag">cocoon cli -x &lt;xconf file&gt;</span>.</p>
+<p>For a sample xconf file, with comments describing each option, see the 
+           <a href="configuration.html">configuration</a> page.</p>
+      
+<h2>Command Line Parameters</h2>
+<p>You can get a listing of the available parameters on unix with 
+        <span class="codefrag">./cocoon.sh cli -h</span> or on Windows with <span class="codefrag">cocoon cli -h</span>.
+        This should give a listing something like:</p>
+<pre class="code">
+-------------------- Executing -----------------
+Main Class: org.apache.cocoon.Main
+usage: cocoon cli [options] [targets]
+------------------------------------------------------------------------
+cocoon 2.1
+Copyright (c) 1999-2003 Apache Software Foundation. All rights reserved.
+------------------------------------------------------------------------
+ -a,--userAgent            use given string for user-agent header
+ -e,--confirmExtensions    confirm that file extensions match mime-type of
+                           pages and amend filename accordingly (default is true)
+ -C,--configFile           specify alternate location of the configuration
+                           file (default is ${contextDir}/cocoon.xconf)
+ -D,--defaultFilename      specify a filename to be appended to a URI when
+                           the URI refers to a directory
+ -L,--loadClass            specify a class to be loaded at startup
+                           (specifically for use with JDBC). Can be used multiple times
+ -P,--precompileOnly       generate java code for xsp and xmap files
+ -V,--verbose              enable verbose messages to System.out
+ -b,--brokenLinkFile       send a list of broken links to a file (one URI
+                           per line)
+ -c,--contextDir           use given dir as context
+ -d,--destDir              use given dir as destination
+ -f,--uriFile              use a text file with uris to process (one URI
+                           per line)
+ -h,--help                 print this message and exit
+ -k,--logKitconfig         use given file for LogKit Management
+                           configuration
+ -l,--Logger               use given logger category as default logger for
+                           the Cocoon engine
+ -p,--accept               use given string for accept header
+ -r,--followLinks          process pages linked from starting page or not
+                           (boolean argument is expected, default is true)
+ -u,--logLevel             choose the minimum log level for logging
+                           (DEBUG, INFO, WARN, ERROR, FATAL_ERROR) for startup logging
+ -v,--version              print the version information and exit
+ -w,--workDir              use given dir as working directory
+ -x,--xconf                specify a file containing XML configuration
+                           details for the command line interface
+Note: the context directory defaults to './webapp'
+        </pre>
+<p>For details of the meaning of each specific parameter, see the <a href="index.html">overview</a>
+           page.</p>
+<h3>Specifying Targets</h3>
+<p>The command line parameter method does not have access to all of Cocoon's URI handling features. However,
+             it is possible to specify multiple URIs to be crawled, all of which will be written to the same destination,
+             and that destination (specified by the <span class="codefrag">-d</span> or <span class="codefrag">--destDir</span> option, may be a file URI
+             or any other protocol for which a ModifiableSource exists (e.g. FTP).</p>
+<h3>URI Files</h3>
+<p>A URI file offers a simple way to specify multiple URIs. The file is treated as one URI per line.</p>
+<h3>Broken Link Handling</h3>
+<p>If a broken link file is specified, all broken links will be written to this file, in text format,
+             one URI per line.</p>
+    
+  
+</body>
+</html>

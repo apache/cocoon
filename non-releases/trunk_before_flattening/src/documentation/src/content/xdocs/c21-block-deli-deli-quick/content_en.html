@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>DELI Quick Start Guide</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Mark H. Butler" name="DC.Creator">
+</head>
+<body>
+		
+<h1>DELI Quick Start Guide</h1>
+
+<p>If you are seeing the 'DELI is switched off' message when you try the test pages then you need to enable DELI. If you do not
+want to rebuild Cocoon, just
+add the following lines to the deployed <span class="codefrag">cocoon.xconf</span>:</p>
+				
+<pre class="code">
+&lt;deli class="org.apache.cocoon.components.deli.DeliImpl"&gt;
+   &lt;parameter name="deli-config-file" value="deli/config/deliCocoonConfig.xml"/&gt;
+&lt;/deli&gt;
+</pre>
+
+<p>However if you are developing with Cocoon and need DELI you may prefer to make the same change to the <span class="codefrag">deli.xconf</span> file in 
+<span class="codefrag">src\java\components\deli</span>. When you build Cocoon, this file is inserted into the <span class="codefrag">cocoon.xconf</span> file.</p>
+
+
+<p>By default DELI recognises Internet Explorer, Netscape, Opera, Amaya
+and the Nokia WAP development kit as legacy browsers. If you are 
+using a different browser, you may need to edit the 
+<span class="codefrag">legacyDevices.xml</span>, the DELI legacy device support file. For more 
+details see the <a href="deli.html">DELI documentation</a>.</p>
+
+		
+	
+</body>
+</html>

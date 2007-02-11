@@ -1,0 +1,324 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: Validation</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>For each widget you can define a number of widget validators. A
+      widget validator can perform some checks on the widget and if these
+      fail, set a validation error on the widget.</p>
+
+      
+<p>Implementation-wise, a widget validator is an object implementing
+      the <span class="codefrag">WidgetValidator</span> interface
+      (<a class="external" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/forms/validation/WidgetValidator.html">javadoc</a>).</p>
+
+      
+<p>WidgetValidators can either be defined as part of the form definition
+      (inside the <span class="codefrag">fd:validation</span> element) or added to a widget
+      instance at runtime. The former is useful for validators that only act
+      on the data in the form. The latter is useful if the validation logic
+      needs access to other objects you have available in your controller.</p>
+
+      
+<p>The validation logic runs over the widget tree. For each widget first
+      the child widgets are validated and then the widget itself (recursively).
+      The validators on a widget are executed in the order in which they were
+      defined or added. First the ones defined in the form definition are executed, then
+      the ones added on the widget instance. The validation of a widget stops at the
+      first validator that fails (but continues to execute for the other widgets).</p>
+
+      
+<p>For widgets having a datatype and hence a convertor (field and multivaluefield),
+      the convertor could be considered to be the first validator, i.e. it is executed
+      before the other validators (because those operate on the converted value).
+      If the conversion fails a validation error is set on the widget.</p>
+
+      
+<p>Validation errors can only be set on widgets implementing
+      the interface <span class="codefrag">ValidationErrorAware</span>, which currently is not
+      implemented by all widgets. For example, a repeater widget does not
+      implement ValidationErrorAware. However, a validator attached to
+      a repeater could perform inter-row checks on the fields in the
+      different rows of the repeater, and set validation errors on these
+      fields (instead of on the repeater itself).</p>
+
+      
+<p>CForms supplies a number of default widget validators, mostly for performing
+      checks on the value of field widgets. Additionally you can write your
+      own ones in Java or in Javascript.</p>
+    
+
+    
+<h1>Table of widgets supporting ValidationErrorAware</h1>
+      
+<p>These are the widgets on which you can call <span class="codefrag">setValidationError</span>
+      (and <span class="codefrag">getValidationError</span>). This is relevant if you are writing your
+      own validation logic.</p>
+      
+<table>
+        
+<tr>
+          
+<th colspan="1" rowspan="1">Widget</th>
+          <th colspan="1" rowspan="1">Supports ValidationErrorAware</th>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">field</td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">multivaluefield</td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">booleanfield</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">repeater</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">output</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">submit</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">action</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">repeater-action</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">row-action</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">aggregatefield</td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">upload</td>
+          <td colspan="1" rowspan="1"><img alt="yes" src="images/yes_mark.png"></td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">messages</td>
+          <td colspan="1" rowspan="1"></td>
+        
+</tr>
+      
+</table>
+    
+
+    
+<h1>Reference</h1>
+      
+<h2>General remarks</h2>
+<p>For most widget validators, the failmessage (i.e. the message displayed
+        to the user in case the validation failed) can be overridden by specifying
+        a child <strong>fd:failmessage</strong> element inside the validator element. The
+        failmessage can contain mixed content. Example:</p>
+<pre class="code">&lt;fd:field id="yourmail"&gt;
+  &lt;fd:datatype base="string"/&gt;
+  &lt;fd:validation&gt;
+    &lt;fd:email&gt;
+      &lt;fd:failmessage&gt;Not a valid email address!&lt;/fd:failmessage&gt;
+    &lt;/fd:email&gt;
+  &lt;/fd:validation&gt;
+&lt;/fd:field&gt;</pre>
+<p>To provide locale-dependent messages, use i18n tags in
+        combination with the I18nTransformer.</p>
+<p>Often the values that validators will check are specified as
+        expressions. CForms uses for this the <a class="external" href="http://cocoondev.org/xreporter/docs/core/91.html">xReporter expression interpreter</a>.</p>
+<p>Note that you cannot use each validator with each widget. Most validators
+        only work with certain types of widgets, in case of field widgets
+        often expecting a specific datatype. The below table shows the supported combinations
+        for the default validators.</p>
+<table>
+          
+<tr>
+            
+<th colspan="1" rowspan="1">Validator</th>
+            <th colspan="1" rowspan="1">Allowed datatypes</th>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">fd:assert</td>
+            <td colspan="1" rowspan="1">all datatypes</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">fd:email</td>
+            <td colspan="1" rowspan="1">string</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">fd:length</td>
+            <td colspan="1" rowspan="1">string</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">fd:mod10</td>
+            <td colspan="1" rowspan="1">string</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">fd:range</td>
+            <td colspan="1" rowspan="1">integer, long, decimal</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">fd:regexp</td>
+            <td colspan="1" rowspan="1">string</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">fd:value-count</td>
+            <td colspan="1" rowspan="1">all array types (use this with multivaluefield)</td>
+          
+</tr>
+        
+</table>
+
+      
+<h2>fd:assert</h2>
+<p>Evaluates the expression specified in the "test" attribute. This expression
+        should have a boolean result, it should evaluate to either true or false.
+        Example: Suppose there are 2 fields widgets <span class="codefrag">password</span> and <span class="codefrag">confirmPassword</span>.
+        We can use assert inside <span class="codefrag">confirmPassword</span> to check if is equals to <span class="codefrag">password</span> widget:</p>
+<pre class="code">&lt;fd:assert test="password = confirmPassword"&gt;
+  &lt;fd:failmessage&gt;The two passwords are not equal.&lt;/fd:failmessage&gt;
+&lt;/fd:assert&gt;</pre>
+
+      
+<h2>fd:email</h2>
+<p>Checks that a value is a valid email address. Example:</p>
+<pre class="code">&lt;fd:email/&gt;</pre>
+<p>Currently this checks the email does not contain any spaces,
+        contains exactly one <span class="codefrag">@</span> symbol with at least one character
+        before it and at least one dot after it.</p>
+
+      
+<h2>fd:length</h2>
+<p>Checks the length of strings. This validator can take 3 attributes:
+        min, max and exact. You can use either of these three separately or
+        min and max together. The values of these attributes are expressions. Example:</p>
+<pre class="code">&lt;fd:length min="2" max="4"/&gt;
+
+Another example:
+
+&lt;fd:length exact="2*2"&gt;
+   &lt;fd:failmessage&gt;Must be 4 characters long!&lt;/fd:failmessage&gt;
+&lt;/fd:length&gt;</pre>
+
+      
+<h2>fd:mod10</h2>
+<p>Uses the "mod10" algorithm used to check the validity of credit card
+        numbers such as VISA. This validator does not require any additional
+        attributes. Example:</p>
+<pre class="code">&lt;fd:mod10&gt;
+   &lt;fd:failmessage&gt;Invalid credit card number.&lt;/fd:failmessage&gt;
+&lt;/fd:mod10&gt;</pre>
+
+      
+<h2>fd:range</h2>
+<p>Checks the numeric range. This validator can take 3 attributes:
+        min, max and exact. You can use either of these three separately or
+        min and max together. The values of these attributes are expressions. Example:</p>
+<pre class="code">&lt;fd:range min="2" max="4"/&gt;
+
+Another example:
+
+&lt;fd:range exact="2*2"/&gt;</pre>
+
+      
+<h2>fd:regexp</h2>
+<p>Checks that a string matches a regular expression. It requires a "pattern"
+        attribute specifying the regexp. The regular expression library used is
+        Jakarta ORO, see <a class="external" href="http://jakarta.apache.org/oro/api/org/apache/oro/text/regex/package-summary.html">here</a> for some information. Example:</p>
+<pre class="code">&lt;fd:regexp pattern="[a-z]{3,5}"&gt;
+   &lt;fd:failmessage&gt;Invalid code!&lt;/fd:failmessage&gt;
+&lt;/fd:regexp&gt;</pre>
+
+      
+<h2>fd:value-count</h2>
+<p>Checks the number of items selected in a multivaluefield.
+        Again works with min, max and exact attributes. Example:</p>
+<pre class="code">&lt;fd:value-count min="2" max="4"/&gt;
+
+Another example:
+
+&lt;fd:value-count exact="2"/&gt;</pre>
+
+      
+<h2>fd:javascript</h2>
+<p>Allows to write a validator using Javascript, embedded directly in the
+        form definition. The widget in question is available in the Javascript
+        snippet as a variable called <span class="codefrag">widget</span>.</p>
+<p>Checkout the samples of Cocoon for an example.</p>
+    
+  
+</body>
+</html>

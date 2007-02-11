@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Parameter Selector</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="in @doctitle@" name="DC.Subject">
+<meta content="Beth Naquin" name="DC.Creator">
+<meta content="This document describes the Parameter Selector." name="DC.Description">
+</head>
+<body>
+  
+<h1>Parameter Selector</h1>
+   
+   
+<ul>
+    
+<li>Name : ParameterSelector</li>
+    
+<li>Class: org.apache.cocoon.selection.ParameterSelector</li>
+    
+<li>Cacheable: not applicable</li>
+   
+</ul>
+   
+   
+<p>
+    This Selector matches a string, in the Parameters object passed to the 
+    selector, against a specified Cocoon internal parameter.  It performs a 
+    case-sensitive string comparison between the value of the 
+    'parameter-selector-test' parameter and the value of the 'test' 
+    attribute of the <span class="codefrag">&lt;map:when ...&gt;</span> element.
+   </p>
+   
+   
+<p>
+   This internal parameter could be:
+   </p>
+   
+<ul>
+    
+<li>A sitemap parameter from the <span class="codefrag">&lt;map:match ...&gt;</span> portion of the pipeline</li>
+    
+<li>A sitemap parameter set by an action</li>
+   
+</ul>
+   
+   
+   
+   
+<h1>Reasons to use ParameterSelector</h1>
+   
+<p>
+   One purpose of this selector is to choose between different components 
+   of a pipeline based on sitemap parameters set by an action.  This would 
+   allow the action to control the logic required to set one or more parameters, 
+   which can then be used by this selector to control pipeline processing.  
+   Thus, complex decision-making logic can be contained in actions, while the 
+   sitemap simply uses the results of the actions (the parameters) to determine 
+   pipeline processing.
+   </p>
+   
+<p>
+   Parameter Selector can also be used to select on the value of 'keys' 
+   (such as {1} or {../2} ) from the wildcard matcher.  Information in the 
+   URI, such as part of a filename, can then be used to determine pipeline 
+   processing.   
+   </p>
+   
+   
+   
+<h1>Examples</h1>
+   
+<p>
+   Add the component to your sitemap.xmap:
+   </p>
+   
+<pre class="code">
+   &lt;map:components&gt;
+    ...
+    &lt;map:selectors&gt;
+     ...
+     &lt;map:selector
+      name="parameter"
+        logger="sitemap.selector.parameter"
+        src="org.apache.cocoon.selection.ParameterSelector"/&gt;
+     ...</pre>
+   
+   
+<p>
+   Use a parameter set by an action:
+   </p>
+   
+<p>
+    Assume there is an action (named MyAction) that sets a parameter 
+    (named MyRegion) to several possible values.  For more information on actions, 
+    including a simple example of an action that creates a sitemap parameter, see
+    <a href="../concepts/actions.html">Creating and Using Actions</a>.
+   </p>
+   
+<pre class="code">
+   &lt;map:match pattern="*.xml"&gt;
+    &lt;map:act type="MyAction"&gt;
+      &lt;map:generate src="{../1}.xml"/&gt;
+
+      &lt;map:select type="parameter"&gt;
+        &lt;map:parameter name="parameter-selector-test" value="{MyRegion}"/&gt;
+      
+        &lt;!-- executes iff the value of MyRegion equals 
+             "United States" (without quotes) --&gt;
+        &lt;map:when test="United States"&gt;
+          &lt;map:transform src="stylesheets/us.xsl"/&gt;
+        &lt;/map:when&gt;
+      
+        &lt;map:when test="South_America"&gt;
+          &lt;map:transform src="stylesheets/southamerica.xsl"/&gt;
+        &lt;/map:when&gt;
+
+        &lt;map:when test="Europe"&gt;
+          &lt;map:transform src="stylesheets/europe.xsl"/&gt;
+        &lt;/map:when&gt;
+
+        &lt;map:otherwise&gt;
+          &lt;map:transform src="all_others.xsl"
+        &lt;/map:otherwise&gt;
+
+      &lt;/map:select&gt;
+    &lt;/map:act&gt;
+    &lt;map:serialize/&gt;
+  &lt;/map:match&gt;</pre>
+   
+   
+<p>
+   Use values from the URI:
+   </p>
+   
+<pre class="code">
+   &lt;map:pipeline&gt;
+     &lt;!-- {1}/{2}/myfile.xml --&gt;
+     &lt;map:match pattern="**/*/myfile.xml"&gt; 
+   
+       &lt;!-- Use ParameterSelector --&gt;
+       &lt;map:select type="parameter"&gt;
+        &lt;map:parameter name="parameter-selector-test" value="{2}"/&gt;
+
+        &lt;!-- executes iff the value of {2} equals 
+             "basic" (without quotes); the requested URI
+              could be **/basic/myfile.xml --&gt;
+        &lt;map:when test="basic"&gt;
+            &lt;map:generate src="{1}/myfile.xml"/&gt;
+            &lt;map:transform src="stylesheets/basic.xsl"&gt;
+                &lt;map:parameter name="use-request-parameters" value="true"/&gt;
+                &lt;map:parameter name="resource" value="{2}.html"/&gt;
+            &lt;/map:transform&gt;
+            &lt;map:serialize/&gt;
+        &lt;/map:when&gt;
+
+        &lt;map:when test="aggregate"&gt;
+            &lt;map:aggregate element="site"&gt;
+          &lt;map:part src="cocoon:/{1}/sidebar-{1}/{2}.xml"/&gt;
+          &lt;map:part src="cocoon:/body-{1}/{2}.xsp"/&gt;
+            &lt;/map:aggregate&gt;
+            &lt;map:transform src="stylesheets/aggregate2xhtml.xsl"/&gt;
+            &lt;map:serialize/&gt;
+        &lt;/map:when&gt;
+
+        &lt;map:otherwise&gt;
+            &lt;map:redirect-to uri="other_URI"/&gt;
+        &lt;/map:otherwise&gt;
+
+      &lt;/map:select&gt;
+    &lt;/map:match&gt; 
+    ...</pre>
+   
+   
+ 
+</body>
+</html>

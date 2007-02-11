@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: submit widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>The submit widget, usually rendered as a button, is used by
+      the user to submit the form. The submit widget is a special kind
+      of action widget, thus also has the same functionality as an action
+      widget, however the submit widget does trigger validation and its
+      purpose is to end the form.</p>
+
+      
+<p>You don't need to use a submit widget to submit a form. For example,
+      in your HTML template you can simply put:</p>
+
+      
+<pre class="code">&lt;input type="submit"/&gt;</pre>
+
+      
+<p>to be able to submit the form. Using a submit widget enables
+      some extra functionality. You can control whether validation
+      should be performed. You can put multiple submit widgets on
+      a form and add different event handlers to them.</p>
+
+      
+<p>While a submit widget has the explicit purpose to submit a
+      form, a form can also be submitted by other widgets. One example
+      is the already mentioned <a href="widget_action.html">action
+      widget</a>. It is however also possible to automatically submit
+      a form when a widget changes its value, so that server-side event
+      value-changed event listeners can be triggerd. This can be specified
+      using <span class="codefrag">&lt;fi:styling submit-on-change="true"/&gt;</span> in
+      the form template (see <a href="xslt.html">XSLT</a> for more
+      information on the <span class="codefrag">fi:styling</span> directive).</p>
+
+      
+<p>To know which widget caused the form to be submitted, use the
+      method <span class="codefrag">getSubmitWidget</span> of the <span class="codefrag">Form</span> object.</p>
+    
+
+    
+<h1>Configuration</h1>
+      
+<pre class="code">&lt;fd:submit id="..." action-command="..." validate="true|false"&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+  &lt;fd:on-action&gt;
+    ...
+  &lt;/fd:on-action&gt;
+&lt;/fd:submit&gt;</pre>
+
+      
+<p>The optional attribute validate, which is true by default, can
+      be used to disable validation. The difference between an action
+      widget and a submit widget with validate="false" is that a submit
+      widget with validate="false" will end form processing, thus the form
+      will not be redisplayed. Ultimately, it is of course the controller
+      who decides this, but the forms hint towards the controller is that
+      it shouldn't be redisplayed, and this is exactly what the flowscript
+      integration library does.</p>
+    
+  
+</body>
+</html>

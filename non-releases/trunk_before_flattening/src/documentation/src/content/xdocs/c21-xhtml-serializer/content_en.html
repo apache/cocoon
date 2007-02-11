@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XHTML Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the XHTML serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>XHTML Serializer</h1>
+    
+<p>
+      The XHTML serializer serializes sax events to XHTML.
+      The output of the XHTML serializer is XHTML.
+    </p>
+    
+<ul>
+      
+<li>Name : xhtml</li>
+      
+<li>Class: org.apache.cocoon.serialization.XMLSerializer</li>
+      
+<li>Cacheable: yes</li>
+    
+</ul>
+    
+<h2>Sitemap Configuration</h2>
+<p>
+        The XHTML serializer is declared in the sitemap serializers section.
+      </p>
+<pre class="code">
+&lt;map:serializers ...
+...
+   &lt;map:serializer name="xhtml"
+     src="org.apache.cocoon.serialization.XMLSerializer"
+     mime-type="text/html" 
+     logger="sitemap.serializer.xhtml"
+     pool-max="64"
+     &gt;
+     &lt;doctype-public&gt;-//W3C//DTD XHTML 1.0 Strict//EN&lt;/doctype-public&gt;
+     &lt;doctype-system&gt;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&lt;/doctype-system&gt;
+     &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+   &lt;/map:serializer&gt;
+...
+      </pre>
+<p>
+        The declaration of the XHTML serializer shall use following 
+        XML serializer configuration parameters
+      </p>
+<table>
+        
+<tr>
+<th colspan="1" rowspan="1">Name</th><th colspan="1" rowspan="1">Value</th><th colspan="1" rowspan="1">Comment</th>
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">doctype-public</td><td colspan="1" rowspan="1">-//W3C//DTD XHTML 1.0 Strict//EN</td>
+          <td colspan="1" rowspan="1">specifies the XHTML public document type</td>
+        
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">doctype-system</td><td colspan="1" rowspan="1">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</td>
+          <td colspan="1" rowspan="1">specifies the XHTML system document type</td>
+        
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">mime-type</td><td colspan="1" rowspan="1">text/html</td>
+          <td colspan="1" rowspan="1">specifies mime-type of the serialized XHTML document.
+          </td>
+        
+</tr>
+      
+</table>
+    
+<h2>Pipeline Usage</h2>
+<p>
+        Using the XHTML Serializer in a pipeline is just setting the 
+        serializer type to xhtml. 
+        The following code snippet uses the XHTML Serializer:
+      </p>
+<pre class="code">
+&lt;map:match pattern="*.html"&gt;
+...
+  &lt;map:serialize type="xhtml"/&gt;
+&lt;/map:match&gt;
+...
+      </pre>
+    
+<h2>Further Reading</h2>
+<p>
+        As XHTML serializer uses the XML serializer internally, you might 
+        want to read the complete list of valid XML configuration parameters.
+        It is available at <a href="xml-serializer.html">XML serializer</a>
+        user docuementation.
+      </p>
+  
+  
+</body>
+</html>

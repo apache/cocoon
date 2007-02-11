@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2002-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+Skin configuration file. This file contains details of your project,
+which will be used to configure the chosen Forrest skin.
+-->
+
+<!DOCTYPE skinconfig PUBLIC "-//APACHE//DTD Skin Configuration V0.6-3//EN" "http://forrest.apache.org/dtd/skinconfig-v06-3.dtd"
+[
+  <!ENTITY heading  SYSTEM "./forrest-configuration/skinconf-heading.xml">
+  <!ENTITY extracss SYSTEM "./forrest-configuration/skinconf-extracss.xml">
+  <!ENTITY colors   SYSTEM "./forrest-configuration/skinconf-colors.xml">
+  <!ENTITY pdf      SYSTEM "./forrest-configuration/skinconf-pdf.xml">
+  <!ENTITY credits  SYSTEM "./forrest-configuration/skinconf-credits.xml">       
+]>
+
+<skinconfig>
+  <!-- To enable lucene search add provider="lucene"
+    Add box-location="alt" to move the search box to an alternate location
+    (if the skin supports it) and box-location="all" to show it in all
+    available locations on the page.  Remove the <search> element to show
+    no search box.
+  -->
+  <search name="Apache Forrest" domain="cocoon.apache.org" provider="google"/>
+
+  <!-- Disable the print link? If enabled, invalid HTML 4.0.1 -->
+  <disable-print-link>true</disable-print-link>
+  <!-- Disable the PDF link? -->
+  <disable-pdf-link>false</disable-pdf-link>
+  <!-- Disable the xml source link? -->
+  <!-- The xml source link makes it possible to access the xml rendition
+    of the source frim the html page, and to have it generated statically.
+    This can be used to enable other sites and services to reuse the
+    xml format for their uses. Keep this disabled if you don't want other
+    sites to easily reuse your pages.-->
+  <disable-xml-link>true</disable-xml-link>
+
+  <!-- Disable navigation icons on all external links? -->
+  <disable-external-link-image>false</disable-external-link-image>
+
+  <!-- Disable w3c compliance links? -->
+  <disable-compliance-links>false</disable-compliance-links>
+
+  <!-- Render mailto: links unrecognisable by spam harvesters? -->
+  <obfuscate-mail-links>true</obfuscate-mail-links>
+  <obfuscate-mail-value>[.at.]</obfuscate-mail-value>
+
+  <!-- Disable the javascript facility to change the font size -->
+  <disable-font-script>false</disable-font-script>
+
+  <!-- mandatory project logo
+       skin: forrest-site renders it at the top -->
+  <project-name>Apache Cocoon</project-name>
+  <project-description>Apache Cocoon</project-description>
+  <project-url>http://cocoon.apache.org/</project-url>
+  <project-logo>images/cocoon-logo.gif</project-logo>
+
+
+  <!-- optional group logo
+       skin: forrest-site renders it at the top-left corner -->
+  <group-name>Apache</group-name>
+  <group-description>The Apache Software Foundation</group-description>
+  <group-url>http://www.apache.org/</group-url>
+  <group-logo>images/cocoon-project-logo.png</group-logo>
+
+  <!-- optional host logo (e.g. sourceforge logo)
+       skin: forrest-site renders it at the bottom-left corner -->
+  <host-url></host-url>
+  <host-logo></host-logo>
+
+  <!-- relative url of a favicon file, normally favicon.ico -->
+  <favicon-url>images/cocoon.ico</favicon-url>
+
+  <!-- The following are used to construct a copyright statement -->
+  <year>1999-2005</year>
+  <vendor>The Apache Software Foundation.</vendor>
+  <copyright-link>http://www.apache.org/licenses/</copyright-link>
+
+  <!-- Some skins use this to form a 'breadcrumb trail' of links.
+    If you don't want these, then set the attributes to blank.
+    The DTD purposefully requires them.
+    Use location="alt" to move the trail to an alternate location
+    (if the skin supports it).
+  -->
+
+  <trail>
+    <link1 name="apache" href="http://www.apache.org/"/>
+    <link2 name="cocoon" href="http://cocoon.apache.org/"/>
+    <link3 name="" href=""/>
+  </trail>
+
+  <!-- Configure the TOC, i.e. the Table of Contents.
+  @max-depth
+   how many "section" levels need to be included in the
+   generated Table of Contents (TOC).
+  @min-sections
+   Minimum required to create a TOC.
+  @location ("page","menu","page,menu")
+   Where to show the TOC.
+  -->
+  <toc max-depth="3" min-sections="2" location="page"/>
+
+  &heading;
+  &extracss;
+  &colors;
+  &pdf;
+  &credits;
+
+</skinconfig>

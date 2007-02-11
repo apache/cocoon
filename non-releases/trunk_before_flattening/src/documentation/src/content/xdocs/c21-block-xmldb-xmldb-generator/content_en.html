@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XML:DB Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Gianugo Rabellino" name="DC.Creator">
+<meta content="This document describes the XML:DB generator of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Warning!</h1>
+      
+<p>
+        The XML:DB generators are currently unmaintained and going to be 
+        deprecated soon. Please use the XML:DB pseudo-protocol instead.
+      </p>  
+    
+    
+<h1>XML:DB Generator</h1>
+      
+<p>
+         Generates XML documents out of an XML:DB compliant database. XML:DB
+         is a generic API developed by the XML:DB group in order to allow access
+         via a consistent API to the upcoming XML databases such as dbXML,
+         Ozone and eXist (as of now only the first one has an almost compliant
+         API implementation).
+         For the sake of this document, an XML:DB compliant database can be 
+         seen as a filesystem where directories are called "collections" and 
+         files are called "resources".
+      </p>
+      
+<ul>
+        
+<li>Name: xmldb</li>
+        
+<li>Class: org.apache.cocoon.generation.XMLDBGenerator</li>
+        
+<li>Cacheable: no</li>
+      
+</ul>
+      
+<p>
+         The generator needs to be configured in a "JDBCish" way: a driver 
+         (a class name) must be provided, together with a "base" URI. An example
+         configuration, based on the stock dbXML implementation, will look like 
+         this:
+      </p>
+
+<pre class="code">
+&lt;map:generator name="xmldb"
+               src="org.apache.cocoon.generation.XMLDBGenerator"
+               label="content"&gt;
+  &lt;driver&gt;org.dbxml.client.xmldb.DatabaseImpl&lt;/driver&gt;
+  &lt;base&gt;xmldb:dbxml:///db/&lt;/base&gt;
+&lt;/map:generator&gt;
+</pre>
+      
+<p>
+         Note that the content of the "base" tag will be prepended to the 
+         requested resource. It's important to keep a trailing slash at the
+         end of the <span class="codefrag">base</span> tag.
+      </p>
+    
+  
+</body>
+</html>

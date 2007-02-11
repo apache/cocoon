@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Session Action</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document describes the session action." name="DC.Description">
+</head>
+<body>
+  
+<h1>Session Action</h1>
+   
+<p>
+    The session action helps in managing the session of a user on
+    the server. It can create and terminate a session. The function
+    is controlled by a parameter named 'action'.
+   </p>
+   
+<p>For more information on session handling and session contexts
+      have a look at the <a href="../../developing/webapps/session.html">Session Context documentation</a>.</p>
+   
+<h2>Creating a Session</h2>
+<p>
+      To create a session (if it not already exists) simply add the
+      action in your pipeline:
+     </p>
+<pre class="code">
+
+    &lt;map:act type="session"/&gt;
+  
+</pre>
+<p>This is the equivalent to specify the 'action' parameter
+       with the value 'create':</p>
+<pre class="code">
+
+    &lt;map:act type="session"&gt;
+        &lt;map:parameter name="action" value="create"/&gt;
+    &lt;/map:act&gt;
+  
+</pre>
+   
+<h2>Terminating a Session</h2>
+<p>Terminating a session is as easy as creating a session, simply
+      add the action to your pipeline and set the 'action' parameter
+      to 'terminate':</p>
+<pre class="code">
+
+    &lt;map:act type="session"&gt;
+        &lt;map:parameter name="action" value="terminate"/&gt;
+    &lt;/map:act&gt;
+  
+</pre>
+<p>This terminates the session immediately.</p>
+<p>You can optionally specifiy the 'mode' parameter which controlls
+        the termination of the session. You have the choice between
+        'immediately' (the default) and 'if-unsued'. If you use the
+        mode 'if-unused', the session is only terminated, if no session
+        context exists for the user:</p>
+<pre class="code">
+
+    &lt;map:act type="session"&gt;
+        &lt;map:parameter name="action" value="terminate"/&gt;
+        &lt;map:parameter name="mode" value="if-unused"/&gt;
+    &lt;/map:act&gt;
+  
+</pre>
+   
+   
+<h1>Configuration</h1>
+   
+<ul>
+    
+<li>Name : session</li>
+    
+<li>Class: org.apache.cocoon.webapps.session.acting.SessionAction</li>
+   
+</ul>
+  
+ 
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: Binding Framework</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Intro</h1>
+      
+<p>Likely you will want to use CForms to "edit stuff", such as the properties
+      of a bean or data from an XML document (we'll simply use the term object to
+      refer to either of these). This supposes that before you show the form,
+      you copy the data from the object to the form, and after the form has been
+      validated, you copy the data in the form back to the object. To avoid having
+      to write actual code for this, a binding framework is available.</p>
+
+      
+<p>The same illustration as in the introduction,
+      but now extended with the binding, can be viewed <a href="images/forms_schema_withbinding.png">here</a>.</p>
+
+      
+<p>The basic definition of a binding is as follows (if you don't know Java, just ignore this):</p>
+
+      
+<pre class="code">public interface Binding {
+    public void loadFormFromModel(Widget frmModel, Object objModel);
+    public void saveFormToModel(Widget frmModel, Object objModel);
+}</pre>
+
+      
+<p>A binding can work with any object and can perform the binding in any
+      possible way. Currently one implementation is available, based on
+      <a class="external" href="http://jakarta.apache.org/commons/jxpath/index.html">JXPath</a>.
+      JXPath allows to address data in both beans and XML documents using
+      <a class="external" href="http://www.w3.org/TR/xpath">XPath</a> expressions, so this
+      binding implementation can be used both with beans and XML documents.
+      The rest of this document will focus on this implementation.</p>
+
+      
+<p>The binding is configured using an XML file. This XML file contains
+      elements in the fb namesspace (Forms Binding):</p>
+
+      
+<pre class="code">http://apache.org/cocoon/forms/1.0#binding</pre>
+    
+
+    
+<h1>What does a binding file look like?</h1>
+      
+<p>To give you an idea of what a binding file looks like, below a
+      very simple example is shown.</p>
+
+      
+<pre class="code">&lt;fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" path="/" &gt;
+    &lt;fb:value id="firstname" path="firstName"/&gt;
+    &lt;fb:value id="lastname" path="lastName"/&gt;
+    &lt;fb:value id="email" path="email"/&gt;
+&lt;/fb:context&gt;</pre>
+
+      
+<p>The id attribute identifies the widget. The path attribute is the address
+      of the items in the target object (a Javabean or an XML document).
+      The paths can be arbitrary JXPath expressions.</p>
+
+      
+<p>[Convention] Let's call all elements in the fb namespace "binding elements".
+      They all cause a binding-related action to be performed.</p>
+
+      
+<p>The <span class="codefrag">fb:context</span> element changes the <a class="external" href="http://jakarta.apache.org/commons/jxpath/apidocs/org/apache/commons/jxpath/JXPathContext.html">JXPath context</a>
+      to the specified path. The path expressions on the binding elements occuring
+      inside the context element will then be evaluated in this context, thus relative
+      to the path specified on the fb:context element.</p>
+
+      
+<p>The <span class="codefrag">fb:value</span> element is used to bind the value of a widget.</p>
+
+      
+<p>The binding framework can do much more than what is shown in the simple
+      example above, so read on for more meat.</p>
+    
+
+    
+<h1>Quick reference of supported binding elements</h1>
+      
+<table>
+        
+<tr>
+          
+<th colspan="1" rowspan="1">Element</th>
+          <th colspan="1" rowspan="1">Description</th>
+          <th colspan="1" rowspan="1">Attributes</th>
+          <th colspan="1" rowspan="1">child elements</th>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:*</td>
+          <td colspan="1" rowspan="1">common settings for all bindings</td>
+          <td colspan="1" rowspan="1">direction</td>
+          <td colspan="1" rowspan="1">not applicable, see specific elements</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:context</td>
+          <td colspan="1" rowspan="1">changes the JXPath context</td>
+          <td colspan="1" rowspan="1">path</td>
+          <td colspan="1" rowspan="1">any</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:value</td>
+          <td colspan="1" rowspan="1">binds the value of widgets</td>
+          <td colspan="1" rowspan="1">id, path</td>
+          <td colspan="1" rowspan="1">fb:on-update, fd:convertor</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:aggregate</td>
+          <td colspan="1" rowspan="1">binds aggregatefield widgets</td>
+          <td colspan="1" rowspan="1">id, path</td>
+          <td colspan="1" rowspan="1">fb:value</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:repeater</td>
+          <td colspan="1" rowspan="1">binds repeater widgets</td>
+          <td colspan="1" rowspan="1">id, parent-path, row-path, unique-row-id
+          (deprecated), unique-path (deprecated)</td>
+          <td colspan="1" rowspan="1">fd:convertor (deprecated), fb:on-bind,
+          fb:on-delete-row, fb:on-insert-row, fb:unique-row</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:unique-row</td>
+          <td colspan="1" rowspan="1">specifies unique fields for a repeater row</td>
+          <td colspan="1" rowspan="1">none</td>
+          <td colspan="1" rowspan="1">fb:unique-field</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:unique-field</td>
+          <td colspan="1" rowspan="1">specifies unique field for a repeater row</td>
+          <td colspan="1" rowspan="1">id, path</td>
+          <td colspan="1" rowspan="1">fd:convertor</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:set-attribute</td>
+          <td colspan="1" rowspan="1">sets an attribute to a fixed value</td>
+          <td colspan="1" rowspan="1">name, value</td>
+          <td colspan="1" rowspan="1">none</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:delete-node</td>
+          <td colspan="1" rowspan="1">deletes the current context node</td>
+          <td colspan="1" rowspan="1">none</td>
+          <td colspan="1" rowspan="1">none</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:insert-node</td>
+          <td colspan="1" rowspan="1">insert a node in an XML document</td>
+          <td colspan="1" rowspan="1">src, xpath</td>
+          <td colspan="1" rowspan="1">piece of XML that should be inserted</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:insert-bean</td>
+          <td colspan="1" rowspan="1">inserts an object in a list-type bean property</td>
+          <td colspan="1" rowspan="1">addmethod, classname (optional)</td>
+          <td colspan="1" rowspan="1">none</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:simple-repeater</td>
+          <td colspan="1" rowspan="1">binds repeater widgets</td>
+          <td colspan="1" rowspan="1">id, parent-path,row-path, clear-before-load, delete-parent-if-empty</td>
+          <td colspan="1" rowspan="1">any</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:javascript</td>
+          <td colspan="1" rowspan="1">write binding logic in Javascript</td>
+          <td colspan="1" rowspan="1">id, path</td>
+          <td colspan="1" rowspan="1">fb:load-form, fb:save-form</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">fb:custom</td>
+          <td colspan="1" rowspan="1">write binding logic in Java</td>
+          <td colspan="1" rowspan="1">id, path, class, builderclass,factorymethod</td>
+          <td colspan="1" rowspan="1">fb:config</td>
+        
+</tr>
+      
+</table>
+    
+
+    
+<h1>Detailed reference of binding elements</h1>
+      
+<h2>fb:*/@direction</h2>
+<p>All Bindings share the ability to have the two distinct actions
+        they provide (i.e. load and save) been enabled or disabled by setting
+        the attribute direction to one of the following values:</p>
+<table>
+          
+<tr>
+            
+<th colspan="1" rowspan="1">value</th>
+            <th colspan="1" rowspan="1">load active?</th>
+            <th colspan="1" rowspan="1">save active?</th>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">both(default)</td>
+            <td colspan="1" rowspan="1">yes</td>
+            <td colspan="1" rowspan="1">yes</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">load</td>
+            <td colspan="1" rowspan="1">yes</td>
+            <td colspan="1" rowspan="1">no</td>
+          
+</tr>
+          
+<tr>
+            
+<td colspan="1" rowspan="1">save</td>
+            <td colspan="1" rowspan="1">no</td>
+            <td colspan="1" rowspan="1">yes</td>
+          
+</tr>
+        
+</table>
+<p>The default value 'both' for this attribute makes its use optional.</p>
+<p>
+<strong>NOTE</strong>: this setting replaces the @readonly attribute that
+        was available only on selected bindings.</p>
+
+      
+<h2>fb:context</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>path</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements: any</p>
+<p>The <span class="codefrag">fb:context</span> element changes the JXPath context to the
+        specified path. The path expressions on the binding elements occuring inside
+        the context element will then be evaluated in this context, thus relative to
+        the path specified on the <span class="codefrag">fb:context</span> element.</p>
+<p>The <span class="codefrag">fb:context</span> element is usually used in two occasions.
+        First of all, it is used as the root element of the binding file; because an
+        XML file must always have one root element, and you will usually want to
+        perform more than one binding action.</p>
+<p>Secondly, you use <span class="codefrag">fb:context</span> if you need to address multiple
+        items having a common base path. On the one hand, this saves you on typing
+        and helps readability, and on the other hand, this improves the performance
+        of the binding. To illustrate this with an example, instead of doing this:</p>
+<pre class="code">...
+&lt;fb:value id="firstname" path="info/person/firstName"/&gt;
+&lt;fb:value id="lastname" path="info/person/lastName"/&gt;
+...</pre>
+<p>it is better to do this:</p>
+<pre class="code">...
+&lt;fb:context path="info/person"&gt;
+  &lt;fb:value id="firstname" path="firstName"/&gt;
+  &lt;fb:value id="lastname" path="lastName"/&gt;
+&lt;/fb:context&gt;
+...</pre>
+
+      
+<h2>fb:value</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>id</li>
+          
+<li>path</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements:</p>
+<ul>
+          
+<li>fb:on-update (optional)</li>
+          
+<li>fd:convertor (note the fd: namespace!) (optional)</li>
+        
+</ul>
+<p>This binding element is used to bind the value of a widget.</p>
+<p>The <span class="codefrag">fb:on-update</span> element (which itself has no attributes),
+        can contain one or more binding elements that will be executed if the value
+        of the widget has changed, and thus if the object has been updated. For example,
+        you could use the <span class="codefrag">fb:set-attribute</span> binding to set the
+        value of an attribute <span class="codefrag">changed</span> to <span class="codefrag">true</span>.</p>
+<p>The <span class="codefrag">fd:convertor</span> element has the same purpose as the
+        <span class="codefrag">fd:convertor</span> element in the form definition: it converts
+        between objects (numbers, dates) and strings. This is mostly used when
+        binding to XML documents. Suppose you have defined a certain widget in
+        a form definition to have a "date" datatype, and you want to bind to
+        an XML document which contains the date in the XML Schema date representation,
+        then you could define a convertor as follows:</p>
+<pre class="code">&lt;fb:value id="birthday" path="person/birthday"&gt;
+  &lt;fd:convertor datatype="date" type="formatting"&gt;
+    &lt;fd:patterns&gt;
+      &lt;fd:pattern&gt;yyyy-MM-dd&lt;/fd:pattern&gt;
+    &lt;/fd:patterns&gt;
+  &lt;/fd:convertor&gt;
+&lt;/fb:value&gt;</pre>
+<p>The datatype attribute on the <span class="codefrag">fd:convertor</span> element, which you
+        don't have to specify in the form definition, identifies the datatype to which
+        the convertor belongs.</p>
+
+      
+<h2>fb:aggregate</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>id</li>
+          
+<li>path</li>
+          
+<li>direction</li>
+        
+</ul>
+<p>Child elements:</p>
+<ul>
+          
+<li>fb:value elements</li>
+        
+</ul>
+<p>The <span class="codefrag">fb:aggregate</span> element is used to bind aggregatefields. Remember
+        that aggregatefields are a special type of widget that groups multiple field widgets
+        and lets the user edit their values in one textbox, splitting the values out to the
+        different widgets on submit based on a regexp.</p>
+<p>The <span class="codefrag">fb:aggregate</span> binding allows to bind the values of the individual
+        field widgets out of which an aggregatefield widget consists. The bindings for these
+        field widgets are specified by the fb:value child elements.</p>
+
+      
+<h2>fb:repeater</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>id</li>
+          
+<li>parent-path</li>
+          
+<li>row-path</li>
+          
+<li>unique-row-id (deprecated)</li>
+          
+<li>unique-path (deprecated)</li>
+          
+<li>row-path-insert (optional)</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements:</p>
+<ul>
+          
+<li>fb:identity</li>
+          
+<li>fd:convertor (deprecated)</li>
+          
+<li>fb:on-bind</li>
+          
+<li>fb:on-delete-row</li>
+          
+<li>fb:on-insert-row</li>
+        
+</ul>
+<p>
+<strong>NOTE:</strong> The attributes <span class="codefrag">unique-row-id</span> and
+        <span class="codefrag">unique-path</span> and the child element <span class="codefrag">fd:convertor</span>
+        are deprecated in favor of &lt;fb:unique-row&gt;.</p>
+<p>The <span class="codefrag">fb:repeater</span> binding binds repeaters based on the concept
+        that each row in the repeater is identified by one or more widgets uniquely.
+        This unique identification is necessary to know which rows in the repeater
+        correspond to which objects in the target collection. Newly added rows in
+        the repeater can (but should not) have a null value for this identification
+        widget(s). Typically this/these widget(s) will not editable, so in most cases
+        it will be an output widget. If you don't need the identification widget(s)
+        at the client you don't need to add them to the template at all! You only have
+        to specify <span class="codefrag">direction="load"</span> to this/these widget(s) then.
+        This prevents the database IDs from getting to the client.</p>
+<p>The <span class="codefrag">id</span> attribute should contain the id of the repeater.</p>
+<p>The <span class="codefrag">unique-row-id</span> attribute specifies the id of the widget
+        appearing on each repeater row that contains the unique identification for
+        that row. The unique-path attribute contains the corresponding path in the object model.</p>
+<p>
+<strong>NOTE</strong>: Both attributes are deprecated. Please use <span class="codefrag">&lt;fb:identity&gt;</span> instead.</p>
+<p>The <span class="codefrag">parent-path</span> and <span class="codefrag">row-path</span> attributes can best be
+        understood when described differently for XML documents and Javabeans.</p>
+<p>For XML documents: If you have an XML structure like this:</p>
+<pre class="code">&lt;things&gt;
+   &lt;thing ... /&gt;
+   &lt;thing ... /&gt;
+&lt;/things&gt;</pre>
+<p>then the parent-path attribute contains the path to the containing
+        element ("things") and the row-path attribute contains the path to the
+        repeating element ("thing").</p>
+<p>For beans: if your bean has a property "things" which is a Collection
+        [or whathever JXPath supports as lists], then the parent-path should simply
+        contain "." and the row-path "things".</p>
+<p>For both beans and XML documents there is an optional attribute
+        row-path-insert which functions just like the row-path but is used
+        for the nested on-insert-row binding (see below). By default the row-path-insert
+        just takes the value of the row-path. By explicitely setting them different
+        one can exploit one of the following use cases:</p>
+<ul>
+          
+<li>(1) use xpath-predicates in the row-path (note that you can not do that on the row-path-insert)</li>
+          
+<li>(2) save the inserted rows in a different target-node of the backend model.</li>
+        
+</ul>
+<p>A child element <span class="codefrag">fd:convertor</span> can be used to specify the convertor
+        to use in case the unique-id from the model is a String (typical for XML documents)
+        and the matching widget inside the repeater has a different type.</p>
+<p>
+<strong>NOTE:</strong> This element is deprecated at that place as it
+        is only used in combination with the deprecated attributes unique-row-id
+        and unique-path. Please use <span class="codefrag">&lt;fb:identity&gt;</span> instead.</p>
+<p>The three remaining child elements <span class="codefrag">fb:on-bind</span>, <span class="codefrag">fb:on-delete-row</span>,
+        <span class="codefrag">fb:on-insert-row</span> should contain the binding elements that have to
+        be executed in case of these three events.</p>
+<p>The children of the <span class="codefrag">fb:on-bind</span> element are executed when
+        an existing repeater row is updated, or after inserting a new row. The JXPath
+        context is automatically changed to match the current row.</p>
+<p>The children of the <span class="codefrag">fb:on-delete-row</span> element are executed
+        when a repeater row has been deleted. If you want to delete the row, then put
+        a <span class="codefrag">&lt;fb:delete-node/&gt;</span> in there. Alternatively, you could also
+        use the <span class="codefrag">fb:set-attribute</span> binding to set e.g. an attribute status to deleted.</p>
+<p>The children of the <span class="codefrag">fb:on-insert-row</span> are executed in case a
+        new row has been added to the repeater. Typically this will contain a
+        <span class="codefrag">fb:insert-node</span> or a <span class="codefrag">fb:insert-bean</span> binding (see
+        the descriptions of these binding elements for more details).</p>
+<p>The childrens of the <span class="codefrag">fb:unique-row</span> specify the widgets appearing
+        on each repeater row for the unique identification of that row. Each &lt;fb:unique-field&gt;
+        child specifies one widget.</p>
+
+      
+<h2>fb:identity</h2>
+<p>Child elements:</p>
+<ul>
+          
+<li>fb:value widget-bindings that make up the identity</li>
+        
+</ul>
+<p>The <span class="codefrag">&lt;fb:identity&gt;</span> is just a container for the child elements
+        specifying the bindings of the identification widgets.</p>
+<p>The nested elements just describe regular value bindings that can
+        declare their own convertor if needed.</p>
+<p>
+<strong>NOTE:</strong> This 'identity' binding is only active in the
+        'load' operation, so specifying the direction="save" is meaningless.</p>
+
+      
+<h2>fb:set-attribute</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>name</li>
+          
+<li>value</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements: none</p>
+<p>Set the value of the attribute specified in the <span class="codefrag">name</span> attribute to the
+        fixed string value specified in the <span class="codefrag">value</span> attribute.</p>
+<p>
+<strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <span class="codefrag">direction="save"</span> to protect you model
+        from being changed during load.</p>
+
+      
+<h2>fb:delete-node</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements: none</p>
+<p>Deletes the current context node.</p>
+<p>
+<strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <span class="codefrag">direction="save"</span> to protect you model from
+        being changed during load.</p>
+
+      
+<h2>fb:insert-node</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>src (optional)</li>
+          
+<li>xpath (optional, only in combination with src)</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements: the piece of XML that should be inserted</p>
+<p>This binding element can only be used when the target object is an XML document (DOM-tree).</p>
+<p>It inserts the content of the <span class="codefrag">fb:insert-node</span> element as child
+        of the current context element, or, if a src attribute is specified, retrieves
+        the XML from the specified source and inserts that as child of the current
+        context element. In this last case, you can also supply an xpath attribute
+        to select a specific element from the retrieved source.</p>
+<p>
+<strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <span class="codefrag">direction="save"</span> to protect you model
+        from being changed during load.</p>
+
+      
+<h2>fb:insert-bean</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>addmethod</li>
+          
+<li>classname (optional)</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>This binding element can only be used when the target object is a Javabean.</p>
+<p>If classname is specified it instantiates a new object of the type specified 
+        in the classname attribute and calls the method specified in the addmethod 
+        attribute on the current context object with the newly instantiated object as argument.
+        If classname is not specified it will just call the addmethod (e.g. if the addmethod creates
+        the new instance itself).</p>
+<p>
+<strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <span class="codefrag">direction="save"</span> to protect you model
+        from being changed during load.</p>
+
+      
+<h2>fb:simple-repeater</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>id</li>
+          
+<li>parent-path (same as in fb:repeater)</li>
+          
+<li>row-path (same as in fb:repeater)</li>
+          
+<li>clear-before-load (default true)</li>
+          
+<li>delete-parent-if-empty (default false)</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements: any</p>
+<p>A simple repeater binding that will replace (i.e. delete then re-add all) its content.</p>
+<p>Works with XML or with JavaBeans if a JXPath factory is set on the binding context.</p>
+
+      
+<h2>fb:javascript</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>id</li>
+          
+<li>path</li>
+          
+<li>direction (optional)</li>
+        
+</ul>
+<p>Child elements:</p>
+<ul>
+          
+<li>fb:load-form</li>
+          
+<li>fb:save-form</li>
+        
+</ul>
+<p>Specifies the binding using two JavaScript snippets, respectively for loading and saving the form.</p>
+<p>Example:</p>
+<pre class="code">&lt;fb:javascript id="foo" path="@foo"&gt;
+  &lt;fb:load-form&gt;
+    var appValue = jxpathPointer.getValue();
+    var formValue = doLoadConversion(appValue);
+    widget.setValue(formValue);
+  &lt;/fb:load-form&gt;
+  &lt;fb:save-form&gt;
+    var formValue = widget.getValue();
+    var appValue = doSaveConversion(formValue);
+    jxpathPointer.setValue(appValue);
+  &lt;/fb:save-form&gt;
+&lt;/fb:javascript&gt;</pre>
+<p>This example is rather trivial and could be replaced by a simple
+        <span class="codefrag">&lt;fb:value&gt;</span>, but it shows the available variables in the script:</p>
+<ul>
+          
+<li>
+<span class="codefrag">widget:</span> the widget identified by the <span class="codefrag">id</span> attribute,</li>
+          
+<li>
+<span class="codefrag">jxpathPointer:</span> the JXPath pointer corresponding to the <span class="codefrag">path</span> attribute,</li>
+          
+<li>
+<span class="codefrag">jxpathContext</span> (not shown): the JXPath context corresponding to the <span class="codefrag">path</span> attribute</li>
+        
+</ul>
+<p>It's much more interesting to fill a selection list via <span class="codefrag">fb:javascript</span>
+        as there is no built-in element for it at the moment. Imagine your binding bean
+        contains a collection field:</p>
+<pre class="code">&lt;fb:javascript id="selectionListWidget" path="objectCollection" direction="load"&gt;
+  &lt;fb:load-form&gt;
+    var collection = jxpathPointer.getNode();
+    widget.setSelectionList(collection, "id", "name")
+  &lt;/fb:load-form&gt;
+&lt;/fb:javascript&gt;</pre>
+<p>
+<strong>NOTE:</strong>
+</p>
+<ul>
+          
+<li>The <span class="codefrag">&lt;fb:save-form&gt;</span> snippet should be ommitted
+          if the <span class="codefrag">direction</span> attribute is set to load.</li>
+          
+<li>The <span class="codefrag">&lt;fb:load-form&gt;</span> snippet should be ommitted if the
+          <span class="codefrag">direction</span> attribute is set to save.</li>
+          
+<li>The <span class="codefrag">@readonly</span> attribute supported in early versions of this
+          binding has been replaced by the @direction attribute as supported now on all binding elements.</li>
+        
+</ul>
+
+      
+<h2>fb:custom</h2>
+<p>Attributes:</p>
+<ul>
+          
+<li>id (optional, if not provided the containing widget-context will be passed)</li>
+          
+<li>path (optional, if not provided "." is assumed)</li>
+          
+<li>direction (optional)</li>
+          
+<li>class (optional, if not present @builderclass and @factorymethod should be)</li>
+          
+<li>builderclass (optional)</li>
+          
+<li>factorymethod (optional)</li>
+        
+</ul>
+<p>Child elements:</p>
+<ul>
+          
+<li>fb:config</li>
+        
+</ul>
+<p>Allows to specify your own user-defined binding to be written in Java.
+        There are two essential modes of operation reflected in two examples:</p>
+<p>Example 1 - No configuration required:</p>
+<pre class="code">&lt;fb:custom id="custom" path="custom-value"
+      class="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"/&gt;</pre>
+<p>This describes the classname of your user defined binding class.</p>
+<p>Above imposes the following requirements:</p>
+<ol>
+          
+<li>there is a <span class="codefrag">class</span> CustomValueWrapBinding available in the specified package</li>
+          
+<li>it has a default (i.e. no arguments) constructor</li>
+          
+<li>it is a subclass of org.apache.cocoon.forms.binding.AbstractCustomBinding</li>
+        
+</ol>
+<p>This last will impose the implementation of two methods:</p>
+<ul>
+          
+<li>void doLoad(Widget widget, JXPathContext context) throws BindingException;</li>
+          
+<li>void doSave(Widget widget, JXPathContext context) throws BindingException;</li>
+        
+</ul>
+<p>where the available arguments are</p>
+<ul>
+          
+<li>
+<span class="codefrag">widget</span>: the widget identified by the <span class="codefrag">id</span> attribute,</li>
+          
+<li>
+<span class="codefrag">context</span>: the JXPath context corresponding to the <span class="codefrag">path</span> attribute</li>
+        
+</ul>
+<p>Example 2 - with nested configuration:</p>
+<pre class="code">  &lt;fb:custom id="config" path="config-value"
+      builderclass="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"
+      factorymethod="createBinding" &gt;
+      &lt;fb:config prefixchar="[" suffixchar="]" /&gt;
+  &lt;/fb:custom&gt;</pre>
+<p>The additional requirements to your user defined classes are now:</p>
+<ol>
+          
+<li>there is a <span class="codefrag">builderclass</span> CustomValueWrapBinding class having a static <span class="codefrag">factorymethod</span>
+</li>
+          
+<li>that can (optionally) take an org.w3c.dom.Element holding it's configuration</li>
+          
+<li>and return an instance of your own user-defined binding which must be a non abstract subclass of org.apache.cocoon.forms.binding.AbstractCustomBinding</li>
+        
+</ol>
+    
+  
+</body>
+</html>

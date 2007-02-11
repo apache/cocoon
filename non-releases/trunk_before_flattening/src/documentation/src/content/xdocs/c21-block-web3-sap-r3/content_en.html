@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Web3</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Web3 Connectivity Toolkit" name="DC.Subject">
+<meta content="Michael Gerzabek" name="DC.Creator">
+</head>
+<body>
+		
+<h1>About</h1>
+			
+<p>
+				
+<a class="external" href="http://www.efp.cc/web3">EFP Consulting Austria</a> produced an open-source library called Web3
+				that allows you to integrate SAP R/3 seamlessly into Cocoon 2. With these components you are able to call Remote 
+				Function Calls via an easy to use XML-syntax. For most BAPIs and Remote enabled Function Calls you simply need 
+				a text editor.
+			</p>
+			
+<p>This toolkit offers you ...</p>
+				
+<ul>
+					
+<li>... synchron communication to any SAP system above release 3.1H.</li>
+					
+<li>... easy to use ABAP function calls from outside R/3 with a se37-like markup-syntax.</li>
+				
+</ul>
+			
+<div class="note">
+				The following guide helps you to setup cocoon with your SAP R/3. Reasonably this guide cannot answer
+				all questions dealing with your environment. For further questions be advised to contact your favorite SAP Consultant.
+			</div>
+		
+		
+<h1>Installing SAP R/3 (TM) JavaConnector</h1>
+			
+<p>
+					Be sure to proper install the appropriate SAP Java-Connector from <a class="external" href="http://service.sap.com/connectors">
+					www.sap.com</a>. To install the connector refer to the included documentations.
+			</p>
+		
+		
+<h1>Configuring cocoon.xconf</h1>
+			
+<p>
+					With Web3 you have a flexible Toolkit where you can connect to multiple R/3 System within one single Cocoon-
+					Instance. Enter your backend configuration into cocoon.xconf like this:
+			</p>
+			
+<h2>Items</h2>
+<table>
+					Configuration elements
+					<tr>
+						
+<th colspan="1" rowspan="1">Element</th>
+						<th colspan="1" rowspan="1">Description</th>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">web3</td>
+						<td colspan="1" rowspan="1">Declare your logger here.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">pool</td>
+						<td colspan="1" rowspan="1">The pool element is the logical unit of all your SAP settings.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">client</td>
+						<td colspan="1" rowspan="1">The systems client you log onto.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">user, password, language</td>
+						<td colspan="1" rowspan="1">...</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">route</td>
+						<td colspan="1" rowspan="1">The route to your SAP system. Please refer to your <a class="external" href="http://help.sap.com">SAP help</a> to prepare the connection string.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">system</td>
+						<td colspan="1" rowspan="1">The system-number of your SAP system you log onto.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">gateway, program-id</td>
+						<td colspan="1" rowspan="1">Are mandatory and not used within Web3's szenario.</td>
+					
+</tr>
+				
+</table>
+<table>
+                    Specifics on the pool element
+					<tr>
+                       
+<td colspan="1" rowspan="1">@trace</td><td colspan="1" rowspan="1">a <span class="codefrag">boolean</span> switch whether to use JCO's facility to trace the 	communication layer or not.</td>
+                    
+</tr>
+                    
+<tr>
+					   
+<td colspan="1" rowspan="1">@level</td><td colspan="1" rowspan="1">if @trace is <span class="codefrag">true</span> set the trace-level to your prefered value. Please refer to the JCO's documentation about tracing.</td>
+                    
+</tr>
+                    
+<tr>
+					   
+<td colspan="1" rowspan="1">@size</td><td colspan="1" rowspan="1">denotes the pool-size of your sap connection pool. Be aware that this is a hard-limited pool.</td>
+                    
+</tr>
+				
+</table>
+			
+<p>
+				A configuration in your cocoon.xconf would look like this:
+			</p>
+
+				
+<pre class="code">&lt;web3 logger="core.web3"&gt;
+	&lt;backend name="indy"&gt;
+		&lt;pool level="0" size="10" trace="false"&gt;
+			&lt;client&gt;100&lt;/client&gt;
+			&lt;user&gt;user&lt;/user&gt;
+			&lt;password&gt;secret-passphrase&lt;/password&gt;
+			&lt;language&gt;DE&lt;/language&gt;
+			&lt;route&gt;indy&lt;/route&gt;
+			&lt;system&gt;00&lt;/system&gt;
+			&lt;gateway&gt;sapgw00&lt;/gateway&gt;
+			&lt;program-id&gt;USR-GR02&lt;/program-id&gt;
+		&lt;/pool&gt;
+	&lt;/backend&gt;
+	&lt;backend name="hugo"&gt;
+	...
+&lt;/web3&gt;</pre>
+
+		
+
+		
+<h1>Implementing your own RFC's</h1>
+			
+<p>First of all you have to setup your markup with the right Namespace</p>
+			
+<pre class="code">&lt;page xmlns:rfc="http://apache.org/cocoon/Web3-Rfc/1.0"&gt;
+	...
+&lt;/page&gt;</pre>
+			
+<p>After doing so you can enter RFC-mappings with the following syntax. You will see this is a very easy task and you will enjoy
+			using Web3 to do the stuff for you within your SAP environment :)</p>
+			
+<h2>Web3 rfc-Syntax</h2>
+<p>
+					Data definitions (metadata) are created and managed in the ABAP Dictionary. The ABAP Dictionary permits a central 
+					description of all the data used in the system without redundancies. New or modified information is automatically provided 
+					for all the system components. This ensures data integrity, data consistency and data security.
+				</p>
+<p>
+					The syntax used within this markup builds upon these facts. So do not wonder if you find the corresponding logical
+					units in the Cocoon frontend.
+				</p>
+<table>
+					Markup
+					<tr>
+						
+<th colspan="1" rowspan="1">Element</th>
+						<th colspan="1" rowspan="1">Description</th>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							<a href="#rfc_include">rfc:include</a>
+						</td>
+						<td colspan="1" rowspan="1">Starts a mapping for the specified RFC.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							<a href="#rfc_import">rfc:import</a>
+						</td>
+						<td colspan="1" rowspan="1">Container element for structures and fields.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							<a href="#rfc_tables">rfc:tables</a>
+						</td>
+						<td colspan="1" rowspan="1">Container element for tables.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							<a href="#rfc_structure">rfc:structure</a>
+						</td>
+						<td colspan="1" rowspan="1">Container element for fields.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							<a href="#rfc_table">rfc:table</a>
+						</td>
+						<td colspan="1" rowspan="1">Container element for structures.</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							<a href="#rfc_field">rfc:field</a>
+						</td>
+						<td colspan="1" rowspan="1">The data-fields.</td>
+					
+</tr>
+				
+</table>
+
+			
+<a name="rfc_include"></a>
+			
+<h2>rfc:include</h2>
+<p>First when you start to map a RFC keep in mind to get the parameters from your SAP system. Therefore you
+				may want to use se37 where all relevant parameters are listed. The <span class="codefrag">@name</span> has to be the name of
+				the RFC you want to map. </p>
+<p>Since many RFC's return hierarchical data split into tables you will encounter some
+				problems in xslt when rendering these data to trees. So you may implement <span class="codefrag">org.apache.cocoon.components.web3.Web3Streamer</span> to get a proper XML to work with. You can set your own streamer in the
+				<span class="codefrag">@streamer</span>.</p>
+<table>
+					Attributes
+					<tr>
+						
+<th colspan="1" rowspan="1">Attribute</th>
+						<th colspan="1" rowspan="1">Description</th>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							@name
+						</td>
+						<td colspan="1" rowspan="1">The name of the SAP RFC</td>
+					
+</tr>
+					
+<tr>
+						
+<td colspan="1" rowspan="1">
+							@streamer
+						</td>
+						<td colspan="1" rowspan="1">The class-name of your function streamer. Most of the time you won't need to implement it anyway.</td>
+					
+</tr>
+				
+</table>
+<p></p>
+			
+<a name="rfc_import"></a>
+			
+<h2>rfc:import</h2>
+<p>
+					When requesting a RFC you have to fill the import parameterlist. The import parameterlist lists all relevant parameters
+					that have to be provided to get proper results from your R/3.</p>
+<p>se37 can provide you with the relevant information.
+				</p>
+			
+<a name="rfc_tables"></a>
+			
+<h2>rfc:tables</h2>
+<p>
+					Some highly complex RFC's have also tables in their calling interface. You may need to read the SAP documentation of the
+					BAPI you gotta call and when to make use of one of them.
+				</p>
+			
+<a name="rfc_structure"></a>
+			
+<h2>rfc:structure</h2>
+<p>
+					A structure comprises fields. A field can refer to an elementary type (via a data element or by directly specifying the data type and length in the structure definition), another structure or a table type. A structure can therefore be nested to any depth.
+				</p>
+<div class="note">At the time the facility to use nested structures has not been tested!</div>
+			
+<a name="rfc_table"></a>
+			
+<h2>rfc:table</h2>
+<p>
+					A table consists of a collection of structures with same structure type. To keep it simple we can sloppily say a table is like
+					a SQL-database-table.
+				</p>
+			
+<a name="rfc_field"></a>
+			
+<h2>rfc:field</h2>
+<p>
+					Fields, also called data elements are the smallest indivisible units of the complex types and are used to specify the types 
+					in structures and columns of tables. A field describes either an elementary type or a reference type.</p>
+<p>
+					In ABAP exist predefined types and custom defined types. But don't worry about the horrible task of converting into the right
+					type. This task is excellently done for you by the JavaConnector.
+				</p>
+<div class="note">
+					Keep in mind that the communication format for numbers and date is US. So supply <span class="codefrag">Date</span> information
+					in format YYYY-MM-DD with the slashes and <span class="codefrag">number</span> information like DDDDD.DD where the dot is the comma!
+				</div>
+			
+<p>If you want to check your RFC mappings for syntactically correctness you may want to use the enclosed <span class="codefrag">dtd</span>'s.</p>
+		
+		
+<h1>A more complex example</h1>
+			
+<p>
+				The included example demonstrates a more complex function call. Keep in mind that the correct execution
+				depends on the local customizing settings of the connected SAP System.
+			</p>
+			
+<pre class="code">&lt;page xmlns:rfc="http://apache.org/cocoon/Web3-Rfc/1.0"&gt;
+  &lt;rfc:include name="XXX" streamer="XXX"&gt;
+    &lt;rfc:import&gt;
+      &lt;rfc:structure name="XXX"&gt;
+        &lt;rfc:field name="XXX"&gt;YYY&lt;/rfc:field&gt;
+        &lt;rfc:field name="XXX"&gt;YYY&lt;/rfc:field&gt;
+        &lt;rfc:field name="XXX"&gt;YYY&lt;/rfc:field&gt;
+      &lt;/rfc:structure&gt;
+      &lt;rfc:tables&gt;
+        &lt;rfc:table name="XXX"&gt;
+          &lt;rfc:structure name="1"&gt;
+            &lt;rfc:field name="XXX"&gt;YYY&lt;/rfc:field&gt;
+            &lt;rfc:field name="XXX"&gt;YYY&lt;/rfc:field&gt;
+            &lt;rfc:field name="XXX"&gt;YYY&lt;/rfc:field&gt;
+          &lt;/rfc:structure&gt;
+        &lt;/rfc:table&gt;
+      &lt;/rfc:tables&gt;
+    &lt;/rfc:import&gt;
+  &lt;/rfc:include&gt;
+&lt;/page&gt;</pre>
+		
+		
+<h1>Setting up the sitemap</h1>
+			
+<p>There are two ways to setup your Web3Transformer in the sitemap.</p>
+			
+<h2>Global Configuration</h2>
+<p>If you have to deal only with one R/3 Instance you may
+				configure your <span class="codefrag">org.apache.cocoon.transformation.Web3RfcTransformer</span>
+				global like stated in the following sitemap snippet.</p>
+<pre class="code">
+&lt;map:transformer name="rfc" 
+                 src="org.apache.cocoon.transformation.Web3RfcTransformer" 
+                 logger="web3.transformation"&gt;
+  &lt;system&gt;indy&lt;/system&gt;
+&lt;/map:transformer&gt;
+</pre>
+              
+<h2>Parametrized Configuration</h2>
+<p>If you have setup several R/3 pools you can parametrize the
+                   <span class="codefrag">org.apache.cocoon.transformation.Web3RfcTransformer</span> as stated next</p>
+<pre class="code">
+&lt;map:transform type="rfc"&gt;
+  &lt;map:parameter name="backend" value="indy"/&gt;
+&lt;/map:transform&gt;
+</pre>
+		
+		
+<h1>Further questions</h1>
+			
+<p>
+				Enjoy using Web3. For further questions feel free to contact the author 
+				<a href="mailto:michael.gerzabek.at.at.efp.cc">Michael Gerzabek</a>
+			
+</p>
+		
+		
+<div align="center">
+<img class="figure" alt="Built with Apache Cocoon" src="images/cocoon-built.gif"></div>
+	
+</body>
+</html>

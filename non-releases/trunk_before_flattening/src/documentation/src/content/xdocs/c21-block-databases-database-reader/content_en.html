@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>DatabaseReader</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the DatabaseReader of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>DatabaseReader</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">databasereader</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">DatabaseReader</span> component is used 
+            to serve data from a database
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Reader, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Database</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.reading.DatabaseReader</td>
+        
+</tr>
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
+        </tr-->
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.1</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">yes</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        This Reader pulls a resource from a database.  It is configured with
+        the Connection to use, parameters specify the table and column
+        to pull the image from, and source specifies the source key information.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+      
+</p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p>
+          The following pipeline snippet uses a <span class="codefrag">Database Reader</span> 
+          for serving <em>PNG</em> images from a database.
+        </p>
+<pre class="code">
+&lt;map:match pattern="images/*.png"&gt;
+  &lt;map:read type="databasereader" 
+    src="{1}" 
+    mime-type="image/png"&gt;
+    &lt;!-- option sitemap parameters --&gt;
+    &lt;map:parameter name="table" value="images"/&gt;
+    &lt;map:parameter name="image" value="image"/&gt;
+    &lt;map:parameter name="key" value="name"/&gt;
+    &lt;map:parameter name="where" value="publishing = 1"/&gt;
+    &lt;map:parameter name="order-by" value="created"/&gt;
+    &lt;map:parameter name="last-modified" value="last-modified"/&gt;
+  &lt;/map:read&gt;
+&lt;/map:match&gt;
+        </pre>
+<p>
+          The snippet above make following assumption about the database
+        </p>
+<ul>
+          
+<li>A database table <span class="codefrag">images</span> holds the <em>PNG</em> image data.</li>
+          
+<li>The database table has <span class="codefrag">image</span> column storing the image data as <span class="codefrag">BLOB</span>.
+          </li>
+          
+<li>The database table has <span class="codefrag">key</span> column which must match the value of 
+            of <span class="codefrag">{1}</span>.
+          </li>
+          
+<li>The database table has <span class="codefrag">publishing</span> column indicating by value <span class="codefrag">1</span>
+            that the image data is allowed to get published.
+          </li>
+          
+<li>The database table has <span class="codefrag">created</span> column, indicating the creation date of
+            the image data, and used if the <span class="codefrag">key</span> is not a primary key, serving
+            images in a LIFO fashion.
+          </li>
+          
+<li>The database table has <span class="codefrag">last-modified</span> column of type <span class="codefrag">TIMESTAMP</span>
+            indicating the last modification date of the image data.
+          </li>
+        
+</ul>
+      
+<h2>Sitemap component configuration example</h2>
+<p></p>
+<pre class="code">
+&lt;map:readers...
+  &lt;map:reader name="databasereader" 
+    src="org.apache.cocoon.reading.DatabaseReader"
+    logger="sitemap.reader.databasereader" 
+    pool-max="32"/&gt;
+    &lt;!-- optional reader configuration --&gt;
+    ...
+  &lt;/map:readers&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          In the <span class="codefrag">Database Reader</span> declaration section following configuration 
+          options are available
+        </p>
+<table>
+          
+<tr>
+<th colspan="1" rowspan="1">Configurationname</th><th colspan="1" rowspan="1">Type</th><th colspan="1" rowspan="1">Comment</th>
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">use-connection</td><td colspan="1" rowspan="1">Data source name</td>
+            <td colspan="1" rowspan="1">The name of a database selector, configured in the
+              <span class="codefrag">cocoon.xconf</span> file.
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">invalidate</td><td colspan="1" rowspan="1"> never | always </td>
+            <td colspan="1" rowspan="1">
+              This option configures the caching behaviour if lastModifed
+              has value of <span class="codefrag">-1</span>.
+            </td>
+          
+</tr>
+        
+</table>
+      
+<h2>Setup</h2>
+<p>
+          The <span class="codefrag">DatabaseReader</span> accepts following setup parameters
+        </p>
+<table>
+          
+<tr>
+<th colspan="1" rowspan="1">Parametername</th><th colspan="1" rowspan="1">Type</th><th colspan="1" rowspan="1">Comment</th>
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">table</td><td colspan="1" rowspan="1">database table name</td>
+            <td colspan="1" rowspan="1">The database table name</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">image</td><td colspan="1" rowspan="1">database column name</td>
+            <td colspan="1" rowspan="1">The column name of the image data</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">key</td><td colspan="1" rowspan="1">database key column name</td>
+            <td colspan="1" rowspan="1">The key column name of the image data matching the src attribute of
+              the &lt;map:read&gt; sitemap usage.
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">where</td><td colspan="1" rowspan="1">database where expression</td>
+            <td colspan="1" rowspan="1">Optional parameter specifying SQL where expression.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">order-by</td><td colspan="1" rowspan="1">database order-by expression</td>
+            <td colspan="1" rowspan="1">Optional parameter specifying an SQL order-by expression.
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">last-modified</td><td colspan="1" rowspan="1">timestamp column name</td>
+            <td colspan="1" rowspan="1">Optional parameter a <span class="codefrag">TIMESTAMP</span> column name, added
+              to the <span class="codefrag">SELECT</span> clause of the SQL query. 
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">content-type</td><td colspan="1" rowspan="1">database column name</td>
+            <td colspan="1" rowspan="1">Optional parameter a column name, if specified the column
+              value overrides the <span class="codefrag">mime-type</span> attribute of the
+              &lt;map:read&gt; sitemap usage.
+            </td>
+            
+</tr>
+        
+</table>
+<p>
+          The key value is derived from the <span class="codefrag">src</span> attribute
+          of the <span class="codefrag">Database Reader</span> usage..
+        </p>
+<p>
+          The <span class="codefrag">Database Reader</span> builds internally following SQL query:
+        </p>
+<pre class="code">
+SELECT {image} [, last-modified] [, {order-by-column} ] from {table}
+  WHERE {key} = {src} [ AND {where} ]
+  [ORDER BY {order-by}]
+        </pre>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+        
+</p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+        The <span class="codefrag">Database Reader</span> needs a datasource name, it is referenced
+        by the configuration element <span class="codefrag">use-connection</span>. The datasource name
+        has to be configured in the Cocoon database configuration <span class="codefrag">cocoon.xconf</span>.
+      </p>
+      
+<p>
+        If the parameter <span class="codefrag">last-modified</span> ends with <span class="codefrag">" DESC"</span> this
+        suffix is truncated as it is appended to the SQL clause, noted as {order-by-column}
+        in the SQL query snippet above.
+      </p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        12-25-02: created initial version by Bernhard Huber
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages -->
+      
+</p>
+    
+  
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Ovidiu Predescu" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Cocoon and continuations</h1>
+  
+<p>With continuations in the language, you can essentially
+  store the continuation of <span class="codefrag">sendPageAndWait()</span> (think of all
+  the stack trace, and the program counter), put it in a global
+  hash table associated with an id. The id is then encoded in
+  the <span class="codefrag">response.xml</span> page as an URL. When the user
+  clicks on that URL, on the server side the associated
+  continuation is resumed. Resuming the processing happens as if
+  nothing was stopped, you get all the stack trace back, and all
+  the local variables.</p>
+
+  
+<p>So instead of using beans to store things in session, you
+  use normal variables in a program. Since each user has its own
+  version of the program, all the local variables in the program
+  are separate between users.</p>
+
+  
+<p>With this approach clicking the <em>Back</em> button in the
+  browser is no longer a hassle to deal with for you as a
+  server-side programmer. They will simply refer to past
+  continuations objects, which have their own state of the local
+  variables.</p>
+
+  
+<p>Since continuations are objects, you can also store them in
+  a database, for really long-lived session, just like you do
+  with session beans.</p>
+  
+
+  
+</body>
+</html>

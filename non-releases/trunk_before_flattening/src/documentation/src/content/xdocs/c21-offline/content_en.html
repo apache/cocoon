@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Offline Page Generation</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Upayavira" name="DC.Creator">
+<meta content="This document explains the basic concepts of offline page generation with Apache Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Overview</h1>
+      
+<p>Cocoon can generate static, 'offline' versions of web pages or web sites, as well
+         as sites served dynamically. This document covers the concepts involved in offline
+         page and site generation.
+      </p>
+    
+    
+<h1>Offline Page Generation</h1>
+      
+<p>Cocoon allows static versions of Cocoon web sites to be created.</p>
+      
+<p>At present, this can be done in three ways:</p>
+      
+<ul>
+        
+<li>
+<a href="cli.html">Command Line Interface</a>
+</li>
+        
+<li>
+<a href="ant.html">Using Ant Task</a>
+</li>
+        
+<li>
+<a href="bean.html">Cocoon Bean</a>
+</li>
+      
+</ul>
+      
+<p>This document explains the general concepts that are shared by all of these approaches.
+         The specific details for each method are explained on a separate page.</p>
+      
+<p>Cocoon, when generating pages offline, can follow links in a page (whether that page
+         is HTML, PDF or anything else), and can rewrite URIs to create filenames by checking 
+         the mime type of the generated page. All links to pages who's URIs change are changed
+         too.
+      </p>
+    
+    
+<h1>Configuration</h1>
+      
+<p>To use Cocoon in its offline mode, a servlet container (e.g. Tomcat or Jetty) is not
+         needed. Cocoon can generate an offline site directly using the information available
+         in the Cocoon <span class="codefrag">webapp</span> folder.</p>
+      
+<p>Having said this, many choose to have a servlet container available locally for use
+         whilst debugging, as this can speed up the development process significantly.</p>
+      
+<h2>Directories and Files</h2>
+<p>As all the information Cocoon needs to generate a site is stored in the Cocoon 
+           webapp directory, we need to tell it where to find it, and where to find various 
+           other files and directories. These are:</p>
+<ul>
+          
+<li>Context directory (the Cocoon Webapp directory)</li>
+          
+<li>Configuration File (usually <span class="codefrag">${COCOON_WEBAPP}/WEB-INF/cocoon.xconf</span>)</li>
+          
+<li>Work Directory (used by Cocoon to store temporary files, this can be anywhere of your choosing)</li>
+        
+</ul>   
+      
+<h2>Logging</h2>
+<p>There are three options that need to be specified in relation to logging. These are:</p>
+<ul>
+          
+<li>Log Kit (the logging configuration file, usually <span class="codefrag">${COCOON_WEBAPP}/WEB-INF/logkit.xconf</span>)</li>
+          
+<li>Logger (a category used for logging, as configured in the configuration file)</li>
+          
+<li>Log Level (a logging level, either DEBUG, INFO WARN, ERROR or FATAL_ERROR. Relates specifically to logging
+              at startup, after which log kit configuration takes over)</li>
+        
+</ul>
+      
+<h2>Other Configuration Options</h2>
+<p>In online mode, a User agent string tells Cocoon what browser is being used to access a page. The user agent
+           can be configured manually for offline generation.</p>
+<p>In online mode, an accept string is provided by a browser, telling the browser what types of content it 
+           is capable of accepting. This will be a comma separated list of mime types. In offline mode, an accept
+           string can also be specified.</p>
+<p>As Cocoon based sites can change the content they generate based upon the user agent string and the accepts 
+           string, it can be necessary to specify them in order to have the correct content generated.</p>
+<p>In order to generate sites that make use of databases and database connections, it is necessary to load
+           JDBC classes at startup. Cocoon allows for this.</p>
+<p>When, in offline mode, Cocoon generates a page ending in a <span class="codefrag">/</span>, the resultant file cannot be 
+           written to a filesystem as its name would refer specifically to a directory. Therefore, the user can
+           specify a default filename which will be appended to the page's URI before saving to disc.</p>
+    
+    
+<h1>URIs and Targets</h1>
+      
+<h2>SourceURIs</h2>
+<p>A source URI (which may also have a source prefix prepended) is the part of the URI that is given
+           to Cocoon for processing. So, for example, if you access a page with: 
+           <span class="codefrag">http://localhost:8080/cocoon/site/page.html</span> then the source URI would be 
+           <span class="codefrag">site/page.html</span>
+</p>
+      
+<h2>Destinations and Modifiable Sources</h2>
+<p>Most of the time, when generating pages, the generated pages will be simply written to disk.</p>
+<p>However, this is not the only option. Generated pages can be written anywhere for which a 
+           <span class="codefrag">ModifiableSource</span> exists. So, for example, it is possible to generate a site and 
+           have the pages written directly to a web server using FTP, by making use of the Avalon 
+           <span class="codefrag">FTPSource</span>.</p>
+      
+<h2>Target Types</h2>
+<p>When generating a page, Cocoon needs to know how to decide upon the URI of the generated page. 
+           This process could be described as 'URI arithmetic'.</p>
+<p>Source and destination URIs are made up of the following elements:</p>
+<ul>
+          
+<li>Source Prefix: Part of a source URI used to request a page but excluded from the destination 
+              URI</li>
+          
+<li>Source URI: Part of a source URI that is used when calculating the destination URI</li>
+          
+<li>Destination URI: The base URI for a destination</li>
+          
+<li>Type: The method used for merging the above elements (can be append, replace or 
+              insert</li>
+        
+</ul>
+<div class="note">When combining elements to make a URI, it is the user's responsibility to include directory
+              separators. For example, <span class="codefrag">foo</span> with <span class="codefrag">bar</span> appended will be 
+              <span class="codefrag">foobar</span>, whereas <span class="codefrag">foo/</span> with <span class="codefrag">bar</span> appended will be
+              <span class="codefrag">foo/bar</span>.
+        </div>
+<h3>Appending</h3>
+<p>Here, when calculating the destination URI, the source prefix is ignored, and the destination
+             URI is calculated by appending the source URI to the end of the destination URI. For example,
+             with the following values:</p>
+<p>Source prefix: <span class="codefrag">site/</span>, source URI: <span class="codefrag">page.html</span>, destination URI:
+             <span class="codefrag">pages/</span>
+</p>
+<p>A request will be made to Cocoon for a page at: <span class="codefrag">site/page.html</span>. This will be
+             saved as <span class="codefrag">pages/page.html</span>.</p>
+<h3>Replacing</h3>
+<p>Here, when calculating the destination URI, the source prefix and the source URI are 
+             ignored, and the destination URI is used as is. This is useful when you wish to save the
+             generated page with a filename that bears no relationship to the source URI. For example,
+             with the following values:</p>
+<p>Source prefix: <span class="codefrag">site/</span>, source URI: <span class="codefrag">page.html</span>, destination URI:
+             <span class="codefrag">pages/simple.html</span>
+</p>
+<p>A request will be made to Cocoon for a page at: <span class="codefrag">site/page.html</span>. This will be
+             saved as <span class="codefrag">pages/simple.html</span>.</p>
+<div class="note">Given the nature of this target type, it inherently cannot be used when following links 
+             (otherwise all pages will be written on top of each other).</div>
+<h3>Inserting</h3>
+<p>Here, when calculating the destination URI, the source prefix is ignored, and the source URI
+             is inserted into the destination URI at the point marked by an asterisk (*). This is intended
+             for use with complex protocols where the source URI does not appear at the end of the 
+             destination URI.</p>
+      
+<h2>Mime Type Checking</h2>
+<p>Cocoon can optionally test the mime type for a page, and, if the mime type doesn't match the page's
+           extension, amend the destination URI to include the correct extension. This will ensure that pages
+           will load correctly when served by a static web server.</p>
+<p>When Cocoon amends a destination URI, it also amends URIs for links in those pages, so that links 
+           will still work when a site has been crawled.</p>
+<div class="note">This feature substantially slows down page generation, as each page must be generated three times,
+              (once to find links, once to find its mime-type and once to collect the actual content. This 
+              can be avoided by ensuring that all URIs in the site are correct and do not need amending, in which
+              case it is only necessary to generate a page once.</div>
+    
+    
+<h1>Following Links and Site Crawling</h1>
+      
+<p>Cocoon can be configured to either follow, or ignore, links in pages that it generates. It has two methods
+      of gathering links, 'link view' and 'link gathering'.</p>
+      
+<h2>Link View Crawling</h2>
+<p>With link view crawling, Cocoon gets the links by generating the 'link view' for a page. Using link view
+           gives a significant degree of configurability in terms of which links are gathered, as it is possible to
+           insert a transformer into the view to select out links that should not be followed.</p>
+<p>The disadvantage with link view crawling is that each page must be generated twice, which doubles page 
+           generation time.</p>
+<p>Link view is usually configured in the root sitemap with:</p>
+<pre class="code">
+
+
+  &lt;map:views&gt;
+
+  &lt;map:view from-position="last" name="links"&gt;
+   &lt;map:serialize type="links"/&gt;
+  &lt;/map:view&gt;
+
+ &lt;/map:views&gt;
+
+        </pre>
+<p>If you have this in your root sitemap, you do not need it in your sub-sitemaps. However, you may choose
+           to override it with one that carries our further processing - for example, with an XSLT transformer that
+           removes links that should not be crawled.</p>
+<p>See <a href="../concepts/views.html">views</a> for more on views. </p>
+<p>You can see the link view yourself by appending <span class="codefrag">?cocoon-view=links</span> to the page's URI.</p>
+      
+<h2>Link Gathering Crawling</h2>
+<p>With link gathering crawling, links are gathered from the SAX stream right before the serializer. All 
+           <span class="codefrag">src</span>, <span class="codefrag">href</span> and <span class="codefrag">xlink:href</span> attributes are taken to be links, and are
+           therefore followed.</p>
+<p>The benefit of link gathering crawling is that pages do not need to be generated twice. However, one looses
+           the ability to configure which links should be followed that exists with link view crawling.</p>
+    
+    
+<h1>Broken Links</h1>
+      
+<p>When a page cannot be found at a URI that has either been specified, or has been found as a link in another
+         page, it is considered 'broken'.</p>
+      
+<p>Exactly what is done when a broken link is found depends upon the method used to evoke 
+         Cocoon. See related pages for specific details.</p>
+      
+<h2>Broken Link Handling using xconf Configuration method</h2>
+<p>The xconf method allows for more sophisticated broken link handling. The
+             user can select to have broken links reported to a file, this file being
+             either text or XML.</p>
+<p>When this file is plain text, it will have one link URI per line.</p>
+<p>When this file is in XML, it will detail a message explaining the reason
+           for the broken link, as well as the URI of the link.</p>
+<p>It is also possible to specify whether an error page should be generated 
+           in the place of the broken page (based upon the configured 
+           <span class="codefrag">&lt;map:handle-errors&gt;</span> code in the sitemap). If required,
+           an extension can be appended to the original file's URI to signify that
+           it is an error page (e.g. <span class="codefrag">.error</span>).</p>
+    
+    
+<h1>Precompiling XSPs</h1>
+      
+<p>When used offline, Cocoon can precompile XSP pages. If no URIs are specified, it will scan all directories
+         within the context directory looking for XSP files, each of which will be compiled. If URIs are specified,
+         all links will be followed looking for pages that make use of XSP, compiling those XSP pages as they are
+         found.</p>
+    
+  
+</body>
+</html>

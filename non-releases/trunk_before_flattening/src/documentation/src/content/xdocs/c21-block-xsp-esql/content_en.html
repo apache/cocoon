@@ -1,0 +1,678 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ESQL Taglib</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Donald A. Ball Jr." name="DC.Creator">
+<meta content="Robin Green" name="DC.Creator">
+</head>
+<body>
+
+    
+<h1>Description</h1>
+
+    
+<p>The ESQL logicsheet is an XSP logicsheet that performs sql queries and
+    serializes their results as XML. This allows you to work with data from a
+    wide variety of different sources when using Apache Cocoon.
+   </p>
+
+   
+<p>It has a number of important advantages over the old (deprecated) SQL
+    logicsheet and SQL processor. For example, it allows you to mix esql with
+    other logicsheets. It also supports prepared statements (which gives you
+    automatic parameter escaping), multiple encodings in a single query and
+    even multiple resultsets on one statement (if supported from database)!</p>
+
+    
+<p>The name was chosen merely to emphasise the fact that this is an
+    extended version of the old sql logicsheet - esql still uses standard SQL
+    syntax. In fact, it is just a conversion wrapper around your JDBC database
+    driver, so it supports no more and no less SQL syntax than your JDBC driver
+    supports.
+    </p>
+  
+
+  
+<h1>Installation</h1>
+   
+<p>Check your <span class="codefrag">cocoon.xconf</span> for this line and add it if it's not already there:</p>
+   
+<pre class="code">
+&lt;builtin-logicsheet&gt;
+  &lt;parameter name="prefix" value="esql"/&gt;
+  &lt;parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/&gt;
+  &lt;parameter name="href"
+  value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/&gt;
+&lt;/builtin-logicsheet&gt;
+</pre>
+  
+
+  
+<h1>Configuration</h1>
+   
+<p>Map the</p>
+   
+<pre class="code">http://apache.org/cocoon/SQL/v2</pre>
+   
+<p>namespace to the esql prefix. Elements in the esql taglib namespace will be interpreted as input to 
+    the esql taglib and will be stripped from the output.</p>
+   
+<p>This is typically done like this:</p>
+   
+<pre class="code">
+&lt;xsp:page
+      language="java"
+      xmlns:xsp="http://apache.org/xsp"
+      xmlns:esql="http://apache.org/cocoon/SQL/v2"
+&gt;
+. . .
+&lt;/xsp:page&gt;
+</pre>
+    
+   
+<h2>Connection</h2>
+<p>Esql can use connection pools configured in <span class="codefrag">cocoon.xconf</span> or
+   individually set up connections.</p>
+<p>
+<span class="codefrag">esql:pool</span> gives the name of the connection pool to use.</p>
+<p>Individually configured connections use the <span class="codefrag">esql:driver,
+    esql:dburl, esql:username, esql:password</span> tags. Their meaning
+   should be obvious.</p>
+<h3>Connection Options</h3>
+<p>Per default, esql will try to switch a connection to <em>autocommit</em>
+   mode. This is because it prevents hanging transactions that hold locks and
+   disturb further database accesses. Esql can be forced to not use
+   autocommit, by giving the
+   <span class="codefrag">&lt;esql:autocommit&gt;false&lt;/esql:autocommit&gt;</span> nested
+   element to <span class="codefrag">esql:connection</span>.</p>
+<div class="note">Even if a connection is configured with autocommit off in
+   <span class="codefrag">cocoon.xconf</span>, esql will switch autocommit on if not
+   instructed to do otherwise.</div>
+<p>Other options like limiting the size of the resultset are discussed
+   below.</p>
+
+  
+
+  
+<h1>Usage and Examples</h1>
+   
+<p>At the moment documentation on esql is quite thin on the ground -
+    however, it should be enough to get you started. In the
+    <span class="codefrag">docs/samples/xsp</span> directory you will find
+    <span class="codefrag">esql.xsp</span>, which is an example of two esql queries,
+    demonstrating "nested" queries and dynamic prepared statements. However,
+    much more comprehensive is the <strong>schema</strong> in
+    <span class="codefrag">esql.xsd</span> which is a formal specification, written in the W3C
+    standard language XML Schema, of every single esql element and attribute.
+    It is fairly human-readable and includes comments for the purpose of each
+    tag.</p>
+
+   
+<p>A fairly common example is to list a query result in a table. Notice that
+    esql:results and esql:no-results are mutual exclusive. So only one of them
+    will be in your XML tree. This example takes a connection from a datasource
+    defined in <span class="codefrag">cocoon.xconf</span>:</p>
+
+   
+<pre class="code">
+&lt;esql:connection&gt;
+  &lt;esql:pool&gt;connectionName&lt;/esql:pool&gt;
+  &lt;esql:execute-query&gt;
+    &lt;esql:query&gt;SELECT mycolumn1,mycolumn2 FROM table&lt;/esql:query&gt;
+    &lt;esql:results&gt;
+      &lt;table&gt;
+        &lt;esql:row-results&gt;
+          &lt;tr&gt;
+             &lt;td&gt;&lt;esql:get-string column="mycolumn1"/&gt;&lt;/td&gt;
+             &lt;td&gt;&lt;esql:get-string column="mycolumn2"/&gt;&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/esql:row-results&gt;
+      &lt;/table&gt;
+    &lt;/esql:results&gt;
+    &lt;esql:no-results&gt;
+       &lt;p&gt;Sorry, no results!&lt;/p&gt;
+    &lt;/esql:no-results&gt;
+  &lt;/esql:execute-query&gt;
+&lt;/esql:connection&gt;
+</pre>
+
+   
+<h2>Dynamic Queries</h2>
+<p>When a query contains dynamic parts, e.g. a value that is to be matched,
+     esql offers two different possibilities to achieve that. First, as the 
+     query is really a string, it can be constructed like any other string by 
+     concattenation.
+    </p>
+<pre class="code">
+    &lt;xsp:logic&gt;
+       String orderBy = null;
+       switch(type) {
+       case 1: orderBy = "order by name"; break;
+       case 2: orderBy = "order by salary"; break;
+       default: orderBy = "";
+       }
+    &lt;/xsp:logic&gt;
+
+    &lt;!-- ... --&gt;
+
+    &lt;esql:query&gt;&lt;xsp:expr&gt;"SELECT name, salary FROM employee "+orderBy&lt;/xsp:expr&gt;&lt;/esql:query&gt;
+
+</pre>
+<p>Note, however, that here any string will be part of the actual
+     statement. In this example it does no harm as the value for the
+     <span class="codefrag">orderBy</span> variable is completely under the control of
+     your code. Any malicious attacker could not inject his or her own
+     code. Thus this technique should not be used when values returned
+     from the client have to be used.
+    </p>
+<p>The second variant is to use a PreparedStatement for dynamic 
+     parameters. Since the driver is supposed to keep parameters
+     distinct from the statement, no code can be injected this way. In
+     addition, your DBMS puts more effort into optimizing the
+     statement. PreparedStatements are created whenever a
+     <span class="codefrag">&lt;esql:parameter/&gt;</span> tag appears in a query. 
+    </p>
+<pre class="code">
+    &lt;esql:query&gt;SELECT name, salary FROM employee 
+                WHERE name=&lt;esql:parameter&gt;&lt;xsp:expr&gt;name&lt;/xsp:expr&gt;&lt;/esql:parameter&gt;&lt;/esql:query&gt;
+
+   </pre>
+
+   
+<h2>Refering to Results</h2>
+<p>A select query usually returns one ResultSet. This case is handled by
+     the <span class="codefrag">esql:results</span> tag and its content. However, many special
+     cases exist, e.g. an error occurs or an update query is used. Esql
+     provides different tags for these cases.
+    </p>
+<p>If an empty result set is returned, the <span class="codefrag">esql:no-results</span>
+     block is used.</p>
+<h3>Errors</h3>
+<p>In case of an error, usually signalled by an Exception during setup or
+      execution of a query, the <span class="codefrag">esql:error-results</span> block is
+      evaluated. If no such tag exists, the exception is rethrown and
+      processing is stopped. Withing the tag, <span class="codefrag">esql:get-message</span>,
+      <span class="codefrag">esql:get-stacktrace</span>, and <span class="codefrag">esql:to-string</span> allow
+      access to the error message.</p>
+<h3>Limiting the number of rows returned</h3>
+<p>Esql allows to display only a part of the result set using the
+      <span class="codefrag">esql:use-limit-clause</span>. If your DBMS is supported, the DBMS
+      generates only the indicated rows, otherwise a number of rows are skipped
+      and retrieval is stopped after a given number of rows. It works like a
+      fixed-size window to the result set, paging through it.</p>
+<p>These parameters are set for a connection.</p>
+<p>If the <span class="codefrag">esql:use-limit-clause</span> is empty or set to "auto",
+      esql tries to determine automatically which method to use, depending on
+      the connection URL.</p>
+<p>
+<span class="codefrag">esql:skip-rows</span> and <span class="codefrag">esql:max-rows</span> tags specify
+      how many rows should be skipped at the beginning and how many rows should
+      be retrieved at maximum.</p>
+<p>In this context the <span class="codefrag">esql:previous-results</span> and
+      <span class="codefrag">esql:more-results</span> blocks hold code and content that is only
+      used if this sliding window has previous or following windows.</p>
+<pre class="code">
+&lt;esql:connection&gt;
+  &lt;esql:pool&gt;connectionName&lt;/esql:pool&gt;
+  &lt;esql:execute-query&gt;
+    &lt;esql:query&gt;SELECT mycolumn1,mycolumn2 FROM table&lt;/esql:query&gt;
+    &lt;esql:use-limit-clause&gt;auto&lt;/esql:use-limit-clause&gt;
+    &lt;esql:skip-rows&gt;&lt;xsp:expr&gt;skiprows&lt;/xsp:expr&gt;&lt;/esql:skip-rows&gt;
+    &lt;esql:max-rows&gt;10&lt;/esql:max-rows&gt;
+    &lt;esql:results&gt;
+      &lt;table&gt;
+        &lt;esql:row-results&gt;
+        &lt;esql:previous-results&gt;previous rows available&lt;/esql:previous-results&gt;
+        &lt;esql:more-results&gt;more rows available&lt;/esql:more-results&gt;
+          &lt;tr&gt;
+             &lt;td&gt;&lt;esql:get-string column="mycolumn1"/&gt;&lt;/td&gt;
+             &lt;td&gt;&lt;esql:get-string column="mycolumn2"/&gt;&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/esql:row-results&gt;
+      &lt;/table&gt;
+    &lt;/esql:results&gt;
+    &lt;esql:error-results&gt;An error occurred&lt;/esql:error-results&gt;
+    &lt;esql:no-results&gt;
+       &lt;p&gt;Sorry, no results!&lt;/p&gt;
+    &lt;/esql:no-results&gt;
+  &lt;/esql:execute-query&gt;
+&lt;/esql:connection&gt;
+</pre>
+<h3>Updates</h3>
+<p>In JDBC, updates, inserts, and deletes are "update queries". For those,
+      no results are available but an update count is returned, indicating,
+      how many rows were affected.</p>
+<p>Code or content that depends on this has to be placed inside the
+      <span class="codefrag">esql:update-results</span> tag. It is used whenever at least one
+      row was affected. The update count can be accessed through the
+      <span class="codefrag">esql:get-update-count</span> tag.
+     </p>
+<p>If no rows where affected, the <span class="codefrag">esql:no-results</span> block is
+      used.</p>
+<pre class="code">
+&lt;esql:connection&gt;
+  &lt;esql:pool&gt;connectionName&lt;/esql:pool&gt;
+  &lt;esql:execute-query&gt;
+    &lt;esql:query&gt;update table set price=price*1.17&lt;/esql:query&gt;
+    &lt;esql:error-results&gt;An error occurred&lt;/esql:error-results&gt;
+    &lt;esql:update-results&gt;
+       &lt;esql:get-update-count/&gt; prices adjusted.
+    &lt;/esql:update-results&gt;
+    &lt;esql:no-results&gt;
+       &lt;p&gt;Sorry, no prices adjusted!&lt;/p&gt;
+    &lt;/esql:no-results&gt;
+  &lt;/esql:execute-query&gt;
+&lt;/esql:connection&gt;
+</pre>
+
+   
+<h2>Groups</h2>
+<p>For more complex lists, often nested queries are needed. Esql allows
+     arbitrary nesting of queries. However, you can do table joins and then
+     insert a header whenever a "watched" column value changes using the
+     <span class="codefrag">&lt;esql:group/&gt;</span> and <span class="codefrag">&lt;esql:member/&gt;</span>
+     tags.  It follows the nesting ideology of <span class="codefrag">&lt;xsp:logic&gt; ...
+      &lt;xsp:content&gt;&lt;/&gt;&lt;/&gt;</span>You can nest
+     <span class="codefrag">&lt;esql:group&gt;</span> and <span class="codefrag">&lt;esql:member&gt;</span>
+     indefinately. <span class="codefrag">group-on</span> can be an attribute of
+     <span class="codefrag">group</span> or a text node. The value of the text node has
+     precedence over the attribute. The value can be the column name or the
+     column number. 
+     </p>
+<pre class="code">
+&lt;esql:execute-query&gt;
+  &lt;esql:query&gt;
+    select committeeName, title, firstName, middleName, lastName, suffix, status 
+    from committeeMember left join directoryInformation using(userid)
+         left join committee on committee.id=committeeMember.committeeid 
+    order by committeeName asc
+  &lt;/esql:query&gt;
+  &lt;esql:results&gt;
+    &lt;esql:row-results&gt;
+      &lt;esql:group group-on="committeeName"&gt;
+        &lt;h2&gt;&lt;esql:get-string column="committeeName"/&gt;&lt;/h2&gt;
+        &lt;ul&gt;
+          &lt;esql:member&gt;
+            &lt;li&gt;
+              &lt;esql:get-string column="title"/&gt;
+              &lt;esql:get-string column="firstName"/&gt;
+              &lt;esql:get-string column="middleName"/&gt;
+              &lt;esql:get-string column="lastName"/&gt;
+              &lt;esql:get-string column="suffix"/&gt;
+            &lt;/li&gt;
+          &lt;/esql:member&gt;
+        &lt;/ul&gt;
+      &lt;/esql:group&gt;
+    &lt;/esql:row-results&gt;
+  &lt;/esql:results&gt;
+&lt;/esql:execute-query&gt;
+    </pre>
+<p>One important limitation of the grouping feature is, that <em>no access
+      to a column may appear after closing a group.</em> The value will belong
+     to the following row or cause an error if no next row exists. If this is
+     needed, consider swapping columns using XSLT or embedded JAVA. Hence the
+     following example is illegal:</p>
+
+    
+<pre class="code">
+&lt;esql:execute-query&gt;
+  &lt;esql:query&gt;
+    select committeeName, committeeTitle, title, firstName, middleName, 
+           lastName, suffix, status 
+    from committeeMember left join directoryInformation using(userid)
+         left join committee on committee.id=committeeMember.committeeid 
+    order by committeeName asc
+  &lt;/esql:query&gt;
+  &lt;esql:results&gt;
+    &lt;esql:row-results&gt;
+      &lt;esql:group group-on="committeeName"&gt;
+        &lt;h2&gt;&lt;esql:get-string column="committeeName"/&gt;&lt;/h2&gt;
+        &lt;ul&gt;
+          &lt;esql:member&gt;
+            &lt;li&gt;
+              &lt;esql:get-string column="title"/&gt;
+              &lt;esql:get-string column="firstName"/&gt;
+              &lt;esql:get-string column="middleName"/&gt;
+              &lt;esql:get-string column="lastName"/&gt;
+              &lt;esql:get-string column="suffix"/&gt;
+            &lt;/li&gt;
+          &lt;/esql:member&gt;
+        &lt;/ul&gt;
+      &lt;/esql:group&gt;
+      &lt;esql:get-string column="committeeTitle"/&gt;&lt;!-- illegal !! --&gt;
+    &lt;/esql:row-results&gt;
+  &lt;/esql:results&gt;
+&lt;/esql:execute-query&gt;
+    </pre>
+
+
+   
+<h2>Stored Procedure Support</h2>
+<p>In order to use stored procedures replace
+     <span class="codefrag">&lt;esql:query/&gt;</span> with <span class="codefrag">&lt;esql:call/&gt;</span>, use
+     either DBMS specific syntax or JDBC escape syntax <span class="codefrag">{? =
+      foo(?)}</span>. If your jdbc driver requires to use the
+     <span class="codefrag">executeQuery()</span> method instead of the <span class="codefrag">execute()</span>
+     method (like e.g. INFORMIX does), set <span class="codefrag">needs-query="true"</span>
+     attribute.</p>
+<p>If a result set is returned through the (only) return parameter of a
+     stored procedure, e.g. <span class="codefrag">resultset-from-object="1"</span> as attribute
+     to <span class="codefrag">&lt;esql:call/&gt;</span>to automatically use this result set.
+     For a more general alternative see further below.</p>
+<p>Parameters for a stored procedure call may be of
+   <span class="codefrag">direction="in|out|inout"</span> with the usual JDBC meaning. In
+   addition a <span class="codefrag">type</span> needs to be supplied for "out" and "inout"
+   parameters. This would be the same "XXX" as used in a <span class="codefrag">get-XXX</span>
+   JDBC-method call. Alternatively, you can use a fully qualified field name,
+   e.g. "java.sql.Types.CHAR"</p>
+<p>
+<span class="codefrag">&lt;esql:call-results/&gt;</span> (child of
+     <span class="codefrag">&lt;esql:execute-query/&gt;</span>) may contain code that will
+     always be executed whether the query returned a result or not. For example
+     most stored procedures will not return a result set but several out
+     parameters.</p>
+<p>All <span class="codefrag">&lt;esql:get-xxx/&gt;</span> tags accept a new attribute
+     <span class="codefrag">from-call="yes"</span> to indicate that the value is retrieved from
+     the CallableStatement rather than the current ResultSet. Obviously, this
+     only works after a call to a stored procedure.</p>
+<p>Retrieve a ResultSet from any column and use it like the result of a
+     nested query with the <span class="codefrag">esql:use-results</span> tag. It behaves
+     exactly like nesting queries. Thus the <span class="codefrag">ancestor</span> attribute can
+     be used to access e.g. the original query.</p>
+<p>Example:</p>
+<pre class="code">
+&lt;esql:call&gt;{? = foo(&lt;esql:parameter direction="in"
+  type="Int"&gt;&lt;xsp:expr&gt;1&lt;/xsp:expr&gt;&lt;/esql:parameter&gt;)}
+&lt;/esql:call&gt;
+&lt;esql:call-results&gt;
+  &lt;esql:use-results&gt;
+    &lt;esql:result&gt;&lt;xsp:expr&gt;(ResultSet)&lt;esql:get-object column="1" from-call="true"/&gt;&lt;/xsp:expr&gt;&lt;/esql:result&gt;
+    &lt;esql:results&gt;
+      &lt;esql:row-results&gt;
+        &lt;esql:get-string column="1"/&gt;
+      &lt;/esql:row-results&gt;
+    &lt;/esql:results&gt;
+  &lt;/esql:use-results&gt;
+&lt;/esql:call-results&gt;
+</pre>
+<p>Example:</p>
+<pre class="code">
+&lt;esql:query&gt;select name, list_of_aliases from table&lt;/esql:query&gt;
+&lt;esql:results&gt;
+  &lt;esql:row-results&gt;
+    &lt;p&gt;
+      &lt;esql:get-string column="name"/&gt;: 
+      &lt;esql:use-results&gt;
+        &lt;esql:result&gt;&lt;xsp:expr&gt;&lt;esql:get-array column="list_of_aliases"/&gt;.getResultSet()&lt;/xsp:expr&gt;&lt;/esql:result&gt;
+        &lt;esql:results&gt;
+          &lt;esql:row-results&gt;
+            &lt;esql:get-string column="1"/&gt;
+          &lt;/esql:row-results&gt;
+        &lt;/esql:results&gt;
+      &lt;/esql:use-results&gt;
+    &lt;/p&gt;
+  &lt;/esql:row-results&gt;
+&lt;/esql:results&gt;
+</pre>
+
+   
+<h2>Multiple Results</h2>
+<p>If multiple results are returned from a stored procedure or a query, the
+     <span class="codefrag">esql:results</span> block is reused. However, it is supported to
+     have different blocks for each result. Since a result can either be a
+     ResultSet or an UpdateCount, both are counted independently. The nth
+     ResultSet will be handled by the nth <span class="codefrag">esql:results</span> block, or -
+     if there are fewer blocks - the last one.</p>
+<p>The same holds true for <span class="codefrag">esql:update-results</span> and
+     <span class="codefrag">esql:no-results</span> blocks as well.</p>
+<div class="note">Support for multiple results is not widely available with DBMSs.
+   Therefore support is disabled by default. Use the
+   <span class="codefrag">&lt;esql:allow-multiple-results&gt;yes&lt;/esql:allow-multiple-results&gt;</span> 
+   parameter to the &lt;esql:connection/&gt;.</div>
+<p>Example: Suppose stored procedure <span class="codefrag">bar</span> returns an update
+     count, another update count, a result set, an update count, and a
+     last result set.</p>
+<pre class="code">
+&lt;esql:call&gt;{? = bar(&lt;esql:parameter direction="in"
+type="Int"&gt;&lt;xsp:expr&gt;1&lt;/xsp:expr&gt;&lt;/esql:parameter&gt;)}
+&lt;/esql:call&gt;
+&lt;esql:results&gt;
+  &lt;!-- this is used for the first result set --&gt;
+&lt;/esql:results&gt;
+&lt;esql:results&gt;
+  &lt;!-- this is used for the second and 
+       all following result sets --&gt;
+&lt;/esql:results&gt;
+&lt;esql:update-results&gt;
+  &lt;!-- this is used for the first update count --&gt;
+&lt;/esql:update-results&gt;
+&lt;esql:no-results&gt;
+  &lt;!-- this is used for the first update count --&gt;
+&lt;/esql:no-results&gt;
+&lt;esql:update-results&gt;
+  &lt;!-- this is used for the second and 
+       all following update counts --&gt;
+&lt;/esql:update-results&gt;
+&lt;esql:no-results&gt;
+  &lt;!-- this is used for the second and 
+       all following update counts --&gt;
+&lt;/esql:no-results&gt;
+</pre>
+
+   
+<p>The ultimate reference, is of course the source code, which is an XSLT
+    logicsheet contained in the file
+    <span class="codefrag">src/org/apache/cocoon/components/language/markup/xsp/java/esql.xsl</span>
+</p>
+
+   
+<p>Of course, we would be very grateful for any improvements on this
+    documentation or further examples - please send them to <a href="mailto:users.at.cocoon.apache.org">users.at.cocoon.apache.org</a>!</p>
+   
+  
+
+
+  
+<h1>Template Descriptions</h1>
+   
+<table>
+    
+<tr>
+     
+<th colspan="1" rowspan="1">Tag</th>
+     <th colspan="1" rowspan="1">Description</th>
+    
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-columns</td>
+          <td colspan="1" rowspan="1">results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself. For Cocoon 2 only, this outputs structured types as well. Here sql-list or sql-set contains several sql-list-item or sql-set-item element that again contain the actual data.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-string</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a string</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-date</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a date. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-time</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a time. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-timestamp</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a timestamp. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-boolean</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as true or false</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-double</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a double. if a format attribute exists, its value is taken to be a decimal format string as defined in java.text.DecimalFormat, and the result is formatted accordingly.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-float</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a float. if a format attribute exists, its value is taken to be a decimal format string as defined in java.text.DecimalFormat, and the result is formatted accordingly.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-int</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as an integer</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-long</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a long</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-short</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a short</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-ascii</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a clob</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-object</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as an object</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-array</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as an java.sql.Array. This is frequently used for collection 
+          datatypes like lists, sets, bags etc.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-struct</td>
+          <td colspan="1" rowspan="1">returns the value of the given column as a java.sql.Struct. This is frequently used for row types.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-xml</td>
+          <td colspan="1" rowspan="1">returns the value of the given column interpreted as an xml fragment.
+ The fragment is parsed by the default xsp parser and the document element is returned.
+ If a root attribute exists, its value is taken to be the name of an element to wrap around the contents of
+ the fragment before parsing.</td>
+ 
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:results//esql:get-column-count</td>
+          <td colspan="1" rowspan="1">returns the number of columns in the resultset.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-row-position|esql:results//esql:get-row-position</td>
+          <td colspan="1" rowspan="1">returns the position of the current row in the result set</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-column-name</td>
+          <td colspan="1" rowspan="1">returns the name of the given column. the column must be specified by number, not name.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-column-label</td>
+          <td colspan="1" rowspan="1">returns the label of the given column. the column must be specified by number, not name.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:get-column-type-name</td>
+          <td colspan="1" rowspan="1">returns the name of the type of the given column. the column must be specified by number, not name.</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:row-results//esql:is-null</td>
+          <td colspan="1" rowspan="1">allows null-column testing. Evaluates to a Java expression, which is true when the referred column contains a null-value for the current resultset row</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:error-results//esql:get-message</td>
+          <td colspan="1" rowspan="1">returns the message of the current exception</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:error-results//esql:to-string</td>
+          <td colspan="1" rowspan="1">returns the current exception as a string</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:error-results//esql:get-stacktrace</td>
+          <td colspan="1" rowspan="1">returns the stacktrace of the current exception</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:results/esql:get-metadata</td>
+          <td colspan="1" rowspan="1">returns the metadata associated with the current resultset</td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">esql:results/esql:get-resultset</td>
+          <td colspan="1" rowspan="1">returns the current resultset</td>
+          
+</tr>
+      
+<tr>
+<td colspan="1" rowspan="1">esql:group</td>
+      <td colspan="1" rowspan="1">Allows header elements around groups of consecutive records with identical values in column named by @group-on.  Facilitates a single query with joins to be used in lieu of some nested queries.</td>
+          
+</tr>
+      
+<tr>
+<td colspan="1" rowspan="1">esql:member</td>
+      <td colspan="1" rowspan="1">Used in conjunction with and nested inside esql:group.  Formatting for individual records goes within esql:member. Header stuff goes in between group and member.</td>
+      
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">@*|node()</td>
+          <td colspan="1" rowspan="1">used internally to determine which column is the given column. if a column attribute exists and its value is a number, it is taken to be the column's position. if the value is not a number, it is taken to be the column's name. if a column attribute does not exist, an esql:column element is assumed to exist and to render as a string (after all of the xsp instructions have been evaluated), which is taken to be the column's name.</td>
+          
+</tr>
+       
+</table>
+      
+
+
+</body>
+</html>

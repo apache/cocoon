@@ -1,0 +1,424 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Database Actions</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Christian Haul" name="DC.Creator">
+</head>
+<body>
+  
+<h1>Introduction</h1>
+    
+<p>
+    Two different sets of actions exist, that deal with (object) relational
+    database access through JDBC. The original database actions provide a
+    relatively simple interface to store, modify, delete and retrieve data.
+    They are oriented towards usage of request parameters for input and
+    request attributes together with sitemap variables for output and do
+    not support auto increment column types. In addition, the description of
+    the database structure is split over several files since these actions
+    attempt to use all tables in a provided description.
+    </p>
+    
+<p>
+    The modular database actions provide similar functionality. In contrast
+    to the original actions they allow to store the database meta data in a
+    single file and to switch input and output flexible through the use of
+    modules. Even for auto increment columns specific modules exist that
+    cover a wide range of database management systems.
+    </p>
+      
+<p>
+        For an overview of column types supported by the modular database
+        actions, see javadocs for JDBCTypeConversions. The types supported by
+        the original actions are documented in AbstractDatabaseAction.
+      </p>
+  
+
+  
+<h1>Original Database Actions</h1>
+    
+<p>
+    The original database actions have evolved quite a bit and at different
+    speeds. The add action is certainly the most complete one, providing
+    support for multiple tables and rows. However, the interface has become
+    a bit inconsistent.
+    </p>
+    
+<p>
+    If an error occurs, the original database actions will throw an
+    exception.
+    </p>
+    
+<h2>Describing the Structure of your DB - descriptor.xml</h2>
+<p>
+      The key to database actions is a file that describes database meta
+      data in XML. The original actions will ignore all but the first table
+      and act only on one row. Only the add action will try to access all
+      tables that are contained in this description. As a consequence, each
+      HTML form needs to have a corresponding descriptor file if different
+      tables are affected.
+    </p>
+<p>
+      The file name has no meaning and does not need to be
+      <span class="codefrag">descriptor.xml</span> - it can even be a Cocoon pipeline. The
+      name of the root element in a descriptor file is ignored. Only
+      <span class="codefrag">table</span> elements nested on first level inside the root
+      element are parsed by the actions. All unknown elements or attributes
+      are ignored.
+    </p>
+<p>
+      For each table a <span class="codefrag">table</span> element needs to be present. 
+    </p>
+<pre class="code">
+
+&lt;?xml version="1.0"?&gt;
+
+&lt;employee&gt;
+  &lt;connection&gt;personnel&lt;/connection&gt;
+  &lt;table name="employee"&gt;
+    &lt;keys&gt;
+      &lt;key param="employee" dbcol="id" type="int" mode="manual"/&gt;
+    &lt;/keys&gt;
+    &lt;values&gt;
+      &lt;value param="name" dbcol="name" type="string"/&gt;
+      &lt;value param="department" dbcol="department_id" type="int"/&gt;
+    &lt;/values&gt;
+  &lt;/table&gt;
+&lt;/employee&gt;
+  
+    </pre>
+<p>
+      Describes a single table named "employee". In addition a database
+      connection is specified. See <a href="../../developing/datasources.html">here</a> for more
+      information on database connections. 
+    </p>
+<h3>Key Columns</h3>
+<p>
+      Tables may or may not have key columns. A key column is a column
+      that is part of the primary key. Actually, candidate keys should do
+      as well.
+      </p>
+<p>
+      All key columns are contained in a <span class="codefrag">keys</span> child element
+      of the <span class="codefrag">table</span> element. Each column has a
+      <span class="codefrag">key</span> element to define its properties. The
+      <span class="codefrag">dbcol</span> attribute holds the column name,
+      <span class="codefrag">type</span> is the JDBC type name for this column (have a
+      look at AbstactDatabaseAction source for valid type names),
+      <span class="codefrag">param</span> specifies the name of the request parameter to
+      use, and <span class="codefrag">mode</span> sets how the value for this column is
+      obtained on adding a row.
+      </p>
+<p>
+      Through the mode attribute the behaviour of the add action can be
+      changed.
+      </p>
+<p>
+      Default mode is "automatic" and to let the database create the key
+      value by setting this value to <span class="codefrag">null</span>. The created value
+      can not be read back from the database and will not be available as
+      request attribute or sitemap variable.
+      </p>
+<p>
+      A mode of "manual" will query the database for the maximum current
+      value, add 1 to it and use that for a value.
+      </p>
+<p>
+      A mode of "form" will use the corresponding request parameter.
+      </p>
+<p>
+      A mode of "request-attribute" will use the corresponding request
+      attribute. The name specified in the <span class="codefrag">param</span> attribute
+      will be automatically prefixed with the class name.
+      </p>
+<p>
+      Key values will be propagated to sitemap variables and - prefixed
+      with the class name - request attributes.
+      </p>
+<h3>Other Columns</h3>
+<p>
+      All other columns are contained in a <span class="codefrag">values</span> child
+      element of the <span class="codefrag">table</span> element. Each column has a
+      <span class="codefrag">value</span> element to define its properties. Properties are
+      similar to those for key columns. A <span class="codefrag">mode</span> attribute
+      does not exist for value columns. Instead, request parameters and
+      request attributes are tried in this order for the specified
+      parameter. 
+      </p>
+<p>
+      Request attribute names are <em>not</em> prefixed with the class
+      name. Thus, to insert the value of a key column of the previous row
+      or previous table into a value column, it needs to be named
+      <span class="codefrag">org.apache.cocoon.acting.AbstractDatabaseAction:key:table:dbcol</span>. 
+      </p>
+<p>
+      Value columns are propagated to request attributes with class name
+      prefix. They are not available for the sitemap.
+      </p>
+  
+  
+<h1>Modular Database Actions</h1>
+    
+<p>
+    The modular database actions were mainly created to make auto increment
+    columns available, handle input and output flexibly, and have a
+    consistent interface. A successful action will return the number of
+    rows affected in a sitemap parameter named <span class="codefrag">row-count</span>. The
+    added features required to change the descriptor file format in
+    incompatible ways.
+    </p>
+    
+<p>
+    It can be configured if an exception will be thrown when an error
+    occurs.
+    </p>
+    
+<h2>Describing the Structure of your DB - descriptor.xml</h2>
+<p>
+      Like the original actions, the modular actions need meta data in an
+      XML file. However, that file may contain any number of tables, not
+      just the ones needed for a single request. The tables actually used
+      are referenced through a <span class="codefrag">table-set</span>. Unknown elements and
+      attributes are ignored. This way a descriptor file can be shared with
+      other actions like the form validator.
+    </p>
+<p>
+      For the flexible input and output handling, the modular database
+      actions rely on <a href="../concepts/modules.html">modules</a>.
+      Have a look at those before proceeding.
+    </p>
+<p>
+          The following is a snippet from a descriptor file. 
+        </p>
+<pre class="code">
+
+&lt;root&gt;
+   &lt;connection&gt;personnel&lt;/connection&gt;
+   &lt;table name="user" alias="user"&gt;
+      &lt;keys&gt;
+         &lt;key name="uid" type="int" autoincrement="true"&gt;
+            &lt;mode name="auto"  type="autoincr"/&gt;
+         &lt;/key&gt;
+      &lt;/keys&gt;
+      &lt;values&gt;
+         &lt;value name="name"      type="string"&gt;&lt;/value&gt;
+         &lt;value name="firstname" type="string"&gt;&lt;/value&gt;
+         &lt;value name="uname"     type="string"&gt;&lt;/value&gt;
+      &lt;/values&gt;   
+   &lt;/table&gt;
+
+        </pre>
+<p>
+          The <span class="codefrag">table</span> element has an additional attribute
+          <span class="codefrag">alias</span> which is an alternative name to reference
+          the table from a table set. The descriptor file is searched
+          top down for tables whose <span class="codefrag">name</span> or
+          <span class="codefrag">alias</span> match. The <span class="codefrag">alias</span>n attribute
+          is useful if a complex join expression is used as table
+          name. In such a case modifications like update, insert,
+          delete will likely fail.
+        </p>
+<p>
+      Another application of aliases if different numbers of columns should
+      be affected by an operation. or if a table contains several candidate
+      keys that are used alternatively. This way, different views to a
+      table can be created.
+    </p>
+<h3>Key Columns</h3>
+<p>
+      The descriptor file resembles the one for the original actions. One
+      major difference is the absence of <span class="codefrag">dbcol</span> and
+      <span class="codefrag">param</span> attributes. Instead there is a <span class="codefrag">name</span>
+      attribute which corresponds to the <span class="codefrag">dbcol</span> attribute and
+      specifies the database column name.
+      </p>
+<p>
+      If a column is an auto increment column, the similar named attribute
+      indicates this. Auto increment columns will be handled differently
+      on insert operations.
+      </p>
+<p>
+      Instead of specifying a parameter name, the actions support to use
+      different input modules for each operation through the nested
+      <span class="codefrag">mode</span> elements. This is described in more detail below.
+      </p>
+<p>
+      Note here though, that not every column needs a <span class="codefrag">mode</span>
+      element: The actions default to the module defined as
+      <span class="codefrag">request</span> which is in a default installation to obtain
+      the values from request parameters. The name of the parameter
+      defaults to table name dot column name.
+      </p>
+<h3>Other Columns</h3>
+<p>
+            Apart from the fact that the auto increment columns are only
+      supported for key columns, everything said above applies to value
+      columns as well.
+          </p>
+<h3>Operation Mode Types</h3>
+<p>
+      Basically, two different mode types exist:
+      <span class="codefrag">autoincrement</span> which is used whenever data shall be
+      inserted into a table and this particular key column has the
+      auto increment attribute set and <span class="codefrag">others</span> for all other
+      requirements.
+          </p>
+<p>
+            In addition, a table-set can specify different mode types to use
+      instead of the predefined type names. Through this, and the fact
+      that every mode can specify a different input module, it is easy to
+      use different input modules for different tasks and forms.
+          </p>
+<p>
+            One special mode type name exists that matches all requested ones:
+      <span class="codefrag">all</span> This makes it easier to configure only some
+      columns differently for each table-set.
+          </p>
+<h3>How to obtain Values</h3>
+<p>
+      As said above, these actions default to reading from request
+      parameters with a default parameter name. By specifying
+      <span class="codefrag">mode</span> elements, this can be overridden. Any component
+      that implements the <span class="codefrag">InputModule</span> interface can be used
+      to obtain values. How to make such modules known to Apache Cocoon
+      is described  <a href="../concepts/modules.html">elsewhere</a>. 
+      </p>
+<p>
+      Beside using different input modules, their parameters can be set
+      in place, for example to override parameter names, configure a
+      random generator or a message digest algorithm.
+      </p>
+<pre class="code">
+
+   &lt;table name="user_groups"&gt;
+      &lt;keys&gt;
+         &lt;key name="uid" type="int"&gt;
+            &lt;mode name="request" type="request"&gt;
+               &lt;parameter&gt;user_groups.uid&lt;/parameter&gt;
+            &lt;/mode&gt;
+            &lt;mode name="attribute" type="attrib"&gt;
+               &lt;parameter&gt;org.apache.cocoon.components.modules.output.OutputModule:user.uid[0]&lt;/parameter&gt;
+            &lt;/mode&gt;
+         &lt;/key&gt;
+         &lt;key name="gid" type="int" set="master"&gt;
+            &lt;mode name="request" type="all"&gt;
+               &lt;parameter&gt;user_groups.gid&lt;/parameter&gt;
+            &lt;/mode&gt;
+         &lt;/key&gt;
+      &lt;/keys&gt;
+   &lt;/table&gt;
+
+      </pre>
+<p>
+      The above example shows just that: the <span class="codefrag">parameter</span>
+      element is not read by the database action itself but the
+      complete <span class="codefrag">mode</span> configuration object is passed to the
+      input module. Both the request attribute and the request parameter
+      input modules understand this parameter attribute which takes
+      precedence over the default one.
+      </p>
+<p>
+      Another feature when obtaining values is tied to the
+      <span class="codefrag">type</span> attribute: Different modes can be used in
+      different situations. The basic setup uses two different mode
+      types: <span class="codefrag">autoincrement</span> when inserting in key columns
+      that have an indicator that they are indeed auto increment columns
+      and <span class="codefrag">others</span> for insert operations on all other columns
+      and all other operations on all columns.
+      </p>
+<p>
+      Table-sets can override the default names for these two mode type
+      name categories with arbitrary names except the special name
+      <span class="codefrag">all</span>. A mode that carries the type name "all" is used
+      with all requested type names. Lookup obeys first match principle
+      so that all modes are tested from top to bottom and the first that
+      matches is used.
+      </p>
+<h3>How to store Values e.g. in your Session</h3>
+<p>
+      All modular database action can be configured to use any component
+      that implements the <span class="codefrag">OutputModule</span> interface to store
+      values. The output module is chosen on declaring the action in the
+      sitemap or dynamically with a sitemap parameter. If no output
+      module is specified, the default it to use the request attribute
+      module.
+      </p>
+<p>
+      The interface does not allow to pass configuration information to
+      the output module. This has to be done when the module is declared
+      e.g. in cocoon.xconf.
+      </p>
+<h3>Inserting Multiple Rows - Sets</h3>
+<p>
+      Once common task is to work on more than one row. If the rows are
+      in different tables, this is catered for by table-sets. Operating
+      on multiple rows of one table requires to mark columns that should
+      vary and among those one, that determines the number of rows to
+      work on.
+      </p>
+<p>
+      This is done with sets. All columns that cary a <span class="codefrag">set</span>
+      attribute can vary, those, that don't, are kept fixed during the
+      operation. The column that is used to determine the number of rows
+      is required to have a value of <span class="codefrag">master</span> while all others
+      need to have a value of <span class="codefrag">slave</span> for the set
+      attribute. There may be only one master in a set.
+      </p>
+<p>
+      Sets can be tagged either on column or on mode level but not both
+      for a single column.
+      </p>
+<h3>Select Your Tables - Table-Sets</h3>
+<p>
+      Tables that should be used during an operation can be grouped
+      together with a table-set. A table-set references tables by their
+      name or their alias.
+      </p>
+<p>
+      In addition, a table-set can override the mode type names for the
+      two categories "autoincrement" and "others".
+      </p>
+<p>
+      Operations spanning multiple tables in a table-set are done in a
+      single transaction. Thus, if one fails, the other is rolled back.
+      </p>
+<pre class="code">
+
+
+   &lt;table name="groups"&gt;
+      &lt;keys&gt;
+         &lt;key name="gid" type="int" autoincrement="true"&gt;
+            &lt;mode name="auto" type="autoincr"/&gt;
+         &lt;/key&gt;
+      &lt;/keys&gt;
+      &lt;values&gt;
+         &lt;value name="gname" type="string"/&gt;
+      &lt;/values&gt;   
+   &lt;/table&gt;
+   
+   &lt;table-set name="user"&gt;
+      &lt;table name="user"/&gt;
+   &lt;/table-set&gt;
+
+   &lt;table-set name="groups"&gt;
+      &lt;table name="groups"/&gt;
+   &lt;/table-set&gt;
+
+   &lt;table-set name="user+groups"&gt;
+      &lt;table name="user"/&gt;
+      &lt;table name="user_groups" others-mode="attrib"/&gt;
+   &lt;/table-set&gt;
+
+   &lt;table-set name="user_groups"&gt;
+      &lt;table name="user_groups" others-mode="request"/&gt;
+   &lt;/table-set&gt;
+
+&lt;/root&gt;
+
+      </pre>
+  
+  
+</body>
+</html>

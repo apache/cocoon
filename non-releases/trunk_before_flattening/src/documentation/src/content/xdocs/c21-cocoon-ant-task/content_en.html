@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Offline Page Generation with Apache Ant</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Upayavira" name="DC.Creator">
+<meta content="This document explains how to use Cocoon to generate offline pages and sites with Apache Ant." name="DC.Description">
+</head>
+<body>
+   
+<h1>Overview</h1>
+    
+<p>Apache Ant can be used to start Cocoon in its Offline mode. A specific Ant 
+       task is available, allowing the user to embed the Cocoon configuration 
+       information into Ant's build script.
+            </p>
+   
+   
+<h1>Configuring the Ant task</h1>
+     
+<p>The main configuration for the task is to specify a <span class="codefrag">cocoon.context</span> property which points to the
+        Cocoon webapp from which the pages or site are to be generated.</p>
+     
+<p>From this property, a classpath can be created. By default, this should point to <span class="codefrag">WEB-INF/classes</span> 
+        and all jar files in <span class="codefrag">WEB-INF/lib</span>. Futher classpaths can be added if they are needed.</p>
+     
+<p>The taskdef requires this classpath in order to invoke the Ant task, and the task itself needs the classpath in
+        order to invoke Cocoon.</p>
+     
+<p>Beyond these configurations, the rest are the same as is used by the <a href="cli.html">Command Line interface</a>,
+        and is detailed on the <a href="configuration.html">configuration</a> page.</p>
+   
+   
+<h1>Sample Ant Task</h1>
+       
+<p>A sample ant build file is shown below. This sample shows only that which is required to configure the
+          Ant task. For further details of configuring Cocoon, see the <a href="configuration.html">configuration</a>
+          page.</p>
+       
+<pre class="code">
+
+&lt;?xml version="1.0"?&gt;
+&lt;project default="cocoon" basedir="."&gt;
+
+    &lt;property name="cocoon.context" value="../cocoon/build/webapp"/&gt;
+    &lt;path id="cocoon.classpath"&gt;
+      &lt;dirset dir="${cocoon.context}/WEB-INF/classes"/&gt;
+      &lt;fileset dir="${cocoon.context}/WEB-INF/lib" includes="*.jar"/&gt;
+    &lt;/path&gt;
+ 
+    &lt;taskdef name="cocoon" classname="org.apache.cocoon.CocoonTask" classpathref="cocoon.classpath"/&gt;
+    
+    &lt;target name="cocoon"&gt;
+
+        &lt;cocoon verbose="true"  
+                classpathref="cocoon.classpath"
+                follow-links="true" 
+                precompile-only="false" 
+                confirm-extensions="false"
+                context-dir="${cocoon.context}"
+                config-file="WEB-INF/cocoon.xconf"
+                work-dir="build/work"
+                dest-dir="build/dest"
+                default-filename="index.html"
+                accept="*/*"&gt;
+        
+           &lt;broken-links type="xml" 
+                         file="brokenlinks.xml"
+                         generate="false"
+                         extension=".error"/&gt;
+           
+           &lt;logging log-kit="${cocoon.context}/WEB-INF/logkit.xconf" logger="cli" level="DEBUG" /&gt;
+    
+           &lt;uris name="site" follow-links="true"&gt;
+               &lt;uri type="append" 
+                    src-prefix="" 
+                    src="index.html"
+                    dest="${cocoon.context}/build/dest/"/&gt;
+           &lt;/uris&gt;        
+        &lt;/cocoon&gt;
+    &lt;/target&gt;
+&lt;/project&gt;
+    </pre>
+     
+  
+</body>
+</html>

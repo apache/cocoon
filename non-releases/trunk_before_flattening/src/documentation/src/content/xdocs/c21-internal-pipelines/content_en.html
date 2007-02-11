@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Internal Pipeline Snippet</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Diana Shannon" name="DC.Creator">
+</head>
+<body>
+
+  
+<h1>Overview</h1>
+
+<p>
+This Snippet shows how to create and use an internal pipeline in the sitemap. An internal pipeline processes a request from another pipeline in a sitemap. It then returns a pipeline fragment to the requesting pipeline for additional processing. The pipeline fragment produced by an internal pipeline cannot be accessed externally, for example, from an explicit browser request. An internal pipeline is distinguished from other pipelines by the value of its internal-only attribute which is set to true.
+</p>
+  
+
+  
+<h1>Version</h1>
+
+<p>
+At the time of this writing, this Snippet was tested against the current release version, 2.0.3, and head version, 2.1, of Cocoon.
+</p>
+  
+
+  
+<h1>Example</h1>
+    
+<pre class="code">
+
+&lt;map:pipeline internal-only="true"&gt;
+
+  &lt;map:match pattern="salad"&gt;
+    &lt;!-- do something --&gt;
+  &lt;/map:match&gt;
+
+  &lt;map:match pattern="soup"&gt;
+    &lt;!-- do something else --&gt;
+  &lt;/map:match&gt;
+
+&lt;/map:pipeline&gt;
+
+
+&lt;map:pipeline&gt;
+   &lt;map:match pattern="meal"&gt;
+      &lt;map:aggregate element="lunch"&gt;
+         &lt;map:part src="cocoon:/salad"/&gt;
+         &lt;map:part src="cocoon:/soup"/&gt;
+      &lt;/map:aggregate&gt;
+     &lt;map:transform src="stylesheets/lunch2html.xsl"/&gt;
+     &lt;map:serialize/&gt;
+   &lt;/map:match&gt;
+&lt;/map:pipeline&gt;
+
+    </pre>
+
+  
+  
+  
+<h1>Discussion</h1>
+
+<p>
+In the above snippet example, you'll find two pipelines. The first is an internal pipeline which provides XML content to the second pipeline upon request. The second pipeline makes requests of the first internal pipeline through the <span class="codefrag">cocoon:/ protocol</span>. For example, when a request such <span class="codefrag">http://localhost:8080/meal</span> is received, the second pipeline, whose <span class="codefrag">map:match</span> element contains the value "meal," is matched. This pipeline begins processing by making two internal requests of the internal pipeline: one for <span class="codefrag">cocoon:/salad</span> and another for <span class="codefrag">cocoon:/soup</span>. It then aggregates the fragments returned by the internal pipeline within a lunch element. It continues processing by transforming and serializing the result. 
+</p>
+
+
+
+  
+<h1>Tips</h1>
+
+<p>
+You may need to check the pipeline fragments returned by your internal pipelines by calling them externally, for example, in your browser. If so, change the <span class="codefrag">internal-only</span> attribute of the pipeline to false until your testing is complete. In the above snippet, you could evaluate the pipeline fragment for soup with the following request: <span class="codefrag">http://localhost:8080/soup</span>. Once your testing is complete, make sure to change the value of the <span class="codefrag">internal-only</span> attribute back to true.
+</p>
+
+
+  
+<h1>Comments</h1>
+
+<p>
+Care to comment on this Snippet? Got another tip? Help keep this Snippet relevant by passing along any useful feedback to the author, <a href="mailto:shannon.at.apache.org">Diana Shannon.</a>
+
+</p>
+
+
+
+
+</body>
+</html>

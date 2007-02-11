@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Updating Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="J&ouml;rg Heinicke" name="DC.Creator">
+<meta content="Bertrand Delacr&eacute;taz" name="DC.Creator">
+</head>
+<body>
+  
+<h1>Known Issues for 2.1.5</h1>
+   
+<p>
+     This is a list of known issues for Cocoon 2.1.5.
+   </p>
+   
+<h2>Store</h2>
+<p>
+      Cocoon 2.1.5 uses different implementation of the store based on the
+      <a class="external" href="http://jakarta.apache.org/turbine/jcs">JCS</a>.
+      This new implementation currently does not allow storing of not serializable objects,
+      and it does not write out memory cache to the disk on shutdown. If you depend on
+      this functionality, you can keep 2.1.4 store configuration.
+     </p>
+<p>
+      Cocoon 2.1.4 used MRUMemoryStore as store implementation and JISPStore as persistent
+      store implementation. JISPStore is known to corrupt storage file under some
+      conditions.
+     </p>
+   
+<h2>Logging Configuration</h2>
+<p>
+      Cocoon 2.1.5 uses a newer version of the Avalon Excalibur logging package
+      than version 2.1.4. Unfortunately this logging package has an imcompatibility
+      to the version used in Cocoon 2.1.4.
+     </p>
+<p>
+      If you update your application from 2.1.4 to 2.1.5 make sure that you have
+      a log definition for the empty category in your logkit.xconf. Add the following
+      lines to your category definition:
+     </p>
+<pre class="code">
+    &lt;category name="" log-level="@loglevel@"&gt;
+      &lt;log-target id-ref="core"/&gt;
+      &lt;log-target id-ref="error"/&gt;
+    &lt;/category&gt;
+     </pre>
+  
+
+  
+<h1>Updating Cocoon</h1>
+   
+<p>
+    Please take your time to read this document completely before trying to upgrade from
+    a Cocoon 2.0.x installation to 2.1 (or above). You can also read it if you want to
+    know what was going on in the development of Cocoon.
+   </p>
+   
+<p>
+    The Cocoon team took great care in making this new version as compatible as
+    possible. However, in order to achieve even more flexibility, usability and
+    performance, the internal architecure of Cocoon has been improved. Due to these
+    improvements it has not been possible to be compatible in every little detail.
+    If you follow the instructions of document closely, however,
+    you should be able to quickly upgrade your Cocoon 2.0.x installation.
+   </p>
+   
+<p>
+    The Cocoon team has developed many Avalon components that are not specific to Cocoon
+    and therefore have been donated to the Avalon Excalibur project and moved out
+    of Cocoon. This has led to some configuration changes which are also described
+    in this document.
+   </p>
+  
+  
+<h1>Sitemap</h1>
+   
+<div class="note">There are some changes in the sitemap and in the configuration of some
+    components in the sitemap. In general we recommend you to start with a new
+    sitemap from 2.1 and to adapt it to your needs. But for manual migration we
+    will list as many changes as possible.</div>
+   
+<h2>Pipelines configuration in the sitemap</h2>
+<p>
+      The configuration of the pipelines has moved from cocoon.xconf to the sitemap.
+      To update your installation, you have to remove the "event-pipeline" and "stream-pipeline"
+      section from your cocoon.xconf (see also the cocoon.xconf section) and add the
+      <span class="codefrag">map:pipes</span> section to the <span class="codefrag">map:components</span> section
+      of your sitemap. You can find the pipelines components definition in the sample
+      main sitemap of Cocoon. Here is an example:
+     </p>
+<pre class="code">
+&lt;map:sitemap&gt;
+ &lt;map:components&gt;
+      ...
+  &lt;map:pipes default="caching"&gt;
+   &lt;map:pipe name="caching"
+    src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/&gt;
+   &lt;map:pipe name="noncaching"
+    src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/&gt;
+  &lt;/map:pipes&gt;
+ &lt;/map:components&gt;
+   ...
+&lt;/map:sitemap&gt;
+     </pre>
+<p>You can choose these different pipeline implementations
+       in the <span class="codefrag">map:pipeline</span> section by specifying their <span class="codefrag">type</span> attribute:
+     </p>
+<pre class="code">
+&lt;map:sitemap&gt;
+  ...
+ &lt;map:pipelines&gt;
+  &lt;map:pipeline type="noncaching"&gt;
+   &lt;map:match pattern="welcome"&gt;
+                  ...
+   &lt;/map:match&gt;
+            ..
+  &lt;/map:pipeline&gt;
+ &lt;/map:pipelines&gt;
+&lt;/map:sitemap&gt;
+     </pre>
+<p>This is similar to choosing the type of a generator or any other sitemap component.
+       If the type attribute is omitted, the default configuration from the
+       <span class="codefrag">map:components</span> section is used.
+     </p>
+   
+<h2>FOP Serializer</h2>
+<p>Relative paths in FOP serializer's <span class="codefrag">&lt;user-config&gt;</span> are now resolved
+      relatively to the directory that contains the sitemap.</p>
+<p>All Cocoon URIs are supported too.</p>
+   
+<h2>Sitemap components</h2>
+<p>Some of the sitemap components have been removed from Cocoon sources, others were renamed.
+      If you have the old declaration in your sitemap, you will get
+      <span class="codefrag">ClassNotFoundException</span>s. Trial and error will probably be the fastest way for
+      removing them and getting a clean and working sitemap. Hopefully you are not using one of the
+      removed components. The following components are known to be removed or renamed:</p>
+<ul>
+     
+<li>
+      
+<span class="codefrag">o.a.c.XTTransformer</span> - use the TraxTransformer instead.
+     </li>
+     
+<li>
+      
+<span class="codefrag">o.a.c.webapps.authentication.selection.MediaSelector</span> - the full qualified class
+      name has changed to <span class="codefrag">o.a.c.webapps.session.selection.MediaSelector</span>.
+     </li>
+    
+</ul>
+   
+<h2>Error handling</h2>
+<p>The <span class="codefrag">map:handle-errors</span> section must now be a complete pipeline. This means the
+       old form</p>
+<pre class="code">
+    &lt;map:handle-errors&gt;
+      &lt;map:transform src="stylesheets/system/error2html.xsl"/&gt;
+      &lt;map:serialize status-code="404"/&gt;
+    &lt;/map:handle-errors&gt;
+  </pre>
+<p>is no longer valid, because the generator is missing. Therefore you can now describe
+     explicitely the error handling. The replacement of the above looks like the following:</p>
+<pre class="code">
+    &lt;map:handle-errors&gt;
+      &lt;map:generate type="notifying"/&gt;
+      &lt;map:transform src="stylesheets/system/error2html.xsl"/&gt;
+      &lt;map:serialize status-code="404"/&gt;
+    &lt;/map:handle-errors&gt;
+  </pre>
+<p>For a more detailed example have a look into the default sitemap delivered with Cocoon
+       sources or read the
+       <a href="../userdocs/concepts/errorhandling.html">documentation on error handling</a>.
+     </p>
+  
+  
+<h1>Namespace changes</h1>
+    
+<p>
+      In order to have consistent namespaces, some transformers and generators
+      (listed below) use new namespaces. If you use any of these components, you
+      will need to use the new namespaces.
+    </p>
+    
+<h2>Request Generator</h2>
+<p>RequestGenerator changed its namespace from
+      <span class="codefrag">http://xml.apache.org/cocoon/requestgenerator/2.0</span> to
+      <span class="codefrag">http://apache.org/cocoon/request/2.0</span>.
+    </p>
+    
+<h2>I18nTransformer</h2>
+<p>The I18nTransformer supports both
+         <span class="codefrag">http://apache.org/cocoon/i18n/2.0</span> and
+         <span class="codefrag">http://apache.org/cocoon/i18n/2.1</span> namespace.</p>
+  
+  
+<h1>Changes in logging interfaces require recompilation</h1>
+    
+<p>
+       Due to some interface changes in the Cocoon logging components, custom java
+       components (generators, transformers or actions for example) compiled for Cocoon
+       2.0.x will not run under Cocoon 2.1 unless recompiled.</p>
+       
+<p>It's also advisable to change your implementations from using <em>Loggable</em>
+         to <em>LogEnabled</em> when it comes to logging in your components.
+       </p>
+  
+  
+<h1>Components</h1>
+   
+<p>
+    The Cocoon architecture has changed significantly. However, great care has been
+    taken to preserve backwards compatibility.
+   </p>
+   
+<h2>Cocoon Configuration (cocoon.xconf)</h2>
+<p>In order to reflect the new version, the version information in the <em>cocoon.xconf</em>
+       has changed from <em>2.0</em> to <em>2.1</em>.
+    </p>
+<p>To update <em>cocoon.xconf</em>, we recommend that you start with the new cocoon.xconf from V2.1 and
+       incorporate your changes in it, instead of trying to migrate your old configuration file.</p>
+<p>The SAXConnectors have been removed, so if you upgrade manually you have to remove
+        the <em>sax-connectors</em> configuration from <em>cocoon.xconf</em>.</p>
+   
+<h2>Source Resolver</h2>
+<p>
+      Every sitemap component gets a SourceResolver from the sitemap processor.
+      For all other components that need access to a SourceResolver, the SourceResolver 
+      is now an Avalon component that can be accessed using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em>.
+      The package name of the component is <em>org.apache.excalibur.source</em>.
+    </p>
+   
+<h2>XSLT Processor</h2>
+<p>There are some issues related to JDK 1.4.</p>
+<h3>XML/XSLT with JDK 1.4</h3>
+<p>Another serious issue is the presence of the Xalan and Xerces
+       package in the JDK 1.4. For general information on this please read the
+       <a class="external" href="http://xml.apache.org/xalan-j/faq.html#jdk14">Xalan FAQ</a> and our own
+       <a class="external" href="http://wiki.apache.org/cocoon/EndorsedLibsProblem">EndorsedLibsProblem</a>
+       wiki page.
+      </p>
+<p>
+       Basically, you have to update your libraries in the endorsed dirs of the JDK
+       or the servlet containers with every new version of Xalan and Xerces delivered with Cocoon.
+       Strange errors can occur if you have different versions of these packages in the
+       classpath (independent of those in the JDK).
+      </p>
+   
+<h2>XML Parser</h2>
+<p>The XML parser component has been moved to Excalibur.
+     In cocoon.xconf, the hint name has therefore changed from <em>parser</em> to
+     <em>xml-parser</em>. The configuration has not changed, so changing the hint
+     names is sufficent.</p>
+<p>Java code should not use
+      <em>org.apache.cocoon.components.parser.Parser.ROLE</em> anymore; use
+      <em>org.apache.excalibur.xml.sax.SAXParser.ROLE</em> instead.
+    </p>
+   
+<h2>XML Entity Resolver</h2>
+<p>Similarly, the XML entity resolver component has been moved to Excalibur.
+     In cocoon.xconf the hint name has therefore changed from <em>resolver</em> to
+     <em>entity-resolver</em>. The configuration has not changed, so changing the hint
+     names is sufficent.</p>
+<p>Java code should not use
+      <em>org.apache.cocoon.components.resolver.Resolver.ROLE</em> anymore; use
+      <em>org.apache.excalibur.xml.EntityResolver.ROLE</em> instead.
+    </p>
+<p>The default entities (DTDs, entity sets, etc.) have moved to the
+     WEB-INF/ directory.
+    </p>
+   
+<h2>Caching</h2>
+<p>Although the basic caching mechanism is still the same (each sitemap component
+       in the pipeline is queried), the interface for a component have been
+       improved as well.</p>
+<p>The old interface <em>Cacheable</em> is deprecated in favour of the new
+      <em>CacheableProcessingComponent</em> interface. The basic behaviour of this
+      interface has been preserved, however the method names and the signatures
+      have changed a little bit.
+      </p>
+<p>Some other interfaces, like the validity of the cached information has
+      moved to the source packacke in Avalon Excalibur.</p>
+<p>The old interfaces are still support but deprecated, so it's advisable to
+      update your components. However, you can support both interfaces at the
+      same time, making your component runable in old and new Cocoon installations
+      at the same time.</p>
+   
+<h2>Stores</h2>
+<p>The Store and StoreJanitor components and implementations have been moved to
+       Avalon Excalibur.</p>
+<p>To make upgrading easier, the class attributes of the store janitor
+       component have been removed in <em>cocoon.xconf</em> as the class names have changed.
+       The <em>cache-transient</em> and <em>cache-persistent</em> components do
+       not exist anymore, so any reference to them must be removed from cocoon.xconf.
+       Use the <em>persistent-store</em> and <em>transient-store</em> components instead.
+    </p>
+<p>In general the package names changed from <em>org.apache.cocoon.components.store</em>
+       to <em>org.apache.excalibur.store</em> (and <em>org.apache.excalibur.store.impl</em>). So
+       if you have custom java code using these components, you have to change
+       your imports.</p>
+<p>The roles <em>PERSISTENT_CACHE</em> and <em>TRANSIENT_CACHE</em> have been renamed to
+       <em>PERSISTENT_STORE</em> and <em>TRANSIENT_STORE</em>. The hold() method has been removed
+       from the Store interface.</p>
+   
+<h2>SAXConnectors, Stream and Event Pipeline</h2>
+<p>This is the only real incompatible change (But don't panic, this will
+       not affect you, or maybe just a little bit..).
+    </p>
+<p>
+       The internal architecture of Cocoon
+       has changed: previously, the processing pipeline - consisting of
+       a generator, the transformers and a serializer - was represented by two components,
+       called <em>stream</em> and <em>event pipeline</em>.</p>
+<p>For a simpler architecture, enhanced functionality and improved performance,
+       these components have been combined into one: the <em>processing pipeline</em>.
+       The <em>SAXConnectors</em>, which were rarely used, have been removed
+       to avoid overcomponentization.</p>
+   
+<h2>File Upload</h2>
+<p>The class name for file upload has changed from <em>org.apache.cocoon.components.request.multipart.FilePart</em> to
+        <em>org.apache.cocoon.servlet.multipart.Part</em>, and the <em>getFilePath()</em> has been renamed
+        <em>Part.getUploadName()</em>.
+     </p>
+   
+<h2>RequestLifeCycleComponent</h2>
+<p>If you are using the marker interface <em>RequestLifeCycleComponent</em> for your
+    own components, you have to make sure that your implementations still implement
+    the <em>Component</em> interface. The <em>RequestLifeCycleComponent</em> does no
+    longer extend the <em>Component</em> interface, so you have to declare it in your
+    own components together with <em>RequestLifeCycleComponent</em>. Otherwise you
+    will get a <em>ClassCastException</em> as soon as you access your component.</p>
+  
+  
+<h1>Components from the scratchpad</h1>
+    
+<p>Cocoon 2.0.x had some components in the scratchpad area that have now moved into
+       the main trunk as blocks. With this move some things have changed.
+    </p>
+    
+<h2>Session, Authentication and Portal</h2>
+<p>The session framework (sunShine), the authentication framework (sunRise)
+         and the portal framework (sunSpot) are now blocks (session-fw, authentication-fw
+         and portal-fw).
+      </p>
+<p>The <em>sunShine transformer</em> has been renamed to <em>session transformer</em>.
+        All sitemap components starting with <em>sunrise-</em> have been changed to
+        start now with <em>auth-</em>. The <em>sunrise-auth</em> action has been
+        renamed to <em>auth-protect</em>.
+      </p>
+<p>
+      The transformer namespace has changed from <em>http://cocoon.apache.org/sunshine/1.0</em>
+      to <em>http://apache.org/cocoon/session/1.0</em> and the context names have changed
+      from <em>sunshine</em> to <em>session</em> and from <em>sunrise</em> to
+      <em>authentication</em>.
+      </p>
+  
+ 
+</body>
+</html>

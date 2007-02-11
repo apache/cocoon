@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XML Searching</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Search resources in Apache Cocoon" name="DC.Subject">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="Jeremy Quinn" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Introduction</h1>
+      
+<p>
+        This document describes indexing, and searching XML documents
+        in Apache Cocoon.
+      </p>
+      
+<p>
+        Indexing is the process of fetching XML documents from an Apache Cocoon
+        instance, and building an index file.
+        Searching is the process of querying the once built index.
+      </p>
+      
+<p>
+        See also Wiki: 
+        <a class="external" href="http://wiki.apache.org/cocoon/LuceneIndexTransformer">LuceneIndexTransformer</a>
+      
+</p>
+    
+ 
+    
+<h1>Decomposition of XMLSearching</h1>
+      
+<p>
+        The indexing process is split up into crawling, fetching URL resource, 
+        and generating the index.
+      </p>
+      
+<p>
+        The searching process is split up into searching, 
+        and feeding search result into the
+        Apache Cocoon pipeline.
+      </p>
+      
+<h2>Crawling</h2>
+<p>
+          The crawling process is specified by  
+        </p>
+<ol>
+          
+<li>Base URL to start crawling from</li>
+          
+<li>Included, and excluded URLs</li>
+          
+<li>Cocoon view to use for requesting links from an XML resource</li>
+        
+</ol>
+<p>
+          Specifying the base URL determines the protocol for fetching XML resources.
+          The  implementation offers to specify <span class="codefrag">http:</span> URLs, 
+          crawling an Apache Cocoon instance deployed in a servlet-engine.
+          Alternatively you may specify an URI, e.g.: <span class="codefrag">/documents/index.html</span>,
+          offering to crawl the local Apache Cocoon instance only, either
+          servlet-deployed, or in commandline-mode.
+        </p>
+      
+<h2>Fetching URL resource</h2>
+<p>
+          This processing step fetches the URL resource from Apache Cocoon.
+        </p>
+<p>
+          Apache Cocoon offers the feature of views.
+          This feature is used to fetch the 'bare' content of an URL.
+        </p>
+<p>
+          The crawling component described above is used by the this processing step
+          to retrieve a link of an XML document. 
+          The link name is augmented by a cocoon view name for fetching the XML resource.
+        </p>
+<p>
+          The Avalon component <span class="codefrag">CocoonCrawler</span> defines the interface
+          of a crawler.
+        </p>
+<p>
+          The Avalon component <span class="codefrag">SimpleCocoonCrawlerImpl</span> is the implementation. 
+          It can be configured to use a specific view, or default to the 'content' view.
+        </p>
+      
+<h2>Generating index</h2>
+<p>
+          A xml resource is fed into a indexing engine.
+          Generating an index specifies which elements of an XML resources
+          should get indexed, how the elements are stored in the index.
+          Moreover the physical file location of the index is specified by
+          this processing step.
+        </p>
+<p>
+          The current implementation splits up an XML resource the following way:
+        </p>
+<ul>
+          
+<li>Use an Lucene Analyzer for splitting up text</li>
+          
+<li>Each XML element is indexed using its name as Lucene field name.</li>
+          
+<li>Each XML attribute is indexed using its element name and the attribute name
+            as field name. An attribute has following field name 
+            <span class="codefrag">{element-name}@{attribute-name}</span>.
+          </li>
+          
+<li>XML elements that match the names you configured in cocoon.xconf are added as stored fields.</li>
+        
+</ul>
+<p>
+          The Avalon component <span class="codefrag">LuceneCocoonIndexer</span> defines the interface
+          of an indexer.
+        </p>
+<p>
+          The Avalon component <span class="codefrag">LuceneXMLIndexer</span> defines an interface
+          for building an lucene index from an XML document. It uses an SAX content handler
+          for parsing an XML document, and generating Lucene fields, the current 
+          index layout is implemented by <span class="codefrag">SimpleLuceneXMLIndexerImpl</span>,
+          and <span class="codefrag">LuceneIndexContentHandler</span>.
+        </p>
+
+      
+<h2>Searching</h2>
+<p>
+          This process uses a search engine for querying the index. 
+          The input of this process is a search query string, the result is the
+          search result of the search engine.
+        </p>
+<p>
+          The Avalon component <span class="codefrag">LuceneCocoonSearcher</span> defines an interface
+          for searching a Lucene index.
+        </p>
+      
+<h2>Feeding Search Results</h2>
+<p>
+          This is the final step for presenting information stored in the index.
+          The result of search engine is feed into the Cocoon processing pipeline.
+        </p>
+<p>
+          A GUI for the searching process may be developed using any
+          java enabled script language, like JSP, or XSP. 
+          Moreover a sitemap generator component <span class="codefrag">SearchGenerator</span>
+          is provided which transforms the search result to XML, and feeds it
+          into the Cocoon processing pipeline.
+        </p>
+    
+    
+    
+<h1>Interdependencies</h1>
+      
+<p>
+        As both Avalon components <span class="codefrag">LuceneXMLIndexer</span>, and 
+        <span class="codefrag">LuceneCocoonSearcher</span> may use the same Lucene index, you must
+        take care of the Lucene index structure in both components.
+      </p>
+      
+<p>
+        The current implementation uses following Lucene index layout
+      </p>
+      
+<ul>
+        
+<li>Lucene field <span class="codefrag">body</span> indexed field of the pure text of an XML document.
+          The <span class="codefrag">body</span> field is the default field name for searching. Thus the
+          query-string <span class="codefrag">foo</span>, and <span class="codefrag">body:foo</span> is equivalent.
+        </li>
+        
+<li>Each XML element generates a Lucene field having the same name as the XML element name.
+          For example searching for occurences of <span class="codefrag">Cocoon</span> inside of an XML abstract
+          element, use query-string <span class="codefrag">abstact:Cocoon</span>.
+        </li>
+        
+<li>Each XML attribute generates a Lucene field having the name
+          <span class="codefrag">{element-name}@{attribute-name}</span>. 
+          For example searching for occurrences of <span class="codefrag">Cocoon</span> inside of an XML title attribute
+          of s1 element, use query-string <span class="codefrag">s1@title:Cocoon</span>.
+        </li>
+        
+<li>
+          The Lucene field <span class="codefrag">url</span> stores the URI of the indexed document. As
+          all fields described above are only indexed information, and no XML document 
+          is stored inside the Lucene index, this field is the only reference to the 
+          XML document resource.
+        </li>
+        
+<li>
+          The Lucene field <span class="codefrag">uid</span> stores an unique id for implementing updating
+          the index. This field is used for checking if the XML resource is newer than
+          the information stored in the Lucene index.
+        </li>
+        
+<li>
+          Further Stored fields can be added, depending on your configuration. 
+          Stored fields are returned in the hits found by the engine.
+        </li>
+      
+</ul>
+    
+      
+    
+<h1>Configuration</h1>
+      
+<p>
+        Configuring the indexing, and searching Avalon components is specified
+        in the <span class="codefrag">cocoon.xconf</span> file.
+      </p>
+      
+<h2>example</h2>
+<p>This would set up the crawler to crawl all of your site, except pages in the 'search' section, also we are telling the crawler to use a non-standard cocoon-view for getting the links in documents, called <span class="codefrag">my-search-links</span>. </p>
+<pre class="code">
+&lt;cocoon-crawler logger="core.search.crawler"&gt;
+  &lt;exclude&gt;.*/search/.*&lt;/exclude&gt;
+  &lt;link-view-query&gt;cocoon-view=my-search-links&lt;/link-view-query&gt;
+&lt;/cocoon-crawler&gt;
+</pre>
+<p>This tells the indexer to use the non-standard 'my-search-content' view to retrieve the content for indexing. Also it tells the indexer that we would like to have any <span class="codefrag">title</span> or <span class="codefrag">subtitle</span> XML elements in the document added to the index as stored fields, so they can be retrieved and displayed to the user with any hits they get.</p>
+<pre class="code">
+&lt;lucene-xml-indexer logger="core.search.lucene"&gt;
+  &lt;store-fields&gt;title, subtitle&lt;/store-fields&gt;
+  &lt;content-view-query&gt;cocoon-view=my-search-content&lt;/content-view-query&gt;
+&lt;/lucene-xml-indexer&gt;
+</pre>
+      
+<p>
+        Setting up the sitemap component SearchGenerator takes place in the
+        <span class="codefrag">sitemap.xmap</span> file.
+      </p>
+      
+<h2>example</h2>
+<p>This would generate a document from a search, getting the query and other information from request parameters.</p>
+<pre class="code">
+&lt;map:generate type="search"/&gt;
+</pre>
+<p>This would generate a document from a search, getting the query from the sitemap parameter '1' and other information from request parameters.</p>
+<pre class="code">
+&lt;map:generate type="search"&gt;
+  &lt;map:parameter name="query" value="{1}"/&gt;
+&lt;/map:generate&gt;  
+</pre>
+    
+    
+    
+<h1>Implementation notes</h1>
+      
+<p>
+        The package <span class="codefrag">org.apache.cocoon.components.search</span> holds
+        all searching relevant components.
+        The current implementation uses
+        <a class="external" href="http://jakarta.apache.org/lucene">Jakarta Lucene</a>
+        as its indexing, and searching engine.
+      </p>
+      
+<p>
+        SearchGenerator is sitemap generator and is available in
+        the package <span class="codefrag">org.apache.cocoon.generation</span>.
+      </p>
+      
+<p>
+        The package <span class="codefrag">org.apache.cocoon.components.crawler</span> holds
+        all crawling relevant sources.
+      </p>
+    
+    
+    
+<h1>WebApp Sample usage</h1>
+      
+<p>
+        The Cocoon sample webapplication has a link for generating,
+        an index of the Cocoon documentation, and searching the 
+        Cocoon documentation.
+      </p>
+      
+<p>
+        The following list describes step by step how to make use of
+        webapp sample page:
+      </p>
+      
+<ol>
+        
+<li>Go to the page "Search the docs".
+        </li>
+        
+<li>Create an index, follow the link "create".
+          Creating an index may take some time, as the implementation
+          accesses the XML resources via http: protocol.
+        </li>
+        
+<li>Next you may query the index, by following the 
+          link "XSP", or "Cocoon Generators". Typing in a query will
+          result in the table of hits orderer by relevance.
+        </li>
+      
+</ol>
+      
+<p>
+        As a result of the creation step, there should exist an
+        Lucene index in the directory <span class="codefrag">index</span> 
+        below the temporary working directory of the servlet engine.
+      </p>
+      
+<p>
+        The "XSP" link for searching shows an XSP implementation of
+        invoking the Avalon component <span class="codefrag">CocoonSearch</span>. 
+        Using this approach gives fine grained control
+        over the searching process.
+      </p>
+      
+<p>
+        The "Cocoon Generator" links defines in the sitemap using
+        the SearchGenerator, and transforming the XML search result to HTML.
+        This approach tries to minimize your effort of using searching,
+        as you need to adapt the XSLT transformation step only to your
+        needs.
+      </p>
+    
+    
+<h1>Extending the Sample</h1>
+      
+<p>
+        It is easy to extend the search sample to display more information about the search hit than just the url of the resource.</p>
+      
+<p>In order to show, for example, the title and summary of a document, these first need to be added to the search index as 'Stored Fields'. Then when the documents are found during a search, that information is available to display, from the search engine itself.</p>
+      
+<p>First, decide which fields you want to store.</p>
+      
+<p>Decide where is the best place in your pipeline for content to be extracted for indexing, it might not always be the default view 'content'.</p>
+      
+<p>Next, decide if you need an XSLT transformation on your documents, to make them more suitable for indexing. This may include deciding on one of several titles in your document, what part of your document gets added to the summary etc. You might want to strip certain tags out because you don't want their content searched. You might be able to raise hit scores on documents by re-arranging content, or keeping larger amounts of content in fewer tags.</p>
+      
+<p>Now you tell the search engine (in cocoon.xconf) which tags you'd like storing.</p>
+
+<pre class="code">
+&lt;lucene-xml-indexer logger="core.search.lucene"&gt;
+  &lt;store-fields&gt;title, summary&lt;/store-fields&gt;
+  &lt;content-view-query&gt;cocoon-view=search-content&lt;/content-view-query&gt;
+&lt;/lucene-xml-indexer&gt;
+</pre>
+      
+<p>This example tells the indexer to store any tags called 'title' or 'summary' it finds in your documents. It also tells the indexer to get it's content from the view called 'search-content'.</p>
+
+<pre class="code">
+&lt;map:view from-label="search" name="search"&gt;
+  &lt;map:transform src="search-filter.xsl"/&gt;
+  &lt;map:serialize type="xml"/&gt;
+&lt;/map:view&gt;
+</pre>
+      
+<p>This is how you might setup that custom view in your sitemap. You would then add a label attribute <span class="codefrag">label="search"</span> to the appropriate place in your pipelines. See the section on views for more information.</p>
+      
+<p>After you have re-indexed the site, when you do searches, the new fields will be available in the XML output by Lucene, in the form of a <span class="codefrag">search:field</span> tag, you will need to modify your XSLT that displays the hits to show this.</p>
+
+<pre class="code">
+&lt;xsl:template match="search:hit"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;
+      &lt;xsl:value-of select="format-number( @search:score, '### %' )"/&gt;
+    &lt;/td&gt;
+    &lt;td&gt;
+      &lt;xsl:value-of select="@search:rank"/&gt;
+    &lt;/td&gt;
+    &lt;td&gt;
+      &lt;a target="_blank" href="{@search:uri}"&gt;
+        &lt;xsl:attribute name="title"&gt;
+          &lt;xsl:value-of select="search:field[@search:name='summary']"/&gt;
+        &lt;/xsl:attribute&gt;
+        &lt;xsl:value-of select="search:field[@search:name='title']"/&gt;
+      &lt;/a&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/xsl:template&gt;
+</pre>
+
+<p>This is how the search sample's xslt might be changed. All the fields you made for each document are available to you as <span class="codefrag">search:field</span> elements in the <span class="codefrag">search:hit</span> elements. The code above assumes you only had one 'title' and one 'summary' per document.</p>
+    
+    
+<h1>Summary</h1>
+      
+<p>
+        This document gives an overview of the components for
+        using an indexing, and searching engine in Cocoon.
+        It described the component decomposition of the Cocoon
+        XMLSearch subsystem.
+      </p>
+    
+  
+</body>
+</html>

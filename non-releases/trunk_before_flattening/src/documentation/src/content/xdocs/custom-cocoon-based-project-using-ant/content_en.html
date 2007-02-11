@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<html>
+<head>
+<title>Building your own Cocoon project using Ant</title>
+</head>
+<body>
+<h1>Building your own Cocoon project using Ant</h1>
+<p>
+Now that you've studied Cocoon and you are convinced it is worth 
+spending your time on, you want to try your hand at your own project.
+There are several ways to start your own project. This is just one of them.
+</p>
+<p>
+The following HOW-TO helps you to create your own project in a subdirectory of the Cocoon root. 
+It also has its own subsitemap.
+The main advantage of this configuration is the fact that you can leave the original Cocoon 
+root sitemap intact. 
+Since it is set up in a pretty generic way and accommodating most types of generators, 
+transformers and serializers, it provides a working environment that you don't have to understand 
+thoroughly before you are able to use it. Instead, you can work the other way around. Once you 
+understand a part of the root sitemap you can tune it to your needs.
+</p>
+<p>
+Another advantage of this configuration is the strict separation of the files that are part of 
+Cocoon and those that are part of your project. The separation allows you to update Cocoon without 
+overwriting vital modifications. Or you can develop your webapp against different Cocoon 
+distributions.
+<br/>
+<b>Note:</b> This configuration will work with Cocoon 2.1.X distributions and maybe more recent.
+It will probably be more difficult to get this working with an older distribution.
+</p>
+
+<h2>Initial setup</h2>
+<p>
+The following steps explain how to set up this configuration. These steps will only be performed once. 
+You will work from the commandline.
+</p>
+<ol>
+<li>Get the Cocoon distribution. You can either download a release build or dive in and get the latest HEAD from SVN.</li>
+<li>Make a separate project directory and put <i>build-cocoon-targets.xml</i> in this directory.</li>
+<li>&quot;Seed&quot; the project by running the following on the commandline:
+<pre>ant -f build-cocoon-targets.xml -Dcocoon.distro.home=/path/to/your/cocoon/distribution</pre></li>
+<p>
+<b>Note:</b> Either you have ANT_HOME set to the appropriate directory or you use the full path to Ant.<br/>
+<b>Note:</b> The <i>cocoon.distro.home</i> is now set in <i>user.properties</i>.<br/>
+<b>Note for Windows users:</b> set the slashes as forward slashes.</p>
+<li>Customize the <i>src/cocoon/local.build.properties</i> and remove the 
+path variables in this file. Ant cannot substitute variables in property files, 
+so ${...} variables would cause build errors. 
+Remove the sections <i>build, build webapp, src, standalone demo, dir layout, tools, 
+deprecated, ide, lib, dist, site, legal, gump</i>, so that there are no more ${...} and variables in this file.</li>
+<li>Exclude all blocks you don't need in the top part of <i>local.build.properties</i>.</li>
+<li>Exclude the samples and documentation too if you don't need them. The build process is time consuming.</li>
+<li>Run the following command from the commandline:
+<pre>ant cocoon:get</pre>
+<b>Note:</b>This will only be done when changing the distribution or the settings in <i>local.build.properties</i>.</li>
+
+<li>Run the following command from the commandline:
+<pre>ant webapp</pre>
+This builds the Java classes and copies the entire project to the tools tree.<br/>
+<b>Note:</b> classes are built with <i>debug</i> flag on.</li>
+<li>Run the following command from the commandline:
+<pre>ant cocoon:run</pre>
+This starts Jetty with Cocoon and your project in it.<br/>
+<b>Note:</b> Default Cocoon is configured to automatically reload files that are changed. 
+This way Jetty can keep running while you develop your project. You only have to restart when the previous step
+has done any of the following:
+<ul>
+<li>changed any of the libraries,</li>
+<li>compiled java classes.</li>
+</ul>
+</li>
+<li>Start up your favourite browser and enter the following:
+<pre>http://localhost:8888/</pre>
+You should now see the homepage of Cocoon.</li>
+<li>Check your (now still empty) project in in your CVS.</li>
+</ol>
+<p>
+This concludes the initial setup.
+</p>
+<h3>Example</h3>
+<p>If we execute the above steps on a Windows machine with the Cocoon distribution in 
+/SVN/cocoon and your project in /projects/myprojects, the 
+commands and the resulting information on your screen will look like this:
+</p>
+<pre>
+D:\projects>mkdir myproject
+
+D:\projects>copy build-cocoon-targets.xml myproject
+        1 file(s) copied.
+
+D:\projects>cd myproject
+
+D:\projects\myproject>\apache-ant-1.6.1\bin\ant -f build-cocoon-targets.xml -Dcocoon.distro.home=/SVN/cocoon
+Buildfile: build-cocoon-targets.xml
+
+seed-check:
+
+msg-seed-localprops:
+
+seed-dirs:
+    [mkdir] Created dir: D:\projects\myproject\src\cocoon
+    [mkdir] Created dir: D:\projects\myproject\src\cocoon\webapp
+    [mkdir] Created dir: D:\projects\myproject\src\cocoon\xconf
+    [mkdir] Created dir: D:\projects\myproject\tools\cocoon
+    [mkdir] Created dir: D:\projects\myproject\tools\cocoon\webapp
+    [mkdir] Created dir: D:\projects\myproject\src\java
+    [mkdir] Created dir: D:\projects\myproject\lib
+
+seed-localprops:
+
+msg-seed-cvsignore:
+
+seed-cvsignore:
+
+msg-seed-userprops:
+
+seed-userprops:
+
+msg-seed-build:
+
+seed-build:
+     [echo] Creating build.xml...
+
+seed:
+     [echo] Done.
+     [echo]
+     [echo]     The directory src/cocoon/webapp is created to hold your cocoon
+     [echo]     webapp resources.
+     [echo]     The directory src/cocoon/xconf is created to hold XConfPatch files
+     [echo]     to (optionally) modify the cocoon.xconf log.xconf web.xml and
+     [echo]     (root) sitemap.xmap
+     [echo]
+     [echo]     From here:
+     [echo]     ---------
+     [echo]     You should now edit the file ./src/cocoon/local.build.properties to select
+     [echo]     only those optional components of Cocoon that your project needs.
+     [echo]     IMPORTANT: Remove the path-entries from that file!
+     [echo]
+     [echo]     The build.xml can freely be extended for your project needs.
+     [echo]
+     [echo]     To build a fresh Cocoon base for this project
+     [echo]     (when you updated the distro pointed to by -Dcocoon.distro.home)
+
+     [echo]         > ant cocoon:get
+     [echo]
+     [echo]     To blend in your own project resources and classes:
+     [echo]         > ant webapp
+     [echo]
+     [echo]     To test-run using the Jetty container:
+     [echo]         > ant cocoon:run
+     [echo]
+
+BUILD SUCCESSFUL
+Total time: 1 second
+D:\projects\myproject>
+</pre>
+
+<h2>Directory layout</h2>
+<table style="border: 1px solid black">
+<tr><td><img src="files/dirlayout.png" /><br/>
+<i>Figure 1: Directory layout</i>
+</td></tr></table>
+<p>
+In figure 1 you can see the resulting directory layout. We'll discuss what each of these entries contain:
+<ul>
+<li><b>lib</b> This directory contains project dependant jars. Not the Cocoon jars, 
+since they are distribution dependent.</li>
+<li><b>src/java</b> Your own Java classes and components go here.</li>
+<li><b>src/cocoon/webapp</b> Add a directory &lt;yourProjectName&gt; here. This contains your
+Cocoon related files such as the sitemap, XSL and XML files.</li>
+<li><b>src/cocoon/xconf</b> Your modifications to the Cocoon configuration files go here.<br/>
+<b>Note:</b> See <!--<a href="xpatchusage">-->xpatchusage<!--/a--> for an explanation of how to create these modifications.
+</li>
+<li><b>tools/cocoon/webapp</b> This will contain the resulting structure for Jetty to display. 
+The Cocoon jars, copied from the Cocoon distribution are put here too in <i>WEB-INF/lib</i>.</li>
+<li><b>build.xml</b> This will be your Ant buildfile. Modify it to your needs.</li>
+<li><b>user.properties</b> and <b>src/cocoon/local.build.properties</b> contain some variables
+such as cocoon.distro.home</li>
+</ul> 
+<h2>During development</h2>
+<p>
+The <i>build.xml</i> contains several useful targets, which we will explain below. <b>Note</b> that
+this file includes <i>build-cocoon-targets.xml</i>. Some of the targets below are in that file, so
+don't delete it!
+</p>
+<ul>
+<li><b>cocoon:get</b> Get Cocoon into your project. This target will compile the Cocoon 
+distribution using your <i>local.build.properties</i> and put the result in 
+<i>tools/cocoon/webapp</i>.</li>
+<li><b>cocoon:unpatch</b> During <i>cocoon:get</i> the original versions of vital Cocoon configuration
+files such as <i>sitemap.xmap, cocoon.xconf, web.xml</i> and <i>logkit.xml</i> are copied to
+<i>tools/cocoon/unpatched</i>. This target allows you to copy the original versions to their
+respective locations. Very convenient when you changed an xconf file that cannot be applied.</li>
+<li><b>webapp</b> Compile the Java classes in <i>src/java</i> and copy the relevant files in the
+source tree to the appropriate places under <i>tools/cocoon</i>. It also modifies the Cocoon
+configuration files using the xconf files.</li>
+<li><b>cocoon:run</b> Start up Jetty with your webapp. Your project can be reached under
+<pre>http://localhost:8888/yourProjectName</pre></li>
+</ul>
+
+<p>
+The <i>build-cocoon-targets.xml</i> file can be found <a href="files/build-cocoon-targets.xml">here</a>. <br/>
+<i>Credits go to Marc Portier for the content and the Ant build script.</i>
+</p>
+
+<h2>ToDo</h2>
+<ul>
+<li>Use Cocoon 2.2 import mechanism</li>
+<li>figure out the difference between the Ant 1.5 setup and the Ant 1.6 setup. OTOH: is this still necessary?</li>
+<li>check English (grammar, style, US vs EN)</li>
+<li>check if all is (still) accurate -&gt; it was as far as I can tell. </li>
+<li>Refer to this for adding it to Eclipse?</li>
+<li>create xpatchusage documentation</li>
+</ul>
+
+</body>
+</html>
+

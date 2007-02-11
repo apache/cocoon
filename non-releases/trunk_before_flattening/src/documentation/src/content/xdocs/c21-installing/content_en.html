@@ -1,0 +1,1242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Installing Apache Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Cocoon Developers" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Getting Apache Cocoon</h1>
+      
+<p>
+       You have three choices for getting Cocoon: you can either download
+       a stable release, or you can download development snapshot, or you can
+       get the latest development version directly from the cvs repository.
+      </p>
+      
+<h2>Download a distribution</h2>
+<p>
+        You can simply download the latest official release from the
+        <a class="external" href="http://cocoon.apache.org/mirror.cgi">Cocoon distribution</a>
+        directory.
+       </p>
+      
+<h2>Download a development snapshot</h2>
+<p>
+        You also can download one of the development snapshots from the
+        <a class="external" href="http://cocoon.apache.org/mirror.cgi#nightly">CVS snapshots</a>
+        directory.
+       </p>
+      
+<h2>Step-by-step cvs instructions for Windows</h2>
+<p>See the Cocoon document
+         <a class="external" href="http://cocoon.apache.org/community/contrib.html">Contrib</a>
+         for starting tips.
+        </p>
+<ol>
+          
+<li>Download a recent
+            <a class="external" href="http://sourceforge.net/projects/cvsgui/">WinCVS</a>
+            (1.2 or above);
+          </li>
+          
+<li>Install it;</li>
+          
+<li>Start it;</li>
+          
+<li>Click on admin-&gt;preferences;</li>
+          
+<li>In "Enter the CVSROOT:" enter
+            ":pserver:anoncvs@cvs.apache.org:/home/cvspublic" (without quotes);</li>
+          
+<li>In "Authentication:" choose "'passwd' file on the cvs server";</li>
+          
+<li>Click "Ok";</li>
+          
+<li>Click admin-&gt;login;</li>
+          
+<li>When asked for the password: answer "anoncvs" (without quotes);</li>
+          
+<li>Click "create-&gt;checkout module";</li>
+          
+<li>Module name and path on the server is "cocoon-2.1" (no quotes);</li>
+          
+<li>Choose a dir to put the source code in;</li>
+          
+<li>Go to the "Checkout-options" tab and select "By revision/tag/branch"
+              and enter "HEAD";</li>
+          
+<li>Click "Ok";</li>
+          
+<li>If everything goes well, messages will start to appear in the log
+            window;</li>
+          
+<li>Wait until you see "*****CVS exited normally with code 0*****" in the
+            log window;</li>
+          
+<li>The Cocoon source is now on your harddrive.</li>
+        
+</ol>
+      
+<h2>Step-by-step cvs instructions for Unix</h2>
+<ol>
+          
+<li>Start the shell of your choice.</li>
+          
+<li>Enter "cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic login".</li>
+          
+<li>When asked for the password: answer "anoncvs".</li>
+          
+<li>Enter "cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic -z3 checkout
+            -r HEAD cocoon-2.1". This will create a directory called "cocoon-2.1" where the
+            Cocoon2 source will be stored.</li>
+          
+<li>Wait until cvs has finished.</li>
+          
+<li>The Cocoon source is now on your harddrive.</li>
+        
+</ol>
+<p>In case you want to update your Cocoon source tree to the
+          current version, change to the "cocoon-2.1" directory and
+          call "cvs -z3 update -d -P".</p>
+    
+
+    
+<h1>Configuring Environment</h1>
+      
+<h2>Set JAVA_HOME environment variable</h2>
+<p>Set the JAVA_HOME environment variable to point to the root directory of
+          the Java Development Kit installed on your machine. To do this simply type:</p>
+<pre class="code">
+[unix]  JAVA_HOME=/path/to/java/
+[win32] SET JAVA_HOME=c:\path\to\java
+        </pre>
+<p>Your mileage may vary, but you know how to setup environments, right?</p>
+
+      
+<h2>Java 1.4 configuration</h2>
+<p>Cocoon requires more recent versions of the Xerces and Xalan libraries
+          than those shipped with j2se 1.4. To override bundled libraries, follow
+          these steps:
+        </p>
+<ol>
+          
+<li>
+            Create <span class="codefrag">%JAVA_HOME%\jre\lib\endorsed</span> directory. (Tomcat users
+            use <span class="codefrag">%TOMCAT_HOME\common\endorsed</span> instead)
+          </li>
+          
+<li>
+            Copy <span class="codefrag">xercesXXX.jar</span>, <span class="codefrag">xalan-XXX.jar</span>,
+            and the <span class="codefrag">xml-apis.jar</span> from the
+            <span class="codefrag">.\lib\endorsed\</span> to the new directory created above.
+          </li>
+        
+</ol>
+<p>Due to changes in JDBC between JDK 1.3 and JDK 1.4, it is not possible
+           to use Cocoon built on JDK 1.3 with JDK 1.4 when it comes to database
+           connections. Make sure you prepare cocoon with a JDK that matches the
+           one you will deploy on.
+        </p>
+
+      
+<h2>JDK Dependency</h2>
+<p>Cocoon requires a Java compiler for installation and for running some
+        	components like XSP etc. For components, the default configuration of
+        	Cocoon does not use the compiler in JAVA_HOME, but a version shipped
+        	with Cocoon.
+        </p>
+<div class="note">You can configure which compiler Cocoon uses in WEB-INF/lib.
+        </div>
+      
+<div class="fixme">ghoward:
+      Is this still an issue?</div>
+
+      
+<h2>UNIX with X server</h2>
+<p>Cocoon is bundled with the <a class="external" href="http://xml.apache.org/batik/">Batik</a>
+          (SVG rasterization toolkit) to deliver SVG imaging capabilities. Batik uses Java
+          <span class="codefrag">java.awt</span> library, which (at least in Sun JDK before 1.4) requires
+          graphics display. This means that X server must be running and Cocoon should
+          have permission to connect to it.</p>
+<p>Easiest way to avoid X server connection problem (and to have mentioned permission)
+          is to install and run Cocoon and entire servlet engine of your choice under regular
+          user account.</p>
+<p>For security, and many other reasons, X server can be replaced by Xfvb
+          or PJA (alternative awt implementation).</p>
+<div class="note">Sun JDK 1.4 does not require graphics display anymore, but Java has to be
+          started with the argument <span class="codefrag">-Djava.awt.headless=true</span>,
+          and X libraries still must be installed.</div>
+<div class="fixme">ghoward:
+      Is this still an issue?</div>
+
+      
+<h2>Headless UNIX and PJA</h2>
+<p>If you are using unix with the Sun JDK 1.4, it can run in the
+          headless environment (but you still must have X libraries installed!)
+          when following option is provided on Java startup:</p>
+<pre class="code">-Djava.awt.headless=true</pre>
+<div class="note">If you use Tomcat, this can be done by setting environment variable
+          CATALINA_OPTS (Tomcat 4.x), or TOMCAT_OPTS (Tomcat 3.x):</div>
+<pre class="code">export CATALINA_OPTS='-Djava.awt.headless=true'</pre>
+<p>If you are using unix with the Sun JDK 1.3.1 or earlier, it's awt
+          implementation requires you to use X even if you aren't actually
+          displaying anything. One simple solution is to use a different
+          implementation of the awt.</p>
+<ol>
+          
+<li>From www.eteks.com you can get an awt replacement that doesn't need X:
+            <a class="external" href="http://www.eteks.com/pja/en/">http://www.eteks.com/pja/en/</a>.</li>
+          
+<li>Then add the following options to the Java command starting your container:
+          </li>
+        
+</ol>
+<pre class="code">
+-Xbootclasspath/a:/path/to/pja.jar
+-Dawt.toolkit=com.eteks.awt.PJAToolkit
+-Djava.awt.graphicsenv=com.eteks.java2d.PJAGraphicsEnvironment
+-Djava.awt.fonts=/usr/local/jdk/jre/lib/fonts/
+        </pre>
+<div class="note">If you use Tomcat, this can be done by setting environment variable
+          CATALINA_OPTS (Tomcat 4.x), or TOMCAT_OPTS (Tomcat 3.x):</div>
+<pre class="code">
+export CATALINA_OPTS='-Xbootclasspath/a:/path/to/pja.jar \
+    -Dawt.toolkit=com.eteks.awt.PJAToolkit \
+    -Djava.awt.graphicsenv=com.eteks.java2d.PJAGraphicsEnvironment \
+    -Djava.awt.fonts=/usr/local/jdk/jre/lib/fonts/'
+        </pre>
+    
+
+    
+<h1>Building Cocoon</h1>
+      
+<h2>Optional functionality</h2>
+<div class="note">This is an area that has changed significantly since 2.0</div>
+<h3>Blocks</h3>
+<p>Additional "components" in Cocoon 2.1 are now implemented using a partial
+            implementation of a concept called "blocks". Full support (planned for the
+            next release) will include hot-deployable services with java-like extension
+            and inheritance. For this release, blocks are implemented as self contained
+            units of code, samples, files and configuration. Most, if not all optional
+            features have been factored out into blocks and can be neatly included or
+            excluded as a unit.
+          </p>
+<p>Most blocks are configured by default to be included in the build, but can
+            be excluded using a <span class="codefrag">local.blocks.properties</span> file.
+          </p>
+<p>
+            Some blocks delivered with Cocoon require additional libraries which can not
+            be redistributed with Cocoon (e.g. the Php block). The documentation for
+            these should provide more information, and you should find a "mocks" directory
+            containing non-functional code provided merely to allow compilation.
+          </p>
+<h3>Optional Jars</h3>
+<p>Some additional libraries could not be factored ou 
+            into a block. For example, the Jakarta Commons HttpClient jar is used by
+            several different optional components, some not in blocks. If you determine
+            that one of these is not necessary for your build, you can eliminate it from
+            your build by removing its entry in lib/jars.xml and removing the jar from
+            lib/optional.
+          </p>
+<h3>Building a minimal Cocoon</h3>
+<p>By creating and editing local.build.properties and local.blocks.properties
+            you can remove any unnecessary features you desire.
+          </p>
+      
+<h2>Running the build</h2>
+<div class="note">This is an area that has changed significantly since 2.0</div>
+<p>Cocoon uses <a class="external" href="http://jakarta.apache.org/ant/">Jakarta Ant</a>
+          for the build and installation, and comes with a build script
+          ([unix]./build.sh, [win32] .\build.bat) that automates the process.
+        </p>
+<div class="note">If you want to use build.xml directly with your copy of Ant, please
+          run the build script at least once after every CVS checkout, to ensure that
+          extra initializations like jar copying are done correctly.
+        </div>
+<div class="note">The build script overrides the existing ANT_HOME variable.</div>
+<p>There are basically two options that can be set as parameters to
+          the script: <strong>targets</strong> and <strong>properties</strong>.
+        </p>
+<div class="note">The use of -D style properties as parameters to the build is deprecated.
+          Use the build and blocks properties files instead.</div>
+<h3>About build targets</h3>
+<p>Targets are the execution units available in
+            <a class="external" href="http://jakarta.apache.org/ant/">Ant</a> build files.</p>
+<p>Targets are specified by appending them to the script invocation:</p>
+<pre class="code">
+[unix]  ./build.sh target1 target2 ...
+[win32] .\build.bat target1 target2 ...
+          </pre>
+<h3>Cocoon build targets</h3>
+<p>The <strong>build.xml</strong> file comes with some basic
+            important targets. If no target is specified, the default one
+            is used (defined in build.xml).</p>
+<p>Cocoon targets place work files and results in a build directory
+            under the cocoon root. The only exception are the distribution targets
+            that build in a directory called dist.</p>
+<p>The key targets you will use most often are noted below. For a listing
+            of all available targets, run:</p>
+<pre class="code">
+[unix]  ./build.sh -projecthelp
+[win32] .\build.bat -projecthelp
+          </pre>
+<h4>build clean</h4>
+<p>Cleans the build directory. It is recommended to clean Cocoon
+              build directory every time you upgrade Cocoon, or add/remove
+              libraries from the <span class="codefrag">./lib/optional/</span>
+              directory, or change JDK version.
+            </p>
+<h4>build webapp [default]</h4>
+<p>Builds a Cocoon web application in build/webapp. This is the default target, so
+              running the build script with no arguments calls this target.
+            </p>
+<div class="note">For quick testing, a stripped down version of Jetty is included in the
+              distribution. After a <span class="codefrag">build webapp</span> Jetty can be launched by
+              <span class="codefrag">cocoon servlet</span> and Cocoon will be available at http://localhost:8888/.
+            </div>
+<h4>build war</h4>
+<p>Builds a Cocoon web application in build/webapp and packages it as a .war file.</p>
+    
+
+    
+<h1>Installing Cocoon</h1>
+      
+<p>In most servlet engines, this is just a matter of copying
+        the war file or webapp directory to a specific directory and the
+        engine will take care of installing it when restarted.</p>
+
+      
+<div class="note">If you are using JDK 1.4, be sure you have read and followed the
+	      "Java 1.4 configuration" information above.</div>
+      
+<p>If those simple instructions do not work as expected, you may find
+	      help in some of the container-specific notes below contributed by
+	      users:
+      </p>
+      
+<h2>Installing on Tomcat 3.3.X</h2>
+<p>This is a very easy installation.</p>
+<ol>
+          
+<li>
+            Build the Cocoon webapp as described above.
+          </li>
+          
+<li>
+            Copy <span class="codefrag">cocoon/build/cocoon/cocoon.war</span>
+            into <span class="codefrag">tomcat/webapps</span> directory.
+          </li>
+          
+<li>
+            Start Tomcat: Go to the <span class="codefrag">tomcat/bin</span> directory,
+            and run the startup script.
+          </li>
+          
+<li>
+            Open the Cocoon welcome page:
+            <span class="codefrag">http://localhost:8080/cocoon/</span>
+          
+</li>
+          
+<li>
+            Congratulations! You should see the Cocoon welcome page.
+          </li>
+        
+</ol>
+
+      
+<h2>Installing on Tomcat 3.2.X</h2>
+<div class="note">Cocoon requires Tomcat version 3.2 or greater. It wouldn't work
+        with Tomcat 3.1.X</div>
+<p>Tomcat currently uses a different version of the XML parser
+          than Cocoon. To get Cocoon to work, you need to perform the
+          following steps:</p>
+<ol>
+          
+<li>
+            
+<strong>Stop Tomcat</strong>
+            Go to the tomcat/bin directory, and run the shutdown script.
+          </li>
+          
+<li>
+            
+<strong>Delete tomcat/lib/jaxp.jar</strong>
+            Tomcat's jaxp.jar is 'sealed', and since xerces contains its
+            own implementation of the JAXP standard extension, Java
+            will fail to load xerces and report a 'Package Sealing Violation'
+            if both are in the classpath.
+          </li>
+          
+<li>
+            
+<strong>Rename tomcat/lib/parser.jar to tomcat/lib/zparser.jar</strong>
+            Tomcat's parser.jar contains older versions of some the same
+            XML APIS that Xerces uses, and these will prevent Xerces from
+            functioning properly if they appear before Xerces in the classpath.
+            Since Tomcat's startup scripts automatically load all the jar files
+            in tomcat/lib in name order, changing the name of the file causes it
+            to be loaded last in the classpath.
+          </li>
+          
+<li>
+            
+<strong>Copy the cocoon/lib/core/xerces-XXX.jar and cocoon/lib/core/xml-apis.jar
+            JAR files to tomcat/lib</strong>
+            Cocoon will now be able to see and use the correct XML libraries.
+          </li>
+          
+<li>
+            
+<strong>Copy cocoon/build/cocoon/cocoon.war into tomcat/webapps</strong>
+          
+</li>
+          
+<li>
+            
+<strong>Start Tomcat</strong>
+            Go to the tomcat/bin directory, and run the startup script.
+          </li>
+          
+<li>
+            
+<strong>Start using Cocoon</strong>
+            Access the URI <span class="codefrag">http://localhost:8080/cocoon/</span>
+            with your favorite browser and start to enjoy the world of Cocoon.
+          </li>
+        
+</ol>
+
+      
+<h2>Installing on Tomcat 4.0 - 4.0.1, 4.0.4b1</h2>
+<p>Tomcat 4 is a really straight-forward installation.</p>
+<ol>
+          
+<li>
+            Build the Cocoon webapp as described above.
+          </li>
+          
+<li>
+            Copy <span class="codefrag">cocoon/build/cocoon/cocoon.war</span> into
+            <span class="codefrag">tomcat/webapps</span> directory.
+          </li>
+          
+<li>
+            Start Tomcat: Go to the <span class="codefrag">tomcat/bin</span> directory,
+            and run the startup script.
+          </li>
+          
+<li>
+            Open the Cocoon welcome page:
+            <span class="codefrag">http://localhost:8080/cocoon/</span>
+          
+</li>
+          
+<li>
+            Congratulations! You should see the Cocoon welcome page.
+          </li>
+        
+</ol>
+
+      
+<h2>Installing on Tomcat 4.0.3</h2>
+<p>If you have to use Tomcat 4.0.3, you have to replace its
+          XML parser with the one shipped with Cocoon.</p>
+<ol>
+          
+<li>Remove <span class="codefrag">tomcat/common/lib/xerces.jar</span> file.</li>
+          
+<li>Copy following libraries from the <span class="codefrag">cocoon/lib/core</span>
+            directory to the tomcat/common/lib directory:
+            <ul>
+              
+<li>xalan-XXX.jar</li>
+              
+<li>xercesImpl-XXX.jar</li>
+              
+<li>xml-apis.jar</li>
+            
+</ul>
+          
+</li>
+          
+<li>Copy <span class="codefrag">cocoon/lib/optional/batik-all-XXX.jar</span>
+            to the tomcat/common/lib directory.</li>
+          
+<li>Edit <span class="codefrag">extra-classpath</span> parameter in the
+            <span class="codefrag">cocoon/src/webapp/WEB-INF/web.xml</span> file:
+          </li>
+        
+</ol>
+<p>For UNIX:</p>
+<pre class="code">
+&lt;init-param&gt;
+  &lt;param-name&gt;extra-classpath&lt;/param-name&gt;
+  &lt;param-value&gt;/tomcat/common/lib/xalan-XXX.jar:
+/tomcat/common/lib/xercesImpl-XXX.jar:
+/tomcat/common/lib/xml-apis.jar:
+/tomcat/common/lib/batik-all-XXX.jar&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+<p>For Windows:</p>
+<pre class="code">
+&lt;init-param&gt;
+  &lt;param-name&gt;extra-classpath&lt;/param-name&gt;
+  &lt;param-value&gt;C:\tomcat\common\lib\xalan-XXX.jar;
+C:\tomcat\common\lib\xercesImpl-XXX.jar;
+C:\tomcat\common\lib\xml-apis.jar;
+C:\tomcat\common\lib\batik-all-XXX.jar&lt;/param-value&gt;
+&lt;/init-param&gt;
+</pre>
+<div class="note">param-value should be in one line!
+        Also, replace <span class="codefrag">/tomcat/</span> (UNIX), <span class="codefrag">C:\tomcat\</span>
+        (Windows) with the path to your Tomcat installation home.</div>
+<ol>
+          
+<li>
+            Clean Cocoon build directory: <span class="codefrag">build clean</span>
+          
+</li>
+          
+<li>
+            Build Cocoon webapp: <span class="codefrag">build webapp</span>
+          
+</li>
+          
+<li>
+            Remove xalan-XXX.jar, xercesImpl-XXX.jar, batik-all-XXX.jar,
+            and xml-apis.jar from the cocoon.war archive.
+          </li>
+          
+<li>
+            Copy <span class="codefrag">cocoon/build/cocoon/cocoon.war</span> into
+            <span class="codefrag">tomcat/webapps</span> directory.
+          </li>
+          
+<li>
+            Start Tomcat: Go to the <span class="codefrag">tomcat/bin</span> directory,
+            and run the startup script.
+          </li>
+          
+<li>
+            Open the Cocoon welcome page:
+            <span class="codefrag">http://localhost:8080/cocoon/</span>
+          
+</li>
+          
+<li>
+            Congratulations! You should see the Cocoon welcome page.
+          </li>
+        
+</ol>
+
+      
+<h2>Installing on Tomcat 4.0.4b1 LE with JDK 1.4.0</h2>
+<p>This combination is also easy to install.</p>
+<ol>
+          
+<li>
+            Build the Cocoon webapp as described above.
+          </li>
+          
+<li>
+            Copy <span class="codefrag">cocoon-2.1/build/cocoon/cocoon.war</span> into
+            <span class="codefrag">tomcat/webapps</span> directory.
+          </li>
+          
+<li>
+            Set environment variable <span class="codefrag">CATALINA_OPTS=-Djava.awt.headless=true</span>
+          
+</li>
+          
+<li>
+            Start Tomcat: Go to the <span class="codefrag">tomcat/bin</span> directory,
+            and run the startup script.
+          </li>
+          
+<li>
+            Open the Cocoon welcome page: <span class="codefrag">http://localhost:8080/cocoon/</span>
+          
+</li>
+          
+<li>
+            Congratulations! You should see the Cocoon welcome page.
+          </li>
+        
+</ol>
+<div class="note">
+          Make sure that JAVA_HOME enviroment variable points to the JDK1.4.0.
+          If you had JDK1.3.1 or earlier before, <span class="codefrag">build clean</span> before
+          all these steps.
+        </div>
+
+      
+<h2>Installing on BEA Weblogic 6.0sp2</h2>
+<p>This installs Cocoon using the cocoon.war file.
+          This was successfully installed under Windows 2000 and JDK 1.3.1.
+          Unix users will need to adjust appropriately. If you haven't done so already,
+          build a domain and a server. In this discussion, the name of the domain
+          is 'mydomain', the name of the server is 'myserver', and WebLogic installation
+          directory is <span class="codefrag">c:\bea\wlserver6.0sp2\</span>. These are the BEA defaults.
+        </p>
+<ol>
+          
+<li>
+            Build the Cocoon webapp as described above.
+          </li>
+          
+<li>
+            Copy <span class="codefrag">cocoon\build\cocoon\webapp</span> directory into the
+            <span class="codefrag">c:\bea\wlserver6.0sp2\config\mydomain\applications\</span>
+            directory of your WebLogic server.
+          </li>
+          
+<li>
+            Copy the <span class="codefrag">xerces-XXX.jar</span> and <span class="codefrag">xml-apis.jar</span> JAR files from the
+            <span class="codefrag">cocoon\lib\core\</span> to the directory of your choice, say <span class="codefrag">c:\bea\</span>.
+          </li>
+          
+<li>
+            Add to the config.xml of the WebLogic server following snippet:
+          </li>
+        
+</ol>
+<pre class="code">
+&lt;Application Deployed="true" Name="Cocoon"
+    Path="./config/mydomain/applications"&gt;
+  &lt;WebAppComponent Name="cocoon"
+                   Targets="myserver"
+                   URI="cocoon"/&gt;
+&lt;/Application&gt;
+</pre>
+<ol>
+          
+<li>
+            Edit <span class="codefrag">c:\bea\wlserver6.0sp2\config\mydomain\startWebLogic.cmd</span> file,
+            add xerces and xml-apis JAR files to the classpath:
+          </li>
+        
+</ol>
+<pre class="code">
+set CLASSPATH=c:\bea\xerces-XXX.jar;c:\bea\xml-apis.jar
+set CLASSPATH=%CLASSPATH%;.;.\lib\weblogic_sp.jar
+set CLASSPATH=%CLASSPATH%;.\lib\weblogic.jar
+</pre>
+<ol>
+          
+<li>
+            Start WebLogic server using <span class="codefrag">startWebLogic.cmd</span>.
+          </li>
+          
+<li>
+            Using a browser, you might want to check WebLogic configuration using console:
+            <span class="codefrag">http://localhost:7001/console/</span>.
+          </li>
+          
+<li>
+            Open the Cocoon welcome page:
+            <span class="codefrag">http://localhost:7001/cocoon/</span>
+            (Don't forget the final '/' in the link.)
+          </li>
+          
+<li>
+            Congratulations! You should see the Cocoon welcome page.
+          </li>
+        
+</ol>
+<div class="note">Because of some issues with this version of WebLogic, you will
+          see lots of exceptions in the WebLogic's console window.
+        </div>
+
+      
+<h2>Installing on ServletExec 3.1 (In Process with IIS)</h2>
+<p>This installs Cocoon in a "war" configuration.  This was successfully
+         installed under Windows NT 4.0 and IIS 4.  I don't believe that SE is
+         available for unix.</p>
+<div class="note">Please note that <em>JDK 1.3</em> is required.</div>
+<ol>
+          
+<li>Install IIS as usual</li>
+          
+<li>Install ServletExec (default paths will be used throughout), but
+            don't start it.</li>
+          
+<li>Build Cocoon's war file (include lib's)</li>
+          
+<li>Copy <em>cocoon.war</em> into
+            <em>C:\Program Files\New Atlanta\ServletExec ISAPI\webapps\default</em>,
+            creating the directory default if required.</li>
+          
+<li>Start IIS.</li>
+          
+<li>Open the Cocoon welcome page (<span class="codefrag">http://localhost/cocoon/</span>)</li>
+          
+<li>
+            Congratulations! (hopefully) you should see the Cocoon welcome page.
+          </li>
+        
+</ol>
+      
+<h2>Installing on JBoss 2.4.4 with Tomcat 4.0.1 (Catalina)</h2>
+<p>
+         This section describes the deployment of the Cocoon sample WAR with
+         the JBoss-2.4.4_Tomcat-4.0.1 package. It assumes that you built Cocoon as
+         described above or downloaded the binary Cocoon distribution. All steps have
+         been tested with a fresh JBoss 2.4.4 installation on Linux and Windows 2000.
+        </p>
+<div class="note">The JBoss/Tomcat bundle is available from the
+          <a class="external" href="http://sourceforge.net/projects/jboss/">JBoss project page</a>
+        
+</div>
+<p>
+          The JBoss/Tomcat package has the following directory structure
+        </p>
+<pre class="code">
+[path]/JBoss-2.4.4_Tomcat-4.0.1/jboss
+[path]/JBoss-2.4.4_Tomcat-4.0.1/catalina
+        </pre>
+<p>
+          Subsequently,
+        </p>
+<ul>
+          
+<li>
+            
+<span class="codefrag">jboss</span> denotes the <span class="codefrag">JBoss-2.4.4_Tomcat-4.0.1/jboss</span> directory
+          </li>
+          
+<li>
+            
+<span class="codefrag">catalina</span> is short for <span class="codefrag">JBoss-2.4.4_Tomcat-4.0.1/catalina</span>
+          
+</li>
+          
+<li>and <span class="codefrag">cocoon</span> is the base directory of your Cocoon distribution or CVS checkout.</li>
+        
+</ul>
+<p>In order to get Cocoon running you have to install Xerces as default XML parser for JBoss.</p>
+<ul>
+          
+<li>Stop JBoss if it is running.</li>
+          
+<li>Remove the following files from the <span class="codefrag">jboss/lib</span> directory
+            <ul>
+              
+<li>crimson.jar</li>
+              
+<li>jaxp.jar</li>
+            
+</ul>
+          
+</li>
+          
+<li>Copy <span class="codefrag">xml-apis.jar</span> from <span class="codefrag">cocoon/lib/core/</span> to <span class="codefrag">jboss/lib</span>
+          
+</li>
+          
+<li>Change <span class="codefrag">jboss/bin/run.sh</span>
+          
+</li>
+        
+</ul>
+<pre class="code">
+[...]
+# Add the XML parser jar and set the JAXP factory names
+# Crimson parser JAXP setup(default)
+<strong># Change it to Xerces for C2</strong>
+JBOSS_CLASSPATH=$JBOSS_CLASSPATH:<strong>../lib/xml-apis.jar</strong>
+          <strong># Remove the following two lines</strong>
+JAXP=-Djavax.xml.parsers.DocumentBuilderFactory=\
+  org.apache.crimson.jaxp.DocumentBuilderFactoryImpl
+JAXP="$JAXP -Djavax.xml.parsers.SAXParserFactory=\
+  org.apache.crimson.jaxp.SAXParserFactoryImpl"
+[...]
+        </pre>
+<div class="note">Windows users have to change <span class="codefrag">run.bat</span> accordingly.</div>
+<ul>
+          
+<li>Start JBoss with <span class="codefrag">run_with_catalina.sh</span> or <span class="codefrag">run_with_catalina.bat</span>
+</li>
+          
+<li>Copy <span class="codefrag">cocoon/build/cocoon/cocoon.war</span> to <span class="codefrag">jboss/deploy</span>
+</li>
+          
+<li>Check the server log to make sure that <span class="codefrag">J2EE application: [...]/cocoon.war is deployed.</span>
+</li>
+          
+<li>Open the Cocoon welcome page (<span class="codefrag">http://localhost:8080/cocoon/</span>)</li>
+          
+<li>You should see the Cocoon welcome page.</li>
+        
+</ul>
+<div class="note">As both JBoss and Cocoon ship with a Hypersonic database installed,
+          these two conflict and you won't be able to use Cocoon database (SQL) samples.
+          Then again, you probably use JBoss for EJB persistence anyway, so this shouldn't
+          bother you too much ;-)
+        </div>
+
+      
+<h2>Installing on JBoss 2.2.2 with Tomcat 3.2.2</h2>
+<p>This section describes the deployment of the Cocoon sample WAR with
+          the JBoss 2.2.2/Tomcat-3.2.2 package. It assumes that you built Cocoon as described above.
+          All steps have been tested with a fresh JBoss 2.2.2 installation on Linux and Windows ME(sic).</p>
+<div class="note">The JBoss/Tomcat bundle is available from the
+          <a class="external" href="http://sourceforge.net/projects/jboss/">JBoss project page</a>
+        
+</div>
+<p>The JBoss/Tomcat package has the following directory structure</p>
+<pre class="code">
+[path]/JBoss-2.2.2_Tomcat-3.2.2/jboss
+[path]/JBoss-2.2.2_Tomcat-3.2.2/tomcat
+        </pre>
+<p>Subsequently,</p>
+<ul>
+          
+<li>
+            
+<span class="codefrag">jboss</span> denotes the <span class="codefrag">JBoss-2.2.2_Tomcat-3.2.2/jboss</span> directory</li>
+          
+<li>
+            
+<span class="codefrag">Tomcat</span> is short for <span class="codefrag">JBoss-2.2.2_Tomcat-3.2.2/tomcat</span>
+          
+</li>
+          
+<li>and <span class="codefrag">cocoon</span> is the base directory of your Cocoon distribution or CVS checkout.</li>
+        
+</ul>
+<p>In order to get Cocoon running you have to install Xerces as default XML parser for JBoss.</p>
+<ul>
+          
+<li>Stop the server if it is running.</li>
+          
+<li>Remove the following files from the <span class="codefrag">jboss/lib</span> directory
+            <ul>
+              
+<li>crimson.jar</li>
+              
+<li>jaxp.jar</li>
+              
+<li>xml.jar</li>
+            
+</ul>
+          
+</li>
+          
+<li>Remove the following files from the <span class="codefrag">tomcat/lib</span>
+           directory
+            <ul>
+              
+<li>jaxp.jar</li>
+              
+<li>parser.jar</li>
+            
+</ul>
+          
+</li>
+          
+<li>Copy <span class="codefrag">xerces-XXX.jar</span> from <span class="codefrag">cocoon/lib/core/</span> to <span class="codefrag">jboss/lib</span>
+          
+</li>
+          
+<li>Change <span class="codefrag">jboss/bin/run.sh</span>
+          
+</li>
+        
+</ul>
+<pre class="code">
+[...]
+# Add the XML parser jars and set the JAXP factory names
+# Crimson parser JAXP setup(default)
+<strong># Change it to Xerces for C2</strong>
+JBOSS_CLASSPATH=$JBOSS_CLASSPATH:<strong>../lib/xerces-XXX.jar</strong>
+          <strong># Remove the following two lines</strong>
+JAXP=-Djavax.xml.parsers.DocumentBuilderFactory=\
+  org.apache.crimson.jaxp.DocumentBuilderFactoryImpl
+JAXP="$JAXP -Djavax.xml.parsers.SAXParserFactory=\
+  org.apache.crimson.jaxp.SAXParserFactoryImpl"
+[...]
+        </pre>
+<div class="note">Windows users have to change <span class="codefrag">run.bat</span> accordingly.</div>
+<ul>
+          
+<li>Start JBoss with <span class="codefrag">run_with_tomcat.sh</span> or <span class="codefrag">run_with_tomcat.bat</span>
+</li>
+          
+<li>Copy <span class="codefrag">cocoon/build/cocoon/cocoon.war</span> to <span class="codefrag">jboss/deploy</span>
+</li>
+          
+<li>Check the server log to make sure that <span class="codefrag">J2EE application: [...]/cocoon.war is deployed.</span>
+</li>
+          
+<li>Open the Cocoon welcome page (<span class="codefrag">http://localhost:8080/cocoon/</span>)</li>
+          
+<li>Congratulations! (hopefully) you should see the Cocoon welcome page.</li>
+        
+</ul>
+<div class="note">As both JBoss and Cocoon ship with a Hypersonic database installed,
+          these two conflict and you won't be able to use Cocoon database (SQL) samples.
+          Then again, you probably use JBoss for EJB persistence anyway,
+          so this shouldn't bother you too much ;-)
+        </div>
+
+      
+<h2>Installing on Resin 2.x</h2>
+<p>
+          This section describes the deployment of the Cocoon sample WAR with Resin 2.x.
+          It assumes that you built Cocoon as described above. All steps have been tested
+          with a fresh Resin 2.0.0, 2.0.4, and 2.1.3 installations (the package is available from
+          <a class="external" href="http://www.caucho.com/download/">Resin's download page</a>)
+        </p>
+<p>After unpacking the Resin package you get the following directory structure</p>
+<pre class="code">
+[path]...
+[path]/resin-2.x/conf
+[path]/resin-2.x/lib
+[path]/resin-2.x/webapps
+[path]...</pre>
+<p>To get Cocoon running do the following:</p>
+<ul>
+          
+<li>Stop the server if it is running.</li>
+          
+<li>
+            
+<strong>For 2.0.3 version and older:</strong>
+            If yours Resin is older then 2.0.4, you have to install Xerces as
+            default XML parser for Resin
+            <ul>
+              
+<li>Remove the following files from the <span class="codefrag">resin-2.0.x/lib</span> directory:
+                <ul>
+                  
+<li>jaxp.jar</li>
+                  
+<li>dom.jar</li>
+                  
+<li>sax.jar</li>
+                
+</ul>
+              
+</li>
+              
+<li>Copy <span class="codefrag">xerces-XXX.jar</span> and <span class="codefrag">xml-apis.jar</span>
+                JAR file from <span class="codefrag">cocoon-2.1/lib/core/</span> to
+                the <span class="codefrag">resin-2.0.x/lib/</span> directory.</li>
+            
+</ul>
+          
+</li>
+          
+<li>
+            
+<strong>For 2.0.4 version and newer:</strong>
+            Edit <span class="codefrag">resin-2.x/conf/resin.conf</span>, change value of the
+            <span class="codefrag">servlet-classloader-hack</span> element to <span class="codefrag">true</span>
+          
+</li>
+          
+<li>Copy the <span class="codefrag">cocoon-2.1/build/cocoon/cocoon.war</span> WAR file
+            to <span class="codefrag">resin-2.x/webapps</span> directory
+          </li>
+          
+<li>Start Resin as usual</li>
+          
+<li>Open the Cocoon welcome page (<span class="codefrag">http://localhost:8080/cocoon/</span>)</li>
+          
+<li>Congratulations! (hopefully) you should see the Cocoon welcome page.</li>
+        
+</ul>
+<div class="note"> If you want to place Cocoon webapp in a directory different than
+          <span class="codefrag">resin-2.x/webapps</span>, you need to edit
+          <span class="codefrag">resin-2.x/conf/resin.conf</span> file and add a line somewhere
+          in <span class="codefrag">&lt;host&gt;</span> tag:
+          <span class="codefrag">&lt;web-app id='/cocoon' app-dir='/path/to/webapp/cocoon.war'/&gt;</span>
+        
+</div>
+
+      
+<h2>Installing on HP-AS 8.X</h2>
+<p>HP-AS is J2EE application server available from the Hewlett-Packard website.
+          <a class="external" href="http://www.hpmiddleware.com/download">Download and install HP-AS 8.X</a>
+        
+</p>
+<div class="note">Cocoon cannot be deployed as a .war file in HP-AS. Use the
+          following steps to deploy cocoon.war:
+        </div>
+<ol>
+          
+<li>Extract the <span class="codefrag">cocoon.war</span> file to some directory, using <span class="codefrag">WinZIP</span>
+           or a similar utility to extract the files.</li>
+          
+<li>To run HP-AS, go to
+            <strong>
+              <span class="codefrag">( Start | Programs | HP Middleware | HP Application Server | System Console).</span>
+            </strong>
+            
+<br>
+            The HP-AS Console appears with a Log browser. As the HP-AS kernel
+            starts and initializes, messages will appear in the status bar of the
+            console. Wait for the message 'Kernel started' to appear in the Log
+            browser. The following message should display:<br>
+            
+<br>
+            
+<span class="codefrag">[10/16/01 16:03:50][localhost_][S]:Kernel "kernel" started.</span>
+            
+<br>
+            
+<br>
+          
+</li>
+          
+<li>To verify that an instance of HP-AS is running,
+            open a web browser and go to <span class="codefrag">http://localhost:9090/helloservlet/hello</span>
+            
+<br>
+            An HTML page should appear containing the following message:
+            <br>
+            
+<br>
+            
+<span class="codefrag">Congratulations!</span>
+            
+<br>
+            
+<span class="codefrag">Congratulations from the HelloWorldServlet</span>
+            
+<br>
+            
+<span class="codefrag">It appears you have the server running</span>
+            
+<br>
+            
+<span class="codefrag">My servlet path is /hello</span>
+            
+<br>
+            
+<br>
+            
+<strong>
+              <span class="codefrag">This test is valid only if you've performed a full install of HP-AS</span>
+            </strong>
+            
+<br>
+            
+<br>
+          
+</li>
+          
+<li>In the HP-AS console, select <strong>View | Deployment Window</strong>.
+            In the <strong>Available Files</strong> pane on the right,
+            browse to the the directory you extracted the <span class="codefrag">cocoon.war</span> file to.
+            <br>
+            Expand this directory, and then drag and drop the
+            <span class="codefrag">cocoon</span> sub-directory node to the <strong>kernel.j2ee-partition</strong> icon
+            in the left pane.
+          </li>
+          
+<li>When prompted, answer <strong>Yes</strong> to the deployment question.<br>
+            This should create an appropriate entry in the HP-AS j2ee partition configuration file.<br>
+            
+<strong>
+              <span class="codefrag">In the current version of the console, there is no
+                indication that the operation succeeded. If you see a parser
+                error in the Log browser, ignore it.
+              </span>
+            </strong>
+          
+</li>
+          
+<li>To test the deployment, open a web browser and go to the following URL:<br>
+            
+<br>
+            
+<span class="codefrag">http://localhost:9090/cocoon/welcome</span>
+            
+<br>
+            
+<br>
+            Congratulations! (hopefully) you should see the Cocoon welcome page.
+            (this request may take some time).
+            <br>
+          
+</li>
+        
+</ol>
+
+      
+<h2>Installing on JRun 3.1</h2>
+<p>
+          This section describes the deployment of the Cocoon sample WAR with JRun 3.1,
+          on its default server. It assumes that you built Cocoon as described above. All
+          steps have been tested under Win2000.
+        </p>
+<p>To get Cocoon running do the following:</p>
+<ul>
+          
+<li>Stop the default and admin servers if they are running.</li>
+          
+<li>Remove <span class="codefrag">jaxp.jar</span> and <span class="codefrag">parser.jar</span>
+            files (Crimson XML parser) from the <span class="codefrag">jrun/lib/ext/</span> directory.
+          </li>
+          
+<li>Install Xerces as default XML parser for JRun by copying
+            <span class="codefrag">xerces-XXX.jar</span> and <span class="codefrag">xml-apis.jar</span> JAR
+            files from the <span class="codefrag">cocoon-2.1/lib/core/</span> to <span class="codefrag">jrun/lib/ext/</span>
+            directory.
+          </li>
+          
+<li>Update Rhino shipped with JRun with newer version from the Cocoon by
+            overwriting <span class="codefrag">jrun/lib/rhino.jar</span> JAR file
+            with the <span class="codefrag">cocoon-2.1/lib/optional/rhino-1.5r3.jar</span> file.
+          </li>
+          
+<li>Start JRun admin server.</li>
+          
+<li>Start JRun default server.</li>
+          
+<li>Open JRun admin page:
+            <span class="codefrag">http://localhost:8000/</span>
+          
+</li>
+          
+<li>Deploy cocoon.war webapp using console. Use same values for
+            application name and URI prefix (e.g., application name "cocoon",
+            URI "/cocoon").</li>
+          
+<li>Open the Cocoon welcome page:
+            <span class="codefrag">http://localhost:8100/cocoon/</span>
+          
+</li>
+          
+<li>Congratulations! (hopefully) you should see the Cocoon welcome page.</li>
+        
+</ul>
+<div class="note">Instead of deploying WAR file using console, same could be done by copying
+          <span class="codefrag">cocoon-2.1/build/cocoon/webapp</span> under <span class="codefrag">jrun/servers/default/</span>
+          directory and adding following lines to the <span class="codefrag">jrun/servers/default/local.properties</span>:
+        </div>
+<pre class="code">
+cocoon.rootdir=/absolute/path/to/jrun/servers/default/cocoon
+cocoon.class={webapp.service-class}
+webapp.mapping./cocoon=cocoon
+        </pre>
+
+      
+<h2>Installing on iPlanet Web Server 4.x and other engines without context management</h2>
+<p>
+          iPlanet Web Server 4.x provides the servlet 2.2 API (<span class="codefrag">javax.servlet.*</span> classes),
+          but the servlet engine doesn't handle servlet contexts. This means there is no classloader
+          built with the contents of <span class="codefrag">WEB-INF/classes</span> and <span class="codefrag">WEB-INF/lib</span> and that
+          resolution of context resources (using <span class="codefrag">ServletContext.getResource()</span>) doesn't give
+          the expected results.
+        </p>
+<p>
+          To be able to run on such non-compliant engines, Cocoon provides a bootstrap servlet in
+          <span class="codefrag">org.apache.cocoon.BootstrapServlet</span>that handles all the servlet context related
+          behaviours needed for proper functioning.
+        </p>
+<p>
+          To use this bootstrap servlet, configure your servlet engine as follows (how to do it depends
+          on the actual engine - see below for iPlanet) :
+        </p>
+<ul>
+          
+<li>add cocoon.jar (and only this one) in the engine's classpath,</li>
+          
+<li>declare the <span class="codefrag">org.apache.cocoon.servlet.BootstrapServlet</span> servlet,</li>
+          
+<li>add a "<span class="codefrag">context-directory</span>" parameter, whose value is the absolute path to Cocoon's
+              context (e.g. "<span class="codefrag">/path/webapp/cocoon</span>"),</li>
+          
+<li>add any other cocoon parameters you want to this servlet (see <span class="codefrag">web.xml</span> for a
+              description of available parameters),</li>
+          
+<li>configure a path translation from "/" to the servlet.</li>
+        
+</ul>
+<p>For iPlanet Web Server 4.x, this translates to :</p>
+<ul>
+          
+<li>connect to the administration server of your web server,</li>
+          
+<li>in the "Servlet" tabs, select "Configure servlet attributes", and enter the following :
+            <ul>
+              
+<li>Servlet Name : <span class="codefrag">cocoon</span>
+</li>
+              
+<li>Servlet Code (class name) : <span class="codefrag">org.apache.cocoon.servlet.BootstrapServlet</span>
+</li>
+              
+<li>Servlet Classpath : <span class="codefrag">/path/webapp/cocoon/WEB-INF/lib/cocoon.jar</span>
+</li>
+              
+<li>Servlet Args : <span class="codefrag">context-directory=/path/webapp/cocoon</span>
+                (and any other Cocoon parameters you want)</li>
+            
+</ul>
+          
+</li>
+          
+<li>select "Configure Servlet Virtual Path Translation" and enter the following :
+            <ul>
+              
+<li>Virtual Path : <span class="codefrag">@/.*</span>
+</li>
+              
+<li>Servlet Name : <span class="codefrag">cocoon</span>
+</li>
+            
+</ul>
+          
+</li>
+          
+<li>save and apply your changes, and enjoy the latest Cocoon on an old-fashioned servlet engine!</li>
+        
+</ul>
+
+      
+<h2>Installing on WebSphere 4.0</h2>
+<p>
+          This section describes the deployment of the Cocoon sample WAR with WebSphere 4.0,
+          on its default server. It assumes that you built Cocoon as described above. All
+          steps have been tested under Win2000 and WebSphere AEs 4.0.1 a0136.02.
+        </p>
+<p>To get Cocoon running do the following:</p>
+<ul>
+          
+<li>Start the server using <span class="codefrag">startServer</span> startup script.</li>
+          
+<li>Open admin page:
+            <span class="codefrag">http://localhost:9090/admin/</span>
+          
+</li>
+          
+<li>Deploy cocoon.war webapp using console.</li>
+          
+<li>Save server configuration file.</li>
+          
+<li>Restart the server using <span class="codefrag">stopServer</span> and 
+            <span class="codefrag">startServer</span> scripts.</li>
+          
+<li>Open the Cocoon welcome page:
+            <span class="codefrag">http://localhost:9080/cocoon/</span>
+          
+</li>
+          
+<li>Congratulations! (hopefully) you should see the Cocoon welcome page.</li>
+        
+</ul>
+<div class="note">WebSphere power users might deploy Cocoon by exploding cocoon.war into
+          <span class="codefrag">installedApps</span> directory and editing
+          <span class="codefrag">config/server-cfg.xml</span> file.
+        </div>
+    
+  
+</body>
+</html>

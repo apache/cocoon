@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Host-Selector in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the HostSelector of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>HostSelector</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">host</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">HostSelector</span> component is used to
+            select appropriate sitemap processing depending on <span class="codefrag">Host</span> header
+            value.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Selector, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          <!-- choose Core, the block name, or Scratchpad 
+            depending on where HostSelector sources live
+          -->
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.selection.HostSelector</td>
+        
+</tr>
+        <!-- uncomment folling tr if HostSelector is deprecated -->
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
+        </tr-->
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.0</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The <span class="codefrag">HostSelector</span> tests the <span class="codefrag">Host</span> header field from the 
+        request against the test attribute of the selectors when clause.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        The <span class="codefrag">HostSelector</span> allows to define host specific sitemap
+        processing. This way Cocoon can do multi-homed sitemap processing.
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p>
+          The snippet below uses a <span class="codefrag">HostSelector</span> named <span class="codefrag">host</span>,
+          and tests against symbolic host-sites which are configured in the
+          <span class="codefrag">host</span> selector section.
+        </p>
+<pre class="code">
+&lt;map:select type="host"&gt;
+  &lt;map:when test="uk-site"&gt;
+  ....
+  &lt;/map:when&gt;
+  &lt;map:when test="de-site"&gt;
+  ...
+  &lt;/map:when&gt;
+  ...
+  &lt;map:otherwise&gt;
+  ...
+  &lt;/map:otherwise&gt;
+&lt;/map:select&gt;
+        </pre>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p>
+          The snippet below declares a <span class="codefrag">HostSelector</span>
+          defining symbolic host-site names for some host domains.
+        </p>
+<pre class="code">
+&lt;map:selectors&gt;
+  &lt;map:selector name="host" 
+    src="org.apache.cocoon.selection.HostSelector"
+    logger="sitemap.selector.host" 
+    
+    &lt;host name="uk-site" value="foo.bar.uk"/&gt;
+    ...
+    &lt;host name="de-site" value="foo.bar.de"/&gt;
+    &lt;host name="us-site" value="foo.bar.com"/&gt;
+    
+  &lt;/map:selector&gt;
+  ...
+&lt;/map:selectors&gt;
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          <!-- Explain the sitemap selector configuration, options when declaring host selector -->
+          The configuration section of <span class="codefrag">HostSelector</span> specifies
+          a mapping from host strings to symbolic host-site names.
+        </p>
+<p>
+          Each host element specifies a name attribute holding the symbolic host-site name
+          used in the test attribute expression. The attribute name contains 
+          a matchable substring of some real host header values.
+        </p>
+<p>
+          It is allowed to specify for a host name more than one entry. This way
+          a symbolic host-site name is matched by different host header substrings.
+          The snippet belows will yield true for <span class="codefrag">test="central-europe"</span> if 
+          the host header contains <span class="codefrag">foo.bar.cz</span>, <span class="codefrag">foo.bar.at</span>, or 
+          <span class="codefrag">foo.bar.hu</span>.
+        </p>
+<pre class="code">
+...
+  &lt;host name="central-europe" value="foo.bar.cz"/&gt;
+  &lt;host name="central-europe" value="foo.bar.at"/&gt;
+  &lt;host name="central-europe" value="foo.bar.uk"/&gt;
+...
+        </pre>
+      
+<h2>Setup</h2>
+<p>
+          <!-- Explain the sitemap selector setup, ie options when using host selector -->
+          Setting up a <span class="codefrag">HostSelector</span> includes choosing the 
+          <span class="codefrag">&lt;map:when&gt;</span> test expressions and a 
+          optional <span class="codefrag">&lt;map:otherwise&gt;</span> clause.
+        </p>
+<p>
+          The test attribute of the <span class="codefrag">&lt;map:when&gt;</span> clause must match
+          a host attribute name value. The value of the test attribute in a 
+          <span class="codefrag">&lt;map:when&gt;</span> clause must be declared in a 
+          <span class="codefrag">host</span> name attribute.
+        </p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+          The <span class="codefrag">HostSelector</span> has no side effects on the object model or 
+          any sitemap parameters. 
+        </p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+        The <span class="codefrag">HostSelector</span> adds the response header attribute
+        <span class="codefrag">Vary</span> having value <span class="codefrag">Host</span> indicating
+        that the response differ for different hosts. This information
+        is particularly meaningful for a http-proxy server.
+      </p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        28-12-02: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+      
+<p>
+        For a detailed <span class="codefrag">Host</span> header documentation 
+        see <a class="external" href="http://www.ietf.org/rfc/rfc2068.txt">RFC 2068</a>, especially
+        if Cocoon's run time environment is an http servlet environment. 
+      </p>
+    
+  
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Input Modules Reference</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Tony Collen" name="DC.Creator">
+<meta content="A concise reference to Cocoon's InputModules." name="DC.Description">
+</head>
+<body> 
+
+    
+<h1>Introduction</h1>
+        
+        
+<p>This is meant to be a concise reference to Cocoon's InputModules, 
+        what they do, and how to use them.  InputModules are available in 
+        Cocoon 2.0.4 and above.  Many descriptions are taken directly from 
+        the respective modules' source code, or from trial and error 
+        experimentation.</p>
+        
+        
+<div class="note">See also: the 
+        <a class="external" href="http://wiki.apache.org/cocoon/InputModules">InputModules 
+        Wiki Page</a>.</div>
+    
+
+
+    
+<h1>Modules Reference</h1>
+        
+
+        
+<h2>AbstractInputModule</h2>
+<p>AbstractInputModule gives you the infrastructure for easily 
+            deploying more InputModules.</p>
+
+        
+<h2>AbstractJXPathModule</h2>
+<p>JXPathModule allows to access properties of any object in generic way. 
+            JXPath provides APIs for the traversal of graphs of JavaBeans, DOM and other 
+            types of objects using the XPath syntax. JXPathMetaModule is based on this 
+            class and duplicates the code since multiple inheritance is not possible. 
+            Please keep both classes in sync.</p>
+<p>
+<strong>Configuration Example:</strong>
+</p>
+<p>The following imports the class "String" as extension class to the 
+            JXPathContext using the prefix "str". Thus "str:length(xpath)" would apply 
+            the method "length" to the string object obtained from the xpath expression. 
+            Please note that the class needs to be fully qualified.</p>
+<pre class="code">&lt;function name="java.lang.String" prefix="str"/&gt;</pre>
+<p>The following imports all classes in the package "java.util" as extension 
+            classes to the JXPathContext using the prefix "util". Thus "util:Date.new()" 
+            would create a new java.util.Date object.</p>
+<pre class="code">&lt;package name="java.util" prefix="util"/&gt;</pre>
+
+
+        
+<h2>AbstractMetaModule</h2>
+<p>AbstractMetaModule gives you the infrastructure for easily deploying 
+            more "meta" InputModules i.e. InputModules that are composed of other 
+            InputModules. In order to get at the Logger, use getLogger().</p>
+
+        
+<h2>CollectionMetaModule</h2>
+<p>Constructs an array of values suitable for a JDBC collection type from 
+            parameters obtained from another input module. Application is not limited 
+            to JDBC collections but can be used wherever similar named attributes 
+            shall be collected to an array of a given type. Currently, long, int, and 
+            string are known, more to come.</p>
+<p>
+<strong>Global and Local Configuration:</strong>
+</p>
+<div class="fixme">TC:
+      Finish the reference for this Module.</div>
+
+        
+<h2>CookieModule</h2>
+<p>This module returns the value of the named HTTP cookie.</p>
+<p>
+<strong>Example Pipeline Fragment:</strong>
+</p>
+<pre class="code">
+&lt;map:match pattern="foo.html"&gt;
+  &lt;map:generate type="file" src="documents/{cookie:user-language}/foo.xml"/&gt;
+  &lt;map:transform src="stylesheets/foo2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+
+        
+<h2>DateInputModule</h2>
+<p>This module returns the current date, optionally formated 
+            as string. Format given through attribute "format" of 
+            configuration root node or nested &lt;format/&gt; tag on module 
+            declaration.</p>
+<div class="note">The 'format' attribute doesn't seem to work. Nested 
+            <span class="codefrag">&lt;format/&gt;</span> tags work fine.</div>
+<div class="note">See also: 
+            <a class="external" href="http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html">Java 
+            Date Format</a>.</div>
+
+        
+<h2>GlobalInputModule</h2>
+<p>This module allows you to access "global" variables which are defined in 
+            a sitemap's pipelines definition.</p>
+<p>
+<strong>cocoon.xconf usage:</strong>
+</p>
+<pre class="code">
+&lt;input-modules&gt;
+  ...
+  &lt;component-instance 
+     class="org.apache.cocoon.components.modules.input.GlobalInputModule" 
+     logger="core.modules.input" 
+     name="global"/&gt;
+  ...
+&lt;/input-modules&gt; 
+</pre>
+<p>
+<strong>Sitemap Usage:</strong>
+</p>
+<pre class="code">
+&lt;map:component-configurations&gt;
+  &lt;global-variables&gt;
+      &lt;doc&gt;doc.xml&lt;/doc&gt;
+  &lt;/global-variables&gt;
+&lt;/map:component-configurations&gt;
+</pre>
+<p>
+<strong>Example Pipeline Fragment:</strong>
+</p>
+<pre class="code">
+&lt;map:match pattern="foo"&gt;
+  &lt;map:generate type="file" src="documents/{global:doc}"/&gt;
+  &lt;map:transform src="stylesheets/foo2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+
+
+        
+<a name="raw-request-parameter-module"></a>
+
+        
+<h2>RawRequestParameterModule</h2>
+<p>This module allows access to "raw" request parameters and their 
+            values.</p>
+<p>Values returned are "URL Encoded", meaning if a parameter is 
+            submitted as "foo+bar", you will get the string "foo+bar".</p>
+<div class="note">For access to URL-Decoded request parameters, see the <a href="#request-parameter-module">RequestParameterModule</a>.</div>
+<p>
+<strong>cocoon.xconf usage:</strong>
+</p>
+<pre class="code">
+&lt;input-modules&gt;
+  ...
+  &lt;component-instance 
+     class="org.apache.cocoon.components.modules.input.RawRequestParameterModule" 
+     logger="core.modules.input" 
+     name="raw-request-param"/&gt;
+  ...
+&lt;/input-modules&gt; 
+</pre>
+<p>
+<strong>Example Pipeline Fragment:</strong>
+</p>
+<pre class="code">
+&lt;map:match pattern="amazonProxy"&gt;
+  &lt;map:generate type="file" 
+      src="http://localhost:8888/search?qry={raw-request-param:actor}"/&gt;
+  &lt;map:serialize type="xml"/&gt;
+&lt;/map:match&gt;
+</pre>
+<p>
+                This input module is useful when you are querying a remote service, 
+                and you need to be able to send a search string with spaces or other 
+                special characters intact. If you were to simply use 
+                <span class="codefrag">{request-param:actor}</span>, you would end up sending a space 
+                character to the remote service, which would be an error, since 
+                <a class="external" href="http://www.faqs.org/rfcs/rfc1738.html">RFC 1738</a> 
+                requires spaces and other special characters to be correctly encoded.
+            </p>
+
+        
+<a name="request-parameter-module"></a>
+
+        
+<h2>RequestParameterModule</h2>
+<p>This module allows access to request parameters. Values returned are 
+            "URL Decoded". That is, if a request parameter is submitted as 
+            <span class="codefrag">foo+bar</span>, you will get the string "foo bar".</p>
+<div class="note">For URL-Encoded request parameters, see the 
+            <a href="#raw-request-parameter-module">RawRequestParameterModule</a>.</div>
+<p>
+<strong>cocoon.xconf usage:</strong>
+</p>
+<pre class="code">
+&lt;input-modules&gt;
+  ...
+  &lt;component-instance 
+     class="org.apache.cocoon.components.modules.input.RequestParameterModule" 
+     logger="core.modules.input" 
+     name="request-param"/&gt;
+  ...
+&lt;/input-modules&gt;
+</pre>
+<p>
+<strong>Example Pipeline Fragment:</strong>
+</p>
+<pre class="code">
+&lt;map:match pattern="bar"&gt;
+   &lt;map:generate type="file" src="documents/{request-param:file}"/&gt;
+   &lt;map:transform src="stylesheets/{request-param:stylesheet}"/&gt;
+   &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+<p>This pipeline will match a request for "bar" and pass the request 
+            parameters "file" and "stylesheet" to the generator and transformer, 
+            respectively. (e.g. 
+            http://localhost:8080/cocoon/bar?file=doc.xml&amp;stylesheet=main.xsl).</p>
+<div class="warning">
+                Directly passing request parameters for file access can be 
+                dangerous. Remember to follow basic webapp safety rules when 
+                designing your pipelines, and when passing around request 
+                parameters.
+            </div>
+
+        
+<h2>RequestURIModule</h2>
+<p>Returns the URI of the request.</p>
+<p>If you are familliar with Avalon and Cocoon's component architecture, 
+            the following will explain what is specifically returned:</p>
+<pre class="code">String uri = ObjectModelHelper.getRequest(objectModel).getSitemapURI();</pre>
+<p>
+<strong>cocoon.xconf usage:</strong>
+</p>
+<pre class="code">
+&lt;input-modules&gt;
+  ...
+  &lt;component-instance 
+     class="org.apache.cocoon.components.modules.input.RequestURIModule" 
+     logger="core.modules.input" 
+     name="request-uri"/&gt;
+  ...
+&lt;/input-modules&gt;
+</pre>
+<p>
+<strong>Example Sitemap Usage:</strong>
+</p>
+<pre class="code">{request-uri:requestURI}</pre>
+<p>This is how you would use the module most of the time, since the 
+            module only returns one item, the Request URI.</p>
+<div class="note">
+                The same effect can be achieved by passing the parameter name 
+                "sitemapURI" to the request module. Therefore this component is not 
+                declared in cocoon.xconf by default. You must manually add it.
+            </div>
+        
+    
+
+    
+</body>
+</html>

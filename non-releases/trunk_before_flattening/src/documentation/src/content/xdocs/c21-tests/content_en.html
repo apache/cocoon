@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Testing your Apache Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="Stephan Michels" name="DC.Creator">
+<meta content="David Crossley" name="DC.Creator">
+</head>
+<body>
+ 
+<h1>Overview of testing procedures</h1>
+  
+<p>
+   There are some initial procedures available for you to ensure that
+   Apache Cocoon can run properly on your particular computing platform
+   and that the components do function properly.
+  </p>
+  
+<p>
+   You can build upon this infrastructure to add your own tests, and to
+   ensure that development work proceeds smoothly. The tests are located
+   in the <span class="codefrag">src/test/</span> directory.
+  </p>
+ 
+
+ 
+<h1>JUnit tests</h1>
+  
+<p>
+   Run "<span class="codefrag">build test</span>" to conduct an initial set of
+   automated JUnit test cases,
+   e.g. Test various transformers;
+   Test the methods for getting platform-dependent filesystem pathnames; etc.
+  </p>
+
+  
+<h2>How to add more tests</h2>
+<p>
+    As there is already a nice junit framework available, it is not that
+    difficult to add junit tests for any transformer. In short:
+   </p>
+<ul>
+    
+<li>Create XYTransformerTestCase.java</li>
+    
+<li>Create XYTransformerTestCase.xconf</li>
+    
+<li>Edit the transformers section in XYTransformerTestCase.xtest
+     for XYTransformerTestCase</li>
+    
+<li>Add testABC() methods to XYTransformerTestCase.java</li>
+   
+</ul>
+ 
+
+ 
+<h1>Other tests</h1>
+  
+<ul>
+    
+<li>
+      Some Anteater Functional Tests at <span class="codefrag">src/test/anteater</span>
+    
+</li>
+    
+<li>
+      
+<a href="../catalog-test.html">Testing: Catalog Entity Resolver</a>
+      which conducts some additional tests for resolving external entities.
+    </li>
+  
+</ul>
+ 
+
+ 
+</body>
+</html>

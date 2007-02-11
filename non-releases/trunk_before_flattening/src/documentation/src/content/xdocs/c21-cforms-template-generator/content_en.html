@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: Template Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>The same "ft:" tags as provided by the <a href="templatetransformer.html">template
+      transformer</a> are also available as macros for the
+      <a href="../flow/jxtemplate.html">JXTemplate</a> generator.</p>
+
+      
+<p>Before the availability of these macros, the JXTemplate generator was
+      already often used in the form publishing pipeline. It makes it possible
+      to dynamically include additional data on the form page and to conditionally
+      include parts of the page (and thus conditionally show widgets).
+      Moving the interpretation of the <span class="codefrag">ft:</span> tags directly into
+      generator makes this even more powerful. Think of the possibility
+      of not showing a repeater table if the repeater contains no rows,
+      and this also for nested repeaters.</p>
+    
+
+    
+<h1>Usage</h1>
+      
+<p>Simply remove the FormsTemplateTransformer from your publishing pipeline,
+      and instead include the following jx statement into your template file:</p>
+
+      
+<pre class="code">&lt;jx:import uri="resource://org/apache/cocoon/forms/generation/template.jx"/&gt;</pre>
+
+      
+<p>Note that these macros only work when calling the pipeline from flowscript.</p>
+    
+  
+</body>
+</html>

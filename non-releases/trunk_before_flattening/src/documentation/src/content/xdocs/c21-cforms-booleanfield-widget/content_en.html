@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: booleanfield widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>An fd:booleanfield is a field that has a value of
+      true or false. Usually is rendered as a checkbox.</p>
+
+      
+<p>It is different from a <a href="widget_field.html">field widget</a>
+      with a <span class="codefrag">boolean</span> datatype because an HTML checkbox submits
+      no request parameter if the checkbox is unchecked. If you would render
+      it instead as a listbox with true and false values, you could also
+      use a regular field widget. Since the styling preference might change over
+      time, it is however better to use consistently the fd:booleanfield widget.</p>
+
+      
+<p>A booleanfield cannot be marked as "required", because it is
+      always required. It is either true or false. If you want tripples
+      (true/false/none), use a normal field widget with a selection list.</p>
+    
+
+    
+<h1>Configuration</h1>
+      
+<pre class="code">&lt;fd:booleanfield id="..."&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+  &lt;fd:on-value-changed&gt;
+     [...]
+  &lt;/fd:on-value-changed&gt;
+&lt;/fd:booleanfield&gt;</pre>
+
+      
+<p>See <a href="widget_field.html">field wiget</a> for a description of the
+      configuration options.</p>
+    
+  
+</body>
+</html>

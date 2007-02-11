@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Directory Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Frank Ridderbusch" name="DC.Creator">
+<meta content="John Morrison" name="DC.Creator">
+<meta content="J&ouml;rg Heinicke" name="DC.Creator">
+<meta content="This document describes the Directory Generator of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Directory Generator</h1>
+      
+<p>The root node of the generated document will normally be a <span class="codefrag">directory</span> node. A
+          directory node can contain zero or more <span class="codefrag">file</span> or <span class="codefrag">directory</span> nodes.
+          A file node has no children. All generated elements have the namespace
+          <span class="codefrag">http://apache.org/cocoon/directory/2.0</span>.
+      </p>
+      
+<p>Each node will contain the following attributes:</p>
+      
+<ul>
+        
+<li>
+<span class="codefrag">name</span>: the name of the file or directory.</li>
+        
+<li>
+<span class="codefrag">lastModified</span>: the time the file was last modified, measured as the number
+            of milliseconds since the epoch (as in <span class="codefrag">java.io.File.lastModified</span>).</li>
+        
+<li>
+<span class="codefrag">date</span> (optional): the time the file was last modified in human-readable form.</li>
+        
+<li>
+<span class="codefrag">size</span>: the file size (or 0 for directories).</li>
+      
+</ul>
+      
+<p>Additionally the node for the requested directory has the attributes:</p>
+      
+<ul>
+        
+<li>
+<span class="codefrag">requested</span>: with the value set to <span class="codefrag">true</span>.</li>
+        
+<li>
+<span class="codefrag">sort</span>: the sort order of the <span class="codefrag">file</span> and <span class="codefrag">directory</span>
+                               nodes.</li>
+        
+<li>
+<span class="codefrag">reverse</span>: determines whether reverse sort was chosen.</li>
+      
+</ul>
+      
+<p>This node needs not to be the root node as you will see later.</p>
+    
+    
+<h1>Configuration</h1>
+      
+<pre class="code">
+  &lt;map:generate type="directory" src="the/requested/directory"&gt;
+    &lt;map:parameter name="depth" value="2"/&gt;
+  &lt;/map:generate&gt;
+      </pre>
+      
+<p>The <span class="codefrag">src</span> attribute on the <span class="codefrag">&lt;map:generate/&gt;</span> must be set to the
+          directory the XML listing should be created of. This is the <em>requested</em> directory.
+      </p>
+      
+<p>The following parameter are all optional and can be specified in the pipeline for the
+          generate command (as seen in the example above for the parameter <span class="codefrag">depth</span>):
+      </p>
+      
+<ul>
+        
+<li>depth: Sets how deep the generator should delve into the directory structure. If
+            set to 1 (the default), only the starting directory's immediate contents will be
+            returned.</li>
+        
+<li>dateFormat: Sets the format for the date attribute of each node as described in
+            <span class="codefrag">java.text.SimpleDateFormat</span>. If unset, the default format for the current
+            locale will be used.</li>
+        
+<li>refreshDelay: Sets the delay (in seconds, default is 1) between checks for updates on
+            the file system. So this option influences the caching of the directory listing.</li>
+        
+<li>sort: Sets the sort order in which the <span class="codefrag">file</span> and <span class="codefrag">directory</span>
+            nodes are returned. Possible values are <span class="codefrag">name</span>, <span class="codefrag">size</span>,
+            <span class="codefrag">lastmodified</span> and <span class="codefrag">directory</span> (where <span class="codefrag">directory</span> is the same
+            as <span class="codefrag">name</span>, except that directory entries are listed first). The default sort
+            order is <span class="codefrag">name</span>.</li>
+        
+<li>reverse: Reverses the sort order, defaults to <span class="codefrag">false</span>.</li>
+        
+<li>root: The root pattern. From the requested director upwards a directory is searched
+            using this pattern, that is added as root node to the document. The path from this root
+            node down to the requested directory will also be in the output. If no root pattern is
+            specified or no ancestor of the requested directory matches this pattern, the requested
+            directory will be the root in the output document.<br>
+            The pattern is a regular expression as described in the API docs of the
+            <a class="external" href="http://jakarta.apache.org/regexp/apidocs/org/apache/regexp/RE.html">
+            Apache RegExp project</a>.</li>
+        
+<li>include: The include pattern. Specifies the directories and files that should be
+            included. Also a regular expression.</li>
+        
+<li>exclude: The exclude pattern. Specifies the directories and files that should be
+            excluded. Also a regular expression.</li>
+      
+</ul>
+    
+    
+<h1>DTD</h1>
+      
+<p>XML generated by Directory Generator uses namespace
+          <span class="codefrag">http://apache.org/cocoon/status/2.0</span>. The DTD of XML generated by Directory
+          Generator:
+      </p>
+      
+<pre class="code">
+  &lt;!ELEMENT directory (directory|file)*&gt;
+  &lt;!ATTLIST directory
+    name         CDATA #REQUIRED
+    lastModified CDATA #REQUIRED
+    date         CDATA #REQUIRED
+    size         CDATA #REQUIRED
+    requested    CDATA #IMPLIED
+    sort         CDATA #IMPLIED
+    reverse      CDATA #IMPLIED&gt;
+
+  &lt;!ELEMENT file #EMPTY&gt;
+  &lt;!ATTLIST file
+    name         CDATA #REQUIRED
+    lastModified CDATA #REQUIRED
+    date         CDATA #REQUIRED
+    size         CDATA #REQUIRED&gt;
+      </pre>
+    
+    
+<h1>Example</h1>
+      
+<p>The current Directory Generator may generate following xml:</p>
+      
+<pre class="code">
+&lt;dir:directory xmlns:dir="http://apache.org/cocoon/directory/2.0"
+    name="stylesheets" lastModified="1056668768203" date="27.06.03 01:06" size="0"
+    requested="true" sort="name" reverse="false"&gt;
+  &lt;dir:directory name="sites" lastModified="1056668768203" date="27.06.03 01:06" size="0"/&gt;
+  &lt;dir:file name="dynamic-page2html.xsl" lastModified="1056668768203" date="27.06.03 01:06" size="4321"/&gt;
+  &lt;dir:file name="simple-xml2html.xslt" lastModified="1056668768203" date="27.06.03 01:06" size="1234"/&gt;
+&lt;/dir:directory&gt;
+      </pre>
+    
+  
+</body>
+</html>

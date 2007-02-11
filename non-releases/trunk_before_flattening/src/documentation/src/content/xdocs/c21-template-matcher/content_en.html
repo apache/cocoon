@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Template-Matcher in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Your Name" name="DC.Creator">
+<meta content="This document describes the TemplateMatcher of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>TemplateMatcher</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">template</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">TemplateMatcher</span> component is used 
+            to serve data in a sitemap pipeline.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Matcher, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          <!-- choose Core, the block name, or Scratchpad 
+            depending on where TemplateMatcher sources live
+          -->
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core/Block-Name/Scratchpad</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.matching.TemplateMatcher</td>
+        
+</tr>
+        <!-- uncomment folling tr iff TemplateMatcher is deprecated -->
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
+        </tr-->
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon X.Y</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        A general description of TemplateMatcher
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        A usage scenario of TemplateMatcher
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p></p>
+<pre class="code">
+&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="page-*.html"&gt;
+      &lt;map:generator 
+        src="{1}"
+      &gt;
+        &lt;!-- option sitemap parameters --&gt;
+      &lt;/map:generator&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+  ...
+        </pre>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p></p>
+<pre class="code">
+&lt;map:matchers...
+  &lt;map:matcher name="template" 
+    src="org.apache.cocoon.matching.TemplateMatcher"
+    logger="sitemap.matcher.template" 
+  /&gt;
+    &lt;!-- optional matcher configuration --&gt;
+    ...
+  &lt;/map:matcher&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          Explain the sitemap matcher configuration, options when declaring template matcher
+        </p>
+      
+<h2>Setup</h2>
+<p>
+          Explain the sitemap matcher setup, ie options when using template matcher
+        </p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+        
+        
+</p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+        <!-- Describe limitation, bugs of TemplateMatcher --> 
+      
+</p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        MM-DD-YY: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages. -->
+        A general documentation about matchers is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+    
+  
+</body>
+</html>

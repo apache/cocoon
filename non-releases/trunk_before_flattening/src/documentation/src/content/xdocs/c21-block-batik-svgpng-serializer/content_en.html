@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>SVG/PNG Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the svg/png serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>SVG/PNG Serializer</h1>
+    
+<p>
+      The SVG/PNG serializes an xml svg document to a png image.
+      The serialization uses the Batik's PNGTranscoder internally.
+    </p>
+    
+<ul>
+      
+<li>Name : svg2png</li>
+      
+<li>Class: org.apache.cocoon.serialization.SVGSerializer</li>
+      
+<li>Cacheable: yes</li>
+    
+</ul>
+    
+<h2>Sitemap Configuration</h2>
+<p>
+        A minimal sitemap configuration snippet declaring the svg2png serializer:
+      </p>
+<pre class="code">
+&lt;map:serializers..
+  &lt;map:serializer name="svg2png"
+    src="org.apache.cocoon.serialization.SVGSerializer"
+    mime-type="image/png"
+    logger="sitemap.serializer.svg2png"
+  &gt;
+  &lt;/map:serializer&gt;
+</pre>
+<p>
+        A sitemap pipeline snippet using the svg2png serializer:
+      </p>
+<pre class="code">
+&lt;map:match pattern="svg/*.png"&gt;
+  &lt;map:generate src="docs/samples/svg/{1}.svg"/&gt;
+  &lt;map:serialize type="svg2png"/&gt;
+&lt;/map:match&gt;
+</pre>
+<p>
+        In the declaration section of the svg2png a number of parameters can be specified.
+        The following snippet set the background color explicitly:
+      </p>
+<pre class="code">
+&lt;map:serializers..
+  &lt;map:serializer name="svg2png"
+    src="org.apache.cocoon.serialization.SVGSerializer"
+    mime-type="image/png"
+    logger="sitemap.serializer.svg2png"
+  &gt;
+    &lt;parameter name="background_color" type="color" value="#ff00ff"/&gt;
+  &lt;/map:serializer&gt;
+</pre>
+    
+<h2>PNGTranscoder Parameters</h2>
+<p>
+        General ImageTranscoder parameters are described
+        at the <a href="svg-serializer.html">SVG Serializer</a> user documentation.
+      </p>
+<p>
+        The following section presents PNGTranscoder specific parameters configurable 
+        for the PNGTranscoder.
+      </p>
+<table>
+        
+<tr>
+<th colspan="1" rowspan="1">Parameter</th><th colspan="1" rowspan="1">Type</th><th colspan="1" rowspan="1">Comment</th>
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">force_transparent_white</td><td colspan="1" rowspan="1">boolean</td><td colspan="1" rowspan="1">It controls whether the encoder should
+          force the image's fully transparent pixels to be fully transparent
+          white instead of fully transparent black.  This is usefull when the
+          encoded PNG is displayed in a browser which does not support PNG
+          transparency and lets the image display with a white background instead
+          of a black background. <br> However, note that the modified image
+          will display differently over a white background in a viewer that
+          supports transparency.</td>
+        
+</tr>
+        
+<tr>
+<td colspan="1" rowspan="1">gamma</td><td colspan="1" rowspan="1">float</td><td colspan="1" rowspan="1">Controls the gamma correction of the png image;
+          by default its value is approx <span class="codefrag">2.22</span>.
+          </td>
+        
+</tr>
+      
+</table>
+    
+<h2>Further Reading</h2>
+<p>
+        Further details about PNGTranscoder, ImageTranscoder is available 
+        at <a class="external" href="http://xml.apache.org/batik">Batik</a>.
+      </p>
+  
+  
+</body>
+</html>

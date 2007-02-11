@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Transformers</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document describes all of the available transformers of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Goal</h1>
+      
+<p>This document lists all of the available transformers of Apache Cocoon and
+                     describes their purpose.</p>
+     
+     
+<h1>Overview</h1>
+  
+<p>
+A transformer is the central point in a sitemap pipeline. Within a pipeline match, transformers consume SAX events and emit SAX events. Transformers are placed inside a pipeline match between a generator and a serializer. You can include several transformers within a pipeline match. Any pipeline match containing a generator and transformer must end with a serializer.
+  </p>
+  
+<p>
+In the sitemap file, each transformer has a unique name which is mapped to a java class. One transformer name must be declared as the default transformer. Each transformer may have additional configuration information specified in child elements.
+  </p>
+  
+<p>
+ For more conceptual information about transformers see <a href="../concepts/sitemap.html">the sitemap</a>.
+  </p>
+
+
+<h1>The Transformers in Apache Cocoon</h1>
+  
+<ul>
+    
+<li>
+<a href="xslt-transformer.html">XSLT Transformer</a> (The default transformer)</li>
+  
+<li>
+<a href="extractor-transformer.html">Fragment Extractor Transformer</a>
+</li>
+  
+<li>
+<a href="i18n-transformer.html">I18n Transformer</a>
+</li>
+  
+<li>
+<a href="log-transformer.html">Log Transformer</a>
+</li>
+  
+<li>
+<a href="sql-transformer.html">SQL Transformer</a>
+</li>
+  
+<li>
+<a href="filter-transformer.html">Filter Transformer</a>
+</li>
+  
+<li>
+<a href="readdomsession-transformer.html">Read DOM Session Transformer</a>
+</li>
+  
+<li>
+<a href="writedomsession-transformer.html">Write DOM Session Transformer</a>
+</li>
+  
+<li>
+<a href="xinclude-transformer.html">XInclude Transformer</a>
+</li>
+  
+<li>
+<a href="cinclude-transformer.html">CInclude Transformer</a>
+</li>
+  
+<li>
+<a href="encodeurl-transformer.html">EncodeURL Transformer</a>
+</li>
+  
+<li>
+<a href="sourcewriting-transformer.html">SourceWriting Transformer</a>
+</li>
+    
+<li>
+<a href="augment-transformer.html">Augment Transformer</a>
+</li>
+    
+<li>
+<a href="jx-template-transformer.html">JX Template Transformer</a>
+</li>
+  
+<li>
+<a href="ldap-transformer.html">LDAP Transformer</a> (optional)</li>
+    
+<li>
+<a href="lexer-transformer.html">Lexical Transformer</a> (optional)</li>
+    
+<li>
+<a href="parser-transformer.html">Parser Transformer</a> (optional)</li>
+    
+<li>
+<a href="pattern-transformer.html">Pattern Transformer</a> (optional)</li>
+    
+<li>
+<a href="../../developing/webapps/contexts.html">Session Transformer</a> (optional)</li>
+  
+</ul>
+
+  
+</body>
+</html>

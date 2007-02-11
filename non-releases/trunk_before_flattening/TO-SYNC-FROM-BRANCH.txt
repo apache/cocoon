@@ -1,0 +1,20 @@
+--------------------------------------------------------------------------------
+Use this file to list stuff that must be synced from BRANCH_2_1_X to the trunk,
+or the opposite.
+
+See http://marc.theaimsgroup.com/?t=112322817300004&r=1&w=2
+
+There are sometimes good reasons to keep some code unsynchronized for some time,
+but we don't want to forget about it, so it can be listed here.
+--------------------------------------------------------------------------------
+
+Slop block: @doktor comments will be added in trunk only as part of the refdoc
+GSoC project. We're still experimenting with this and it might still change,
+so there's no hurry to sync, or maybe we won't sync at all.
+
+Xsltal block is in branch only for now, it can wait for more examples before
+"porting" to trunk.
+
+HtmlUnit test framework is in branch only.
+
+Tour block has been updated for 2.1.8, need to be synced and tested in trunk.

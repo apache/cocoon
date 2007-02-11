@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XInclude Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="in @doctitle@" name="DC.Subject">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document describes the XInclude transformer." name="DC.Description">
+</head>
+<body>
+  
+<h1>XInclude Transformer</h1>
+   
+<p>
+    This transformer works according to the XInclude specification.
+   </p>
+   
+<p>
+    For more information refer to the
+    <a class="external" href="http://www.w3.org/TR/xinclude">XInclude specification</a>.
+   </p>
+   
+<ul>
+    
+<li>Name : xinclude</li>
+    
+<li>Class: org.apache.cocoon.transformation.XIncludeTransformer</li>
+    
+<li>Cacheable: no.</li>
+   
+</ul>
+   
+<p>
+    You can include either simple text, or xml content. 
+    Including xml content -- which is the default --
+    gives you the option to define an xpointer in the href attribute. Some
+    quick xinclude examples should reveal the possibilities of xinclude. 
+   </p>
+   
+<ul>
+    
+<li>
+     Include an xml content as-is: 
+     <span class="codefrag">&lt;xi:include href="include.xml"/&gt;</span>
+    
+</li>
+    
+<li>
+     Include an xml content but pick the strong element only:
+     <span class="codefrag">&lt;xi:include href="include.xml#xpointer(/p/strong)"/&gt;</span>
+    
+</li>
+    
+<li>
+     Include text content:
+     <span class="codefrag">&lt;xi:include parse="text" href="include.txt"/&gt;</span>
+    
+</li>
+   
+</ul>
+
+   
+<p>
+    A simple example using xinclude might help to use this transfomer
+    effectively:
+   </p>
+   
+<p>
+    Add the XIncludetransfomer to the components in your sitemap.xmap
+   </p>
+
+<pre class="code">
+...
+&lt;map:components&gt;
+...
+  &lt;map:transformers default="xslt"&gt;
+  ...
+    &lt;map:transformer name="xinclude"
+      src="org.apache.cocoon.transformation.XIncludeTransformer"/&gt;
+  ...
+</pre>
+
+   
+<p>
+    Next define in your pipeline to use the XIncludeTransformer
+   </p>
+
+<pre class="code">
+&lt;map:match pattern="xinc/simple-xinc"&gt;
+  &lt;map:generate src="xinc/simple-xinc.xml"/&gt;
+  &lt;map:transform type="xinclude"/&gt;
+  &lt;map:transform src="stylesheets/page/simple-page2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+
+   
+<p>
+    In this example pipeline it assumed that simple-xinc.xml contains
+    the include element. As well as defining the include element,
+    it defines the namespace URI "http://www.w3.org/2001/XInclude".
+    This helps the XIncludeTransformer to find the include element to 
+    get replaced by the included content.
+    The simple-xinc.xml may look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page 
+  xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+    &lt;xi:include href="include.xml"/&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre>
+
+   
+<p>
+    Next you should define the include.xml file which is included.
+    A simple include.xml might look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0"?&gt;
+&lt;p&gt;
+  I am &lt;strong&gt;included&lt;/strong&gt; by XIncludeTransformer.
+  I come from "include.xml".
+&lt;/p&gt;
+</pre>
+
+   
+<p>
+    Now finally we have everything put together the xml content after the 
+    XIncludeTransformer processing will look like this:
+   </p>
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page 
+  xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+      &lt;p&gt;
+       I am &lt;strong&gt;included&lt;/strong&gt; by XIncludeTransformer.
+       I come from "include.xml".
+      &lt;/p&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre>
+  
+ 
+</body>
+</html>
