@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0" check-reload="yes">
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
  <map:components>
   <map:classloader factory-role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading">  
