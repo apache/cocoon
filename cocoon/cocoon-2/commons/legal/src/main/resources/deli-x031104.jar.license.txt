@@ -1,0 +1,60 @@
+DELI Delivery Context Library
+
+==========================================================================
+
+Note: this is the 'BSD License' as endorsed by OpenSource.org.
+
+(c) Copyright Hewlett-Packard Company 2001
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+==========================================================================
+
+This distribution includes Jena, RDFFilter, Sax2 and Xerces. 
+
+DELI is released under the Hewlett Packard License above.
+For more details on DELI see
+http://www-uk.hpl.hp.com/people/marbut/
+
+Jena is released under the Hewlett Packard License above.
+For more information on Jena see 
+http://www.hpl.hp.com/semweb
+
+For details of the Xerces license see xerces_license.txt in the distribution.
+Further information on Xerces is available at 
+http://xml.apache.org/xerces-j/index.html
+
+For details of the icu4j license see icu4j_license.txt in the distribution.
+For further information on icu4j is available at
+http://oss.software.ibm.com/icu4j/
+
+Sax2 is Public Domain. 
+Further information on Sax2 is available at
+http://sax.sourceforge.net/
+
+==========================================================================
+
+Welcome! The zip file you have downloaded contains code for the DELI
+library. For more details of DELI, see the Technical Report HPL-2001-260 at
+http://www-uk.hpl.hp.com/people/marbut/
+
+
