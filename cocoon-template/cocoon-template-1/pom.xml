@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>cocoon-blocks-modules</artifactId>
+    <groupId>org.apache.cocoon</groupId>
+    <version>1</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.cocoon</groupId>
+  <artifactId>cocoon-template</artifactId>
+  <packaging>pom</packaging>
+  <name>Template framework</name>
+  <version>1</version>
+  <!--modules>
+    <module>cocoon-template-impl</module>
+  </modules-->
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-1</url>
+  </scm>
+</project>

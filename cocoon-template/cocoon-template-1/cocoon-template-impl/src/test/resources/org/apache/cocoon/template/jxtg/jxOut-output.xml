@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<simple>simple</simple>
+	<nonxmlized>&lt;root&gt;&lt;node&gt;value&lt;/node&gt;&lt;/root&gt;</nonxmlized>
+	<xmlized><root><node>value</node></root></xmlized>
+	<xmlized-noroot><node>value</node></xmlized-noroot>
+	<document>
+		<root>
+			<p>content</p>
+			<p>content2</p>
+		</root>
+	</document>
+	<document-noroot>
+		<p>content</p>
+		<p>content2</p>
+	</document-noroot>
+</root>
