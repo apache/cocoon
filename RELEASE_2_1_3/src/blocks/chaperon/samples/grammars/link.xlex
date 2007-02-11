@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE lexicon PUBLIC "-//Chaperon//DTD lexicon 2.0//EN" "lexicon-v20.dtd">
+
+<lexicon>
+ <!-- (([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))? -->
+ <lexeme symbol="link">
+  <concat>
+   <concat>
+    <cclass maxOccurs="*">
+     <cinterval min="A" max="Z"/>
+     <cinterval min="a" max="z"/>
+    </cclass>
+    <cstring content=":"/>
+    <cstring content="/"/>
+   </concat>
+ 
+   <concat minOccurs="0">
+    <cstring content="/"/>
+    <cclass minOccurs="0" maxOccurs="*">
+     <cinterval min="A" max="Z"/>
+     <cinterval min="a" max="z"/>
+     <cinterval min="0" max="9"/>
+     <cset content="._-:"/>
+    </cclass>
+   </concat>
+ 
+   <cclass minOccurs="0" maxOccurs="*">
+    <cinterval min="A" max="Z"/>
+    <cinterval min="a" max="z"/>
+    <cinterval min="0" max="9"/>
+    <cset content="._-:/"/>
+   </cclass>
+
+   <concat minOccurs="0">
+    <cstring content="?"/>
+    <cclass minOccurs="0" maxOccurs="*">
+     <cinterval min="A" max="Z"/>
+     <cinterval min="a" max="z"/>
+     <cinterval min="0" max="9"/>
+     <cset content="._-:/?"/>
+    </cclass>
+   </concat>
+
+   <concat minOccurs="0">
+    <cstring content="#"/>
+    <cclass minOccurs="0" maxOccurs="*">
+     <cinterval min="A" max="Z"/>
+     <cinterval min="a" max="z"/>
+     <cinterval min="0" max="9"/>
+     <cset content="._-:/?#"/>
+    </cclass>
+   </concat>
+  </concat>
+ </lexeme>
+
+ <lexeme symbol="email">
+  <concat>
+   <concat>
+    <group>
+     <cclass maxOccurs="*">
+      <cinterval min="A" max="Z"/>
+      <cinterval min="a" max="z"/>
+      <cinterval min="0" max="9"/>
+      <cset content="._-:"/>
+     </cclass>
+    </group>
+    <cstring content="@"/>
+    <group>
+     <cclass maxOccurs="*">
+      <cinterval min="A" max="Z"/>
+      <cinterval min="a" max="z"/>
+      <cinterval min="0" max="9"/>
+      <cset content="._-:"/>
+     </cclass>
+    </group>
+   </concat>
+  </concat>
+ </lexeme>
+</lexicon>

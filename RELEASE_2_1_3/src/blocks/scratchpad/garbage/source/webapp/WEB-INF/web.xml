@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE web-app
+          PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+                 "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+
+  <description>Garbage Demo Web Application</description>
+
+  <servlet>
+    <servlet-name>garbage</servlet-name>
+    <servlet-class>org.apache.garbage.servlet.GarbageServlet</servlet-class>
+    <init-param>
+      <param-name>charset</param-name>
+      <param-value>iso-8859-1</param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>garbage</servlet-name>
+    <url-pattern>/templates/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>garbage</servlet-name>
+    <url-pattern>*.gt</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.gt</welcome-file>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

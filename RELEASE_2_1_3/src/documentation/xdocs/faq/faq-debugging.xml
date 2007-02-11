@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE faqs PUBLIC "-//APACHE//DTD FAQ V1.0//EN" "../dtd/faq-v10.dtd">
+
+<faqs title="Debugging FAQs">
+
+<faq>
+  <question>
+  How do I debug Cocoon using JDK1.3+?
+  </question>
+  <answer>
+    <p>
+    With JDK1.3, set the TOMCAT_OPTS (for Tomcat 3.X) or CATALINA_OPTS 
+    (for Tomcat 4.X) as shown below (on Win2K) and then attach the debugger to
+    localhost:8000 using "<code>jdb -attach myhost:8000</code>" More information can be found at 
+    <link href="http://java.sun.com/j2se/1.3.0/docs/guide/jpda/conninv.html">JPDA - Connection and Invocation Details</link>.
+    </p>
+
+    <source><![CDATA[
+set TOMCAT_OPTS=-classic -Xdebug -Xnoagent -Djava.compiler=NONE
+    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 
+]]></source>
+
+    <note>
+    This method is supposed to work under JBuilder4.0 as well.
+    </note>
+  </answer>
+</faq>
+
+
+
+</faqs>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.6 2003/11/07 10:41:26 bdelacretaz Exp $ -->
+
+<samples>
+
+ <group name="Main examples page">
+  <sample name="Back" href="../../samples/">to Cocoon examples main page</sample>
+ </group>
+
+ <group name="Garbage">
+    <sample name="Garbage" href="garbage/">
+      Flowscript Calculator Sample using Garbage Template Generator
+    </sample>
+  </group>
+  
+  <group name="Castor">
+    <sample name="CastorTransformer" href="castor/">
+      Show the usage of the Castor Transformer.
+    </sample>
+  </group>
+
+  <group name="Jelly">
+    <sample name="Test 1" href="jelly/test1">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+    <sample name="Test 2" href="jelly/test2">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+  </group>
+
+  <group name="Intercepted Flow">
+    <sample name="Example" href="intercepted-flow/">
+      Show the usage intercepted JavaScript flow functions
+    </sample>
+  </group>
+  
+  <group name="Image-Based Authentication">
+    <sample name="Image Auth" href="image-auth/">
+      An example of image-based authentication using the Flow layer.  
+      Make sure the Batik block is included before testing this sample.
+    </sample>
+  </group>
+
+  <group name="Betwixt">
+    <sample name="Example" href="betwixt/">
+      Show the usage of the Betwixt Transformer
+    </sample>
+  </group>
+
+  <group name="Sitemap Viewer">
+    <sample name="Sitemap Viewer" href="sitemap-viewer/">
+        Experimental sitemap viewer
+    </sample>
+  </group>
+
+</samples>

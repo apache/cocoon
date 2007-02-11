@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE grammar PUBLIC "-//Chaperon//DTD grammar 2.0//EN" "grammar-v20.dtd">
+
+<grammar>
+ <production symbol="E">
+  <nonterminal symbol="E"/><terminal symbol="plus"/><nonterminal symbol="T"/>
+ </production>
+
+ <production symbol="E">
+  <nonterminal symbol="T"/>
+ </production>
+
+ <production symbol="T">
+  <nonterminal symbol="T"/><terminal symbol="mult"/><nonterminal symbol="F"/>
+ </production>
+
+ <production symbol="T">
+  <nonterminal symbol="F"/>
+ </production>
+
+ <production symbol="F">
+  <terminal symbol="dopen"/><nonterminal symbol="E"/><terminal symbol="dclose"/>
+ </production>
+
+ <production symbol="F">
+  <terminal symbol="id"/>
+ </production>
+
+ <production symbol="F">
+  <terminal symbol="number"/>
+ </production>
+
+ <start symbol="E"/>
+</grammar>

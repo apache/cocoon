@@ -1,0 +1,66 @@
+<!-- === Test targets =========================================================== -->
+
+  <!-- Runs all tests -->
+  <target name="test" depends="junit-tests, block-tests" description="Runs all tests"/>
+
+  <!-- Runs JUnit tests -->
+  <target name="junit-tests" depends="compile-tests">
+    <junit printsummary="yes" haltonfailure="yes" fork="yes">
+      <classpath refid="test.classpath"/>
+      <formatter type="plain" usefile="no" />
+      <batchtest>
+        <fileset dir="${build.test}">
+          <include name="**/*TestCase.class"/>
+          <include name="**/*Test.class" />
+          <exclude name="**/AllTest.class" />
+          <exclude name="**/*$$*Test.class" />
+          <exclude name="**/Abstract*.class" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Anteater tests  -->
+  <target name="anteater-tests" depends="compile-tests,block-anteater-tests">
+    <property name="host" value="localhost"/>
+    <property name="port" value="8888"/>
+    <property name="base" value="/"/>
+    <property name="anteater.home" value="D:\downloads\anteater-0.9.16"/>
+    <available file="${anteater.home}" property="anteater.present"/>
+    <fail unless="anteater.present"
+          message="Please make sure Anteater is installed in ${anteater.home} or adjust the anteater.home property"/>
+    <java classname="org.apache.tools.ant.Main" fork="true">
+      <classpath>
+        <fileset dir="${anteater.home}">
+          <include name="lib/**/*.jar"/>
+          <include name="tomcat/**/*.jar"/>
+        </fileset>
+        <pathelement location="${anteater.home}/resources"/>
+      </classpath>
+      <jvmarg value="-Dant.home=${anteater.home}"/>
+      <jvmarg value="-Danteater.home=${anteater.home}"/>
+      <jvmarg value="-Danteater.resources=${anteater.home}/resources"/>
+      <jvmarg value="-Danteater.report=${anteater.home}/resources/scripts/report.xml"/>
+      <jvmarg value="-Djava.endorsed.dirs=${anteater.home}/lib"/>
+      <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+    </java>
+  </target>
+
+  <!-- Block tests -->
+  <target name="block-tests" depends="compile-tests, prepare-blocks">
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="tests"/>
+
+  </target>
+
+  <target name="block-anteater-tests" depends="prepare-blocks">
+
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="prepare-anteater-tests"/>
+
+  </target>

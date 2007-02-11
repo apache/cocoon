@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Offline Page Generation with the Command Line Interface</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors><person name="Upayavira" email="upayavira@apache.org"/>
+    </authors>
+    <abstract>This document explains how to use the Cocoon Command Line Interface for offline page and site generation.</abstract>
+  </header>
+  <body>
+    <s1 title="Overview">
+      <p>The Command Line Interface provides access to Cocoon's offline generation capabilities.</p>
+      <p>This page gives details of how configure and use the CLI. Details of the concepts behind
+         offline page generation are given on the offline generation 
+         <link href="index.html">overview</link> page.</p>
+    </s1>
+    <s1 title="Invoking the CLI">
+      <p>The CLI can be invoked from the command line. Change to the root directory of your 
+         Cocoon distribution, and then, on Unix use: <code>./cocoon.sh cli &lt;parameters&gt;</code> 
+         and on Windows use <code>cocoon.bat cli &lt;parameters&gt;</code></p>
+      <p>The relevant parameters are detailed in the following sections.</p>
+    </s1>
+    <s1 title="Configuring the CLI">
+      <p>The CLI has two methods of configuration, with an <code>xconf</code> file, and using 
+         command line parameters.</p>
+      <p>The <code>xconf</code> method is the newer, and gives access to a wider range of 
+         features, and is thus explained first.</p>
+      <note>Whilst the xconf method provides access to more features, the command line 
+            parameter method is more stable, as there are currently plans to improve
+            the xconf format to allow greater flexibility. If you require a stable and
+            consistent method for accessing the CLI, it is recommended that you use the 
+            command line parameter method.</note>
+      <s2 title="Using an Xconf file">
+        <p>To start the CLI using an xconf file, on Unix do <code>./cocoon.sh cli -x &lt;xconf file&gt;</code>
+           or on Windows: <code>cocoon cli -x &lt;xconf file&gt;</code>.</p>
+        <p>A sample xconf file, with comments describing each option, is included below.</p>
+        <source>
+<![CDATA[
+<?xml version="1.0"?>
+
+<!--+
+    |  This is the Apache Cocoon command line configuration file. 
+    |  Here you give the command line interface details of where
+    |  to find various aspects of your Cocoon installation.
+    |
+    |  If you wish, you can also use this file to specify the URIs
+    |  that you wish to generate.
+    |
+    |  The current configuration information in this file is for
+    |  building the Cocoon documentation. Therefore, all links here 
+    |  are relative to the build context dir, which, in the build.xml 
+    |  file, is set to ${build.context} 
+    |
+    |  Options:
+    |    verbose:            increase amount of information presented
+    |                        to standard output (default: false)
+    |    follow-links:       whether linked pages should also be 
+    |                        generated (default: true)
+    |    precompile-only:    precompile sitemaps and XSP pages, but 
+    |                        do not generate any pages (default: false)
+    |    confirm-extensions: check the mime type for the generated page
+    |                        and adjust filename and links extensions
+    |                        to match the mime type 
+    |                        (e.g. text/html->.html)
+    |
+    |  Note: Whilst using an xconf file to configure the Cocoon 
+    |        Command Line gives access to more features, the use of 
+    |        command line parameters is more stable, as there are 
+    |        currently plans to improve the xconf format to allow 
+    |        greater flexibility. If you require a stable and
+    |        consistent method for accessing the CLI, it is recommended 
+    |        that you use the command line parameters to configure 
+    |        the CLI.</note>
+    |
+    +-->
+    
+<cocoon verbose="true"  
+        follow-links="true" 
+        precompile-only="false" 
+        confirm-extensions="true">
+
+   <!--+
+       |  The context directory is usually the webapp directory
+       |  containing the sitemap.xmap file.
+       |
+       |  The config file is the cocoon.xconf file.
+       |
+       |  The work directory is used by Cocoon to store temporary
+       |  files and cache files.
+       |  
+       |  The destination directory is where generated pages will
+       |  be written (assuming the 'simple' mapper is used, see 
+       |  below)
+       +-->
+   <context-dir>build/webapp</context-dir>
+   <config-file>WEB-INF/cocoon.xconf</config-file>
+   <work-dir>build/work</work-dir>
+   <dest-dir>build/dest</dest-dir>
+
+   <!--+
+       | Broken link reporting options:
+       |   Report into a text file, one link per line:
+       |     <broken-links type="text" report="filename"/>
+       |   Report into an XML file:
+       |     <broken-links type="xml" report="filename"/>
+       |   Ignore broken links (default):
+       |     <broken-links type="none"/>
+       |     
+       |   Two attributes to this node specify whether a page should
+       |   be generated when an error has occured. 'generate' specifies 
+       |   whether a page should be generated (default: true) and
+       |   extension specifies an extension that should be appended
+       |   to the generated page's filename (default: none)
+       |   
+       |   Using this, a quick scan through the destination directory
+       |   will show broken links, by their filename extension.
+       +-->
+   <broken-links type="xml" 
+                 file="brokenlinks.xml"
+                 generate="false"
+                 extension=".error"/>
+   
+   <!--+
+       |  Load classes at startup. This is necessary for generating
+       |  from sites that use SQL databases and JDBC.
+       |  The <load-class> element can be repeated if multiple classes
+       |  are needed.
+       +-->
+   <!--
+   <load-class>org.firebirdsql.jdbc.Driver</load-class>
+   -->
+
+   <!--+
+       |  Configures logging. 
+       |  The 'log-kit' parameter specifies the location of the log kit 
+       |  configuration file (usually called logkit.xconf. 
+       | 
+       |  Logger specifies the logging category (for all logging prior 
+       |  to other Cocoon logging categories taking over)
+       |
+       |  Available log levels are:
+       |    DEBUG:        prints all level of log messages.
+       |    INFO:         prints all level of log messages except DEBUG 
+       |                  ones.
+       |    WARN:         prints all level of log messages except DEBUG 
+       |                  and INFO ones.
+       |    ERROR:        prints all level of log messages except DEBUG, 
+       |                  INFO and WARN ones.
+       |    FATAL_ERROR:  prints only log messages of this level
+       +-->
+   <logging log-kit="build/webapp/WEB-INF/logkit.xconf" logger="cli" level="DEBUG" />
+
+   <!--+
+       |  Specifies the filename to be appended to URIs that
+       |  refer to a directory (i.e. end with a forward slash).
+       +-->
+   <default-filename>index.html</default-filename>
+
+   <!--+
+       |  Specifies a user agent string to the sitemap when
+       |  generating the site.
+       +-->
+   <!--
+   <user-agent>xxx</user-agent>
+   -->
+
+   <!--+
+       |  Specifies an accept string to the sitemap when generating
+       |  the site.
+       +-->
+   <accept>*/*</accept>
+   
+   <!--+
+       | Specifies which URIs should be included or excluded, according
+       | to wildcard patterns. 
+       | 
+       | By default, all URIs are included. If both include and exclude
+       | patterns are specified, a URI is first checked against the 
+       | include patterns, and then against the exclude patterns.
+       | 
+       | Multiple patterns can be given, using muliple include or exclude
+       | nodes. 
+       | 
+       | The order of the elements is not significant, as only the first 
+       | successful match of each category is used.
+       | 
+       | Currently, only the complete source URI can be matched (including
+       | any URI prefix). Future plans include destination URI matching 
+       | and regexp matching. If you have requirements for these, contact
+       | dev@cocoon.apache.org.
+       +-->
+   <include pattern="**"/>
+   <exclude pattern="docs/apidocs/**"/>
+   
+<!--   <include-links extension=".html"/>-->
+   
+   <!--+
+       |  <uri> nodes specify the URIs that should be generated, and 
+       |  where required, what should be done with the generated pages.
+       |
+       |  Append: append the generated page's URI to the end of the 
+       |  source URI:
+       |
+       |   <uri type="append" src-prefix="documents/" src="index.html"
+       |   dest="build/dest/"/>
+       |
+       |  Replace: Completely ignore the generated page's URI - just 
+       |  use the destination URI:
+       |
+       |   <uri type="replace" src-prefix="documents/" src="index.html" 
+       |   dest="build/dest/docs.html"/>
+       |
+       |  Insert: Insert generated page's URI into the destination 
+       |  URI at the point marked with a * (example uses fictional 
+       |  zip protocol)
+       |
+       |   <uri type="insert" src-prefix="documents/" src="index.html" 
+       |   dest="zip://*.zip/page.html"/>
+       |
+       |  If in any of these scenarios, the dest attribute is omitted,
+       |  the value provided globally using the <dest-dir> node will 
+       |  be used.
+       +-->
+
+   <uri type="replace" 
+        src-prefix="samples/" 
+        src="hello-world/hello.html"
+        dest="build/dest/hello-world.html"/>
+        
+   <!--+
+       | <uri> nodes can be grouped together in a <uris> node. This 
+       | enables a group of URIs to share properties. The following
+       | properties can be set for a group of URIs:
+       |   * follow-links:       should pages be crawled for links
+       |   * confirm-extensions: should file extensions be checked
+       |                         for the correct mime type
+       |   * src-prefix:         all source URIs should be 
+       |                         pre-pended with this prefix before
+       |                         generation. The prefix is not 
+       |                         included when calculating the 
+       |                         destination URI
+       |   * dest:               the base destination URI to be
+       |                         shared by all pages in this group
+       |   * type:               the method to be used to calculate
+       |                         the destination URI. See above 
+       |                         section on <uri> node for details.
+       | 
+       | Each <uris> node can have a name attribute. When a name
+       | attribute has been specified, the -n switch on the command
+       | line can be used to tell Cocoon to only process the URIs
+       | within this URI group. When no -n switch is given, all 
+       | <uris> nodes are processed. Thus, one xconf file can be 
+       | used to manage multiple sites.
+       +-->
+   <uris name="docs" follow-links="true">
+     <uri type="append" src-prefix="docs/" src="index.html"
+          dest="build/dest/" />
+   </uris>
+   
+   <uris name="samples" follow-links="false"
+         confirm-extensions="true"
+         src-prefix="samples/"
+         dest="build/dest/examples/"
+         type="append"
+         >
+      <uri src=""/>
+      <uri src="hello-world/"/>
+      <uri src="hello-world/hello.html"/>
+      <uri src="hello-world/hello.xml"/>
+   </uris>
+
+   <!--+
+       |  File containing URIs (plain text, one per
+       |  line).
+       +-->
+   <!--
+   <uri-file></uri-file>
+   -->
+   
+</cocoon>
+]]>
+        </source>
+        <s3 title="Broken Link Handling">
+        <p>The xconf method allows for more sophisticated broken link handling. The
+             user can select to have broken links reported to a file, this file being
+             either text or XML.</p>
+            <p>When this file is plain text, it will have one link URI per line.</p>
+          <p>When this file is in XML, it will detail a message explaining the reason
+             for the broken link, as well as the URI of the link.</p>
+          <p>It is also possible to specify whether an error page should be generated 
+             in the place of the broken page (based upon the configured 
+             <code>&lt;map:handle-errors&gt;</code> code in the sitemap). If required,
+             an extension can be appended to the original file's URI to signify that
+             it is an error page (e.g. <code>.error</code>).</p>
+        </s3>
+      </s2>
+      <s2 title="Command Line Parameters">
+        <p>You can get a listing of the available parameters on unix with 
+        <code>./cocoon.sh cli -h</code> or on Windows with <code>cocoon cli -h</code>.
+        This should give a listing something like:</p>
+        <source>
+-------------------- Executing -----------------
+Main Class: org.apache.cocoon.Main
+usage: cocoon cli [options] [targets]
+------------------------------------------------------------------------
+cocoon 2.1
+Copyright (c) 1999-2003 Apache Software Foundation. All rights reserved.
+------------------------------------------------------------------------
+ -a,--userAgent            use given string for user-agent header
+ -e,--confirmExtensions    confirm that file extensions match mime-type of
+                           pages and amend filename accordingly (default is true)
+ -C,--configFile           specify alternate location of the configuration
+                           file (default is ${contextDir}/cocoon.xconf)
+ -D,--defaultFilename      specify a filename to be appended to a URI when
+                           the URI refers to a directory
+ -L,--loadClass            specify a class to be loaded at startup
+                           (specifically for use with JDBC). Can be used multiple times
+ -P,--precompileOnly       generate java code for xsp and xmap files
+ -V,--verbose              enable verbose messages to System.out
+ -b,--brokenLinkFile       send a list of broken links to a file (one URI
+                           per line)
+ -c,--contextDir           use given dir as context
+ -d,--destDir              use given dir as destination
+ -f,--uriFile              use a text file with uris to process (one URI
+                           per line)
+ -h,--help                 print this message and exit
+ -k,--logKitconfig         use given file for LogKit Management
+                           configuration
+ -l,--Logger               use given logger category as default logger for
+                           the Cocoon engine
+ -p,--accept               use given string for accept header
+ -r,--followLinks          process pages linked from starting page or not
+                           (boolean argument is expected, default is true)
+ -u,--logLevel             choose the minimum log level for logging
+                           (DEBUG, INFO, WARN, ERROR, FATAL_ERROR) for startup logging
+ -v,--version              print the version information and exit
+ -w,--workDir              use given dir as working directory
+ -x,--xconf                specify a file containing XML configuration
+                           details for the command line interface
+Note: the context directory defaults to './webapp'
+        </source>
+        <p>For details of the meaning of each specific parameter, see the <link href="index.html">overview</link>
+           page.</p>
+        <s3 title="Specifying Targets">
+          <p>The command line parameter method does not have access to all of Cocoon's URI handling features. However,
+             it is possible to specify multiple URIs to be crawled, all of which will be written to the same destination,
+             and that destination (specified by the <code>-d</code> or <code>--destDir</code> option, may be a file URI
+             or any other protocol for which a ModifiableSource exists (e.g. FTP).</p>
+        </s3>
+        <s3 title="URI Files">
+          <p>A URI file offers a simple way to specify multiple URIs. The file is treated as one URI per line.</p>
+        </s3>
+        <s3 title="Broken Link Handling">
+          <p>If a broken link file is specified, all broken links will be written to this file, in text format,
+             one URI per line.</p>
+        </s3>
+      </s2>
+    </s1>
+  </body>
+</document>
+

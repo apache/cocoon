@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+  <header>
+    <title>Long Line Without Word Boundaries</title>
+  </header>
+
+  <body>
+    <section>
+      <title>Source element with plain text</title>
+      <source>
+_________1_________2_________3_________4_________5_________6_________7
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+LongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundariesLongLineWithoutWordBoundaries
+      </source>
+    </section>
+
+  </body>
+</document>

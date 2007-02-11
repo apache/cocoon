@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coplets>
+   <coplet-data id="Newsweek" name="standard">
+      <title>Newsweek</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/newsweek.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="NYTBusiness" name="standard">
+      <title>NYT Business</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/NYTBusiness.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="BBCNews" name="standard">
+      <title>BBC News</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/BBCNews.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CNET News" name="standard">
+      <title>CNET News</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CNET_news.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CNET Business" name="standard">
+      <title>CNET Business News</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CNET_business.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CSTNews" name="standard">
+      <title>Chicago Sunday Times</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CSTNews.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CNNEurope" name="standard">
+      <title>CNN Europe</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CNNEurope.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="ML Weblog" name="standard">
+      <title>ML's Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/ML_weblog.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CZ Weblog" name="standard">
+      <title>CZ's Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/liverss?feed=http://radio.weblogs.com/0107211/rss.xml</value>
+      </attribute>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>error-uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/CZ_weblog.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Weblog" name="standard">
+      <title>Another Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/weblog.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Introduction" name="standard">
+      <title>Cocoon Introduction</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/introduction.html</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Overview" name="standard">
+      <title>Cocoon Overview</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/overview.html</value>
+      </attribute>
+   </coplet-data>
+
+   <!-- The portal introduction coplet -->
+   <coplet-data id="Portal-Intro" name="standard">
+      <title>Introduction</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-intro.html</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Portal-Right" name="standard">
+      <title>Right</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-right.html</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Portal-Left" name="standard">
+      <title>Left</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-left.html</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Portal-Bottom" name="standard">
+      <title>Bottom</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-bottom.html</value>
+      </attribute>
+   </coplet-data>
+
+
+</coplets>
