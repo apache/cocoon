@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-tools-modules</artifactId>
+    <version>1</version>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <artifactId>cocoon-deployer-modules</artifactId>
+  <version>1</version>
+    
+  <packaging>pom</packaging>
+  <name>Cocoon Deployer [modules]</name>
+
+  <modules>
+    <module>cocoon-deployer-minimal-webapp</module>     
+    <module>cocoon-deployer-plugin</module>
+    <module>cocoon-deployer-plugin-demo</module>
+    <module>cocoon-tutorial-simple-block</module>             
+  </modules>
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-modules-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-modules-1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-modules-1</url>
+  </scm>
+</project>
