@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<html xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+<head>
+    <title>image authentication</title>
+</head>
+<body>
+
+    <h1>Image-based authentication</h1>
+    
+    <p>As a security measure, please enter the string you see below.</p>
+ 
+    <img src="auth-${continuation.id}.jpg"/>
+
+    <form method="post" action="${continuation.id}.flow">
+        <input type="text" name="secret"/>
+        <input type="submit"/>        
+    </form>
+    
+    
+</body>
+</html>

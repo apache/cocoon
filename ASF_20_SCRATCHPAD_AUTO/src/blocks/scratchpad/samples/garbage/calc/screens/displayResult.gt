@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<!--+
+    | CVS: $Id: displayResult.gt,v 1.4 2004/02/17 00:04:38 joerg Exp $
+    | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
+    | Date: March 23, 2002
+    +-->
+
+<page>
+  <resources>
+    <resource type="file" href="calc.js">Flowscript</resource>
+  </resources>
+  <title>Calculator</title>
+  <content>
+    <form action="./" method="post">
+      <para>a = <strong>#{a}</strong></para>
+      <para>b = <strong>#{b}</strong></para>
+      <para>Operator = <strong>#{operator}</strong></para>
+      <para>Result = <strong>#{result}</strong></para>
+      <input type="submit" name="submit" value="Start over"/>
+    </form>
+  </content>
+</page>
