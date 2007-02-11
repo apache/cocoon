@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2005 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components>
+    <map:transformers default="xslt">
+      <map:transformer name="tool-layout"
+                       src="org.apache.cocoon.portal.tools.transformation.PortalToolsLayoutTransformer" />
+	  <map:transformer name="i18n" 
+	                   src="org.apache.cocoon.portal.tools.transformation.PortalToolsI18nTransformer">
+        <catalogues default="portalTools" new="no">
+          <catalogue id="portalTools" name="portalTools" location="cocoon:/i18n"/>
+        </catalogues>
+        <cache-at-startup>true</cache-at-startup>
+      </map:transformer>
+    </map:transformers>
+    <map:generators default="file">
+	  <map:generator name="i18nc" src="org.apache.cocoon.portal.tools.generation.I18nCatalogueGenerator"/>
+    </map:generators>
+    <map:actions>
+    	<map:action name="check-access-action" src="org.apache.cocoon.portal.tools.acting.CheckAccessAction"/>
+    </map:actions>
+  </map:components>
+
+<!-- flow script -->
+  <map:flow language="javascript">
+    <map:script src="flow.js" />
+  </map:flow>
+
+  <map:pipelines>
+
+<!-- select skin to use -->
+    <map:component-configurations>
+      <map:global-variables>
+      	
+      </map:global-variables>
+
+    </map:component-configurations>
+
+<!-- Now the accessible pipelines -->
+    <map:pipeline>
+		
+		<map:match pattern="">
+			<map:redirect-to uri="tools"/>
+		</map:match>
+
+		<map:match pattern="i18n/**">
+			<map:generate src="{1}" type="i18nc"/>
+			<map:serialize type="xml"/>
+		</map:match>
+		
+      <map:match pattern="*.continue">
+        <map:call continuation="{1}" />
+      </map:match>
+
+      <map:match pattern="*.jx">
+        <map:generate type="jx" src="main/{1}.jx">
+          <map:parameter name="lenient-xpath" value="false" />
+        </map:generate>
+        <map:transform type="tool-layout"></map:transform>
+        <map:transform type="i18n"/>
+        <map:transform src="{portal-skin:skin.basepath}/styles/tab.xsl" />
+        <map:transform src="skins/{portal-skin:skin}/styles/function.xsl" />
+        <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
+					<map:parameter name="base" value="{portalpath:relative}"/>
+					<map:parameter name="title" value="{global:toolsTitle}"/>
+        </map:transform>
+        <map:serialize type="html"></map:serialize>
+      </map:match>
+
+      <map:match pattern="*/*.jx">
+        <map:generate type="jx" src="main/{2}.jx">
+          <map:parameter name="lenient-xpath" value="false" />
+        </map:generate>
+        <map:transform type="tool-layout">
+          <map:parameter name="selected" value="{1}" />
+        </map:transform>
+        <map:transform type="i18n"></map:transform>
+        <map:transform src="{portal-skin:skin.basepath}/styles/tab.xsl" />
+        <map:transform src="skins/{portal-skin:skin}/styles/function.xsl" />
+        <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
+					<map:parameter name="base" value="{portalpath:relative}"/>
+					<map:parameter name="title" value="{global:toolsTitle}"/>
+        </map:transform>
+        <map:serialize type="html"></map:serialize>
+      </map:match>
+
+      <map:match pattern="*">
+        <map:call function="{1}"></map:call>
+      </map:match>
+
+      <map:match pattern="functions/*">
+        <map:call function="functions">
+          <map:parameter name="name" value="{1}" />
+        </map:call>
+      </map:match>
+
+<!-- mount sub-sitemaps -->
+      <map:match pattern="plugins/*/**">
+     	 <map:act type="cowarp-is-logged-in">
+            <map:parameter name="handler" value="portal-handler"/> 
+            <map:parameter name="application" value="portal"/> 
+	      	<map:act type="check-access-action">
+	    		<map:parameter name="url" value="{../1}/{../2}"/>
+      		    
+      		    <map:mount uri-prefix="plugins/{../../1}" check-reload="yes" src="plugins/{../../1}/sitemap.xmap"/>
+			</map:act>
+		</map:act>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>
+<!-- end of file -->

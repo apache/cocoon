@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Image Effects Samples">
+
+  <group name="Main examples page.">
+    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  </group>
+
+  <group name="The Original">
+    <sample href="image" name="Image">
+      Image of original size and color.
+    </sample>
+  </group>
+
+  <group name="ImageReader - Size Scaling">
+    <sample href="logo2.png/scale-0.5-jpg" name="Image Scaled">
+      An PNG file is read from the system, scaled to half size and
+      converted to JPG, which is returned to the client.
+    </sample>
+    <sample href="logo2.png/resize-50-50" name="Image 50x50">
+      Image scaled down to the size 50 x 50.
+    </sample> 
+    <sample href="logo2.png/resize-250-250" name="Image 250x250">
+      Image scaled up to the size 250 x 250.
+    </sample>
+    <sample href="logo2.png/resize-50-100" name="Image 50x100">
+      Image scaled along x-axis only.
+    </sample>
+  </group>
+
+  <group name="ImageReader - Color Manipulation">
+    <sample href="logo2.png/grayscale" name="Image grayscaled">
+      The image in gray.
+    </sample>
+    <sample href="logo2.png/color-2-1-1-0-0-0" name="Image tinted red">
+      The values for the color red are doubled.
+    </sample>
+    <sample href="logo2.png/color-1-2-1-0-0-0" name="Image tinted green">
+      The values for the color green are doubled.
+    </sample>
+    <sample href="logo2.png/color-1-1-2-0-0-0" name="Image tinted blue">
+      The values for the color blue are doubled.
+    </sample>
+    <sample href="logo2.png/color-1-1-1-50-0-0" name="Image tinted red">
+      The values for the color red are incremented by 50.
+    </sample>
+    <sample href="logo2.png/color-1-1-1-0-50-0" name="Image tinted green">
+      The values for the color green are incremented by 50.
+    </sample>
+    <sample href="logo2.png/color-1-1-1-0-0-50" name="Image tinted blue">
+      The values for the color blue are incremented by 50.
+    </sample>
+  </group>
+
+  <group name="ImageReader - Transforms">
+    <note>
+      We provide the following transform samples as-is, but sadly they don't
+      work satisfactorily.  Your contribution to fix them will be greatly
+      appreciated.
+    </note>
+    <sample href="logo2.png/rotate-90" name="Image Rotate 90 degree">
+      The image is rotated 90 degrees clockwise.
+    </sample>
+    <sample href="logo2.png/rotate-180" name="Image Rotate 180 degree">
+      The image is rotated 180 degrees clockwise.
+    </sample>
+    <sample href="logo2.png/rotate-270" name="Image Rotate 270 degree">
+      The image is rotated 270 degrees clockwise.
+    </sample>
+    <sample href="logo2.png/mirror-false" name="Image Mirrored Horizontally">
+      The image is mirrored along the X-axis.
+    </sample>
+    <sample href="logo2.png/mirror-true" name="Image Mirrored Vertically">
+      The image is mirrored along the Y-axis.
+    </sample>
+  </group>
+  
+  <group name="ImageReader - Visuals">
+    <sample href="logo2.png/sharpen" name="Image Sharpened">
+      The image is sharpened with a medium strength convolve operation.
+    </sample>
+    <sample href="logo2.png/blur" name="Image Blurred">
+      The image is blurred with a medium strength convolve operation.
+    </sample>
+  </group>
+</samples>

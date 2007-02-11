@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+    <content>
+        <p>
+            Depending on who you ask, you might get different answers: Cocoon 2 has become
+            a rather big project, or more precisely a rather big collection of modular
+            components, and as such means different things to different people.
+        </p>
+        <p>
+            Today, more than 40 <em>blocks</em> are available to acquire, process and publish
+            XML data, and to build interactive applications based on XML and java technologies.
+            Cocoon does not contain millions of lines of codes, but rather reuses a lot of
+            Open-Source tools and libraries, combining them in a very modular way.
+        </p>
+        <p>
+            In the beginning, Cocoon was only a <em>web publishing framework</em>, meant to
+            convert different document types to HTML, PDF and similar formats for publishing.
+        </p>
+        <p>
+            Today, and especially with the <em>Cocoon Forms</em> and <em>Flow</em> components
+            that we're going to discuss, Cocoon is becoming a full-blown web applications framework,
+            covering a large set of use cases and targeting different styles of developers.
+        </p>
+        <p>
+            By covering the mainstream aspects of Cocoon as it stands at the beginning of 2004,
+            this <em>supersonic tour</em> will help you get a feel of what Cocoon is about, and
+            help you find your way in this big collection of components.
+        </p>
+    </content>
+</page>

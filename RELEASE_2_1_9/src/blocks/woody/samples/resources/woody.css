@@ -1,0 +1,75 @@
+/*
+* Copyright 1999-2004 The Apache Software Foundation
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+.woody-tab {
+    background-color: white;
+    border: 1px solid black;
+    border-bottom-width: 0px;
+    padding: 2px 1em 2px 1em;
+    margin-right: 5px;
+    position: relative;
+    text-decoration: none;
+    top: -1px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.woody-tab.woody-activeTab {
+    font-weight: bold;
+    padding-top: 5px;
+    cursor: default;
+    z-index: 3;
+}
+
+.woody-tabContent {
+    background-color: white;
+    border: 1px solid black;
+    padding: 1em;
+    position: relative;
+    z-index: 2;
+}
+
+.woody-validation-message, a.woody-validation-message:link {
+    color: red;
+    font-weight: bold;
+}
+
+.woody-validation-errors {
+}
+
+.woody-validation-error {
+}
+
+.woody-field-required {
+	color:blue;
+    font-weight: bold;
+}
+
+.woody-help {
+    border-style: dotted;
+    border-width: 1px;
+    padding: 5px;
+    background-color:#FFFFC0; /* light yellow */
+    width: 200px; /* otherwise IE does a weird layout */
+    z-index:1000; /* must be higher than woody-tabContent */
+}
+
+.woody-doubleList select {
+    width: 150px;
+}
+
+.woody-doubleList input {
+    width: 40px;
+}

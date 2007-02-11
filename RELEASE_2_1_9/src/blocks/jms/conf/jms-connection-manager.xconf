@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<xconf xpath="/cocoon" unless="jms-connection-manager">
+  <!-- +
+    | Configuration of a set JMS Connections. 
+    | Three types of connections can be configured: 
+    | - general <connection>s: created by a call to ConnectionFactory.createConnection()
+    | - <topic-connection>s: created by a call to TopicConnectionFactory.createTopicConnection()
+    | - <queue-connection>s: created by a call to QeueuConnectionFactory.createQueueConnection()
+    | 
+    | Each connection must have a unique name. This is the name other components
+    | use to retrieve it.
+    | 
+    | All connection types support the same set of parameters:
+    | - javax.naming.*: properties used to create the initial JNDI context.
+    |   JNDI parameters must be specified with their literal values here.
+    |   For example, javax.naming.Context.INITIAL_CONTEXT_FACTORY is 
+    |   equivalent to "java.naming.factory.initial".
+    | - connection-factory: the JNDI lookup name of the javax.jms.ConnectionFactory service.
+    | - username / password: optional connection credentials
+    | - auto-reconnect: when the JMS connection fails when this parameter is set to true
+    |   a cron job will be scheduled to attempt to re-establish the connection. Default is false.
+    | - auto-reconnect-delay: the amount of time in ms between reconnection attempts. 
+    |   Only applies when auto-reconnect is on. Defaults to 1000ms.
+    + -->
+  <jms-connection-manager logger="core.jms">
+    <topic-connection name="local-topics">
+      <parameter name="java.naming.factory.initial" value="org.exolab.jms.jndi.InitialContextFactory"/>
+      <parameter name="java.naming.provider.url" value="rmi://localhost:1099/"/>
+      <!-- OpenJMS RMI topic connection factory -->
+      <parameter name="connection-factory" value="JmsTopicConnectionFactory"/>
+      <!--
+      <parameter name="username" value="user"/>
+      <parameter name="password" value="secret"/>
+      <parameter name="auto-reconnect" value="false"/>
+      <parameter name="auto-reconnect-delay" value="1000"/>
+      -->
+    </topic-connection>
+  </jms-connection-manager>
+</xconf>
