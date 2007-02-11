@@ -26,7 +26,9 @@
 
     <!-- Defines a SOAP RPC reader that will serve SOAP requests via HTTP-POST. -->
     <map:reader logger="sitemap.reader.soap-rpc" name="soap-rpc"
-                src="org.apache.cocoon.reading.AxisRPCReader"/>
+                src="org.apache.cocoon.reading.AxisRPCReader">
+      <development-stage>false</development-stage>
+    </map:reader>
 
   </map:readers>
 
@@ -41,9 +43,7 @@
 
     <!-- Match SOAP RPC Router requests -->
     <map:match pattern="rpcrouter">
-      <map:read type="soap-rpc" mime-type="text/xml">
-        <in-development-stage>false</in-development-stage>
-      </map:read>
+      <map:read type="soap-rpc" mime-type="text/xml"/>
     </map:match>
 
     <!-- Send all non qualified requests to the status page -->
