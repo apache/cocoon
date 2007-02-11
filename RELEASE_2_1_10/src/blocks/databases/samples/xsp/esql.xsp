@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS: $Id$ -->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2">
+
+  <page>
+    <title>A Database Driven XSP Page</title>
+    <resources>
+      <resource type="file" href="../schema.sql">Schema</resource>
+      <resource type="doc" href="userdocs/xsp/esql">ESQL</resource>
+    </resources>
+
+    <content>
+      <esql:connection>
+        <esql:pool>personnel</esql:pool>
+
+        <h3>Below you see all of the guys</h3>
+        <ul>
+          <esql:execute-query>
+            <esql:query>select * from employee</esql:query>
+            <esql:results>
+              <esql:row-results>
+                <li><esql:get-string column="name"/></li>
+                <!-- uncomment if you want columns to become tags -->
+                <!-- <esql:get-columns/> -->
+              </esql:row-results>
+            </esql:results>
+          </esql:execute-query>
+        </ul>
+
+        <h3>Below you see just some of the guys</h3>
+        <esql:execute-query>
+          <esql:query>select * from employee</esql:query>
+          <esql:use-limit-clause>jdbc</esql:use-limit-clause>
+          <esql:skip-rows>1</esql:skip-rows>
+          <esql:max-rows>2</esql:max-rows>
+          <esql:results>
+            <ul>
+              <esql:row-results>
+                <li><esql:get-string column="name"/></li>
+              </esql:row-results>
+              <esql:previous-results>
+                <li>We skipped some.</li>
+              </esql:previous-results>
+              <esql:more-results>
+                <li>There are some more.</li>
+              </esql:more-results>
+            </ul>
+            <para>
+              There is a total of <esql:row-count/> employees.
+            </para>
+          </esql:results>
+        </esql:execute-query>
+
+        <h3>
+          Below departments and employees are printed.
+          Without the grouping feature, the result would look like this:
+        </h3>
+
+        <esql:execute-query>
+          <esql:query>
+            SELECT department.name, employee.id, employee.name as empName FROM department, employee
+            WHERE department.id = employee.department_id  ORDER BY department.name
+          </esql:query>
+          <esql:results>
+            <esql:row-results>
+              <Department>
+                <xsp:attribute name='name'><esql:get-string column='name'/></xsp:attribute>
+                <h4><esql:get-string column='name'/></h4>
+                <para><employee><esql:get-string column='empName'/></employee></para>
+              </Department>
+            </esql:row-results>
+          </esql:results>
+        </esql:execute-query>
+
+        <h3>
+          This uses the grouping feature in esql.
+        </h3>
+
+        <esql:execute-query>
+          <esql:query>
+            SELECT department.name, employee.id, employee.name as empName FROM department, employee
+            WHERE department.id = employee.department_id  ORDER BY department.name
+          </esql:query>
+          <esql:results>
+            <esql:row-results>
+              <esql:group group-on='name'><!-- grouping -->
+                <Department>
+                  <xsp:attribute name='name'><esql:get-string column='name'/></xsp:attribute>
+                  <h4><esql:get-string column='name'/></h4>
+                  <esql:member><!-- grouping -->
+                    <para><employee><esql:get-string column='empName'/></employee></para>
+                  </esql:member><!--grouping -->
+                </Department>
+              </esql:group><!-- grouping -->
+            </esql:row-results>
+          </esql:results>
+        </esql:execute-query>
+
+        <h3>This uses nested queries.</h3>
+        <esql:execute-query>
+          <esql:query>
+            SELECT name, id FROM department ORDER BY name
+          </esql:query>
+          <esql:results>
+            <esql:row-results>
+              <Department>
+                <xsp:attribute name='name'><esql:get-string column='name'/></xsp:attribute>
+                <h4><esql:get-string column='name'/></h4>
+
+                <esql:execute-query>
+                  <esql:query>
+                    select name from employee
+                    where department_id = <esql:parameter type="int"><esql:get-int column="id" ancestor="1"/></esql:parameter>
+                  </esql:query>
+                  <esql:results>
+                    <esql:row-results>
+                      <para><employee><esql:get-string column='name'/></employee></para>
+                    </esql:row-results>
+                  </esql:results>
+                </esql:execute-query>
+
+              </Department>
+            </esql:row-results>
+          </esql:results>
+        </esql:execute-query>
+
+      </esql:connection>
+
+    </content>
+  </page>
+</xsp:page>

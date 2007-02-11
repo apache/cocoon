@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | FOP block samples sitemap
+    | CVS $Id$
+    +-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+<!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline type="caching">
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+
+      <!-- list of samples -->
+      <map:match pattern="welcome">
+        <map:generate src="misc/samples.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
+      <!-- hello world -->
+      <map:match pattern="hello.pdf">
+        <map:generate src="context://samples/hello-world/content/hello.xml"/>
+        <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
+        <map:serialize type="fo2pdf"/>
+      </map:match>
+
+      <map:match pattern="hello.ps">
+        <map:generate src="context://samples/hello-world/content/hello.xml"/>
+        <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
+        <map:serialize type="fo2ps"/>
+      </map:match>
+
+      <!-- xsl-fo document access -->
+      <map:match pattern="**/*.fo.xml">
+        <map:generate src="{1}/{2}.fo.xml"/>
+        <!-- This stylesheet makes image URLs absolute, so that FOP can
+        display images. {realpath:/} returns the absolute path of the
+        context root. -->
+        <map:transform src="misc/fix-imagelinks.xsl" label="content">
+          <map:parameter name="ctxroot" value="{realpath:/}"/>
+          <map:parameter name="dir" value="samples/fop/{1}/"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <!-- PDF conversion -->
+      <map:match pattern="**/*.pdf">
+        <map:generate src="cocoon:/{1}/{2}.fo.xml"/>
+        <map:serialize type="fo2pdf"/>
+      </map:match>
+
+      <!-- reuse the XSP caching example for our caching test -->
+      <map:match pattern="cache-test-*.pdf">
+        <!-- note that caching didn't work when accessing the XSP using the cocoon:/ protocol -->
+        <map:generate src="../xsp/java/cacheable.xsp" type="serverpages"/>
+        <map:transform src="cache-test/xsp-sample-to-fo.xsl">
+           <map:parameter name="pages" value="{1}"/>
+        </map:transform>
+        <map:serialize type="fo2pdf"/>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

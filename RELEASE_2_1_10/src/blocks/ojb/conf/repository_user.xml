@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OJB USER MAPPINGS START HERE -->
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  $Id$
+-->
+
+    <!-- Add your own mappings here -->
+
+    <class-descriptor class="org.apache.cocoon.ojb.samples.bean.Department" table="DEPARTMENT">
+        <field-descriptor name="id"   column="ID"   jdbc-type="INTEGER" primarykey="true"/>
+        <field-descriptor name="name" column="NAME" jdbc-type="VARCHAR"/>
+    </class-descriptor>
+
+    <class-descriptor class="org.apache.cocoon.ojb.samples.bean.Employee" table="EMPLOYEE">
+        <field-descriptor name="id"             column="ID"             jdbc-type="INTEGER" primarykey="true"/>
+        <field-descriptor name="departmentId" column="DEPARTMENT_ID" jdbc-type="INTEGER"/>
+        <field-descriptor name="name"           column="NAME"           jdbc-type="VARCHAR"/>
+    </class-descriptor>
+
+ 
+     <class-descriptor class="org.apache.cocoon.ojb.samples.bean.User" table="USER">
+        <field-descriptor name="uid"             column="UID"             jdbc-type="INTEGER" primarykey="true"/>
+        <field-descriptor name="lastname"           column="NAME"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="firstname"           column="FIRSTNAME"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="username"           column="UNAME"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="password"           column="PWD"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="role"           column="ROLE"           jdbc-type="VARCHAR"/>
+    </class-descriptor>
+    
+    <!-- mappings for the QueryBean Block -->
+    <class-descriptor class="org.apache.cocoon.bean.query.SimpleLuceneCriterionBean" table="CRITERION">
+        <field-descriptor name="id"   column="ID"   jdbc-type="BIGINT" primarykey="true" autoincrement="true"/>
+        <field-descriptor name="qid" column="Q_ID" jdbc-type="BIGINT" access="anonymous"/>
+        <field-descriptor name="field" column="C_FIELD" jdbc-type="VARCHAR"/>
+        <field-descriptor name="match" column="C_MATCH" jdbc-type="VARCHAR"/>
+        <field-descriptor name="term" column="C_TERM" jdbc-type="VARCHAR"/>
+    </class-descriptor>
+
+    <class-descriptor class="org.apache.cocoon.bean.query.SimpleLuceneQueryBean" table="QUERY">
+        <field-descriptor name="id"   column="ID"   jdbc-type="BIGINT" primarykey="true" autoincrement="true"/>
+        <field-descriptor name="user" column="USER_ID" jdbc-type="VARCHAR"/>
+        <field-descriptor name="date" column="Q_DATE" jdbc-type="TIMESTAMP" conversion="org.apache.ojb.broker.accesslayer.conversions.JavaDate2SqlTimestampFieldConversion"/>
+        <field-descriptor name="bool" column="Q_BOOL" jdbc-type="VARCHAR"/>
+        <field-descriptor name="name" column="Q_NAME" jdbc-type="VARCHAR"/>
+        <field-descriptor name="type" column="Q_TYPE" jdbc-type="VARCHAR"/>
+        <field-descriptor name="size" column="Q_SIZE" jdbc-type="BIGINT"/>
+        <collection-descriptor
+            name="criteria"
+            element-class-ref="org.apache.cocoon.bean.query.SimpleLuceneCriterionBean"
+            auto-retrieve="true"
+            auto-update="true"
+            auto-delete="true">
+            <inverse-foreignkey field-ref="qid"/>
+        </collection-descriptor>
+    </class-descriptor>
+
+<!-- END OF OJB USER MAPPINGS-->

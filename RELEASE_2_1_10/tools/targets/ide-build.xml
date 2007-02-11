@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<project name="ide">
+  <description>IDE targets</description>
+
+  <!-- for those who like long names.. -->
+  <target name="eclipse-customized-project" depends="eclipse-project"/>
+  
+  <target name="init-full-eclipse-project">
+    <property name="unconditional.include.all.blocks" value="true"/>
+  </target>
+  
+  <target name="full-eclipse-project" depends="init-full-eclipse-project, eclipse-project" description="Generate the Eclipse project with all cocoon blocks included."/>
+  
+  <!-- Build the Eclipse customized project's files -->
+  <target name="eclipse-project" depends="prepare"
+    description="Generate the Eclipse customized project files (using local.block.properties).">
+    <echo message="Building Eclipse Customized Project Files"/>
+    <xslt in="${gump.descriptor}"
+          out="${build.temp}/blocks-eclipse.xml"
+          style="${tools}/ide/eclipse/blocks-classpath.xsl"/>
+
+    <ant antfile="${build.temp}/blocks-eclipse.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="generate-customized-eclipse-project"/>
+  </target>
+
+  <!-- Generate the Emacs JDE project file -->
+  <target name="emacs-project" depends="prepare" description="Generate the Emacs project files">
+    <path id="jar.files">
+      <fileset dir="${build.webapp}/WEB-INF/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${build.context}/WEB-INF/classes"/>
+    </path>
+    <property name="jar.files" refid="jar.files"/>
+    <copy file="${tools}/ide/emacs/prj.el.in" tofile="prj.el" filtering="yes">
+      <filterset>
+        <filter token="jar.files" value="${jar.files}"/>
+        <filter token="src" value="${java}"/>
+        <filter token="build.webapp" value="${build.webapp}"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- Prepares the webapp to make it directly usable with the eclipse project -->
+  <target name="eclipse-webapp-prepare" depends="eclipse-webapp-delete-jars, eclipse-webapp-restore-roles"
+          description="Prepares the webapp directory to make it usable within Eclipse"/>
+
+  <target name="eclipse-webapp-restore-roles" depends="prepare" description="Restore cocoon.roles (for use with eclipse)">
+      <copy file="${build.dest}/org/apache/cocoon/cocoon.roles"
+            tofile="${build.webapp}/WEB-INF/classes/org/apache/cocoon/cocoon.roles"
+            overwrite="yes"/>
+  </target>
+
+  <target name="eclipse-webapp-delete-jars" depends="prepare">
+      <!-- delete all jars and class files, they are already included in the project -->
+      <delete>
+          <fileset dir="${build.webapp}/WEB-INF">
+            <include name="lib/*.jar" />
+            <include name="classes/**/*.class" />
+          </fileset>
+      </delete>
+  </target>
+</project>

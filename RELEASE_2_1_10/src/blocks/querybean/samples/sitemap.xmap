@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- CVS $Id: sitemap.xmap 56371 2004-11-02 13:17:20Z cziegeler $ -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Components =================================== -->
+
+	<map:components>
+		<map:transformers default="xslt">
+			<map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+				<catalogues default="forms">
+					<catalogue id="local" name="messages" location="i18n"/>
+					<catalogue id="forms" name="FormsMessages" location="context://samples/blocks/forms/messages"/>
+				</catalogues>
+			</map:transformer>
+     <map:transformer name="lucene-indexer" src="org.apache.cocoon.transformation.LuceneIndexTransformer"/>
+		</map:transformers>
+		<map:pipes default="caching"/>
+	</map:components>
+
+<!-- =========================== FlowScripts =================================== -->
+
+	<map:flow language="javascript">
+		<map:script src="flow/query.js"/>
+		<map:script src="flow/indexer.js"/>
+	</map:flow>
+
+<!-- =========================== Views =================================== -->
+
+<map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+
+  <map:view from-label="content" name="pretty-content">
+   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:serialize type="html"/>
+  </map:view>
+
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
+  </map:view>
+
+</map:views>
+
+<!-- =========================== Pipelines ================================= -->
+
+<map:pipelines>
+
+		<map:component-configurations>
+			<global-variables>
+				<history>_query_bean_history_</history><!-- the name of the Session Attribute, used to store History -->
+				<lucene-analyzer>org.apache.lucene.analysis.standard.StandardAnalyzer</lucene-analyzer><!-- the name of the Lucene Analyzer to use -->	
+				<!--+
+						|		The path to the Lucene Index to use. 
+						|
+						| 	If you supply an absolute path, this will be used as-is
+						| 	If you supply a non-absolute path, this will be used inside the 
+						|		servlet's work-directory. If stored here, it will be destroyed on shutdown.
+						|
+						+-->
+				<lucene-directory>cocoon-docs</lucene-directory>
+			</global-variables>
+		</map:component-configurations>
+
+		<map:pipeline internal-only="true">
+		
+			<map:act type="locale">
+			
+				<!-- displays the forms -->
+				<map:match pattern="form/*">
+					<map:generate type="jx" src="forms/{1}-template.xml"/>
+					<map:transform type="forms">
+						<map:parameter name="locale" value="{../locale}"/>  
+					</map:transform>
+					<map:transform type="i18n">
+						<map:parameter name="locale" value="{../locale}"/>  
+					</map:transform>
+					<map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl"/>
+					<map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+						<map:parameter name="contextPath" value="{request:contextPath}"/>
+					</map:transform>
+					<map:serialize/>
+				</map:match>
+
+				<!-- prepare the document for indexing -->
+				<map:match pattern="prepare4indexing/**">
+					<map:generate src="{1}"/>
+					<map:transform src="stylesheets/content2lucene.xsl"/>
+					<map:serialize type="xml"/>
+				</map:match>
+
+				<!-- the lucene indexer -->
+				<map:match pattern="screen/indexer">
+					<map:generate type="jx" src="screens/lucene-indexer.xml"/>
+					<map:transform type="cinclude"/>
+					<map:transform type="lucene-indexer"/>
+					<map:transform src="stylesheets/lucene2simple-page.xsl"/>
+					<map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+						<map:parameter name="contextPath" value="{request:contextPath}"/>
+					</map:transform>
+					<map:serialize/>
+				</map:match>
+	
+				<!-- displays the rest of the screens -->
+				<map:match pattern="screen/*">
+					<map:generate type="jx" src="screens/{1}.xml"/>
+					<map:transform type="i18n">
+						<map:parameter name="locale" value="{../locale}"/>  
+					</map:transform>
+					<map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+						<map:parameter name="contextPath" value="{request:contextPath}"/>
+					</map:transform>
+					<map:serialize/>
+				</map:match>
+				
+			</map:act>
+
+		</map:pipeline>
+  
+		<map:pipeline>
+
+			<!--					
+			 Used for CForms Continuations
+			
+			 must be placed before external page pipelines
+			 and after internal screen pipelines
+			 otherwise you get infinite loops					 
+			-->				
+			<map:match type="request-parameter" pattern="continuation-id">
+				<map:call continuation="{1}"/>
+			</map:match>
+
+			<!-- home page -->
+            <map:match pattern="">
+                <map:redirect-to uri="cocoon:/screen/index"/>
+            </map:match>
+            <map:match pattern="welcome">
+                <map:redirect-to uri="cocoon:/screen/index"/>
+            </map:match>
+
+            <!-- redirect to the found pages -->
+            <map:match pattern="*/welcome">
+                <map:redirect-to uri="cocoon://samples/blocks/{1}/"/>
+            </map:match>
+            
+            <map:match pattern="images/**">
+                <map:read src="resources/images/{1}"/>
+            </map:match>
+
+			<!-- create the index from the contents of a collection -->
+			<map:match pattern="create.html">
+				<map:call function="indexCollection">
+					<map:parameter name="screen" value="screen/indexer"/>
+					<map:parameter name="lucene-directory" value="{global:lucene-directory}"/>
+					<map:parameter name="lucene-analyzer" value="{global:lucene-analyzer}"/>
+					<map:parameter name="lucene-merge-factor" value="10"/>
+					<map:parameter name="lucene-create-index" value="false"/>
+					<map:parameter name="lucene-content" value="cocoon:/prepare4indexing/"/>
+					<map:parameter name="content-directory" value="../"/>
+					<map:parameter name="include-pattern" value="welcome\.xml$"/>
+					<map:parameter name="result-directory" value=""/>
+					<map:parameter name="result-suffix" value=""/>
+				</map:call>
+			</map:match>
+
+			<!-- update the index with a single resource -->
+			<map:match pattern="update/**">
+				<map:call function="indexItem">
+					<map:parameter name="screen" value="screen/indexer"/>
+					<map:parameter name="lucene-directory" value="{global:lucene-directory}"/>
+					<map:parameter name="lucene-analyzer" value="{global:lucene-analyzer}"/>
+					<map:parameter name="lucene-merge-factor" value="10"/>
+					<map:parameter name="lucene-create-index" value="false"/>
+					<map:parameter name="lucene-content" value="cocoon:/prepare4indexing/"/>
+					<map:parameter name="content-directory" value="{global:root}"/>
+					<map:parameter name="indexer-target" value="{1}"/><!-- the resource to be indexed -->
+					<map:parameter name="result-directory" value=""/>
+					<map:parameter name="result-suffix" value=""/>
+				</map:call>
+			</map:match>
+
+			<!-- list history -->
+			<map:match pattern="history.html">
+				<map:call function="showHistory">
+					<map:parameter name="screen" value="screen/history"/>
+					<map:parameter name="history" value="{global:history}"/>
+				</map:call>
+			</map:match>
+			
+			<!-- clear history -->
+			<map:match pattern="clear-history.html">
+				<map:call function="clearHistory">
+					<map:parameter name="screen" value="screen/history"/>
+					<map:parameter name="history" value="{global:history}"/>
+				</map:call>
+			</map:match>
+
+			<!-- list favourites -->
+			<map:match pattern="favourites.html">
+				<map:call function="showFavourites">
+					<map:parameter name="screen" value="screen/favourites"/>
+					<map:parameter name="user-id" value="anon"/>
+					<!-- NB. this value is for testing .... it is more likely you would use a value like the commented out one below -->
+					<!--<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>-->
+				</map:call>
+			</map:match>
+
+			<!-- add a history item to the favourites, using the history ID -->
+			<map:match pattern="add-favourite.html">
+				<map:call function="addFavourite">
+					<map:parameter name="screen" value="screen/favourites"/>
+					<map:parameter name="user-id" value="anon"/>
+					<!-- NB. this value is for testing .... it is more likely you would use a value like the commented out one below -->
+					<!--<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>-->
+					<map:parameter name="hid" value="{request-param:hid}"/>
+					<map:parameter name="history" value="{global:history}"/>
+				</map:call>
+			</map:match>
+
+			<!-- remove an item from the favourites, using the favourite ID -->
+			<map:match pattern="remove-favourite.html">
+				<map:call function="removeFavourite">
+					<map:parameter name="screen" value="screen/favourites"/>
+					<map:parameter name="user-id" value="anon"/>
+					<!-- NB. this value is for testing .... it is more likely you would use a value like the commented out one below -->
+					<!--<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>-->
+					<map:parameter name="fid" value="{request-param:fid}"/>
+				</map:call>
+			</map:match>
+
+			<!-- do the searches -->
+			<map:match pattern="*.html">
+				<map:call function="doSearch">
+					<map:parameter name="form" value="form/{1}"/>
+					<map:parameter name="form-definition" value="forms/{1}-model.xml"/>
+					<map:parameter name="bindingURI" value="forms/{1}-binding.xml"/>
+					<map:parameter name="lucene-directory" value="{global:lucene-directory}"/>
+					<map:parameter name="lucene-analyzer" value="{global:lucene-analyzer}"/>
+					<map:parameter name="screen" value="screen/results"/>
+					<map:parameter name="history" value="{global:history}"/>
+					<map:parameter name="type" value="{1}"/>
+					<map:parameter name="hid" value="{request-param:hid}"/>
+					<map:parameter name="fid" value="{request-param:fid}"/>
+					<map:parameter name="page" value="{request-param:page}"/>
+					<map:parameter name="query" value="{request-param:query}"/>
+					<map:parameter name="match" value="{request-param:match}"/>
+					<map:parameter name="field" value="{request-param:field}"/>
+					<map:parameter name="size" value="{request-param:size}"/>
+					<map:parameter name="bool" value="{request-param:bool}"/>
+				</map:call>
+			</map:match>
+
+			<!-- used in the docs, to show files -->
+			<map:match pattern="**.xml">
+				<map:generate src="{1}.xml"/>
+				<map:serialize type="xml"/>
+			</map:match>
+
+		</map:pipeline>
+	</map:pipelines>
+
+</map:sitemap>

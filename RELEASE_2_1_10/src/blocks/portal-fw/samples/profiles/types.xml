@@ -1,0 +1,125 @@
+<?xml version="1.0" standalone="yes"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ 
+
+ Description: The type profile
+
+-->
+
+<type-profile>
+
+   	 <typedefs>
+		<!-- The following types are defined by the portal engine: (Names are casesensitiv!)
+                  	      STRING, BOOLEAN, ENUMERATION, INTEGER, CARDINAL -->
+		<typedef name="backgroundcolor" type="ENUMERATION">
+			<value name="white">#ffffff</value>
+			<value name="light-grey">#cccccc</value>
+			<value name="dark-grey">#666666</value>
+			<value name="black">black</value>
+
+			<value name="green-blue">#aab9bf</value>
+			<value name="dark-green-blue">#46627A</value>
+
+			<value name="light-blue">#CDD5EA</value>
+			<value name="dark-blue">#272676</value>
+			
+			<value name="pink">#FFCCCC</value>
+			<value name="red">#E13024</value>
+			<value name="dark-red">#7F0007</value>
+
+			<value name="light-orange">#FFCC66</value>
+			<value name="orange">#FF9900</value>
+			<value name="dark-orange">#FF6600</value>
+	
+			<value name="light-yellow">#F7F7BD</value>
+			<value name="yellow">#FFCC00</value>
+
+			<value name="light-green">#ABBEAB</value>
+			<value name="green">#4A594A</value>
+
+		</typedef>
+		<typedef name="textcolor" type="ENUMERATION">
+			<value name="white">#ffffff</value>
+			<value name="light-grey">#cccccc</value>
+			<value name="dark-frey">#666666</value>
+			<value name="black">black</value>
+
+			<value name="green-blue">#aab9bf</value>
+			<value name="dark-green-blue">#46627A</value>
+
+			<value name="light-blue">#CDD5EA</value>
+			<value name="dark-blue">#272676</value>
+			
+			<value name="pink">#FFCCCC</value>
+			<value name="red">#E13024</value>
+			<value name="dark-red">#7F0007</value>
+
+			<value name="light-orange">#FFCC66</value>
+			<value name="orange">#FF9900</value>
+			<value name="dark-orange">#FF6600</value>
+	
+			<value name="light-yellow">#F7F7BD</value>
+			<value name="yellow">#FFCC00</value>
+
+			<value name="light-green">#ABBEAB</value>
+			<value name="green">#4A594A</value>
+		</typedef>
+		<typedef name="copletsize" type="ENUMERATION">
+			<value name="Maximized">max</value>
+			<value name="Minimized">min</value>
+		</typedef>
+		<typedef name="columnnumber" type="ENUMERATION">
+			<value name="1">1</value>
+			<value name="2">2</value>
+			<value name="3">3</value>
+			<value name="4">4</value>
+			<value name="5">5</value>
+		</typedef>
+   	</typedefs>
+
+	<elements>
+		<layout-profile>
+		<portal><layouts>
+			<layout>
+			<background>
+				<color type="backgroundcolor" description="Backgroundcolor"/>
+			</background>
+			<font><color type="textcolor" description="Fontcolor"/>
+			</font>
+			</layout>
+			</layouts>
+			<columns><number type="columnnumber" description="Amount"/></columns>
+		</portal>
+		</layout-profile>
+		<portal-profile>
+			<content>
+				<column position="*">
+					<width type="CARDINAL" description="Width"/>
+					<coplets>
+						<coplet id="*" position="*" number="*">
+							<status>
+								<visible type="BOOLEAN" description="Visibile"/>
+								<size type="copletsize" description="Size"/>
+							</status>
+						</coplet>
+					</coplets>
+				</column>
+			</content>
+		</portal-profile>
+	</elements>
+</type-profile>

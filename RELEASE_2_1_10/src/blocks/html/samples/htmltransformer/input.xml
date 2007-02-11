@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id: samples.xml 158439 2005-03-21 10:17:23Z cziegeler $ -->
+
+<html-transformer-test>
+  <div id="explain">
+    <p>
+      This XML file contains HTML code with escaped markup: tags are written
+      like &amp;lt;body/&amp;gt; with escaped &lt; and &gt; signs. This is
+      often the case with RSS feeds.
+    </p>
+    <p>
+      In this example, the HTMLTransformer is configured to parse the contents
+      of the &lt;description&gt; and &lt;escaped-html&gt;, elements, creating
+      well-formed content from this escaped markup.
+    </p>
+    <p>
+      A downstream transform is used to filter the result, as the HTMLTransformer
+      writes full HTML documents as &lt;html&gt; elements, for each input element
+      that it parses.
+    </p>
+    <p>
+      For more info search "HTMLTransformer" in the sitemap that drives this sample.
+    </p>
+  </div>
+  <div id="content-with-escaped-html">
+    <div id="example-1">
+      <description>
+        <!-- this element does not contain markup, only text with escaped &lt; and &gt; signs -->
+        &lt;div style="background: #FFFFCC; color: black; margin: 1em;"&gt;
+        &lt;h1&gt;Here's some escaped HTML&lt;/h1&gt;
+        This test document contains escaped HTML code in the description elements,
+        as is customary in RSS documents for example.
+        &lt;p&gt;
+
+        &lt;img align="right" src="http://cocoon.apache.org/2.1/images/cocoon.gif"/&gt;
+
+        This description element contains escaped html markup, which should be
+        converted to proper html by the HTMLTransformer. If the Cocoon logo is shown
+        properly, it means that the parsing worked.
+        &lt;blockquote&gt;
+        This should be a blockquote and &lt;b&gt;here's some bold&lt;/b&gt;.
+        &lt;/blockquote&gt;
+        Note that the HTMLTransformer generates a complete HTML document for each element that
+        is parsed - here this is filtered downstream to keep only the contents of the &amp;lt;body&amp;gt;
+        of the parsed documents.
+        &lt;/div&gt;
+      </description>
+    </div>
+
+    <div id="example-2">
+      <escaped-html>
+        &lt;div style="background: #FFFFCC; color: black; margin: 1em;"&gt;
+        &lt;h1&gt;More escaped HTML&lt;/h1&gt;
+
+         &lt;img align="right" src="http://cocoon.apache.org/2.1/images/cocoon.gif"/&gt;
+
+         Another description element with escaped html markup, including a Cocoon logo.
+         &lt;p&gt;
+         Here's some &lt;i&gt;italic&lt;/i&gt; and a &lt;a href="http://cocoon.apache.org"&gt;
+         link to the Cocoon site&lt;/a&gt;.
+
+         &lt;/div&gt;
+      </escaped-html>
+    </div>
+  </div>
+</html-transformer-test>
