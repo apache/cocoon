@@ -104,7 +104,7 @@
             If you set the internal-only value to "no", you'll get the unsecure version of the viewer, 
             set it to "yes" to make it secure. -->
             
-        <map:pipeline internal-only="yes" label="srcviewing">
+        <map:pipeline internal-only="yes">
         
             <map:match pattern="src/**">
                 <map:mount uri-prefix="src" src="unsecure.xmap"/>
@@ -285,10 +285,6 @@
                   </map:generate>
                   <map:serialize type="xml"/>
               </map:match>
-
-        <map:pipeline>
-
-        </map:pipeline>
 
             <map:match pattern="**">
                 <map:generate  src="cocoon:/{1}._xmap"/>
