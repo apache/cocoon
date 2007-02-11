@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page
+    xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+>
+    <content>
+        <p>
+            The <em>view/singleTask</em> page (for example
+            <a href="../view/singleTask?taskId=2">view/singleTask?taskId=2</a>) is built in a similar way
+            than the tasksList page, without requiring new definitions in the sitemap.
+        </p>
+        <p>
+            Shown below are the singleTask-specific portions of our code. Refer to the
+            <a href="tasklist.html">taskList</a> page for the corresponding sitemap excerpts.
+        </p>
+        <h2>Flowscript query and display methods</h2>
+        <p>
+            These methods query the java objects and call the appropriate pipeline for display:
+            <pre class="code">
+0020 // Query a single TaskBean object and display it
+0021 function query_singleTask() {
+0022    id = cocoon.request.getParameter("taskId");
+0023    bean = db.getTaskBeanById(id);
+0024    displayTaskBean(id,bean);
+0025 }
+...
+0038 // Display a single TaskBean
+0039 function displayTaskBean(id,bean) {
+0040    cocoon.sendPage("internal/generate-view/singleTask", {
+0041        title : "Task #" + id,
+0042        task : bean,
+0043        selectedTaskId : id
+0044    });
+0045 }
+            </pre>
+        </p>
+        <p>
+            Note that no error checking is done, for example for a missing <em>taskId</em>
+            parameter. This would obviously be needed in a production application.
+        </p>
+        <h2>JXTemplate page</h2>
+        <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/cocoon-app/views/singleTaskView.xml/page"/>
+    </content>
+</page>

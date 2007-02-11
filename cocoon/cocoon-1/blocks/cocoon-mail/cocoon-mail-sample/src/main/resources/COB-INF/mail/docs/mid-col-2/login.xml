@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<document>
+  <header>
+    <title>CocoonMail Login</title>
+    <authors>
+      <person name="Bernhard Huber" email="berni_huber@a1.net"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="CocoonMail Login">
+      <p>
+        A simple site for Using Cocoon as WebMail Engine.
+      </p>
+      <div
+        style="background-color: lightgrey; border: 1px dotted #333; padding: 5px; margin: 5px;"
+      >
+        <p>
+          Enter your login and password for your IMAP access...
+        </p>
+        <form action="mail/mail.html" method="GET">
+          <div class="row">
+            <span class="label">Userid</span>
+            <span class="formw"><input type="text" name="mail-userid"/></span>
+          </div>
+          <div class="row">
+            <span class="label">Password</span>
+            <span class="formw"><input type="password" name="mail-password"/></span>
+          </div>
+          <div class="row">
+            <span class="label"></span>
+            <span class="formw"><input name="Login" value="Login" type="submit"/></span>
+          </div>
+          <input type="hidden" name="cmd" value="list-folder"/>
+          <input type="hidden" name="folder" value="~"/>
+        </form>
+        <br/>
+      </div>
+      <p>
+        You may want to check your sitemap, again?
+      </p>
+      <p>
+        Be sure that the IMAP server is configured properly in your <code>sitemap.xmap</code>.
+      </p>
+    </s1>
+  </body>
+</document>

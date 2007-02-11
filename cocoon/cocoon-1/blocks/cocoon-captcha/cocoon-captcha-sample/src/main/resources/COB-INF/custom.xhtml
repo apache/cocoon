@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2006 The Apache Software Foundation or its licensors,
+  as applicable.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+  <head>
+    <title>Customize your CAPTCHAs</title>
+    <script language="javascript">//<!--
+      function generate(form) {
+        var imageuri = "custom.jpeg";
+        imageuri += "?text="       + form['text'].value;
+        imageuri += "&width="      + form['width'].value;
+        imageuri += "&height="     + form['height'].value;
+        imageuri += "&background=" + form['background'].value;
+        imageuri += "&foreground=" + form['foreground'].value;
+        imageuri += "&font="       + form['font'].value;
+        imageuri += "&scale="      + form['scale'].value;
+        imageuri += "&amount="     + form['amount'].value;
+        imageuri += "&quality="    + form['quality'].value;
+        imageuri += "&random="     + Math.random();
+        if (document.all) {
+          document.all['captcha'].src = imageuri;
+        } else {
+          document.getElementById('captcha').src = imageuri;
+        }
+        return(false);
+      }
+    //--></script>
+  </head>
+  <body onload="generate(document.forms['form']);">
+    <div style="text-align: center">
+      <p><a href="welcome">Back to the samples</a></p>
+
+      <p>
+        This page demonstrate the capabilities of
+        Cocoon's <code>CaptchaReader</code>.
+      </p>
+
+      <form id="form" onsubmit="return generate(this);">
+        <table border="0" align="center" cellspacing="0" cellpadding="0">
+          <tr><td><input type="text" name="text"       value="welcome"/></td><td>The text to render</td></tr>
+          <tr><td><input type="text" name="width"      value="100"/></td>    <td>The width of the image.</td></tr>
+          <tr><td><input type="text" name="height"     value="50"/></td>     <td>The height of the image.</td></tr>
+          <tr><td><input type="text" name="background" value="white"/></td>  <td>The background color of the image.</td></tr>
+          <tr><td><input type="text" name="foreground" value="black"/></td>  <td>The foreground color of the image.</td></tr>
+          <tr><td><input type="text" name="font"       value="serif"/></td>  <td>The font used to write the text.</td></tr>
+          <tr><td><input type="text" name="scale"      value="5"/></td>      <td>The scaling factor for rendering quality.</td></tr>
+          <tr><td><input type="text" name="amount"     value="1"/></td>      <td>The amount of text warping.</td></tr>
+          <tr><td><input type="text" name="quality"    value="0.75"/></td>   <td>The quality of the JPEG to produce.</td></tr>
+        </table>
+        <input type="submit" value="Generate"/>
+      </form>
+      
+      <img id="captcha"/>
+    </div>
+  </body>
+</html>

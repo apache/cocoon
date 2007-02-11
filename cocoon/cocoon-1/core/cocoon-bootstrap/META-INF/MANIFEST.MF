@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: cocoon_bootstrap
+Bundle-SymbolicName: cocoon_bootstrap
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Bundle-ClassPath: target/osgi/lib/commons-jci-r306555.jar
+Export-Package: org.apache.cocoon.bootstrap.servlet,
+ org.apache.cocoon.classloader,
+ org.apache.commons.jci.monitor
+Import-Package: javax.servlet;version="2.3.0",
+ javax.servlet.http;version="2.3.0"

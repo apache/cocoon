@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+ 
+ <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+  
+  <map:view name="content1" from-label="content1">
+   <map:serialize type="xml"/>
+  </map:view>  
+
+  <map:view from-label="content" name="pretty-content">
+   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:serialize type="html"/>
+  </map:view>
+
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
+  </map:view>
+ </map:views>
+ 
+ <map:resources>
+   <!-- this will later become a virtual transformer -->
+   <map:resource name="simple-page2html">
+     <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+       <map:parameter name="servletPath" value="{request:servletPath}"/>
+       <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+       <map:parameter name="file" value="{file}"/>
+       <map:parameter name="remove" value="{../0}"/>
+     </map:transform> 
+   </map:resource>
+ </map:resources>
+
+  <!-- indicates what flowscript to attach to this sitemap -->
+  <map:flow language="javascript">
+    <map:script src="flow/captcha.js"/>
+  </map:flow>
+
+ <map:pipelines>
+   <map:pipeline>
+
+     <map:match pattern="">
+       <map:call function="captcha"/>
+     </map:match>
+
+     <map:match pattern="*.cont">
+       <map:call continuation="{1}"/>
+     </map:match>
+
+     <map:match pattern="success">
+       <map:generate type="jx" src="success.xml"/>
+       <map:call resource="simple-page2html">
+         <map:parameter name="file" value="success.xml"/>
+       </map:call>
+       <map:serialize/>
+     </map:match>
+
+     <!--
+        | Show a form, using the forms transformer
+        -->
+     <map:match pattern="*-display-pipeline">
+       <map:generate type="file" src="forms/{1}.tpl.xml"/>
+       <map:transform type="forms" label="content1"/>
+       <map:transform type="i18n">
+         <!--map:parameter name="locale" value="en-US"/-->
+       </map:transform>
+       <map:call resource="simple-page2html">
+         <map:parameter name="file" value="forms/{1}.tpl.xml"/>
+       </map:call>
+       <map:transform src="../resources/forms-samples-styling.xsl">
+         <map:parameter name="resources-uri" value="../resources"/>
+       </map:transform>
+       <map:transform type="i18n">
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+
+    <!--
+       | Generate the CAPTCHA image. Any type of generator can be used here,
+       | as long as it reads the string to display from the session
+       | attribute named "captcha-{1}".
+       | Using an SVG file as input requires that the Batik block be
+       | included in the build.
+       -->
+    <map:match pattern="captcha-*.jpg">
+      <map:generate type="jx" src="captcha-image.xml">
+        <map:parameter name="value" value="{session-attr:captcha-{1}}"/>
+      </map:generate>
+      <map:serialize type="svg2jpeg"/>
+    </map:match>
+    
+    <map:match pattern="*">
+      <map:redirect-to uri="{1}/"/>
+    </map:match>
+
+   </map:pipeline>
+ </map:pipelines>
+
+</map:sitemap>

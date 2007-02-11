@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
+<components>
+
+  <!--+
+      | Configuration for the continuations manager.
+      |
+      | This section specifies the default time-to-live of continuations
+      | in miliseconds using the "time-to-live" attribute of
+      | the <continuations-manager> element.
+      |
+      | The <expirations-check> element specifies different policies for
+      | expiring continuations. Currently only the "periodic" type is
+      | supported.
+      |
+      | If you need higher security you can bind your continuations
+      | to session. This way only the session that initially created
+      | the continuation can later resume it. Also if session gets
+      | invalidated all continuations are invalidated as well.
+      | Enable this feature for web applications by setting
+      | 'session-bound-continuations' to true.
+      +-->
+  <continuations-manager logger="flow.manager" 
+                         time-to-live="3600000"
+                         session-bound-continuations="false">
+    <expirations-check type="periodic">
+      <offset>180000</offset>
+      <period>180000</period>
+    </expirations-check>
+  </continuations-manager>
+
+</components>
