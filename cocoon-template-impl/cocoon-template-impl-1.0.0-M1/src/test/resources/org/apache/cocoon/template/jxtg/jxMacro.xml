@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<jx:macro name="d">
+		<jx:parameter name="p"/>
+		<macroTest a="${p}">
+			<jx:evalBody/>
+		</macroTest>
+	</jx:macro>
+	<m>
+		<d p="foo">
+			<content b="${1+2}"/>
+		</d>
+	</m>
+	<n>
+		<jx:set var="macroName" value="d"/>
+		<jx:call macro="${macroName}">
+			<jx:withParam name="p" value="bar"/>
+			<content b="${2+3}"/>
+		</jx:call>
+		<jx:call macro="d">
+			<jx:withParam name="p" value="bar1"/>
+			<content b="${2+3+1}"/>
+		</jx:call>
+	</n>
+	<o>
+		<jx:macro name="stringContainer">
+			<jx:parameter name="c"/>
+			<containerValue>${c.value}</containerValue>
+		</jx:macro>
+
+		<stringContainer c="${container}"/>
+		<jx:call macro="stringContainer">
+			<jx:withParam name="c" value="${container}"/>
+		</jx:call>
+	</o>
+</root>

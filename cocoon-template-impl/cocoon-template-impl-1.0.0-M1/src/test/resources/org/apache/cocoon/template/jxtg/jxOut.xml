@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<simple><jx:out value="${value}"/></simple>
+	<nonxmlized><jx:out value="${xml}"/></nonxmlized>
+	<xmlized><jx:out value="${xml}" xmlize="true"/></xmlized>
+	<xmlized-noroot><jx:out value="${xml}" xmlize="true" strip-root="true"/></xmlized-noroot>
+	<document><jx:out value="${document}"/></document>
+	<document-noroot><jx:out value="${document}" strip-root="true"/></document-noroot>
+</root>
