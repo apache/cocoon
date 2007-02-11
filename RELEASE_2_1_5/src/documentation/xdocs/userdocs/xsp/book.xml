@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon XSP"
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../../index.html"/>
+    <menu-item label="User Documentation" href="../index.html"/>
+  </menu>
+
+  <menu label="XSP">
+    <menu-item label="Overview" href="index.html"/>
+    <menu-item label="XSP Guide" href="logicsheet.html"/>
+    <menu-item label="XSP Internals" href="xsp-internals.html"/>
+    <menu-item label="XSP Logicsheets" href="logicsheet-concepts.html"/>
+    <menu-item label="Sessions" href="sessions.html"/>
+  </menu>
+
+  <menu label="Logicsheets">
+    <menu-item label="Request" href="request.html"/>
+    <menu-item label="Session" href="session.html"/>
+    <menu-item label="ESQL" href="esql.html"/>
+    <menu-item label="Forms" href="logicsheet-forms.html"/>
+    <menu-item label="Sendmail" href="sendmail.html"/>
+  </menu>
+
+</book>
+
+

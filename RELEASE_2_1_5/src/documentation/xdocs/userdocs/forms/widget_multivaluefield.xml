@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: multivaluefield widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Concept">
+      <p>The fd:multivaluefield is similar to the
+      <link href="widget_field.html">field widget</link> but
+      can take multiple values. Its purpose is to handle those (HTML) form
+      controls which submit their multiple values as multiple (HTTP) request parameters
+      with the same name. A multivaluefield should always have
+      an fd:datatype element combined with a fd:selection-list, since
+      the user will have to select values from this list.</p>
+
+      <p>The fd:multivaluefield could be rendered as a list of checkboxes
+      or as a listbox in which the user can select multiple items.
+      The CForms stylesheets also include a styling option to render
+      them as a "double list", i.e. a list of available and selected
+      values.</p>
+
+      <p>The setValue and getValue methods of the multivaluefield take
+      respectively return arrays of objects (i.e. Object[]). The type
+      of the objects in these arrays should match the datatype declared
+      for the widget.</p>
+    </s1>
+
+    <s1 title="Configuration">
+
+      <source><![CDATA[<fd:multivaluefield id="...">
+  <fd:label>...</fd:label>
+  <fd:help>...</fd:help>
+  <fd:hint>...</fd:hint>
+  <fd:datatype base="...">
+    [...]
+  </fd:datatype>
+  <fd:selection-list>
+    [...]
+  </fd:selection-list>
+  <fd:validation>
+    [...]
+  </fd:validation>
+  <fd:on-value-changed>
+     [...]
+  </fd:on-value-changed>
+</fd:multivaluefield>]]></source>
+
+      <p>Most of the elements and attributes have the same meaning
+      as for the <link href="widget_field.html">field</link> widget.</p>
+
+      <p>Note: A multivaluefield cannot have a required attribute,
+      instead you should use the value-count validator to
+      check the number of values the user has selected.</p> 
+    </s1>
+  </body>
+</document>

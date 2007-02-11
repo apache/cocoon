@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon Serializers" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../../index.html"/>
+    <menu-item label="User Documentation" href="../index.html"/>
+  </menu>
+
+  <menu label="Serializers">
+    <menu-item label="Overview" href="serializers.html"/>
+  </menu>
+  <menu label="Default">
+    <menu-item label="HTML Serializer" href="html-serializer.html"/>
+  </menu>
+  <menu label="Core">
+    <menu-item label="XHTML Serializer" href="xhtml-serializer.html"/>
+    <menu-item label="XML Serializer" href="xml-serializer.html"/>
+    <menu-item label="Text Serializer" href="text-serializer.html"/>
+    <menu-item label="WAP/WML Serializer" href="wap-serializer.html"/>
+    <menu-item label="SVG Serializer" href="svg-serializer.html"/>
+    <menu-item label="SVG/XML Serializer" href="svgxml-serializer.html"/>
+    <menu-item label="SVG/JPEG Serializer" href="svgjpeg-serializer.html"/>
+    <menu-item label="SVG/PNG Serializer" href="svgpng-serializer.html"/>
+    <menu-item label="SVG/TIFF Serializer" href="svgtiff-serializer.html"/>
+    <menu-item label="VRML Serializer" href="vrml-serializer.html"/>
+    <menu-item label="Link Serializer" href="link-serializer.html"/>
+    <menu-item label="Zip archive Serializer" href="ziparchive-serializer.html"/>
+  </menu>
+  <menu label="Optional">
+    <menu-item label="PDF Serializer" href="pdf-serializer.html"/>
+    <menu-item label="PS Serializer" href="ps-serializer.html"/>
+    <menu-item label="PCL Serializer" href="pcl-serializer.html"/>
+    <menu-item label="HSSF (XLS) Serializer" href="xls-serializer.html"/>  
+  </menu>
+
+</book>
+
+

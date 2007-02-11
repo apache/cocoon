@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: booleanfield widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Concept">
+      <p>An fd:booleanfield is a field that has a value of
+      true or false. Usually is rendered as a checkbox.</p>
+
+      <p>It is different from a <link href="widget_field.html">field widget</link>
+      with a <code>boolean</code> datatype because an HTML checkbox submits
+      no request parameter if the checkbox is unchecked. If you would render
+      it instead as a listbox with true and false values, you could also
+      use a regular field widget. Since the styling preference might change over
+      time, it is however better to use consistently the fd:booleanfield widget.</p>
+
+      <p>A booleanfield cannot be marked as "required", because it is
+      always required. It is either true or false. If you want tripples
+      (true/false/none), use a normal field widget with a selection list.</p>
+    </s1>
+
+    <s1 title="Configuration">
+      <source><![CDATA[<fd:booleanfield id="...">
+  <fd:label>...</fd:label>
+  <fd:help>...</fd:help>
+  <fd:hint>...</fd:hint>
+  <fd:on-value-changed>
+     [...]
+  </fd:on-value-changed>
+</fd:booleanfield>]]></source>
+
+      <p>See <link href="widget_field.html">field wiget</link> for a description of the
+      configuration options.</p>
+    </s1>
+  </body>
+</document>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page
+    xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+>
+    <content>
+        <p>
+            Let's look at the implementation of the
+            <a href="../view/allTasks">view/allTasks</a>
+            application page, which lists all tasks provided by the DatabaseFacade.
+        </p>
+        <p>
+            The scenario is the following:
+            <ol>
+                <li>In Flowscript, access and query the DatabaseFacade</li>
+                <li>Pass the data from Flowscript to a page which uses the JXTemplateGenerator to access it</li>
+                <li>In the JXTemplate page, iterate over the data elements and display them</li>
+            </ol>
+        </p>
+
+        <h2>Sitemap</h2>
+        <p>
+            Here's the first pipeline definition in sitemap, activated
+            by the <em>view/allTasks</em> request:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/sitemap.xmap/view"/>
+        </p>
+        <p>
+            This causes the above request to call the <em>query_allTasks()</em> Flowscript
+            function (Flowscript listing <a href="flowscript.html">here</a>).
+        </p>
+        <p>
+            Later, the Flowscript will call the <em>internal/generate-view/taskList</em> pipeline to generate
+            a view using the JXTemplateGenerator and the views/taskListView.xml page:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/sitemap.xmap/genView"/>
+        </p>
+
+        <h2>Java beans to JXTemplate page</h2>
+        <p>
+            The following lines of Flowscript code implement the first two
+            steps of our scenario, getting a List of TaskBean objects from the
+            DatabaseFacade and passing it to the <em>taskList</em> pipeline.
+            <pre class="code">
+0006 // Access java "database" facade object
+0007 var db = Packages.org.apache.cocoon.samples.tour.beans.DatabaseFacade.getInstance();
+...
+0010 function query_allTasks() {
+0011    list = db.getTasks();
+
+0013    cocoon.sendPage("internal/generate-view/taskList", {
+0014        title : "List of tasks",
+0015        task : list,
+0016        db : db
+0017    });
+            </pre>
+            As the taskList pipeline uses a JXTemplate generator, the corresponding
+            page will have access to the variables passed with the <em>sendPage</em> call.
+        </p>
+        <p>
+            The <em>db</em> object is also passed to the page, but it is only
+            used to access its db.version field.
+        </p>
+        <p>
+            We're not using continuations here (there's no <em>sendPageAndWait</em>),
+            Flowscript serves only as a thin layer of glue
+            between our java objects and our JXTemplate view page.
+        </p>
+
+        <h2>JXTemplate page</h2>
+        <p>
+            Here's the JXtemplate page that generates the taskList view, using the
+            <em>title</em>, <em>task</em> and <em>db</em> variables supplied
+            by the above Flowscript code:
+            <cinclude:include element="xml-code" src="cocoon:/xml-element/bean-editor/cocoon-app/views/taskListView.xml/page"/>
+        </p>
+        <p>
+            Note the use of a <em>&lt;c:forEach&gt;</em> element, from the JXTemplate namespace,
+            to iterate over members of the <em>task</em> collection.
+        </p>
+        <h2>That's it!</h2>
+        <p>
+            Let's summarize what happened here:
+            <ol>
+                <li>A request for <em>view/allTasks</em> comes in</li>
+                <li>
+                    The <em>query_allTasks()</em> Flowscript function is called and uses the java <em>DatabaseFacade</em>
+                    to retrieve a java List of <em>TaskBean</em> objects.
+                </li>
+                <li>
+                    Flowscript uses the <em>cocoon.sendPage()</em> function to trigger the execution of a sitemap
+                    pipeline, passing to it some data as javascript variables.
+                </li>
+                <li>
+                    The pipeline uses the JXTemplate generator to dynamically insert data in an XML template
+                    document, generating one of our &lt;page&gt; documents.
+                </li>
+                <li>
+                    Our usual XML-to-HTML conversion transformation is used for final presentation.
+                </li>
+            </ol>
+            This might seem complicated when explained in so much detail, but the interesting thing to note
+            is that, once again, very little code must be written to make this work. And the whole thing stays
+            very flexible and customizable.
+        </p>
+    </content>
+</page>

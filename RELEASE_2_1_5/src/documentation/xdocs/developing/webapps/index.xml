@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+<document>
+  <header>
+  <title>Webapps Developer Documentation</title>
+  <subtitle>Overview</subtitle>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+    </authors>
+  </header>
+  <body>
+<s1 title="Overview">
+ <p>This section contains several documents about developing real-world web applications
+  with Cocoon.</p>
+ <p>Some of these concepts are currently in development. The development of the
+  <link href="session.html">Session handling</link>, the 
+  <link href="authentication.html">authentication</link> framework and
+  the <link href="portal.html">portal framework</link> is nearly finished. You will
+  find these components in the latest CVS version of Cocoon. The documentation
+  listed in the menu conforms to the current CVS version.</p>
+ <p>However, the current release @released.version@ contains alpha versions in the
+   scratchpad area of these three components. So you can already have a look at them. The
+   documentation in the "scratchpad" folder contains the description conforming to the
+   scratchpad. But be warned that they are in the scratchpad area and will change in 
+   upcomming releases. So if you are really planning to use them, have a look at the
+   latest CVS.
+ </p>
+
+ </s1>
+    <s1 title="Introduction">
+     <p>A session is a data storage which resides on the server and records
+        information about one single user. Cocoon creates a session on demand and
+        from that point of time the user is tracked and information can be stored
+        inside the session. Each following request of this user is linked to the one
+        specific session, so there is always only one session per user on the
+        server.</p>
+     <p>To avoid a fast growing amount of sessions on the server and the
+        overcome potential security problems, a session has usually a valid period of
+        time. If during this period no new request comes in from the user, the session
+        object on the server will be destroyed by the server (this period of time is
+        called session timeout). The web application often allows a user to explictly
+        destroy a session.</p>
+     <p>The usual web applications create sessions during login of a user and
+        destroy them when the user logs out.</p>
+     </s1>
+
+  </body>
+</document>

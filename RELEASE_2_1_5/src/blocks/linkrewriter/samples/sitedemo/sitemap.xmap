@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Components ================================ -->
+
+ <map:components>
+  <map:transformers default="xslt">
+    <map:transformer name="linkrewriter"
+      src="org.apache.cocoon.transformation.LinkRewriterTransformer">
+      <input-module name="linkmap">
+        <file src="{src}" reloadable="true"/>
+      </input-module>
+      <input-module name="site">
+        <input-module name="linkmap">
+          <file src="{src}" reloadable="true"/>
+        </input-module>
+        <prefix>/site/</prefix>
+        <suffix>/@href</suffix>
+      </input-module>
+    </map:transformer>
+  </map:transformers>
+ </map:components>
+
+<!-- =========================== Pipelines ================================= -->
+
+ <map:pipelines>
+   <map:pipeline>
+
+     <map:match pattern="">
+       <map:redirect-to uri="welcome"/>
+     </map:match>
+
+     <map:match pattern="**welcome">
+       <map:generate src="docs/index.xml"/>
+       <!-- Uses {src} and {prefix} var interpolation -->
+       <map:transform type="linkrewriter" src="cocoon:/{1}linkmap">
+         <map:parameter name="prefix" value="/site/"/>
+       </map:transform>
+       <map:serialize type="xml"/>
+     </map:match>
+
+     <map:match pattern="abs-linkmap">
+       <map:generate src="linkmap.xml"/>
+       <map:transform src="../stylesheets/absolutize-linkmap.xsl"/>
+       <map:serialize type="xml"/>
+     </map:match>
+
+     <map:match pattern="**linkmap">
+       <map:generate src="linkmap.xml"/>
+       <map:transform src="../stylesheets/absolutize-linkmap.xsl"/>
+       <map:transform src="../stylesheets/relativize-linkmap.xsl">
+         <map:parameter name="path" value="{0}"/>
+       </map:transform>
+       <map:serialize type="xml"/>
+     </map:match>
+
+   </map:pipeline>
+ </map:pipelines>
+
+</map:sitemap>
+
+<!-- end of file -->
