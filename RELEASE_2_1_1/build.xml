@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+<!-- ===========================================================================
+
+                       * =========================== *
+                       |  Apache Cocoon Build System |
+                       * =========================== *
+
+       CVS $Id: build.xml,v 1.32 2003/08/07 16:40:22 joerg Exp $:
+
+============================================================================ -->
+
+  <!-- ==================  Apache Cocoon targets  ======================== --> 
+  <!ENTITY init-targets     SYSTEM "./src/targets/init-build.xml"> 
+  <!ENTITY compile-targets  SYSTEM "./src/targets/compile-build.xml"> 
+  <!ENTITY validate-targets SYSTEM "./src/targets/validate-build.xml"> 
+  <!ENTITY samples-targets  SYSTEM "./src/targets/samples-build.xml"> 
+  <!ENTITY webapp-targets   SYSTEM "./src/targets/webapp-build.xml"> 
+  <!ENTITY ide-targets      SYSTEM "./src/targets/ide-build.xml"> 
+  <!ENTITY test-targets     SYSTEM "./src/targets/test-build.xml"> 
+  <!ENTITY docs-targets     SYSTEM "./src/targets/docs-build.xml">
+  <!ENTITY dist-targets     SYSTEM "./src/targets/dist-build.xml">
+  <!ENTITY admin-targets    SYSTEM "./src/targets/admin-build.xml">
+  <!ENTITY standalone-demo-targets  SYSTEM "./src/targets/standalone-demo-build.xml">
+  <!ENTITY instrumentation-targets  SYSTEM "./src/targets/instrumentation-build.xml">
+  <!-- =================================================================== -->
+
+  <!-- ==================  Apache Forrest targets  ======================= -->
+  <!ENTITY forrest-targets  SYSTEM "./src/targets/forrest-build.xml">
+  <!-- =================================================================== -->
+
+]>
+
+<project default="webapp" basedir="." name="Apache Cocoon">
+
+  <!-- ==================  Apache Cocoon targets  ======================== -->
+
+  <!-- =================================================================== -->
+  <!-- Initialization targets  -->  &init-targets;
+  <!-- =================================================================== -->
+  <!-- Compile targets         -->  &compile-targets;
+  <!-- =================================================================== -->  
+  <!-- Validation targets      -->  &validate-targets;
+  <!-- =================================================================== -->
+  <!-- Samples targets         -->  &samples-targets;
+  <!-- =================================================================== -->
+  <!-- Web application targets -->  &webapp-targets;
+  <!-- =================================================================== -->
+  <!-- IDE targets             -->  &ide-targets;
+  <!-- =================================================================== -->
+  <!-- Testcases targets       -->  &test-targets;
+  <!-- =================================================================== -->
+  <!-- Documentation targets   -->  &docs-targets;
+  <!-- =================================================================== -->
+  <!-- Distribution targets    -->  &dist-targets;
+  <!-- =================================================================== -->
+  <!-- Administration targets  -->  &admin-targets;
+  <!-- =================================================================== -->
+  <!-- Standalone-demo targets -->  &standalone-demo-targets;
+  <!-- =================================================================== -->
+  <!-- Instrumentation targets -->  &instrumentation-targets;
+  <!-- =================================================================== -->
+
+  <!-- ==================  Apache Forrest targets  ======================= -->
+
+  <!-- =================================================================== -->
+  <!-- Forrest targets         -->  &forrest-targets;
+  <!-- =================================================================== -->
+
+</project>
+

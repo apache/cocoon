@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide - Advanced" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../intro.html"/>
+  </menu>
+  
+  <menu label="2. Advanced">
+    <menu-item label="2.1 Intro" href="preface.html"/>
+    <menu-item label="2.2 Sessions" href="session/preface.html"/>
+    <menu-item label="2.3 Authentication" href="authentication/preface.html"/>
+    <menu-item label="2.4 Control Flow" href="flow/index.html"/>
+    <menu-item label="2.5 Offline Generation" href="offline/index.html"/>
+    <menu-item label="2.6 XSP" href="xsp/index.html"/>
+    <menu-item label="2.7 Portal" href="portal/index.html"/>
+  </menu>
+
+</book>

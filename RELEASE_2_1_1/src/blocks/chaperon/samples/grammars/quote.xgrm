@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0">
+<!--This file was generated! Don't edit!-->
+<priority>
+<terminal symbol="Comma"/>
+<terminal symbol="Value"/>
+<terminal symbol="SoftBreak"/>
+</priority>
+<production symbol="document">
+<nonterminal symbol="document"/>
+<terminal symbol="SoftBreak"/>
+<nonterminal symbol="row"/>
+</production>
+<production symbol="document">
+<nonterminal symbol="row"/>
+<terminal symbol="SoftBreak"/>
+</production>
+<production symbol="document">
+<nonterminal symbol="row"/>
+</production>
+<production symbol="row">
+<nonterminal symbol="row"/>
+<terminal symbol="Comma"/>
+<terminal symbol="Value"/>
+</production>
+<production symbol="row">
+<terminal symbol="Value"/>
+</production>
+<start symbol="document"/>
+</grammar>

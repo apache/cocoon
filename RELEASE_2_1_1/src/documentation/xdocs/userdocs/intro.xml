@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Apache Cocoon User Guide</title>
+  <subtitle>Introduction</subtitle>
+  <authors>
+   <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="The Cocoon Manual">
+
+  <p>This user manual describes the latest version of Cocoon. It's currently a
+    work in progress and will grow over time, so come back often...this guide is 
+    being updated regularly.
+  </p>
+
+  <p>Now, let's start with the manual in the <link href="user/preface.html">next chapter</link>.
+  </p>
+
+ </s1>
+
+ </body>
+</document>

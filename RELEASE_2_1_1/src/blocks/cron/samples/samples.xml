@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS: $Id: samples.xml,v 1.2 2003/09/04 16:00:16 giacomo Exp $ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Cron block">
+
+  <group name="Cron">
+     <sample name="Component documentation" href="docs.html">
+       Documentation for the Cron component.
+     </sample>
+  </group>
+
+  <group name="Cron Sample">
+     <sample name="Cron" href="cron.html" xlink:role="dynamic">
+      Cron samples.
+     </sample>
+  </group>
+  
+</samples>

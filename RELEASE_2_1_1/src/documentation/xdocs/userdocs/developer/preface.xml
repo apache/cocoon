@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Apache Cocoon User Guide</title>
+    <subtitle>Developer Basics</subtitle>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="The usual Cocoon Developer profile">
+      <p>As a Cocoon developer (someone who develops components for Cocoon), you
+         need of course everything you have to know as a Cocoon user. In addition
+         you should have a basic understanding of the following technologies.
+         Again, this knowledge is not specific to Cocoon; it can be used for
+         building web applications with different frameworks as well.
+      </p>
+      <ul>
+        <li>The Java Language and Application Frameworks</li>
+        <li>Java Servlets</li>
+        <li><link href="avalon/preface.html">Avalon Component Framework</link></li>
+      </ul>
+
+    </s1>
+   
+  </body>
+</document>

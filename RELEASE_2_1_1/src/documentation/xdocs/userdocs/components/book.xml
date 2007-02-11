@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide - Apendix" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../intro.html"/>
+  </menu>
+
+  <menu label="B. Components">
+
+    <menu-item label="B.1 Intro" href="index.html"/>
+    <menu-item label="B.2 Generators" href="generators/generators.html"/>
+    <menu-item label="B.3 Transformers" href="transformers/transformers.html"/>
+    <menu-item label="B.4 Serializers" href="serializers/serializers.html"/>
+    <menu-item label="B.5 Matchers" href="matchers/matchers.html"/>
+    <menu-item label="B.6 Selectors" href="selectors/selectors.html"/>
+    <menu-item label="B.7 Actions" href="actions/actions.html"/>
+    <menu-item label="B.8 Readers" href="readers/readers.html"/>
+  </menu>
+  
+</book>

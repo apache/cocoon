@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<xlog xpath="/logkit/categories"
+      unless="category[@name='cron']">
+
+    <category log-level="DEBUG" name="cron">
+        <log-target id-ref="cron" />
+        <log-target id-ref="error"/>
+    </category>
+    
+</xlog>

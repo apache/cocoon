@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='asciiart']">
+
+  <group name="ASCII Art">
+    <sample name="ASCII Art" href="asciiart/">
+      Plain text files with character-based artwork and diagrams are presented
+      in various formats, e.g. plain text, JPEG, PNG
+    </sample>
+  </group>
+
+</xsamples>

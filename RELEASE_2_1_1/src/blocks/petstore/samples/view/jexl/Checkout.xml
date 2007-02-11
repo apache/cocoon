@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
+    <site signOn="${accountForm.signOn}" view="c">
+        <cart name="Checkout Summary">
+            <backpointer name="Shopping Cart" do="viewCart.do" />
+            <c:forEach var="cartItem" items="${cartItems}" >
+                <item product-id="${cartItem.item.productId}" id="${cartItem.item.itemId}">
+                    <desc>
+                        ${cartItem.item.attr1} 
+                        ${cartItem.item.attr2} 
+                        ${cartItem.item.attr3} 
+                        ${cartItem.item.attr4} 
+                        ${cartItem.item.attr5} 
+                        ${cartItem.item.product.name} 
+                    </desc>
+                    <price>${cartItem.item.listPrice}</price>
+                    <quantity>${cartItem.quantity}</quantity>
+                </item>
+            </c:forEach>
+            <total>${cartForm.cart.subTotal}</total>
+            <nextpointer img="images/button_continue.gif" do="${continuation.id}.kont"/>
+        </cart>
+    </site>
+</page>
+
+
+
+

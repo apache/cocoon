@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Apache Cocoon User Guide</title>
+    <subtitle>Avalon</subtitle>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Introduction">
+        <p>This chapter deals with Avalon.</p>
+    </s1>
+
+  </body>
+</document>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../../dtd/book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon XSP"
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="2. Advanced" href="../preface.html"/>
+  </menu>
+
+  <menu label="2.6 XSP">
+    <menu-item label="2.6.1 Overview" href="index.html"/>
+    <menu-item label="2.6.2 XSP Guide" href="logicsheet.html"/>
+    <menu-item label="2.6.3 XSP Internals" href="xsp-internals.html"/>
+    <menu-item label="2.6.4 XSP Logicsheets" href="logicsheet-concepts.html"/>
+    <menu-item label="2.6.5 Sessions" href="sessions.html"/>
+  </menu>
+
+  <menu label="Logicsheets">
+    <menu-item label="2.6.6 Request" href="request.html"/>
+    <menu-item label="2.6.7 Session" href="session.html"/>
+    <menu-item label="2.6.8 ESQL" href="esql.html"/>
+    <menu-item label="2.6.9 Forms" href="logicsheet-forms.html"/>
+    <menu-item label="2.6.10 Sendmail" href="sendmail.html"/>
+  </menu>
+
+</book>
+
+

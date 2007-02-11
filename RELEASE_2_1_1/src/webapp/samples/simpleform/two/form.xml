@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<page>
+<head>
+<style type="text/css">
+error {
+	font-style:italic;
+	font-weight:bold;
+	color:red;
+	background-color:#fffbe4;
+	display: block;
+}
+</style>
+</head>
+	<body>
+		<h1>Reserve a car with Cocoon Cars!</h1>
+
+		<p>This sample illustrates how to use simple form validation in conjunction
+		with the SimpleFormTransformer to fill in user submitted data.</p>
+
+		<h2>Car Reservation</h2>
+		<p>Please fill in the form completely in order to reserve a car.</p>
+		<form name="car" method="post">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+            	           The car should seat
+						   <select size="1" name="persons">
+							<option value="" selected="true" disabled="true">Please select</option>
+						   	<option value="2">2</option>
+						   	<option value="4">4</option>
+						   	<option value="5">5</option>
+						   	<option value="7">7</option>
+						   	<option value="9">9</option>
+						   </select>
+						   Persons.
+						</td>
+						<td>
+							<error name="persons" when-ge="error">*</error>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							The car should by a
+							<select size="1" name="type">
+							<option value="" selected="true" disabled="true">Please select</option>
+							<option value="sedan">Sedan Car</option>
+							<option value="station">Station Wagon</option>
+							<option value="cabrio">Cabrio</option>
+							<option value="racing">Sports Car</option>
+							</select>
+						</td>
+						<td><error name="type" when-ge="error">*</error></td>
+					</tr>
+					<tr>
+						<td>
+							I'd like to deposit EUR <input type="text" size="4" name="deposit"/>
+						</td>
+						<td><error name="deposit" when-ge="error">*</error></td>
+					</tr>
+					<tr>
+						<td>My email is <input type="text" size="30" name="email"/></td>
+						<td><error name="email" when-ge="error">*</error></td>
+					</tr>
+					<tr>
+						<td>
+							Please bill to
+							<textarea name="address" cols="30" rows="5" />
+						</td>
+						<td><error name="address" when-ge="error">*</error></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<error name="*" when-ge="error">An error occurred. Please check your input and the messages below for more information.</error>
+							<error name="persons" when="too-small">The smallest car seats 2.</error>
+							<error name="persons" when="too-large">The largest car seats 9.</error>
+							<error name="deposit" when="too-small">The deposit needs to be at least EUR 50.</error>
+							<error name="deposit" when="is-null">Please specify a deposit.</error>
+							<error name="email" when="is-null">Please fill in an email address.</error>
+							<error name="email" when="no-match">Your email seems incorrect. Please fill in a correct email address.</error>
+							<error name="address" when="is-null">Please fill in a billing address.</error>
+							<error name="address" when="too-small">Your address seems to be incorrect. Please fill in a correct billing address.</error>
+							<error name="type" when="is-null">Please select the type of car you would like to drive.</error>
+							<error name="type" when="no-match">Please select one of the existing type of car.</error>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" name="go" value="go!"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</body>
+</page>

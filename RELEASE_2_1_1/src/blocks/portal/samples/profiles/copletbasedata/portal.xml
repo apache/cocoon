@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coplets>
+   <coplet-base-data id="URICoplet">
+      <coplet-adapter>uri</coplet-adapter>
+   </coplet-base-data>
+</coplets>
+

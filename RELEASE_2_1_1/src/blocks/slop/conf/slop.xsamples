@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='Slop']">
+
+  <group name="Slop">
+    <sample name="Slop Text Parser" href="slop/">
+      Examples showing how to use SLOP
+      (the Simple Line Oriented Parser)
+      to parse text files
+    </sample>
+  </group>
+</xsamples>

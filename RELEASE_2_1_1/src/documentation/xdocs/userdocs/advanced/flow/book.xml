@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../../dtd/book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Schecoon Documentation" 
+      copyright="1999-2003 The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="2. Advanced" href="../preface.html"/>
+  </menu>
+  
+  <menu label="2.4 Control Flow">
+    <menu-item label="2.4.1 Introduction" href="index.html"/>
+    <menu-item label="2.4.2 Continuations" href="continuations.html"/>
+    <menu-item label="2.4.3 How does it work?" href="how-does-it-work.html"/>
+    <menu-item label="2.4.4 Usage" href="using.html"/>
+    <menu-item label="2.4.5 Tutorial" href="tutor.html"/>
+    <menu-item label="2.4.6 Sitemap" href="sitemap.html"/>
+    <menu-item label="2.4.7 Flowscript" href="api.html"/>
+    <menu-item label="2.4.8 Views" href="views.html"/>
+    <menu-item label="2.4.9 JXTemplate" href="jxtemplate.html"/>
+    <menu-item label="2.4.10 JPath" href="jpath.html"/>
+    <menu-item label="2.4.11 Velocity" href="velocity.html"/> 
+    <menu-item label="2.4.12 JXForms" href="jxforms.html"/>
+    <menu-item label="2.4.13 Woody" href="woody.html"/>
+  </menu>
+</book>

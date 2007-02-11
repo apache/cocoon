@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<map:components>
+  <map:generators default="file">
+    <map:generator name="traverse" src="org.apache.cocoon.generation.TraversableGenerator"/>
+  </map:generators>
+  <map:selectors default="browser">
+    <map:selector logger="sitemap.selector.header" name="depth" src="org.apache.cocoon.selection.HeaderSelector">
+      <header-name>Depth</header-name>
+    </map:selector>
+  </map:selectors>
+</map:components>
+<map:flow language="javascript">
+  <map:script src="webdav.js"/>
+</map:flow>
+
+<map:pipelines>
+  <map:component-configurations>
+    <global-variables>
+      <staging></staging>
+      <!--staging>webdav://localhost/webdav/davmap/</staging-->
+    </global-variables>
+  </map:component-configurations>
+
+  <map:pipeline>
+    <map:match pattern="repo">
+      <map:call function="selectMethod">
+        <map:parameter name="page" value="repo"/>
+      </map:call>
+    </map:match>
+    <map:match pattern="repo/">
+      <map:call function="selectMethod">
+        <map:parameter name="page" value="repo/"/>
+      </map:call>
+    </map:match>
+    <map:match pattern="repo/**">
+      <map:call function="selectMethod">
+        <map:parameter name="page" value="repo/{1}"/>
+      </map:call>
+    </map:match>
+
+    <map:match pattern="GET/repo/">
+      <map:generate type="traverse" src="{global:staging}repo/">
+        <map:parameter name="depth" value="1"/>
+      </map:generate>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="GET/**">
+      <map:generate src="{global:staging}{1}"/>
+      <map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="PROPFIND/**/*.*">
+      <map:generate type="traverse" src="{global:staging}{1}/"/>
+      <map:transform src="{global:staging}styles/file2propfind0.xsl">
+        <map:parameter name="requestURI" value="{request:requestURI}"/>
+        <map:parameter name="directory" value="{1}"/>
+        <map:parameter name="file" value="{2}.{3}"/>
+      </map:transform>
+      <map:serialize type="xml" status-code="207"/>
+    </map:match>
+    <map:match pattern="PROPFIND/**">
+      <map:generate type="traverse" src="{global:staging}{1}/"/>
+      <map:select type="depth">
+        <map:when test="0">
+          <map:transform src="{global:staging}styles/dir2propfind0.xsl">
+            <map:parameter name="requestURI" value="{request:requestURI}"/>
+          </map:transform>
+        </map:when>
+        <map:otherwise>
+          <map:transform src="{global:staging}styles/dir2propfind1.xsl">
+            <map:parameter name="requestURI" value="{request:requestURI}"/>
+          </map:transform>
+        </map:otherwise>
+      </map:select>
+      <map:serialize type="xml" status-code="207"/>
+    </map:match>
+
+    <map:match pattern="PUT/**/*.*">
+      <map:generate type="stream">
+        <map:parameter name="defaultContentType" value="text/xml"/>
+      </map:generate>
+      <map:transform src="styles/stream2write.xsl">
+        <map:parameter name="file" value="{global:staging}{1}/{2}.{3}"/>
+      </map:transform>
+      <map:transform type="write-source"/>
+      <map:serialize/>
+    </map:match>
+
+    <map:match pattern="OPTIONS/**">
+      <map:act type="set-header">
+        <map:parameter name="DAV" value="DAV:1"/>
+        <map:parameter name="Allow" value="OPTIONS, GET, HEAD, POST, DELETE,TRACE, PROPFIND, PROPPATCH, COPY, MOVE"/>
+      </map:act>
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="DELETE/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="COPY/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="MOVE/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="PROPPATCH/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="LOCK/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="HEAD/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="TRACE/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+    <map:match pattern="POST/**">
+      <map:generate src="dummy.xml"/>
+      <map:serialize type="xml"/>
+    </map:match>
+  </map:pipeline>
+</map:pipelines>
+
+</map:sitemap>
