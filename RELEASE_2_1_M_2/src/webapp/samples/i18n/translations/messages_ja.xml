@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Japanese message catalogue file for Cocoon 2 i18n sample -->
+<!-- $Id: messages_ja.xml,v 1.1 2003/03/09 00:11:12 pier Exp $ -->
+<catalogue xml:lang="ja">
+    <message key="a_key">これは一つのキーの値です。</message>
+    <message key="language">英語</message>
+    <message key="titletext">おはよう、国際化！</message>
+    <message key="doclink">詳しくは国際化文書をご覧ください：{0}</message>
+    <message key="first">一番目</message>
+    <message key="second">二番目</message>
+    <message key="third">三番目</message>
+    <message key="forth">四番目</message>
+    <message key="article">論本</message>
+    <message key="article_text1">これは国際化された段落です。</message>
+    <message key="article_text2">これはもう一つの国際化された段落であり、やっぱり凄いでしょう。</message>
+    <message key="copyright">Copyright © 2002 Konstantin Piroumian。　翻訳　イアス。</message>
+    <message key="Hello">はじめまして, {0}！　よろしくお願いします！</message>
+    <message key="Kot">トムケト</message>
+    <message key="none">なし</message>
+    <message key="one">一</message>
+    <message key="two">二</message>
+    <message key="count_title">このページは　{0}度　アクセスされました。 最近アクセス: {1}.</message>
+</catalogue>

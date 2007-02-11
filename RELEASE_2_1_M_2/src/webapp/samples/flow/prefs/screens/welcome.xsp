@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<!--+
+    | CVS: $Id: welcome.xsp,v 1.2 2003/05/20 00:54:12 vgritsenko Exp $
+    | Author: Ovidiu Predescu "ovidiu@apache.org"
+    | Date: August 30, 2002
+    +-->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:jpath="http://apache.org/xsp/jpath/1.0">
+  <page>
+    <resources>
+      <resource type="file" href="/samples/flow/prefs/prefs.js">Flowscript</resource>
+    </resources>
+    <title>Welcome!</title>
+    <content>
+      <para>Welcome back,
+        <strong>
+          <jpath:value-of select="user/firstName"/> <jpath:value-of select="user/lastName"/>
+        </strong>!
+      </para>
+      <para>| <link href="edit">Edit my preferences</link> | <link href="logout">Logout</link> |</para>
+    </content>
+  </page>
+</xsp:page>

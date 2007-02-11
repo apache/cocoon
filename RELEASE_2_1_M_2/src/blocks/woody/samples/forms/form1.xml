@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<wd:form
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <wd:field id="email" required="true">
+    <wd:datatype base="string">
+      <wd:validation>
+        <wd:email/>
+      </wd:validation>
+    </wd:datatype>
+    <wd:label>Enter an <b>email</b> address:</wd:label>
+  </wd:field>
+
+  <wd:booleanfield id="somebool">
+    <wd:label>Put me <em>on</em> or <em>off</em>.</wd:label>
+  </wd:booleanfield>
+
+  <wd:field id="fourchars">
+    <wd:label>Select something that's 4 characters long:</wd:label>
+    <wd:datatype base="string">
+      <wd:validation>
+        <wd:length exact='2*2'/>
+      </wd:validation>
+      <wd:selection-list src="forms/a-choices.xml"/>
+    </wd:datatype>
+  </wd:field>
+
+  <wd:field id="account">
+    <wd:label>Indicate the size of your bank account (in m<sup>3</sup>):</wd:label>
+    <wd:datatype base="long">
+      <wd:selection-list>
+        <wd:item value="1"/>
+        <wd:item value="2"/>
+        <wd:item value="3">
+          <wd:label>three</wd:label>
+        </wd:item>
+        <wd:item value="4"/>
+        <wd:item value="5"/>
+      </wd:selection-list>
+    </wd:datatype>
+  </wd:field>
+
+  <wd:field id="cowheight">
+    <wd:label>Indicate your height (in cows):</wd:label>
+    <wd:datatype base="long">
+      <wd:selection-list>
+        <wd:item value="1"/>
+        <wd:item value="2"/>
+        <wd:item value="3">
+          <wd:label>three</wd:label>
+        </wd:item>
+        <wd:item value="4"/>
+        <wd:item value="5"/>
+      </wd:selection-list>
+    </wd:datatype>
+  </wd:field>
+
+  <wd:field id="number1" required="true">
+    <wd:label>Please enter a number:</wd:label>
+    <wd:datatype base="long"/>
+  </wd:field>
+
+  <wd:field id="number2" required="true">
+    <wd:label>Enter another number, larger than the other number:</wd:label>
+    <wd:datatype base="long">
+      <wd:validation>
+        <wd:range min="number1 + 1">
+          <wd:failmessage>This number should be larger than the first number.</wd:failmessage>
+        </wd:range>
+      </wd:validation>
+    </wd:datatype>
+  </wd:field>
+
+  <wd:multivaluefield id="drinks">
+    <wd:label>Indicate which 2 of the following drinks you'd like to receive:</wd:label>
+    <wd:datatype base="string">
+      <wd:selection-list>
+        <wd:item value="Maes"/>
+        <wd:item value="Jupiler"/>
+        <wd:item value="Leffe"/>
+        <wd:item value="Hoegaarden"/>
+        <wd:item value="Coca Cola"/>
+      </wd:selection-list>
+      <wd:validation>
+        <wd:value-count exact="2"/>
+      </wd:validation>
+    </wd:datatype>
+  </wd:multivaluefield>
+
+  <wd:repeater id="contacts">
+    <wd:field id="firstname">
+      <wd:label>Firstname</wd:label>
+      <wd:datatype base="string"/>
+    </wd:field>
+    <wd:field id="lastname">
+      <wd:label>Lastname</wd:label>
+      <wd:datatype base="string"/>
+    </wd:field>
+    <wd:field id="phone">
+      <wd:label>Phone</wd:label>
+      <wd:datatype base="string"/>
+    </wd:field>
+    <wd:field id="email">
+      <wd:label>Email</wd:label>
+      <wd:datatype base="string">
+        <wd:validation>
+          <wd:email/>
+        </wd:validation>
+      </wd:datatype>
+    </wd:field>
+    <wd:booleanfield id="select">
+      <wd:label>Select</wd:label>
+    </wd:booleanfield>
+  </wd:repeater>
+
+  <wd:button id="addcontact" action-command="add-contact">
+    <wd:label>Add contact</wd:label>
+  </wd:button>
+
+  <wd:button id="removecontacts" action-command="remove-selected-contacts">
+    <wd:label>Remove selected contacts</wd:label>
+  </wd:button>
+
+</wd:form>

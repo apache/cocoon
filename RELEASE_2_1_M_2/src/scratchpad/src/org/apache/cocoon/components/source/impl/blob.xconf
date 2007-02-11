@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon/source-factories" unless="protocol[@name='blob']">
+
+    <!-- blob pseudo protocol -->
+    <protocol name="blob" class="org.apache.cocoon.components.source.impl.BlobSourceFactory"/>
+
+</xconf>

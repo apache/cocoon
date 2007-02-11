@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="repository">
+
+  <!--+ 
+      | Jakarta Slide repository
+      |
+      | The Slide repository handles serveral sources sorted in namspaces.
+      +-->
+  <repository logger="slide.repository"
+              file="context://samples/slide/slide.xconf"/>
+
+  <!--+
+      | Principal providers:
+      | The principal providers handles principals/users, should be used for 
+      | user management.
+      +-->
+  <principal-provider role="org.apache.cocoon.components.repository.PrincipalProviderSelector" 
+                      class="org.apache.cocoon.components.ExtendedComponentSelector"
+                      logger="core.principalprovider" default="slide">
+
+    <!-- Default implementation via Jakarta Slide -->
+    <component-instance class="org.apache.cocoon.components.repository.impl.SlidePrincipalProvider" 
+                        name="slide" logger="slide.principalprovider"
+                        namespace="myrepository"/>
+  </principal-provider>
+</xconf>

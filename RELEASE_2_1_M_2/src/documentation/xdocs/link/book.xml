@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon"
+      title="Apache Cocoon Links"
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../index.html"/>
+  </menu>
+
+  <menu label="Overview">
+    <menu-item label="Links Overview" href="index.html"/>
+  </menu>
+
+  <menu label="External Resources">
+    <menu-item label="Books" href="books.html"/>
+    <menu-item label="Articles" href="in-the-press.html"/>
+    <menu-item label="Tips and Guides" href="tips-guides.html"/>
+    <menu-item label="Training" href="training.html"/>
+  </menu>
+
+  <menu label="External Sites">
+    <menu-item label="Info Sites" href="sites.html"/>
+    <menu-item label="Projects" href="projects.html"/>
+    <menu-item label="Live Sites" href="livesites.html"/>
+    <menu-item label="Cocoon Hosting" href="hosting.html"/>
+  </menu>
+
+  <menu label="Related Topics">
+    <menu-item label="XML" href="xml.html"/>
+    <menu-item label="XSL/XSLT" href="xsl.html"/>
+    <menu-item label="DTD/Schema" href="dtd-schema.html"/>
+  </menu>
+
+</book>

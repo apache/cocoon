@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!--
+    FOP block samples sitemap
+    $Id: sitemap.xmap,v 1.5 2003/05/05 09:30:12 bdelacretaz Exp $
+ -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+    <map:pipelines>
+
+        <map:pipeline type="caching">
+
+            <map:match pattern="">
+                <map:redirect-to uri="welcome"/>
+            </map:match>
+
+            <!-- list of samples -->
+            <map:match pattern="welcome">
+                <map:generate src="misc/samples.xml"/>
+                <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+                    <map:parameter name="contextPath" value="{request:contextPath}"/>
+                </map:transform>
+                <map:serialize/>
+            </map:match>
+
+            <!-- hello world -->
+            <map:match pattern="hello.pdf">
+                <map:generate src="context://samples/hello-world/content/hello.xml"/>
+                <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
+                <map:serialize type="fo2pdf"/>
+            </map:match>
+
+            <!-- xsl-fo document access -->
+            <map:match pattern="**/*.fo.xml">
+                <map:generate src="{1}/{2}.fo.xml"/>
+                <map:serialize type="xml"/>
+            </map:match>
+
+            <!-- PDF conversion -->
+            <map:match pattern="**/*.pdf">
+                <map:generate src="cocoon:/{1}/{2}.fo.xml"/>
+                <map:serialize type="fo2pdf"/>
+            </map:match>
+
+            <!-- reuse the XSP caching example for our caching test -->
+            <map:match pattern="cache-test-*.pdf">
+                <!-- note that caching didn't work when accessing the XSP using the cocoon:/ protocol -->
+                <map:generate src="../xsp/xsp/cacheable.xsp" type="serverpages"/>
+                <map:transform src="cache-test/xsp-sample-to-fo.xsl">
+                    <map:parameter name="pages" value="{1}"/>
+                </map:transform>
+                <map:serialize type="fo2pdf"/>
+            </map:match>
+
+        </map:pipeline>
+
+    </map:pipelines>
+
+</map:sitemap>

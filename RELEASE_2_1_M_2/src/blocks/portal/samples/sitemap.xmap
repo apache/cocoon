@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+<!-- =========================== Components ================================ -->
+
+ <map:components>
+
+  <map:generators default="file">
+    <map:generator name="portal" src="org.apache.cocoon.portal.generation.PortalGenerator"/>
+  </map:generators>
+  <map:transformers default="xslt">
+    <map:transformer name="htmlroot" src="org.apache.cocoon.portal.transformation.HTMLRootTransformer" logger="sitemap.transformer.htmlroot" />
+  </map:transformers>
+  <map:readers default="resource"/>
+  <map:serializers default="html"/>
+  <map:matchers default="wildcard"/>
+  <map:selectors default="browser"/>
+ </map:components>
+ 
+<!-- =========================== Views =================================== -->
+
+ <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+ </map:views>
+
+
+<!-- =========================== Pipelines ================================= -->
+
+ <map:pipelines>
+ 
+  <map:component-configurations>
+    <authentication-manager>
+      <handlers>
+        <handler name="portalhandler">
+          <redirect-to uri="cocoon:/login"/>
+          <authentication uri="cocoon:raw:/sunrise-authuser"/>
+        </handler>
+      </handlers>
+    </authentication-manager>
+  </map:component-configurations>
+  
+  <map:pipeline>
+
+    <map:match pattern="">
+       <map:redirect-to uri="portal"/>
+    </map:match>
+
+   <map:match pattern="news/**">
+      <map:mount check-reload="yes" src="news/" uri-prefix="news"/>
+    </map:match>
+
+    <!-- Test pipeline for layout engine -->
+    <map:match pattern="portal">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="portalhandler"/> 
+
+          <map:generate type="portal" label="content">
+        	<map:parameter name="portal-name" value="portal" />
+          </map:generate>
+          <map:transform type="cinclude"/> 
+          <map:transform src="styles/header.xsl"/>
+          <map:transform type="htmlroot" />
+          <map:serialize type="html"/> 
+        </map:act>
+        <map:redirect-to uri="login"/>
+    </map:match>
+    
+    <!-- images -->
+	<map:match pattern="sunspotdemoimg-*.gif">
+		<map:read mime-type="image/gif" src="images/{1}.gif"/>
+	</map:match>
+	<map:match pattern="sunspotdemoimg-*.jpg">
+    	<map:read mime-type="image/jpg" src="images/{1}.jpg"/>
+   	</map:match>
+    
+    <!-- authentication stuff -->
+
+    <map:match pattern="login">
+        <map:act type="auth-loggedIn">
+          <map:parameter name="handler" value="portalhandler"/> 
+          <map:redirect-to uri="portal"/>
+        </map:act>
+        <map:generate src="resources/login.xml"/>
+        <map:transform src="styles/login-html.xsl"/>
+        <map:transform src="styles/header.xsl"/>
+        <map:transform type="htmlroot" />
+        <map:transform type="encodeURL"/>
+        <map:serialize/>
+    </map:match>
+
+    <map:match pattern="auth">
+        <map:act type="auth-loggedIn">
+          <map:parameter name="handler" value="portalhandler"/> 
+          <map:redirect-to uri="loggedin"/>
+        </map:act>
+        <map:act type="auth-login">
+          <map:parameter name="handler" value="portalhandler"/>
+          <map:parameter name="parameter_name" value="{request-param:name}"/>
+          <map:parameter name="parameter_password" value="{request-param:password}"/>
+          <map:redirect-to uri="portal"/>
+        </map:act>
+        <map:generate src="resources/login-error.xml"/>
+        <map:transform src="styles/header.xsl"/>
+        <map:transform type="encodeURL"/>
+        <map:serialize/>
+    </map:match>
+
+    <map:match pattern="loggedin">
+		<map:act type="auth-protect">
+		  <map:parameter name="handler" value="portalhandler"/> 
+		  
+          <map:generate src="resources/logged-in.xml"/>
+          <map:transform src="styles/header.xsl"/>
+          <map:transform type="encodeURL"/>
+          <map:serialize/>
+        </map:act>
+        <map:redirect-to uri="login"/>
+    </map:match>
+
+    <map:match pattern="logout">
+		<map:act type="auth-protect">
+		  <map:parameter name="handler" value="portalhandler"/> 
+		  <map:act type="auth-logout"/>
+        </map:act>
+<!-- TODO logout??? -->
+        <map:redirect-to uri="login"/>
+    </map:match>
+
+  </map:pipeline>
+
+  <map:pipeline internal-only="true">
+    <map:match pattern="sunrise-authuser">
+      <map:generate src="resources/sunrise-user.xml"/>
+      <map:transform src="styles/sunrise-user.xsl">
+        <map:parameter name="use-request-parameters" value="true"/>
+      </map:transform>
+      <map:serialize type="xml"/>
+    </map:match>
+  </map:pipeline>
+
+ </map:pipelines>
+
+</map:sitemap>
+
+<!-- end of file -->

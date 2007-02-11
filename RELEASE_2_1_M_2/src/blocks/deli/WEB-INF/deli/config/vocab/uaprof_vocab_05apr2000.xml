@@ -1,0 +1,454 @@
+<?xml version="1.0"?>
+<!--
+ * Note: this is the 'BSD License' as endorsed by OpenSource.org.
+ *
+ *  (c) Copyright Hewlett-Packard Company 2001 
+ *  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+-->
+<!--
+ * Note: this is the 'BSD License' as endorsed by OpenSource.org.
+ *
+ *  (c) Copyright Hewlett-Packard Company 2001 
+ *  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+-->
+<vocabspec>
+	<ccppUri>http://www.wapforum.org/UAPROF/ccppschema-20000405#</ccppUri>
+	<attribute>
+		<name>BitsPerPixel</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Number</attributeType>
+		<resolution>Override</resolution>
+	</attribute>
+	<attribute>
+		<name>ColorCapable</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Override</resolution>
+	</attribute>
+	<attribute>
+		<name>CPU</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>ImageCapable</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>InputCharSet</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>Keyboard</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>MaxScreenChar</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Dimension</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>Model</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>OutputCharSet</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>PointingResolution</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>ScreenSize</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Dimension</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>ScreenSizeChar</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Dimension</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>SoftKeysCapable</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>SoundOutputCapable</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>TextInputCapable</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>Vendor</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>VoiceInputCapable</name>
+		<component>HardwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>AcceptDownloadableSoftware</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>AudioInputEncoder</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>DownloadableSoftwareSupport</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>JVMVersion</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>MexeClassmark</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Number</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>MexeSpec</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>OSName</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>OSVendor</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>OSVersion</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>RecipientAppAgent</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>SoftwareNumber</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>VideoInputEncoder</name>
+		<component>SoftwarePlatform</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>CurrentBearerService</name>
+		<component>NetworkCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>SecuritySupport</name>
+		<component>NetworkCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>SupportedBearers</name>
+		<component>NetworkCharacteristics</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>BrowserName</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>BrowserVersion</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>CcppAccept</name>
+		<component>BrowserUA</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>CcppAccept-Charset</name>
+		<component>BrowserUA</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>CcppAccept-Encoding</name>
+		<component>BrowserUA</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>CcppAccept-Language</name>
+		<component>BrowserUA</component>
+		<collectionType>Seq</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>DownloadableBrowserApps</name>
+		<component>BrowserUA</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>FramesCapable</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Override</resolution>
+	</attribute>
+	<attribute>
+		<name>HtmlVersion</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>JavaScriptVersion</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>PreferencesForFrames</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>TablesCapable</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Boolean</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>XhtmlVersion</name>
+		<component>BrowserUA</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>XhtmlModules</name>
+		<component>BrowserUA</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>WapDeviceClass</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>WapPushMsgPriority</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>WapPushMsgSize</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Number</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>WapVersion</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>WmlDeckSize</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Number</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>WmlScriptLibraries</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>WmlScriptVersion</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>WmlVersion</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Append</resolution>
+	</attribute>
+	<attribute>
+		<name>WtaiLibraries</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Bag</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+	<attribute>
+		<name>WtaVersion</name>
+		<component>WapCharacteristics</component>
+		<collectionType>Simple</collectionType>
+		<attributeType>Literal</attributeType>
+		<resolution>Locked</resolution>
+	</attribute>
+</vocabspec>

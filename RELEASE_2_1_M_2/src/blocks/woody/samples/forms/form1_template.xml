@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
+  <title>Sample form</title>
+  <content>
+    <form action="form1" method="POST">
+      <table border="1">
+        <tr>
+          <td valign="top"><wt:widget-label id="email"/></td>
+          <td valign="top"><wt:widget id="email"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="fourchars"/></td>
+          <td valign="top">
+            <!-- The extra content inside the widget element will be
+            used by the XSL to determine its behaviour -->
+            <wt:widget id="fourchars">
+              <list-style>listbox</list-style>
+              <listbox-size>4</listbox-size>
+            </wt:widget>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="number1"/></td>
+          <td valign="top"><wt:widget id="number1"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="number2"/></td>
+          <td valign="top"><wt:widget id="number2"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="account"/></td>
+          <td valign="top"><wt:widget id="account"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="cowheight"/></td>
+          <td valign="top">
+            <wt:widget id="cowheight">
+              <list-style>radio</list-style>
+            </wt:widget>
+          </td>
+        </tr>
+        <tr>
+          <td/>
+          <td><wt:widget id="somebool"/> <wt:widget-label id="somebool"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="drinks"/></td>
+          <td valign="top"><wt:widget id="drinks"/></td>
+        </tr>
+      </table>
+
+      <wt:widget-label id="contacts"/><br/>
+      <wt:repeater-size id="contacts"/>
+      <table border="1">
+        <tr>
+          <th><wt:repeater-widget-label id="contacts" widget-id="firstname"/></th>
+          <th><wt:repeater-widget-label id="contacts" widget-id="lastname"/></th>
+          <th><wt:repeater-widget-label id="contacts" widget-id="phone"/></th>
+          <th><wt:repeater-widget-label id="contacts" widget-id="email"/></th>
+          <th><wt:repeater-widget-label id="contacts" widget-id="select"/></th>
+        </tr>
+
+        <!-- The contents of the repeater-widget element is a template that will
+        be applied to each row in the repeater. -->
+        <wt:repeater-widget id="contacts">
+          <tr>
+            <td><wt:widget id="firstname"/></td>
+            <td><wt:widget id="lastname"/></td>
+            <td><wt:widget id="phone"/></td>
+            <td><wt:widget id="email"/></td>
+            <td><wt:widget id="select"/></td>
+          </tr>
+        </wt:repeater-widget>
+
+        <tr>
+          <td colspan="4" align="right">
+            <wt:widget id="addcontact"/>
+            <wt:widget id="removecontacts"/>
+          </td>
+        </tr>
+      </table>
+
+      <input type="submit"/>
+    </form>
+  </content>
+</page>

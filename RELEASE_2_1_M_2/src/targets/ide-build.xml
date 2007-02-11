@@ -1,0 +1,117 @@
+<!-- === IDE targets =========================================================== -->
+
+  <!-- Generate the Emacs JDE project file -->
+  <target name="emacs-project" depends="prepare" description="Generate the Emacs project files">
+    <path id="jar.files">
+      <fileset dir="${build.webapp}/WEB-INF/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${build.context}/WEB-INF/classes"/>
+    </path>
+    <property name="jar.files" refid="jar.files"/>
+    <copy file="${resources}/dev/emacs/prj.el.in" tofile="prj.el" filtering="yes">
+      <filterset>
+        <filter token="jar.files" value="${jar.files}"/>
+        <filter token="src" value="${java}"/>
+        <filter token="build.webapp" value="${build.webapp}"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- Build the Eclipse projects files -->
+  <target name="eclipse-project" depends="prepare" description="Generate the Eclipse project files">
+
+    <echo message="Building Eclipse Project Files"/>
+
+    <!-- prepare the various paths that will form the project -->
+    <path id="srcs">
+      <!-- main source dir -->
+      <pathelement path="${src}/java"/>
+      <!-- deprecated source dir -->
+      <pathelement path="${src}/deprecated/java"/>
+      <!-- scratchpad source dir -->
+      <pathelement path="${src}/scratchpad/src"/>
+      <!-- blocks source dirs -->
+      <dirset dir="${blocks}">
+        <include name="*/java"/>
+        <include name="*/java${target.vm}"/>
+      </dirset>
+    </path>
+
+    <path id="mockss">
+      <dirset dir="${src}">
+        <include name="**/mocks"/>
+      </dirset>
+    </path>
+
+    <path id="libs">
+      <!-- main libs -->
+      <fileset dir="${lib}">
+        <include name="core/*.jar"/>
+        <include name="core/jvm${target.vm}/*.jar"/>
+        <include name="optional/*.jar"/>
+        <include name="local/*.jar"/>
+        <include name="endorsed/*.jar"/>
+      </fileset>
+      <!-- scratchpad libs -->
+      <fileset dir="${scratchpad}/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <!-- blocks lib -->
+      <fileset dir="${blocks}">
+        <include name="**/*.jar"/>
+      </fileset>
+      <!-- tools libs -->
+      <fileset dir="${tools}/lib">
+        <include name="*.jar"/>
+        <exclude name="x*.jar"/>
+      </fileset>      
+    </path>
+
+    <!-- convert paths to properties -->
+    <property name="srcs" refid="srcs"/>
+    <property name="mockss" refid="mockss"/>
+    <property name="libs" refid="libs"/>
+
+    <!-- expand properties in the template file -->
+    <copy file="${resources}/dev/eclipse/classpath-tmpl.xml"
+          tofile="${build.temp}/classpath-temp.xml"
+          filtering="yes"
+          overwrite="yes">
+      <filterset>
+        <filter token="SRC_DIRS" value="${srcs}"/>
+        <filter token="LIBS" value="${libs}"/>
+        <filter token="MOCKS_DIRS" value="${mockss}"/>
+        <filter token="OUTPUT_DIR" value="${build.root}/eclipse/classes"/>
+      </filterset>
+    </copy>
+
+    <!-- split the path in 'item' XML elements -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${path.separator}" value="&lt;/item&gt;&#xA; &lt;item&gt;"/>
+    <!-- relativize file names by removing the current directory -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${user}${file.separator}" value=""/>
+    <!-- and in case that fails, remove the base directory -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${basedir}${file.separator}" value=""/>
+
+    <!-- replace platform-dependent path separator by '/' -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${file.separator}" value="/"/>
+
+    <!-- now build the .classpath file -->
+    <xslt in="${build.temp}/classpath-temp.xml" out="${basedir}/.classpath"
+          processor="trax"
+          style="${resources}/dev/eclipse/make-classpath.xsl"/>
+
+    <!-- copy the project file (expand version) -->
+    <copy file="${resources}/dev/eclipse/project"
+          tofile="${basedir}/.project"
+          overwrite="yes">
+      <filterset>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+  </target>
+

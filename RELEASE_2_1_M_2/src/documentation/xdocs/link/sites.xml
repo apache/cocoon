@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Web Sites Providing Information About Cocoon</title>
+  <authors>
+   <person name="Andreas Hochsteger" email="e9625392@student.tuwien.ac.at"/>
+  </authors>
+ </header>
+
+ <body>
+  <s1 title="Web Sites Providing Information About Cocoon">
+<ul>
+<li><link href="http://wiki.cocoondev.org/">CocoDocoWiki</link>, the Cocoon
+Documentation Wiki.</li>
+<li><link href="http://outerthought.net/">http://outerthought.net/</link>
+hosts several Cocoon-related resources.</li>
+<li><link href="http://tecfa.unige.ch/guides/xml/cocoon-pointers.html">TECFA's little Cocoon Page</link><br/>
+	This page contains examples of using Cocoon, links to Cocoon/XSP documentation and general
+	XML/XSLT links.
+</li>
+<li><link href="http://ziegeler.bei.t-online.de/">The Ziegeler Community</link></li>
+<li><link href="http://radio.weblogs.com/0107211/categories/cocoon/">Carsten Ziegeler's Cocoon Weblog</link></li>
+<li><link href="http://radio.weblogs.com/0103021/">Matthew Langham's Radio Weblog</link></li>
+<li><link href="http://needacake.blogspot.com/">Matthew Langham's VoicesInMyBlog</link></li>
+<li><link href="http://www.cocooncenter.org/">Cocooncenter</link><br/>
+	A site completely dedicated to Cocoon, providing tutorials and
+	how-to articles written by Cocoon users. The articles - and other issues -
+	can be discussed in a forum.
+</li>
+<li><link href="http://www.cocoonhive.org/">CocoonHive.org</link><br/>
+	CocoonHive.org maintainings a catalog of articles on Best Practices, 
+	Use Cases and Success Stories.
+</li>
+<li><link href="http://www.luminas.co.uk/technology/cocoon/url/">Cocoon-URL, a weekly summary of links posted to the cocoon mailing lists</link></li>
+<li><link href="http://www.galatea.com/flashguides/index.html">Galatea FlashGuides(TM)</link></li>
+<li><link href="http://durdo.miesto.sk/Cocoon2HowTo/index.html">Cocoon 2 How-To Pages</link> by Michal Durdina<br/>
+	Some tutorials, tips and hints for Cocoon 2 developers, e. g. how to build a database application
+	and how to use Cocoon with JBuilder.
+</li>
+<li><link href="http://www.luminas.co.uk/technology/cocoon/url/">Cocoon Lists Weekly Summary</link><br/>
+	Cocoon-URL is a weekly summary of interesting links posted to the mailing lists of the Cocoon project
+</li>
+</ul>
+</s1>
+
+  <s1 title="How to get listed">
+   <p>
+    If you do not find your site here, make sure you
+    <link href="mailto:cocoon-users@xml.apache.org?subject=Link: Site:">tell us</link>.
+    Enter a meaningful title after the words &quot;Link: Site:&quot;
+    in the subject, provide a short summary of your site, and do not forget to
+    tell us the URL.
+    You could also follow the <link href="../contrib.html">Contributing</link>
+    page to make it easier for everyone.
+   </p>
+  </s1>
+
+</body>
+</document>

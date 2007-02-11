@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../../dtd/book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Schecoon Documentation" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../../index.html"/>
+    <menu-item label="User Documentation" href="../index.html"/>
+  </menu>
+  
+  <menu label="Flowscript">
+    <menu-item label="Introduction" href="index.html"/>
+    <menu-item label="Continuations" href="continuations.html"/>
+    <menu-item label="How does it work?" href="how-does-it-work.html"/>
+  </menu>
+</book>

@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.event.aspect.EventAspectSelector']">
+
+ <!-- Event Aspect configuration -->
+ <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.aspect.EventAspectSelector">
+    <aspect name="action-counter" class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
+    <aspect name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
+    <aspect name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
+    <aspect name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
+ </component>
+
+ <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
+    <event-aspects>
+        <aspect type="action-counter"/>
+        <aspect type="frame"/>
+        <aspect type="full-screen-coplet"/>
+        <aspect type="request-parameter"/>
+    </event-aspects>
+ </component>
+
+ <component class="org.apache.cocoon.portal.profile.impl.SimpleProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager">
+ </component>
+
+ <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
+
+ <component class="org.apache.cocoon.portal.impl.PortalServiceImpl" logger="portal" role="org.apache.cocoon.portal.PortalService"/>
+
+ <component class="org.apache.cocoon.portal.impl.DefaultLinkService" logger="portal" role="org.apache.cocoon.portal.LinkService"/>
+
+ <component class="org.apache.cocoon.portal.event.impl.DefaultEventConverter" logger="portal" role="org.apache.cocoon.portal.event.EventConverter">
+ </component>
+ <!-- Coplet Adapter configuration -->
+ <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.coplet.adapter.CopletAdapterSelector">
+     <coplet-adapter name="uri" class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter" logger="portal"/>
+ </component>
+
+
+ <!-- Renderer Aspect configuration -->
+ <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectSelector">
+    <aspect name="composite-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"/>
+    <aspect name="tab-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"/>
+    <aspect name="window" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
+
+    <!-- This aspect can be used to render the minimize/maximize buttons -->
+    <aspect name="coplet-sizing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
+
+    <!-- This aspect can be used to render the remove button -->
+    <aspect name="coplet-removing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemoveableAspect"/>
+
+    <!-- This aspect can be used to render a full-screen button -->
+    <aspect name="coplet-full-screen" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FullScreenCopletAspect"/>
+
+    <!-- This aspect can be used to render cinclude statements that will be used to include the coplet content,
+         use the coplet aspect below to directly stream the content -->
+    <aspect name="coplet-cinclude" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"/>
+
+    <!-- This aspect can be used to render the content of the coplet -->
+    <aspect name="coplet" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"/>
+    <aspect name="frame" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
+    <aspect name="xslt" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
+ </component>
+
+ <!-- Renderer configuration -->
+ <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.RendererSelector">
+     <renderer name="column" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="styles/column.xsl"/>
+             </aspect>
+             <aspect type="composite-content">
+                 <parameter name="tag-name" value="column-layout"/>
+             </aspect>
+         </aspects>
+     </renderer>
+     <renderer name="row" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="styles/row.xsl"/>
+             </aspect>
+             <aspect type="composite-content">
+                 <parameter name="tag-name" value="row-layout"/>
+             </aspect>
+         </aspects>
+     </renderer>
+     <renderer name="tab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="styles/tab.xsl"/>
+             </aspect>
+             <aspect type="tab-content">
+                 <parameter name="tag-name" value="tab-layout"/>
+             </aspect>
+         </aspects>
+     </renderer>
+     <renderer name="window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="styles/window.xsl"/>
+             </aspect>
+             <aspect type="window">
+                 <parameter name="tag-name" value="window"/>
+             </aspect>
+             <aspect type="coplet-removing"/>
+             <aspect type="coplet-full-screen"/>
+             <aspect type="coplet-sizing"/>
+             <aspect type="coplet-cinclude"/>
+         </aspects>
+     </renderer>
+     <renderer name="frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="frame"/>
+         </aspects>
+     </renderer>
+     <!--renderer name="frame" class="org.apache.cocoon.portal.layout.renderer.impl.FrameRenderer" logger="portal"/-->
+     <!--renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.NoWindowRenderer" logger="portal"/-->
+     <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="coplet"/>
+         </aspects>
+     </renderer>
+     <renderer name="link" class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" logger="portal"/>
+ </component>
+ 
+<!-- Layout factory configuration -->
+<component class="org.apache.cocoon.portal.layout.impl.DefaultLayoutFactory"
+           role="org.apache.cocoon.portal.layout.LayoutFactory">
+    <layouts>
+        <layout name="column" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
+                renderer="column">
+        </layout>
+        <layout name="row" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
+                renderer="row">
+        </layout>
+        <layout name="tab" 
+                class="org.apache.cocoon.portal.layout.impl.TabLayout" 
+                renderer="tab">
+            <aspects>
+                <aspect name="tab" class="java.lang.Integer" persistence="session"/>
+            </aspects>
+        </layout>
+        <layout name="frame" 
+                class="org.apache.cocoon.portal.layout.impl.FrameLayout" 
+                renderer="frame">
+        </layout>
+        <layout name="coplet" 
+                class="org.apache.cocoon.portal.layout.impl.CopletLayout" 
+                renderer="window">
+        </layout>
+    </layouts>
+</component>
+
+ <component class="org.apache.cocoon.components.persistance.CastorSourceConverter" role="org.apache.cocoon.components.persistance.CastorSourceConverter">
+ 	<mapping-source source="layout">context://samples/portal/profiles/mapping/layout.xml</mapping-source>
+ 	<mapping-source source="copletbasedata">context://samples/portal/profiles/mapping/copletbasedata.xml</mapping-source>
+ 	<mapping-source source="copletdata">context://samples/portal/profiles/mapping/copletdata.xml</mapping-source>
+ 	<mapping-source source="copletinstancedata">context://samples/portal/profiles/mapping/copletinstancedata.xml</mapping-source>
+ </component>
+ <component class="org.apache.cocoon.portal.profile.impl.MapSourceAdapter" role="org.apache.cocoon.portal.profile.impl.MapSourceAdapter" />
+</xconf>

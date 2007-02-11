@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<description>Coplet data mapping file</description>
+
+	<class name="org.apache.cocoon.portal.profile.impl.CopletDataManager">
+		<map-to xml="coplets" />
+
+		<field name="copletData" type="org.apache.cocoon.portal.coplet.CopletData" collection="map">
+			<bind-xml auto-naming="deriveByClass"/>
+		</field>
+	</class>
+
+	<class name="org.apache.cocoon.portal.coplet.CopletData">
+		<map-to xml="coplet-data" />
+
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name" node="attribute" />
+		</field>
+
+		<field name="title" type="java.lang.String">
+			<bind-xml name="title"/>
+		</field>
+
+		<field name="maxpageable" type="java.lang.Boolean">
+			<bind-xml name="maxpageable" />
+		</field>
+
+		<field name="removable" type="java.lang.Boolean">
+			<bind-xml name="removable" />
+		</field>
+
+		<field name="attributes" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.profile.impl.AttributesFieldHandler">
+			<bind-xml name="attribute"/>
+		</field>
+
+		<field name="copletBaseData" type="java.lang.String" handler="org.apache.cocoon.portal.profile.impl.CopletBaseDataReferenceFieldHandler"/>
+	</class>
+   
+	<class name="org.exolab.castor.mapping.MapItem">
+		<field name="key" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+
+		<field name="value">
+			<bind-xml name="value"/>
+		</field>
+	</class>
+</mapping>
+

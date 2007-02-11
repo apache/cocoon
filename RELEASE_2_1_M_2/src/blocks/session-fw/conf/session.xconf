@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="session-manager">
+
+  <session-manager logger="core.session-manager"/>
+  <session-form-manager logger="core.session-manager"/>
+  <session-transaction-manager logger="core.session-manager"/>
+  <session-context-manager logger="core.session-manager"/>
+
+  <session-media-manager logger="core.media-manager"
+                 pool-max="32" pool-min="8" pool-grow="4">
+      <mediatypes default="html">
+        <media name="wap" useragent="Nokia"/>
+        <media name="wap" useragent="UP"/>
+        <media name="wap" useragent="Wapalizer"/>
+      </mediatypes>
+  </session-media-manager>
+
+</xconf>

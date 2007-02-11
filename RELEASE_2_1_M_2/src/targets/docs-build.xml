@@ -1,0 +1,201 @@
+<!-- === Documentation Targets ================================================= -->
+
+  <target name="prepare-docs" depends="blocks">
+
+    <!-- Set classpath for documentation -->
+    <path id="documentation.classpath">
+      <path refid="classpath"/>
+      <fileset dir="${build.blocks}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${blocks}">
+        <include name="*/lib/*.jar"/>
+      </fileset>
+      <path location="${tools.jar}"/>
+      <path location="${build.context}/WEB-INF/classes"/>
+    </path>
+
+    <mkdir dir="${build.context}"/>
+    <mkdir dir="${build.context}/images"/>
+
+    <!-- make filtered copy of XML docs -->
+    <copy todir="${build.context}" filtering="on">
+      <fileset dir="${documentation}">
+        <exclude name="images/**"/>
+      </fileset>
+    </copy>
+
+    <!-- Add some other documents -->
+    <copy file="status.xml"
+      tofile="${build.context}/xdocs/status.xml" filtering="on"/>
+
+    <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
+    overwrite it with the old Cocoon-specific sitemap here -->
+    <move file="${build.context}/sitemap-localdocs.xmap"
+      tofile="${build.context}/sitemap.xmap"/>
+
+    <!-- Copy images -->
+    <copy todir="${build.context}/images" filtering="off">
+      <fileset dir="${documentation}/images"/>
+    </copy>
+
+    <!-- Copy entity catalog and entities -->
+    <copy todir="${build.context}/WEB-INF/entities" filtering="on">
+      <fileset dir="${webapp}/WEB-INF/entities"/>
+    </copy>
+    <copy todir="${build.context}/WEB-INF/classes" filtering="on">
+      <fileset dir="${webapp}/WEB-INF/classes"/>
+    </copy>
+    <copy todir="${build.context}" filtering="on" file="${webapp}/WEB-INF/logkit.xconf"/>
+  </target>
+
+  <!-- Set a variable if the generated docs are already up-to-date. -->
+  <target name="docs_check" depends="prepare-docs">
+    <uptodate property="docs.notrequired" targetfile="${build.docs}/index.html" >
+      <srcfiles dir="." includes="status.xml"/>
+      <srcfiles dir="${build}" includes="jars.xml"/>
+      <srcfiles dir="${documentation}/xdocs" includes="**/*.xml"/>
+    </uptodate>
+  </target>
+
+  <!-- If generated docs are already up-to-date, print a message saying so. -->
+  <target name="docs_done" depends="docs_check" if="docs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding docs, as they are up-to-date:"/>
+    <echo message="  ${build.docs}/index.html is more recent than"/>
+    <echo message="  status.xml, ${documentation}/xdocs/*.xml"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- Create docs -->
+  <target name="docs" depends="prepare-docs, validate-xdocs, docs_done" unless="docs.notrequired" description="Builds the documentation">
+    <mkdir dir="${build.docs}"/>
+
+    <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context}" failonerror="true" maxmemory="128m">
+      <arg value="-u${build.docs.loglevel}"/>
+      <arg value="-x../../../cli.xconf"/>
+      <arg value="index.html"/>
+      <classpath>
+        <path refid="documentation.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <!-- Prepares the printer-docs -->
+  <target name="prepare-printer-docs" depends="prepare-docs">
+    <mkdir dir="${build.context.printer}"/>
+
+    <!-- copy prepared docs -->
+    <copy todir="${build.context.printer}" filtering="off">
+      <fileset dir="${build.context}"/>
+    </copy>
+
+    <!-- copy printer skin -->
+    <copy todir="${build.context.printer}/stylesheets" filtering="off" overwrite="yes">
+      <fileset dir="${build.context}/stylesheets/printer_skin"/>
+    </copy>
+  </target>
+
+  <!-- Set a variable if the generated printer docs are already up-to-date. -->
+  <target name="printer-docs_check" depends="prepare">
+    <uptodate property="printer-docs.notrequired" targetfile="${build.docs.printer}/index.html" >
+      <srcfiles dir="." includes="status.xml"/>
+      <srcfiles dir="${docs}" includes="**/*.xml"/>
+    </uptodate>
+  </target>
+
+  <!-- If generated printer docs are already up-to-date, print a message saying so. -->
+  <target name="printer-docs_done" depends="printer-docs_check" if="printer-docs.notrequired">
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Not rebuilding printer docs, as they are up-to-date:"/>
+    <echo message="  ${build.docs.printer}/index.html is more recent than"/>
+    <echo message="  status.xml, ${docs}/*.xml"/>
+    <echo message="-------------------------------------------------------------"/>
+  </target>
+
+  <!-- Create printer friendly docs -->
+  <target name="printer-docs" depends="prepare-printer-docs, validate-xdocs, printer-docs_done" description="Builds printer-friendly documentation">
+    <mkdir dir="${build.docs.printer}"/>
+
+    <java classname="org.apache.cocoon.Main" fork="true" dir="${build.context.printer}" failonerror="true" maxmemory="128m">
+      <arg value="-c."/>
+      <arg value="-d../printer-docs"/>
+      <arg value="-w../temp/printer"/>
+      <arg value="-b../brokenlinks.txt"/>
+      <arg value="-k./logkit.xconf"/>
+      <arg value="-u${build.docs.printer.loglevel}"/>
+      <arg value="-V"/>
+      <arg value="index.html"/>
+      <classpath>
+        <path refid="documentation.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+<!-- === Javadoc/IDLDoc Targets ================================================ -->
+
+  <!-- Create IDL API documentation -->
+  <target name="idldocs" depends="prepare" unless="unless.exclude.idldocs" description="Builds the IDL API documentation for non-java language bindings">
+    <mkdir dir="${build.idldocs}"/>
+    <java classname="org.openorb.compiler.doc.IdlDoc">
+      <arg value="-I${idl}"/>
+      <arg value="-outdir:${build.idldocs}"/>
+      <arg value="-all"/>
+      <arg value="-html"/>
+      <arg value="${idl}/main.idl"/>
+    </java>
+  </target>
+
+  <!-- Check if javadocs have to be generated -->
+  <target name="javadocs-check">
+    <mkdir dir="${build.javadocs}"/>
+    <condition property="javadocs.notrequired" value="true">
+     <or>
+      <uptodate targetfile="${build.javadocs}/packages.html" >
+       <srcfiles dir= "${java}" includes="**/*.java,**/package.html"/>
+       <srcfiles dir= "${deprecated.src}" includes="**/*.java,**/package.html"/>
+      </uptodate>
+      <istrue value="${unless.exclude.javadocs}"/>
+     </or>
+    </condition>
+  </target>
+
+  <!-- Creates Javadocs -->
+  <target name="javadocs" depends="prepare, javadocs-check" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
+
+    <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
+      <equals arg1="1.4" arg2="${ant.java.version}"/>
+    </condition>
+    <condition property="javadoc.additionalparam" value="">
+      <not><equals arg1="1.4" arg2="${ant.java.version}"/></not>
+    </condition>
+
+    <javadoc destdir="${build.javadocs}"
+             author="true"
+             version="true"
+             use="true"
+             noindex="false"
+             splitindex="true"
+             windowtitle="${Name} API ${version} [${TODAY}]"
+             doctitle="${Name} API ${version}"
+             bottom="Copyright &#169; ${year} Apache Software Foundation. All Rights Reserved."
+             stylesheetfile="${resources.javadoc}/javadoc.css"
+             useexternalfile="yes"
+             additionalparam="${javadoc.additionalparam}">
+
+      <link offline="true" href="http://avalon.apache.org/api"                  packagelistloc="${resources.javadoc}/avalon"/>
+      <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api"  packagelistloc="${resources.javadoc}/xerces"/>
+      <link offline="true" href="http://xml.apache.org/xalan-j/apidocs"         packagelistloc="${resources.javadoc}/xalan"/>
+      <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api"       packagelistloc="${resources.javadoc}/j2se"/>
+      <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${resources.javadoc}/j2ee"/>
+
+      <packageset dir="${java}">
+        <include name="**"/>
+      </packageset>
+      <packageset dir="${deprecated.src}">
+        <include name="**"/>
+      </packageset>
+      <classpath refid="classpath"/>
+    </javadoc>
+
+  </target>

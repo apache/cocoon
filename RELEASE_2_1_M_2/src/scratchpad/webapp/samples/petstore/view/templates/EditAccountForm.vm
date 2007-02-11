@@ -1,0 +1,35 @@
+#parse("view/templates/IncludeTop.vm")
+
+
+<form styleId="workingAccountForm" method="post" action="${continuation.id}.kont">
+<hidden name="workingAccountForm" property="validate" value="editAccount" />
+<hidden name="workingAccountForm" property="account.username" />
+
+<table cellpadding="10" cellspacing="0" align="center" border="1" bgcolor="#dddddd"><tr><td>
+
+
+<font color="darkgreen"><h3>User Information</h3></font>
+<table border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
+<tr bgcolor="#FFFF88"><td>
+User ID:</td><td><input name="workingAccountForm.account.username" value="$account.username"/>
+</td></tr><tr bgcolor="#FFFF88"><td>
+New password:</td><td><input type="password" name="workingAccountForm.account.password" />
+</td></tr><tr bgcolor="#FFFF88"><td>
+Repeat password:</td><td> <input type="password" name="workingAccountForm.repeatedPassword" />
+</td></tr>
+</table>
+
+#parse("view/templates/IncludeAccountFields.vm")
+
+</td></tr></table>
+
+<br /><center>
+<input border="0" type="image" src="images/button_submit.gif" name="submit" value="Save Account Information" />
+</center>
+
+</form>
+<p>
+<center><b><a href="listOrders.do">My Orders</a></b></center>
+</p>
+#parse("view/templates/IncludeBottom.vm")
+

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<!-- CVS: $Id: list.xml,v 1.1 2003/03/09 00:10:32 pier Exp $ -->
+
+<list>
+  <item>This is item 1</item>
+  <item>This is item 2</item>
+  <item>This is item 3</item>
+  <item>This is item 4</item>
+  <item>This is item 5</item>
+  <item>This is item 6</item>
+  <item>This is item 7</item>
+  <item>This is item 8</item>
+  <item>This is item 9</item>
+</list>

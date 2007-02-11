@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- ========================= Components ================================ -->
+
+<!-- =========================== Views =================================== -->
+
+<!-- =========================== Pipelines ================================= -->
+
+<!-- ===========================  Hello  =================================== -->
+
+   <map:match pattern="deli.html">
+     <map:generate src="docs/samples/hello-page.xml"/>
+     <map:transform src="stylesheets/deli_test.xsl" type="xslt"/>
+     <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="deli.wml">
+     <map:generate src="docs/samples/hello-page.xml"/>
+     <map:transform src="stylesheets/deli_test.xsl" type="xslt"/>
+     <map:serialize type="wml"/>
+   </map:match>
+   
+</map:sitemap>
+
+<!-- end of file -->

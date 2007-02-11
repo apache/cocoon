@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon-based and Cocoon-related Projects</title>
+  <authors>
+   <person name="Andreas Hochsteger" email="e9625392@student.tuwien.ac.at"/>
+  </authors>
+ </header>
+
+ <body>
+
+<s1 title="Cocoon-based Projects">
+<ul>
+<li><link href="http://www.wyona.org/">Wyona CMS</link><br/>
+	Wyona CMS is an Open-Source Content Management and Publishing System written in 100% pure Java.
+	It is based on open standards such as XML ( DOM, SAX) and XSLT.
+	One of its core components is the pipeline processor Cocoon from the Apache Software Foundation.
+</li>
+<li><link href="http://opensource.yourdecor.ca/faq1/index.html">FAQ Project</link><br/>
+	A web-based, database driven that make use of JSP and XML and Cocoon.
+</li>
+<li><link href="http://www.sourcepole.com/sources/software/sp.xsl/">sp.xsl</link><br/>
+	Generate simple websites with XSL.
+</li>
+<li><link href="http://webeditor.sourceforge.net/">WebEditor WCMS</link><br/>
+	webEditor is a web application to manage the content of a news-based web site (you know Slashdot?).
+	It's based on Apache Cocoon and Apache/ApacheJServ/Tomcat as Web Server/Servlet platform.
+</li>
+<li><link href="http://chello.sourceforge.net/">Chello - A minimal Cocoon 2 application</link><br/>
+	Chello is an Open Source minimal Cocoon 2 application. It features project compilation using ANT,
+	unit testing with JUnit, functional testing with HTTPUnit, continuous integration process with CruiseControl,
+	documentation generation for Java code using javadoc and XSL Stylesheets using XSLDoc,
+	project documentation using Cocoon and automatic build of web archive file (WAR) for easy distribution.
+</li>
+<li><link href="http://sourceforge.net/projects/holometabolous/">Holometabolous - CMS, Profiling and App Suite</link><br/>
+	A content management, profiling and application suite built on top of software from the Apache foundation, most especially Cocoon, with a database back end.
+	The goal is to make the power of Java/SQL/XML easy to leverage 'out of the box.'
+</li>
+<li><link href="http://sourceforge.net/projects/xmlleague/">XMLLeague</link><br/>
+	Sports (soccer) league administration.
+</li>
+<li><link href="http://buglet.sourceforge.net/">Buglet - XML Bugtracking System</link><br/>
+	An xml-centric bug system implemented in Java as a servlet running on top of Cocoon/Tomcat. 
+	Supports e-mail and web based submission of bugs.
+	Buglet offers a standardized form for the data associated with bugs.
+</li>
+<li>CocoBlog is a free weblogging software tool based on Apache Cocoon and 
+ Apache Xindice. For more information see Ugo Cei's weblog at 
+ <link href="http://www.beblogging.com/blog/">http://www.beblogging.com/blog/</link>
+</li>
+<li><link href="http://xreporter.cocoondev.org/">xReporter</link> is an Avalon/Cocoon-based database reporting application that makes use of XML report
+  definitions to produce HTML, CSV, Excel and PDF reports available across a web interface.</li>
+</ul>
+</s1>
+
+<s1 title="Cocoon-related Projects">
+<ul>
+<li><link href="http://editxml.sourceforge.net/">EditXML - Managing XML files for Cocoon</link><br/>
+	Edit XML provides a servlet based solution for managing sets of XML files for XML based publishing systems like Cocoon.
+</li>
+<li><link href="http://pollo.sourceforge.net/">Pollo XML Editor (with Cocoon sitemap support)</link><br/>
+	Pollo lets you edit XML files. It's best suited for files which can be represented in a tree structure.
+	It comes with built-in support for Cocoon sitemap files, Ant build files and XML Schemas.
+	The editor has a colourful tree widget (not the default Swing one!), drag-and-drop support, unlimited undo, model-view design (open multiple views on the same file), ...
+</li>
+<li><link href="http://www.plenix.com/dbprism/">DBPrism XML Framework for Oracle DB</link><br/>
+	DBPrism is a servlet engine that works in two different modes: as a standalone servlet, or plugged into the Cocoon publishing framework. 
+	In the first mode, DBPrism works like the PLSQL Cartridge of Oracle Web Server. 
+	Plugged into the Cocoon framework, DBPrism works as a DB Producer, generating dynamic XML from a database.
+</li>
+<li><link href="http://jeuclid.sourceforge.net/">JEuclid - MathML Transformer for Cocoon</link><br/>
+	The project is a component for the Apache Cocoon project which converts MathML documents to GIF images or SVG.
+</li>
+<li><link href="http://exformula.d-haven.org/">ExFormula - XForms for Cocoon</link><br/>
+	ExFormula is an implementation of the XForms specification.
+	It allows you to define XML Models and Instances associated with it, to process dynamic forms based on an end markup.
+</li>
+<li><link href="http://jakarta.apache.org/poi/">POI - OLE2 File System (DOC, XLS, ...)</link><br/>
+	The POI project consists of APIs for manipulating various file formats based upon Microsoft's OLE 2 Compound Document format using pure Java.
+	There will soon be generators and serializers for Cocoon to read/write MS Office file formats.
+</li>
+<li><link href="http://opensource.bibop.it/bbp/xforge/index.html">X:Forge XML Framework</link><br/>
+	X:Forge is an XML Language whose main focus is in dynamic XML generation.
+	X:Forge tags are supposed to be included in XML documents for further processing.
+	The tool was designed as a replacement for XSP, an Apache technology originally used for dynamic generation of XML content in the Cocoon Project and slowly evolving into an Internet standard.
+</li>
+</ul>
+</s1>
+
+  <s1 title="How to get listed">
+   <p>
+    If you do not find your project here, make sure you
+    <link href="mailto:cocoon-users@xml.apache.org?subject=Link: Project:">tell us</link>.
+    Enter a meaningful title after the words &quot;Link: Project:&quot;
+    in the subject, provide a short summary of your project, and do not forget
+    to tell us the URL.
+    You could also follow the <link href="../contrib.html">Contributing</link>
+    page to make it easier for everyone.
+   </p>
+  </s1>
+
+</body>
+</document>

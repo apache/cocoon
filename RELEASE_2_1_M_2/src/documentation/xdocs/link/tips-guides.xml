@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon Tips and Guides</title>
+  <authors>
+   <person name="Andreas Hochsteger" email="e9625392@student.tuwien.ac.at"/>
+  </authors>
+ </header>
+
+ <body>
+
+<s1 title="Cocoon Tips and Guides (English)">
+<p>
+Here you can find various tips, tutorials and guides on specific cocoon-related topics spread all over the internet.
+Unless otherwise explicitly noted, all documents refer to the 2.x series of Cocoon.
+</p>
+<ul>
+				<li>
+					<link href="http://www-105.ibm.com/developerworks/education.nsf/xml-onlinecourse-bytitle/83F66813F7FFD61486256B74006EB648?OpenDocument">
+						Introduction to Cocoon 2
+					</link>
+					<br/>
+					Introduction to Cocoon 2 is a tutorial by Leigh Dodds,
+					published on IBM developerWorks site.
+				</li>
+				<li>
+					<link href="http://www-105.ibm.com/developerworks/education.nsf/xml-onlinecourse-bytitle/14DFAEE91D8BB1EF86256BA300662FAF?OpenDocument">
+						Working with XML Server Pages in Apache Cocoon 2
+					</link>
+					<br/>
+					Working with XML Server Pages in Apache Cocoon 2 is another tutorial by Leigh Dodds,
+					published on IBM developerWorks site.
+				</li>
+<li><link href="http://ziegeler.bei.t-online.de/tecart.html">Introduction to Cocoon authentication (C. Ziegeler)</link></li>
+<li><link href="http://radio.weblogs.com/0107211/stories/2002/04/26/theNewCocoonSourceResolving.html">Differences between Cocoon and Avalon Excalibur Source Resolving (Ziegeler)</link></li>
+<li><link href="http://radio.weblogs.com/0103021/stories/2002/02/14/cocoonPortalFirstLook.html">Cocoon portal - first look (Langham)</link></li>
+<li><link href="http://radio.weblogs.com/0103021/stories/2002/02/28/usingTheSunriseComponents.html">Using the sunRise components (Langham)</link></li>
+<li><link href="http://www.galatea.com/flashguides/cocoon-tips-2.xml">Galatea FlashGuide: Cocoon2 Tips and Tricks</link> by Lajos Moczar<br/>
+	This FlashGuideTM provides various tips and tricks for Cocoon2, e. g.
+	database pooling, running multiple instances of Cocoon,
+	and removing 'cocoon' from your URL base.
+</li>
+<li><link href="http://durdo.miesto.sk/Cocoon2HowTo/index.html">Cocoon 2 How To Pages</link></li>
+<li><link href="http://www.suranyami.com/intro.html">XSP Tutorial</link> by David Perry<br/>
+	A tutorial describing what XSP pages are and how to create them.
+</li>
+<li><link href="http://www.jboss.org/online-manual/HTML/ch14s07.html">Deploying Cocoon 2 in JBoss</link><br/>
+	An installation guide for Cocoon with the JBoss application server.
+</li>
+</ul>
+</s1>
+<s1 title="Cocoon Tips and Guides (German)">
+<p>
+Here you can find various tips, tutorials and guides on specific cocoon-related topics in german.
+Unless otherwise explicitly noted, all documents refer to the 2.x series of Cocoon.
+</p>
+<ul>
+<li><link href="http://entwickler.com/itr/online_artikel/show.php3?id=154&amp;nodeid=97">Cocoon Introduction Part 1 (Langham/Ziegeler)</link></li>
+<li><link href="http://entwickler.com/itr/online_artikel/show.php3?id=155&amp;nodeid=97">Cocoon Introduction Part 2 (Langham/Ziegeler)</link></li>
+</ul>
+</s1>
+  <s1 title="How to get listed">
+   <p>
+    If you do not find your page here, make sure you
+    <link href="mailto:cocoon-users@xml.apache.org?subject=Link: Guide:">tell us</link>.
+    Enter a meaningful title after the words &quot;Link: Guide:&quot;
+    in the subject, provide a short summary of your page, and do not forget
+    to tell us the URL.
+    You could also follow the <link href="../contrib.html">Contributing</link>
+    page to make it easier for everyone.
+   </p>
+  </s1>
+
+</body>
+</document>
