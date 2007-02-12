@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>cocoon-core-modules</artifactId>
+    <groupId>org.apache.cocoon</groupId>
+    <version>3</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>cocoon-thread-impl</artifactId>
+  <version>1.0.0-M1</version>
+  <packaging>jar</packaging>
+  <name>Cocoon Thread Implementation</name>
+  <description>
+   Implementation of thread pool and factory components.
+   Implementation of a component for execution of background tasks.
+  </description>
+  <dependencies>
+    <!--  Cocoon  -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-thread-api</artifactId>
+      <version>1.0.0-M1</version>
+    </dependency>
+    <!--  Commons logging -->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <!--  test dependencies  -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
