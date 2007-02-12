@@ -17,6 +17,7 @@
 package org.apache.cocoon.portal.services.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +30,6 @@ import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.impl.AbstractBean;
 import org.apache.cocoon.portal.services.LinkService;
-import org.apache.cocoon.util.NetUtils;
 
 /**
  *
@@ -142,7 +142,7 @@ public class DefaultLinkService
                     buffer.append('?');
                 }
                 try {
-                    buffer.append((String) objects[1]).append('=').append(NetUtils.encode((String) objects[2], "utf-8"));
+                    buffer.append((String) objects[1]).append('=').append(URLEncoder.encode((String) objects[2], "utf-8"));
                 } catch (UnsupportedEncodingException uee) {
                     // ignore this as utf-8 is always supported
                 }
@@ -168,7 +168,7 @@ public class DefaultLinkService
         }
         final String value = this.portalService.getEventConverter().encode(event);
         try {
-            buffer.append(DEFAULT_REQUEST_EVENT_PARAMETER_NAME).append('=').append(NetUtils.encode(value, "utf-8"));
+            buffer.append(DEFAULT_REQUEST_EVENT_PARAMETER_NAME).append('=').append(URLEncoder.encode(value, "utf-8"));
         } catch (UnsupportedEncodingException uee) {
             // ignore this as utf-8 is always supported
         }
@@ -215,7 +215,7 @@ public class DefaultLinkService
                     buffer.append('?');
                 }
                 try {
-                    buffer.append((String) objects[1]).append('=').append(NetUtils.encode((String) objects[2], "utf-8"));
+                    buffer.append((String) objects[1]).append('=').append(URLEncoder.encode((String) objects[2], "utf-8"));
                 } catch (UnsupportedEncodingException uee) {
                     // ignore this as utf-8 is always supported
                 }
@@ -311,7 +311,7 @@ public class DefaultLinkService
                 buffer.append('?');
             }
             try {
-                buffer.append((String)objects[1]).append('=').append(NetUtils.encode((String)objects[2], "utf-8"));
+                buffer.append((String)objects[1]).append('=').append(URLEncoder.encode((String)objects[2], "utf-8"));
             } catch (UnsupportedEncodingException uee) {
                 // ignore this as utf-8 is always supported
             }
