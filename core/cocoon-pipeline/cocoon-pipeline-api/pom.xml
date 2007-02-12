@@ -45,13 +45,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>
           <createSiteXmlOnly>true</createSiteXmlOnly>
         </configuration>
-      </plugin>       
+      </plugin-->       
     </plugins>
   </build>  
   
