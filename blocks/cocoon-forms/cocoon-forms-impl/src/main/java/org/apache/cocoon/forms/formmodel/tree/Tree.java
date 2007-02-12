@@ -360,6 +360,8 @@ public class Tree extends AbstractWidget {
             TreePath parent = path.getParentPath();
             if (parent != null) {
                 expandPath(parent);
+                // Make visible also all parent paths
+                makeVisible(parent);
             }
         }
     }
@@ -394,6 +396,31 @@ public class Tree extends AbstractWidget {
             }
         }
     }
+    
+    public void collapseAll() {
+    	this.expandedPaths.clear();
+        if (!this.rootVisible) {
+            this.expandedPaths.add(TreePath.ROOT_PATH);
+        }    	
+    }
+    
+    public void expandAll() {
+    	collapseAll();
+        this.expandedPaths.add(TreePath.ROOT_PATH);    	
+    	TreeWalker tw = new TreeWalker(this);
+    	tw.enterChildren();
+    	while (tw.hasNext()) {
+    		tw.next();
+    		if (!tw.isLeaf()) {
+    			expandPath(tw.getPath());
+    			tw.enterChildren();
+    		}
+    		if (!tw.hasNext()) {
+    			tw.leave();
+    		}
+    	}
+    }
+    
 
     public void setExpandsSelectedPath(boolean value) {
         this.expandSelectedPath  = value;
