@@ -53,6 +53,7 @@ public class FileGeneratorTestCase extends MockObjectTestCase {
     private Mock manager = new Mock(ServiceManager.class);
     
     public void setUp() throws SAXException {
+        
         final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
         parser = new SAXParser() {
 
