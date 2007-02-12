@@ -28,7 +28,6 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -42,6 +41,8 @@ import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Map;
@@ -225,7 +226,11 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
              * connection regardless of whether the server returned an error or not.
              * {@link http://jakarta.apache.org/commons/httpclient/tutorial.html}
              */
-            response = method.getResponseBody();
+            try {
+                response = method.getResponseBody();
+            } catch (IOException e) {
+                // ignore
+            }
             method.releaseConnection();
         }
 
@@ -236,7 +241,7 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
      * Create one per client session. 
      */
     protected HttpClient getHttpClient() throws ProcessingException {
-        URI uri = null;
+        URL uri = null;
         String host = null;
         Request request = ObjectModelHelper.getRequest(objectModel);
         Session session = request.getSession(true);
@@ -258,10 +263,10 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
              * here need to be resolved before being set in the HostConfiguration?
              */
             try {
-                uri = new URI(this.source);
+                uri = new URL(this.source);
                 host = uri.getHost();
-                config.setHost(uri);
-            } catch (URIException ex) {
+                config.setHost(uri.getHost());
+            } catch (MalformedURLException ex) {
                 throw new ProcessingException("URI format error: " + ex, ex);
             }
 

@@ -37,6 +37,7 @@ import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -57,16 +58,20 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class HttpProxyGenerator extends ServiceableGenerator implements Configurable {
 
+    /** The configured method. */
+    private String methodString;
     /** The HTTP method to use at request time. */
-    private HttpMethodBase method = null;
+    private HttpMethodBase method;
     /** The base HTTP URL for requests. */
-    private HttpURL url = null;
+    private HttpURL url;
     /** The list of request parameters for the request */
-    private ArrayList reqParams = null;
+    private ArrayList reqParams;
     /** The list of query parameters for the request */
-    private ArrayList qryParams = null;
+    private ArrayList qryParams;
     /** Wether we want a debug output or not */
     private boolean debug = false;
+    /** The host configuration. */
+    private HostConfiguration hostConfiguration;
 
     /**
      * Default (empty) constructor.
@@ -85,31 +90,25 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
     public void configure(Configuration configuration)
     throws ConfigurationException {
 
-        /* Setup the HTTP method to use. */
-        String method = configuration.getChild("method").getValue("GET");
-        if ("GET".equalsIgnoreCase(method)) {
-            this.method = new GetMethod();
-        } else if ("POST".equalsIgnoreCase(method)) {
-            this.method = new PostMethod();
-            /* TODO: Is this still needed? Does it refer to a bug in bugzilla?
-             *       At least the handling in httpclient has completely changed.
-             * Work around a bug from the HttpClient library */
-            ((PostMethod) this.method).setRequestBody("");
-        } else {
+        // Setup the HTTP method to use.
+        this.methodString = configuration.getChild("method").getValue("GET");
+        if ( !this.methodString.equalsIgnoreCase("GET") && !this.methodString.equalsIgnoreCase("POST") ) {
             throw new ConfigurationException("Invalid method \"" + method + "\" specified"
                     + " at " + configuration.getChild("method").getLocation());
+            
         }
-
-        /* Create the base URL */
+        // Create the base URL.
         String url = configuration.getChild("url").getValue(null);
         try {
-            if (url != null) this.url = new HttpURL(url);
+            if (url != null) {
+                this.url = new HttpURL(url);
+            }
         } catch (URIException e) {
             throw new ConfigurationException("Cannot process URL \"" + url + "\" specified"
                     + " at " + configuration.getChild("url").getLocation());
         }
 
-        /* Prepare the base request and query parameters */
+        // Prepare the base request and query parameters.
         this.reqParams = this.getParams(configuration.getChildren("param"));
         this.qryParams = this.getParams(configuration.getChildren("query"));
     }
@@ -130,25 +129,30 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
     public void setup(SourceResolver sourceResolver, Map objectModel,
             String source, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
-        /* Do the usual stuff */
+        // Do the usual stuff
         super.setup(sourceResolver, objectModel, source, parameters);
 
-        /*
-         * Parameter handling: In case the method is a POST method, query
-         * parameters and request parameters will be two different arrays
-         * (one for the body, one for the query string, otherwise it's going
-         * to be the same one, as all parameters are passed on the query string
-         */
+        if ("GET".equalsIgnoreCase(this.methodString)) {
+            this.method = new GetMethod();
+        } else if ("POST".equalsIgnoreCase(this.methodString)) {
+            this.method = new PostMethod();
+        }
+        //
+        // Parameter handling: In case the method is a POST method, query
+        // parameters and request parameters will be two different arrays
+        // (one for the body, one for the query string, otherwise it's going
+        // to be the same one, as all parameters are passed on the query string
+        //
         ArrayList req = new ArrayList();
         ArrayList qry = req;
         if (this.method instanceof PostMethod) qry = new ArrayList();
         req.addAll(this.reqParams);
         qry.addAll(this.qryParams);
 
-        /*
-         * Parameter handling: complete or override the configured parameters with
-         * those specified in the pipeline.
-         */
+        //
+        // Parameter handling: complete or override the configured parameters with
+        // those specified in the pipeline.
+        //
         String names[] = parameters.getNames();
         for (int x = 0; x < names.length; x++) {
             String name = names[x];
@@ -170,7 +174,7 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
             }
         }
 
-        /* Process the current source URL in relation to the configured one */
+        // Process the current source URL in relation to the configured one
         HttpURL src = (super.source == null ? null : new HttpURL(super.source));
         if (this.url != null) src = (src == null ? this.url : new HttpURL(this.url, src));
         if (src == null) throw new ProcessingException("No URL specified");
@@ -178,14 +182,13 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
             throw new ProcessingException("Invalid URL \"" + src.toString() + "\"");
         }
 
-        /* Configure the method with the resolved URL */
-        HostConfiguration hc = new HostConfiguration();
-        hc.setHost(src);
-        this.method.setHostConfiguration(hc);
+        // Configure the method with the resolved URL
+        this.hostConfiguration = new HostConfiguration();
+        this.hostConfiguration.setHost(src);
         this.method.setPath(src.getPath());
         this.method.setQueryString(src.getQuery());
 
-        /* And now process the query string (from the parameters above) */
+        // And now process the query string (from the parameters above)
         if (qry.size() > 0) {
             String qs = this.method.getQueryString();
             NameValuePair nvpa[] = new NameValuePair[qry.size()];
@@ -195,14 +198,14 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
             }
         }
 
-        /* Finally process the body parameters */
+        // Finally process the body parameters
         if ((this.method instanceof PostMethod) && (req.size() > 0)) {
             PostMethod post = (PostMethod) this.method;
             NameValuePair nvpa[] = new NameValuePair[req.size()];
             post.setRequestBody((NameValuePair []) req.toArray(nvpa));
         }
 
-        /* Check the debugging flag */
+        // Check the debugging flag
         this.debug = parameters.getParameterAsBoolean("debug", false);
     }
 
@@ -215,14 +218,13 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
      * @see #generate()
      */
     public void recycle() {
-        /* Recycle the method */
-        this.method.recycle();
-        /* TODO: Is this still needed? Does it refer to a bug in bugzilla?
-         *       At least the handling in httpclient has completely changed.
-         *  Work around a bug from the HttpClient library */
-        if (this.method instanceof PostMethod) ((PostMethod) this.method).setRequestBody("");
+        this.hostConfiguration = null;
+        if ( this.method != null ) {
+            this.method.releaseConnection();
+            this.method = null;
+        }
 
-        /* Clean up our parent */
+        // Clean up our parent.
         super.recycle();
     }
 
@@ -236,14 +238,14 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
      */
     public void generate()
     throws ResourceNotFoundException, ProcessingException, SAXException, IOException {
-        /* Do the boring stuff in case we have to do a debug output (blablabla) */
+        // Do the boring stuff in case we have to do a debug output
         if (this.debug) {
             this.generateDebugOutput();
             return;
         }
 
-        /* Call up the remote HTTP server */
-        HttpConnection connection = new HttpConnection(this.method.getHostConfiguration());
+        // Call up the remote HTTP server
+        HttpConnection connection = new HttpConnection(this.hostConfiguration);
         HttpState state = new HttpState();
         this.method.setFollowRedirects(true);
         int status = this.method.execute(state, connection);
@@ -256,7 +258,7 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         }
         InputStream response = this.method.getResponseBodyAsStream();
 
-        /* Let's try to set up our InputSource from the response output stream and to parse it */
+        // Let's try to set up our InputSource from the response output stream and to parse it
         SAXParser parser = null;
         try {
             InputSource inputSource = new InputSource(response);
@@ -285,28 +287,15 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         attributes.addAttribute("", "method", "method", "CDATA", this.method.getName());
         attributes.addAttribute("", "url", "url", "CDATA", this.method.getURI().toString());
         attributes.addAttribute("", "protocol", "protocol", "CDATA",
-                (this.method.isHttp11() ? "HTTP/1.1" : "HTTP/1.0"));
+                (method.getParams().getVersion().compareTo(HttpVersion.HTTP_1_1) == 0 ? "HTTP/1.1" : "HTTP/1.0"));
         super.xmlConsumer.startElement("", "request", "request", attributes);
 
         if (this.method instanceof PostMethod) {
-            String body = ((PostMethod) this.method).getRequestBodyAsString();
-
             attributes.clear();
             attributes.addAttribute("", "name", "name", "CDATA", "Content-Type");
             attributes.addAttribute("", "value", "value", "CDATA", "application/x-www-form-urlencoded");
             super.xmlConsumer.startElement("", "header", "header", attributes);
             super.xmlConsumer.endElement("", "header", "header");
-
-            attributes.clear();
-            attributes.addAttribute("", "name", "name", "CDATA", "Content-Length");
-            attributes.addAttribute("", "value", "value", "CDATA", Integer.toString(body.length()));
-            super.xmlConsumer.startElement("", "header", "header", attributes);
-            super.xmlConsumer.endElement("", "header", "header");
-
-            attributes.clear();
-            super.xmlConsumer.startElement("", "body", "body", attributes);
-            super.xmlConsumer.characters(body.toCharArray(), 0, body.length());
-            super.xmlConsumer.endElement("", "body", "body");
         }
 
         super.xmlConsumer.endElement("", "request", "request");
