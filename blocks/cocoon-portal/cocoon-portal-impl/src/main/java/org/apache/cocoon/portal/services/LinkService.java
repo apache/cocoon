@@ -125,15 +125,6 @@ public interface LinkService {
     String encodeURL(String url);
 
     /**
-     * A list of parameters that should be filtered when
-     * coplets are called. The list might consist of either
-     * a parameter name (string) or a prefix (string). A prefix
-     * ends with a '*'.
-     * @return A list of strings. This method always returns a list.
-     */
-    List getInternalParameterNames();
-
-    /**
      * Test if the parameter is an internal one.
      */
     boolean isInternalParameterName(String name);

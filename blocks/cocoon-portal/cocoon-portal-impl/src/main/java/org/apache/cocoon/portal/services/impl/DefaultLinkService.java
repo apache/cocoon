@@ -22,15 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.impl.AbstractComponent;
+import org.apache.cocoon.portal.impl.AbstractBean;
 import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.util.NetUtils;
 
@@ -39,9 +36,8 @@ import org.apache.cocoon.util.NetUtils;
  * @version $Id$
  */
 public class DefaultLinkService 
-    extends AbstractComponent
-    implements LinkService,
-               Parameterizable {
+    extends AbstractBean
+    implements LinkService {
 
     /** Default port used for http. */
     protected int defaultPort = 80;
@@ -49,28 +45,34 @@ public class DefaultLinkService
     /** Default port used for https. */
     protected int defaultSecurePort = 443;
 
-    /** List of internal parameters. */
-    protected List internalParameters = new ArrayList();
-
     /** List of matchers for internal parameters. */
     protected List internalParametersMatchers = new ArrayList();
 
-    /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters params) throws ParameterException {
-        this.defaultPort = params.getParameterAsInteger("defaultPort", this.defaultPort);
-        this.defaultSecurePort = params.getParameterAsInteger("defaultSecurePort", this.defaultSecurePort);
-        final String internalParams = params.getParameter("internalParameters", "cocoon-*");
-        final StringTokenizer st = new StringTokenizer(internalParams, ",");
-        while ( st.hasMoreTokens() ) {
-            final String parameter = st.nextToken();
-            this.internalParameters.add(parameter);
-            if ( parameter.endsWith("*") ) {
-                this.internalParametersMatchers.add(new PrefixParameterMatcher(parameter));
-            } else {
-                this.internalParametersMatchers.add(new ConstantParameterMatcher(parameter));
-            }
+    public DefaultLinkService() {
+        this.setInternalParameters("cocoon-*");
+    }
+
+    public void setDefaultPort(int defaultPort) {
+        this.defaultPort = defaultPort;
+    }
+
+    public void setDefaultSecurePort(int defaultSecurePort) {
+        this.defaultSecurePort = defaultSecurePort;
+    }
+
+    public void setInternalParameters(String internalParams) {
+        if ( internalParams == null ) {
+            this.internalParametersMatchers.clear();
+        } else {
+            final StringTokenizer st = new StringTokenizer(internalParams, ",");
+            while ( st.hasMoreTokens() ) {
+                final String parameter = st.nextToken();
+                if ( parameter.endsWith("*") ) {
+                    this.internalParametersMatchers.add(new PrefixParameterMatcher(parameter));
+                } else {
+                    this.internalParametersMatchers.add(new ConstantParameterMatcher(parameter));
+                }
+            }            
         }
     }
 
@@ -318,13 +320,6 @@ public class DefaultLinkService
         return buffer.toString();
     }
     
-    /**
-     * @see org.apache.cocoon.portal.services.LinkService#getInternalParameterNames()
-     */
-    public List getInternalParameterNames() {
-        return this.internalParameters;
-    }
-
     /**
      * @see org.apache.cocoon.portal.services.LinkService#isInternalParameterName(java.lang.String)
      */

@@ -26,9 +26,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-  <!-- Event Converter -->
-  <bean name="org.apache.cocoon.portal.event.EventConverter"
-        class="org.apache.cocoon.portal.event.impl.DefaultEventConverter"
-        init-method="init" scope="singleton"/>
+  <!--+
+      | Portal Event Converter.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.event.EventConverter"
+          class="org.apache.cocoon.portal.event.impl.DefaultEventConverter"
+          init-method="init" scope="singleton"/>
+  
+  <!--+
+      | Portal Link Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.LinkService"
+          class="org.apache.cocoon.portal.services.LinkService"
+          scope="singleton"/>
 
 </beans>

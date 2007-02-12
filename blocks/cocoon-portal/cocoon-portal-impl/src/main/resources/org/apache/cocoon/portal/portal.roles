@@ -209,14 +209,6 @@
           shorthand="page-label-manager"/>
 
   <!--+
-      | Portal Link Service.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.services.LinkService"
-          default-class="org.apache.cocoon.portal.services.impl.DefaultLinkService"
-          shorthand="portal-link-service"/>
-
-  <!--+
       | Layout Factory.
       |
       +-->
