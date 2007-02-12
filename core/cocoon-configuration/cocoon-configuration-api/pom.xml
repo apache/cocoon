@@ -19,7 +19,6 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -29,7 +28,7 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>3-SNAPSHOT</version>
+    <version>3</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-configuration-api</artifactId>
@@ -65,7 +64,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -73,7 +72,7 @@
           <collection>cdocs-configuration-api</collection>          
           <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin>
+      </plugin-->
     </plugins> 
   </build>
 
