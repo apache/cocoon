@@ -43,6 +43,13 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+/*
+ * This test case should be moved to cocoon-pipeline-components. Currently there seems to be
+ * some Maven bug with the test dependency resultion though that prevents it from running there.
+ * 
+ * If you move it back, don't forget to move the references resources too!
+ */
+
 /**
  *
  * @version $Id$
