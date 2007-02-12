@@ -47,13 +47,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>
           <createSiteXmlOnly>true</createSiteXmlOnly>
         </configuration>
-      </plugin>       
+      </plugin-->       
     </plugins>
   </build>  
   
@@ -74,7 +74,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-configuration-api</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
