@@ -27,6 +27,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.cookie.CookieSpecBase;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 
 /**
  * This is a generic and externally configurable method, to forward any Request
@@ -50,7 +51,7 @@ public class RequestForwardingHttpMethod extends EntityEnclosingMethod {
             this.setPath(req.getRequestURI());
             cloneHeaders();
             cloneCookies();
-            setRequestBody(originalRequest.getInputStream());
+            setRequestEntity(new InputStreamRequestEntity(originalRequest.getInputStream()));
     }
     
 

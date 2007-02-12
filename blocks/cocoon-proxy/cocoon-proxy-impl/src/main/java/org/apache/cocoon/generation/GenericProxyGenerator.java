@@ -36,6 +36,7 @@ import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -130,7 +131,8 @@ public class GenericProxyGenerator extends ServiceableGenerator {
             // Build the forwarded connection
             HttpConnection conn = new HttpConnection(destination.getHost(), destination.getPort());
             HttpState state = new HttpState();
-            state.setCredentials(null, destination.getHost(),
+            AuthScope as = new AuthScope(destination.getHost(), destination.getPort());
+            state.setCredentials(as,
                 new UsernamePasswordCredentials(destination.getUser(), destination.getPassword()));
             method.setPath(path);
 
