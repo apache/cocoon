@@ -31,7 +31,7 @@
   <packaging>pom</packaging>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>3</version>
+  <version>4-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
@@ -432,9 +432,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-3</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-3</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-3</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
+    <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
   </scm>
 
   <distributionManagement>
