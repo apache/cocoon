@@ -34,6 +34,9 @@
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
 
+  <!-- Include default components -->
+  <include-beans src="resource://org/apache/cocoon/portal/cocoon-portal-components.xml"/>
+
   <!-- If you don't need JSR 168 support, you can remove the following include. -->
   <include src="resource://org/apache/cocoon/portal/pluto/portal-pluto.roles"/>
 
@@ -99,27 +102,6 @@
         <aspect type="request-parameter"/>
     </aspects>
   </portal-event-manager>
-
-  <!--+
-      | Page Labels.
-      | To enable PageLabels uncomment the following definition:
-  <portal-event-converter class="org.apache.cocoon.portal.event.impl.PageLabelEventConverter"/>
-      +-->
-  <portal-event-converter>
-    <!-- Map event class to keys. These keys are used to create the values
-         for the uri if that event is used. If no mapping is found a hash
-         of the event class name is used as default. -->
-    <mappings>
-      <mapping name="sizing" event-class="org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent"/>
-      <mapping name="lpar" event-class="org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent"/>
-    </mappings>
-  </portal-event-converter>
-
-  <page-label-manager>
-    <!-- Uncomment to enable non sticky tabs
-    <nonStickyTabs>true</nonStickyTabs>
-    -->
-  </page-label-manager>
 
   <!--+
       | Page Labels.

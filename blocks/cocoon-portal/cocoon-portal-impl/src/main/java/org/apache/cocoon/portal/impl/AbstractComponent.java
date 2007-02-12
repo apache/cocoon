@@ -23,7 +23,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This class can be used as a base class for all portal related components.
@@ -34,7 +35,6 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  * @version $Id$
  */
 public class AbstractComponent
-    extends AbstractLogEnabled
     implements Serviceable, Disposable, ThreadSafe, Initializable {
     
     /** The service manager. */
@@ -42,6 +42,17 @@ public class AbstractComponent
 
     /** The portal service. */
     protected PortalService portalService;
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)

@@ -24,16 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
-import org.apache.cocoon.portal.impl.AbstractComponent;
+import org.apache.cocoon.portal.impl.AbstractBean;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.HashUtil;
 
@@ -51,8 +47,8 @@ import org.apache.cocoon.util.HashUtil;
  * @version $Id$
  */
 public class DefaultEventConverter
-    extends AbstractComponent
-    implements EventConverter, Configurable {
+    extends AbstractBean
+    implements EventConverter {
 
     protected static final String EVENT_LIST = DefaultEventConverter.class.getName();
 
@@ -70,9 +66,37 @@ public class DefaultEventConverter
     /** All configured event converters. */
     protected Map converters = new HashMap();
 
+    /** The configured mappings. */
+    protected Map mappings;
+
+    /**
+     * Set the mappings.
+     * A mapping is a key value pair consisting of a name as the key and a class
+     * name as a value.
+     */
+    public void setMappings(Map m) {
+        this.mappings = m;
+    }
+
+    /**
+     * Initialize this component.
+     */
+    public void init() {
+        if ( this.mappings != null ) {
+            final Iterator i = this.mappings.entrySet().iterator();
+            while ( i.hasNext() ) {
+                final Map.Entry current = (Map.Entry)i.next();
+                final Constructor c = this.getConstructor(current.getValue().toString());
+                final long hash = HashUtil.hash(current.getValue().toString());
+                final String hashKey = Long.toString(hash);
+                this.factories.put(hashKey, current.getKey().toString());
+                this.factories.put(current.getKey().toString(), c);
+            }
+        }
+    }
+
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
     public void configure(Configuration config) throws ConfigurationException {
         Configuration[] mappings = config.getChild("mappings").getChildren("mapping");
         for( int i=0; i<mappings.length; i++) {
@@ -107,10 +131,10 @@ public class DefaultEventConverter
             }
         }
     }
+    */
 
     /**
      * @see org.apache.cocoon.portal.impl.AbstractComponent#dispose()
-     */
     public void dispose() {
         if ( this.manager != null ) {
             final Iterator i = this.converters.values().iterator();
@@ -120,6 +144,7 @@ public class DefaultEventConverter
         }
         super.dispose();
     }
+     */
 
     protected Constructor getConstructor(String factory) {
         try {
