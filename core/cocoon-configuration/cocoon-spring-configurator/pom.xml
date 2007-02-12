@@ -28,7 +28,7 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>3</version>
+    <version>4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-spring-configurator</artifactId>
@@ -60,7 +60,7 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/${project.artifactId}</tagBase>
         </configuration>
       </plugin>    
-      <!--plugin>
+      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -68,7 +68,7 @@
           <collection>cdocs-spring-configurator</collection>          
           <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin-->         
+      </plugin>         
     </plugins> 
   </build>
   
