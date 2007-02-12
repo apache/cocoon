@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.forms.formmodel.tree;
 
+import java.awt.AWTEventMulticaster;
 import java.util.EventListener;
 
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
@@ -78,13 +79,24 @@ public class TreeModelHelper {
             if (b == null)  return a;
             return new EventMulticaster(a, b);
         }
-        
+                
         public static TreeModelListener add(TreeModelListener a, TreeModelListener b) {
             return (TreeModelListener)addInternal(a, b);
         }
         
         public static TreeModelListener remove(TreeModelListener l, TreeModelListener oldl) {
             return (TreeModelListener)removeInternal(l, oldl);
+        }
+
+        protected EventListener remove(EventListener oldl) {
+            if (oldl == a)  return b;
+            if (oldl == b)  return a;
+            EventListener a2 = removeInternal(a, oldl);
+            EventListener b2 = removeInternal(b, oldl);
+            if (a2 == a && b2 == b) {
+                return this;        // it's not here
+            }
+            return addInternal(a2, b2);
         }
         
         public void treeStructureChanged(TreeModelEvent event) {
