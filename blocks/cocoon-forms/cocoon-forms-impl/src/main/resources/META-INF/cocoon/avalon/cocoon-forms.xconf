@@ -50,6 +50,7 @@
       <binding name="union" src="org.apache.cocoon.forms.binding.UnionJXPathBindingBuilder"/>
       <binding name="expand" src="org.apache.cocoon.forms.binding.ExpandJXPathBindingBuilder"/>
       <binding name="import" src="org.apache.cocoon.forms.binding.ImportJXPathBindingBuilder"/>
+      <binding name="treemodel" src="org.apache.cocoon.forms.binding.TreeModelJXPathBuilder"/>
     </bindings>
   </forms-binding>
 
