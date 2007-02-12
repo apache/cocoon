@@ -45,11 +45,11 @@ public class PageLabelLinkService extends DefaultLinkService {
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
     public void service(ServiceManager aManager) throws ServiceException {
         super.service(aManager);
         this.labelManager = (PageLabelManager)this.manager.lookup(PageLabelManager.ROLE);
     }
+     */
 
     /**
      * Get the uri for the coplet containing event
@@ -202,7 +202,6 @@ public class PageLabelLinkService extends DefaultLinkService {
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
     public void dispose() {
         if (this.manager != null) {
             if (this.labelManager != null) {
@@ -212,6 +211,7 @@ public class PageLabelLinkService extends DefaultLinkService {
         }
         super.dispose();
     }
+     */
 
     /**
      * Generates the page label.

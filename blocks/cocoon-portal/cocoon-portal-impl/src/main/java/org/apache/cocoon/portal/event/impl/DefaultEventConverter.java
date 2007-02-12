@@ -39,9 +39,6 @@ import org.apache.cocoon.util.HashUtil;
  * the current user session. Each event is then converted to a string just containing
  * the index of the event in this list. This list is cleared when the session is closed.
  *
- * In addition, this component can be configured with additional event converters
- * that convert a specific event.
- *
  * TODO - What happens if two event classes have the same hash?
  *
  * @version $Id$
@@ -62,9 +59,6 @@ public class DefaultEventConverter
      * name as the key and the Constructor as the value.
      */
     protected Map factories = new HashMap();
-
-    /** All configured event converters. */
-    protected Map converters = new HashMap();
 
     /** The configured mappings. */
     protected Map mappings;
@@ -95,57 +89,6 @@ public class DefaultEventConverter
         }
     }
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-    public void configure(Configuration config) throws ConfigurationException {
-        Configuration[] mappings = config.getChild("mappings").getChildren("mapping");
-        for( int i=0; i<mappings.length; i++) {
-            final Configuration current = mappings[i];
-            final String key = current.getAttribute("name");
-            final String eventClass = current.getAttribute("event-class");
-            final Constructor c = this.getConstructor(eventClass);
-            final long hash = HashUtil.hash(eventClass);
-            final String hashKey = Long.toString(hash);
-            this.factories.put(hashKey, key);
-            this.factories.put(key, c);
-        }
-        Configuration[] helpers = config.getChild("converters").getChildren("converter");
-        for( int i=0; i<helpers.length; i++) {
-            final Configuration current = helpers[i];
-            final String role = current.getAttribute("role");
-            final String eventClass = current.getAttribute("event-class");
-            final String name = current.getAttribute("name", null);
-            try {
-                final EventConverter converter = (EventConverter)this.manager.lookup(role);
-                final long hash = HashUtil.hash(eventClass);
-                final String hashKey = Long.toString(hash);
-                if ( name != null ) {
-                    this.factories.put(name, converter);
-                    this.factories.put(hashKey, name);                    
-                } else {
-                    this.factories.put(hashKey, converter);                    
-                }
-                this.converters.put(eventClass, converter);
-            } catch (ServiceException e) {
-                throw new ConfigurationException("Unable to lookup event converter: " + role, e);
-            }
-        }
-    }
-    */
-
-    /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#dispose()
-    public void dispose() {
-        if ( this.manager != null ) {
-            final Iterator i = this.converters.values().iterator();
-            while ( i.hasNext() ) {
-                this.manager.release(i.next());
-            }
-        }
-        super.dispose();
-    }
-     */
-
     protected Constructor getConstructor(String factory) {
         try {
             final Class factoryClass = ClassUtils.loadClass(factory);
@@ -163,11 +106,6 @@ public class DefaultEventConverter
     public String encode(Event event) {
         final String eventClassName = event.getClass().getName();
         String data = null;
-        // first check if we have a converter registered for this event
-        EventConverter registeredConverter = (EventConverter)this.converters.get(eventClassName);
-        if ( registeredConverter != null ) {
-            data = registeredConverter.encode(event);
-        }
         // if this is a convertable event just return
         // the used factory and the data.
         if ( data == null && event instanceof ConvertableEvent ) {
