@@ -21,6 +21,7 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -64,7 +65,7 @@ public class DefaultFormManager extends AbstractLogEnabled
     protected SimpleServiceSelector widgetDefinitionBuilderSelector;
     protected CacheManager cacheManager;
 
-    protected LibraryManagerImpl libraryManager;
+    protected LibraryManager libraryManager;
 
     //
     // Lifecycle
@@ -72,18 +73,25 @@ public class DefaultFormManager extends AbstractLogEnabled
 
     public DefaultFormManager() {
         widgetDefinitionBuilderSelector = new SimpleServiceSelector("widget", WidgetDefinitionBuilder.class);
-        libraryManager = new LibraryManagerImpl();
+        this.libraryManager = new LibraryManagerImpl();
     }
 
+    /**
+     * @see org.apache.avalon.framework.logger.AbstractLogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
+     */
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         widgetDefinitionBuilderSelector.enableLogging(getLogger());
-        libraryManager.enableLogging(getLogger().getChildLogger("library"));
+        ContainerUtil.enableLogging(this.libraryManager, getLogger().getChildLogger("library"));
     }
 
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.avalonContext = context;
         widgetDefinitionBuilderSelector.contextualize(avalonContext);
+        ContainerUtil.contextualize(this.libraryManager, avalonContext);
     }
 
     /** Temporary internal method, don't rely on it's existence! Needed to access the context from flowscript. */
@@ -92,25 +100,34 @@ public class DefaultFormManager extends AbstractLogEnabled
         return this.avalonContext;
     }
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.cacheManager = (CacheManager) manager.lookup(CacheManager.ROLE);
         widgetDefinitionBuilderSelector.service(new FormServiceManager());
-        libraryManager.service(new FormServiceManager());
+        ContainerUtil.service(this.libraryManager, new FormServiceManager());
     }
 
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
-        libraryManager.configure(configuration.getChild("libraries"));
+        ContainerUtil.configure(this.libraryManager, configuration.getChild("libraries"));
         widgetDefinitionBuilderSelector.configure(configuration.getChild("widgets"));
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.widgetDefinitionBuilderSelector != null) {
             this.widgetDefinitionBuilderSelector.dispose();
             this.widgetDefinitionBuilderSelector = null;
         }
-        if(this.libraryManager != null) {
-            this.libraryManager.dispose();
+        if (this.libraryManager != null) {
+            ContainerUtil.dispose(this.libraryManager);
             this.libraryManager = null;
         }
         if (this.cacheManager != null) {
