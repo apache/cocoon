@@ -30,16 +30,10 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-xml-api</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon XML API</name>
   <description>
     DOMParser and SAXParser interface.
   </description>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-api/cocoon-xml-api-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-api/cocoon-xml-api-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-api/cocoon-xml-api-1.0.0-M1</url>
-  </scm>
 </project>
