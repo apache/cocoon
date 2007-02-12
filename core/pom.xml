@@ -30,7 +30,7 @@
     <version>3</version>
   </parent>
   <artifactId>cocoon-core-modules</artifactId>
-  <version>4-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
   <name>Cocoon Core [modules]</name>
   
   <modules>
