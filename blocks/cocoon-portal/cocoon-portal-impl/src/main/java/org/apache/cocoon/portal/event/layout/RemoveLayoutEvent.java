@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.event.layout;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ConvertableEvent;
+import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;

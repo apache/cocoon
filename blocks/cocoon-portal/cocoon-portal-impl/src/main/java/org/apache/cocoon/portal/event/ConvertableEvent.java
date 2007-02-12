@@ -19,6 +19,8 @@ package org.apache.cocoon.portal.event;
 /**
  * Marker interface for portal event.
  *
+ * Each event should be convertable.
+ *
  * @version $Id$
  */
 public interface ConvertableEvent extends Event {

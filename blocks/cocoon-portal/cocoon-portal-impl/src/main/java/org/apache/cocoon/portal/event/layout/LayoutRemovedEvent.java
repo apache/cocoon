@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.portal.event.layout;
 
+import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.om.Layout;
 
 /**

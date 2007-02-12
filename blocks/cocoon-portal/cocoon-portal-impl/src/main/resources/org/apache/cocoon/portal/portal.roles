@@ -201,14 +201,6 @@
           shorthand="portal-event-manager"/>
 
   <!--+
-      | Event Converter.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.event.EventConverter"
-          default-class="org.apache.cocoon.portal.event.impl.DefaultEventConverter"
-          shorthand="portal-event-converter"/>
-
-  <!--+
       | Page Label Manager.
       |
       +-->

@@ -17,7 +17,9 @@
 package org.apache.cocoon.portal.event;
 
 /**
- * Marker interface for portal event that is comparable.
+ * Marker interface for a portal event that is comparable.
+ * This interface should be used, if each url should only contain one (or zero)
+ * events of this specific type.
  *
  * @version $Id$
  */
