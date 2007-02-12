@@ -646,7 +646,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>2.0-beta-4</version>
         <configuration>
-          <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/${project.artifactId}</tagBase>
+          <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
       <plugin>

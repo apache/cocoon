@@ -58,6 +58,12 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/${project.artifactId}</tagBase>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>

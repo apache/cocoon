@@ -86,8 +86,7 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
       <version>2.0.2</version>
-    </dependency>             
-
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -98,6 +97,12 @@
   
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/${project.artifactId}</tagBase>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
