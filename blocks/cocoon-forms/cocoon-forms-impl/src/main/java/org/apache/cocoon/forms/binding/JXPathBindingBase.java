@@ -68,6 +68,9 @@ public abstract class JXPathBindingBase extends AbstractLogEnabled
         this.commonAtts = commonAtts;
     }
 
+    /**
+     * @see org.apache.cocoon.forms.binding.Binding#getEnclosingLibrary()
+     */
     public Library getEnclosingLibrary() {
         if (parent != null) {
             return parent.getEnclosingLibrary();
@@ -76,12 +79,18 @@ public abstract class JXPathBindingBase extends AbstractLogEnabled
         }
     }
 
+    /**
+     * @see org.apache.cocoon.forms.binding.Binding#setEnclosingLibrary(org.apache.cocoon.forms.binding.library.Library)
+     */
     public void setEnclosingLibrary(Library lib) {
     	this.enclosingLibrary = lib;
     }
 
+    /**
+     * @see org.apache.cocoon.forms.binding.Binding#isValid()
+     */
     public boolean isValid() {
-        if (this.enclosingLibrary != null) {
+        if (this.enclosingLibrary == null) {
             if (parent != null) {
                 return parent.isValid();
             }
@@ -121,6 +130,9 @@ public abstract class JXPathBindingBase extends AbstractLogEnabled
         return null;
     }
 
+    /**
+     * @see org.apache.cocoon.forms.binding.Binding#getClass(java.lang.String)
+     */
     public Binding getClass(String id) {
 
         Binding classBinding = null;
