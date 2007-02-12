@@ -31,7 +31,7 @@
   <packaging>pom</packaging>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>3-SNAPSHOT</version>
+  <version>3</version>
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
@@ -432,9 +432,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-3</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-3</url>
   </scm>
 
   <distributionManagement>
@@ -472,137 +472,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>2.0.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.daisycms</groupId>
-          <artifactId>daisy-maven-plugin</artifactId>
-          <version>1.0.0-SNAPSHOT</version>
-          <configuration>
-            <repoUrl>${docs.repoUrl}</repoUrl>
-            <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
-            <daisyServerId>cocoon-daisy</daisyServerId>
-            <cleanSiteXml>true</cleanSiteXml>
-            <author>The Cocoon Community</author>
-            <navDocId>0</navDocId>            
-            <collections>
-              <!-- sites -->
-              <collection>
-                <name>cdocs-site-main</name>
-                <path></path>
-              </collection>
-              <collection>
-                <name>cdocs-site-blocks</name>
-                <path>blocks/</path>
-              </collection>
-              <collection>
-                <name>cdocs-site-core-modules</name>
-                <path>core-modules/</path>
-              </collection>
-              <collection>
-                <name>cdocs-site-subprojects</name>
-                <path>${docs.m.subprojects.relPath}</path>
-              </collection>              
-              <collection>
-                <name>cdocs-site-maven-plugins</name>
-                <path>maven-plugins/</path>
-              </collection>
-              <!-- core -->
-              <collection>
-                <name>cdocs-core</name>
-                <path>${docs.m.core.relPath}</path>
-              </collection>
-              <!-- subprojects -->
-              <collection>
-                <name>cdocs-configuration-api</name>
-                <path>${docs.m.configuration-api.relPath}</path>
-              </collection>                 
-              <collection>
-                <name>cdocs-spring-configurator</name>
-                <path>${docs.m.spring-configurator.relPath}</path>
-              </collection>                 
-              <!-- blocks -->
-              <collection>
-                <name>cdocs-ajax</name>
-                <path>blocks/ajax/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-auth</name>
-                <path>blocks/auth/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-captcha</name>
-                <path>blocks/captcha/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-flowscript</name>
-                <path>blocks/flowscript/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-fop</name>
-                <path>blocks/fop/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-forms</name>
-                <path>blocks/forms/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-javaflow</name>
-                <path>blocks/javaflow/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-lucene</name>
-                <path>blocks/lucene/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-mail</name>
-                <path>blocks/mail/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-portal</name>
-                <path>blocks/portal/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-serializers</name>
-                <path>blocks/serializers/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-template</name>
-                <path>blocks/template/1.0/</path>
-              </collection>
-              <collection>
-                <name>cdocs-fop</name>
-                <path>blocks/fop/1.0/</path>
-              </collection>
-              <!-- Maven plugins -->
-              <collection>
-                <name>cdocs-rcl-plugin</name>
-                <path>maven-plugins/reloading-classloader-plugin/1.0/</path>
-              </collection>                         
-            </collections>
-            <siteXmlContent>
-              <![CDATA[
-                <project>
-                  <skin>
-                    <groupId>org.apache.cocoon</groupId>
-                    <artifactId>cocoon-maven-site-skin</artifactId>
-                    <version>1.0.0-SNAPSHOT</version>
-                  </skin>
-                  <body>
-                    <!-- @daisy-start@ --><!-- @daisy-end@ -->
-                    <menu ref="reports" />
-                  </body>
-                </project>
-              ]]>
-            </siteXmlContent>
-          </configuration>
-          <executions>
-            <execution>
-              <phase>pre-site</phase>
-              <goals>
-                <goal>cocoon</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
