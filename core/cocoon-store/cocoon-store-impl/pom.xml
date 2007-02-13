@@ -31,6 +31,12 @@
       <artifactId>cocoon-util</artifactId>
       <version>1.0.0-RC1-SNAPSHOT</version>
     </dependency>
+    <!--  Commons -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.3</version>
+    </dependency>
     <!--  Excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components.store</groupId>
