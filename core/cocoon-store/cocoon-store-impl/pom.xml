@@ -12,7 +12,7 @@
   <packaging>jar</packaging>
   <name>Cocoon Store Implementation</name>
   <description>
-    Several components implementing of the Excalibur Store interface.
+     Several components implementing of the Excalibur Store interface.
   </description>
   <dependencies>
     <!--  Cocoon  -->
@@ -54,7 +54,6 @@
       <artifactId>excalibur-instrument-api</artifactId>
       <version>2.1</version>
     </dependency>
-
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
