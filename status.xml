@@ -181,6 +181,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="CZ" type="add">
+      Core: Update ehcache to 1.2.3.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1984" due-to="Mark Lundquist">
       Template block: Add missing toString implementation to TemplateObjectModelHelper.ParametersMap.
     </action>
