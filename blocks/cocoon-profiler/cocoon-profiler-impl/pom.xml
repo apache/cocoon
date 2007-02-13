@@ -31,6 +31,21 @@
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-profiler-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>
+          <navDocId>1324</navDocId>
+          <collection>cdocs-profiler</collection>
+          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <packaging>jar</packaging>
   <name>Profiler Block</name>
   <description/>
@@ -46,4 +61,16 @@
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.profiler.relPath}/</url>
+    </site>
+  </distributionManagement>
+
+  <properties>
+    <docs.name>Cocoon Profiler</docs.name>    
+    <docs.version>${docs.m.profiler.version}</docs.version>
+  </properties>
 </project>
