@@ -16,10 +16,10 @@
  */
 package org.apache.cocoon.components.store.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -32,6 +32,7 @@ import net.sf.ehcache.Status;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.Store;
@@ -150,6 +151,8 @@ public class EHDefaultStore implements Store {
 
     private File workDir;
     private File cacheDir;
+
+    private String diskStorePath;  // The directory to be used a disk store path. Uses java.io.tmpdir if the argument is null.
 
     // ---------------------------------------------------- Lifecycle
 
@@ -288,7 +291,7 @@ public class EHDefaultStore implements Store {
         if (!(directory.canRead() && directory.canWrite())) {
             throw new IOException("Directory '" + directoryPath + "' is not readable/writable");
         }
-        System.setProperty("java.io.tmpdir", directoryPath);
+        this.diskStorePath = directoryPath;
     }
 
     /**
@@ -346,8 +349,12 @@ public class EHDefaultStore implements Store {
             throw new Exception("Unable to set directory", e);
         }
 
-        URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(CONFIG_FILE);
-        this.cacheManager = CacheManager.create(configFileURL);
+        // read configuration - we have to replace the diskstorepath in the configuration
+        // as the diskStorePath argument of the Cache constructor is ignored and set by the
+        // CacheManager! (see bug COCOON-1927)
+        String config = org.apache.commons.io.IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE));
+        config = StringUtils.replace(config, "${diskstorepath}", this.diskStorePath);
+        this.cacheManager = CacheManager.create(new ByteArrayInputStream(config.getBytes("utf-8")));
         this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
                 this.timeToLiveSeconds, this.timeToIdleSeconds, this.diskPersistent, 120);
         this.cacheManager.addCache(this.cache);
