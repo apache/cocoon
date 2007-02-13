@@ -84,7 +84,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0-RC1-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
