@@ -43,9 +43,10 @@ public class BlockPropertyModule implements InputModule {
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
         // FIXME Will be removed when the scoped proxy work
-        if (this.servletContext == null)
-            this.servletContext = CallStackHelper.getBaseServletContext();
-        return this.servletContext.getInitParameter(name);
+        ServletContext servletContext = this.servletContext;
+        if (servletContext == null)
+            servletContext = CallStackHelper.getBaseServletContext();
+        return servletContext.getInitParameter(name);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)

@@ -46,8 +46,9 @@ public class BlockPathModule implements InputModule {
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
         // FIXME Will be removed when the scoped proxy work
-        if (this.servletContext == null)
-            this.servletContext = CallStackHelper.getBaseServletContext();
+        ServletContext servletContext = this.servletContext;
+        if (servletContext == null)
+            servletContext = CallStackHelper.getBaseServletContext();
         String absoluteURI = null;
         /* No relative block paths yet
         Environment env = EnvironmentHelper.getCurrentEnvironment();
@@ -58,7 +59,7 @@ public class BlockPathModule implements InputModule {
         try {
             // URI uri = ServletSource.resolveURI(new URI(name), new URI(null, null, baseURI, null));
             URI uri = new URI(name);
-            absoluteURI = ((ServletServiceContext)this.servletContext).absolutizeURI(uri).toString();
+            absoluteURI = ((ServletServiceContext)servletContext).absolutizeURI(uri).toString();
         } catch (URISyntaxException e) {
             throw new ConfigurationException("Couldn't absolutize " + name);
         }
