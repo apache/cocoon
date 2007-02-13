@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
 
 /**
@@ -76,7 +75,7 @@ public final class CopletInstance implements Cloneable, Serializable {
     /**
 	 * Constructor to create a new coplet instance data object.
      * Never create a coplet instance data object directly. Use the
-     * {@link CopletFactory} instead.
+     * {@link org.apache.cocoon.portal.services.CopletFactory} instead.
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
 	 */

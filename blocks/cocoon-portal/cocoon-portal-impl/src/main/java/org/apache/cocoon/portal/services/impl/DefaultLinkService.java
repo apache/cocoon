@@ -21,7 +21,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -32,6 +31,9 @@ import org.apache.cocoon.portal.impl.AbstractBean;
 import org.apache.cocoon.portal.services.LinkService;
 
 /**
+ * This is the default implementation of the {@link LinkService}.
+ * In order to work properly this component has to be configured with the correct
+ * ports.
  *
  * @version $Id$
  */
@@ -48,8 +50,11 @@ public class DefaultLinkService
     /** List of matchers for internal parameters. */
     protected List internalParametersMatchers = new ArrayList();
 
+    /** The name of the request parameter for events. */
+    protected String requestParameterName = LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
+
     public DefaultLinkService() {
-        this.setInternalParameters("cocoon-*");
+        this.setInternalParameters(LinkService.DEFAULT_INTERNAL_PARAMETERS);
     }
 
     public void setDefaultPort(int defaultPort) {
@@ -60,13 +65,16 @@ public class DefaultLinkService
         this.defaultSecurePort = defaultSecurePort;
     }
 
-    public void setInternalParameters(String internalParams) {
-        if ( internalParams == null ) {
-            this.internalParametersMatchers.clear();
-        } else {
-            final StringTokenizer st = new StringTokenizer(internalParams, ",");
-            while ( st.hasMoreTokens() ) {
-                final String parameter = st.nextToken();
+    public void setRequestParameterName(String requestParameterName) {
+        this.requestParameterName = requestParameterName;
+    }
+
+    public void setInternalParameters(List internalParams) {
+        this.internalParametersMatchers.clear();
+        if ( internalParams != null ) {
+            final Iterator i = internalParams.iterator();
+            while ( i.hasNext() ) {
+                final String parameter = i.next().toString();
                 if ( parameter.endsWith("*") ) {
                     this.internalParametersMatchers.add(new PrefixParameterMatcher(parameter));
                 } else {
@@ -168,7 +176,7 @@ public class DefaultLinkService
         }
         final String value = this.portalService.getEventConverter().encode(event);
         try {
-            buffer.append(DEFAULT_REQUEST_EVENT_PARAMETER_NAME).append('=').append(URLEncoder.encode(value, "utf-8"));
+            buffer.append(this.requestParameterName).append('=').append(URLEncoder.encode(value, "utf-8"));
         } catch (UnsupportedEncodingException uee) {
             // ignore this as utf-8 is always supported
         }
@@ -262,9 +270,9 @@ public class DefaultLinkService
                     info.comparableEvents.remove(objects);
                 }
             }
-            info.comparableEvents.add(new Object[]{event, DEFAULT_REQUEST_EVENT_PARAMETER_NAME, value});
+            info.comparableEvents.add(new Object[]{event, this.requestParameterName, value});
         } else {
-            this.addParameterToLink(DEFAULT_REQUEST_EVENT_PARAMETER_NAME, value);
+            this.addParameterToLink(this.requestParameterName, value);
         }
     }
 
@@ -337,6 +345,7 @@ public class DefaultLinkService
     public static interface ParameterMatcher {
         boolean match(String name);
     }
+
     public static final class ConstantParameterMatcher implements ParameterMatcher {
         protected final String name;
         public ConstantParameterMatcher(String value) {
@@ -346,6 +355,7 @@ public class DefaultLinkService
             return this.name.equals(matchingName);
         }
     }
+
     public static final class PrefixParameterMatcher implements ParameterMatcher {
         protected final String prefix;
         public PrefixParameterMatcher(String prefix) {

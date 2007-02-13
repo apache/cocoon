@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.portal.services;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.cocoon.portal.event.Event;
@@ -28,7 +29,11 @@ import org.apache.cocoon.portal.event.Event;
  */
 public interface LinkService {
 
+    /** The request parameter name used for adding event information to the url. */
     String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
+
+    /** These parameters are used by default for adding portal specific information to a url. */
+    List DEFAULT_INTERNAL_PARAMETERS = Collections.singletonList("cocoon-*");
 
     static class ParameterDescription {
         public final String parameters;
