@@ -181,6 +181,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="CZ" type="fix" fixes-bug="COCOON-1984" due-to="Mark Lundquist">
+      Template block: Add missing toString implementation to TemplateObjectModelHelper.ParametersMap.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1998" due-to="Woonsan Ko">
       Portal block: CocoonPortlet needs to allow overriding servlet-path parameter with preferences.
     </action>

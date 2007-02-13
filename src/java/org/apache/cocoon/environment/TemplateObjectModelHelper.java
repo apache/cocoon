@@ -290,5 +290,12 @@ public class TemplateObjectModelHelper {
         public Collection values() {
             return this.getMap().values();
         }
+
+        /**
+         * @see org.apache.avalon.framework.parameters.Parameters#toString()
+         */
+        public String toString() {
+            return this.wrappedParameters.toString();
+        }
     }
 }
