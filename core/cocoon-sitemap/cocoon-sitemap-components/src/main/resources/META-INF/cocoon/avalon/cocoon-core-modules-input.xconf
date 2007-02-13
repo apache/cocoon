@@ -64,6 +64,7 @@
     <component-instance logger="core.modules.input" name="cookie"           class="org.apache.cocoon.components.modules.input.CookieModule"/>
     <component-instance logger="core.modules.input" name="system-property"  class="org.apache.cocoon.components.modules.input.SystemPropertyModule"/>
     <component-instance logger="core.modules.input" name="constant"         class="org.apache.cocoon.components.modules.input.StringConstantModule"/>
+    <component-instance logger="core.modules.input" name="concat"           class="org.apache.cocoon.components.modules.input.StringConcatMetaModule"/>
     <component-instance logger="core.modules.input" name="random"           class="org.apache.cocoon.components.modules.input.RandomNumberModule"/>
     <component-instance logger="core.modules.input" name="digest"       class="org.apache.cocoon.components.modules.input.DigestMetaModule"/>
     <component-instance logger="core.modules.input" name="date"         class="org.apache.cocoon.components.modules.input.DateInputModule">
