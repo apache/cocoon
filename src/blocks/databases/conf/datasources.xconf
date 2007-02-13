@@ -42,7 +42,7 @@
         -
         - The default is true.
         -->
-      <dburl>jdbc:hsqldb:hsql://localhost:9002</dburl>
+      <dburl>jdbc:hsqldb:hsql://localhost:9002/cocoondb</dburl>
       <user>sa</user>
       <password></password>
     </jdbc>
