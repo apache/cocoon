@@ -26,12 +26,12 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>3</version>
+    <version>4-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-servlet-service-impl</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0-M2-SNAPSHOT</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Servlet Service Implementation</name>
   <description>
   	The servlet service framework makes it easy to use servlets as Spring components.
