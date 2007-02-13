@@ -56,6 +56,7 @@
     <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>
     <module>../blocks/cocoon-mail/cocoon-mail-impl</module>
     <module>../blocks/cocoon-portal/cocoon-portal-impl</module>
+    <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>
     <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
     <module>../blocks/cocoon-template/cocoon-template-impl</module>
 

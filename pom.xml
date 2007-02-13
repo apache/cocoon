@@ -568,6 +568,10 @@
                 <path>blocks/portal/1.0/</path>
               </collection>
               <collection>
+                <name>cdocs-profiler</name>
+                <path>blocks/profiler/1.0/</path>
+              </collection>
+              <collection>
                 <name>cdocs-serializers</name>
                 <path>blocks/serializers/1.0/</path>
               </collection>
@@ -755,6 +759,8 @@
     <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
     <docs.m.spring-configurator.relPath>subprojects/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>               
     <!-- Path and version properties: blocks -->
+    <docs.m.profiler.version>1.0</docs.m.profiler.version>
+    <docs.m.profiler.relPath>blocks/profiler/${docs.m.profiler.version}/</docs.m.profiler.relPath>
   </properties>
 
   <profiles>
