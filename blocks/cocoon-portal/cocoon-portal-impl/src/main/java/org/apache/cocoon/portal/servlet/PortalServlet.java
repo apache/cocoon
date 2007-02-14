@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.services.PortalManager;
 import org.springframework.web.HttpRequestHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -60,7 +60,7 @@ public class PortalServlet implements HttpRequestHandler {
             pm.process();
             // TODO - what do we here? We don't have an xml consumer
             final ContentHandler xmlConsumer = null;
-            pm.showPortal(xmlConsumer, this.properties);
+            pm.render(xmlConsumer, this.properties);
         } catch (SAXException se) {
             throw new ServletException(se);
         } catch (PortalException pe) {

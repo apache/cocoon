@@ -26,8 +26,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.services.PortalManager;
 import org.xml.sax.SAXException;
 
 /**
@@ -79,7 +79,7 @@ extends ServiceableGenerator {
         } catch (PortalException pe) {
             throw new ProcessingException(pe);
         }
-        pm.showPortal(this.xmlConsumer, Parameters.toProperties(this.parameters));
+        pm.render(this.xmlConsumer, Parameters.toProperties(this.parameters));
 	}
 
     /**

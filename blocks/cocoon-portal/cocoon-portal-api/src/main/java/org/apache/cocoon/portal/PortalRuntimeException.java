@@ -16,27 +16,26 @@
  */
 package org.apache.cocoon.portal;
 
-
 /**
+ * Runtime exception used inside the portal.
  *
  * @version $Id$
  */
-public class LayoutException extends PortalException {
+public class PortalRuntimeException extends RuntimeException {
 
-    public LayoutException() {
+    public PortalRuntimeException() {
         super();
     }
 
-    public LayoutException(String message) {
+    public PortalRuntimeException(String message) {
         super(message);
     }
 
-    public LayoutException(String message, Throwable cause) {
+    public PortalRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public LayoutException(Throwable cause) {
+    public PortalRuntimeException(Throwable cause) {
         super(cause);
     }
 }
-

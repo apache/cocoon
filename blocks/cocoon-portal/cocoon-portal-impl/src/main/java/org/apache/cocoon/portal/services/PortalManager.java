@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal;
+package org.apache.cocoon.portal.services;
 
 import java.util.Properties;
 
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -27,7 +28,7 @@ import org.xml.sax.SAXException;
  * Invoke the request processing using the {@link #process()} method,
  * this starts the event handling for the current request (evaluating
  * request parameters etc.)
- * The section method {@link #showPortal(ContentHandler, Properties)}
+ * The section method {@link #render(ContentHandler, Properties)}
  * starts rendering the portal.
  *
  * @version $Id$
@@ -35,13 +36,13 @@ import org.xml.sax.SAXException;
 public interface PortalManager {
 
     /** This property containing a layout id can be passed to the
-     * {@link #showPortal(ContentHandler, Properties)} method. In this
+     * {@link #render(ContentHandler, Properties)} method. In this
      * case only the tree starting with this layout object is rendered.
      */
     String PROPERTY_RENDER_LAYOUT = "render-layout";
 
     /** This property containing a coplet instance id can be passed to the
-     * {@link #showPortal(ContentHandler, Properties)} method. In this
+     * {@link #render(ContentHandler, Properties)} method. In this
      * case only the coplet with the surrounding layout is rendered.
      */
     String PROPERTY_RENDER_COPLET = "render-coplet";
@@ -60,8 +61,8 @@ public interface PortalManager {
      * @param Properties A properties object (can be null)
      * @throws SAXException
      */
-    void showPortal(ContentHandler ch,
-                    Properties     properties)
+    void render(ContentHandler ch,
+                Properties     properties)
     throws SAXException;
 
     void register(PortalManagerAspect aspect);

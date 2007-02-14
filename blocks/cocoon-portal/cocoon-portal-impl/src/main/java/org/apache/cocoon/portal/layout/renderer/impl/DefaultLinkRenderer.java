@@ -17,10 +17,10 @@
 package org.apache.cocoon.portal.layout.renderer.impl;
 
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.LinkLayout;

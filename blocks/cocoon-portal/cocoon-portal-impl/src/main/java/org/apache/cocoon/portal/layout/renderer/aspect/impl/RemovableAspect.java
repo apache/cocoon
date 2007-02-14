@@ -16,13 +16,13 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.event.layout.RemoveLayoutEvent;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CopletDefinitionFeatures;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
