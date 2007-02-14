@@ -35,8 +35,14 @@ public interface LinkService {
     /** These parameters are used by default for adding portal specific information to a url. */
     List DEFAULT_INTERNAL_PARAMETERS = Collections.singletonList("cocoon-*");
 
+    /**
+     * This object holds a 'complete' request parameter (or several) which means it
+     * contains a string like {name}={value}. The value should already be url encoded! 
+     */
     static class ParameterDescription {
+
         public final String parameters;
+
         public ParameterDescription(String parameters) {
             this.parameters = parameters;
         }
