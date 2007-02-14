@@ -40,8 +40,12 @@ public final class DefaultHandlerManager {
      */
     static public Map prepareHandlerConfiguration(Map           objectModel,
                                                   Configuration configs)
-    throws ConfigurationException {
-        return prepare( objectModel, configs );
+    throws ProcessingException {
+        try {
+            return prepare( objectModel, configs );
+        } catch (ConfigurationException ce) {
+            throw new ProcessingException("Exception during handler configuration.", ce);
+        }
     }
     /**
      * Prepare the handler configuration

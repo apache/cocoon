@@ -101,12 +101,15 @@ public class DefaultAuthenticationManager
     /** The map containing the handler configurations for this sitemap. */
     protected Map handlerConfigs;
 
+    /** The handler configuration. */
+    protected Configuration configuration;
+
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
         Deprecation.logger.warn("The authentication-fw block is deprecated. Please use the auth block instead.");
-        this.handlerConfigs = DefaultHandlerManager.prepareHandlerConfiguration(ContextHelper.getObjectModel(this.context), config);
+        this.configuration = config;
     }
 
     /**
@@ -115,6 +118,14 @@ public class DefaultAuthenticationManager
     private Map getHandlerConfigurations()
     throws ProcessingException {
         // TODO - we have to find a way to get the parent handlers!
+        // we have to do a lazy initialization as we need an object model (request)
+        if ( this.handlerConfigs == null ) {
+            synchronized ( this ) {
+                if ( this.handlerConfigs == null ) {
+                    this.handlerConfigs = DefaultHandlerManager.prepareHandlerConfiguration(ContextHelper.getObjectModel(this.context), this.configuration);
+                }                
+            }
+        }
         return this.handlerConfigs;
     }
 
