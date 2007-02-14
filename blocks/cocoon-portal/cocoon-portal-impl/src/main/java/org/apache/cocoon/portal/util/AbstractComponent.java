@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.impl;
+package org.apache.cocoon.portal.util;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;

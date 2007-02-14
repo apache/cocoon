@@ -26,9 +26,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.services.UserService;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.springframework.core.Ordered;
 
 
@@ -49,7 +49,7 @@ public class DefaultUserService
     protected String defaultProfileName;
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#initialize()
+     * @see org.apache.cocoon.portal.util.AbstractComponent#initialize()
      */
     public void initialize() throws Exception {
         super.initialize();

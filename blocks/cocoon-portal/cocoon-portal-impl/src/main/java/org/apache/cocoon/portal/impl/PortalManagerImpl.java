@@ -41,6 +41,7 @@ import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareConte
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.services.aspects.impl.support.PortalManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.StringUtils;

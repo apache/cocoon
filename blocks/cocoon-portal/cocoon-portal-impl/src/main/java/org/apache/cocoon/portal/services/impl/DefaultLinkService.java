@@ -27,8 +27,8 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.impl.AbstractBean;
 import org.apache.cocoon.portal.services.LinkService;
+import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
  * This is the default implementation of the {@link LinkService}.

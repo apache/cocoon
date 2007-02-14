@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 

@@ -35,6 +35,7 @@ import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.NamedItem;
+import org.apache.cocoon.portal.util.AbstractComponent;
 
 /**
  * Manages the various activities required for page labels.

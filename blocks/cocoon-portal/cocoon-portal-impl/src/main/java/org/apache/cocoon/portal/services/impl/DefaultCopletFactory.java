@@ -22,11 +22,11 @@ import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionRemovedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.services.CopletFactory;
+import org.apache.cocoon.portal.util.AbstractComponent;
 
 /**
  * This factory is for creating and managing coplet objects.

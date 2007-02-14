@@ -23,10 +23,10 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
 import org.apache.cocoon.portal.profile.ProfileLS;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.pluto.om.common.PreferenceSet;
 
@@ -61,7 +61,7 @@ public class PortletPreferencesProviderImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#dispose()
+     * @see org.apache.cocoon.portal.util.AbstractComponent#dispose()
      */
     public void dispose() {
         if ( this.manager != null ) {
@@ -72,7 +72,7 @@ public class PortletPreferencesProviderImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see org.apache.cocoon.portal.util.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         super.service(serviceManager);

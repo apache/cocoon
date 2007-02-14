@@ -34,8 +34,8 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
 

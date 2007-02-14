@@ -110,7 +110,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#dispose()
+     * @see org.apache.cocoon.portal.util.AbstractComponent#dispose()
      */
     public void dispose() {
         if ( this.manager != null ) {
@@ -121,7 +121,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see org.apache.cocoon.portal.util.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         super.service(serviceManager);

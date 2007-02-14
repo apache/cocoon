@@ -38,7 +38,7 @@ import org.apache.cocoon.portal.deployment.DeploymentManager;
 import org.apache.cocoon.portal.deployment.DeploymentObject;
 import org.apache.cocoon.portal.deployment.DeploymentStatus;
 import org.apache.cocoon.portal.deployment.UndeploymentEvent;
-import org.apache.cocoon.portal.impl.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -93,7 +93,7 @@ public class DefaultDeploymentManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#dispose()
+     * @see org.apache.cocoon.portal.util.AbstractComponent#dispose()
      */
     public void dispose() {
         if ( this.manager != null ) {
@@ -104,7 +104,7 @@ public class DefaultDeploymentManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see org.apache.cocoon.portal.util.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
         super.service(aManager);
@@ -159,7 +159,7 @@ public class DefaultDeploymentManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#initialize()
+     * @see org.apache.cocoon.portal.util.AbstractComponent#initialize()
      */
     public void initialize()
     throws Exception {
