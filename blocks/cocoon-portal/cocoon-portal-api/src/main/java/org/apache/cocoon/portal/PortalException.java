@@ -17,6 +17,7 @@
 package org.apache.cocoon.portal;
 
 /**
+ * Base class for all portal related exceptions.
  *
  * @version $Id$
  */

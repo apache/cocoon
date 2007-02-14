@@ -20,10 +20,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;

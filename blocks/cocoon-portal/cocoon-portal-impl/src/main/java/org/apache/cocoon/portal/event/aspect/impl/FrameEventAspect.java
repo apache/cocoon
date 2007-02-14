@@ -16,13 +16,13 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
 import org.apache.cocoon.portal.om.FrameLayout;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
 

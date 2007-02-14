@@ -16,10 +16,10 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.FrameLayout;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.xml.sax.ContentHandler;

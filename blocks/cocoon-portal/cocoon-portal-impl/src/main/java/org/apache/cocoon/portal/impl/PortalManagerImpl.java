@@ -26,16 +26,16 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.PortalManager;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
@@ -71,7 +71,7 @@ public class PortalManagerImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManager#process()
+     * @see org.apache.cocoon.portal.services.PortalManager#process()
      */
     public void process()
     throws PortalException {
@@ -81,9 +81,9 @@ public class PortalManagerImpl
     }
 
 	/**
-	 * @see PortalManager#showPortal(ContentHandler, Properties)
+	 * @see PortalManager#render(ContentHandler, Properties)
 	 */
-	public void showPortal(ContentHandler contentHandler, Properties properties) 
+	public void render(ContentHandler contentHandler, Properties properties) 
     throws SAXException {
         PortalManagerAspectContextImpl aspectContext =
             new PortalManagerAspectContextImpl(this.portalService, this.chain);
@@ -215,7 +215,7 @@ public class PortalManagerImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManager#register(org.apache.cocoon.portal.services.aspects.PortalManagerAspect)
+     * @see org.apache.cocoon.portal.services.PortalManager#register(org.apache.cocoon.portal.services.aspects.PortalManagerAspect)
      */
     public void register(PortalManagerAspect aspect) {
         try {

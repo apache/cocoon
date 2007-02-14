@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.portal.Constants;
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
@@ -35,6 +34,7 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;

@@ -14,27 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal;
+package org.apache.cocoon.portal.om;
+
+import org.apache.cocoon.portal.PortalException;
+
 
 /**
+ * Base class for all layout related exceptions.
  *
  * @version $Id$
  */
-public class PortalRuntimeException extends RuntimeException {
+public class LayoutException extends PortalException {
 
-    public PortalRuntimeException() {
+    public LayoutException() {
         super();
     }
 
-    public PortalRuntimeException(String message) {
+    public LayoutException(String message) {
         super(message);
     }
 
-    public PortalRuntimeException(String message, Throwable cause) {
+    public LayoutException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public PortalRuntimeException(Throwable cause) {
+    public LayoutException(Throwable cause) {
         super(cause);
     }
 }
+

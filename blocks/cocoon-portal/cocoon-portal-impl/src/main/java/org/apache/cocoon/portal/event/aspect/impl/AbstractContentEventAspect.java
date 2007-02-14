@@ -24,13 +24,13 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.portal.LayoutException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
