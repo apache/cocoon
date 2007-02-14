@@ -246,7 +246,7 @@ public class XSLTAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see org.apache.cocoon.portal.util.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
         super.service(aManager);

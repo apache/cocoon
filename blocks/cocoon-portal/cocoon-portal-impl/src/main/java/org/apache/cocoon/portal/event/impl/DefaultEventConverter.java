@@ -29,7 +29,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
-import org.apache.cocoon.portal.impl.AbstractBean;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.util.HashUtil;
 
 /**

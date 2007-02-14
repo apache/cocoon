@@ -30,7 +30,6 @@ import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserDidLoginEvent;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.event.user.UserWillLogoutEvent;
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
@@ -41,6 +40,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.springframework.core.Ordered;
 
 /**

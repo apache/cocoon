@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.impl;
+package org.apache.cocoon.portal.util;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.commons.logging.Log;

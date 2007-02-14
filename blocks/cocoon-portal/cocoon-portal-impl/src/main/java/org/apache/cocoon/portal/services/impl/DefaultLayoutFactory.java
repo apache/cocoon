@@ -32,7 +32,6 @@ import org.apache.cocoon.portal.event.layout.LayoutAddedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceAddedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutRemovedEvent;
 import org.apache.cocoon.portal.event.layout.RemoveLayoutEvent;
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
@@ -42,6 +41,7 @@ import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.cocoon.util.ClassUtils;
 
 /**

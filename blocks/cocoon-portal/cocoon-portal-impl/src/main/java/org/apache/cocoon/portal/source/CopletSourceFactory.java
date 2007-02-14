@@ -21,8 +21,8 @@ import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
