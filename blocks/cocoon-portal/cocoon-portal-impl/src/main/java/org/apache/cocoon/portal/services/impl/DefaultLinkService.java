@@ -28,6 +28,9 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.services.LinkService;
+import org.apache.cocoon.portal.services.impl.links.ConstantParameterMatcher;
+import org.apache.cocoon.portal.services.impl.links.ParameterMatcher;
+import org.apache.cocoon.portal.services.impl.links.PrefixParameterMatcher;
 import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
@@ -340,29 +343,5 @@ public class DefaultLinkService
             }
         }
         return false;
-    }
-
-    public static interface ParameterMatcher {
-        boolean match(String name);
-    }
-
-    public static final class ConstantParameterMatcher implements ParameterMatcher {
-        protected final String name;
-        public ConstantParameterMatcher(String value) {
-            this.name = value;
-        }
-        public boolean match(String matchingName) {
-            return this.name.equals(matchingName);
-        }
-    }
-
-    public static final class PrefixParameterMatcher implements ParameterMatcher {
-        protected final String prefix;
-        public PrefixParameterMatcher(String prefix) {
-            this.prefix = prefix.substring(0, prefix.length()-1);
-        }
-        public boolean match(String name) {
-            return name.startsWith(this.prefix);
-        }
     }
 }
