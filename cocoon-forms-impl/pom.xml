@@ -33,7 +33,7 @@
   </parent>
   <artifactId>cocoon-forms-impl</artifactId>
   <name>Cocoon Forms Block Implementation</name>
-  <version>1.0.0-M2</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   
   <build>
     <plugins>
@@ -151,11 +151,4 @@
     <docs.name>Cocoon Forms</docs.name>
     <docs.version>1.0</docs.version>
   </properties>
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0-M2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0-M2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0-M2</url>
-  </scm>
 </project>
