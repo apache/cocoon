@@ -56,7 +56,7 @@
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
-      <!--plugin>
+      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>
@@ -64,7 +64,7 @@
           <collection>cdocs-forms</collection>
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin-->
+      </plugin>
     </plugins>
   </build>
   
