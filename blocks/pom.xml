@@ -26,10 +26,10 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
-  <version>3-SNAPSHOT</version>
+  <version>3</version>
   <name>Cocoon Blocks [modules]</name>
   <build>
     <plugins>
@@ -132,8 +132,8 @@
     </profile>
   </profiles>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-3</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-3</url>
   </scm>
 </project>
