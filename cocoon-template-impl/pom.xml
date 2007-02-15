@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-template-impl</artifactId>
-  <version>1.0.0-M3</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Template Framework Block Implementation</name>
   
   <dependencies>
@@ -118,10 +118,4 @@
       </plugin>         
     </plugins>    
   </build-->
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-template-impl/cocoon-template-impl-1.0.0-M3</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-template-impl/cocoon-template-impl-1.0.0-M3</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-template-impl/cocoon-template-impl-1.0.0-M3</url>
-  </scm>
 </project>
