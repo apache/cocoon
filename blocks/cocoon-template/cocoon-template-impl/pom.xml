@@ -105,7 +105,7 @@
     <docs.name>Cocoon Template</docs.name>    
     <docs.version>1.0</docs.version>
   </properties>     
-  <!--build>
+  <build>
     <plugins>
       <plugin>
         <groupId>org.daisycms</groupId>
@@ -117,5 +117,5 @@
         </configuration>
       </plugin>         
     </plugins>    
-  </build-->
+  </build>
 </project>
