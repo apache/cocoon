@@ -33,7 +33,7 @@
   </parent>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-databases-hsqldb-server</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Hsqldb Block Implementation</name>
 
   <dependencies>
@@ -59,11 +59,4 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-server/cocoon-databases-hsqldb-server-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-server/cocoon-databases-hsqldb-server-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-server/cocoon-databases-hsqldb-server-1.0.0-M1</url>
-  </scm>
 </project>
