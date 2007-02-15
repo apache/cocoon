@@ -81,7 +81,14 @@
         <module>cocoon-captcha/cocoon-captcha-sample</module>        
         <module>cocoon-chaperon</module>
         <module>cocoon-cron</module>
-        <module>cocoon-databases</module>
+		    <module>cocoon-databases/cocoon-databases-impl</module>
+		    <module>cocoon-databases/cocoon-databases-mocks</module>
+		    <module>cocoon-databases/cocoon-databases-sample</module>
+		    <module>cocoon-databases/cocoon-databases-hsqldb-client</module>
+		    <module>cocoon-databases/cocoon-databases-hsqldb-server</module>
+		    <module>cocoon-databases/cocoon-databases-odbc-client</module>
+		    <module>cocoon-databases/cocoon-databases-oracle-client</module>
+		    <module>cocoon-databases/cocoon-databases-postgresql-client</module>
         <module>cocoon-deli</module>
         <module>cocoon-eventcache</module>
         <module>cocoon-faces</module>
