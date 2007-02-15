@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- ========================= Components ================================ -->
+
+  <map:components>
+    <map:matchers default="wildcard">
+      <map:matcher name="host-matcher"
+                   logger="sitemap.matcher.wildcard"
+                   src="org.apache.cocoon.matching.modular.CachingWildcardMatcher">
+        <input-module name="request"/>
+        <parameter-name>serverName</parameter-name>
+      </map:matcher>
+    </map:matchers>
+
+    <map:selectors default="browser"/>
+    <map:actions>
+      <map:action name="sendmail"
+                  logger="sitemap.action.sendmail"
+                  src="org.apache.cocoon.acting.Sendmail">
+        <!--+
+            | Configuration:
+        <smtp-host>localhost</smtp-host>
+        <smtp-user>john</smtp-user>
+        <smtp-password>john</smtp-password>
+            +-->
+      </map:action>
+
+      <!-- Deprecated -->
+      <map:action name="old-sendmail"
+                  logger="sitemap.action.sendmail"
+                  src="org.apache.cocoon.acting.SendmailAction"/>
+    </map:actions>
+
+    <map:transformers default="xslt">
+      <map:transformer logger="sitemap.transformer.simpleform"
+                       name="simpleform"
+                       pool-max="32"
+                       src="org.apache.cocoon.transformation.SimpleFormTransformer"/>
+    </map:transformers>
+  </map:components>
+
+  <map:resources>
+    <map:resource name="show-page">
+      <map:generate type="serverpages" src="{target}"/>
+      <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="remove" value="{remove}"/>
+        <map:parameter name="file" value="{target}"/>
+      </map:transform>
+      <map:transform type="simpleform"/>
+      <map:serialize/>
+    </map:resource>
+  </map:resources>
+
+  <map:flow language="javascript">
+    <map:script src="mail.js"/>
+  </map:flow>
+
+<!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="view/page">
+        <map:call resource="show-page">
+          <map:parameter name="target" value="done.xml"/>
+          <map:parameter name="remove" value="ignored"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="*">
+        <map:match type="host-matcher" pattern="localhost">
+
+          <!--+
+              | To avoid creating an open SPAM relay in default
+              | deployments, only allow "localhost" as server name.
+              | -> client accesses this host as localhost => client == server
+              +-->
+
+          <map:act type="req-params">
+            <map:parameter name="parameters" value="use-flow"/>
+            <!--+
+                | Use flow to send mail
+                +-->
+            <map:call function="mail">
+              <map:parameter name="host"     value="{request-param:smtphost}"/>
+              <map:parameter name="user"     value="{request-param:smtpuser}"/>
+              <map:parameter name="password" value="{request-param:smtppassword}"/>
+              <map:parameter name="from"     value="{request-param:from}"/>
+              <map:parameter name="to"       value="{request-param:to}"/>
+              <map:parameter name="subject"  value="{request-param:subject}"/>
+              <map:parameter name="body"     value="{request-param:body}"/>
+              <map:parameter name="cc"       value="{request-param:cc}"/>
+              <map:parameter name="bcc"      value="{request-param:bcc}"/>
+            </map:call>
+          </map:act>
+
+          <map:act type="req-params">
+            <map:parameter name="parameters" value="use-action"/>
+            <!--+
+                | Use action to send mail
+                +-->
+            <map:act type="sendmail">
+              <!--+
+                  | New sendmail action extends the deprecated action with options
+                  | to use CC, BCC, attachments, and more. Incompatibility with
+                  | deprecated action: does not read request parameters. All
+                  | parameters need to be passed explicitly from sitemap.
+                  +-->
+              <map:parameter name="smtp-host"   value="{request-param:smtphost}"/>
+              <map:parameter name="smtp-user"   value="{request-param:smtpuser}"/>
+              <map:parameter name="smtp-password" value="{request-param:smtppassword}"/>
+              <map:parameter name="from"        value="{request-param:from}"/>
+              <map:parameter name="to"          value="{request-param:to}"/>
+              <map:parameter name="subject"     value="{request-param:subject}"/>
+              <map:parameter name="body"        value="{request-param:body}"/>
+              <map:parameter name="cc"          value="{request-param:cc}"/>
+              <map:parameter name="bcc"         value="{request-param:bcc}"/>
+              <map:parameter name="attachments" value="attachment cocoon:/// context://welcome.xml"/>
+
+              <map:call resource="show-page">
+                <map:parameter name="target" value="done.xml"/>
+                <map:parameter name="remove" value="{0}"/>
+              </map:call>
+            </map:act>
+          </map:act>
+
+
+          <map:act type="req-params">
+            <map:parameter name="parameters" value="use-oldaction"/>
+            <!--+
+                | Use (deprecated) action to send mail
+                +-->
+            <map:act type="old-sendmail">
+              <map:parameter name="smtp-host"    value="{request-param:mail.smtphost}"/>
+              <map:parameter name="smtp-user"   value="{request-param:smtpuser}"/>
+              <map:parameter name="smtp-password" value="{request-param:smtppassword}"/>
+
+                <!--+
+                    | optional: if these parameters are not present, they will be read
+                    | from request
+                    +-->
+                <!--
+                <map:parameter name="from"        value="{request-param:mail.from}"/>
+                <map:parameter name="to"          value="{request-param:mail.to}"/>
+                <map:parameter name="subject"     value="{request-param:mail.subject}"/>
+                <map:parameter name="body"        value="{request-param:mail.body}"/>
+                -->
+              <map:call resource="show-page">
+                <map:parameter name="target" value="done.xml"/>
+                <map:parameter name="remove" value="{0}"/>
+              </map:call>
+            </map:act>
+          </map:act>
+
+
+          <map:act type="req-params">
+            <map:parameter name="parameters" value="use-logicsheet"/>
+            <!--+
+                | Use logicsheet from XSP to send mail
+                +-->
+            <map:call resource="show-page">
+              <map:parameter name="target" value="sendmail_xsp.xml"/>
+              <map:parameter name="remove" value="{0}"/>
+            </map:call>
+          </map:act>
+
+        </map:match> <!-- type="host-matcher" pattern="localhost" -->
+
+
+        <!-- default page -->
+        <map:call resource="show-page">
+          <map:parameter name="target" value="form.xml"/>
+          <map:parameter name="remove" value="{0}"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="">
+        <map:redirect-to uri="../"/>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>
+
+<!-- end of file -->

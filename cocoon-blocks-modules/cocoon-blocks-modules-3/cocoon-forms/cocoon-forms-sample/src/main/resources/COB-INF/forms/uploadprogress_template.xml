@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+    FormUploadProgress Widget Sample
+    
+    FormUploadProgress is a Dojo Widget for Cocoon that monitors the progress of uploads from a form.
+    
+    It works by sending periodical XMLHttp calls to Cocoon in the background, while the files are being uploaded.
+    Cocoon responds with JSON data which is used to draw the progress bar and status strings.
+    
+    You can have multiple file fields.
+    The Widget tracks all simultaneous uploads in a single progress bar
+    
+    Place the Widget inside the form which is doing the upload.
+    eg. 
+        <div dojoType="ajax:FormUploadProgress">Upload Progress:</div>
+ 
+    It should be possible to use this widget outside the context of a CForm.
+ 
+    There are several parameters that may be optionally configured:
+    eg.
+        <div dojoType="ajax:FormUploadProgress"
+            background="#333"
+            color="#ccc"
+            ready="upload:progress.ready"
+            connecting="upload:progress.connecting" 
+            i18n:attr="ready connecting"
+        >
+            <i18n:text catalogue="upload">progress.title</i18n:text>
+        </div>
+    
+    @background : the CSS colour to use for the progress bar
+    @color      : the CSS colour to use for the status text and progress bar border
+    @ready      : the String to show on startup
+    @connecting : the String to show while connecting
+    
+    NB. This example assumes the use of an 'upload' catalogue configured in the I18nTransformer
+
+    @version $Id$
+    
+-->
+
+
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+    
+    <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+    
+    <h4 class="samplesGroup">Upload Progress Sample</h4>
+    <title>Upload Progress Sample</title>
+    <content>
+    
+        <para>
+            For this example to work, you must enable uploads in your web.xml file.<br/>
+            It would also be a good idea to up the limit on file-size a bit, so you can upload larger files to see the effect ....
+        </para>
+        <para>
+            This samples shows uploads in a repeater. Notice how your first click to add an upload row is submitted via XHR, while subsequent clicks are submitted via IframeIO (on supported browsers), as there are now file fields in the form.<br/>
+            There is another upload sample with <a href="upload">on-value-changed handler</a> that submits the form as soon as a file is chosen.
+        </para>
+        
+        <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" enctype="multipart/form-data" ajax="true">
+            <table border="0">
+                <tr>
+                    <td valign="top"><ft:widget-label id="user"/></td>
+                    <td valign="top"><ft:widget id="user"/></td>
+                </tr>
+            </table>
+            
+            <ft:repeater id="uploads">
+                <div>
+                    <jx:choose>
+                        <jx:when test="${repeater.getSize() == 0}">
+                            <p><strong><em>There are no uploads to display</em></strong></p>
+                        </jx:when>
+                        <jx:otherwise>
+                            <p>
+                                <b><ft:repeater-widget-label widget-id="upload"/></b>
+                                <ft:repeater-rows>
+                                    <p class="forms-row-${repeaterLoop.index % 2}"><ft:widget id="upload"/></p>
+                                </ft:repeater-rows>
+                            </p>
+                        </jx:otherwise>
+                    </jx:choose>
+                </div>
+            </ft:repeater>
+            <p>
+                <ft:widget id="addupload"/> <ft:widget id="ok"/><br/>
+            </p>
+            <p>
+                <div dojoType="ajax:FormUploadProgress">
+                    <div>Upload Progress Sample</div>
+                </div>
+            </p>
+        </ft:form-template>
+
+        <para>Hint: If you are running the client and server on the same machine, you will need to upload a lot to see the effect, or it will upload so fast, the progress bar will not have time to draw.</para>
+    
+        <p><a href="./">Back to Forms samples</a></p>
+    
+      </content>
+</page>

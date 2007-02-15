@@ -1,0 +1,92 @@
+/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+ttd { border: blue solid 1px; margin: yellow 2px; }        
+
+td#preimg { width: 18px }        
+                pp#link-to-others { text-align: right; }
+                p,pre { margin: 0 0 0 0 ; }
+                
+                table.header {width: 100% }                
+                table.header td {width: 50% }       
+                
+                table.special-other, table table.subtable  {width:100%;}
+                table table.subtable td.filler {width:100%;}
+                
+                td.aggregate-elements td.select-elements {width:100%;}
+                
+                td.parameters, td#othersites {text-align: right; }
+                tr.comments td {vertical-align:  top }
+
+    
+    
+                td.p, p.name { white-space: pre }
+                
+                ttd { border: red 1px dashed }
+                ttd.filler { border: green1px dashed; background-color: green }
+
+                .comment { text-color: gray; color: #808080; font-size: 70% }
+
+                 .part {text-align: right; }
+
+                 table.pipe, td.stream { border-left: 1pt black solid; border-top: 1pt black solid;border-bottom: 1pt black solid;  }
+                 table.pipe {margin: 5pt; }
+                 
+                 td.aggregate-elements { border-left: 1pt #808080 solid; border-top: 1pt #808080 dashed;border-bottom: 1pt #808080 dashed;  }
+                 td.select-elements { border-left: 1pt #808080 dashed; border-top: 1pt #808080 dashed;border-bottom: 1pt #808080 dashed;  }
+/*
+                 td.pipeline { border-left: 1pt blue dashed ; border-top: 1pt blue dashed ;border-bottom: 1pt blue dashed ;  }
+                 td.stream { border-left: 1pt red dashed ; border-top: 1pt red dashed ;border-bottom: 1pt red dashed ;  }
+                 td.serialize { border-left: 1pt green dashed ; border-top: 1pt green dashed ;border-bottom: 1pt green dashed ;  }
+*/                 
+                 table#resource { }
+                 td.serialize{ bborder-left: 2pt red solid; }
+                 a { cursor:pointer;cursor:hand; }
+    
+                table.subtable { background-color: #ffffff; }
+                table.subtable table.subtable { background-color: #f8f8f8; }
+                table.subtable table.subtable table.subtable { background-color: #f0f0f0; }
+                table.subtable table.subtable table.subtable table.subtable { background-color: #e8e8e8e; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable { background-color:  #e0e0e0; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #d8d8d8; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #d0d0d0; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #c8c8c8; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #c0c0c0; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #b8b8b8; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #b0b0b0; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #a8a8a8; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #a0a0a0; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #989898; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #909090; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #888888; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #808080; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #787878; }
+                table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable table.subtable { background-color: #707070; }
+
+                table.debug, table.debug-part {
+                    background-color: silver;
+                    color: red;
+                    border: raised 2pt;
+                } 
+                table.debug, table.debug-part {
+                    border: 1px dashed red ;
+                }
+                
+                table.debug-special {
+                    background-color: white;
+                    color: red;
+                    border: 1px red solid;
+                }    

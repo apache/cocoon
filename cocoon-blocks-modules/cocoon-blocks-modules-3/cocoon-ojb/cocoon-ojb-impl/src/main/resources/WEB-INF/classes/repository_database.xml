@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OJB DATABASE MAPPINGS START HERE -->
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  $Id$
+-->
+
+<!--
+  Define here all used connections.
+  One defined connection should be defined as the default one,
+  by set default-connection="true" - this could be done at runtime too.
+
+  It is possible to set user/password at
+  runtime or let login different users at runtime using the same
+  database. Use different PBKey with same jcdAlias name but
+  different user/password.
+
+  Ditto it is possible to add jdbc-connection-descriptor at runtime
+  using the MetadataManager.
+-->
+    <jdbc-connection-descriptor
+        jcd-alias="default"
+        platform="Hsqldb"
+        jdbc-level="3.0"
+        driver="org.hsqldb.jdbcDriver"
+        protocol="jdbc"
+        subprotocol="hsqldb"
+        dbalias="hsql://localhost:9002"
+        username="sa"
+        password=""
+        batch-mode="false"
+        useAutoCommit="1"
+        ignoreAutoCommitExceptions="false"
+     >
+     <!-- alternative cache implementations, see docs section "Caching" -->
+        <object-cache class="org.apache.ojb.broker.cache.ObjectCacheTwoLevelImpl">
+            <!-- meaning of attributes, please see docs section "Caching" -->
+            <!-- common attributes -->
+            <attribute attribute-name="cacheExcludes" attribute-value=""/>
+            <!-- ObjectCacheTwoLevelImpl attributes -->
+            <attribute attribute-name="applicationCache" attribute-value="org.apache.ojb.broker.cache.ObjectCacheDefaultImpl"/>
+            <attribute attribute-name="copyStrategy" attribute-value="org.apache.ojb.broker.cache.ObjectCacheTwoLevelImpl$CopyStrategyImpl"/>
+            <!-- ObjectCacheDefaultImpl attributes -->
+            <attribute attribute-name="timeout" attribute-value="900"/>
+            <attribute attribute-name="autoSync" attribute-value="true"/>
+            <attribute attribute-name="cachingKeyType" attribute-value="0"/>
+            <attribute attribute-name="useSoftReferences" attribute-value="true"/>
+        </object-cache>
+        
+        <connection-pool
+            maxActive="2"
+            maxIdle="2"
+            whenExhaustedAction="2"
+            validationQuery=""
+        />
+        <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
+            <attribute attribute-name="grabSize" attribute-value="5"/>
+        </sequence-manager>
+    </jdbc-connection-descriptor>
+
+    <jdbc-connection-descriptor jcd-alias="personnel" default-connection="true">
+        <object-cache class="org.apache.ojb.broker.cache.ObjectCacheDefaultImpl">
+            <attribute attribute-name="cacheExcludes" attribute-value=""/>
+            <attribute attribute-name="timeout" attribute-value="900"/>
+            <attribute attribute-name="autoSync" attribute-value="true"/>
+            <attribute attribute-name="cachingKeyType" attribute-value="0"/>
+        </object-cache>
+        <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
+            <attribute attribute-name="grabSize" attribute-value="5"/>
+        </sequence-manager>
+    </jdbc-connection-descriptor>
+
+<!-- END OF OJB DATABASE MAPPINGS-->

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <!--  This portlet is on every page. -->
+   <coplet-instance id="static_sample_1">
+      <coplet-definition>static_sample</coplet-definition>
+   </coplet-instance>
+
+   <coplet-instance id="PortalIntro_1">
+      <coplet-definition>PortalIntro</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="PortalRight_1">
+      <coplet-definition>PortalRight</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="PortalLeft_1">
+      <coplet-definition>PortalLeft</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="PortalBottom_1">
+      <coplet-definition>PortalBottom</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="PortalDemo_1">
+      <coplet-definition>PortalDemo</coplet-definition>
+   </coplet-instance>
+
+   <coplet-instance id="GalleryPetstore_1">
+      <coplet-definition>Gallery</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="GalleryViewer_1">
+      <coplet-definition>GalleryViewer</coplet-definition>
+   </coplet-instance>
+
+   <coplet-instance id="Portlet_1">
+      <coplet-definition>Portlet1</coplet-definition>
+   </coplet-instance>
+
+   <coplet-instance id="Portlet_2">
+      <coplet-definition>Portlet2</coplet-definition>
+   </coplet-instance>
+
+   <coplet-instance id="TestPortlet_1">
+      <coplet-definition>TestPortlet1</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="CocoonPortlet">
+      <coplet-definition>CocoonPortlet</coplet-definition>
+   </coplet-instance>
+
+   <coplet-instance id="app_test_1">
+      <coplet-definition>app_test_one</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="app_test_2">
+      <coplet-definition>app_test_one</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="app_test_3">
+      <coplet-definition>app_test_two</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="app_test_4">
+      <coplet-definition>app_test_two</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="Google_1">
+      <coplet-definition>Google</coplet-definition>
+   </coplet-instance>
+
+   <!-- wsrp example -->
+   <coplet-instance id="WSRP_Calc_1">
+      <coplet-definition>wsrp_calc_portlet</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="WSRP_Test_1">
+      <coplet-definition>wsrp_test_portlet</coplet-definition>
+   </coplet-instance>
+
+</coplets>
