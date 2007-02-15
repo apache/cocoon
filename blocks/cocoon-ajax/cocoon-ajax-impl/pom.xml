@@ -87,7 +87,7 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!--plugin>
+      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>
@@ -95,7 +95,7 @@
           <collection>cdocs-ajax</collection>
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin-->
+      </plugin>
     </plugins>
   </build>
 </project>
