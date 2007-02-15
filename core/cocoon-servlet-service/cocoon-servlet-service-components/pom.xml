@@ -26,12 +26,12 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-servlet-service-components</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0-RC1-SNAPSHOT</version>
+  <version>1.0.0-M1</version>
   <name>Cocoon Servlet Service Components</name>
   <description>Components for the servlet service framework that depends on pipeline and sitemap APIs.</description>
   <!--url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url-->
@@ -40,12 +40,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
-      <version>1.0.0-RC1-SNAPSHOT</version>
+      <version>1.0.0-M1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-impl</artifactId>
-      <version>1.0.0-RC1-SNAPSHOT</version>
+      <version>1.0.0-M1</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -67,14 +67,14 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
           <navDocId>0</navDocId>
           <createSiteXmlOnly>true</createSiteXmlOnly>
         </configuration>
-      </plugin>       
+      </plugin-->       
     </plugins>
     <resources>
       <resource>
@@ -96,4 +96,10 @@
     </site>
   </distributionManagement>    
   -->
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M1</url>
+  </scm>
 </project>
