@@ -33,7 +33,7 @@
   </parent>
 
   <artifactId>cocoon-captcha-impl</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Captcha Block Implementation</name>
   
   <distributionManagement>
@@ -69,11 +69,4 @@
       <version>2.2.0-M3</version>
     </dependency>
   </dependencies>
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-captcha-impl/cocoon-captcha-impl-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-captcha-impl/cocoon-captcha-impl-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-captcha-impl/cocoon-captcha-impl-1.0.0-M1</url>
-  </scm>
 </project>
