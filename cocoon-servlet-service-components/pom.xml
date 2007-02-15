@@ -31,7 +31,7 @@
   </parent>
   <artifactId>cocoon-servlet-service-components</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Servlet Service Components</name>
   <description>Components for the servlet service framework that depends on pipeline and sitemap APIs.</description>
   <!--url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url-->
@@ -96,10 +96,4 @@
     </site>
   </distributionManagement>    
   -->
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M1</url>
-  </scm>
 </project>
