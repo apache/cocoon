@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-flowscript-impl</artifactId>
-  <version>1.0.0-M2</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Flowscript Block Implementation</name>
 
   <distributionManagement>
@@ -79,11 +79,4 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-flowscript-impl/cocoon-flowscript-impl-1.0.0-M2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-flowscript-impl/cocoon-flowscript-impl-1.0.0-M2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-flowscript-impl/cocoon-flowscript-impl-1.0.0-M2</url>
-  </scm>
 </project>
