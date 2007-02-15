@@ -28,7 +28,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>3</version>
+    <version>4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-flowscript-impl</artifactId>
@@ -49,7 +49,7 @@
   
   <build>
     <plugins>
-      <!--plugin>
+      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -57,7 +57,7 @@
           <collection>cdocs-flowscript</collection>          
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin-->      
+      </plugin>      
     </plugins>
   </build>
   
