@@ -19,19 +19,21 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
   </parent>
   <artifactId>cocoon-tools-modules</artifactId>
-  <version>3-SNAPSHOT</version>
+  <version>3</version>
   <name>Cocoon Tools [modules]</name>
+
   <modules>
     <module>archetypes/cocoon-22-archetype-block</module>
     <module>archetypes/cocoon-22-archetype-webapp</module>    
@@ -41,9 +43,11 @@
     <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
     <module>cocoon-rcl/cocoon-rcl-plugin</module>    
   </modules>
+
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-tools-modules</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-tools-modules</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-tools-modules/cocoon-tools-modules-3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-tools-modules/cocoon-tools-modules-3</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-tools-modules/cocoon-tools-modules-3</url>
   </scm>
+
 </project>
