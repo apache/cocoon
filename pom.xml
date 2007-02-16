@@ -494,7 +494,7 @@
               <!-- sites -->
               <collection>
                 <name>cdocs-site-main</name>
-                <path></path>
+                <path/>
               </collection>
               <collection>
                 <name>cdocs-site-blocks</name>
@@ -590,19 +590,19 @@
               </collection>                         
             </collections>
             <siteXmlContent>
-              <![CDATA[
-                <project>
-                  <skin>
-                    <groupId>org.apache.cocoon</groupId>
-                    <artifactId>cocoon-maven-site-skin</artifactId>
-                    <version>1.0.0-SNAPSHOT</version>
-                  </skin>
-                  <body>
-                    <!-- @daisy-start@ --><!-- @daisy-end@ -->
-                    <menu ref="reports" />
-                  </body>
-                </project>
-              ]]>
+              
+                &lt;project&gt;
+                  &lt;skin&gt;
+                    &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
+                    &lt;artifactId&gt;cocoon-maven-site-skin&lt;/artifactId&gt;
+                    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+                  &lt;/skin&gt;
+                  &lt;body&gt;
+                    &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
+                    &lt;menu ref="reports" /&gt;
+                  &lt;/body&gt;
+                &lt;/project&gt;
+              
             </siteXmlContent>
           </configuration>
           <executions>
