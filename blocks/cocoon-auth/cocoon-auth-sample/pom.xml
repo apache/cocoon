@@ -32,7 +32,7 @@
   </parent>
   <artifactId>cocoon-auth-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon Authentication Sample</name>
+  <name>Cocoon Authentication Block Sample</name>
 
   <dependencies>
     <dependency>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-auth-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0-RC1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
