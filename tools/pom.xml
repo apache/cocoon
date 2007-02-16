@@ -33,10 +33,13 @@
   <version>3-SNAPSHOT</version>
   <name>Cocoon Tools [modules]</name>
   <modules>
-    <module>archetypes</module>
-    <module>cocoon-block-deployer</module>
+    <module>archetypes/cocoon-22-archetype-block</module>
+    <module>archetypes/cocoon-22-archetype-webapp</module>    
+    <module>cocoon-block-deployer/cocoon-deployer-plugin</module>
+    <module>cocoon-block-deployer/cocoon-deployer-plugin-demo</module>    
     <module>cocoon-maven-reports</module>
-    <module>cocoon-rcl</module>    
+    <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
+    <module>cocoon-rcl/cocoon-rcl-plugin</module>    
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
