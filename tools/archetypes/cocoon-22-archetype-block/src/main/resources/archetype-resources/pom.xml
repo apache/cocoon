@@ -103,15 +103,9 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
     </repository>  
-    <!-- Release testing -->
-    <repository>
-      <id>cocoon.staging</id>
-      <name>Cocoon staging repository</name>
-      <url>http://people.apache.org/builds/cocoon</url>
-    </repository>
   </repositories>
 
 </project>
