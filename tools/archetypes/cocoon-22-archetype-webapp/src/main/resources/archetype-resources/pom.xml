@@ -58,4 +58,19 @@
     </dependency-->
   </dependencies>
   
+  <repositories>
+    <!-- Avalon/Excalibur dependencies -->
+    <repository>
+      <id>apache.snapshot</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>  
+  </repositories>  
+  
 </project>
