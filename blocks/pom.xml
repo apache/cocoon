@@ -71,7 +71,9 @@
       </activation>
       <modules>
         <module>cocoon-asciiart</module>
-        <module>cocoon-auth</module>
+		    <module>cocoon-auth/cocoon-auth-api</module>
+		    <module>cocoon-auth/cocoon-auth-impl</module>
+		    <module>cocoon-auth/cocoon-auth-sample</module>        
         <module>cocoon-authentication-fw</module>
         <module>cocoon-axis</module>
         <module>cocoon-batik/cocoon-batik-impl</module>
