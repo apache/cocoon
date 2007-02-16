@@ -19,16 +19,20 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  
   <parent>
-    <artifactId>cocoon-archetypes</artifactId>
+    <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>3-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
+    <relativePath>../../pom.xml</relativePath>    
+  </parent>  
+
   <artifactId>cocoon-22-archetype-block</artifactId>
   <version>1.0.0-M5-SNAPSHOT</version>
-  <name>Cocoon 2.2 Block Archetype</name>
+  <name>Cocoon 2.2 Archetype: Block </name>
+
 </project>
