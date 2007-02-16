@@ -37,18 +37,22 @@ dojo.require("dojo.widget.ComboBox");
 dojo.widget.defineWidget(
     "cocoon.forms.CFormsSuggest",
     dojo.widget.ComboBox, {
-    
+
     // Widget definition
     ns: "forms",
     widgetType: "CFormsSuggest",
-    
+    // properties
+    onchange: "",
+    name: "",
+
     fillInTemplate: function(args, frag) {
         this.mode = "remote";
         var node = this.getFragNodeRef(frag);
         var form = cocoon.forms.getForm(node);
+        this.form = form;
         var contId = form["continuation-id"].value;
         if (!contId) throw "Cannot find continuation Id";
-        
+
         if (!this.dataUrl || this.dataUrl == "") {
             this.dataUrl = "_cocoon/forms/suggest?widget=" + node.getAttribute("name") +
                 "&continuation-id=" + contId + "&filter=%{searchString}";
@@ -62,6 +66,12 @@ dojo.widget.defineWidget(
             // Restore the initial value and the associated suggestion text, if any
             this.setValue(node.getAttribute("suggestion") ? node.getAttribute("suggestion") : node.value);
             this.setSelectedValue(node.value);
+        }
+    },
+
+    onValueChanged: function(/*String*/ value){
+        if (this.onchange == "cocoon.forms.submitForm(this)") {
+            cocoon.forms.submitForm(this.domNode, this.name);
         }
     },
 
