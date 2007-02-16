@@ -31,7 +31,7 @@
     <version>3</version>
   </parent>
   <artifactId>cocoon-tools-modules</artifactId>
-  <version>3</version>
+  <version>4-SNAPSHOT</version>
   <name>Cocoon Tools [modules]</name>
 
   <modules>
@@ -45,9 +45,9 @@
   </modules>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-tools-modules/cocoon-tools-modules-3</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-tools-modules/cocoon-tools-modules-3</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-tools-modules/cocoon-tools-modules-3</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-tools-modules</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-tools-modules</url>
   </scm>
 
 </project>
