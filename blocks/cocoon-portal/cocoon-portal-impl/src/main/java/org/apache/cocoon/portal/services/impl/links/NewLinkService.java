@@ -197,8 +197,8 @@ public class NewLinkService
             return this.getRefreshLinkURI(secure);
         }
         final LinkInfo info = this.getInfo();
-        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
-        boolean hasParams = buffer.indexOf("?") != -1;
+        // let's collect all events
+        final List allEvents = new ArrayList();
 
         // add comparable events
         if ( info.comparableEvents != null ) {
@@ -215,52 +215,36 @@ public class NewLinkService
                         found = true;
                     }
                 }
-                hasParams = this.addEvent(buffer, current, hasParams);
+                if ( !found ) {
+                    allEvents.add(current);
+                }
             }
         }
 
         // add events
         if ( info.events != null ) {
-            final Iterator iter = info.events.iterator();
-            while (iter.hasNext()) {
-                final Event current = (Event)iter.next();
-                hasParams = this.addEvent(buffer, current, hasParams);
-            }
-        }
-
-        // add parameters
-        if ( info.parameters != null ) {
-            final Iterator iter = info.parameters.entrySet().iterator();
-            while ( iter.hasNext() ) {
-                final Map.Entry current = (Map.Entry)iter.next();
-                final String parameterName = current.getKey().toString();
-                final String [] values = (String[])current.getValue();
-                for(int i=0; i<values.length; i++) {
-                    hasParams = this.addParameter(buffer, parameterName, values[i], hasParams);
-                }
-            }
+            allEvents.addAll(info.events);
         }
 
         // now add supplied events and parameters
+        List parameterDescriptions = null;
         final Iterator iter = events.iterator();
         while (iter.hasNext()) {
             final Object current = iter.next();
             if (current instanceof Event) {
-                hasParams = this.addEvent(buffer, (Event) current, hasParams);
+                allEvents.add(current);
             } else if ( current instanceof ParameterDescription ) {
-                if (hasParams) {
-                    buffer.append('&');
-                } else {
-                    buffer.append('?');
-                    hasParams = true;
+                if ( parameterDescriptions == null ) {
+                    parameterDescriptions = new ArrayList();
                 }
-                buffer.append(((ParameterDescription) current).parameters);
+                parameterDescriptions.add(current);
             } else {
                 throw new PortalRuntimeException("Unknown object passed to create a link. Only events " +
                             "and parameter descriptions are allowed. Unknown object: " + current);
             }
         }
-        return buffer.toString();
+
+        return this.createUrl(allEvents, parameterDescriptions, secure);
     }
 
     /**
@@ -301,41 +285,15 @@ public class NewLinkService
     public String getRefreshLinkURI(Boolean secure) {
         final LinkInfo info = this.getInfo();
 
-        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
-        boolean hasParams = buffer.indexOf("?") != -1;
-        
-        // add comparable events
+        // let's collect all events
+        final List allEvents = new ArrayList();
         if ( info.comparableEvents != null ) {
-            final Iterator iter = info.comparableEvents.iterator();
-            while (iter.hasNext()) {
-                final Event current = (Event)iter.next();
-                hasParams = this.addEvent(buffer, current, hasParams);
-            }
+            allEvents.addAll(info.comparableEvents);
         }
-
-        // add events
         if ( info.events != null ) {
-            final Iterator iter = info.events.iterator();
-            while (iter.hasNext()) {
-                final Event current = (Event)iter.next();
-                hasParams = this.addEvent(buffer, current, hasParams);
-            }
+            allEvents.addAll(info.events);
         }
-
-        // add parameters
-        if ( info.parameters != null ) {
-            final Iterator iter = info.parameters.entrySet().iterator();
-            while ( iter.hasNext() ) {
-                final Map.Entry current = (Map.Entry)iter.next();
-                final String parameterName = current.getKey().toString();
-                final String [] values = (String[])current.getValue();
-                for(int i=0; i<values.length; i++) {
-                    hasParams = this.addParameter(buffer, parameterName, values[i], hasParams);
-                }
-            }
-        }
-
-        return buffer.toString();
+        return this.createUrl(allEvents, null, secure);
     }
 
     /**
@@ -350,5 +308,48 @@ public class NewLinkService
             }
         }
         return false;
+    }
+
+    protected String createUrl(List events, List parameterDescriptions, Boolean secure) {
+        final LinkInfo info = this.getInfo();
+
+        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
+        boolean hasParams = buffer.indexOf("?") != -1;
+
+        // add events
+        final Iterator iter = events.iterator();
+        while (iter.hasNext()) {
+            final Event current = (Event)iter.next();
+            hasParams = this.addEvent(buffer, current, hasParams);
+        }
+
+        // add parameters
+        if ( info.parameters != null ) {
+            final Iterator pIter = info.parameters.entrySet().iterator();
+            while ( pIter.hasNext() ) {
+                final Map.Entry current = (Map.Entry)pIter.next();
+                final String parameterName = current.getKey().toString();
+                final String [] values = (String[])current.getValue();
+                for(int i=0; i<values.length; i++) {
+                    hasParams = this.addParameter(buffer, parameterName, values[i], hasParams);
+                }
+            }
+        }
+        // add optional parameter descriptions
+        if ( parameterDescriptions != null ) {
+            final Iterator dIter = parameterDescriptions.iterator();
+            while ( dIter.hasNext() ) {
+                final ParameterDescription desc = (ParameterDescription)dIter.next();
+                if (hasParams) {
+                    buffer.append('&');
+                } else {
+                    buffer.append('?');
+                    hasParams = true;
+                }
+                buffer.append(desc.parameters);
+            }
+        }
+
+        return buffer.toString();
     }
 }
