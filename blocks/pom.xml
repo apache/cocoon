@@ -29,7 +29,7 @@
     <version>4-SNAPSHOT</version>
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
-  <version>RC1-SNAPSHOT</version>
+  <version>4-SNAPSHOT</version>
   <name>Cocoon Blocks [modules]</name>
   <build>
     <plugins>
