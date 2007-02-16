@@ -21,12 +21,15 @@
     | @version $Id$
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
+
   <name>${artifactId}</name>
   <groupId>${groupId}</groupId>
   <artifactId>${artifactId}</artifactId>
   <version>${version}</version>
+
   <build>
     <plugins>
       <!-- As the reloading classloader plugin hasn't been released yet, it is uncommented.
@@ -71,28 +74,44 @@
       </plugin>
     </plugins>
   </build>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC1-SNAPSHOT</version>
+      <version>2.2.0-M3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-blocks-fw-impl</artifactId>
+      <artifactId>cocoon-servlet-service-components</artifactId>
       <version>1.0.0-M1</version>
     </dependency>      
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      <version>1.0.0-RC1-SNAPSHOT</version>
+      <version>1.0.0-M3</version>
     </dependency>  
   </dependencies> 
+  
   <repositories>
+    <!-- Avalon/Excalibur dependencies -->
+    <repository>
+      <id>apache.snapshot</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>  
+    <!-- Release testing -->
     <repository>
       <id>cocoon.staging</id>
       <name>Cocoon staging repository</name>
       <url>http://people.apache.org/builds/cocoon</url>
     </repository>
   </repositories>
+
 </project>
