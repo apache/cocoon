@@ -28,7 +28,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>3-SNAPSHOT</version>
+    <version>RC1-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <name>Cocoon Samples Style Default Block</name>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      <version>1.0.0-M3-SNAPSHOT</version>
+      <version>1.0.0-RC1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   
