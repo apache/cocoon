@@ -21,16 +21,19 @@
     | @version $Id$
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <parent>
+    <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-rcl-modules</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-rcl-plugin</artifactId>
   <version>1.0.0-M1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>Cocoon Reloading Classloader - Maven 2 Plugin</name>
+  
   <dependencies>
     <!-- utility libs -->
     <dependency>
@@ -87,6 +90,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
   <build>
     <plugins>
       <plugin>
@@ -106,6 +110,7 @@
       </plugin>        
     </plugins>
   </build>
+  
   <reporting>
     <plugins>
       <plugin>
@@ -114,14 +119,17 @@
       </plugin>       
     </plugins>
   </reporting>  
+  
   <properties>
     <docs.name>Cocoon Reloading Classloader - Maven 2 Plugin</docs.name>    
     <docs.version>1.0</docs.version>
   </properties>    
+  
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/maven-plugins/reloading-classloader-plugin/${docs.version}/</url>
     </site>
-  </distributionManagement>    
+  </distributionManagement>   
+   
 </project>
