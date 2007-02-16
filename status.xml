@@ -181,6 +181,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-2011" due-to="Paul Friedman" due-to-email="paul.friedman@quoininc.com">
+      CForms: CFormsSuggest widget does not implement the onValueChanged event.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1927" due-to="Richard Frovarp">
       Core: EHCache now uses the configured cache directory instead of using the default of java.io.tempdir.
     </action>
