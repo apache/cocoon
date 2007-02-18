@@ -57,6 +57,7 @@
     <module>cocoon-flowscript/cocoon-flowscript-impl</module>
     <module>cocoon-forms/cocoon-forms-impl</module>
     <module>cocoon-forms/cocoon-forms-sample</module>    
+    <module>cocoon-linkrewriter</module>
     <module>cocoon-template/cocoon-template-impl</module>
     <module>cocoon-template/cocoon-template-sample</module>    
     <module>cocoon-samples-style/cocoon-samples-style-default</module>
@@ -107,7 +108,6 @@
         <module>cocoon-jfor</module>
         <module>cocoon-jms</module>
         <module>cocoon-jsp</module>
-        <module>cocoon-linkrewriter</module>
         <module>cocoon-lucene</module>
         <module>cocoon-mail/cocoon-mail-impl</module>
         <module>cocoon-mail/cocoon-mail-sample</module>        
