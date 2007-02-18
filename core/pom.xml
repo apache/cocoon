@@ -45,7 +45,7 @@
     <module>cocoon-thread/cocoon-thread-api</module>
     <module>cocoon-thread/cocoon-thread-impl</module>
     <module>cocoon-util</module>
-    <!--module>cocoon-webapp</module-->
+    <module>cocoon-webapp</module>
     <module>cocoon-xml/cocoon-xml-api</module>
     <module>cocoon-xml/cocoon-xml-impl</module>
     <module>cocoon-xml/cocoon-xml-resolver</module>    
