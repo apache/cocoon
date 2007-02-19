@@ -29,6 +29,7 @@ import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.portal.impl.PortalServiceImpl;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * Abstract test case class that can be used as a base for own portal
@@ -75,6 +76,11 @@ public abstract class AbstractPortalTestCase extends CocoonTestCase {
      */
     protected void addComponents(ConfigurationInfo info) throws Exception {
         super.addComponents(info);
+        // ProcessInfoProvider
+        final ComponentInfo processInfoProvider = new ComponentInfo();
+        processInfoProvider.setComponentClassName(MockProcessInfoProvider.class.getName());
+        processInfoProvider.setRole(ProcessInfoProvider.ROLE);
+        info.addComponent(processInfoProvider);
         // Add portal service
         final ComponentInfo portalServiceInfo = new ComponentInfo();
         portalServiceInfo.setComponentClassName(PortalServiceImpl.class.getName());
