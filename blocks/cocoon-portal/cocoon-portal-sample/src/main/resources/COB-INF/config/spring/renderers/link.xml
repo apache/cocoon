@@ -19,19 +19,16 @@
     |
     | @version $Id$
     +-->
-<components>
-    <renderer name="decorated-frame"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/frame.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-           <parameter name="tag-name" value="frame"/>
-        </aspect>
-        <aspect type="frame">
-           <parameter name="store" value="request"/>
-        </aspect>
-      </aspects>
-    </renderer>
-</components>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:portal="http://cocoon.apache.org/schema/portal"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                           http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
+  
+  <bean id="org.apache.cocoon.portal.layout.renderer.Renderer.link"
+        class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer"
+        parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton">
+
+  </bean>
+</beans>
