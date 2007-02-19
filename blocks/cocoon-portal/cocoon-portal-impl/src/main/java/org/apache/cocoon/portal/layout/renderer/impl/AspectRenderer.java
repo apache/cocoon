@@ -16,23 +16,13 @@
  */
 package org.apache.cocoon.portal.layout.renderer.impl;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
-import org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererContextImpl;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererAspectChain;
+import org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererContextImpl;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -50,18 +40,18 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class AspectRenderer
-    extends AbstractLogEnabled
-    implements Renderer, Serviceable, Configurable, Disposable, ThreadSafe {
+    extends AbstractBean
+    implements Renderer {
 
-    protected ServiceManager manager;
-
+    /** The aspect chain for rendering. */
     protected RendererAspectChain chain;
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * Set the event chain.
+     * @param a A chain.
      */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
+    public void setAspectChain(RendererAspectChain a) {
+        this.chain = a;
     }
 
     /**
@@ -72,29 +62,4 @@ public class AspectRenderer
         final RendererContextImpl renderContext = new RendererContextImpl(service, this.chain);
         renderContext.invokeNext(layout, handler);
     }
-
-	/**
-	 * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-	 */
-	public void configure(Configuration conf) throws ConfigurationException {
-        try {
-            this.chain = new RendererAspectChain(RendererAspect.class);
-            this.chain.configure(this.manager, conf);
-        } catch (PortalException ce) {
-            throw new ConfigurationException("Unable configure renderer aspects.", ce);
-        }            
-	}
-
-	/**
-	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
-	 */
-	public void dispose() {
-		if (this.manager != null) {
-            if ( this.chain != null) {
-                this.chain.dispose( this.manager );
-                this.chain = null;
-            }
-            this.manager = null;
-		}
-	}
 }

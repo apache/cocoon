@@ -44,8 +44,16 @@ public class AspectsBeanDefinitionParser extends AbstractElementParser {
 
     protected final String baseClass;
 
+    protected final Class aspectChainClass;
+
     public AspectsBeanDefinitionParser(final String className) {
         this.baseClass = className;
+        this.aspectChainClass = AspectChain.class;
+    }
+
+    public AspectsBeanDefinitionParser(final String className, Class aspectChainClass) {
+        this.baseClass = className;
+        this.aspectChainClass = aspectChainClass;
     }
 
     /**
@@ -53,7 +61,7 @@ public class AspectsBeanDefinitionParser extends AbstractElementParser {
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         // create a new bean definition for the aspect chain
-        RootBeanDefinition beanDef = this.createBeanDefinition(AspectChain.class, null, false);
+        RootBeanDefinition beanDef = this.createBeanDefinition(this.aspectChainClass, null, false);
         final ManagedList aspectBeans = new ManagedList();
         aspectBeans.setSource(parserContext.getReaderContext().extractSource(element));
         final List aspectProperties = new ArrayList();

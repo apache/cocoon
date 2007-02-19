@@ -33,6 +33,9 @@
   <!-- If you don't need WSRP support, you can remove the following include -->
   <import resource="classpath:org/apache/cocoon/portal/wsrp/cocoon-portal-wsrp-components.xml"/>
 
+  <!-- Include renderers: -->
+  <import resource="renderers/*.xml"/>
+
   <!--+
       | Portal Link Service.
       |

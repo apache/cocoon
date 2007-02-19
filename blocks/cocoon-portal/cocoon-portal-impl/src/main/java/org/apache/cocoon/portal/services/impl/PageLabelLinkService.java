@@ -27,8 +27,6 @@ import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.NamedItem;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 
 /**
  * The PageLabelLinkService generates links for named items defined in the layout portal.xml.

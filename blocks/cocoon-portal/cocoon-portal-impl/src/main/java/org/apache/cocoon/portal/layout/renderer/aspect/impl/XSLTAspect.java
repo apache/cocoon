@@ -18,23 +18,19 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Properties;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalException;
@@ -84,11 +80,11 @@ import org.xml.sax.ext.LexicalHandler;
  * <tr><th>xslt-processor-role</th><td></td><td>req</td><td>String</td><td><code>null</code></td></tr>
  * </tbody></table>  
  *
+ * TODO - Remove all dependencies to Avalon.
  * @version $Id$
  */
 public class XSLTAspect 
-    extends AbstractAspect
-    implements Configurable {
+    extends AbstractAspect {
 
     protected List variables = new ArrayList();
 
@@ -98,20 +94,18 @@ public class XSLTAspect
     /** Source resolver for resolving the stylesheets. */
     protected SourceResolver resolver;
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
-        Configuration parameterItems = config.getChild("parameters", false);
-        if (parameterItems != null) {
-            this.parameters = new HashMap();
-            final Parameters params = Parameters.fromConfiguration(parameterItems);
-            final String[] names = params.getNames();
-            for(int i=0; i<names.length; i++) {
-                final String value = params.getParameter(names[i], null);
-                this.parameters.put(names[i], value);
-            }
-        }
+    protected ServiceManager serviceManager;
+
+    public void setServiceManager(ServiceManager sm) {
+        this.serviceManager = sm;
+    }
+
+    public void setSourceResolver(SourceResolver resolver) {
+        this.resolver = resolver;   
+    }
+
+    public void setXsltParameters(Map p) {
+        this.parameters = p;
     }
 
 	/**
@@ -127,7 +121,7 @@ public class XSLTAspect
         Source stylesheet = null;
         try {
             stylesheet = this.resolver.resolveURI(this.getStylesheetURI(config, layout));
-            processor = (XSLTProcessor) this.manager.lookup(config.xsltRole);
+            processor = (XSLTProcessor) this.serviceManager.lookup(config.xsltRole);
             TransformerHandler transformer = processor.getTransformerHandler(stylesheet);
             // Pass configured parameters to the stylesheet.
             if (config.parameters.size() > 0) {                
@@ -165,7 +159,7 @@ public class XSLTAspect
             throw new SAXException("Unable to lookup component.", ce);
         } finally {
             this.resolver.release(stylesheet);
-            this.manager.release(processor);
+            this.serviceManager.release(processor);
         }
 	}
 
@@ -176,7 +170,7 @@ public class XSLTAspect
         if ( stylesheet != null ) {
             VariableResolver variableResolver = null;
             try {
-                variableResolver = VariableResolverFactory.getResolver(stylesheet, this.manager);
+                variableResolver = VariableResolverFactory.getResolver(stylesheet, this.serviceManager);
                 stylesheet = variableResolver.resolve(objectModel);
             } catch (PatternException pe) {
                 throw new SAXException("Unknown pattern for stylesheet " + stylesheet, pe);
@@ -223,7 +217,7 @@ public class XSLTAspect
         pc.xsltRole = configuration.getProperty("xslt-processor-role", XSLTProcessor.ROLE);
         String stylesheet = configuration.getProperty("style", null);
         try {
-            pc.stylesheet = VariableResolverFactory.getResolver(stylesheet, this.manager);
+            pc.stylesheet = VariableResolverFactory.getResolver(stylesheet, this.serviceManager);
         } catch (PatternException pe) {
             throw new PortalException("Unknown pattern for stylesheet " + stylesheet, pe);
         }
@@ -234,7 +228,7 @@ public class XSLTAspect
                 final Map.Entry current = (Map.Entry)i.next();
                 try {
                     VariableResolver variableResolver =
-                        VariableResolverFactory.getResolver(current.getValue().toString(), this.manager);
+                        VariableResolverFactory.getResolver(current.getValue().toString(), this.serviceManager);
                     this.variables.add(variableResolver);
                     pc.parameters.put(current.getKey(), variableResolver);
                 } catch (PatternException e) {
@@ -246,26 +240,15 @@ public class XSLTAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.util.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
+     * Destroy this component.
      */
-    public void service(ServiceManager aManager) throws ServiceException {
-        super.service(aManager);
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
+    public void destroy() {
+        if ( this.serviceManager != null ) {
             Iterator vars = this.variables.iterator();
             while ( vars.hasNext() ) {
                 ContainerUtil.dispose(vars.next());
             }
             this.variables.clear();
-            this.manager.release(this.resolver);
-            this.resolver = null;
         }
-        super.dispose();
     }
 }

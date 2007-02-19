@@ -32,52 +32,6 @@
   <alias role="org.apache.cocoon.portal.layout.renderer.Renderer" shorthand="renderer"/>
 
   <!--+
-      | Renderer Aspects
-      |
-      +-->
-    <!-- Legacy service selector. -->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectSelector"
-          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
-
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/composite-content"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"/>
-
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/tab-content"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"/>
-
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/window"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
-
-    <!--+
-        | This aspect can be used to render the remove button.
-        +-->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-removing"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemovableAspect"/>
-
-    <!--+
-        | This aspect can be used to render cinclude statements that will be used to include
-        | the coplet content, use the coplet aspect below to directly stream the content.
-        +-->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-cinclude"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"/>
-    
-    <!--+
-        | This aspect can be used to render the content of the coplet.
-        +-->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"/>
-
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/frame"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
-
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/xslt"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
-
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/parameter"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect"/>
-
-
-  <!--+
       | Components.
       |
       +-->
@@ -172,14 +126,6 @@
       +-->
     <role name="org.apache.cocoon.portal.profile.ProfileManager"
           shorthand="portal-profile-manager"/>
-
-  <!--+
-      | Profile Manager Aspects
-      |
-      +-->
-    <!-- Legacy service selector. -->
-    <role name="org.apache.cocoon.portal.profile.ProfileManagerAspectSelector"
-          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
   <!--+
       | Deployment Manager

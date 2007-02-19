@@ -36,20 +36,6 @@
           </div>
           <div class="coplet-icons" id="coplet-icons-{$copletId}">
             <xsl:variable name="copletSize"><xsl:value-of select="size"/></xsl:variable>
-            <xsl:if test="basket-add-link">
-              <div class="coplet-icon basket-add-link" id="coplet-icon-basket-add-link-{$copletId}">
-                <a href="{basket-add-link}">
-                  <img src="images/basket.gif" border="0" alt="Add Link"/>
-                </a>
-              </div>
-            </xsl:if>
-            <xsl:if test="basket-add-content">
-              <div class="coplet-icon basket-add-content" id="coplet-icon-basket-add-content-{$copletId}">
-                <a href="{basket-add-content}">
-                  <img src="images/basket.gif" border="0" alt="Add Content"/>
-                </a>
-              </div>
-            </xsl:if>
             <xsl:if test="edit-uri">
               <div class="coplet-icon edit-uri" id="coplet-icon-edit-uri-{$copletId}">
                 <a href="{edit-uri}">
