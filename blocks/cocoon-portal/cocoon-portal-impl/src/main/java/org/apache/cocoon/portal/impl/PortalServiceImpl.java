@@ -187,16 +187,24 @@ public class PortalServiceImpl
         this.portalName = portal.getAttribute("name");
         this.configuration = portal.getChild("configuration");
         this.configureSkins(this.getConfiguration(org.apache.cocoon.portal.Constants.CONFIGURATION_SKINS_PATH,
-                                                  org.apache.cocoon.portal.Constants.DEFAULT_CONFIGURATION_SKINS_PATH));
+                                                  org.apache.cocoon.portal.Constants.DEFAULT_CONFIGURATION_SKINS_PATH),
+                            this.getConfiguration(org.apache.cocoon.portal.Constants.CONFIGURATION_SKINS_PATH, null) != null);
     }
 
-    protected void configureSkins(String directory)
+    protected void configureSkins(String directory, boolean check)
     throws ConfigurationException {
         SourceResolver resolver = null;
         Source dir = null;
         try {
             resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
             dir = resolver.resolveURI(directory, null, CONTEXT_PARAMETERS);
+            if ( !dir.exists() ) {
+                if ( check ) {
+                    throw new ConfigurationException("Skin directory does not exist: '" + directory + "'.");
+                }
+                this.getLogger().warn("No skin directory found at location '" + directory + "'.");
+                return;
+            }
             if ( dir instanceof TraversableSource ) {
                 final Iterator children = ((TraversableSource)dir).getChildren().iterator();
                 while ( children.hasNext() ) {
@@ -208,7 +216,7 @@ public class PortalServiceImpl
                     }
                 }
             } else {
-                throw new ConfigurationException("Include.dir must point to a directory, '" + dir.getURI() + "' is not a directory.'");
+                throw new ConfigurationException("Skin configuration must point to a directory, '" + dir.getURI() + "' is not a directory.'");
             }
         } catch (IOException ioe) {
             throw new ConfigurationException("Unable to read configurations from " + directory);
