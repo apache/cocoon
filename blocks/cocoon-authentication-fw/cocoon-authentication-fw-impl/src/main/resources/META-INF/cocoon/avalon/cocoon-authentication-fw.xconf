@@ -24,8 +24,6 @@
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/webapps/authentication/authentication.roles"/>
   
-  <authentication-manager logger="core.authentication-manager"/>
-
   <session-context-providers>
       <component-instance class="org.apache.cocoon.webapps.authentication.context.AuthenticationContextProvider" name="authentication"/>
   </session-context-providers>
