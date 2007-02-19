@@ -15,8 +15,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
-<p>
-  Title: ${parameters.getParameter('title')}<br/>
-  Your message was: ${parameters.getParameter('value')}
-</p>
+<!--+
+    |
+    | @version $Id$
+    +-->
+<components>
+    <renderer name="window"
+              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
+      <aspects>
+        <aspect type="xslt">
+          <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
+        </aspect>
+        <aspect type="parameter">
+          <parameter name="tag-name" value="window"/>
+        </aspect>
+        <aspect type="window">
+          <parameter name="root-tag" value="false"/>
+        </aspect>
+        <aspect type="coplet-cinclude"/>
+      </aspects>
+    </renderer>
+</components>

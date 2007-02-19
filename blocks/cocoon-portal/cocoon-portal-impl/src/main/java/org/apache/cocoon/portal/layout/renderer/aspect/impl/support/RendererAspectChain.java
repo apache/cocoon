@@ -46,8 +46,9 @@ public final class RendererAspectChain extends AspectChain {
     /** The list of the configuration objects for each renderer aspects. */
     protected final List configs = new ArrayList(3);
 
-    public RendererAspectChain(Class aClass) {
-        super(aClass);
+    public RendererAspectChain(Class aClass, List aspects, List properties)
+    throws PortalException {
+        super(aClass, aspects, properties);
     }
 
     public Iterator getConfigurationIterator() {

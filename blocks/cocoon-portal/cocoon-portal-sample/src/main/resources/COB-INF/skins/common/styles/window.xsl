@@ -51,20 +51,6 @@
       </td>
       <td align="right" valign="middle" bgColor="{$bgColor}">
         <table cellSpacing="0" cellpadding="0" border="0"><tbody><tr>
-          <xsl:if test="basket-add-link">
-            <td width="15">
-              <a href="{basket-add-link}">
-                <img src="images/basket.gif" border="0" alt="Add Link"/>
-              </a>
-            </td>
-          </xsl:if>
-          <xsl:if test="basket-add-content">
-            <td width="15">
-              <a href="{basket-add-content}">
-                <img src="images/basket.gif" border="0" alt="Add Content"/>
-              </a>
-            </td>
-          </xsl:if>
           <xsl:if test="edit-uri">
             <td width="15">
               <a href="{edit-uri}">

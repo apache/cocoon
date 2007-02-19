@@ -39,6 +39,59 @@
     </bean>
 
   <!--+
+      | Renderer Aspects
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.composite-content"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.tab-content"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.window"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton" init-method="init"/>
+
+    <!--+
+        | This aspect can be used to render the remove button.
+        +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.coplet-removing"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemovableAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <!--+
+        | This aspect can be used to render cinclude statements that will be used to include
+        | the coplet content, use the coplet aspect below to directly stream the content.
+        +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.coplet-cinclude"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+    
+    <!--+
+        | This aspect can be used to render the content of the coplet.
+        +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.coplet"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.frame"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.xslt"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton" destroy-method="destroy">
+      <property name="serviceManager" ref="org.apache.avalon.framework.service.ServiceManager"/>
+      <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect-parameter"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+  <!--+
       | Portal Manager.
       |
       +-->
@@ -116,7 +169,9 @@
 
     <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.page-label"
           class="org.apache.cocoon.portal.event.aspect.impl.PageLabelEventAspect"
-          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton">
+      <property name="pageLabelManager" ref="org.apache.cocoon.portal.impl.PageLabelManager"/>
+    </bean>
 
     <!--+
         | This aspect sets headers on the response telling the client to not cache

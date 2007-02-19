@@ -43,9 +43,6 @@
   <!-- We use Castor for persisting/mapping the profiles to XML: -->
   <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
 
-  <!-- Include all renderers: -->
-  <include pattern="*.xconf" dir="renderers"/>
-
   <portal-service>
     <portal name="portal">
       <!-- Configuration: -->

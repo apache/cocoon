@@ -21,7 +21,7 @@ import java.util.Properties;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 import org.apache.cocoon.portal.om.CopletInstance;
-import org.apache.cocoon.portal.util.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
  * Base class for renderer aspects.
@@ -29,7 +29,7 @@ import org.apache.cocoon.portal.util.AbstractComponent;
  * @version $Id$
  */
 public abstract class AbstractAspect
-    extends AbstractComponent
+    extends AbstractBean
     implements RendererAspect {
 
     /**

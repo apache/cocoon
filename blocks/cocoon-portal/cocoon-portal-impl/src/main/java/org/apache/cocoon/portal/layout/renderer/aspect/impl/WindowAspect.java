@@ -95,10 +95,9 @@ public final class WindowAspect extends AbstractAspect {
     protected boolean enableMaximized;
 
     /**
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     * Initialize this component.
      */
-    public void initialize() throws Exception {
-        super.initialize();
+    public void init() {
         this.enableFullScreen = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_FULL_SCREEN_ENABLED, Constants.DEFAULT_CONFIGURATION_FULL_SCREEN_ENABLED);
         this.enableMaximized = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_MAXIMIZED_ENABLED, Constants.DEFAULT_CONFIGURATION_MAXIMIZED_ENABLED);
     }

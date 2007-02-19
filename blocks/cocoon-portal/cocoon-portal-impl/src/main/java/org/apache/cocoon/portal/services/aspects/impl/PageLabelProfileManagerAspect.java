@@ -18,19 +18,20 @@ package org.apache.cocoon.portal.services.aspects.impl;
 
 import java.util.Collection;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.NamedItem;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext;
+import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
  * $Id$
  */
 public class PageLabelProfileManagerAspect
-    implements ProfileManagerAspect, ThreadSafe {
+    extends AbstractBean
+    implements ProfileManagerAspect {
 
     /**
      * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspect#prepareCopletDefinitions(org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext, java.util.Collection)
