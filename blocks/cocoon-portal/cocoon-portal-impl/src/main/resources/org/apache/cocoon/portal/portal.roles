@@ -193,14 +193,6 @@
           shorthand="user-service" lazy-init="false"/>
 
   <!--+
-      | Event Manager.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.event.EventManager"
-          default-class="org.apache.cocoon.portal.event.impl.DefaultEventManager"
-          shorthand="portal-event-manager"/>
-
-  <!--+
       | Page Label Manager.
       |
       +-->

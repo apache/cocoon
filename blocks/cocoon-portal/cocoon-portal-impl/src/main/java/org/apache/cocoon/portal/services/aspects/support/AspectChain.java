@@ -36,22 +36,37 @@ import org.apache.cocoon.portal.PortalException;
  */
 public class AspectChain {
 
-    protected static Properties EMPTY_PROPERTIES = new Properties();
+    public static final Properties EMPTY_PROPERTIES = new Properties();
 
     /** The aspect class. */
     protected final Class aspectClass;
 
     /** The aspects. */
-    protected List aspects = new ArrayList(3);
+    protected final List aspects;
 
     /** The configuration for the aspects. */
-    protected List configs = new ArrayList(3);
+    protected final List configs;
 
     /** Do we have any aspects? */
     protected boolean process = false;
 
+    public AspectChain(Class aClass, List aspects, List properties)
+    throws PortalException {
+        this.aspectClass = aClass;
+        if ( aspects.size() != properties.size() ) {
+            throw new PortalException("Size of aspects list differes from size of properties list for configuring aspect chain (" + aspects.size() + " vs. " + properties.size()+").");
+        }
+        this.aspects = new ArrayList(aspects.size());
+        this.configs = new ArrayList(aspects.size());
+        for(int i=0; i<aspects.size(); i++) {
+            this.addAspect(aspects.get(i), (Properties)properties.get(i));
+        }
+    }
+
     public AspectChain(Class aClass) {
         this.aspectClass = aClass;
+        this.aspects = new ArrayList(3);
+        this.configs = new ArrayList(3);
     }
 
     public void configure(ServiceManager manager,
@@ -60,7 +75,6 @@ public class AspectChain {
         if ( conf != null ) {
             final Configuration[] aspectConfigs = conf.getChild("aspects").getChildren("aspect");
             for(int i=0; i < aspectConfigs.length; i++) {
-                this.process = true;
                 final Configuration current = aspectConfigs[i];
                 final String role = current.getAttribute("type");
                 try {

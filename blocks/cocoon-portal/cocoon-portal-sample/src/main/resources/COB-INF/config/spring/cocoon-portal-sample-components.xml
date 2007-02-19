@@ -22,9 +22,10 @@
     +-->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:portal="http://cocoon.apache.org/schema/portal"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                           http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
 
   <!-- Include default beans -->
   <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
@@ -40,5 +41,25 @@
       <property name="defaultPort" value="8888"/>
       <property name="defaultSecurePort" value="443"/>
     </bean>
+
+  <!--+
+      | Event Manager Aspect configuration.
+      |
+      +-->
+    <portal:event-aspects id="org.apache.cocoon.portal.event.EventManager/aspects">
+      <!--  The client should not cache the page. -->
+      <portal:aspect type="no-client-caching"/>
+      <!-- Use the action counter with great care. We recommend turning it off. -->
+      <!-- Remove action-counter when using PageLabels -->
+      <!-- aspect type="action-counter"/ -->
+      <portal:aspect type="frame"/>
+      <portal:aspect type="link"/>
+      <!-- Uncomment the following when using PageLabels
+        <portal:aspect type="page-label"/>
+      -->
+      <!-- Comment the following out if you don't need WSRP: --> 
+      <portal:aspect type="wsrp"/>
+      <portal:aspect type="request-parameter"/>
+    </portal:event-aspects>
 
 </beans>

@@ -21,6 +21,7 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.aspects.BasicAspectContext;
+import org.apache.commons.collections.iterators.EmptyIterator;
 
 /**
  * Reusable implementation of the {@link BasicAspectContext}.
@@ -44,8 +45,13 @@ public abstract class BasicAspectContextImpl implements BasicAspectContext {
     public BasicAspectContextImpl(PortalService service,
                                   AspectChain   chain) {
         this.portalService = service;
-        this.aspectsIterator = chain.getAspectsIterator();
-        this.propertiesIterator = chain.getPropertiesIterator();
+        if ( chain != null ) {
+            this.aspectsIterator = chain.getAspectsIterator();
+            this.propertiesIterator = chain.getPropertiesIterator();
+        } else {
+            this.aspectsIterator = EmptyIterator.INSTANCE;
+            this.propertiesIterator = EmptyIterator.INSTANCE;
+        }
     }
 
     /**
@@ -69,5 +75,4 @@ public abstract class BasicAspectContextImpl implements BasicAspectContext {
         }
         return null;
     }
-
 }
