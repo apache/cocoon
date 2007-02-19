@@ -39,6 +39,20 @@
     </bean>
 
   <!--+
+      | Portal Manager.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.PortalManager"
+          class="org.apache.cocoon.portal.services.impl.DefaultPortalManager"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          init-method="init" scope="singleton">
+      <property name="aspectChain" ref="org.apache.cocoon.portal.services.PortalManager/aspects"/>
+    </bean>
+
+    <!-- We register an empty aspects bean which should be redefined in the portal config. -->
+    <portal:event-aspects id="org.apache.cocoon.portal.services.PortalManager/aspects"/>
+
+  <!--+
       | Portal Event Converter.
       |
       +-->

@@ -17,6 +17,9 @@
 package org.apache.cocoon.portal.spring;
 
 import org.apache.cocoon.portal.event.aspect.EventAspect;
+import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
+import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
+import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -30,5 +33,8 @@ public class PortalNamespaceHandler extends NamespaceHandlerSupport {
      */
     public void init() {
         this.registerBeanDefinitionParser("event-aspects", new AspectsBeanDefinitionParser(EventAspect.class.getName()));
+        this.registerBeanDefinitionParser("renderer-aspects", new AspectsBeanDefinitionParser(RendererAspect.class.getName()));
+        this.registerBeanDefinitionParser("portal-manager-aspects", new AspectsBeanDefinitionParser(PortalManagerAspect.class.getName()));
+        this.registerBeanDefinitionParser("profile-manager-aspects", new AspectsBeanDefinitionParser(ProfileManagerAspect.class.getName()));
     }
 }
