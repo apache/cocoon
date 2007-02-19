@@ -34,9 +34,6 @@
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
 
-  <!-- Include default components -->
-  <include-beans src="resource://org/apache/cocoon/portal/cocoon-portal-components.xml"/>
-
   <!-- If you don't need JSR 168 support, you can remove the following include. -->
   <include src="resource://org/apache/cocoon/portal/pluto/portal-pluto.roles"/>
 
@@ -102,16 +99,6 @@
         <aspect type="request-parameter"/>
     </aspects>
   </portal-event-manager>
-
-  <!--+
-      | Page Labels.
-      | To enable PageLabels add a "class" attribute to the following
-      | definition with the value "org.apache.cocoon.portal.services.impl.PageLabelLinkService"
-      +-->
-  <portal-link-service>
-    <parameter name="defaultPort" value="8888"/>
-    <parameter name="defaultSecurePort" value="443"/>
-  </portal-link-service>
 
   <!--+
       | Deployment Manager.

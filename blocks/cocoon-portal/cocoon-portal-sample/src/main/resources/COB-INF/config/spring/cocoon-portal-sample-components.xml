@@ -26,34 +26,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-  <!--+
-      | Abstract Bean used as a base for nearly all beans
-      |
-      +-->
-    <bean name="org.apache.cocoon.portal.util.AbstractBean"
-          class="org.apache.cocoon.portal.util.AbstractBean"
-          abstract="true">
-      <property name="portalService" ref="org.apache.cocoon.portal.PortalService"/>
-    </bean>
-  
-  <!--+
-      | Portal Event Converter.
-      |
-      +-->
-    <bean name="org.apache.cocoon.portal.event.EventConverter"
-          class="org.apache.cocoon.portal.event.impl.DefaultEventConverter"
-          parent="org.apache.cocoon.portal.util.AbstractBean"
-          init-method="init" scope="singleton">
-      <!-- Map event class to keys. These keys are used to create the values
-           for the uri if that event is used. If no mapping is found a hash
-           of the event class name is used as default. -->
-      <property name="mappings">
-        <map>
-          <entry key="sizing" value="org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent"/>
-          <entry key="lpar" value="org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent"/>
-        </map>
-      </property>
-    </bean>
+  <!-- Include default beans -->
+  <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
 
   <!--+
       | Portal Link Service.
@@ -62,6 +36,9 @@
     <bean name="org.apache.cocoon.portal.services.LinkService"
           class="org.apache.cocoon.portal.services.impl.DefaultLinkService"
           parent="org.apache.cocoon.portal.util.AbstractBean"
-          scope="singleton"/>
+          scope="singleton">
+      <property name="defaultPort" value="8888"/>
+      <property name="defaultSecurePort" value="443"/>
+    </bean>
 
 </beans>
