@@ -29,8 +29,6 @@ import org.xml.sax.SAXException;
  */
 public interface Renderer {
 
-    String ROLE = Renderer.class.getName();
-
     /**
      * Stream out raw layout 
      */

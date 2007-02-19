@@ -36,7 +36,7 @@ public class RegistrationBeanPostProcessor
 
     protected BeanFactory beanFactory;
 
-    protected static String RENDERER_ROLE_PREFIX = Renderer.ROLE + '/';
+    protected static String RENDERER_ROLE_PREFIX = Renderer.class.getName() + '.';
 
     /**
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
