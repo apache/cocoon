@@ -20,9 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -41,7 +38,7 @@ import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareConte
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.services.aspects.impl.support.PortalManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
-import org.apache.cocoon.portal.util.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.StringUtils;
@@ -53,21 +50,18 @@ import org.xml.sax.SAXException;
  * @version $Id: PortalManagerImpl.java 507453 2007-02-14 09:41:57Z cziegeler $
  */
 public class DefaultPortalManager
-	extends AbstractComponent
-	implements PortalManager, PortalManagerAspect, Configurable {
+	extends AbstractBean
+	implements PortalManager, PortalManagerAspect {
 
+    /** The aspect chain for additional processing. */
     protected AspectChain chain;
 
     /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     * Set the event chain.
+     * @param a A chain.
      */
-    public void dispose() {
-        if ( this.manager != null ) {
-            if ( this.chain != null) {
-                this.chain.dispose( this.manager );
-            }
-        }
-        super.dispose();
+    public void setAspectChain(AspectChain a) {
+        this.chain = a;
     }
 
     /**
@@ -91,16 +85,14 @@ public class DefaultPortalManager
 	}
 
     /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     * Initialize
      */
-    public void configure(Configuration conf) throws ConfigurationException {
-        try {
+    public void init()
+    throws PortalException {
+        if ( this.chain == null ) {
             this.chain = new AspectChain(PortalManagerAspect.class);
-            this.chain.configure(this.manager, conf);
-            this.chain.addAspect(this, null);
-        } catch (PortalException pe) {
-            throw new ConfigurationException("Unable to configure portal manager aspects.", pe);
         }
+        this.chain.addAspect(this, null);
     }
 
     /**

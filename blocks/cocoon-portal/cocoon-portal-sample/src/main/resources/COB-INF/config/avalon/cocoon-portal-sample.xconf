@@ -74,14 +74,6 @@
     <parameter name="layout-user-save" value="cocoon:raw:/save-user-profile?profile=layout"/>
   </portal-profile-manager>
 
-  <!-- This is the portal manager.
-       The portal manager can be extended with different aspects.
-  -->
-  <portal-manager>
-    <aspects>
-    </aspects>
-  </portal-manager>
-
   <!--+
       | Deployment Manager.
       +-->
