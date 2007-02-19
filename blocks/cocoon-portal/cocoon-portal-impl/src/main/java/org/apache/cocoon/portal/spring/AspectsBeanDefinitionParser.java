@@ -67,7 +67,7 @@ public class AspectsBeanDefinitionParser extends AbstractElementParser {
             if ( ref != null && type != null ) {
                 throw new BeanDefinitionStoreException("Element 'aspect' must have either a 'ref' or a 'type' attribute, but not both.");
             }
-            final String beanName = (ref != null ? ref : this.baseClass + '/' + type);
+            final String beanName = (ref != null ? ref : this.baseClass + '.' + type);
             aspectBeans.add(new RuntimeBeanReference(beanName));
             // properties
             final Properties props = new Properties();

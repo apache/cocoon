@@ -25,48 +25,6 @@
     <role name="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"
           default-class="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"/>
 
-  <!--+ 
-      | Event Aspects
-      |
-      +-->
-    <!-- Legacy service selector. -->
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspectSelector"
-          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
-    
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/action-counter"
-          default-class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
-
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/request-parameter"
-          default-class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
-
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/frame"
-          default-class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
-
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/link"
-          default-class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect"/>
-
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/page-label"
-          default-class="org.apache.cocoon.portal.event.aspect.impl.PageLabelEventAspect"/>
-
-    <!--+
-        | This aspect sets headers on the response telling the client to not cache
-        | the response.
-        +-->
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/no-client-caching"
-          default-class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
-
-
-  <!--+
-      | Portal Manager Aspects
-      |
-      +-->
-    <!-- Legacy service selector. -->
-    <role name="org.apache.cocoon.portal.PortalManagerAspectSelector"
-          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
-
-    <role name="org.apache.cocoon.portal.services.aspects.PortalManagerAspect/preload"
-          default-class="org.apache.cocoon.portal.services.aspects.impl.PreloadPortalManagerAspect"/>
-
   <!--+
       | Renderer
       |

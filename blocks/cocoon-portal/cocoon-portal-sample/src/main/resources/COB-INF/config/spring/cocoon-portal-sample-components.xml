@@ -30,6 +30,9 @@
   <!-- Include default beans -->
   <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
 
+  <!-- If you don't need WSRP support, you can remove the following include -->
+  <import resource="classpath:org/apache/cocoon/portal/wsrp/cocoon-portal-wsrp-components.xml"/>
+
   <!--+
       | Portal Link Service.
       |
@@ -46,7 +49,7 @@
       | Event Manager Aspect configuration.
       |
       +-->
-    <portal:event-aspects id="org.apache.cocoon.portal.event.EventManager/aspects">
+    <portal:event-aspects id="org.apache.cocoon.portal.event.EventManager.aspects">
       <!--  The client should not cache the page. -->
       <portal:aspect type="no-client-caching"/>
       <!-- Use the action counter with great care. We recommend turning it off. -->
@@ -66,7 +69,7 @@
       | Portal Manager Aspect configuration.
       |
       +-->
-    <portal:portal-manager-aspects id="org.apache.cocoon.portal.services.PortalManager/aspects">
+    <portal:portal-manager-aspects id="org.apache.cocoon.portal.services.PortalManager.aspects">
       <!-- Add your aspects here -->
     </portal:portal-manager-aspects>
 </beans>

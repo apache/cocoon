@@ -18,17 +18,6 @@
 <!-- $Id$ -->
 <role-list>
 
-  <!--+ 
-      | Event Aspects
-      |
-      +-->
-    <!--+
-        | This aspect is required for WSRP.
-        +-->
-    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/wsrp"
-          default-class="org.apache.cocoon.portal.wsrp.adapter.WSRPEventAspect"/>
-
-
   <!--+
       | Default User Context Provider for WSRP.
       +-->

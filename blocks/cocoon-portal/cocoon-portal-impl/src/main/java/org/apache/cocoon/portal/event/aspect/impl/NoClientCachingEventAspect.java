@@ -16,12 +16,11 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
  * This aspect implementation sets some headers on the response that tell
@@ -31,9 +30,8 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  * @version $Id$
  */
 public class NoClientCachingEventAspect
-	extends AbstractLogEnabled
-	implements EventAspect,
-               ThreadSafe {
+	extends AbstractBean
+	implements EventAspect {
 
 	/**
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)

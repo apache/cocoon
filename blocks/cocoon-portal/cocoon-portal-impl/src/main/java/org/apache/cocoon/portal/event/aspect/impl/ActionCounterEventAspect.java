@@ -16,16 +16,12 @@
  */
 package org.apache.cocoon.portal.event.aspect.impl;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
  * This aspect "disables" the back button of the browser and tries to avoid
@@ -39,15 +35,13 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  * @version $Id$
  */
 public class ActionCounterEventAspect
-	extends AbstractLogEnabled
-	implements EventAspect,
-               ThreadSafe,
-               Parameterizable {
+	extends AbstractBean
+	implements EventAspect {
 
     protected final static String ATTRIBUTE_NAME = ActionCounterEventAspect.class.getName();
 
     /** The name of the parameter to check */
-    protected String parameterName;
+    protected String parameterName = "cocoon-portal-action";
 
 	/**
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
@@ -92,11 +86,7 @@ public class ActionCounterEventAspect
         response.setHeader("Expires", "Thu, 01 Jan 2000 00:00:00 GMT");
 	}
 
-    /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters parameters) 
-    throws ParameterException {
-        this.parameterName = parameters.getParameter("parameter-name", "cocoon-portal-action");
+    public void setParameterName(String value) {
+        this.parameterName = value;
     }
 }
