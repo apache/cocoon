@@ -180,8 +180,8 @@
       | Portal Manager.
       |
       +-->
-    <role name="org.apache.cocoon.portal.PortalManager"
-          default-class="org.apache.cocoon.portal.impl.PortalManagerImpl"
+    <role name="org.apache.cocoon.portal.services.PortalManager"
+          default-class="org.apache.cocoon.portal.services.impl.DefaultPortalManager"
           shorthand="portal-manager"/>
 
   <!--+
