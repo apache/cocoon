@@ -19,13 +19,9 @@
 <xsamples xpath="/samples" unless="group[@name='Authentication Framework']">
 
   <group name="Authentication Framework">
-    <sample name="Authentication Framework Block" href="authentication-fw/login">
-      This is a demo of the authentication framework integrated into Cocoon.
-    </sample>
-    <sample name="Authentication Framework Block (with Flow)" href="authentication-fw/flow/login">
-      This is the same demo of the authentication framework, but using flow
-      instead of actions.
+    <sample name="Authentication Framework Block">
+      Cocoon Authentication Framework examples (deprecated, use <a href="cocoon-auth-sample/">Cocoon Auth Block</a> instead).
     </sample>
   </group>
-  
+
 </xsamples>
