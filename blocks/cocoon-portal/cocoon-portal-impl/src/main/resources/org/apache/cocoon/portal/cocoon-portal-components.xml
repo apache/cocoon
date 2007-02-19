@@ -23,8 +23,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:portal="http://cocoon.apache.org/schema/portal"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                           http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
 
   <!--+
       | Abstract Bean used as a base for nearly all beans
@@ -35,7 +37,7 @@
           abstract="true">
       <property name="portalService" ref="org.apache.cocoon.portal.PortalService"/>
     </bean>
-  
+
   <!--+
       | Portal Event Converter.
       |
@@ -54,6 +56,20 @@
         </map>
       </property>
     </bean>
+
+  <!--+
+      | Event Manager.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.event.EventManager"
+          class="org.apache.cocoon.portal.event.impl.DefaultEventManager"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          init-method="init" scope="singleton">
+      <property name="aspectChain" ref="org.apache.cocoon.portal.event.EventManager/aspects"/>
+    </bean>
+
+    <!-- We register an empty aspects bean which should be redefined in the portal config. -->
+    <portal:event-aspects id="org.apache.cocoon.portal.event.EventManager/aspects"/>
 
   <!--+
       | Portal Link Service.

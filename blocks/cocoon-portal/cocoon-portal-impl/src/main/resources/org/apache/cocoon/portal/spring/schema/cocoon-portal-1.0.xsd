@@ -21,11 +21,43 @@
             xmlns:tns="http://cocoon.apache.org/schema/portal"
             xmlns="http://cocoon.apache.org/schema/portal">
 
-  <xsd:element name="aspects">
+  <xsd:element name="event-aspects">
     <xsd:complexType>
       <xsd:sequence>
     	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="renderer-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="profile-manager-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="portal-manager-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
     </xsd:complexType>
   </xsd:element>
 
@@ -42,7 +74,7 @@
   <xsd:element name="property">
     <xsd:complexType>
       <xsd:attribute name="name" type="xsd:string" use="required"/>
-      <xsd:attribute name="value" type="xsd:string" use=""required""/>
+      <xsd:attribute name="value" type="xsd:string" use="required"/>
     </xsd:complexType>
   </xsd:element>
 </xsd:schema>

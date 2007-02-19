@@ -25,17 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
-import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
-import org.apache.cocoon.portal.util.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
 
@@ -59,13 +55,10 @@ import org.springframework.core.Ordered;
  * @version $Id$
  */
 public class DefaultEventManager 
-    extends AbstractComponent
-    implements EventManager, 
-               Configurable {
+    extends AbstractBean
+    implements EventManager {
 
-    /** Our configuration. */
-    protected Configuration configuration;
-
+    /** The aspect chain for additional event processing. */
     protected AspectChain chain;
 
     /** Introspected receiver classes. */
@@ -82,35 +75,21 @@ public class DefaultEventManager
     }
 
     /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     * Set the event chain.
+     * @param a A chain.
      */
-    public void configure(Configuration conf) 
-    throws ConfigurationException {
-        this.configuration = conf;
+    public void setAspectChain(AspectChain a) {
+        this.chain = a;
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     * Initialize this component.
      */
-    public void dispose() {
-        if (this.manager != null) {
-            if ( this.chain != null) {
-                this.chain.dispose( this.manager );
-                this.chain = null;
-            }
-        }
-        super.dispose();
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize()
-    throws Exception {
-        super.initialize();
+    public void init() {
         // we create a tree of all events - we initialize this with the root class
         this.getHierarchyInfo(Event.class);
 
+        // TODO - Add this as a default bean!
         // subscribe all receivers that are necessary for the portal to work
         this.subscribe(new InternalEventReceiver());
     }
@@ -120,15 +99,6 @@ public class DefaultEventManager
      */
     public void processEvents()
     throws PortalException {
-        if ( this.configuration != null ) {
-            try {
-                this.chain = new AspectChain(EventAspect.class);
-                this.chain.configure(this.manager, this.configuration);
-            } catch (ConfigurationException ce) {
-                throw new PortalException("Unable configure component.", ce);
-            }
-            this.configuration = null;
-        }
         // now process event aspects
         DefaultEventAspectContext eventContext = new DefaultEventAspectContext(this.portalService, this.chain);
         eventContext.invokeNext();

@@ -24,6 +24,7 @@ import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
+import org.apache.commons.collections.iterators.EmptyIterator;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -46,7 +47,11 @@ public final class RendererContextImpl
 
     public RendererContextImpl(PortalService service, RendererAspectChain chain) {
         super(service, chain);
-        this.configurationIterator = chain.getConfigurationIterator();
+        if ( chain != null ) {
+            this.configurationIterator = chain.getConfigurationIterator();
+        } else {
+            this.configurationIterator = EmptyIterator.INSTANCE;
+        }
     }
 
 	/**
