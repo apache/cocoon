@@ -46,11 +46,20 @@
           class="org.apache.cocoon.portal.services.impl.DefaultPortalManager"
           parent="org.apache.cocoon.portal.util.AbstractBean"
           init-method="init" scope="singleton">
-      <property name="aspectChain" ref="org.apache.cocoon.portal.services.PortalManager/aspects"/>
+      <property name="aspectChain" ref="org.apache.cocoon.portal.services.PortalManager.aspects"/>
     </bean>
 
     <!-- We register an empty aspects bean which should be redefined in the portal config. -->
-    <portal:event-aspects id="org.apache.cocoon.portal.services.PortalManager/aspects"/>
+    <portal:event-aspects id="org.apache.cocoon.portal.services.PortalManager.aspects"/>
+
+  <!--+
+      | Portal Manager Aspects
+      |
+      +-->
+    <!-- Legacy service selector. -->
+    <bean id="org.apache.cocoon.portal.services.aspects.PortalManagerAspect.preload"
+          class="org.apache.cocoon.portal.services.aspects.impl.PreloadPortalManagerAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
 
   <!--+
       | Portal Event Converter.
@@ -79,11 +88,44 @@
           class="org.apache.cocoon.portal.event.impl.DefaultEventManager"
           parent="org.apache.cocoon.portal.util.AbstractBean"
           init-method="init" scope="singleton">
-      <property name="aspectChain" ref="org.apache.cocoon.portal.event.EventManager/aspects"/>
+      <property name="aspectChain" ref="org.apache.cocoon.portal.event.EventManager.aspects"/>
     </bean>
 
     <!-- We register an empty aspects bean which should be redefined in the portal config. -->
-    <portal:event-aspects id="org.apache.cocoon.portal.event.EventManager/aspects"/>
+    <portal:event-aspects id="org.apache.cocoon.portal.event.EventManager.aspects"/>
+
+  <!--+ 
+      | Event Aspects
+      |
+      +-->
+    <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.action-counter"
+          class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.request-parameter"
+          class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.frame"
+          class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.link"
+          class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.page-label"
+          class="org.apache.cocoon.portal.event.aspect.impl.PageLabelEventAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <!--+
+        | This aspect sets headers on the response telling the client to not cache
+        | the response.
+        +-->
+    <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.no-client-caching"
+          class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
 
   <!--+
       | Portal Link Service.

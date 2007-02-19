@@ -18,10 +18,6 @@ package org.apache.cocoon.portal.event.aspect.impl;
 
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
@@ -31,24 +27,15 @@ import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
  *
  * @version $Id$
  */
 public abstract class AbstractContentEventAspect
-    extends AbstractLogEnabled
-    implements EventAspect, ThreadSafe, Serviceable {
-
-    protected ServiceManager manager;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-    }
+    extends AbstractBean
+    implements EventAspect {
 
     protected abstract String getRequestParameterName(EventAspectContext context);
 

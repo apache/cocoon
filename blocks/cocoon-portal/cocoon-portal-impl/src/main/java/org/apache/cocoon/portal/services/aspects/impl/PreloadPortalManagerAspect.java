@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -40,7 +40,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Id$
  */
 public class PreloadPortalManagerAspect
-	extends AbstractLogEnabled
+	extends AbstractBean
 	implements PortalManagerAspect {
 
     /** Handler that simply ignores all sax events. */
