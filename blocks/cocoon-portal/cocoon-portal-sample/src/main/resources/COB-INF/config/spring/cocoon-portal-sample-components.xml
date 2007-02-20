@@ -106,6 +106,7 @@
       |
       +-->
     <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects">
+      <portal:aspect type="page-labels"/>
       <!-- Add your aspects here -->
     </portal:profile-manager-aspects>
 </beans>

@@ -40,13 +40,14 @@ public final class ProfileManagerAspectContextImpl
     public static final int PHASE_COPLET_INSTANCES =2;
     public static final int PHASE_COPLET_LAYOUT = 3;
 
-    protected int phase;
+    protected final int phase;
     protected Object result;
 
     public ProfileManagerAspectContextImpl(PortalService service,
                                            AspectChain   chain,
                                            int           phase) {
         super(service, chain);
+        this.phase = phase;
     }
 
 	public void invokeNext(Object object) {
