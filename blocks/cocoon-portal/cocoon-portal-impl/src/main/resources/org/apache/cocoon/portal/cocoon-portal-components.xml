@@ -87,7 +87,7 @@
       <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     </bean>
 
-    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect-parameter"
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.parameter"
           class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect"
           parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
 
