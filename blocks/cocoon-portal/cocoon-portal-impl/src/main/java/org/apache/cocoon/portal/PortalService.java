@@ -125,12 +125,6 @@ public interface PortalService {
     PortalManager getPortalManager();
 
     /**
-     * Register a renderer.
-     * @since 2.2
-     */
-    void register(String name, Renderer renderer);
-
-    /**
      * Get the process info provider for accessing request
      * information.
      * @since 2.2
