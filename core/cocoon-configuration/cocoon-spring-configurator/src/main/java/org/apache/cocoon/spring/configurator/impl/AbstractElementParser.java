@@ -117,6 +117,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      * @param beanDef The bean definition.
      * @param element The xml element defining the bean.
      * @param registry The registry.
+     * @since 1.0.1
      */
     protected void register(BeanDefinition beanDef, Element element, BeanDefinitionRegistry registry) {
         String id = element.getAttribute(BeanDefinitionParserDelegate.ID_ATTRIBUTE);
