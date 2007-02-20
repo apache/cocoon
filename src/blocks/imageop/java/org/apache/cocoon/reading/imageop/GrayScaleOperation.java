@@ -17,43 +17,37 @@
 package org.apache.cocoon.reading.imageop;
 
 import java.awt.color.ColorSpace;
-
 import java.awt.image.ColorConvertOp;
 import java.awt.image.WritableRaster;
-
 import org.apache.avalon.framework.parameters.Parameters;
 
 public class GrayScaleOperation
-    implements ImageOperation
-{
-    private String   m_Prefix;
-    private boolean  m_Enabled;
+    implements ImageOperation {
+
+    private String   prefix;
+    private boolean  enabled;
  
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    public void setPrefix( String prefix ) {
+        this.prefix = prefix;
     }
     
-    public void setup( Parameters params )
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
-   }
-    
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+    public void setup( Parameters params ) {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
+    }
+
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
-            
+        }
         ColorSpace grayspace = ColorSpace.getInstance( ColorSpace.CS_GRAY );
         ColorConvertOp op = new ColorConvertOp( grayspace, null );
         WritableRaster r = op.filter( image, null );
         return r;
     }    
-    
-    public String getKey()
-    {
+
+    public String getKey() {
         return "grayscale:"
-               + ( m_Enabled ? "enable" : "disable" )
-               + ":" + m_Prefix;
+               + ( enabled ? "enable" : "disable" )
+               + ":" + prefix;
     }
 }

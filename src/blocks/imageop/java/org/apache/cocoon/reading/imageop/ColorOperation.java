@@ -18,49 +18,44 @@ package org.apache.cocoon.reading.imageop;
 
 import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
-
 import org.apache.avalon.framework.parameters.Parameters;
 
 public class ColorOperation
-    implements ImageOperation
-{
-    private RescaleOp m_ColorFilter;
-    private String   m_Prefix;
-    private boolean  m_Enabled;
-     
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    implements ImageOperation {
+
+    private RescaleOp colorFilter;
+    private String   prefix;
+    private boolean  enabled;
+
+    public void setPrefix( String prefix ) {
+        this.prefix = prefix;
     }
-    
-    public void setup( Parameters params )
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
+
+    public void setup( Parameters params ) {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
         float[] scaleColor = new float[3];
         float[] offsetColor = new float[3];
-        scaleColor[0] = params.getParameterAsFloat( m_Prefix + "scale-red", -1.0f);
-        scaleColor[1] = params.getParameterAsFloat( m_Prefix + "scale-green", -1.0f);
-        scaleColor[2] = params.getParameterAsFloat( m_Prefix + "scale-blue", -1.0f);
-        offsetColor[0] = params.getParameterAsFloat( m_Prefix + "offset-red", 0.0f);
-        offsetColor[1] = params.getParameterAsFloat( m_Prefix + "offset-green", 0.0f);
-        offsetColor[2] = params.getParameterAsFloat( m_Prefix + "offset-blue", 0.0f);
-        m_ColorFilter = new RescaleOp( scaleColor, offsetColor, null );
+        scaleColor[0] = params.getParameterAsFloat( prefix + "scale-red", -1.0f);
+        scaleColor[1] = params.getParameterAsFloat( prefix + "scale-green", -1.0f);
+        scaleColor[2] = params.getParameterAsFloat( prefix + "scale-blue", -1.0f);
+        offsetColor[0] = params.getParameterAsFloat( prefix + "offset-red", 0.0f);
+        offsetColor[1] = params.getParameterAsFloat( prefix + "offset-green", 0.0f);
+        offsetColor[2] = params.getParameterAsFloat( prefix + "offset-blue", 0.0f);
+        colorFilter = new RescaleOp( scaleColor, offsetColor, null );
     }
-    
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
-            
-        WritableRaster r = m_ColorFilter.filter( image, null );
+        }
+        WritableRaster r = colorFilter.filter( image, null );
         return r;
     }    
-    
-    public String getKey()
-    {
+
+    public String getKey() {
         return "colorop:"
-               + ( m_Enabled ? "enable" : "disable" )
-               + ":" + m_ColorFilter
-               + ":" + m_Prefix;
+               + ( enabled ? "enable" : "disable" )
+               + ":" + colorFilter
+               + ":" + prefix;
     }
 }
