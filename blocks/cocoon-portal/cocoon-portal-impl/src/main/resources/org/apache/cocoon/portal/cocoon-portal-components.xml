@@ -215,6 +215,15 @@
       | Profile Manager.
       |
       +-->
+
+  <!--+
+      | Profile Manager Aspects.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.aspects.ProfileManagerAspect.page-labels"
+          class="org.apache.cocoon.portal.services.aspects.impl.PageLabelProfileManagerAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
     <!-- We register an empty aspects bean which should be redefined in the portal config. -->
     <portal:event-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
 
