@@ -38,7 +38,6 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionVisitor;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ResourceLoaderAware;
@@ -59,7 +58,7 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
  */
 public abstract class AbstractSettingsBeanFactoryPostProcessor
     extends PropertyPlaceholderConfigurer
-    implements ServletContextAware, BeanFactoryPostProcessor, ResourceLoaderAware, FactoryBean {
+    implements ServletContextAware, ResourceLoaderAware, FactoryBean {
 
     /** Logger (we use the same logging mechanism as Spring!) */
     protected final Log logger = LogFactory.getLog(getClass());

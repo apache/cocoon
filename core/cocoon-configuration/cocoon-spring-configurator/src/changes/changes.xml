@@ -24,6 +24,12 @@
     +-->
 <document>
   <body>
+    <release version="1.0.1-M1" date="2007-00-00" description="unreleased">  
+     <action dev="cziegeler" type="add">
+       Add a bean map that collects all beans from the Spring context
+       conforming to a specified type.
+     </action>
+    </release>
     <release version="1.0.0-M1" date="2007-00-00" description="unreleased">  
      <action dev="cziegeler" type="add">
         Improved the DefaultBlockResourcesHolder to act like a PropertyPlaceholderConfigurer.

@@ -17,6 +17,8 @@
 package org.apache.cocoon.spring.configurator.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.commons.logging.Log;
@@ -28,6 +30,8 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
+import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -102,6 +106,37 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         } else {
             holder = new BeanDefinitionHolder(beanDef, beanName);
         }
+        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+    }
+
+    /**
+     * Register a global bean definition.
+     * The provided xml element is searched for an id and/or name attribute to register
+     * the bean. This implementation works the same as the default spring implementation.
+     *
+     * @param beanDef The bean definition.
+     * @param element The xml element defining the bean.
+     * @param registry The registry.
+     */
+    protected void register(BeanDefinition beanDef, Element element, BeanDefinitionRegistry registry) {
+        String id = element.getAttribute(BeanDefinitionParserDelegate.ID_ATTRIBUTE);
+        String nameAttr = element.getAttribute(BeanDefinitionParserDelegate.NAME_ATTRIBUTE);
+
+        final List aliases = new ArrayList();
+        if (StringUtils.hasLength(nameAttr)) {
+            String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, BeanDefinitionParserDelegate.BEAN_NAME_DELIMITERS);
+            aliases.addAll(Arrays.asList(nameArr));
+        }
+
+        String beanName = id;
+        if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
+            beanName = (String) aliases.remove(0);
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("No XML 'id' specified - using '" + beanName +
+                            "' as bean name and " + aliases + " as aliases");
+            }
+        }
+        final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, beanName, StringUtils.toStringArray(aliases));
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
     }
 
