@@ -262,7 +262,7 @@ public class PortalToolManager
 
     public PortalObjects getPortalObjects() {
     	try {
-			return new PortalObjects((PortalService) this.manager.lookup(org.apache.cocoon.portal.PortalService.ROLE));
+			return new PortalObjects((PortalService) this.manager.lookup(org.apache.cocoon.portal.PortalService.class.getName()));
     	} catch (ServiceException e) {
     		return null;
 		}

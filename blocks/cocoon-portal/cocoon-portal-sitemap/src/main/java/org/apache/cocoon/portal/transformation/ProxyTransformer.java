@@ -124,7 +124,7 @@ public class ProxyTransformer
      */
     public void service(ServiceManager aManager) throws ServiceException {
         this.manager = aManager;
-        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+        this.portalService = (PortalService)this.manager.lookup(PortalService.class.getName());
         this.imHelper = new InputModuleHelper(manager);
     }
 
@@ -581,7 +581,7 @@ public class ProxyTransformer
 
         PortalService portalService = null;
         try {
-            portalService = (PortalService) manager.lookup(PortalService.ROLE);
+            portalService = (PortalService) manager.lookup(PortalService.class.getName());
 
             // determine coplet id
             String copletId = null;

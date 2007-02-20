@@ -84,7 +84,7 @@ public abstract class AbstractPortalTestCase extends CocoonTestCase {
         // Add portal service
         final ComponentInfo portalServiceInfo = new ComponentInfo();
         portalServiceInfo.setComponentClassName(PortalServiceImpl.class.getName());
-        portalServiceInfo.setRole(PortalService.ROLE);
+        portalServiceInfo.setRole(PortalService.class.getName());
         portalServiceInfo.setConfiguration(this.getPortalServiceConfig());
         info.addComponent(portalServiceInfo);
     }

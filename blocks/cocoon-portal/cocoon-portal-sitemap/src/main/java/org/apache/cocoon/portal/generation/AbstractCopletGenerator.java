@@ -132,6 +132,6 @@ extends ServiceableGenerator {
      */
     public void service(ServiceManager aManager) throws ServiceException {
         super.service(aManager);
-        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+        this.portalService = (PortalService)this.manager.lookup(PortalService.class.getName());
     }
 }

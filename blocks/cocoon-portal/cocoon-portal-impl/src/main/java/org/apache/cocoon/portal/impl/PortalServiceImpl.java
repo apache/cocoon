@@ -138,7 +138,7 @@ public class PortalServiceImpl
     public void setServletContext(ServletContext context) {
         this.servletContext = context;
         // add the portal service to the servlet context
-        this.servletContext.setAttribute(PortalService.ROLE, this);
+        this.servletContext.setAttribute(PortalService.class.getName(), this);
     }
 
     /**
@@ -147,7 +147,7 @@ public class PortalServiceImpl
     public void dispose() {
         // remove the portal service from the servlet context - if available
         if ( this.servletContext != null ) {
-            this.servletContext.removeAttribute(PortalService.ROLE);
+            this.servletContext.removeAttribute(PortalService.class.getName());
         }
         if ( this.manager != null ) {
             this.renderers.clear();

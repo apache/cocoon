@@ -79,7 +79,7 @@ public class PortletURLProviderImpl
         this.portletWindow = portletWindow;
         PortalService service = null;
         try {
-            service = (PortalService) manager.lookup(PortalService.ROLE);
+            service = (PortalService) manager.lookup(PortalService.class.getName());
             this.linkService = service.getLinkService();
         } catch (ServiceException se) {
             throw new PortalRuntimeException("Unable to lookup portal service.", se);

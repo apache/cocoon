@@ -59,7 +59,7 @@ public class AbstractComponent
      */
     public void service(ServiceManager aManager) throws ServiceException {
         this.manager = aManager;
-        this.portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
+        this.portalService = (PortalService) this.manager.lookup(PortalService.class.getName());
     }
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()

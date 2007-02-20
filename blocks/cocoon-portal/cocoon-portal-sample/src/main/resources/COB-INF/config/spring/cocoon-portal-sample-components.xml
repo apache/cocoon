@@ -72,4 +72,5 @@
     <portal:portal-manager-aspects id="org.apache.cocoon.portal.services.PortalManager.aspects">
       <!-- Add your aspects here -->
     </portal:portal-manager-aspects>
+
 </beans>

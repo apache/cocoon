@@ -126,7 +126,7 @@ public class PageLabelManager
     public Map getPageEventMap() {
         PortalService service = null;
         try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.class.getName());
             Map map = (Map) service.getUserService().getAttribute(EVENT_MAP);
             if (null == map) {
                 map = new HashMap();
@@ -151,7 +151,7 @@ public class PageLabelManager
     public List getPageLabelEvents(String pageLabel) {
         PortalService service = null;
         try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.class.getName());
             Map map = (Map) service.getUserService().getAttribute(LABEL_MAP);
             if (null == map) {
                 map = initializeLabels(service);
@@ -179,7 +179,7 @@ public class PageLabelManager
     private String[] getLabels() {
         PortalService service = null;
         try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.class.getName());
             String[] labels = (String[]) service.getUserService().getAttribute(LABEL_ARRAY);
             if (null == labels) {
                 labels = new String[2];

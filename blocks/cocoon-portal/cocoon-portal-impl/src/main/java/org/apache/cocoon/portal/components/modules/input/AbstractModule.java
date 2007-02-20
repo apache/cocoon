@@ -49,7 +49,7 @@ public abstract class AbstractModule
      */
     public void service(ServiceManager aManager) throws ServiceException {
         this.manager = aManager;
-        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+        this.portalService = (PortalService)this.manager.lookup(PortalService.class.getName());
     }
 
 	/**
