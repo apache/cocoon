@@ -55,22 +55,6 @@
     </portal>
   </portal-service>
 
-  <!--  This is the profile manager using pipelines to load the various parts. -->
-  <portal-profile-manager class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager">
-    <parameter name="coplettype-global-load" value="cocoon:raw:/load-global-profile?profile=coplettype"/>
-    <parameter name="copletdefinition-global-load" value="cocoon:raw:/load-global-profile?profile=copletdefinition"/>
-    <parameter name="copletdefinition-role-load" value="cocoon:raw:/load-role-profile?profile=copletdefinition"/>
-    <parameter name="copletdefinition-user-load" value="cocoon:raw:/load-user-profile?profile=copletdefinition"/>
-    <parameter name="copletinstance-global-load" value="cocoon:raw:/load-global-profile?profile=copletinstance"/>
-    <parameter name="copletinstance-role-load" value="cocoon:raw:/load-role-profile?profile=copletinstance"/>
-    <parameter name="copletinstance-user-load" value="cocoon:raw:/load-user-profile?profile=copletinstance"/>
-    <parameter name="copletinstance-user-save" value="cocoon:raw:/save-user-profile?profile=copletinstance"/>
-    <parameter name="layout-global-load" value="cocoon:raw:/load-global-profile?profile=layout"/>
-    <parameter name="layout-role-load" value="cocoon:raw:/load-role-profile?profile=layout"/>
-    <parameter name="layout-user-load" value="cocoon:raw:/load-user-profile?profile=layout"/>
-    <parameter name="layout-user-save" value="cocoon:raw:/save-user-profile?profile=layout"/>
-  </portal-profile-manager>
-
   <!--+
       | Deployment Manager.
       +-->

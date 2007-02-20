@@ -189,9 +189,34 @@
       |
       +-->
     <bean name="org.apache.cocoon.portal.services.LinkService"
-          class="org.apache.cocoon.portal.services.impl.DefaultLinkService"
+          class="org.apache.cocoon.portal.services.impl.links.DefaultLinkService"
           parent="org.apache.cocoon.portal.util.AbstractBean"
           scope="singleton"/>
+
+  <!--+
+      | Coplet Factory.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.CopletFactory"
+          class="org.apache.cocoon.portal.services.impl.DefaultCopletFactory"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton"/>
+
+  <!--+
+      | User Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.UserService"
+          class="org.apache.cocoon.portal.services.impl.DefaultUserService"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton" init-method="init"/>
+
+  <!--+
+      | Profile Manager.
+      |
+      +-->
+    <!-- We register an empty aspects bean which should be redefined in the portal config. -->
+    <portal:event-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
 
   <!--+
       | Renderer map

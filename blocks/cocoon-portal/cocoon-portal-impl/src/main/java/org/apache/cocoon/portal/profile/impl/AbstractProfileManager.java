@@ -20,10 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserDidLoginEvent;
@@ -37,10 +33,9 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
-import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
-import org.apache.cocoon.portal.util.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.springframework.core.Ordered;
 
 /**
@@ -49,34 +44,18 @@ import org.springframework.core.Ordered;
  * @version $Id$
  */
 public abstract class AbstractProfileManager 
-    extends AbstractComponent 
-    implements ProfileManager, Receiver, Configurable, Ordered {
+    extends AbstractBean 
+    implements ProfileManager, Receiver, Ordered {
 
     /** The chain for the configured profile manager aspects. */
     protected AspectChain chain;
 
     /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     * Set the event chain.
+     * @param a A chain.
      */
-    public void dispose() {
-        if (this.manager != null) {
-            if ( this.chain != null) {
-                this.chain.dispose( this.manager );
-            }
-        }
-        super.dispose();
-    }
-
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
-        try {
-            this.chain = new AspectChain(ProfileManagerAspect.class);
-            this.chain.configure(this.manager, config);
-        } catch (PortalException pe) {
-            throw new ConfigurationException("Unable to configure profile manager aspects.", pe);
-        }
+    public void setAspectChain(AspectChain a) {
+        this.chain = a;
     }
 
     /**

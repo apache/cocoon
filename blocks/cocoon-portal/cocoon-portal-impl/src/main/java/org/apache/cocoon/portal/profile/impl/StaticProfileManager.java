@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
@@ -48,7 +46,7 @@ import org.apache.excalibur.source.SourceValidity;
 public class StaticProfileManager 
     extends AbstractProfileManager { 
 
-    protected String profilesPath;
+    protected String profilesPath = "cocoon:/profiles";
 
     protected final StaticBucketMap copletInstances = new StaticBucketMap();
     protected final StaticBucketMap copletDefinitions = new StaticBucketMap();
@@ -56,11 +54,17 @@ public class StaticProfileManager
 
     protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
+    /** The profiler loader/saver. */
+    protected ProfileLS loader;
+
+    public void setProfileLS(ProfileLS loader) {
+        this.loader = loader;
+    }
+
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getLayout(java.lang.String)
      */
     public Layout getLayout(String layoutID) {
-        ProfileLS adapter = null;
         try {
             final String layoutKey = this.portalService.getUserService().getDefaultProfileName();
 
@@ -96,8 +100,7 @@ public class StaticProfileManager
             map.put("profile", "layout");
             map.put("groupKey", layoutKey);
 
-            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
-            SourceValidity newValidity = adapter.getValidity(map, ProfileLS.PROFILETYPE_LAYOUT);
+            SourceValidity newValidity = this.loader.getValidity(map, ProfileLS.PROFILETYPE_LAYOUT);
             if (valid == SourceValidity.UNKNOWN) {
                 if (sourceValidity.isValid(newValidity) == SourceValidity.VALID) {
                     return (Layout) ((Map) objects[0]).get(layoutID);
@@ -105,7 +108,7 @@ public class StaticProfileManager
             }
 
             // get Layout specified in the map
-            Layout layout = (Layout) adapter.loadProfile(map, ProfileLS.PROFILETYPE_LAYOUT, objectMap);
+            Layout layout = (Layout) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_LAYOUT, objectMap);
             layout = this.processLayout(null, layout);
 
             final Map layouts = new HashMap();
@@ -122,8 +125,6 @@ public class StaticProfileManager
             return (Layout) layouts.get(layoutID);
         } catch (Exception ce) {
             throw new ProfileException("Unable to get layout.", ce);
-        } finally {
-            this.manager.release(adapter);
         }
     }
 
@@ -165,56 +166,49 @@ public class StaticProfileManager
             return instances;
         }
 
-        ProfileLS adapter = null;
-        try {
-            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
-
-            final Map map = new LinkedMap();
-            map.put("base", this.profilesPath);
-            map.put("portalname", this.portalService.getPortalName());
-            map.put("profile", "coplet");
-            map.put("name", "basedata");
-            Collection cBase = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETTYPE, null);
-            cBase = this.processCopletTypes(cBase);
-            final Map types = new HashMap();
-            Iterator i = cBase.iterator();
-            while ( i.hasNext() ) {
-                final CopletDefinition current = (CopletDefinition)i.next();
-                types.put(current.getId(), current);
-            }
-            this.copletTypes.put(portalName, types);
-
-            // CopletDefinition
-            map.clear();
-            map.put("base", this.profilesPath);
-            map.put("portalname", this.portalService.getPortalName());
-            map.put("profile", "coplet");
-            map.put("name", "data");
-            Collection c = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, types);
-            c = this.processCopletDefinitions(c);
-            final Map definitions = new HashMap();
-            i = c.iterator();
-            while ( i.hasNext() ) {
-                final CopletDefinition current = (CopletDefinition)i.next();
-                definitions.put(current.getId(), current);
-            }
-            this.copletDefinitions.put(portalName, definitions);
-
-            //CopletInstanceData
-            map.clear();
-            map.put("base", this.profilesPath);
-            map.put("portalname", this.portalService.getPortalName());
-            map.put("profile", "coplet");
-            map.put("name", "instancedata");
-            instances = (Collection) adapter.loadProfile(map, ProfileLS.PROFILETYPE_COPLETINSTANCE, definitions);
-            instances = this.processCopletInstances(null, instances);
-
-            // store managers
-            this.copletInstances.put(portalName, instances);
-            return instances;
-        } finally {
-            this.manager.release(adapter);
+        final Map map = new LinkedMap();
+        map.put("base", this.profilesPath);
+        map.put("portalname", this.portalService.getPortalName());
+        map.put("profile", "coplet");
+        map.put("name", "basedata");
+        Collection cBase = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETTYPE, null);
+        cBase = this.processCopletTypes(cBase);
+        final Map types = new HashMap();
+        Iterator i = cBase.iterator();
+        while ( i.hasNext() ) {
+            final CopletDefinition current = (CopletDefinition)i.next();
+            types.put(current.getId(), current);
         }
+        this.copletTypes.put(portalName, types);
+
+        // CopletDefinition
+        map.clear();
+        map.put("base", this.profilesPath);
+        map.put("portalname", this.portalService.getPortalName());
+        map.put("profile", "coplet");
+        map.put("name", "data");
+        Collection c = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, types);
+        c = this.processCopletDefinitions(c);
+        final Map definitions = new HashMap();
+        i = c.iterator();
+        while ( i.hasNext() ) {
+            final CopletDefinition current = (CopletDefinition)i.next();
+            definitions.put(current.getId(), current);
+        }
+        this.copletDefinitions.put(portalName, definitions);
+
+        //CopletInstanceData
+        map.clear();
+        map.put("base", this.profilesPath);
+        map.put("portalname", this.portalService.getPortalName());
+        map.put("profile", "coplet");
+        map.put("name", "instancedata");
+        instances = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETINSTANCE, definitions);
+        instances = this.processCopletInstances(null, instances);
+
+        // store managers
+        this.copletInstances.put(portalName, instances);
+        return instances;
     }
 
     /**
@@ -280,16 +274,6 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) 
-    throws ConfigurationException {
-        super.configure(config);
-        Configuration child = config.getChild("profiles-path");
-        this.profilesPath = child.getValue("cocoon:/profiles");
-    }
-
-    /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinitions()
      */
     public Collection getCopletDefinitions() {
@@ -331,6 +315,10 @@ public class StaticProfileManager
     public LayoutInstance getLayoutInstance(Layout layout) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void setProfilesPath(String profilesPath) {
+        this.profilesPath = profilesPath;
     }
 
 }

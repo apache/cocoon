@@ -26,12 +26,6 @@
           default-class="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"/>
 
   <!--+
-      | Renderer
-      |
-      +-->
-  <alias role="org.apache.cocoon.portal.layout.renderer.Renderer" shorthand="renderer"/>
-
-  <!--+
       | Components.
       |
       +-->
@@ -42,10 +36,6 @@
       | Coplet Adapters
       |
       +-->
-    <!-- Legacy service selector. -->
-    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapterSelector"
-          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
-
     <!--+
         | This is the pipeline/uri based adapter.
         +-->
@@ -89,14 +79,6 @@
           shorthand="portal-service"/>
 
   <!--+
-      | User Service.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.services.UserService"
-          default-class="org.apache.cocoon.portal.services.impl.DefaultUserService"
-          shorthand="user-service" lazy-init="false"/>
-
-  <!--+
       | Page Label Manager.
       |
       +-->
@@ -111,21 +93,6 @@
     <role name="org.apache.cocoon.portal.services.LayoutFactory"
           default-class="org.apache.cocoon.portal.services.impl.DefaultLayoutFactory"
           shorthand="portal-layout-factory"/>
-
-  <!--+
-      | Coplet Factory.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.services.CopletFactory"
-          default-class="org.apache.cocoon.portal.services.impl.DefaultCopletFactory"
-          shorthand="portal-coplet-factory"/>
-
-  <!--+
-      | Profile Manager.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.profile.ProfileManager"
-          shorthand="portal-profile-manager"/>
 
   <!--+
       | Deployment Manager

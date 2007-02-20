@@ -40,7 +40,7 @@ import org.apache.cocoon.portal.util.AbstractBean;
  *
  * @version $Id$
  */
-public class NewLinkService 
+public class DefaultLinkService 
     extends AbstractBean
     implements LinkService {
 
@@ -59,7 +59,7 @@ public class NewLinkService
     /**
      * Construct a new link service.
      */
-    public NewLinkService() {
+    public DefaultLinkService() {
         this.setInternalParameters(LinkService.DEFAULT_INTERNAL_PARAMETERS);
     }
 
@@ -108,12 +108,12 @@ public class NewLinkService
      */
     protected LinkInfo getInfo() {
         final Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
-        LinkInfo info = (LinkInfo)request.getAttribute(NewLinkService.class.getName());
+        LinkInfo info = (LinkInfo)request.getAttribute(DefaultLinkService.class.getName());
         if ( info == null ) {
-            info = (LinkInfo)request.getAttribute(NewLinkService.class.getName());
+            info = (LinkInfo)request.getAttribute(DefaultLinkService.class.getName());
             if ( info == null ) {
                 info = new LinkInfo(request, this.defaultPort, this.defaultSecurePort);
-                request.setAttribute(NewLinkService.class.getName(), info);
+                request.setAttribute(DefaultLinkService.class.getName(), info);
             }
         }
         return info;

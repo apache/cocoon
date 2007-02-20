@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.services.impl;
+package org.apache.cocoon.portal.services.impl.links;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -90,7 +90,7 @@ public class PageLabelLinkService extends DefaultLinkService {
 
                 if (this.labelManager.getPageLabelEvents(key.toString()) != null) {
                     final LinkInfo info = this.getInfo();
-                    boolean hasParams = info.hasParameters();
+                    boolean hasParams = false;// TODO info.hasParameters();
                     final StringBuffer buffer = new StringBuffer(info.getBase(secure));
                     if (hasParams) {
                         buffer.append('&');
@@ -140,7 +140,7 @@ public class PageLabelLinkService extends DefaultLinkService {
         String requestParameterName = this.labelManager.getRequestParameterName();
         final LinkInfo info = this.getInfo();
         final StringBuffer buffer = new StringBuffer(info.getBase(secure));
-        boolean hasParams = info.hasParameters();
+        boolean hasParams = false;// TODO info.hasParameters();
         Iterator iter = events.iterator();
         StringBuffer value = new StringBuffer("");
 

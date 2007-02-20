@@ -18,6 +18,9 @@ package org.apache.cocoon.portal.om;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
@@ -60,6 +63,9 @@ public abstract class Layout extends AbstractParameters {
 
     /** Is this layout object static? */
     protected boolean isStatic;
+
+    /** Temporary attributes are not persisted. */
+    protected transient Map temporaryAttributes = Collections.EMPTY_MAP;
 
     /**
      * Create a new layout object.
@@ -136,6 +142,44 @@ public abstract class Layout extends AbstractParameters {
     }
 
     /**
+     * Return the value of an attribute.
+     * @param key The name of the attribute.
+     * @return The value of the attribute or null
+     */
+    public Object getTemporaryAttribute(String key) {
+        return this.temporaryAttributes.get(key);
+    }
+
+    /**
+     * Set the value of the attribute.
+     * @param key The attribute name.
+     * @param value The new value.
+     */
+    public void setTemporaryAttribute(String key, Object value) {
+        if ( this.temporaryAttributes.size() == 0 ) {
+            this.temporaryAttributes = new HashMap();
+        }
+        this.temporaryAttributes.put(key, value);
+    }
+
+    /**
+     * Remove a temporary attribute.
+     * @param key The attribute name.
+     * @return If there was a value associated with the attribute, the old value is returned.
+     */
+    public Object removeTemporaryAttribute(String key) {
+        return this.temporaryAttributes.remove(key);
+    }
+
+    /**
+     * Return a map with all temporary attributes.
+     * @return A map.
+     */
+    public Map getTemporaryAttributes() {
+        return this.temporaryAttributes;
+    }
+
+    /**
      * Make a copy of this layout object and of all it's children.
      * This includes copies of items and coplet instances.
      */
@@ -168,6 +212,9 @@ public abstract class Layout extends AbstractParameters {
             // clone fields from AbstractParameters
             if ( this.parameters.size() > 0 ) {
                 clone.parameters = new LinkedMap(this.parameters);
+            }
+            if ( this.temporaryAttributes.size() > 0 ) {
+                clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
             }
             
             // we don't clone the parent; we just set it to null

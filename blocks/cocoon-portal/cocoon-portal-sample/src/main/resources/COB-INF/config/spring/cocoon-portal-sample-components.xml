@@ -38,12 +38,40 @@
       |
       +-->
     <bean name="org.apache.cocoon.portal.services.LinkService"
-          class="org.apache.cocoon.portal.services.impl.DefaultLinkService"
+          class="org.apache.cocoon.portal.services.impl.links.DefaultLinkService"
           parent="org.apache.cocoon.portal.util.AbstractBean"
           scope="singleton">
       <property name="defaultPort" value="8888"/>
       <property name="defaultSecurePort" value="443"/>
     </bean>
+
+  <!--+
+      |  This is the profile manager using pipelines to load the various parts.
+      |
+      +-->
+  <bean name="org.apache.cocoon.portal.profile.ProfileManager"
+        class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager"
+        parent="org.apache.cocoon.portal.util.AbstractBean"
+        scope="singleton">
+    <property name="aspectChain" ref="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
+    <property name="profileLS" ref="org.apache.cocoon.portal.profile.ProfileLS"/>
+    <property name="configuration">
+      <value>
+        coplettype-global-load=cocoon:raw:/load-global-profile?profile=coplettype
+        copletdefinition-global-load=cocoon:raw:/load-global-profile?profile=copletdefinition
+        copletdefinition-role-load=cocoon:raw:/load-role-profile?profile=copletdefinition
+        copletdefinition-user-load=cocoon:raw:/load-user-profile?profile=copletdefinition
+        copletinstance-global-load=cocoon:raw:/load-global-profile?profile=copletinstance
+        copletinstance-role-load=cocoon:raw:/load-role-profile?profile=copletinstance
+        copletinstance-user-load=cocoon:raw:/load-user-profile?profile=copletinstance
+        copletinstance-user-save=cocoon:raw:/save-user-profile?profile=copletinstance
+        layout-global-load=cocoon:raw:/load-global-profile?profile=layout
+        layout-role-load=cocoon:raw:/load-role-profile?profile=layout
+        layout-user-load=cocoon:raw:/load-user-profile?profile=layout
+        layout-user-save=cocoon:raw:/save-user-profile?profile=layout
+      </value>
+    </property>
+  </bean>
 
   <!--+
       | Event Manager Aspect configuration.
@@ -73,4 +101,11 @@
       <!-- Add your aspects here -->
     </portal:portal-manager-aspects>
 
+  <!--+
+      | Profile Manager Aspect configuration.
+      |
+      +-->
+    <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects">
+      <!-- Add your aspects here -->
+    </portal:profile-manager-aspects>
 </beans>
