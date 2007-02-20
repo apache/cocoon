@@ -44,9 +44,6 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
  */
 public interface PortalService {
 
-    /** The role to lookup this component. */
-    String ROLE = PortalService.class.getName();
-
     /**
      * The name of the portal - as defined in the portal configuration.
      */

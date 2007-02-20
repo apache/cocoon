@@ -59,7 +59,7 @@ public class RenderRequestFactoryImpl
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
-        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+        this.portalService = (PortalService)this.manager.lookup(PortalService.class.getName());
     }
 
     /**

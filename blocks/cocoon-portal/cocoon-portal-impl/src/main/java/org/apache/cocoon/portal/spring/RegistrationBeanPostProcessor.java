@@ -54,10 +54,10 @@ public class RegistrationBeanPostProcessor
             if ( name.startsWith(RENDERER_ROLE_PREFIX) ) {
                 name = name.substring(RENDERER_ROLE_PREFIX.length());
             }
-            ((PortalService)this.beanFactory.getBean(PortalService.ROLE)).register(name, (Renderer)bean);
+            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).register(name, (Renderer)bean);
         }
         if ( bean instanceof CopletAdapter && bean instanceof PortalManagerAspect ) {
-            ((PortalService)this.beanFactory.getBean(PortalService.ROLE)).getPortalManager().register((PortalManagerAspect)bean);
+            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((PortalManagerAspect)bean);
         }
         return bean;
     }
