@@ -28,7 +28,7 @@ import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.services.UserService;
-import org.apache.cocoon.portal.util.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.springframework.core.Ordered;
 
 
@@ -36,7 +36,7 @@ import org.springframework.core.Ordered;
  * @version $Id$
  */
 public class DefaultUserService
-    extends AbstractComponent
+    extends AbstractBean
     implements UserService, Receiver, Ordered {
 
     /** Attribute to store the current user. */
@@ -49,10 +49,9 @@ public class DefaultUserService
     protected String defaultProfileName;
 
     /**
-     * @see org.apache.cocoon.portal.util.AbstractComponent#initialize()
+     * Initialize this bean.
      */
-    public void initialize() throws Exception {
-        super.initialize();
+    public void init() {
         this.attributeName = DefaultUserService.class.getName() + '/' + this.portalService.getPortalName();
         // FIXME - We should use a better default than 'portal'
         this.defaultProfileName = this.portalService.getConfiguration("default-profile-name", "portal");

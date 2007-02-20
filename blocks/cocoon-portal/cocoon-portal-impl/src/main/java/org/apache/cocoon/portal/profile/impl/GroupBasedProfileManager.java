@@ -23,13 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
@@ -43,6 +38,7 @@ import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileException;
@@ -94,38 +90,14 @@ public class GroupBasedProfileManager
     /** Check for changes? */
     protected boolean checkForChanges = true;
 
-    /** The parameters for the profile configuration. */
-    protected Parameters parameters;
-
     /** The profiler loader/saver. */
     protected ProfileLS loader;
 
-    /**
-     * @see org.apache.cocoon.portal.profile.impl.AbstractProfileManager#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        this.parameters = Parameters.fromConfiguration(config);
-        this.checkForChanges = this.parameters.getParameterAsBoolean("check-for-changes", this.checkForChanges);
-    }
+    /** The configuration for loading/saving the profile. */
+    protected Properties configuration;
 
-    /**
-     * @see org.apache.cocoon.portal.util.AbstractComponent#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.loader);
-            this.loader = null;
-        }
-        super.dispose();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.util.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        super.service(serviceManager);
-        this.loader = (ProfileLS)this.manager.lookup(ProfileLS.ROLE);
+    public void setProfileLS(ProfileLS loader) {
+        this.loader = loader;
     }
 
     protected ProfileHolder getUserProfile() {
@@ -539,7 +511,7 @@ public class GroupBasedProfileManager
                            PortalUser info,
                            boolean  load,
                            String   profileName)
-    throws ParameterException {
+    throws LayoutException {
         if ( profileName == null ) {
             profileName = this.portalService.getUserService().getDefaultProfileName();
         }
@@ -552,8 +524,10 @@ public class GroupBasedProfileManager
         } else {
             config.append("save");            
         }
-        final String uri = this.parameters.getParameter(config.toString());
-
+        final String uri = this.configuration.getProperty(config.toString());
+        if ( uri == null ) {
+            throw new LayoutException("Configuration for key '" + config.toString() + "' is missing.");
+        }
         final Map key = new LinkedMap();
         key.put("baseuri", uri);
         key.put("separator", "?");
@@ -646,5 +620,13 @@ public class GroupBasedProfileManager
             result = profile.searchLayoutInstance(layout);
         }
         return result;
+    }
+
+    public void setCheckForChanges(boolean checkForChanges) {
+        this.checkForChanges = checkForChanges;
+    }
+
+    public void setConfiguration(Properties configuration) {
+        this.configuration = configuration;
     }
 }

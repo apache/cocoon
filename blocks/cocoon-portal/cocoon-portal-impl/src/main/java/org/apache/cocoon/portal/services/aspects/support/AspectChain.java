@@ -21,10 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalException;
 
@@ -67,29 +63,6 @@ public class AspectChain {
         this.aspectClass = aClass;
         this.aspects = new ArrayList(3);
         this.configs = new ArrayList(3);
-    }
-
-    public void configure(ServiceManager manager,
-                          Configuration  conf)
-    throws ConfigurationException, PortalException {
-        if ( conf != null ) {
-            final Configuration[] aspectConfigs = conf.getChild("aspects").getChildren("aspect");
-            for(int i=0; i < aspectConfigs.length; i++) {
-                final Configuration current = aspectConfigs[i];
-                final String role = current.getAttribute("type");
-                try {
-                    final Object aspect = manager.lookup(aspectClass.getName() + '/' + role);
-                    if ( !this.aspectClass.isInstance(aspect) ) {
-                        throw new PortalException("Configured aspect is not an instance of class " + this.aspectClass.getName() + " : " + aspect + " (role=" + role + ").");
-                    }
-                    final Properties props = Parameters.toProperties(Parameters.fromConfiguration(current));
-                    this.addAspect(aspect, props);
-
-                } catch (ServiceException se) {
-                    throw new ConfigurationException("Unable to lookup aspect (" + aspectClass.getName() + "): " + role, se);
-                }
-            }
-        }
     }
 
     public void addAspect(Object aspect, Properties config)

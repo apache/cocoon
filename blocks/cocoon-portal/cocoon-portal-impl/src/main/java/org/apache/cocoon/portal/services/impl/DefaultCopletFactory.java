@@ -26,7 +26,7 @@ import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.services.CopletFactory;
-import org.apache.cocoon.portal.util.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
  * This factory is for creating and managing coplet objects.
@@ -34,7 +34,7 @@ import org.apache.cocoon.portal.util.AbstractComponent;
  * @version $Id$
  */
 public class DefaultCopletFactory  
-    extends AbstractComponent 
+    extends AbstractBean 
     implements CopletFactory {
 
     protected static long idCounter = System.currentTimeMillis();
