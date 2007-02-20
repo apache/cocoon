@@ -17,45 +17,40 @@
 package org.apache.cocoon.reading.imageop;
 
 import java.awt.geom.AffineTransform;
-
 import java.awt.image.AffineTransformOp;
 import java.awt.image.WritableRaster;
-
 import org.apache.avalon.framework.parameters.Parameters;
 
 public class ScaleOperation
-    implements ImageOperation
-{
-    private String  m_Prefix;
-    private boolean m_Enabled;
-    private float   m_Scale;
-    
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    implements ImageOperation {
+
+    private String  prefix;
+    private boolean enabled;
+    private float   scale;
+
+    public void setPrefix( String prefix ) {
+        this.prefix = prefix;
     }
-    
-    public void setup( Parameters params )
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
-        m_Scale = params.getParameterAsFloat( m_Prefix + "scale", 1.0f );
+
+    public void setup( Parameters params ) {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
+        scale = params.getParameterAsFloat( prefix + "scale", 1.0f );
     }
-    
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
-        AffineTransform scale = AffineTransform.getScaleInstance( m_Scale, m_Scale );
+        }
+        AffineTransform scale = AffineTransform.getScaleInstance( this.scale, this.scale );
         AffineTransformOp op = new AffineTransformOp( scale, AffineTransformOp.TYPE_BILINEAR );
         WritableRaster scaledRaster = op.filter( image, null );
         return scaledRaster;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return "scale:" 
-               + ( m_Enabled ? "enable" : "disable" )
-               + ":" + m_Scale
-               + ":" + m_Prefix;
+               + ( enabled ? "enable" : "disable" )
+               + ":" + scale
+               + ":" + prefix;
     }
 } 

@@ -17,23 +17,19 @@
 package org.apache.cocoon.reading.imageop;
 
 import java.awt.image.WritableRaster;
-
-import org.apache.avalon.framework.component.Component;
-
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 
-public interface ImageOperation extends Component 
-{
+public interface ImageOperation {
+
     String ROLE = ImageOperation.class.getName();
-    
+
     void setPrefix( String prefix );
-    
+
     void setup( Parameters params ) 
-        throws ProcessingException;
-    
+    throws ProcessingException;
+
     WritableRaster apply( WritableRaster raster );
-    
+
     String getKey();
 } 

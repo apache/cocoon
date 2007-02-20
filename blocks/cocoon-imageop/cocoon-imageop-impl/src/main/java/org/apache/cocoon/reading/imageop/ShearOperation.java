@@ -17,48 +17,43 @@
 package org.apache.cocoon.reading.imageop;
 
 import java.awt.geom.AffineTransform;
-
 import java.awt.image.AffineTransformOp;
 import java.awt.image.WritableRaster;
-
 import org.apache.avalon.framework.parameters.Parameters;
 
 public class ShearOperation
-    implements ImageOperation
-{
-    private String  m_Prefix;
-    private boolean m_Enabled;
-    private float   m_ShearX;
-    private float   m_ShearY;
+    implements ImageOperation {
+
+    private String  prefix;
+    private boolean enabled;
+    private float   shearX;
+    private float   shearY;
     
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    public void setPrefix( String prefix ) {
+        this.prefix = prefix;
     }
-    
-    public void setup( Parameters params )
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
-        m_ShearX = params.getParameterAsFloat( m_Prefix + "shear-x", 0.0f );
-        m_ShearY = params.getParameterAsFloat( m_Prefix + "shear-y", 0.0f );
+
+    public void setup( Parameters params ) {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
+        shearX = params.getParameterAsFloat( prefix + "shear-x", 0.0f );
+        shearY = params.getParameterAsFloat( prefix + "shear-y", 0.0f );
     }
-    
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
-        AffineTransform shear = AffineTransform.getShearInstance( m_ShearX, m_ShearY );
+        }
+        AffineTransform shear = AffineTransform.getShearInstance( shearX, shearY );
         AffineTransformOp op = new AffineTransformOp( shear, AffineTransformOp.TYPE_BILINEAR );
         WritableRaster scaledRaster = op.filter( image, null );
         return scaledRaster;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return "shear:" 
-               + ( m_Enabled ? "enable" : "disable" )
-               + ":" + m_ShearX
-               + ":" + m_ShearY
-               + ":" + m_Prefix;
+               + ( enabled ? "enable" : "disable" )
+               + ":" + shearX
+               + ":" + shearY
+               + ":" + prefix;
     }
 } 
