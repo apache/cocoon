@@ -44,13 +44,22 @@ import org.apache.cocoon.portal.services.aspects.support.AspectChain;
 public final class RendererAspectChain extends AspectChain {
 
     /** The list of the configuration objects for each renderer aspects. */
-    protected final List configs = new ArrayList(3);
+    protected List configs;
 
     public RendererAspectChain(Class aClass, List aspects, List properties)
     throws PortalException {
+        // we can't initialize configs before we call super
+        // so we have to check in the addAspects method and here
+        // if configs is initialized!
         super(aClass, aspects, properties);
+        if ( this.configs == null ) {
+            this.configs = new ArrayList();            
+        }
     }
 
+    /**
+     * @return The iterator for the prepared configurations.
+     */
     public Iterator getConfigurationIterator() {
         return this.configs.iterator();
     }
@@ -59,6 +68,9 @@ public final class RendererAspectChain extends AspectChain {
      * @see org.apache.cocoon.portal.services.aspects.support.AspectChain#addAspect(java.lang.Object, java.util.Properties, int)
      */
     public void addAspect(Object aspect, Properties config, int index) throws PortalException {
+        if ( configs == null ) {
+            this.configs = new ArrayList();
+        }
         super.addAspect(aspect, config, index);
         final RendererAspect rendererAspect = (RendererAspect)aspect;
         final Properties props = (config == null ? EMPTY_PROPERTIES : config);
