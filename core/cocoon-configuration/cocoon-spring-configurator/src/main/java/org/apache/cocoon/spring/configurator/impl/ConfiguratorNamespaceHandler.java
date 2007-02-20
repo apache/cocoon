@@ -27,6 +27,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  *              By specifying the attribute "processorClassName" an own implementation
  *              can be used (this should be a subclass of the {@link SettingsBeanFactoryPostProcessor}).
  * "child-settings" : This sets up a sub context.
+ * "bean-map" : Creates a bean map.
  *
  * @version $Id$
  * @since 1.0
@@ -39,5 +40,6 @@ public class ConfiguratorNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("settings", new SettingsElementParser());
         registerBeanDefinitionParser("child-settings", new ChildSettingsElementParser());
+        registerBeanDefinitionParser("bean-map", new BeanMapElementParser());
     }
 }
