@@ -16,48 +16,39 @@
  */
 package org.apache.cocoon.reading.imageop;
 
-
 import java.awt.geom.AffineTransform;
-
 import java.awt.image.AffineTransformOp;
 import java.awt.image.WritableRaster;
-
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 
 public class MirrorOperation
-    implements ImageOperation
-{
-    private String  m_Prefix;
-    private boolean m_Enabled;
-    private boolean m_AlongY;
-    
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    implements ImageOperation {
+
+    private String  prefix;
+    private boolean enabled;
+    private boolean alongY;
+
+    public void setPrefix( String prefix ) {
+        this.prefix = prefix;
     }
-    
+
     public void setup( Parameters params )
-        throws ProcessingException
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
-        m_AlongY = params.getParameterAsBoolean( m_Prefix + "along-y", false );
+    throws ProcessingException {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
+        alongY = params.getParameterAsBoolean( prefix + "along-y", false );
     }
-    
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
+        }
         int xScale;
         int yScale;
-        if( m_AlongY )
-        {
+        if( alongY ) {
             xScale = -1;
             yScale = 1;
-        }
-        else
-        {
+        } else {
             xScale = 1;
             yScale = -1;
         }
@@ -67,11 +58,10 @@ public class MirrorOperation
         return scaledRaster;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return "mirror:"
-               + ( m_Enabled ? "enable" : "disable" )
-               + ":" + ( m_AlongY ? "along-y" : "along-x" )
-               + ":" + m_Prefix;
+               + ( enabled ? "enable" : "disable" )
+               + ":" + ( alongY ? "along-y" : "along-x" )
+               + ":" + prefix;
     }
 } 
