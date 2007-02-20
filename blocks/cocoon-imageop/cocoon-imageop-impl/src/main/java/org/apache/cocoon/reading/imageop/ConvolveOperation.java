@@ -19,89 +19,81 @@ package org.apache.cocoon.reading.imageop;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.WritableRaster;
-
 import java.util.StringTokenizer;
-
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 
 public class ConvolveOperation
-    implements ImageOperation
-{
-    private String   m_Prefix;
-    private boolean  m_Enabled;
-    private int      m_ConvolveHeight;
-    private int      m_ConvolveWidth;
-    private float[]  m_Data;
-        
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    implements ImageOperation {
+
+    private String   prefix;
+    private boolean  enabled;
+    private int      convolveHeight;
+    private int      convolveWidth;
+    private float[]  data;
+
+    public void setPrefix( String prefix ) {
+        this.prefix = prefix;
     }
     
     public void setup( Parameters params )
-        throws ProcessingException
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
-        m_ConvolveWidth = params.getParameterAsInteger( m_Prefix + "width", 3 );
-        m_ConvolveHeight = params.getParameterAsInteger( m_Prefix + "height", 3 );
-        String values = params.getParameter( m_Prefix + "data", "" );
-        m_Data = getFloatArray( values );
-        if( m_Data.length != m_ConvolveWidth * m_ConvolveHeight )
-            throw new ProcessingException( "The width*height must be equal to the number of data elements given: " + (m_ConvolveWidth * m_ConvolveHeight) + " is not compatible with '"  + values + "'" );
+    throws ProcessingException {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
+        convolveWidth = params.getParameterAsInteger( prefix + "width", 3 );
+        convolveHeight = params.getParameterAsInteger( prefix + "height", 3 );
+        String values = params.getParameter( prefix + "data", "" );
+        data = getFloatArray( values );
+        if( data.length != convolveWidth * convolveHeight ) {
+            throw new ProcessingException( "The width*height must be equal to the number of data elements given: " + (convolveWidth * convolveHeight) + " is not compatible with '"  + values + "'" );
+        }
     }
-    
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
-            
-        Kernel kernel = new Kernel( m_ConvolveWidth, m_ConvolveHeight, m_Data );
+        }
+        Kernel kernel = new Kernel( convolveWidth, convolveHeight, data );
         ConvolveOp op = new ConvolveOp( kernel, ConvolveOp.EDGE_NO_OP, null );
         WritableRaster r = op.filter( image, null );
         return r;
     }
 
-    private float[] getFloatArray( String values )
-    {
+    private float[] getFloatArray( String values ) {
         float[] fvalues = new float[ 30 ];
         int counter = 0;
         StringTokenizer st = new StringTokenizer( values, ",", false );
-        for( int i = 0 ; st.hasMoreTokens() ; i++ )
-        {
+        for( int i = 0 ; st.hasMoreTokens() ; i++ ) {
             String value = st.nextToken().trim();
             fvalues[ i ] = Float.parseFloat( value );
             counter = counter + 1;
         }
         float[] result = new float[ counter ];
-        for( int i = 0 ; i < counter ; i++ )
+        for( int i = 0 ; i < counter ; i++ ) {
             result[i] = fvalues[i];
+        }
         return result;
     }
-    
-    private String getDataAsString()
-    {
+
+    private String getDataAsString() {
         StringBuffer b = new StringBuffer();
-        for( int i = 0 ; i < m_Data.length ; i++ )
-        {
-            if( i != 0 )
+        for( int i = 0 ; i < data.length ; i++ ) {
+            if( i != 0 ) {
                 b.append( "," );
-            b.append( m_Data[ i ] );
+            }
+            b.append( data[ i ] );
         }
         String result = b.toString();
         b.setLength( 0 );
         return result;
     }
-    
-    public String getKey()
-    {
+
+    public String getKey() {
         return "convolve:" 
-               + ( m_Enabled ? "enable" : "disable" )
-               + ":" + m_ConvolveWidth
-               + ":" + m_ConvolveHeight
+               + ( enabled ? "enable" : "disable" )
+               + ":" + convolveWidth
+               + ":" + convolveHeight
                + ":" + getDataAsString()
-               + ":" + m_Prefix;
+               + ":" + prefix;
     }
 } 
  

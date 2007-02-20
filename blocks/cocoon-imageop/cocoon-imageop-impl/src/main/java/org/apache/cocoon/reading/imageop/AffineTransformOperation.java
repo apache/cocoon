@@ -16,120 +16,109 @@
  */
 package org.apache.cocoon.reading.imageop;
 
-
 import java.awt.geom.AffineTransform;
-
 import java.awt.image.AffineTransformOp;
 import java.awt.image.WritableRaster;
-
 import java.util.StringTokenizer;
-
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 
 public class AffineTransformOperation
-    implements ImageOperation
-{
-    private String  m_Prefix;
-    private boolean m_Enabled;
-    private float[] m_Matrix;
-    
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    implements ImageOperation {
+
+    private String  prefix;
+    private boolean enabled;
+    private float[] matrix;
+
+    public void setPrefix( String prefix ) {
+        this.prefix = prefix;
     }
-    
+
     public void setup( Parameters params )
-        throws ProcessingException
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
-        int size = params.getParameterAsInteger( m_Prefix + "matrix-size", 6 );
-        String values = params.getParameter( m_Prefix + "values", null );
-        
-        if( size != 4 && size != 6 )
+    throws ProcessingException {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
+        int size = params.getParameterAsInteger( prefix + "matrix-size", 6 );
+        String values = params.getParameter( prefix + "values", null );
+
+        if( size != 4 && size != 6 ) {
             throw new ProcessingException( "Only matrices of 4 or 6 elements can be used." );
-        
-        if( values != null )
-            m_Matrix = getFloatArray( values );
-        else
-            m_Matrix = new float[ size ];
-        
-        if( m_Matrix.length != 4 && m_Matrix.length != 6 )
-            throw new ProcessingException( "Only matrices of 4 or 6 elements can be used." );
-        
-        float m00 = params.getParameterAsFloat( m_Prefix + "m00", Float.NaN );
-        float m01 = params.getParameterAsFloat( m_Prefix + "m01", Float.NaN );
-        float m02 = params.getParameterAsFloat( m_Prefix + "m02", Float.NaN );
-        float m10 = params.getParameterAsFloat( m_Prefix + "m10", Float.NaN );
-        float m11 = params.getParameterAsFloat( m_Prefix + "m11", Float.NaN );
-        float m12 = params.getParameterAsFloat( m_Prefix + "m12", Float.NaN );
-        
-        if( m_Matrix.length == 4 )
-        {
-            m_Matrix[0] = m00;
-            m_Matrix[1] = m01;
-            m_Matrix[2] = m10;
-            m_Matrix[3] = m11;
         }
-        else
-        {
-            m_Matrix[0] = m00;
-            m_Matrix[1] = m01;
-            m_Matrix[2] = m02;
-            m_Matrix[3] = m10;
-            m_Matrix[4] = m11;
-            m_Matrix[5] = m12;
+
+        if( values != null ) {
+            matrix = getFloatArray( values );
+        } else {
+            matrix = new float[ size ];
+        }
+
+        if( matrix.length != 4 && matrix.length != 6 ) {
+            throw new ProcessingException( "Only matrices of 4 or 6 elements can be used." );
+        }
+
+        float m00 = params.getParameterAsFloat( prefix + "m00", Float.NaN );
+        float m01 = params.getParameterAsFloat( prefix + "m01", Float.NaN );
+        float m02 = params.getParameterAsFloat( prefix + "m02", Float.NaN );
+        float m10 = params.getParameterAsFloat( prefix + "m10", Float.NaN );
+        float m11 = params.getParameterAsFloat( prefix + "m11", Float.NaN );
+        float m12 = params.getParameterAsFloat( prefix + "m12", Float.NaN );
+
+        if( matrix.length == 4 ) {
+            matrix[0] = m00;
+            matrix[1] = m01;
+            matrix[2] = m10;
+            matrix[3] = m11;
+        } else {
+            matrix[0] = m00;
+            matrix[1] = m01;
+            matrix[2] = m02;
+            matrix[3] = m10;
+            matrix[4] = m11;
+            matrix[5] = m12;
         }
     }
 
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
-        AffineTransform transform = new AffineTransform( m_Matrix );
+        }
+        AffineTransform transform = new AffineTransform( matrix );
         AffineTransformOp op = new AffineTransformOp( transform, AffineTransformOp.TYPE_BILINEAR );
         WritableRaster scaledRaster = op.filter( image, null );
         return scaledRaster;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return "affine:" 
-               + ( m_Enabled ? "enable" : "disable" )
+               + ( enabled ? "enable" : "disable" )
                + ":" + getMatrixAsString()
-               + ":" + m_Prefix;
+               + ":" + prefix;
     }
 
-    private float[] getFloatArray( String values )
-    {
+    private float[] getFloatArray( String values ) {
         float[] fvalues = new float[ 30 ];
         int counter = 0;
         StringTokenizer st = new StringTokenizer( values, ",", false );
-        for( int i = 0 ; st.hasMoreTokens() ; i++ )
-        {
+        for( int i = 0 ; st.hasMoreTokens() ; i++ ) {
             String value = st.nextToken().trim();
             fvalues[ i ] = Float.parseFloat( value );
             counter = counter + 1;
         }
         float[] result = new float[ counter ];
-        for( int i = 0 ; i < counter ; i++ )
+        for( int i = 0 ; i < counter ; i++ ) {
             result[i] = fvalues[i];
+        }
         return result;
     }
-    
-    private String getMatrixAsString()
-    {
+
+    private String getMatrixAsString() {
         StringBuffer b = new StringBuffer();
-        for( int i = 0 ; i < m_Matrix.length ; i++ )
-        {
-            if( i != 0 )
+        for( int i = 0 ; i < matrix.length ; i++ ) {
+            if( i != 0 ) {
                 b.append( "," );
-            b.append( m_Matrix[ i ] );
+            }
+            b.append( matrix[ i ] );
         }
         String result = b.toString();
         b.setLength( 0 );
         return result;
     }
-    
 } 

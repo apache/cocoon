@@ -17,51 +17,45 @@
 package org.apache.cocoon.reading.imageop;
 
 import java.awt.geom.AffineTransform;
-
 import java.awt.image.AffineTransformOp;
 import java.awt.image.WritableRaster;
-
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 
 public class OffsetOperation
-    implements ImageOperation
-{
-    private String  m_Prefix;
-    private boolean m_Enabled;
-    private int     m_Up;
-    private int     m_Left;
-    
-    public void setPrefix( String prefix )
-    {
-        m_Prefix = prefix;
+    implements ImageOperation {
+
+    private String  prefix;
+    private boolean enabled;
+    private int     up;
+    private int     left;
+
+    public void setPrefix( String prefix ) {
+       this. prefix = prefix;
     }
-    
+
     public void setup( Parameters params )
-        throws ProcessingException
-    {
-        m_Enabled = params.getParameterAsBoolean( m_Prefix + "enabled", true);
-        m_Up = params.getParameterAsInteger( m_Prefix + "up", 0 );
-        m_Left = params.getParameterAsInteger( m_Prefix + "left", 0 );
+    throws ProcessingException {
+        enabled = params.getParameterAsBoolean( prefix + "enabled", true);
+        up = params.getParameterAsInteger( prefix + "up", 0 );
+        left = params.getParameterAsInteger( prefix + "left", 0 );
     }
-    
-    public WritableRaster apply( WritableRaster image )
-    {
-        if( ! m_Enabled )
+
+    public WritableRaster apply( WritableRaster image ) {
+        if( ! enabled ) {
             return image;
-        AffineTransform translate = AffineTransform.getTranslateInstance( m_Left, m_Up );
+        }
+        AffineTransform translate = AffineTransform.getTranslateInstance( left, up );
         AffineTransformOp op = new AffineTransformOp( translate, AffineTransformOp.TYPE_BILINEAR );
         WritableRaster scaledRaster = op.filter( image, null );
         return scaledRaster;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return "offset:"
-               + ( m_Enabled ? "enable" : "disable" )
-               + ":" + m_Up
-               + ":" + m_Left
-               + ":" + m_Prefix;
+               + ( enabled ? "enable" : "disable" )
+               + ":" + up
+               + ":" + left
+               + ":" + prefix;
     }
 } 

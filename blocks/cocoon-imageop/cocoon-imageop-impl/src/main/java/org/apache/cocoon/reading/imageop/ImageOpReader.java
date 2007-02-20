@@ -19,6 +19,11 @@ package org.apache.cocoon.reading.imageop;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import javax.imageio.spi.ImageWriterSpi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -27,13 +32,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriter;
-import javax.imageio.spi.ImageWriterSpi;
-import javax.imageio.stream.ImageOutputStream;
-
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -53,59 +52,76 @@ import org.xml.sax.SAXException;
  * the requested resource should be written to the <code>OutputStream</code>
  * or if it can signal that it hasn't changed. 
  */
-final public class ImageOpReader extends ResourceReader
-    implements Configurable, Serviceable
-{
+final public class ImageOpReader
+    extends ResourceReader
+    implements Configurable, Serviceable, Disposable {
+
     private final static String FORMAT_DEFAULT = "png";
-    
-    private String            m_Format;
-    private ArrayList         m_EffectsStack;
-    private ServiceSelector m_OperationSelector;
-    
+
+    private String          format;
+    private ArrayList       effectsStack;
+    private ServiceSelector operationSelector;
+    private ServiceManager  manager;
+
     /**
      * Read reader configuration
      */
     public void configure(Configuration configuration) 
-        throws ConfigurationException 
-    {
+    throws ConfigurationException {
         super.configure( configuration );
         Configuration effects = configuration.getChild( "effects" );
-        try
-        {
+        try {
             configureEffects( effects );
-        } catch( ComponentException e )
-        {
+        } catch( ServiceException e ) {
             throw new ConfigurationException( "Unable to configure ImageOperations", e );
-        } catch (ServiceException e) {
-        	throw new ConfigurationException( "Unable to configure ImageOperations", e );
-		}
+        }
+    }
+
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service( ServiceManager man )
+    throws ServiceException {
+        this.manager = man;
+        operationSelector = (ServiceSelector) man.lookup( ImageOperation.ROLE + "Selector" );
     }
     
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.operationSelector);
+            this.operationSelector = null;
+            this.manager = null;
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.reading.ResourceReader#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException 
-    {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        m_Format = par.getParameter("output-format", FORMAT_DEFAULT);
+        format = par.getParameter("output-format", FORMAT_DEFAULT);
         if(getLogger().isInfoEnabled()) {
-            getLogger().info( src + " --> " + m_Format );
+            getLogger().info( src + " --> " + format );
         }
         setupEffectsStack( par );
     }
 
     protected void processStream( InputStream inputStream ) 
-        throws IOException, ProcessingException 
-    {
-        if( m_EffectsStack.size() > 0 ) 
-        {
+    throws IOException, ProcessingException {
+        if( effectsStack.size() > 0 ) {
             // since we create the image on the fly
             response.setHeader("Accept-Ranges", "none");
 
             BufferedImage image = ImageIO.read( inputStream );
-            if( image == null )
+            if( image == null ) {
                 throw new ProcessingException( "Unable to decode the InputStream. Possibly an unknown format." );                
-
+            }
             image = applyEffectsStack( image );
-                        
+
             write( image );
         } else {
             // only read the resource - no modifications requested
@@ -123,18 +139,16 @@ final public class ImageOpReader extends ResourceReader
      * @return The generated key consists of the src and width and height, and the color transform
      * parameters
     */
-    public Serializable getKey() 
-    {
+    public Serializable getKey() {
         StringBuffer b = new StringBuffer( 200 );
         b.append( this.inputSource.getURI() );
         b.append( ':' );
-        b.append( m_Format );
+        b.append( format );
         b.append( ':' );
         b.append( super.getKey() );
         b.append( ':' );
-        Iterator list = m_EffectsStack.iterator();
-        while( list.hasNext() )
-        {
+        Iterator list = effectsStack.iterator();
+        while( list.hasNext() ) {
             ImageOperation op = (ImageOperation) list.next();
             b.append( op.getKey() );
             b.append( ':' );
@@ -146,40 +160,35 @@ final public class ImageOpReader extends ResourceReader
     }
     
     private void configureEffects( Configuration conf )
-        throws ConfigurationException, ComponentException, ServiceException
-    {
-        m_EffectsStack = new ArrayList();
-        
+    throws ConfigurationException, ServiceException {
+        effectsStack = new ArrayList();
+
         Configuration[] ops = conf.getChildren( "op" );
-        for( int i=0 ; i < ops.length ; i++ )
-        {
+        for( int i=0 ; i < ops.length ; i++ ) {
             String type = ops[i].getAttribute( "type" );
             String prefix = ops[i].getAttribute( "prefix", type + "-" );
-            ImageOperation op = (ImageOperation) m_OperationSelector.select( type );
+            ImageOperation op = (ImageOperation) operationSelector.select( type );
             op.setPrefix( prefix );
-            m_EffectsStack.add( op );
+            effectsStack.add( op );
         }
     }
 
     private void setupEffectsStack( Parameters params )
-        throws ProcessingException
-    {
-        Iterator list = m_EffectsStack.iterator();
-        while( list.hasNext() )
-        {
+    throws ProcessingException {
+        Iterator list = effectsStack.iterator();
+        while( list.hasNext() ) {
             ImageOperation op = (ImageOperation) list.next();
             op.setup( params );
         }
     }
-    
-    private BufferedImage applyEffectsStack( BufferedImage image )
-    {
-        if( m_EffectsStack.size() == 0 )
+
+    private BufferedImage applyEffectsStack( BufferedImage image ) {
+        if( effectsStack.size() == 0 ) {
             return image;
-        Iterator list = m_EffectsStack.iterator();
+        }
+        Iterator list = effectsStack.iterator();
         WritableRaster src = image.getRaster();
-        while( list.hasNext() )
-        {
+        while( list.hasNext() ) {
             ImageOperation op = (ImageOperation) list.next();
             WritableRaster r = op.apply( src );
             if(getLogger().isDebugEnabled()) {
@@ -188,12 +197,12 @@ final public class ImageOpReader extends ResourceReader
             src = r.createWritableTranslatedChild( 0, 0 );
         }
         ColorModel cm = image.getColorModel();
-        if(getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug( "Out Bounds: " + src.getBounds() );
         }
         BufferedImage newImage = new BufferedImage( cm, src, true, new Hashtable() );
         // Not sure what this should really be --------------^^^^^
-        
+
         int minX = newImage.getMinX();
         int minY = newImage.getMinY();
         int width = newImage.getWidth();
@@ -201,36 +210,33 @@ final public class ImageOpReader extends ResourceReader
         if(getLogger().isInfoEnabled()) {
             getLogger().info( "Image: " + minX + ", " + minY + ", " + width + ", " + height );
         }
-        
+
         return newImage;
     }
-    
+
     private void write( BufferedImage image )
-        throws ProcessingException, IOException
-    {
+    throws ProcessingException, IOException {
         ImageTypeSpecifier its = ImageTypeSpecifier.createFromRenderedImage( image );
-        Iterator writers = ImageIO.getImageWriters( its, m_Format );
+        Iterator writers = ImageIO.getImageWriters( its, format );
         ImageWriter writer = null;
-        if( writers.hasNext() ) 
-        {
+        if( writers.hasNext() ) {
             writer = (ImageWriter) writers.next();
         }
-        if( writer == null ) 
-            throw new ProcessingException( "Unable to find a ImageWriter: " + m_Format );
+        if( writer == null ) {
+            throw new ProcessingException( "Unable to find a ImageWriter: " + format );
+        }
 
         ImageWriterSpi spi = writer.getOriginatingProvider();
         String[] mimetypes = spi.getMIMETypes();
-        if(getLogger().isInfoEnabled()) {
+        if (getLogger().isInfoEnabled()) {
             getLogger().info( "Setting content-type: " + mimetypes[0] );
         }
         response.setHeader("Content-Type", mimetypes[0] );
         ImageOutputStream output = ImageIO.createImageOutputStream( out );
-        try
-        {
+        try {
             writer.setOutput( output );
             writer.write( image );
-        } finally
-        {
+        } finally {
             writer.dispose();
             output.close();
             out.flush();
@@ -261,8 +267,4 @@ final public class ImageOpReader extends ResourceReader
         }
     }
 */
-
-	public void service(ServiceManager manager) throws ServiceException {
-		m_OperationSelector = (ServiceSelector) manager.lookup( "org.apache.cocoon.reading.imageop.ImageOperationSelector" );
-	}
 }
