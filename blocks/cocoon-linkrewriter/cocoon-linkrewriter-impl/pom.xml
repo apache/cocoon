@@ -19,21 +19,21 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-linkrewriter</artifactId>
-    <version>1-SNAPSHOT</version>
-  </parent>
+  
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon</groupId>
+  <packaging>jar</packaging>
+  <parent>
+    <artifactId>cocoon-blocks-modules</artifactId>
+    <groupId>org.apache.cocoon</groupId>
+    <version>4-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>    
+  </parent>
   <artifactId>cocoon-linkrewriter-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <name>Linkrewriter Block Implementation</name>
-  <description/>
+  <name>Cocoon Linkrewriter Block Implementation</name>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -41,4 +41,5 @@
       <version>2.2.0-RC1-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  
 </project>
