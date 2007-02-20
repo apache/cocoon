@@ -94,7 +94,7 @@ public class PortalServiceImpl
     protected LinkService linkService;
 
     /** The used renderers. */
-    protected Map renderers = new HashMap();
+    protected Map renderers = Collections.EMPTY_MAP;
 
     /** The used coplet adapters. */
     protected Map copletAdapters = new HashMap();
@@ -123,6 +123,7 @@ public class PortalServiceImpl
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
         this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
+        this.renderers = (Map)this.manager.lookup(Renderer.class.getName()+"Map");
     }
 
     /**
@@ -150,7 +151,6 @@ public class PortalServiceImpl
             this.servletContext.removeAttribute(PortalService.class.getName());
         }
         if ( this.manager != null ) {
-            this.renderers.clear();
             Iterator i = this.copletAdapters.values().iterator();
             while (i.hasNext()) {
                 this.manager.release(i.next());
@@ -381,13 +381,6 @@ public class PortalServiceImpl
             }
         }
         return this.portalManager;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#register(String, org.apache.cocoon.portal.layout.renderer.Renderer)
-     */
-    public void register(String name, Renderer renderer) {
-        this.renderers.put(name, renderer);
     }
 
     /**

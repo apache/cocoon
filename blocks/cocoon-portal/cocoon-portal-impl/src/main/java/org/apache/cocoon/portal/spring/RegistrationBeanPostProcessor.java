@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.spring;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -36,8 +35,6 @@ public class RegistrationBeanPostProcessor
 
     protected BeanFactory beanFactory;
 
-    protected static String RENDERER_ROLE_PREFIX = Renderer.class.getName() + '.';
-
     /**
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
@@ -49,13 +46,6 @@ public class RegistrationBeanPostProcessor
      * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
      */
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if ( bean instanceof Renderer ) {
-            String name = beanName;
-            if ( name.startsWith(RENDERER_ROLE_PREFIX) ) {
-                name = name.substring(RENDERER_ROLE_PREFIX.length());
-            }
-            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).register(name, (Renderer)bean);
-        }
         if ( bean instanceof CopletAdapter && bean instanceof PortalManagerAspect ) {
             ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((PortalManagerAspect)bean);
         }
