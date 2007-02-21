@@ -18,7 +18,9 @@
   limitations under the License.
 -->
 <beans>
-  <bean id="demo" class="demo.MyBean" scope="singleton">
-    <property name="message" value="This is a message coming from a Spring bean."/>
-  </bean>
+  
+  <bean name="org.apache.cocoon.generation.Generator/mygenerator" class="demo.MyGenerator"/>  
+  
+  <bean id="global-bean" class="demo.GlobalBean" scope="singleton"/>
+
 </beans>

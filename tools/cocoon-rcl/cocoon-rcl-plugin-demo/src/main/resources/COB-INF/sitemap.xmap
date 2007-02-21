@@ -16,14 +16,11 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:components>
-    <map:generators default="file">
-      <map:generator logger="sitemap.generator.mygenerator" name="mygenerator" src="demo.MyGenerator"/>
-    </map:generators>
-  </map:components>
+ 
   <map:flow language="javascript">
     <map:script src="demo.js"/>
   </map:flow>
+
   <map:pipelines>
     <map:pipeline>
       <map:match pattern="demo">
@@ -39,4 +36,5 @@
       </map:match>
     </map:pipeline>
   </map:pipelines>
+  
 </map:sitemap>

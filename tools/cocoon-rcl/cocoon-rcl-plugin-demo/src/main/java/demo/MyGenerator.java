@@ -32,7 +32,7 @@ public final class MyGenerator extends AbstractGenerator {
         contentHandler.startElement("","body","body", new AttributesImpl());
         
         //Change message to see the Reloading classloader working
-        final char[] message = "generator!".toCharArray();
+        final char[] message = "generator!!!".toCharArray();
         contentHandler.characters(message, 0, message.length);
         
         contentHandler.endElement("","body","body");
