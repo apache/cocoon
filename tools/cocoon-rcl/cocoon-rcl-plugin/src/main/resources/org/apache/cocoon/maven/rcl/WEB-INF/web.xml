@@ -17,7 +17,8 @@
 -->
 <!--+
     | This is the Cocoon web-app configurations file
-    +--><!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+    +-->
+    <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
     <web-app>
       <context-param>
         <param-name>org.apache.cocoon.servlet.ReloadingListener</param-name>
@@ -26,7 +27,7 @@
         </param-value>
       </context-param>
       
-      <!--filter>
+      <filter>
         <filter-name>ReloadingSpringFilter</filter-name>
         <display-name>ReloadingSpringFilter</display-name>
         <description>Reloads the Spring application context if a classloader change was detected.</description>
@@ -35,7 +36,7 @@
           <param-name>filter-class</param-name>
           <param-value>org.apache.cocoon.servlet.ReloadingSpringFilter</param-value>
         </init-param>
-      </filter-->         
+      </filter>         
       <filter>
         <filter-name>RequestContextFilter</filter-name>
         <display-name>Request context filter</display-name>
@@ -67,10 +68,10 @@
         </init-param>
       </filter>     
                   
-      <!--filter-mapping>
+      <filter-mapping>
         <filter-name>ReloadingSpringFilter</filter-name>
-        <servlet-name>Cocoon</servlet-name>
-      </filter-mapping-->                    
+        <servlet-name>DispatcherServlet</servlet-name>
+      </filter-mapping>                    
       <filter-mapping>
         <filter-name>RequestContextFilter</filter-name>
         <servlet-name>DispatcherServlet</servlet-name>

@@ -32,19 +32,21 @@ public class RwmPropertiesTest extends TestCase {
     public void testLoadingSpringProps() throws Exception {
         RwmProperties p = createTestProperties();
         Properties springProps = p.getSpringProperties();
-        assertEquals(7, springProps.size());
+        assertEquals(8, springProps.size());
         // test variable interpolation
         assertEquals("interpolatedValue:A", springProps.getProperty("b"));
         // test setting the correct context URL if a *%classes-dir property was set
         assertTrue(springProps.containsKey("org.apache.cocoon.cocoon-rcl-plugin-demo.block/contextPath"));
-        assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/contextPath")
-                .indexOf("target/classes/COB-INF") > 0);
+        assertEquals("file:/F:/blocks/myBlock1/src/main/resources/COB-INF", springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/contextPath"));
+        assertEquals("file:/F:/blocks/myBlock2/src/main/resources/COB-INF", 
+                springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block2/contextPath"));     
+        assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block3/contextPath").endsWith("src/main/resources/COB-INF"));
     }
 
     public void testLoadingBasedirs() throws Exception {
         RwmProperties p = createTestProperties();
         Set as = p.getClassesDirs();
-        assertEquals(5, as.size());
+        assertEquals(6, as.size());
         assertTrue(as.contains("file:/F:/blocks/myBlock/target/classes"));
         assertTrue(as.contains("file:/F:/blocks/myBlock1/target/classes"));      
     }      
