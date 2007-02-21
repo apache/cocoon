@@ -208,12 +208,12 @@ public class ReloadingWebappMojo extends AbstractMojo {
             FileWriter fw = new FileWriter(urlClConfFile);
             for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
-                fw.write(new File(dir).getCanonicalPath() + "\n");            
+                fw.write(dir + "\n");            
                 this.getLog().debug("Adding classes-dir to RCLClassLoader configuration: " + dir);
             }
             fw.close();
         } catch(IOException e) {
-            throw new MojoExecutionException("Error while writing to " + urlClConfFile);
+            throw new MojoExecutionException("Error while writing to " + urlClConfFile, e);
         }
     }
 

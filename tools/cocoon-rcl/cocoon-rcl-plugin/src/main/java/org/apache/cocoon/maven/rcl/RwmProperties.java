@@ -18,6 +18,7 @@ package org.apache.cocoon.maven.rcl;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -30,9 +31,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class RwmProperties {
 
-    private static final String COB_INF_DIR = "/COB-INF";
+    private static final String COB_INF_DIR = "src/main/resources/COB-INF";
     private static final String BLOCK_CONTEXT_URL_PARAM = "/contextPath";
-    private static final String CLASSES_DIR = "%classes-dir";    
+    private static final String CLASSES_DIR = "%classes-dir"; 
+    private static final String TARGET_CLASSES_DIR = "target/classes";
     
     private Configuration props;
 
@@ -40,7 +42,7 @@ public class RwmProperties {
         props = new PropertiesConfiguration(propsFile);
     }
     
-    public Set getClassesDirs() {
+    public Set getClassesDirs() throws MojoExecutionException {
         return getFilteredPropertiesValuesAsSet(CLASSES_DIR);
     }
     
@@ -48,30 +50,70 @@ public class RwmProperties {
         Properties springProps = new Properties();
         for(Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
             String key = (String) rclIt.next();
-            if(!key.endsWith(CLASSES_DIR)) {
+            
+            // a [block-id]/COB-INF property was set explicitly
+            if(key.endsWith(BLOCK_CONTEXT_URL_PARAM)) {
+                String path = null;
+                try {
+                    path = new File(this.props.getString(key)).toURL().toExternalForm();
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException("Can't create URL to  " + path, e);
+                }            
+                springProps.put(key, path);
+            }
+            
+            // a %CLASSES_DIR property --> generate a */COB-INF property out of it
+            else if(key.endsWith(CLASSES_DIR) && !CLASSES_DIR.equals(key)) {
+                String path = null;
+                try {
+                    path = new File(this.props.getString(key)).toURL().toExternalForm();
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException("Can't create URL to  " + this.props.getString(key), e);
+                }  
+                
+                if(path.endsWith(TARGET_CLASSES_DIR)) {
+                    path = path + "/";
+                }
+                
+                if(!path.endsWith(TARGET_CLASSES_DIR + "/")) {
+                    throw new MojoExecutionException("A */" + CLASSES_DIR + 
+                            " property can only point to a directory that ends with " + TARGET_CLASSES_DIR + ".");
+                }
+                
+                // path calculation
+                if(path.endsWith("/")) {
+                    path = path.substring(0, path.length() - 1);
+                }
+                path = path.substring(0, path.length() - "target/classes".length());
+                
+                String newKey = key.substring(0, key.length() - CLASSES_DIR.length()) + BLOCK_CONTEXT_URL_PARAM;                
+                springProps.put(newKey, path + COB_INF_DIR);
+            }
+            
+            // copy all other properties
+            else if(!key.endsWith(CLASSES_DIR)) {
                 springProps.put(key, this.props.getString(key));
             }
-            if(key.endsWith(CLASSES_DIR) && !CLASSES_DIR.equals(key)) {
-                String newKey = key.substring(0, key.length() - CLASSES_DIR.length()) + BLOCK_CONTEXT_URL_PARAM;
-                File blockContext = new File(this.props.getString(key) + COB_INF_DIR);
-                try {
-                    springProps.put(newKey, blockContext.toURL().toExternalForm());
-                } catch (MalformedURLException e) {
-                    throw new MojoExecutionException("Can't create URL to  " + blockContext, e);
-                }
-            }
+            
         } 
         return springProps;
     }    
     
-    private Set getFilteredPropertiesValuesAsSet(String filter) {
+    private Set getFilteredPropertiesValuesAsSet(String filter) throws MojoExecutionException {
         Set returnSet = new HashSet();
         for (Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
             String key = (String) rclIt.next();
             if (key.endsWith(filter)) {
                 String[] values = this.props.getStringArray(key);
                 for (int i = 0; i < values.length; i++) {
-                    returnSet.add(values[i]);
+                    String path = values[i];
+                    String url = null;
+                    try {
+                        url = new File(path).toURL().toExternalForm();
+                    } catch (MalformedURLException e) {
+                        throw new MojoExecutionException("Can't create URL to  " + path, e);
+                    }
+                    returnSet.add(url);
                 }
             }
         }        
@@ -79,5 +121,7 @@ public class RwmProperties {
     }
     
 }
+
+    
 
     
