@@ -17,9 +17,13 @@
 package org.apache.cocoon.servlet;
 
 public class ReloadingClassloaderCreationException extends RuntimeException {
+    
+    public ReloadingClassloaderCreationException(String msg) {
+        super(msg);
+    }
 
     public ReloadingClassloaderCreationException(String msg, Exception e) {
         super(msg, e);
     }
-    
+
 }

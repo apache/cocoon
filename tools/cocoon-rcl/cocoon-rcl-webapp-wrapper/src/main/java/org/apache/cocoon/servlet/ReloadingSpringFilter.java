@@ -50,6 +50,7 @@ public class ReloadingSpringFilter implements Filter {
                 System.out.println("old appContext: " + appContext);
                 
                 ContextLoader springContextLoader = new ContextLoader();
+                System.out.println("rsf: " + springContextLoader.getClass().getClassLoader());
                 springContextLoader.closeWebApplicationContext(this.config.getServletContext());
                 this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
                 springContextLoader.initWebApplicationContext(this.config.getServletContext());
