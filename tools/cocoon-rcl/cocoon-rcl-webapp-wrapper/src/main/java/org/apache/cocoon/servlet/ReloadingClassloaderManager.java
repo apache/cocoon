@@ -33,6 +33,8 @@ import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
 
 public class ReloadingClassloaderManager {
 
+    private static final String FILE_PROTOCOL = "file:";
+
     private static final String WEB_INF_RCL_URLCL_CONF = "/WEB-INF/cocoon/rclwrapper.urlcl.conf";
     
     private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "/WEB-INF/cocoon/rclwrapper.rcl.conf";        
@@ -97,7 +99,15 @@ public class ReloadingClassloaderManager {
             List lines = IOUtils.readLines(context.getResourceAsStream(WEB_INF_RCLWRAPPER_RCL_CONF));
             for (Iterator linesIt = lines.iterator(); linesIt.hasNext();) {
                 String line = (String) linesIt.next();
-                org.apache.commons.jci.listeners.ReloadingListener rl = new CocoonReloadingListener(new File(line));
+                if(!line.startsWith(FILE_PROTOCOL)) {
+                    throw new ReloadingClassloaderCreationException("Only support file: URLs.");
+                }
+                String url = line.substring(FILE_PROTOCOL.length());
+                // windows paths
+                if(url.indexOf(2) == ':') {
+                    url = url.substring(1);
+                }
+                org.apache.commons.jci.listeners.ReloadingListener rl = new CocoonReloadingListener(new File(url));
                 reloadingListeners.add(rl);
             }
             return reloadingListeners;
