@@ -84,11 +84,11 @@
       <artifactId>cocoon-servlet-service-components</artifactId>
       <version>1.0.0-RC1-SNAPSHOT</version>
     </dependency>      
-    <dependency>
+    <!--dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-impl</artifactId>
       <version>1.0.0-RC1-SNAPSHOT</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>

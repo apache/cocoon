@@ -16,15 +16,8 @@
  */
 package demo;
 
-public class MyBean {
+public class GlobalBean {
     
-    public String message = "This is a message coming from a Spring bean!";
+    public String message = "This is a message coming from the global Bean!";
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
 }

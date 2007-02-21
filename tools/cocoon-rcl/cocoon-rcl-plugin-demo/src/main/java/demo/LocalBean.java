@@ -14,16 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package demo;
 
-/*
- * @version $Id: demo.js 448451 2006-09-21 04:04:16Z crossley $
- */
- 
-function demo() {
-    var demoBean = cocoon.getComponent("local-bean");
-    cocoon.sendPage("screens/demo", 
-        { 
-            "message" : demoBean.message
-        }
-    );
+public class LocalBean {
+    
+    public String message = "This is a message coming from a local Spring bean!";
+    private GlobalBean globalBean;
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
+    
+    public void setGlobalBean(GlobalBean globalBean) {
+        this.globalBean = globalBean;
+    }
+    
 }
