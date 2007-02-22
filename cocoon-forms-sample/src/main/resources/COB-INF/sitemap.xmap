@@ -204,6 +204,16 @@
         <map:transform src="resource://org/apache/cocoon/forms/resources/selection-list2json.xsl"/>
         <map:serialize type="json"/>
      </map:match>
+
+     <map:match pattern="_cocoon/forms/suggest/*">
+        <map:call function="{1}Lookup"/>
+     </map:match>
+     <map:match pattern="*.json-combo-data">
+        <map:generate type="jx" src="forms/{1}json.xml"/>
+        <map:transform src="resource://org/apache/cocoon/forms/resources/selection-list2json.xsl"/>
+        <map:serialize type="json"/>
+     </map:match>      
+
      <!--
         | Show a form, using the forms transformer
         -->
