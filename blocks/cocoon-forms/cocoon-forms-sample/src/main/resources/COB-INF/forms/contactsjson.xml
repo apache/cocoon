@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fi:selection-list
+    xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+    xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:forEach var="contact" items="${people}">
+    <jx:if test="${contact != null}">
+      <fi:item value="${contact.id}">
+        <fi:label>${contact.name}</fi:label>
+      </fi:item>
+    </jx:if>
+  </jx:forEach>
+</fi:selection-list>

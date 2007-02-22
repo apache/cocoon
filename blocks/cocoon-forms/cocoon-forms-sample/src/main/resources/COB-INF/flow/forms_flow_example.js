@@ -79,6 +79,29 @@ var countries = [
     { key: "zw", value: "Zimbabwe" }
 ];
 
+var people = [
+	{ id: 1, name: "Jean-Baptiste Quenot" },
+	{ id: 2, name: "Donald Ball" },
+	{ id: 3, name: "Joerg Heinicke" }
+];
+
+function contactsLookup(){
+	var filter = cocoon.request.getParameter("filter");
+	var suggestion = [];
+	if (filter) {
+		for (var i = 0; i < people.length; i++) {
+			if (people[i].name.toUpperCase().indexOf(filter.toUpperCase()) == 0) {
+				suggestion.push(people[i]);
+			}
+		}
+	} else {
+		suggestion = people;
+	}
+
+	cocoon.sendPage("contacts.json-combo-data", {"people": suggestion});
+	return suggestion;
+}
+
 function selectCountry() {
     var form = new Form("forms/countryselector_form.xml");
     form.showForm("countryselector-display-pipeline");
@@ -227,6 +250,21 @@ function do_suggest() {
              (path.suggested ? path.suggestionLabel : "(none)") +
              "\n\n\npersonId = " + person.value + 
              "\npersonName = " + (person.suggested ? person.suggestionLabel : "(none)")});
+}
+
+function do_multivalueWithSuggestion() {
+    var form = new Form("forms/ajax_multivalue_with_suggestion_form.xml");
+
+    form.showForm("ajax_multivalue_with_suggestion-display-pipeline.jx");
+
+    var _contacts = form.getChild("contacts").getValue();
+    var _string = "";
+    for (var i = 0; i < _contacts.length; i++) {
+        _string += " " + _contacts[i] + ","; 
+    }
+
+    cocoon.sendPage("textresult-display-pipeline.jx",
+        { title: "Values selected", text: _string });
 }
 
 function do_inplace() {

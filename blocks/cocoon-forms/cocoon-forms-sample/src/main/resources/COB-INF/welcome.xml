@@ -135,6 +135,10 @@
    <sample name="Cocoon suggests" href="do-suggest.flow">
      (Ajax) Very simple demo of the &lt;fd:suggestion-list&gt; feature.
    </sample>
+   <sample name="Cocoon multivalue editor with suggestions" href="do-multivalueWithSuggestion.flow">
+     (Ajax) Very simple demo of the &lt;fd:multivaluefield&gt; with suggestion support feature.
+   </sample>
+   
    <sample name="In place editing" href="do-inplace.flow">
      (Ajax) Various ways to use in place editing.
    </sample>
