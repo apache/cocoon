@@ -69,7 +69,6 @@ import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
-import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
