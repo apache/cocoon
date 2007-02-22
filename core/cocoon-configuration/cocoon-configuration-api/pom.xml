@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-configuration-api</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon Configuration API</name>
   <description>
     The Cocoon Configuration API is a library providing beans for various configuration issues.
@@ -64,7 +64,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -72,7 +72,13 @@
           <collection>cdocs-configuration-api</collection>          
           <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin>
+      </plugin-->
     </plugins> 
   </build>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.0</url>
+  </scm>
 </project>
