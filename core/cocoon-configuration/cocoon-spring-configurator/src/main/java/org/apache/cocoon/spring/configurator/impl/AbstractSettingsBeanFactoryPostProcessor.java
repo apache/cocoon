@@ -280,11 +280,17 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
             try {
                 visitor.visitBeanDefinition(bd);
             } catch (BeanDefinitionStoreException ex) {
-                throw new BeanDefinitionStoreException(bd
-                        .getResourceDescription(), beanNames[i], ex
-                        .getMessage());
+                throw new BeanDefinitionStoreException(bd.getResourceDescription(),
+                        beanNames[i], ex.getMessage());
             }
         }
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#resolvePlaceholder(java.lang.String, java.util.Properties)
+     */
+    protected String resolvePlaceholder(String placeholder, Properties props) {
+        return PropertyHelper.getProperty(placeholder, props, null);
     }
 
     protected class CocoonSettingsResolvingBeanDefinitionVisitor

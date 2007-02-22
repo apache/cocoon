@@ -98,7 +98,32 @@ public class PropertyHelper {
         return buffer.toString();
     }
 
-    protected static String getProperty(String name, Properties properties, Settings settings) {
+    /**
+     * Return the value of the property.
+     * If a properties object is provided, this is searched first for a value.
+     * If no value is found and a settings object is provided, the settings object
+     * is searched for a value. If still no value is found, the system properties
+     * are searched.
+     * The key might contain a default value separated by a ':'! If no value is found
+     * and such a default value is provided, the default value is returned.
+     *
+     * @param key The key for the property.
+     * @param properties A set of properties.
+     * @param settings A settings object.
+     * @return Return the value or null.
+     * @since 1.0.1
+     */
+    public static String getProperty(String key, Properties properties, Settings settings) {
+        final int pos = key.indexOf(':');
+        final String name;
+        final String defaultValue;
+        if ( pos != -1 ) {
+            name = key.substring(0, pos);
+            defaultValue = key.substring(pos+1);
+        } else {
+            name = key;
+            defaultValue = null;
+        }
         String value = null;
         if ( properties != null ) {
             value = properties.getProperty(name);
@@ -112,6 +137,9 @@ public class PropertyHelper {
             } catch (SecurityException ex) {
                 // ignore this
             }
+        }
+        if ( value == null ) {
+            value = defaultValue;
         }
         return value;
     }
