@@ -203,6 +203,32 @@
   </xsl:template>
 
   <!--+
+      | fi:multivaluefield with a selection list and suggestions support
+      +-->
+  <xsl:template match="fi:multivaluefield[fi:styling/@type='MultiValueEditorWithSuggestion']">
+    <!-- <xsl:variable name="values" select="fi:values/fi:value/text()"/>
+    <xsl:variable name="popupUri" select="fi:styling/@popup-uri"/>
+    <xsl:variable name="popupLinkText" select="fi:styling/@popup-link-text"/>
+    <xsl:variable name="dataUrl" select="fi:styling/@dataUrl"/> 
+    <xsl:variable name="popupSize" select="fi:styling/@popup-size"/>-->
+
+    <div id="{@id}" dojoType="forms:MultiValueEditorWithSuggestion" styleClass="multivalue-widget" dataUrl="{fi:styling/@dataUrl}"
+        popupUri="{fi:styling/@popup-uri}" popupLinkText="{fi:styling/@popup-link-text}" popupSize="{fi:styling/@popup-size}">
+      <table>
+        <tbody>
+          <xsl:for-each select="fi:selection-list/fi:item">
+            <xsl:variable name="value" select="@value"/>
+            <tr>
+              <td><xsl:value-of select="$value"/></td>
+              <td><xsl:copy-of select="fi:label/node()"/></td>
+            </tr>
+          </xsl:for-each>
+        </tbody>
+      </table>
+    </div>
+  </xsl:template>
+
+  <!--+
       | Field with in-place editing
       | Reacts to 2 different types:
       | - 'inplace' for a single line input
