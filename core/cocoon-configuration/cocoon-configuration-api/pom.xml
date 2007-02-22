@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-configuration-api</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1.SNAPSHOT</version>
   <name>Cocoon Configuration API</name>
   <description>
     The Cocoon Configuration API is a library providing beans for various configuration issues.
@@ -75,10 +75,4 @@
       </plugin-->
     </plugins> 
   </build>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.0</url>
-  </scm>
 </project>
