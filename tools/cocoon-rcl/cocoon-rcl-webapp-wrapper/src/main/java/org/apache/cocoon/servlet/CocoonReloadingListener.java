@@ -17,16 +17,13 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.jci.listeners.ReloadingListener;
 
 public class CocoonReloadingListener extends ReloadingListener {
 
     private static boolean reload = false;
-    private static List subscribers = new ArrayList();
+//    private static List subscribers = new ArrayList();
     
     public CocoonReloadingListener(File file) {
         super(file);
@@ -35,7 +32,7 @@ public class CocoonReloadingListener extends ReloadingListener {
     public void onChangeFile(File changedFile) {
         System.out.println("A file changed: " + changedFile.getAbsolutePath());
         super.onChangeFile(changedFile);
-        notifySubscribers();
+//        notifySubscribers();
         
         // TODO be more specific when to reload. Not every change needs a reload of the Spring
         // application context
@@ -44,7 +41,7 @@ public class CocoonReloadingListener extends ReloadingListener {
 
     public void onChangeDirectory(File changedDirectory) {
         super.onChangeDirectory(changedDirectory);
-        notifySubscribers();        
+//        notifySubscribers();        
     }    
     
     public static synchronized boolean isReload() {
@@ -55,15 +52,15 @@ public class CocoonReloadingListener extends ReloadingListener {
         return reload;
     }
     
-    private void notifySubscribers() {
-        for(Iterator nIt = subscribers.iterator(); nIt.hasNext(); ) {
-            ((ReloadingNotificationSubscriber) nIt.next()).handleNotification();
-        }
-    }
-    
-    public static void subscribe(ReloadingNotificationSubscriber subscriber) {
-        System.out.println("----------> Subscription by: " + subscriber);
-        subscribers.add(subscriber);
-    }
+//    private void notifySubscribers() {
+//        for(Iterator nIt = subscribers.iterator(); nIt.hasNext(); ) {
+//            ((ReloadingNotificationSubscriber) nIt.next()).handleNotification();
+//        }
+//    }
+//    
+//    public static void subscribe(ReloadingNotificationSubscriber subscriber) {
+//        System.out.println("----------> Subscription by: " + subscriber);
+//        subscribers.add(subscriber);
+//    }
     
 }
