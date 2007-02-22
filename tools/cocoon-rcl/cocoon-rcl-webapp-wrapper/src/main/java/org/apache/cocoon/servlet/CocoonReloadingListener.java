@@ -33,10 +33,12 @@ public class CocoonReloadingListener extends ReloadingListener {
     }
 
     public void onChangeFile(File changedFile) {
-        System.out.println("A file changed: "
-                + changedFile.getAbsolutePath());
+        System.out.println("A file changed: " + changedFile.getAbsolutePath());
         super.onChangeFile(changedFile);
         notifySubscribers();
+        
+        // TODO be more specific when to reload. Not every change needs a reload of the Spring
+        // application context
         reload = true;
     }
 

@@ -104,9 +104,6 @@ public class ReloadingListener
                         ClassLoader cl = ReloadingClassloaderManager.getClassLoader(this.context);
                         Class listenerClass = cl.loadClass(className);
                         final Object listener = listenerClass.newInstance();
-                        ClassLoader listenerClassloader = listener.getClass().getClassLoader();
-                        System.out.println("ReloadingListener: ReloadingClassloaderManager.getClassLoader().getClass()=" + className + "; cl=" + ReloadingClassloaderManager.getClassLoader(this.context).getClass().getName());
-                        System.out.println("ReloadingListener: listener.getClass().getClassloader()=" + listenerClassloader);
                         if ( listener instanceof HttpSessionListener ) {
                             this.httpSessionListeners.add(listener);
                         }
