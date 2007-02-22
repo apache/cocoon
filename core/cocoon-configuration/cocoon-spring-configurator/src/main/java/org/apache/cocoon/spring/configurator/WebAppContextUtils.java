@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.spring.configurator;
 
-import javax.servlet.ServletContext;
-
 import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
@@ -35,8 +33,6 @@ public abstract class WebAppContextUtils {
     /** The name of the request attribute containing the current bean factory. */
     public static final String CONTAINER_REQUEST_ATTRIBUTE = WebAppContextUtils.class.getName();
 
-    protected static WebApplicationContext ROOT_CONTAINER;
-
     /**
      * Get the current web application context.
      * @throws IllegalStateException if no WebApplicationContext could not be found
@@ -48,7 +44,7 @@ public abstract class WebAppContextUtils {
     }
 
     /**
-     * Return the current web application context.
+     * Return the current web application context or if the attributes are null, the parent context.
      * @param attributes     The request attributes.
      * @throws IllegalStateException if no WebApplicationContext could not be found
      * @return The web application context.
@@ -59,12 +55,8 @@ public abstract class WebAppContextUtils {
                 return (WebApplicationContext) attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
             }
         }
-        if ( ROOT_CONTAINER == null ) {
-            final ServletContext servletContext = ServletContextFactoryBean.getServletContext();
-            final WebApplicationContext parentContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-            ROOT_CONTAINER = parentContext;
-        }
-        return ROOT_CONTAINER;
+        // return the root context
+        return WebApplicationContextUtils.getRequiredWebApplicationContext(ServletContextFactoryBean.getServletContext());
     }
 
     /**
