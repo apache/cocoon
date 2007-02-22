@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-spring-configurator</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon Spring Configurator</name>
   <description>
     The Cocoon Spring Configurator is an extension for the Spring framework.
@@ -60,7 +60,7 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/${project.artifactId}</tagBase>
         </configuration>
       </plugin>    
-      <plugin>
+      <!--plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -68,7 +68,7 @@
           <collection>cdocs-spring-configurator</collection>          
           <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin>         
+      </plugin!-->         
     </plugins> 
   </build>
   
@@ -76,7 +76,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-configuration-api</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -152,4 +152,10 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-spring-configurator/cocoon-spring-configurator-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-spring-configurator/cocoon-spring-configurator-1.0.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-spring-configurator/cocoon-spring-configurator-1.0.0</url>
+  </scm>
 </project>
