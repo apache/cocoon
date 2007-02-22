@@ -18,6 +18,7 @@ package org.apache.cocoon.portal;
 
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -29,6 +30,7 @@ import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.portal.impl.PortalServiceImpl;
+import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
@@ -81,6 +83,11 @@ public abstract class AbstractPortalTestCase extends CocoonTestCase {
         processInfoProvider.setComponentClassName(MockProcessInfoProvider.class.getName());
         processInfoProvider.setRole(ProcessInfoProvider.ROLE);
         info.addComponent(processInfoProvider);
+        // RendererMap
+        final ComponentInfo rendererMap = new ComponentInfo();
+        rendererMap.setComponentClassName(HashMap.class.getName());
+        rendererMap.setRole(Renderer.class.getName()+"Map");
+        info.addComponent(rendererMap);
         // Add portal service
         final ComponentInfo portalServiceInfo = new ComponentInfo();
         portalServiceInfo.setComponentClassName(PortalServiceImpl.class.getName());
