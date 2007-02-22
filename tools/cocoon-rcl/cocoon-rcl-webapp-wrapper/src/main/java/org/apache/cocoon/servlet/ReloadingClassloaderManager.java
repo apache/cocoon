@@ -17,11 +17,9 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,22 +55,7 @@ public class ReloadingClassloaderManager {
                 classloader.addListener(rl);
                 fam.addListener(rl);
             }
-            fam.start();    
-            
-            
-            // (rpoetz) debugging stuff: get a list of all resources with the name 
-            // "META-INF/cocoon/spring/demo-application-context.xml"
-            ReloadingClassloaderManager.reloadingClassloader = classloader;            
-            Enumeration o = null;
-            try {
-                o = classloader.getResources("META-INF/cocoon/spring/demo-application-context.xml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(o != null) while(o.hasMoreElements()) {
-                System.out.println("--> rcl: " + o.nextElement());
-            }
-            // (rpoetz) end debugging stuff
+            fam.start();
         }   
         return ReloadingClassloaderManager.reloadingClassloader;
     }    

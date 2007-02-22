@@ -58,12 +58,8 @@ public class ReloadingServlet extends HttpServlet {
         // Create the servlet
         try {
             ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
-//            System.out.println("ReloadingServlet: rcm.getClassloader=" + cl);
             Class servletClass = cl.loadClass(servletName);
-//            System.out.println("ReloadingServlet: servletClass.getClassloader()=" + servletClass.getClassLoader());
             this.servlet = (Servlet) servletClass.newInstance();
-//            System.out.println("ReloadingServlet compare=" + (cl == servletClass.getClassLoader()));
-
         } catch (Exception e) {
             throw new ServletException("Cannot load servlet " + servletName, e);
         }
