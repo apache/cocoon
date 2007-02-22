@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -42,21 +43,50 @@ public class ReloadingSpringFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
             ServletException {
         
-        System.out.println("doFilter ReloadingSpringFilter!");
-        
         if(CocoonReloadingListener.isReload()) {
             synchronized (this) {
-                ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(this.config.getServletContext());
-                System.out.println("old appContext: " + appContext);
+                // load the spring context loader from the reloading classloader
+                ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
+                String contextLoaderClassName = ContextLoader.class.getName();
+                System.out.println("ReloadingSpringFilter#doFilter: contextLoaderClassName=" + contextLoaderClassName);
+                ContextLoader springContextLoader = null;
+                try {
+                    Class contextLoaderClass = cl.loadClass(contextLoaderClassName);
+                    springContextLoader = (ContextLoader) contextLoaderClass.newInstance();
+                } catch (Exception e) {
+                    throw new ServletException("Cannot load class " + contextLoaderClassName, e);
+                }
+                System.out.println("ReloadingSpringFilter#doFilter: classloader=" + springContextLoader.getClass().getClassLoader());                
+                
+                // close old Spring application context
+                ApplicationContext appContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
+                System.out.println("ReloadingSpringFilter#doFilter: old appContext: " + appContext);                
+                springContextLoader.closeWebApplicationContext(this.config.getServletContext());
+                System.out.println("ReloadingSpringFilter#doFilter: after close");                       
+                this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+                System.out.println("ReloadingSpringFilter#doFilter: after removeAttribute");
+                
+                // create the new Spring application context
+                springContextLoader.initWebApplicationContext(this.config.getServletContext());
+                System.out.println("ReloadingSpringFilter#doFilter: after initWebApplicationContext");
+                appContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
+                System.out.println("ReloadingSpringFilter#doFilter: after getRequiredWebApplicationContext");                
+                System.out.println("ReloadingSpringFilter#doFilter: newContext=" + appContext);                
+                
+                
+                /*
+                ApplicationContext appContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
+                System.out.println("ReloadingSpringFilter#doFilter: old appContext: " + appContext);
                 
                 ContextLoader springContextLoader = new ContextLoader();
-                System.out.println("rsf: " + springContextLoader.getClass().getClassLoader());
+                System.out.println("ReloadingSpringFilter#doFilter: classloader=: " + springContextLoader.getClass().getClassLoader());
                 springContextLoader.closeWebApplicationContext(this.config.getServletContext());
                 this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
                 springContextLoader.initWebApplicationContext(this.config.getServletContext());
                 
                 appContext = WebApplicationContextUtils.getWebApplicationContext(this.config.getServletContext());
-                System.out.println("new appContext: " + appContext);     
+                System.out.println("ReloadingSpringFilter#doFilter: " + appContext);
+                */     
             }
         }
         // continue processing the request
