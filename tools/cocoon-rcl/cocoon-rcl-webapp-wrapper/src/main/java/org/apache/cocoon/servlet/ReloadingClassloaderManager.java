@@ -56,6 +56,7 @@ public class ReloadingClassloaderManager {
                 fam.addListener(rl);
             }
             fam.start();
+            ReloadingClassloaderManager.reloadingClassloader = classloader; 
         }   
         return ReloadingClassloaderManager.reloadingClassloader;
     }    

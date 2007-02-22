@@ -45,19 +45,18 @@ public class ReloadingSpringFilter implements Filter {
             synchronized (this) {
                 // load the spring context loader from the reloading classloader
                 ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
-                String contextLoaderClassName = ContextLoader.class.getName();
                 ContextLoader springContextLoader = null;
                 try {
-                    Class contextLoaderClass = cl.loadClass(contextLoaderClassName);
+                    Class contextLoaderClass = cl.loadClass(ContextLoader.class.getName());
                     springContextLoader = (ContextLoader) contextLoaderClass.newInstance();
                 } catch (Exception e) {
-                    throw new ServletException("Cannot load class " + contextLoaderClassName, e);
+                    throw new ServletException("Cannot load class " + ContextLoader.class.getName(), e);
                 }
                 
                 // close old Spring application context
                 springContextLoader.closeWebApplicationContext(this.config.getServletContext());
                 this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-                
+
                 // create the new Spring application context
                 springContextLoader.initWebApplicationContext(this.config.getServletContext());
             }

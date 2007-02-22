@@ -17,6 +17,9 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
+//import java.util.ArrayList;
+//import java.util.Iterator;
+//import java.util.List;
 
 import org.apache.commons.jci.listeners.ReloadingListener;
 
@@ -30,13 +33,27 @@ public class CocoonReloadingListener extends ReloadingListener {
     }
 
     public void onChangeFile(File changedFile) {
+        String changedFilePath = changedFile.getAbsolutePath().replace('\\', '/');
+        String changedFileParent = changedFile.getParent().replace('\\', '/');
+        
+        
         System.out.println("A file changed: " + changedFile.getAbsolutePath());
+        System.out.println("Parent: " + changedFile.getParent());
         super.onChangeFile(changedFile);
-//        notifySubscribers();
+
         
         // TODO be more specific when to reload. Not every change needs a reload of the Spring
         // application context
-        reload = true;
+        if(changedFileParent.endsWith("META-INF/cocoon/spring") ||
+                changedFilePath.endsWith(".xmap") ||
+                changedFilePath.endsWith(".xmap.xml") ||
+                changedFileParent.endsWith("config/spring")) {
+            System.out.println("File change detected: " + changedFile);       
+            reload = true;            
+        }
+        
+//        notifySubscribers();        
+
     }
 
     public void onChangeDirectory(File changedDirectory) {
@@ -51,7 +68,7 @@ public class CocoonReloadingListener extends ReloadingListener {
         }
         return reload;
     }
-    
+//    
 //    private void notifySubscribers() {
 //        for(Iterator nIt = subscribers.iterator(); nIt.hasNext(); ) {
 //            ((ReloadingNotificationSubscriber) nIt.next()).handleNotification();
@@ -59,7 +76,6 @@ public class CocoonReloadingListener extends ReloadingListener {
 //    }
 //    
 //    public static void subscribe(ReloadingNotificationSubscriber subscriber) {
-//        System.out.println("----------> Subscription by: " + subscriber);
 //        subscribers.add(subscriber);
 //    }
     
