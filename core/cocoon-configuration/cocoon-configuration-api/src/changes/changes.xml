@@ -24,8 +24,10 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">  
-      
+    <release version="1.0.0" date="2007-00-00" description="unreleased">    
+      <action dev="cziegeler" type="add">
+        Initial creation.
+      </action>   
     </release>
   </body>
 </document>
