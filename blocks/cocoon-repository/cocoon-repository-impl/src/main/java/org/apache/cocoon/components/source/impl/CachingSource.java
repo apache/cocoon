@@ -45,7 +45,6 @@ import org.apache.cocoon.caching.validity.EventValidity;
 import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 
