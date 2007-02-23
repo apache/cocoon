@@ -560,11 +560,6 @@ public class StatusGenerator extends ServiceableGenerator
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addValue(String name, int value) throws SAXException {
-        addValue(name, String.valueOf(value), null);
-    }
-
-    /** Utility function to begin and end a <code>value</code> tag pair. */
     private void addValue(String name, long value) throws SAXException {
         addValue(name, String.valueOf(value), null);
     }

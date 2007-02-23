@@ -22,8 +22,6 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
@@ -33,23 +31,23 @@ import org.xml.sax.SAXException;
 /**
  * @cocoon.sitemap.component.documentation
  * The <code>StripNameSpacesTransformer</code> is a class that can be plugged into a pipeline
- * to strip all namespaces from a SAX stream. It is much faster (certainly for larger 
+ * to strip all namespaces from a SAX stream. It is much faster (certainly for larger
  * streams, but easily factor 100) then the conventional stripnamespaces.xsl
- * 
+ *
  * @cocoon.sitemap.component.name  stripnamespaces
  * @cocoon.sitemap.component.logger sitemap.transformer.stripnamespaces
- * 
+ *
  * @cocoon.sitemap.component.pooling.max  32
- * 
+ *
  * @version $Id$
  * @author ard schrijvers
- *  
+ *
  */
 public class StripNameSpacesTransformer extends AbstractTransformer implements
 		CacheableProcessingComponent {
-	
+
 	private static final String EMPTY_NS = "";
-	
+
 	public void setup(SourceResolver resolver, Map objectModel, String src,
 			Parameters params) throws ProcessingException, SAXException,
 			IOException {
@@ -67,7 +65,7 @@ public class StripNameSpacesTransformer extends AbstractTransformer implements
 
 	public void startElement(String uri, String localName, String qName,
 			Attributes attr) throws SAXException {
-		
+
 		super.startElement(EMPTY_NS, localName, localName, attr);
 
 	}

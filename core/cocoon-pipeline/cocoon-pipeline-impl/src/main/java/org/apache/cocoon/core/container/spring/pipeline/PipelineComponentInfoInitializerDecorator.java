@@ -23,12 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.cocoon.components.pipeline.impl.PipelineComponentInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionDecorator;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
@@ -42,8 +39,6 @@ public class PipelineComponentInfoInitializerDecorator implements
         BeanDefinitionDecorator {
 
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
-    /** Logger  */
-    private final Log logger = LogFactory.getLog(getClass());
 
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.xml.BeanDefinitionDecorator#decorate(org.w3c.dom.Node, org.springframework.beans.factory.config.BeanDefinitionHolder, org.springframework.beans.factory.xml.ParserContext)
@@ -57,7 +52,7 @@ public class PipelineComponentInfoInitializerDecorator implements
 
     private void registerPipelineComponentInfo(ParserContext ctx) {
         if (!ctx.getRegistry().containsBeanDefinition(PipelineComponentInfo.ROLE)) {
-            BeanDefinitionBuilder defBuilder = BeanDefinitionBuilder.rootBeanDefinition(PipelineComponentInfoFactoryBean.class); 
+            BeanDefinitionBuilder defBuilder = BeanDefinitionBuilder.rootBeanDefinition(PipelineComponentInfoFactoryBean.class);
             defBuilder.setSingleton(true);
             defBuilder.setLazyInit(false);
             defBuilder.setInitMethodName("init");
@@ -70,7 +65,7 @@ public class PipelineComponentInfoInitializerDecorator implements
         String mimeType = ((Element)source).hasAttribute("mime-type") ? ((Element)source).getAttribute("mime-type") : null;
         String label = ((Element)source).hasAttribute("label") ? ((Element)source).getAttribute("label") : null;
         String hint = ((Element)source).hasAttribute("hint") ? ((Element)source).getAttribute("hint") : null;
-        
+
         BeanDefinitionBuilder initializer = BeanDefinitionBuilder.rootBeanDefinition(PipelineComponentInfoInitializer.class);
         initializer.addPropertyReference("info", PipelineComponentInfo.ROLE);
         initializer.addPropertyValue("componentName", componentName);
@@ -84,7 +79,7 @@ public class PipelineComponentInfoInitializerDecorator implements
 
         String beanName = componentName + "/info";
         ctx.getRegistry().registerBeanDefinition(beanName, initializer.getBeanDefinition());
-        
+
         return beanName;
     }
 
