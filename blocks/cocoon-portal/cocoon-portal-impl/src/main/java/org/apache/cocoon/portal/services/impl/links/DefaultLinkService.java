@@ -40,7 +40,7 @@ import org.apache.cocoon.portal.util.AbstractBean;
  *
  * @version $Id$
  */
-public class DefaultLinkService 
+public class DefaultLinkService
     extends AbstractBean
     implements LinkService {
 
@@ -54,7 +54,7 @@ public class DefaultLinkService
     protected List internalParametersMatchers = new ArrayList();
 
     /** The name of the request parameter for events. */
-    protected String requestParameterName = LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
+    protected String requestParameterName = LinkService.DEFAULT_EVENT_REQUEST_PARAMETER_NAME;
 
     /**
      * Construct a new link service.
@@ -98,7 +98,7 @@ public class DefaultLinkService
                 } else {
                     this.internalParametersMatchers.add(new ConstantParameterMatcher(parameter));
                 }
-            }            
+            }
         }
     }
 
@@ -205,7 +205,7 @@ public class DefaultLinkService
             final Iterator iter = info.comparableEvents.iterator();
             while (iter.hasNext()) {
                 final ComparableEvent current = (ComparableEvent)iter.next();
-    
+
                 final Iterator eventIterator = events.iterator();
                 boolean found = false;
                 while (!found && eventIterator.hasNext()) {
@@ -351,5 +351,12 @@ public class DefaultLinkService
         }
 
         return buffer.toString();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.services.LinkService#getEventRequestParameterName()
+     */
+    public String getEventRequestParameterName() {
+        return this.requestParameterName;
     }
 }
