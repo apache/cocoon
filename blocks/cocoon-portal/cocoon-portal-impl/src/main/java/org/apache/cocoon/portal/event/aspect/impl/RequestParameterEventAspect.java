@@ -17,7 +17,6 @@
 package org.apache.cocoon.portal.event.aspect.impl;
 
 import java.util.StringTokenizer;
-import java.util.List;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -37,7 +36,7 @@ public class RequestParameterEventAspect
 	implements EventAspect {
 
     protected void process(EventAspectContext context,
-                           Request            request, 
+                           Request            request,
                            String             parameterName) {
         String[] values = request.getParameterValues( parameterName );
         final EventManager publisher = context.getPortalService().getEventManager();
@@ -47,14 +46,6 @@ public class RequestParameterEventAspect
                 final Event e = context.getPortalService().getEventConverter().decode(current);
                 if ( null != e) {
                     publisher.send(e);
-                }
-            }
-        } else {
-            List list = (List) request.getAttribute("org.apache.cocoon.portal." + parameterName);
-            if (list != null) {
-                Event[] events = (Event[]) list.toArray(new Event[0]);
-                for (int i = 0; i < events.length; i++) {
-                    publisher.send(events[i]);
                 }
             }
         }
@@ -79,6 +70,6 @@ public class RequestParameterEventAspect
         if ( !processedDefault ) {
             this.process( context, request, LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME );
         }
-        context.invokeNext();        
+        context.invokeNext();
 	}
 }
