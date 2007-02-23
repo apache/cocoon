@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 /**
  * Test cases for the {@link PropertyHelper} class.
  *
- * @version $Id: AbstractComponentHandler.java 123887 2005-01-02 15:12:01Z sylvain $
+ * @version $Id$
  */
 public class PropertyHelperTestCase extends TestCase {
 
