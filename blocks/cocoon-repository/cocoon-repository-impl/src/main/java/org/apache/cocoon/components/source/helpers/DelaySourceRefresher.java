@@ -53,6 +53,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.util.NetUtils;
@@ -106,7 +107,6 @@ public class DelaySourceRefresher extends AbstractLogEnabled
 	 */
 	public void contextualize(Context context) throws ContextException {
         this.context = context;
-        this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
 	}
 
     /* (non-Javadoc)
@@ -116,6 +116,7 @@ public class DelaySourceRefresher extends AbstractLogEnabled
         this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.runnable = (RunnableManager) this.manager.lookup(RunnableManager.ROLE);
+        this.workDir = new File(((Settings)this.manager.lookup(Settings.ROLE)).getWorkDirectory());
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -340,7 +341,7 @@ public class DelaySourceRefresher extends AbstractLogEnabled
 
     protected class RefresherTask extends AbstractLogEnabled
                                   implements Runnable {
-        private String key;
+        private final String key;
         private String uri;
         private long interval;
 
