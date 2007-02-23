@@ -31,7 +31,6 @@
     <version>4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-databases-hsqldb-server</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Hsqldb Block Implementation</name>
