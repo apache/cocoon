@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: axis.roles 390027 2006-03-30 08:05:32Z reinhard $ -->
+<!-- $Id$ -->
 <role-list>
   <role name="org.apache.cocoon.components.axis.SoapServer"
         shorthand="soap-server"
