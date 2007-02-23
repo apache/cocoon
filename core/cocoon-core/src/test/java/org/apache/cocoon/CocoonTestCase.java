@@ -35,7 +35,7 @@ import org.apache.excalibur.xmlizer.XMLizer;
 /**
  * Testcase for Cocoon. 
  *
- * @version $Id: SitemapComponentTestCase.java 55427 2004-10-24 11:38:37Z cziegeler $
+ * @version $Id$
  */
 public abstract class CocoonTestCase extends ContainerTestCase {
 

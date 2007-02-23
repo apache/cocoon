@@ -16,18 +16,6 @@
  */
 package org.apache.cocoon;
 
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Vector;
-
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.mock.MockEnvironment;
 
 /**
  * TODO - We need to find a way to setup the bean factory!
