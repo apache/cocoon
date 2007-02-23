@@ -21,10 +21,10 @@ import java.util.StringTokenizer;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
@@ -38,12 +38,14 @@ public class RequestParameterEventAspect
     protected void process(EventAspectContext context,
                            Request            request,
                            String             parameterName) {
-        String[] values = request.getParameterValues( parameterName );
         final EventManager publisher = context.getPortalService().getEventManager();
+        final EventConverter converter = context.getPortalService().getEventConverter();
+
+        final String[] values = request.getParameterValues( parameterName );
         if ( values != null ) {
             for(int i=0; i<values.length; i++) {
                 final String current = values[i];
-                final Event e = context.getPortalService().getEventConverter().decode(current);
+                final Event e = converter.decode(current);
                 if ( null != e) {
                     publisher.send(e);
                 }
@@ -55,20 +57,21 @@ public class RequestParameterEventAspect
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
 	 */
 	public void process(EventAspectContext context) {
+        final String defaultRequestParameterName = context.getPortalService().getLinkService().getEventRequestParameterName();
         final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
-        final String requestParameterNames = context.getAspectProperties().getProperty("parameter-name", LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME);
+        final String requestParameterNames = context.getAspectProperties().getProperty("parameter-name", defaultRequestParameterName);
         boolean processedDefault = false;
 
         StringTokenizer tokenizer = new StringTokenizer(requestParameterNames, ", ");
         while ( tokenizer.hasMoreTokens() ) {
             final String currentName = tokenizer.nextToken();
             this.process(context, request, currentName);
-            if ( LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME.equals(currentName) ) {
+            if ( defaultRequestParameterName.equals(currentName) ) {
                 processedDefault = true;
             }
         }
         if ( !processedDefault ) {
-            this.process( context, request, LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME );
+            this.process( context, request, defaultRequestParameterName );
         }
         context.invokeNext();
 	}

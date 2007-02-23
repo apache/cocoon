@@ -30,14 +30,14 @@ import org.apache.cocoon.portal.event.Event;
 public interface LinkService {
 
     /** The request parameter name used for adding event information to the url. */
-    String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
+    String DEFAULT_EVENT_REQUEST_PARAMETER_NAME = "cocoon-portal-event";
 
     /** These parameters are used by default for adding portal specific information to a url. */
     List DEFAULT_INTERNAL_PARAMETERS = Collections.singletonList("cocoon-*");
 
     /**
      * This object holds a 'complete' request parameter (or several) which means it
-     * contains a string like {name}={value}. The value should already be url encoded! 
+     * contains a string like {name}={value}. The value should already be url encoded!
      */
     static class ParameterDescription {
 
@@ -131,7 +131,7 @@ public interface LinkService {
     /**
      * @param url The url to encode.
      * @return The enocoded URL.
-     * @see javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String) 
+     * @see javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String)
      */
     String encodeURL(String url);
 
@@ -139,4 +139,9 @@ public interface LinkService {
      * Test if the parameter is an internal one.
      */
     boolean isInternalParameterName(String name);
+
+    /**
+     * Get the name of the request parameter used to encode events.
+     */
+    String getEventRequestParameterName();
 }
