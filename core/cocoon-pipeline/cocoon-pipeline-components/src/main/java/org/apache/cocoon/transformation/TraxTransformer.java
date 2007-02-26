@@ -80,7 +80,6 @@ import org.xml.sax.SAXException;
  *   &lt;use-browser-capabilities-db&gt;false&lt;/use-browser-capabilities-db&gt;
  *   &lt;use-session-info&gt;false&lt;/use-session-info&gt;
  *   &lt;xslt-processor-role&gt;xslt&lt;/xslt-processor-role&gt;
- *   &lt;transformer-factory&gt;org.apache.xalan.processor.TransformerFactoryImpl&lt;/transformer-factory&gt;
  *   &lt;check-includes&gt;true&lt;/check-includes&gt;
  * &lt;/map:transformer&gt;
  * </pre>
@@ -112,11 +111,6 @@ import org.xml.sax.SAXException;
  * one or the other depending on the needs of stylesheet specificities.<br>
  * If no processor is specified, this transformer will use the XSLT implementation
  * that Cocoon uses internally.
- *
- * The &lt;transformer-factory&gt; configuration allows to specify the TrAX transformer factory
- * implementation that will be used to obtain the XSLT processor. This is only useful for
- * compatibility reasons. Please configure the XSLT processor in the cocoon.xconf properly
- * and use the xslt-processor-role configuration mentioned above.
  *
  * The &lt;check-includes&gt; configuration specifies if the included stylesheets are
  * also checked for changes during caching. If this is set to true (default), the
@@ -216,10 +210,6 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         this.useSessionInfo = child.getValueAsBoolean(false);
         this._useSessionInfo = this.useSessionInfo;
 
-        child = conf.getChild("transformer-factory");
-        // traxFactory is null, if transformer-factory config is unspecified
-        final String traxFactory = child.getValue(null);
-
         child = conf.getChild("xslt-processor-role");
         String xsltProcessorRole = child.getValue(XSLTProcessor.ROLE);
         if (!xsltProcessorRole.startsWith(XSLTProcessor.ROLE)) {
@@ -240,19 +230,11 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
             getLogger().debug("Use session info is " + this.useSessionInfo);
             getLogger().debug("Use TrAX Processor " + xsltProcessorRole);
             getLogger().debug("Check for included stylesheets is " + this.checkIncludes);
-            if (traxFactory != null) {
-                getLogger().debug("Use TrAX Transformer Factory " + traxFactory);
-            } else {
-                getLogger().debug("Use default TrAX Transformer Factory.");
-            }
             getLogger().debug("Default source = " + this.defaultSrc);
         }
 
         try {
             this.xsltProcessor = (XSLTProcessor) this.manager.lookup(xsltProcessorRole);
-            if (traxFactory != null) {
-                this.xsltProcessor.setTransformerFactory(traxFactory);
-            }
         } catch (ServiceException e) {
             throw new ConfigurationException("Cannot load XSLT processor", e);
         }
@@ -577,22 +559,22 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         try {
             super.endDocument();
         } catch(Exception e) {
-            
+
             Throwable realEx = this.errorListener.getThrowable();
             if (realEx == null) realEx = e;
-            
+
             if (realEx instanceof RuntimeException) {
                 throw (RuntimeException)realEx;
             }
-            
+
             if (realEx instanceof SAXException) {
                 throw (SAXException)realEx;
             }
-            
+
             if (realEx instanceof Error) {
                 throw (Error)realEx;
             }
-            
+
             throw new NestableRuntimeException(realEx);
         }
         this.finishedDocument = true;
