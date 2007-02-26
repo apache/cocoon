@@ -25,6 +25,9 @@
     <document>
       <body>
         <release version="1.0.1" date="2007-00-00" description="unreleased">
+          <action dev="cziegeler" type="fix">
+            SettingsBeanFactoryPostProcessor can be used outside a servlet context.
+          </action>
           <action dev="reinhard" type="fix">
             WebAppContextUtils stored a Spring parent application context in a static field. This
             made it impossible to reload the context. The static field was removed and a request

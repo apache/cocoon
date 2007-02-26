@@ -134,9 +134,15 @@ public class SettingsBeanFactoryPostProcessor
         } else {
             version = null;
         }
-        this.servletContext.log("Apache Cocoon Spring Configurator " +
-                                (version != null ? "v" + version + " " : "") +
-                                "is running in mode '" + mode + "'.");
+        // give a startup message
+        final String msg = "Apache Cocoon Spring Configurator " +
+                           (version != null ? "v" + version + " " : "") +
+                           "is running in mode '" + mode + "'.";
+        if ( this.servletContext != null ) {
+            this.servletContext.log(msg);
+        } else {
+            this.logger.info(msg);
+        }
 
         // first we dump the system properties
         this.dumpSystemProperties();
@@ -175,7 +181,7 @@ public class SettingsBeanFactoryPostProcessor
         }
 
         // fill from the servlet context
-        if ( s.getWorkDirectory() == null ) {
+        if ( this.servletContext != null && s.getWorkDirectory() == null ) {
             final File workDir = (File)this.servletContext.getAttribute("javax.servlet.context.tempdir");
             s.setWorkDirectory(workDir.getAbsolutePath());
         }
