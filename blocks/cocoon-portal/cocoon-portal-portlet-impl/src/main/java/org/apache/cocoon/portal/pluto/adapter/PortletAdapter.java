@@ -52,8 +52,9 @@ import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.pluto.PortletContainer;
@@ -81,7 +82,7 @@ import org.xml.sax.SAXException;
  */
 public class PortletAdapter
     extends AbstractCopletAdapter
-    implements PortalManagerAspect, CopletDecorationProvider, Receiver, Parameterizable {
+    implements RequestProcessorAspect, ResponseProcessorAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
     /** Name of the temporary coplet instance attribute holding the portlet window. */
     public static final String PORTLET_WINDOW_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window";
@@ -388,9 +389,9 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#render(org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext, org.xml.sax.ContentHandler, java.util.Properties)
+     * @see org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect#render(org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext, org.xml.sax.ContentHandler, java.util.Properties)
      */
-    public void render(PortalManagerAspectRenderContext aspectContext,
+    public void render(ResponseProcessorAspectContext aspectContext,
                        ContentHandler ch,
                        Properties properties)
     throws SAXException {

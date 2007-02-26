@@ -14,22 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event.aspect;
+package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.portal.services.aspects.BasicAspectContext;
+import java.util.Properties;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
- * The context for an event aspect.
- * An event aspect can call the next aspect in the chain by calling {@link #invokeNext()}.
- * @see BasicAspectContext
+ * This aspect can be used to extend the portal manager functionality
+ * during the rendering phase, like preparing something before rendering
+ * etc.
  *
  * @version $Id$
  */
-public interface EventAspectContext
-    extends BasicAspectContext {
+public interface ResponseProcessorAspect {
 
-    /**
-     * Invoke next aspect in the chain. 
-     */
-    void invokeNext();
+    void render(ResponseProcessorAspectContext context,
+                ContentHandler                 ch,
+                Properties                     properties)
+    throws SAXException;
 }

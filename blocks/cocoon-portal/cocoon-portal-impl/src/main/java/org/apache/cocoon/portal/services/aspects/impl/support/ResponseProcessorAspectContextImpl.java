@@ -14,34 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event.impl;
+package org.apache.cocoon.portal.services.aspects.impl.support;
+
+import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.aspect.EventAspect;
-import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
 import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
+ * The aspect context is passed to every aspect.
  *
  * @version $Id$
  */
-public final class DefaultEventAspectContext
+public final class ResponseProcessorAspectContextImpl
     extends BasicAspectContextImpl
-    implements EventAspectContext {
+    implements ResponseProcessorAspectContext {
 
-    public DefaultEventAspectContext(PortalService service, AspectChain chain) {
+    public ResponseProcessorAspectContextImpl(PortalService service,
+                                              AspectChain    chain) {
         super(service, chain);
     }
 
-	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspectContext#invokeNext()
-	 */
-	public void invokeNext() {
-        final EventAspect aspect = (EventAspect) this.getNext();
-		if (aspect != null ) {
-            aspect.process(this);
-		}
-
-	}
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext#invokeNext(org.xml.sax.ContentHandler, java.util.Properties)
+     */
+    public void invokeNext(ContentHandler ch,
+                           Properties properties)
+    throws SAXException {
+        final ResponseProcessorAspect aspect = (ResponseProcessorAspect)this.getNext();
+        if ( aspect != null ) {
+            aspect.render(this, ch, properties);
+        }
+    }
 }

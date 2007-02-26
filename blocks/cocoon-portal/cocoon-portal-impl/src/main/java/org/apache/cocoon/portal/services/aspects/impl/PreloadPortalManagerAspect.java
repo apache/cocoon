@@ -23,9 +23,8 @@ import java.util.Properties;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
-import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -40,23 +39,15 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class PreloadPortalManagerAspect
 	extends AbstractBean
-	implements PortalManagerAspect {
+	implements ResponseProcessorAspect {
 
     /** Handler that simply ignores all sax events. */
     protected static final ContentHandler nullHandler = new DefaultHandler();
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
+     * @see org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect#render(org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext, org.xml.sax.ContentHandler, java.util.Properties)
      */
-    public void process(RequestProcessorAspectContext context) {
-        // let's just invoke the next
-        context.invokeNext();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#render(org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext, org.xml.sax.ContentHandler, java.util.Properties)
-     */
-    public void render(PortalManagerAspectRenderContext context,
+    public void render(ResponseProcessorAspectContext context,
                        ContentHandler                   ch,
                        Properties                       properties)
     throws SAXException {

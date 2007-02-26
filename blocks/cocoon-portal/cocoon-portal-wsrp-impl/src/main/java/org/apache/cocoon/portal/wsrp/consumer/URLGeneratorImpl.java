@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
-import org.apache.cocoon.portal.wsrp.adapter.WSRPEventAspect;
+import org.apache.cocoon.portal.wsrp.adapter.WSRPRequestProcessorAspect;
 import org.apache.wsrp4j.consumer.URLGenerator;
 import org.apache.wsrp4j.util.Constants;
 
@@ -115,7 +115,7 @@ public class URLGeneratorImpl
             secureLink = Boolean.TRUE;
         }
         final CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
-        params.put(WSRPEventAspect.REQUEST_PARAMETER_NAME, coplet.getId());
+        params.put(WSRPRequestProcessorAspect.REQUEST_PARAMETER_NAME, coplet.getId());
         final StringBuffer buffer = new StringBuffer(this.service.getLinkService().getRefreshLinkURI(secureLink));
         boolean hasParams = buffer.indexOf("?") > 0;
         Iterator i = params.entrySet().iterator();

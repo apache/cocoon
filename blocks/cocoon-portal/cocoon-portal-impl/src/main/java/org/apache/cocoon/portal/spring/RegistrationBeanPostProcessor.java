@@ -18,7 +18,8 @@ package org.apache.cocoon.portal.spring;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -46,8 +47,11 @@ public class RegistrationBeanPostProcessor
      * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
      */
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if ( bean instanceof CopletAdapter && bean instanceof PortalManagerAspect ) {
-            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((PortalManagerAspect)bean);
+        if ( bean instanceof CopletAdapter && bean instanceof ResponseProcessorAspect ) {
+            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((ResponseProcessorAspect)bean);
+        }
+        if ( bean instanceof CopletAdapter && bean instanceof RequestProcessorAspect ) {
+            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((RequestProcessorAspect)bean);
         }
         return bean;
     }

@@ -24,7 +24,6 @@ import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
@@ -33,10 +32,12 @@ import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.PortalManager;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
-import org.apache.cocoon.portal.services.aspects.impl.support.PortalManagerAspectContextImpl;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
+import org.apache.cocoon.portal.services.aspects.impl.support.RequestProcessorAspectContextImpl;
+import org.apache.cocoon.portal.services.aspects.impl.support.ResponseProcessorAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -51,17 +52,28 @@ import org.xml.sax.SAXException;
  */
 public class DefaultPortalManager
 	extends AbstractBean
-	implements PortalManager, PortalManagerAspect {
+	implements PortalManager, RequestProcessorAspect, ResponseProcessorAspect {
 
-    /** The aspect chain for additional processing. */
-    protected AspectChain chain;
+    /** The aspect chain for additional request processing. */
+    protected AspectChain requestChain;
+
+    /** The aspect chain for additional response processing. */
+    protected AspectChain responseChain;
 
     /**
-     * Set the event chain.
+     * Set the request aspect chain.
      * @param a A chain.
      */
-    public void setAspectChain(AspectChain a) {
-        this.chain = a;
+    public void setRequestAspectChain(AspectChain a) {
+        this.requestChain = a;
+    }
+
+    /**
+     * Set the response aspect chain.
+     * @param a A chain.
+     */
+    public void setResponseAspectChain(AspectChain a) {
+        this.responseChain = a;
     }
 
     /**
@@ -69,8 +81,8 @@ public class DefaultPortalManager
      */
     public void process()
     throws PortalException {
-        PortalManagerAspectContextImpl aspectContext =
-            new PortalManagerAspectContextImpl(this.portalService, this.chain);
+        RequestProcessorAspectContextImpl aspectContext =
+            new RequestProcessorAspectContextImpl(this.portalService, this.requestChain);
         aspectContext.invokeNext();
     }
 
@@ -79,8 +91,8 @@ public class DefaultPortalManager
 	 */
 	public void render(ContentHandler contentHandler, Properties properties)
     throws SAXException {
-        PortalManagerAspectContextImpl aspectContext =
-            new PortalManagerAspectContextImpl(this.portalService, this.chain);
+        ResponseProcessorAspectContextImpl aspectContext =
+            new ResponseProcessorAspectContextImpl(this.portalService, this.responseChain);
         aspectContext.invokeNext(contentHandler, properties);
 	}
 
@@ -89,24 +101,27 @@ public class DefaultPortalManager
      */
     public void init()
     throws PortalException {
-        if ( this.chain == null ) {
-            this.chain = new AspectChain(PortalManagerAspect.class);
+        if ( this.requestChain == null ) {
+            this.requestChain = new AspectChain(RequestProcessorAspect.class);
         }
-        this.chain.addAspect(this, null);
+        this.requestChain.addAspect(this, null);
+        if ( this.responseChain == null ) {
+            this.responseChain = new AspectChain(ResponseProcessorAspect.class);
+        }
+        this.responseChain.addAspect(this, null);
     }
 
     /**
      * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
     public void process(RequestProcessorAspectContext rpContext) {
-        EventManager eventManager = this.portalService.getEventManager();
-        eventManager.processEvents();
+        // by defaut, we have nothing to do
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#render(org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext, org.xml.sax.ContentHandler, java.util.Properties)
+     * @see org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect#render(org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext, org.xml.sax.ContentHandler, java.util.Properties)
      */
-    public void render(PortalManagerAspectRenderContext renderContext,
+    public void render(ResponseProcessorAspectContext renderContext,
                        ContentHandler                   ch,
                        Properties                       properties)
     throws SAXException {
@@ -207,11 +222,24 @@ public class DefaultPortalManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.PortalManager#register(org.apache.cocoon.portal.services.aspects.PortalManagerAspect)
+     * @see org.apache.cocoon.portal.services.PortalManager#register(org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect)
      */
-    public void register(PortalManagerAspect aspect) {
+    public void register(ResponseProcessorAspect aspect) {
         try {
-            this.chain.addAspect(aspect, null, 0);
+            this.responseChain.addAspect(aspect, null, 0);
+        } catch (PortalException pe) {
+            final IllegalArgumentException e = new IllegalArgumentException("Unable to add portal manager aspects.");
+            e.initCause(pe);
+            throw e;
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.services.PortalManager#register(org.apache.cocoon.portal.services.aspects.RequestProcessorAspect)
+     */
+    public void register(RequestProcessorAspect aspect) {
+        try {
+            this.responseChain.addAspect(aspect, null, 0);
         } catch (PortalException pe) {
             final IllegalArgumentException e = new IllegalArgumentException("Unable to add portal manager aspects.");
             e.initCause(pe);
