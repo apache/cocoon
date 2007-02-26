@@ -18,18 +18,13 @@ package org.apache.cocoon.portal.services.aspects;
 
 import java.util.Properties;
 
-import org.apache.cocoon.portal.PortalException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * @since 2.1.8
  * @version $Id$
  */
-public interface PortalManagerAspect {
-
-    void prepare(PortalManagerAspectPrepareContext context)
-    throws PortalException;
+public interface PortalManagerAspect extends RequestProcessorAspect {
 
     void render(PortalManagerAspectRenderContext context,
                 ContentHandler                   ch,

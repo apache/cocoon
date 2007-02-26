@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.portal.PortalException;
-
 /**
  * The context for a {@link RequestProcessorAspect}.
  *
@@ -29,6 +27,5 @@ public interface RequestProcessorAspectContext
     /**
      * Invoke next aspect in the chain.
      */
-    void invokeNext()
-    throws PortalException;
+    void invokeNext();
 }

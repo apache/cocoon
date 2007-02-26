@@ -20,14 +20,19 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 
 /**
- * This is a central service of the portal. It should be used to create links
- * inside the portal pages.
+ * This is a central service of the portal. It creates all links contained in the
+ * portal pages. Usually a link contains information about one (or more) portal events.
+ * When a user activates a link these events are fired. As the link service created
+ * the link, it is also the responsibility of the link service to "parse" the incoming
+ * url and fire the contained events accordingly. Therefore the link service extends
+ * the {@link RequestProcessorAspect}.
  *
  * @version $Id$
  */
-public interface LinkService {
+public interface LinkService extends RequestProcessorAspect {
 
     /** The request parameter name used for adding event information to the url. */
     String DEFAULT_EVENT_REQUEST_PARAMETER_NAME = "cocoon-portal-event";
@@ -139,9 +144,4 @@ public interface LinkService {
      * Test if the parameter is an internal one.
      */
     boolean isInternalParameterName(String name);
-
-    /**
-     * Get the name of the request parameter used to encode events.
-     */
-    String getEventRequestParameterName();
 }

@@ -53,8 +53,8 @@ import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
@@ -79,7 +79,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class PortletAdapter 
+public class PortletAdapter
     extends AbstractCopletAdapter
     implements PortalManagerAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
@@ -131,7 +131,7 @@ public class PortletAdapter
 
         PortletDefinitionRegistry registry = (PortletDefinitionRegistry) portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class);
 
-        final String portletEntityId = (String) getConfiguration(coplet, PORTLET_ATTRIBUTE_NAME);   
+        final String portletEntityId = (String) getConfiguration(coplet, PORTLET_ATTRIBUTE_NAME);
         if ( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("Coplet " + coplet.getId() + " tries to login into portlet " + portletEntityId);
         }
@@ -141,11 +141,11 @@ public class PortletAdapter
 
         if ( portletEntity.getPortletDefinition() != null ) {
             // create the window
-            PortletWindow portletWindow = new PortletWindowImpl(coplet, portletEntityId);                
+            PortletWindow portletWindow = new PortletWindowImpl(coplet, portletEntityId);
             ((PortletWindowCtrl)portletWindow).setId(coplet.getId());
             ((PortletWindowCtrl)portletWindow).setPortletEntity(portletEntity);
-            PortletWindowList windowList = portletEntity.getPortletWindowList();        
-            ((PortletWindowListCtrl)windowList).add(portletWindow);    
+            PortletWindowList windowList = portletEntity.getPortletWindowList();
+            ((PortletWindowListCtrl)windowList).add(portletWindow);
             coplet.setTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME, portletWindow);
 
             // load the portlet
@@ -155,11 +155,11 @@ public class PortletAdapter
                 final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
                 objectModel.put("portlet-response",  new ServletResponseImpl(res));
                 req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
-                objectModel.put("portlet-request",  req);                
+                objectModel.put("portlet-request",  req);
             }
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
             try {
-                this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),  
+                this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),
                                                   res);
             } catch (Exception e) {
                 this.getLogger().error("Error loading portlet " + portletEntityId + " for instance " + coplet.getId(), e);
@@ -254,14 +254,14 @@ public class PortletAdapter
      * Return the portlet container
      */
     public PortletContainer getPortletContainer() {
-        return this.portletContainer;        
+        return this.portletContainer;
     }
 
     /**
      * Return the portlet container environment
      */
     public PortletContainerEnvironment getPortletContainerEnvironment() {
-        return this.portletContainerEnvironment;        
+        return this.portletContainerEnvironment;
     }
 
     /**
@@ -355,10 +355,9 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
+     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
-    public void prepare(PortalManagerAspectPrepareContext aspectContext)
-    throws PortalException {
+    public void process(RequestProcessorAspectContext aspectContext) {
         // process the events
         aspectContext.invokeNext();
 
@@ -419,7 +418,7 @@ public class PortletAdapter
 
             // portlet modes
             final String pmString = (String)copletInstanceData.getTemporaryAttribute(PORTLET_MODE_ATTRIBUTE_NAME);
-            final PortletMode pm; 
+            final PortletMode pm;
             if ( pmString == null ) {
                 pm = PortletMode.VIEW;
             } else {
@@ -436,13 +435,13 @@ public class PortletAdapter
                 url.clearParameters();
                 url.setPortletMode(PortletMode.HELP);
                 modes.add(new DecorationAction("help-uri", url.toString()));
-            }                
+            }
             if ( !pm.equals(PortletMode.VIEW) ) {
                 PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                 url.clearParameters();
                 url.setPortletMode(PortletMode.VIEW);
                 modes.add(new DecorationAction("view-uri", url.toString()));
-            }                
+            }
         }
 
         return modes;
@@ -460,7 +459,7 @@ public class PortletAdapter
 
             // Sizing
             final String wsString = (String)copletInstanceData.getTemporaryAttribute(WINDOW_STATE_ATTRIBUTE_NAME);
-            final WindowState ws; 
+            final WindowState ws;
             if ( wsString == null ) {
                 ws = WindowState.NORMAL;
             } else {
@@ -490,7 +489,7 @@ public class PortletAdapter
                 }
             }
             if ( this.enableFullScreen ) {
-                // TODO - Implement full screen for portlets (= own mode)                
+                // TODO - Implement full screen for portlets (= own mode)
             }
         }
 

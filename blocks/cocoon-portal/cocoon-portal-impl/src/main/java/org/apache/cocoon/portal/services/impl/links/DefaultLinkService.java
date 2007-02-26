@@ -30,7 +30,10 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.EventConverter;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.services.LinkService;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
@@ -354,9 +357,23 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.LinkService#getEventRequestParameterName()
+     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
-    public String getEventRequestParameterName() {
-        return this.requestParameterName;
+    public void process(RequestProcessorAspectContext context) {
+        final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
+        final EventManager publisher = context.getPortalService().getEventManager();
+        final EventConverter converter = context.getPortalService().getEventConverter();
+
+        final String[] values = request.getParameterValues( this.requestParameterName );
+        if ( values != null ) {
+            for(int i=0; i<values.length; i++) {
+                final String current = values[i];
+                final Event e = converter.decode(current);
+                if ( null != e) {
+                    publisher.send(e);
+                }
+            }
+        }
+        context.invokeNext();
     }
 }

@@ -23,10 +23,10 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.aspect.EventAspect;
-import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
@@ -35,9 +35,9 @@ import org.apache.cocoon.portal.util.AbstractBean;
  */
 public abstract class AbstractContentRequestProcessorAspect
     extends AbstractBean
-    implements EventAspect {
+    implements RequestProcessorAspect {
 
-    protected abstract String getRequestParameterName(EventAspectContext context);
+    protected abstract String getRequestParameterName(RequestProcessorAspectContext context);
 
     protected abstract int getRequiredValueCount();
 
@@ -69,9 +69,9 @@ public abstract class AbstractContentRequestProcessorAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
+     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
-    public void process(EventAspectContext context) {
+    public void process(RequestProcessorAspectContext context) {
         final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
         String[] values = request.getParameterValues(this.getRequestParameterName(context));
         if (values != null) {
@@ -103,12 +103,12 @@ public abstract class AbstractContentRequestProcessorAspect
 
                     if ( tokenCount == this.getRequiredValueCount() ) {
                         String [] eventValues = new String[tokenCount];
-                                        
+
                         while (tokenizer.hasMoreTokens()) {
                             eventValues[tokenNumber] = tokenizer.nextToken();
-                        
+
                             tokenNumber = tokenNumber + 1;
-                        } 
+                        }
 
                         this.publish( context.getPortalService(), eventValues );
 

@@ -18,13 +18,13 @@ package org.apache.cocoon.portal.services.aspects.impl;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceChangeAttributeEvent;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.LinkLayout;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 
 /**
  *
@@ -35,7 +35,7 @@ public class LinkRequestProcessorAspect extends AbstractContentRequestProcessorA
     /**
      * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#getRequestParameterName(org.apache.cocoon.portal.event.aspect.EventAspectContext)
      */
-    protected String getRequestParameterName(EventAspectContext context) {
+    protected String getRequestParameterName(RequestProcessorAspectContext context) {
         return context.getAspectProperties().getProperty("parameter-name", "link");
     }
 
@@ -56,6 +56,6 @@ public class LinkRequestProcessorAspect extends AbstractContentRequestProcessorA
         LayoutFeatures.checkLayoutClass(layout, LinkLayout.class, true);
         final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, true);
         final Event e = new LayoutInstanceChangeAttributeEvent(instance, LinkLayout.ATTRIBUTE_LAYOUT_ID, values[2], true);
-        service.getEventManager().send(e);                    
+        service.getEventManager().send(e);
     }
 }
