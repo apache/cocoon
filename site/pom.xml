@@ -21,17 +21,17 @@
     | @version $Id$
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
-  
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
     <version>4-SNAPSHOT</version>
-    <relativePath>pom.xml</relativePath>    
-  </parent>  
-  
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
   <artifactId>site</artifactId>
   <version>1-SNAPSHOT</version>
   <name>Cocoon Site [modules]</name>
@@ -40,11 +40,11 @@
   <modules>
     <!-- Category sites -->
     <module>cocoon-blocks-site</module>
-    <module>cocoon-core-site</module>    
+    <module>cocoon-core-site</module>
     <module>cocoon-main-site</module>
     <module>cocoon-subprojects-site</module>
-    <module>cocoon-maven-plugins-site</module>     
-       
+    <module>cocoon-maven-plugins-site</module>
+
     <!-- Cocoon Blocks -->
     <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
     <module>../blocks/cocoon-auth/cocoon-auth-impl</module>
@@ -65,26 +65,26 @@
     <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
 
     <!-- Maven plugins -->
-    <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>    
-    
-    <!-- Core modules --> 
+    <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>
+
+    <!-- Core modules -->
     <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
-    <module>../core/cocoon-core</module>    
+    <module>../core/cocoon-core</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-components</module>
     <!--module>../core/cocoon-sitemap/cocoon-sitemap-api</module>
     <module>../core/cocoon-sitemap/cocoon-sitemap-impl</module>
-    <module>../core/cocoon-sitemap/cocoon-sitemap-components</module>   
+    <module>../core/cocoon-sitemap/cocoon-sitemap-components</module>
     <module>../core/cocoon-store/cocoon-store-impl</module>
     <module>../core/cocoon-thread/cocoon-thread-api</module>
     <module>../core/cocoon-thread/cocoon-thread-impl</module>
     <module>../core/cocoon-util</module>
     <module>../core/cocoon-xml/cocoon-xml-api</module>
     <module>../core/cocoon-xml/cocoon-xml-impl</module>
-    <module>../core/cocoon-xml/cocoon-xml-resolver</module-->         
+    <module>../core/cocoon-xml/cocoon-xml-resolver</module-->
   </modules>
-  
+
   <build>
     <pluginManagement>
       <plugins>
@@ -93,17 +93,17 @@
           <artifactId>daisy-maven-plugin</artifactId>
           <configuration>
             <siteXmlContent>
-								&lt;project&gt;
-								  &lt;skin&gt;
-								    &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
-								    &lt;artifactId&gt;cocoon-maven-site-skin&lt;/artifactId&gt; 
-								    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt; 
-								  &lt;/skin&gt;
-								  &lt;body&gt;
-								    &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
-								  &lt;/body&gt;
-								&lt;/project&gt;            
-            </siteXmlContent>     
+                &lt;project&gt;
+                  &lt;skin&gt;
+                    &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
+                    &lt;artifactId&gt;cocoon-maven-site-skin&lt;/artifactId&gt;
+                    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+                  &lt;/skin&gt;
+                  &lt;body&gt;
+                    &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
+                  &lt;/body&gt;
+                &lt;/project&gt;
+            </siteXmlContent>
           </configuration>
           <executions>
             <execution>
@@ -112,10 +112,10 @@
                 <goal>cocoon</goal>
               </goals>
             </execution>
-          </executions>          
-        </plugin>         
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
-  </build>  
- 
+  </build>
+
 </project>
