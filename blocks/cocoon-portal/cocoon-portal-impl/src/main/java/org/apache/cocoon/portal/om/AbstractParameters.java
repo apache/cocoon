@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.om;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.map.LinkedMap;
@@ -26,10 +27,13 @@ import org.apache.commons.collections.map.LinkedMap;
  *
  * @version $Id$
  */
-public abstract class AbstractParameters 
+public abstract class AbstractParameters
     implements Cloneable, Serializable {
 
     protected Map parameters = Collections.EMPTY_MAP;
+
+    /** Temporary attributes are not persisted. */
+    protected transient Map temporaryAttributes = Collections.EMPTY_MAP;
 
     public Map getParameters() {
         return this.parameters;
@@ -66,6 +70,44 @@ public abstract class AbstractParameters
     }
 
     /**
+     * Return the value of an attribute.
+     * @param key The name of the attribute.
+     * @return The value of the attribute or null
+     */
+    public Object getTemporaryAttribute(String key) {
+        return this.temporaryAttributes.get(key);
+    }
+
+    /**
+     * Set the value of the attribute.
+     * @param key The attribute name.
+     * @param value The new value.
+     */
+    public void setTemporaryAttribute(String key, Object value) {
+        if ( this.temporaryAttributes.size() == 0 ) {
+            this.temporaryAttributes = new HashMap();
+        }
+        this.temporaryAttributes.put(key, value);
+    }
+
+    /**
+     * Remove a temporary attribute.
+     * @param key The attribute name.
+     * @return If there was a value associated with the attribute, the old value is returned.
+     */
+    public Object removeTemporaryAttribute(String key) {
+        return this.temporaryAttributes.remove(key);
+    }
+
+    /**
+     * Return a map with all temporary attributes.
+     * @return A map.
+     */
+    public Map getTemporaryAttributes() {
+        return this.temporaryAttributes;
+    }
+
+    /**
      * @see java.lang.Object#clone()
      */
     protected Object clone() throws CloneNotSupportedException {
@@ -74,6 +116,10 @@ public abstract class AbstractParameters
         if ( this.parameters.size() > 0 ) {
             clone.parameters = new LinkedMap(this.parameters);
         }
+        if ( this.temporaryAttributes.size() > 0 ) {
+            clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
+        }
+
         return clone;
     }
 }

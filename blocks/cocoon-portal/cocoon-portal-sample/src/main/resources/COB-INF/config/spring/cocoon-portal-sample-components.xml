@@ -38,7 +38,7 @@
       |
       +-->
     <bean name="org.apache.cocoon.portal.services.LinkService"
-          class="org.apache.cocoon.portal.services.impl.links.DefaultLinkService"
+          class="org.apache.cocoon.portal.services.impl.links.PageLabelLinkService"
           parent="org.apache.cocoon.portal.util.AbstractBean"
           scope="singleton">
       <property name="defaultPort" value="8888"/>
