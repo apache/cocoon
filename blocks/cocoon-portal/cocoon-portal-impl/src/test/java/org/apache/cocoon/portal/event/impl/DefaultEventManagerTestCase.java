@@ -26,7 +26,7 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
 
 /**
- * $Id$ 
+ * $Id$
  */
 public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
 
@@ -37,7 +37,7 @@ public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        this.eventManager = (DefaultEventManager)this.getBeanFactory().getBean(EventManager.ROLE);
+        this.eventManager = (DefaultEventManager)this.getBeanFactory().getBean(EventManager.class.getName());
     }
 
     /**
@@ -48,7 +48,7 @@ public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
         // Add event manager
         final ComponentInfo component = new ComponentInfo();
         component.setComponentClassName(DefaultEventManager.class.getName());
-        component.setRole(EventManager.ROLE);
+        component.setRole(EventManager.class.getName());
         component.setConfiguration(new DefaultConfiguration("-"));
         info.addComponent(component);
     }

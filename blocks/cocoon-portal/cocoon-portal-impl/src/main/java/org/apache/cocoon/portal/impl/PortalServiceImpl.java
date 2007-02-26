@@ -63,8 +63,8 @@ import org.springframework.web.context.ServletContextAware;
 public class PortalServiceImpl
     extends AbstractLogEnabled
     implements Serviceable,
-                ThreadSafe, 
-                PortalService, 
+                ThreadSafe,
+                PortalService,
                 ServletContextAware,
                 Disposable,
                 Configurable {
@@ -306,7 +306,7 @@ public class PortalServiceImpl
     public EventManager getEventManager() {
         if ( null == this.eventManager ) {
             try {
-                this.eventManager = (EventManager)this.manager.lookup( EventManager.ROLE );
+                this.eventManager = (EventManager)this.manager.lookup( EventManager.class.getName() );
             } catch (ServiceException e) {
                 throw new PortalRuntimeException("Unable to lookup event manager.", e);
             }

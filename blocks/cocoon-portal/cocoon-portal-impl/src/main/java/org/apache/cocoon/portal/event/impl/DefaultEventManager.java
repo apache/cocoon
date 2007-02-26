@@ -29,7 +29,6 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
@@ -57,9 +56,6 @@ public class DefaultEventManager
     extends AbstractBean
     implements EventManager {
 
-    /** The aspect chain for additional event processing. */
-    protected AspectChain chain;
-
     /** Introspected receiver classes. */
     protected Map receiverClasses = new HashMap();
 
@@ -74,14 +70,6 @@ public class DefaultEventManager
     }
 
     /**
-     * Set the event chain.
-     * @param a A chain.
-     */
-    public void setAspectChain(AspectChain a) {
-        this.chain = a;
-    }
-
-    /**
      * Initialize this component.
      */
     public void init() {
@@ -91,15 +79,6 @@ public class DefaultEventManager
         // TODO - Add this as a default bean!
         // subscribe all receivers that are necessary for the portal to work
         this.subscribe(new InternalEventReceiver());
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.event.EventManager#processEvents()
-     */
-    public void processEvents() {
-        // now process event aspects
-        DefaultEventAspectContext eventContext = new DefaultEventAspectContext(this.portalService, this.chain);
-        eventContext.invokeNext();
     }
 
     /**

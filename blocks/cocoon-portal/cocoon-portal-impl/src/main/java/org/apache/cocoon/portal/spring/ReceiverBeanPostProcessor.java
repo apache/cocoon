@@ -46,7 +46,7 @@ public class ReceiverBeanPostProcessor
      */
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if ( bean instanceof Receiver ) {
-            ((EventManager)this.beanFactory.getBean(EventManager.ROLE)).subscribe((Receiver)bean);
+            ((EventManager)this.beanFactory.getBean(EventManager.class.getName())).subscribe((Receiver)bean);
         }
         return bean;
     }

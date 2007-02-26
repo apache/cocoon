@@ -29,14 +29,14 @@
                            http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
 
   <!--+ 
-      | Event Aspects
+      | Request Processor Aspects
       |
       +-->
     <!--+
         | This aspect is required for WSRP.
         +-->
-    <bean id="org.apache.cocoon.portal.event.aspect.EventAspect.wsrp"
-          class="org.apache.cocoon.portal.wsrp.adapter.WSRPEventAspect"
+    <bean id="org.apache.cocoon.portal.services.aspects.RequestProcessorAspect.wsrp"
+          class="org.apache.cocoon.portal.wsrp.adapter.WSRPRequestProcessorAspect"
           parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
 
 </beans>

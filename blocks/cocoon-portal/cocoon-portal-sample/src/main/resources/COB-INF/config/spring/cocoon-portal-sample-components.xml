@@ -74,10 +74,11 @@
   </bean>
 
   <!--+
-      | Event Manager Aspect configuration.
+      | Request Processor Aspect configuration.
       |
       +-->
-    <portal:event-aspects id="org.apache.cocoon.portal.event.EventManager.aspects">
+    <portal:request-processor-aspects id="org.apache.cocoon.portal.services.PortalManager.requestAspects">
+      <portal:aspect ref="org.apache.cocoon.portal.services.LinkService"/>
       <!--  The client should not cache the page. -->
       <portal:aspect type="no-client-caching"/>
       <!-- Use the action counter with great care. We recommend turning it off. -->
@@ -90,16 +91,15 @@
       -->
       <!-- Comment the following out if you don't need WSRP: --> 
       <portal:aspect type="wsrp"/>
-      <portal:aspect type="request-parameter"/>
-    </portal:event-aspects>
+    </portal:request-processor-aspects>
 
   <!--+
-      | Portal Manager Aspect configuration.
+      | Response Processor Aspect configuration.
       |
       +-->
-    <portal:portal-manager-aspects id="org.apache.cocoon.portal.services.PortalManager.aspects">
+    <portal:response-processor-aspects id="org.apache.cocoon.portal.services.PortalManager.responseAspects">
       <!-- Add your aspects here -->
-    </portal:portal-manager-aspects>
+    </portal:response-processor-aspects>
 
   <!--+
       | Profile Manager Aspect configuration.

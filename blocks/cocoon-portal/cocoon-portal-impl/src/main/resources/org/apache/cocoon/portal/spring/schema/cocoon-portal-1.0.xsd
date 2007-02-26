@@ -21,16 +21,6 @@
             xmlns:tns="http://cocoon.apache.org/schema/portal"
             xmlns="http://cocoon.apache.org/schema/portal">
 
-  <xsd:element name="event-aspects">
-    <xsd:complexType>
-      <xsd:sequence>
-    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
-      </xsd:sequence>
-      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
-      <xsd:attribute name="name" type="xsd:string" use="optional"/>
-    </xsd:complexType>
-  </xsd:element>
-
   <xsd:element name="renderer-aspects">
     <xsd:complexType>
       <xsd:sequence>
@@ -51,7 +41,17 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="portal-manager-aspects">
+  <xsd:element name="request-processor-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="response-processor-aspects">
     <xsd:complexType>
       <xsd:sequence>
     	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>

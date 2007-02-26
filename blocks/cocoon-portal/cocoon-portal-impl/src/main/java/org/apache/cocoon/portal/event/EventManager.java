@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.portal.event;
 
-
 /**
  * This component manages the event handling mechanism in the portal.
  * The event mechanism is based on the publisher/subscriber principle.
@@ -28,16 +27,6 @@ package org.apache.cocoon.portal.event;
  * @version $Id$
  */
 public interface EventManager {
-
-    /**
-     * Represents the role of the service
-     */
-    String ROLE = EventManager.class.getName();
-
-    /**
-     * Process the events.
-     */
-    void processEvents();
 
     /**
      * Publish an event. All registered receivers get notified.

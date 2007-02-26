@@ -22,14 +22,14 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * @since 2.1.8
+ *
  * @version $Id$
  */
-public interface PortalManagerAspectRenderContext
+public interface ResponseProcessorAspectContext
     extends BasicAspectContext {
 
     /**
-     * Invoke next aspect 
+     * Invoke next aspect
      */
     void invokeNext(ContentHandler ch,
                     Properties     parameters)
