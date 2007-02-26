@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @version $Id: PortalManagerImpl.java 507453 2007-02-14 09:41:57Z cziegeler $
+ * @version $Id$
  */
 public class DefaultPortalManager
 	extends AbstractBean

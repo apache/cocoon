@@ -17,7 +17,7 @@
 -->
 <!--+
     |
-    | @version $Id: rawtab.xml 509214 2007-02-19 14:42:03Z cziegeler $
+    | @version $Id$
     +-->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

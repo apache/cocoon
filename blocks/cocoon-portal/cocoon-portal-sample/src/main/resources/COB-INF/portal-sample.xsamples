@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: portal.xsamples 126208 2005-01-23 11:03:50Z cziegeler $ -->
+<!-- SVN $Id$ -->
 <xsamples xpath="/samples" unless="group[@name='Portal Engine']">
 
   <group name="Portal Block">

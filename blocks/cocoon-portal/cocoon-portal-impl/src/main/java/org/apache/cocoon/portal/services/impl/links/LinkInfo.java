@@ -30,7 +30,7 @@ import org.apache.cocoon.portal.event.Event;
  * Helper class containing the information about common parts for each link
  * that will be generated in the portal page.
  *
- * @version $Id: LinkInfo.java 449173 2006-09-23 05:52:37Z crossley $
+ * @version $Id$
  */
 public class LinkInfo {
 
