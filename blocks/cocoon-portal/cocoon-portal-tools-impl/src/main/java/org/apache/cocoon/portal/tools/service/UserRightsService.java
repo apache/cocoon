@@ -33,7 +33,7 @@ import org.apache.excalibur.source.Source;
 /**
  * Service, that provides access to the user rights configuration.
  *
- * @version $Id: UserRightsService.java 151233 2005-02-03 21:28:27Z cziegeler $
+ * @version $Id$
  */
 public class UserRightsService {
 

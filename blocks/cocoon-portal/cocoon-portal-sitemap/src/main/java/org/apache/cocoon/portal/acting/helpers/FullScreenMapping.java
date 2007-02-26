@@ -25,7 +25,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 /**
  * Helper class for a full screen event.
  *
- * @version $Id: CopletMapping.java 30941 2004-07-29 19:56:58Z vgritsenko $
+ * @version $Id$
  */
 public class FullScreenMapping extends Mapping {
 

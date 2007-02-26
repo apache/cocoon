@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * 	&lt;map:parameter name="copletId" type="examplecoplet"/&gt;
  * &lt;/map:generator&gt;</pre>
  *
- * @version $Id: AbstractCopletTransformer.java 30941 2004-07-29 19:56:58Z vgritsenko $
+ * @version $Id$
  */
 public abstract class AbstractCopletGenerator 
 extends ServiceableGenerator {
