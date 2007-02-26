@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.services.aspects.impl.support;
 
 import java.util.Collection;
 
+import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
@@ -50,7 +51,23 @@ public final class ProfileManagerAspectContextImpl
         this.phase = phase;
     }
 
+	/**
+	 * @see org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext#invokeNext(java.lang.Object)
+	 */
 	public void invokeNext(Object object) {
+        // type check first
+        if ( object == null ) {
+            throw new PortalRuntimeException("Profile information can't be null (phase = " + this.phase + ").");
+        }
+        if ( phase == PHASE_COPLET_LAYOUT ) {
+            if ( !(object instanceof Layout) ) {
+                throw new PortalRuntimeException("Profile information must be of type Layout (phase = " + this.phase + ").");
+            }
+        } else {
+            if ( !(object instanceof Collection) ) {
+                throw new PortalRuntimeException("Profile information must be of type Collection (phase = " + this.phase + ").");
+            }
+        }
         final ProfileManagerAspect aspect = (ProfileManagerAspect)this.getNext();
         if ( aspect != null ) {
             switch (phase) {
@@ -68,6 +85,10 @@ public final class ProfileManagerAspectContextImpl
         }
     }
 
+    /**
+     * Return the resulting profile depending on the phase.
+     * @return
+     */
     public Object getResult() {
         return this.result;
     }

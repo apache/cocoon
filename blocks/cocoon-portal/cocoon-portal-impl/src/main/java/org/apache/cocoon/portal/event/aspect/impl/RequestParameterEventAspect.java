@@ -25,6 +25,7 @@ import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
@@ -57,7 +58,7 @@ public class RequestParameterEventAspect
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
 	 */
 	public void process(EventAspectContext context) {
-        final String defaultRequestParameterName = context.getPortalService().getLinkService().getEventRequestParameterName();
+        final String defaultRequestParameterName = LinkService.DEFAULT_EVENT_REQUEST_PARAMETER_NAME;
         final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
         final String requestParameterNames = context.getAspectProperties().getProperty("parameter-name", defaultRequestParameterName);
         boolean processedDefault = false;

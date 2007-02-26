@@ -34,8 +34,8 @@ import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.PortalManager;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.services.aspects.impl.support.PortalManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
 import org.apache.cocoon.portal.util.AbstractBean;
@@ -77,7 +77,7 @@ public class DefaultPortalManager
 	/**
 	 * @see PortalManager#render(ContentHandler, Properties)
 	 */
-	public void render(ContentHandler contentHandler, Properties properties) 
+	public void render(ContentHandler contentHandler, Properties properties)
     throws SAXException {
         PortalManagerAspectContextImpl aspectContext =
             new PortalManagerAspectContextImpl(this.portalService, this.chain);
@@ -96,9 +96,9 @@ public class DefaultPortalManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
+     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
-    public void prepare(PortalManagerAspectPrepareContext renderContext) throws PortalException {
+    public void process(RequestProcessorAspectContext rpContext) {
         EventManager eventManager = this.portalService.getEventManager();
         eventManager.processEvents();
     }

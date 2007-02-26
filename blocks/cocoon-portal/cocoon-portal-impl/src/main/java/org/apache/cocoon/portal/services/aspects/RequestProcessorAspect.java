@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.portal.services.aspects;
 
-import org.apache.cocoon.portal.PortalException;
-
 /**
  * This aspect can be used to add additional behaviour to the request processing
  * phase.
@@ -26,6 +24,5 @@ import org.apache.cocoon.portal.PortalException;
  */
 public interface RequestProcessorAspect {
 
-    void process(RequestProcessorAspectContext context)
-    throws PortalException;
+    void process(RequestProcessorAspectContext context);
 }

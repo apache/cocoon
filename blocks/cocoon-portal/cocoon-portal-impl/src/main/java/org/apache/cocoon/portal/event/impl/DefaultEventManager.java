@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -54,7 +53,7 @@ import org.springframework.core.Ordered;
  *
  * @version $Id$
  */
-public class DefaultEventManager 
+public class DefaultEventManager
     extends AbstractBean
     implements EventManager {
 
@@ -68,7 +67,7 @@ public class DefaultEventManager
     protected Map eventHierarchy = new HashMap();
 
     /**
-     * Helper method to get the current object model 
+     * Helper method to get the current object model
      */
     protected Map getObjectModel() {
         return this.portalService.getProcessInfoProvider().getObjectModel();
@@ -97,8 +96,7 @@ public class DefaultEventManager
     /**
      * @see org.apache.cocoon.portal.event.EventManager#processEvents()
      */
-    public void processEvents()
-    throws PortalException {
+    public void processEvents() {
         // now process event aspects
         DefaultEventAspectContext eventContext = new DefaultEventAspectContext(this.portalService, this.chain);
         eventContext.invokeNext();
@@ -163,7 +161,7 @@ public class DefaultEventManager
                 if ( current.getName().equals("inform") ) {
                     final Class[] params = current.getParameterTypes();
                     if ( (params.length == 1)
-                         || (params.length == 2 
+                         || (params.length == 2
                              && params[1].getName().equals(PortalService.class.getName()))) {
                         if ( Event.class.isAssignableFrom( params[0] ) ) {
                             final MethodInfo info = new MethodInfo();
@@ -262,7 +260,7 @@ public class DefaultEventManager
             final HierarchyInfo current = (HierarchyInfo)i.next();
             info.addToParents(current);
             this.addToHierarchy(info, current.getParents());
-        }        
+        }
     }
 
     protected static final class HierarchyInfo {

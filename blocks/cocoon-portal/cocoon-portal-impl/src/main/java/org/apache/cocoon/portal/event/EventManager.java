@@ -16,14 +16,13 @@
  */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.portal.PortalException;
 
 /**
  * This component manages the event handling mechanism in the portal.
  * The event mechanism is based on the publisher/subscriber principle.
  * An interested component (a {@link org.apache.cocoon.portal.event.Receiver}
  * can subscribe itself for a specific class (or classes) of events.
- * All Events have a common ancestor type {@link Event} and the event types are 
+ * All Events have a common ancestor type {@link Event} and the event types are
  * identified by a (sub)class
  *
  * @version $Id$
@@ -33,13 +32,12 @@ public interface EventManager {
     /**
      * Represents the role of the service
      */
-    String ROLE = EventManager.class.getName(); 
+    String ROLE = EventManager.class.getName();
 
     /**
      * Process the events.
      */
-    void processEvents()
-    throws PortalException;
+    void processEvents();
 
     /**
      * Publish an event. All registered receivers get notified.
@@ -48,7 +46,7 @@ public interface EventManager {
     void send(Event event);
 
     /**
-     * Subscribes a receiver for a specific type of event.  
+     * Subscribes a receiver for a specific type of event.
      */
     void subscribe(Receiver receiver);
 

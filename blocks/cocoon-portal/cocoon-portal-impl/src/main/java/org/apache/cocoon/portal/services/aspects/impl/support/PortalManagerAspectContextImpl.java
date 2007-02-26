@@ -18,11 +18,10 @@ package org.apache.cocoon.portal.services.aspects.impl.support;
 
 import java.util.Properties;
 
-import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.services.aspects.support.AspectChain;
 import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
 import org.xml.sax.ContentHandler;
@@ -36,7 +35,7 @@ import org.xml.sax.SAXException;
 public final class PortalManagerAspectContextImpl
     extends BasicAspectContextImpl
     implements PortalManagerAspectRenderContext,
-               PortalManagerAspectPrepareContext {
+               RequestProcessorAspectContext {
 
     public PortalManagerAspectContextImpl(PortalService service,
                                           AspectChain    chain) {
@@ -44,20 +43,19 @@ public final class PortalManagerAspectContextImpl
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext#invokeNext()
+	 * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext#invokeNext()
 	 */
-	public void invokeNext() 
-    throws PortalException {
+	public void invokeNext() {
         final PortalManagerAspect aspect = (PortalManagerAspect)this.getNext();
         if ( aspect != null ) {
-            aspect.prepare(this);
+            aspect.process(this);
         }
     }
 
     /**
      * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext#invokeNext(org.xml.sax.ContentHandler, java.util.Properties)
      */
-    public void invokeNext(ContentHandler ch, Properties properties) 
+    public void invokeNext(ContentHandler ch, Properties properties)
     throws SAXException {
         final PortalManagerAspect aspect = (PortalManagerAspect)this.getNext();
         if ( aspect != null ) {

@@ -20,13 +20,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -47,10 +46,9 @@ public class PreloadPortalManagerAspect
     protected static final ContentHandler nullHandler = new DefaultHandler();
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
+     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
-    public void prepare(PortalManagerAspectPrepareContext context)
-    throws PortalException {
+    public void process(RequestProcessorAspectContext context) {
         // let's just invoke the next
         context.invokeNext();
     }

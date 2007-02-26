@@ -19,8 +19,8 @@ package org.apache.cocoon.portal.services.aspects.impl;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.portal.event.aspect.EventAspect;
-import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
 
 /**
@@ -36,7 +36,7 @@ import org.apache.cocoon.portal.util.AbstractBean;
  */
 public class ActionCounterRequestProcessorAspect
 	extends AbstractBean
-	implements EventAspect {
+	implements RequestProcessorAspect {
 
     protected final static String ATTRIBUTE_NAME = ActionCounterRequestProcessorAspect.class.getName();
 
@@ -44,9 +44,9 @@ public class ActionCounterRequestProcessorAspect
     protected String parameterName = "cocoon-portal-action";
 
 	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext)
+	 * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
 	 */
-	public void process(EventAspectContext context) {
+	public void process(RequestProcessorAspectContext context) {
         final String requestParameterName = context.getAspectProperties().getProperty("parameter-name", this.parameterName);
 
         int actionCount;

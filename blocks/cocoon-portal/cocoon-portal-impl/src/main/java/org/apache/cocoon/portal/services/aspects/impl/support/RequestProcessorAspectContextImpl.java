@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.portal.services.aspects.impl.support;
 
-import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
@@ -40,8 +39,7 @@ public final class RequestProcessorAspectContextImpl
 	/**
 	 * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext#invokeNext()
 	 */
-	public void invokeNext()
-    throws PortalException {
+	public void invokeNext() {
         final RequestProcessorAspect aspect = (RequestProcessorAspect)this.getNext();
         if ( aspect != null ) {
             aspect.process(this);
