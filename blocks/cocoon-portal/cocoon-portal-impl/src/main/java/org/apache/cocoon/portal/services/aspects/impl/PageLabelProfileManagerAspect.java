@@ -74,7 +74,7 @@ public class PageLabelProfileManagerAspect
             label.append((tab instanceof NamedItem) ? ((NamedItem) tab).getName()
                                                     : Integer.toString(j));
             // TODO
-            layout.setTemporaryAttribute("pageLabel", label.toString());
+            tab.setTemporaryAttribute("pageLabel", label.toString());
             final Layout child = tab.getLayout();
             if (child != null && child instanceof CompositeLayout) {
                 this.populate((CompositeLayout) child, label.toString());
