@@ -41,6 +41,7 @@ import org.springframework.beans.factory.config.BeanDefinitionVisitor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResourceLoader;
@@ -251,7 +252,11 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         if ( this.resourceLoader != null ) {
             return this.resourceLoader;
         }
-        return new ServletContextResourceLoader(this.servletContext);
+        if ( this.servletContext != null ) {
+            return new ServletContextResourceLoader(this.servletContext);
+        } else {
+            return new FileSystemResourceLoader();
+        }
     }
 
     protected String getSystemProperty(String key) {
