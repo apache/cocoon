@@ -68,6 +68,16 @@
     </plugins>
   </build>
   
+  <repositories>
+    <!-- Repository for the xreporter -->
+    <repository>
+      <id>apache-cvs</id>
+      <name>Apache Maven 1 Repository</name>
+      <url>http://people.apache.org/repo/m1-snapshot-repository</url>
+      <layout>legacy</layout>
+    </repository>  
+  </repositories>  
+  
   <dependencies>
     <dependency>
       <groupId>commons-collections</groupId>
@@ -134,9 +144,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
     </dependency>
   </dependencies>
   
