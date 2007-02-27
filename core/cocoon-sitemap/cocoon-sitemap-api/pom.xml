@@ -19,25 +19,57 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+  
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-sitemap-api</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
-  <packaging>jar</packaging>
   <name>Cocoon Sitemap API</name>
   <description>
     Interfaces for the sitemap: Processor, actions, modules, flow, matching,
     selection and some support interfaces for classloading, notification,
     processing and various support interfaces.
   </description>
+  <url>http://cocoon.apache.org/${docs.m.sitemap-api.relPath}</url>    
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>0</navDocId>
+          <createSiteXmlOnly>true</createSiteXmlOnly>
+        </configuration>
+      </plugin>      
+    </plugins>
+  </build>  
+  
+  <properties>
+    <docs.name>${project.name}</docs.name>    
+    <docs.version>${docs.m.sitemap-api.version}</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.sitemap-api.relPath}</url>
+    </site>
+  </distributionManagement>    
+  
   <dependencies>
     <!-- Cocoon -->
     <dependency>
@@ -71,4 +103,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
 </project>

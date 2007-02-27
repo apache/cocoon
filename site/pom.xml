@@ -38,48 +38,11 @@
   <url>http://cocoon.apache.org</url>
 
   <modules>
-    <!-- Category sites -->
-    <module>cocoon-blocks-site</module>
-    <module>cocoon-core-site</module>
-    <module>cocoon-main-site</module>
-    <module>cocoon-subprojects-site</module>
-    <module>cocoon-maven-plugins-site</module>
-
-    <!-- Cocoon Blocks -->
-    <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
-    <module>../blocks/cocoon-auth/cocoon-auth-impl</module>
-    <!--module>../blocks/cocoon-captcha/cocoon-captcha-impl</module-->
-    <module>../blocks/cocoon-flowscript/cocoon-flowscript-impl</module>
-    <module>../blocks/cocoon-fop/cocoon-fop-impl</module>
-    <module>../blocks/cocoon-forms/cocoon-forms-impl</module>
-    <!--module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module-->
-    <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>
-    <module>../blocks/cocoon-mail/cocoon-mail-impl</module>
-    <module>../blocks/cocoon-portal/cocoon-portal-impl</module>
-    <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>
-    <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
-    <module>../blocks/cocoon-template/cocoon-template-impl</module>
-    <!--module>../blocks/cocoon-batik/cocoon-batik-impl</module>
-    <module>../blocks/cocoon-html/cocoon-html-impl</module>
-    <module>../blocks/cocoon-link-rewriter/cocoon-link-rewriter-impl</module>
-    <module>../blocks/cocoon-database/cocoon-database-impl</module>
-    <module>../blocks/cocoon-database/cocoon-hsqldb-server-impl/cocoon-hsqldb-server-impl</module>
-    <module>../blocks/cocoon-database/cocoon-hsqldb-client-impl/cocoon-hsqldb-client-impl</module-->
-
-    <!-- Subprojects -->
-    <module>../core/cocoon-configuration/cocoon-configuration-api</module>
-    <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
-    <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
-
-    <!-- Maven plugins -->
-    <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>
-
-    <!-- Core modules -->
     <module>../core/cocoon-core</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-components</module>
-    <!--module>../core/cocoon-sitemap/cocoon-sitemap-api</module>
+    <module>../core/cocoon-sitemap/cocoon-sitemap-api</module>
     <module>../core/cocoon-sitemap/cocoon-sitemap-impl</module>
     <module>../core/cocoon-sitemap/cocoon-sitemap-components</module>
     <module>../core/cocoon-store/cocoon-store-impl</module>
@@ -88,7 +51,7 @@
     <module>../core/cocoon-util</module>
     <module>../core/cocoon-xml/cocoon-xml-api</module>
     <module>../core/cocoon-xml/cocoon-xml-impl</module>
-    <module>../core/cocoon-xml/cocoon-xml-resolver</module-->
+    <module>../core/cocoon-xml/cocoon-xml-resolver</module>
   </modules>
 
   <build>
