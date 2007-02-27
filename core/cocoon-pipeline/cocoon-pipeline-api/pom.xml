@@ -23,7 +23,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-      </plugin>     
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>0</navDocId>
+          <createSiteXmlOnly>true</createSiteXmlOnly>
+        </configuration>
+      </plugin>      
     </plugins>
   </build>  
   
