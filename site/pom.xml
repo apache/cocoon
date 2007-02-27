@@ -59,16 +59,22 @@
     <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>
     <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
     <module>../blocks/cocoon-template/cocoon-template-impl</module>
+    <!--module>../blocks/cocoon-batik/cocoon-batik-impl</module>
+    <module>../blocks/cocoon-html/cocoon-html-impl</module>
+    <module>../blocks/cocoon-link-rewriter/cocoon-link-rewriter-impl</module>
+    <module>../blocks/cocoon-database/cocoon-database-impl</module>
+    <module>../blocks/cocoon-database/cocoon-hsqldb-server-impl/cocoon-hsqldb-server-impl</module>
+    <module>../blocks/cocoon-database/cocoon-hsqldb-client-impl/cocoon-hsqldb-client-impl</module-->
 
     <!-- Subprojects -->
     <module>../core/cocoon-configuration/cocoon-configuration-api</module>
     <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
+    <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
 
     <!-- Maven plugins -->
     <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>
 
     <!-- Core modules -->
-    <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
     <module>../core/cocoon-core</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>

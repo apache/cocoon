@@ -42,9 +42,9 @@
   
   <dependencies>
     <dependency>
-      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.avalon.framework</groupId>

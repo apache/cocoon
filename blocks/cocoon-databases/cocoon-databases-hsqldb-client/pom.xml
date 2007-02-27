@@ -34,7 +34,7 @@
   <artifactId>cocoon-databases-hsqldb-client</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Cocoon Hsqldb client Implementation</name>
+  <name>Cocoon Hsqldb Client Implementation</name>
 
   <dependencies>
     <dependency>

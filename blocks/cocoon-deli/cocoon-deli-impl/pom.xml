@@ -19,9 +19,9 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-deli</artifactId>
@@ -33,7 +33,17 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Deli Block Implementation</name>
-  <description/>
+  
+  <repositories>
+    <!-- Repository for the deli -->
+    <repository>
+      <id>apache-cvs</id>
+      <name>Apache Maven 1 Repository</name>
+      <url>http://people.apache.org/repo/m1-snapshot-repository</url>
+      <layout>legacy</layout>
+    </repository>  
+  </repositories>    
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -63,4 +73,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
 </project>

@@ -23,14 +23,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <!--plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin-->       
+      </plugin>     
     </plugins>
   </build>  
   
@@ -51,69 +44,39 @@
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>
       <artifactId>avalon-framework-api</artifactId>
-      <version>4.3</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.avalon.logkit</groupId>
-          <artifactId>avalon-logkit</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>4.3.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.avalon.framework</groupId>
           <artifactId>avalon-framework-impl</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>org.apache.avalon.logkit</groupId>
-          <artifactId>avalon-logkit</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.components.xmlutil</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-xmlutil</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
       <exclusions>
         <exclusion>
-          <groupId>org.apache.excalibur.testcase</groupId>
-          <artifactId>excalibur-testcase</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.components.pool</groupId>
-          <artifactId>excalibur-pool-instrumented</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.components.pool</groupId>
+          <groupId>org.apache.excalibur.components</groupId>
           <artifactId>excalibur-pool-api</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.apache.excalibur.components.pool</groupId>
+          <groupId>org.apache.excalibur.components</groupId>
           <artifactId>excalibur-pool-impl</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.apache.avalon.framework</groupId>
-          <artifactId>avalon-framework-impl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.components.store</groupId>
+          <groupId>org.apache.excalibur.components</groupId>
           <artifactId>excalibur-store</artifactId>
         </exclusion>
-        <!-- exclusion>
-          <groupId>org.apache.excalibur.components.sourceresolve</groupId>
-          <artifactId>excalibur-sourceresolve</artifactId>
-        </exclusion -->
         <exclusion>
-          <groupId>org.apache.excalibur.containerkit.instrument</groupId>
+          <groupId>org.apache.excalibur.containerkit</groupId>
           <artifactId>excalibur-instrument-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.avalon.logkit</groupId>
-          <artifactId>avalon-logkit</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

@@ -78,40 +78,30 @@
     </dependency>
     <!-- Excalibur -->
     <dependency>
-      <groupId>org.apache.excalibur.components.pool</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-pool-api</artifactId>
-      <version>2.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.avalon.logkit</groupId>
-          <artifactId>avalon-logkit</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>2.2.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.avalon.framework</groupId>
           <artifactId>avalon-framework-impl</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>org.apache.avalon.logkit</groupId>
-          <artifactId>avalon-logkit</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.components.store</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-store</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.containerkit.instrument</groupId>
+      <groupId>org.apache.excalibur.containerkit</groupId>
       <artifactId>excalibur-instrument-api</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
     </dependency>
     <!-- Commons -->
     <dependency>

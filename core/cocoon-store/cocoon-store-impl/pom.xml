@@ -39,9 +39,9 @@
     </dependency>
     <!--  Excalibur -->
     <dependency>
-      <groupId>org.apache.excalibur.components.store</groupId>
+      <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-store</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.avalon.logkit</groupId>
@@ -50,9 +50,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.containerkit.instrument</groupId>
+      <groupId>org.apache.excalibur.containerkit</groupId>
       <artifactId>excalibur-instrument-api</artifactId>
-      <version>2.1</version>
+      <version>2.2.1</version>
     </dependency>
     <dependency>
       <groupId>net.sf.ehcache</groupId>
