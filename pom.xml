@@ -65,24 +65,6 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository>
-      <id>apache.snapshot</id>
-      <name>Apache Snapshot Repository</name>
-      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-      <releases>
-        <!-- excalibur poms are located here -->
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>apache-cvs</id>
-      <name>Apache Maven 1 Repository</name>
-      <url>http://people.apache.org/repo/m1-snapshot-repository</url>
-      <layout>legacy</layout>
-    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -658,6 +640,10 @@
         <artifactId>maven-eclipse-plugin</artifactId>
         <version>2.3</version>
       </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.1.1</version>
+      </plugin>      
       <plugin>
         <artifactId>maven-idea-plugin</artifactId>
         <version>2.0</version>
