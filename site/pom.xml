@@ -39,11 +39,14 @@
       
       <modules>
         <!-- Category sites -->
+        <module>cocoon-main-site</module>
+        <module>cocoon-22-site</module>
         <module>cocoon-blocks-site</module>
         <module>cocoon-core-site</module>
-        <module>cocoon-main-site</module>
         <module>cocoon-subprojects-site</module>
         <module>cocoon-maven-plugins-site</module>
+        <module>cocoon-servlet-service-site</module>
+        <module>cocoon-configuration-site</module>
         
         <!-- Cocoon Blocks -->
         <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
@@ -69,7 +72,8 @@
         <!-- Subprojects -->
         <module>../core/cocoon-configuration/cocoon-configuration-api</module>
         <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
-        <module>../core/cocoon-blocks-fw/cocoon-blocks-fw-impl</module>
+        <module>../core/cocoon-servlet-service/cocoon-servlet-service-impl</module>
+        <module>../core/cocoon-servlet-service/cocoon-servlet-service-components</module>
         
         <!-- Maven plugins -->
         <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>
