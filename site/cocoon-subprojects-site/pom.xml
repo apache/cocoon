@@ -32,7 +32,7 @@
   <artifactId>cocoon-subprojects-site</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   
-  <name>Apache Cocoon Subprojects Site</name>
+  <name>Cocoon Subprojects Site</name>
   <url>http://cocoon.apache.org/${docs.m.subprojects.relPath}</url>
   
   <properties>

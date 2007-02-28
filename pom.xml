@@ -46,9 +46,6 @@
     <!-- sub projects -->
     <module>core/cocoon-configuration/cocoon-configuration-api</module>
     <module>core/cocoon-configuration/cocoon-spring-configurator</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-impl</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-components</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-sample</module>
   </modules>
 
   <repositories>
@@ -494,6 +491,18 @@
                 <name>cdocs-site-maven-plugins</name>
                 <path>${docs.m.site-maven-plugins.relPath}</path>
               </collection>
+              <collection>
+                <name>cdocs-site-servlet-service</name>
+                <path>${docs.m.site-servlet-service.relPath}</path>
+              </collection>              
+              <collection>
+                <name>cdocs-site-configuration</name>
+                <path>${docs.m.site-configuration.relPath}</path>
+              </collection>              
+              <collection>
+                <name>cdocs-site-22</name>
+                <path>${docs.m.site-22.relPath}</path>
+              </collection>              
               <!-- core -->
               <collection>
                 <name>cdocs-core</name>
@@ -742,12 +751,13 @@
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
     <!-- Path and version properties: sites -->
     <docs.m.site-main.relPath></docs.m.site-main.relPath>
+    <docs.m.site-22.relPath>2.2/</docs.m.site-22.relPath>
     <docs.m.site-blocks.relPath>2.2/blocks/</docs.m.site-blocks.relPath>
     <docs.m.site-core-modules.relPath>2.2/core-modules/</docs.m.site-core-modules.relPath>
     <docs.m.site-maven-plugins.relPath>2.2/maven-plugins/</docs.m.site-maven-plugins.relPath>
-    <docs.m.subprojects.relPath>subprojects/</docs.m.subprojects.relPath>
-    <!--docs.m.configuration.relPath>subprojects/configuration</docs.m.configuration.relPath>
-    <docs.m.servlet-service.relPath>subprojects/servlet-service</docs.m.servlet-service.relPath-->
+    <docs.m.site-subprojects.relPath>subprojects/</docs.m.site-subprojects.relPath>
+    <docs.m.site-configuration.relPath>subprojects/configuration/1.0/</docs.m.site-configuration.relPath>
+    <docs.m.site-servlet-service.relPath>subprojects/servlet-service/1.0/</docs.m.site-servlet-service.relPath>
     <!-- Path and version properties: core -->
     <docs.m.core.version>2.2</docs.m.core.version>
     <docs.m.core.relPath>2.2/core-modules/core/${docs.m.core.version}/</docs.m.core.relPath>
@@ -779,8 +789,6 @@
     <docs.m.xml-resolver.version>1.0</docs.m.xml-resolver.version>
     <docs.m.xml-resolver.relPath>2.2/core-modules/xml-resolver/${docs.m.xml-resolver.version}/</docs.m.xml-resolver.relPath>
     <!-- Path and version properties: subprojects -->
-    <docs.m.blocks-fw-impl.version>1.0</docs.m.blocks-fw-impl.version>
-    <docs.m.blocks-fw-impl.relPath>subprojects/blocks-fw-impl/${docs.m.blocks-fw-impl.version}/</docs.m.blocks-fw-impl.relPath>
     <!--docs.m.servlet-service-impl.version>1.0</docs.m.servlet-service-impl.version>
     <docs.m.servlet-service-impl.relPath>subprojects/servlet-service/servlet-service-impl/${docs.m.blocks-fw-impl.version}/</docs.m.servlet-service-impl.relPath>
     <docs.m.servlet-service-components.version>1.0</docs.m.servlet-service-components.version>

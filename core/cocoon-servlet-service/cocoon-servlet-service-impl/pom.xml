@@ -38,7 +38,19 @@
   	It also contains functionality so that a servlet service can call other servlet
   	services that it is connected to in the Spring configuration.
   </description>
-  <!--url>http://cocoon.apache.org/${docs.m.servlet-service-impl.relPath}</url-->
+  <url>http://cocoon.apache.org/${docs.m.servlet-service-impl.relPath}</url>    
+  
+  <properties>
+    <docs.name>${project.name}</docs.name>    
+    <docs.version>${docs.m.servlet-service-impl.version}</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-impl.relPath}</url>
+    </site>
+  </distributionManagement>  
   
   <dependencies>
     <dependency>
@@ -123,19 +135,6 @@
       </resource>
     </resources>
   </build>
-  <!--
-  <properties>
-    <docs.name>${project.name}</docs.name>    
-    <docs.version>${docs.m.servlet-service-impl.version}</docs.version>
-  </properties>  
-  
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-impl.relPath}</url>
-    </site>
-  </distributionManagement>    
-  -->
   
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</connection>

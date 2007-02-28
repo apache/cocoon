@@ -34,7 +34,19 @@
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Servlet Service Components</name>
   <description>Components for the servlet service framework that depends on pipeline and sitemap APIs.</description>
-  <!--url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url-->
+  <url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url>    
+  
+  <properties>
+    <docs.name>${project.name}</docs.name>    
+    <docs.version>${docs.m.servlet-service-components.version}</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-components.relPath}</url>
+    </site>
+  </distributionManagement>  
   
   <dependencies>
     <dependency>
@@ -88,19 +100,6 @@
       </resource>
     </resources>
   </build>
-  <!--
-  <properties>
-    <docs.name>${project.name}</docs.name>    
-    <docs.version>${docs.m.servlet-service-components.version}</docs.version>
-  </properties>  
-  
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-components.relPath}</url>
-    </site>
-  </distributionManagement>    
-  -->
   
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</connection>
