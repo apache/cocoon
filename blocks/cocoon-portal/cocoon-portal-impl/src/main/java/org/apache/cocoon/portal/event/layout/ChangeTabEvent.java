@@ -51,4 +51,11 @@ public class ChangeTabEvent
     public boolean isUseName() {
         return useName;
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "ChangeTabEvent (" + this.hashCode() + ") : " + this.asString();
+    }
 }

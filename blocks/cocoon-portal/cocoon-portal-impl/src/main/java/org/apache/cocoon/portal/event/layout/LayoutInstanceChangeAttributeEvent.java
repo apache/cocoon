@@ -45,7 +45,7 @@ public class LayoutInstanceChangeAttributeEvent
             throw new IllegalArgumentException("Corrupt event data: " + eventData);
         }
         if ( eventData.charAt(pos+1) != 'T' && eventData.charAt(pos+1) != 'P') {
-            throw new IllegalArgumentException("Corrupt event data: " + eventData);            
+            throw new IllegalArgumentException("Corrupt event data: " + eventData);
         }
         this.temporary = (eventData.charAt(pos+1) == 'T');
         final String layoutId = eventData.substring(0, pos);
@@ -103,4 +103,10 @@ public class LayoutInstanceChangeAttributeEvent
         return l.getId() + ':' + (this.temporary ? 'T' : 'P') + this.attributeName + ':' + this.value;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "LayoutInstanceChangeAttributeEvent (" + this.hashCode() + ") : " + this.asString();
+    }
 }
