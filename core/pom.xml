@@ -73,7 +73,8 @@
   
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-core-modules</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-core-modules</url>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/trunk/core</url>
   </scm>
+  
 </project>
