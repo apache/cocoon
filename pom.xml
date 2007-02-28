@@ -750,7 +750,7 @@
     <docs.m.servlet-service.relPath>subprojects/servlet-service</docs.m.servlet-service.relPath-->
     <!-- Path and version properties: core -->
     <docs.m.core.version>2.2</docs.m.core.version>
-    <docs.m.core.relPath>${docs.m.core.version}core/${docs.m.core.version}/</docs.m.core.relPath>
+    <docs.m.core.relPath>2.2/core-modules/core/${docs.m.core.version}/</docs.m.core.relPath>
     <!-- Path and version properties: Submodules of core without Daisy documentation -->
     <docs.m.pipeline-api.version>1.0</docs.m.pipeline-api.version>
     <docs.m.pipeline-api.relPath>2.2/core-modules/pipeline-api/${docs.m.pipeline-api.version}/</docs.m.pipeline-api.relPath>
@@ -758,26 +758,26 @@
     <docs.m.pipeline-impl.relPath>2.2/core-modules/pipeline-impl/${docs.m.pipeline-impl.version}/</docs.m.pipeline-impl.relPath>
     <docs.m.pipeline-components.version>1.0</docs.m.pipeline-components.version>
     <docs.m.pipeline-components.relPath>2.2/core-modules/pipeline-components/${docs.m.pipeline-components.version}/</docs.m.pipeline-components.relPath>
-    <!--docs.m.sitemap-api.version>1.0</docs.m.sitemap-api.version>
-    <docs.m.sitemap-api.relPath>2.2/core-modules/${docs.m.sitemap-api.version}/</docs.m.sitemap-api.relPath>
+    <docs.m.sitemap-api.version>1.0</docs.m.sitemap-api.version>
+    <docs.m.sitemap-api.relPath>2.2/core-modules/sitemap-api/${docs.m.sitemap-api.version}/</docs.m.sitemap-api.relPath>
     <docs.m.sitemap-impl.version>1.0</docs.m.sitemap-impl.version>
-    <docs.m.sitemap-impl.relPath>2.2/core-modules/${docs.m.sitemap-impl.version}/</docs.m.sitemap-impl.relPath>
+    <docs.m.sitemap-impl.relPath>2.2/core-modules/sitemap-impl/${docs.m.sitemap-impl.version}/</docs.m.sitemap-impl.relPath>
     <docs.m.sitemap-components.version>1.0</docs.m.sitemap-components.version>
-    <docs.m.sitemap-components.relPath>2.2/core-modules/${docs.m.sitemap-components.version}/</docs.m.sitemap-components.relPath>
+    <docs.m.sitemap-components.relPath>2.2/core-modules/sitemap-components/${docs.m.sitemap-components.version}/</docs.m.sitemap-components.relPath>
     <docs.m.store-impl.version>1.0</docs.m.store-impl.version>
-    <docs.m.store-impl.relPath>2.2/core-modules/${docs.m.store-impl.version}/</docs.m.store-impl.relPath>
+    <docs.m.store-impl.relPath>2.2/core-modules/store-impl/${docs.m.store-impl.version}/</docs.m.store-impl.relPath>
     <docs.m.thread-api.version>1.0</docs.m.thread-api.version>
-    <docs.m.thread-api.relPath>2.2/core-modules/${docs.m.thread-api.version}/</docs.m.thread-api.relPath>
+    <docs.m.thread-api.relPath>2.2/core-modules/thread-api/${docs.m.thread-api.version}/</docs.m.thread-api.relPath>
     <docs.m.thread-impl.version>1.0</docs.m.thread-impl.version>
-    <docs.m.thread-impl.relPath>2.2/core-modules/${docs.m.thread-impl.version}/</docs.m.thread-impl.relPath>
+    <docs.m.thread-impl.relPath>2.2/core-modules/thread-impl/${docs.m.thread-impl.version}/</docs.m.thread-impl.relPath>
     <docs.m.util.version>1.0</docs.m.util.version>
-    <docs.m.util.relPath>2.2/core-modules/${docs.m.util.version}/</docs.m.util.relPath>
+    <docs.m.util.relPath>2.2/core-modules/util/${docs.m.util.version}/</docs.m.util.relPath>
     <docs.m.xml-api.version>1.0</docs.m.xml-api.version>
-    <docs.m.xml-api.relPath>2.2/core-modules/${docs.m.xml-api.version}/</docs.m.xml-api.relPath>
+    <docs.m.xml-api.relPath>2.2/core-modules/xml-api/${docs.m.xml-api.version}/</docs.m.xml-api.relPath>
     <docs.m.xml-impl.version>1.0</docs.m.xml-impl.version>
-    <docs.m.xml-impl.relPath>2.2/core-modules/${docs.m.xml-impl.version}/</docs.m.xml-impl.relPath>
+    <docs.m.xml-impl.relPath>2.2/core-modules/xml-impl/${docs.m.xml-impl.version}/</docs.m.xml-impl.relPath>
     <docs.m.xml-resolver.version>1.0</docs.m.xml-resolver.version>
-    <docs.m.xml-resolver.relPath>2.2/core-modules/${docs.m.xml-resolver.version}/</docs.m.xml-resolver.relPath-->
+    <docs.m.xml-resolver.relPath>2.2/core-modules/xml-resolver/${docs.m.xml-resolver.version}/</docs.m.xml-resolver.relPath>
     <!-- Path and version properties: subprojects -->
     <docs.m.blocks-fw-impl.version>1.0</docs.m.blocks-fw-impl.version>
     <docs.m.blocks-fw-impl.relPath>subprojects/blocks-fw-impl/${docs.m.blocks-fw-impl.version}/</docs.m.blocks-fw-impl.relPath>
