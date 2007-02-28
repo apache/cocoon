@@ -152,4 +152,11 @@
       </plugin>
     </plugins>
   </reporting>
+  
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</developerConnection>
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</url>    
+  </scm>    
+  
 </project>

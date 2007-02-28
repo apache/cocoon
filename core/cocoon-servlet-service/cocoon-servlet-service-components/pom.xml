@@ -101,4 +101,11 @@
     </site>
   </distributionManagement>    
   -->
+  
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</developerConnection>
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</url>    
+  </scm>     
+  
 </project>
