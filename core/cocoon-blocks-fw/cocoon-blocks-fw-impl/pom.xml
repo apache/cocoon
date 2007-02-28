@@ -34,7 +34,6 @@
   <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon Blocks Framework Implementation</name>
   <description>${project.name}</description>
-  <url>http://cocoon.apache.org/${docs.m.blocks-fw-impl.relPath}</url>
   
   <dependencies>
     <dependency>
@@ -66,20 +65,6 @@
   </dependencies>
   
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>0</navDocId>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin>       
-    </plugins>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -87,17 +72,5 @@
       </resource>
     </resources>
   </build>
-  
-  <properties>
-    <docs.name>${project.name}</docs.name>    
-    <docs.version>${docs.m.blocks-fw-impl.version}</docs.version>
-  </properties>  
-  
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.blocks-fw-impl.relPath}</url>
-    </site>
-  </distributionManagement>    
-  
+
 </project>
