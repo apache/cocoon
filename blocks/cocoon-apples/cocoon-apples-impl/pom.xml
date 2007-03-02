@@ -28,19 +28,25 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-apples-impl</artifactId>
-  <version>1.0.0-M2-SNAPSHOT</version>
+  <version>1.0.0-M2</version>
   <name>Cocoon Apples Block Implementation</name>
   
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC1-SNAPSHOT</version>
+      <version>2.2.0-M3</version>
     </dependency>
   </dependencies>
   
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-apples-impl/cocoon-apples-impl-1.0.0-M2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-apples-impl/cocoon-apples-impl-1.0.0-M2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-apples-impl/cocoon-apples-impl-1.0.0-M2</url>
+  </scm>
 </project>
