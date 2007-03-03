@@ -34,10 +34,14 @@ public class CocoonReloadingListener extends ReloadingListener {
 
     public void onChangeFile(File changedFile) {
         super.onChangeFile(changedFile);
-        String changedFileParent = changedFile.getParent().replace('\\', '/');
+        String changedFileParentPath = changedFile.getParent().replace('\\', '/');
+        String changedFilePath = changedFile.getAbsolutePath().replace('\\', '/');        
 
-        if (changedFileParent.endsWith("META-INF/cocoon/spring") || changedFileParent.endsWith("config/avalon")
-                || changedFileParent.endsWith("config/spring")) {
+        if(changedFileParentPath.endsWith("META-INF/cocoon/spring") ||
+                changedFileParentPath.endsWith("config/avalon") ||
+                changedFilePath.endsWith(".xmap") ||
+                changedFilePath.endsWith(".xmap.xml") ||
+                changedFileParentPath.endsWith("config/spring")) {            
             log.info("File change detected: " + changedFile);
             reload = true;
         }
