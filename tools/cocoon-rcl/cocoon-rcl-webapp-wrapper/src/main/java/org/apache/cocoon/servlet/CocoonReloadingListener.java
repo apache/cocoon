@@ -27,13 +27,27 @@ public class CocoonReloadingListener extends ReloadingListener {
     private final Log log = LogFactory.getLog(CocoonReloadingListener.class);
 
     private static boolean reload = false;
-
-    public CocoonReloadingListener(File file) {
-        super(file);
+    
+    public CocoonReloadingListener() {
+        super();
     }
 
-    public void onChangeFile(File changedFile) {
-        super.onChangeFile(changedFile);
+    public void onFileChange(File file) {
+        super.onFileChange(file);
+        changeDetected(file);
+    }
+    
+    public void onFileDelete(File file) {
+        super.onFileDelete(file);
+        changeDetected(file);
+    }
+    
+    public void onFileCreate(File file) {
+        super.onFileCreate(file);
+        changeDetected(file);
+    }   
+    
+    protected void changeDetected(File changedFile) {
         String changedFileParentPath = changedFile.getParent().replace('\\', '/');
         String changedFilePath = changedFile.getAbsolutePath().replace('\\', '/');        
 
