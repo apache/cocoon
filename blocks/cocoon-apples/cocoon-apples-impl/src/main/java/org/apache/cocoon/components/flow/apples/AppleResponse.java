@@ -24,9 +24,13 @@ import org.apache.cocoon.environment.Response;
  * @version $Id$
  */
 public interface AppleResponse {
+	
     public void sendPage(String uri, Object bizData);
 
     public void redirectTo(String uri);
 
+    public void sendStatus(int status);
+    
     public Response getCocoonResponse();
+    
 }

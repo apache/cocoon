@@ -123,7 +123,11 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
 
         if (res.isRedirect()) {
             redirector.redirect(false, res.getURI());
-        } else {
+        }
+        else if (res.isSendStatus()) {
+        	redirector.sendStatus(res.getStatus());
+        }     
+        else {
             String uri = res.getURI();
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug(
