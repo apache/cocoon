@@ -156,6 +156,8 @@ public abstract class AbstractTestCase extends TestCase {
         def.setSingleton(true);
         def.setLazyInit(false);
         def.getConstructorArgumentValues().addIndexedArgumentValue(0, "test");
+        def.getPropertyValues().addPropertyValue("workDirectory", System.getProperty("java.io.tmpdir"));
+        def.getPropertyValues().addPropertyValue("cacheDirectory", System.getProperty("java.io.tmpdir"));
         BeanDefinitionHolder holder = new BeanDefinitionHolder(def, Settings.ROLE);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
     }
