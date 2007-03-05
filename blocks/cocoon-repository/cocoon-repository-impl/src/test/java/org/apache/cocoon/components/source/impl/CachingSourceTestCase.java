@@ -82,14 +82,18 @@ public class CachingSourceTestCase extends ContainerTestCase {
         CachingSource.SourceMeta meta2 = source.getResponseMeta();
         resolver.release(source);
 
-        assertTrue(meta1 == meta2);
+        assertTrue(meta1.getMimeType() == meta2.getMimeType());
+        assertTrue(meta1.getContentLength() == meta2.getContentLength());
+        assertTrue(meta1.getLastModified() == meta2.getLastModified());
 
         source = (CachingSource) resolver.resolveURI(uri);
         source.refresh();
         CachingSource.SourceMeta meta3 = source.getResponseMeta();
         resolver.release(source);
 
-        assertTrue(meta1 == meta3);
+        assertTrue(meta1.getMimeType() == meta3.getMimeType());
+        assertTrue(meta1.getContentLength() == meta3.getContentLength());
+        assertTrue(meta1.getLastModified() == meta3.getLastModified());
 
         Thread.sleep(1100);
 
