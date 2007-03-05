@@ -18,29 +18,26 @@
   under the License.
 -->
 <!--+
+    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+    |
     | @version $Id$
     +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-  <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
-  
-  <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
-    <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
-  </parent>
-  <artifactId>cocoon-apples-impl</artifactId>
-  <version>1.0.0-RC1-SNAPSHOT</version>
-  <name>Cocoon Apples Block Implementation</name>
-  
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC1-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
-  
-</project>
+<document>
+  <body>
+    <release version="1.0.0-RC1" date="2007-02-05" description="unreleased">  
+      <action dev="reinhard" type="add">
+        Add sendStatus() to the AppleResponse interface.
+      </action>
+    </release>    
+    <release version="1.0.0-M2" date="2007-02-05" description="released">  
+      <action dev="reinhard" type="update">
+        Use block directory structure as required from cocoon-core-2.2M3
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2006-08-03" description="released">  
+      <action dev="reinhard" type="update">
+        Initial release from trunk.
+      </action>
+    </release>
+  </body>
+</document>

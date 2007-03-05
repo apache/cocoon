@@ -27,6 +27,7 @@ import org.apache.cocoon.environment.Response;
 public class DefaultAppleResponse implements AppleResponse {
     private String uri;
     private Object data;
+    private int status;
     private boolean redirect = false;
     private Response cocoonResponse;
 
@@ -39,14 +40,30 @@ public class DefaultAppleResponse implements AppleResponse {
         this.data = bizData;
         this.redirect = false;
     }
+    
+    public void sendStatus(int status) {
+    	if(isRedirect()) {
+    		throw new IllegalStateException(
+    				"It's not possible to call redirectTo() and sendStatus() at the same response object.");
+    	}
+    	this.status = status;
+    }
 
     public void redirectTo(String uri) {
+    	if(isSendStatus()) {
+    		throw new IllegalStateException(
+    				"It's not possible to call redirectTo() and sendStatus() at the same response object.");
+    	}    	
         this.uri = uri;
         this.redirect = true;
     }
 
     protected boolean isRedirect() {
         return redirect;
+    }
+    
+    protected boolean isSendStatus() {
+    	return this.status > 0 ? true : false;
     }
 
     protected String getURI() {
@@ -57,7 +74,12 @@ public class DefaultAppleResponse implements AppleResponse {
         return data;
     }
 
+    protected int getStatus() {
+    	return this.status;
+    }
+    
     public Response getCocoonResponse() {
         return cocoonResponse;
     }
+
 }
