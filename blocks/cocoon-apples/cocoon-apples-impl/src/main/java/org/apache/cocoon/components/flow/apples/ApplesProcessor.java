@@ -22,6 +22,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -48,7 +49,15 @@ import org.apache.cocoon.environment.Response;
 public class ApplesProcessor extends AbstractInterpreter implements ContinuationsDisposer {
 
     public void callFunction(String className, List params, Redirector redirector) throws Exception {
-        AppleController app = instantiateController(className);
+        // Use the current sitemap's service manager for components
+        ServiceManager sitemapManager;
+        try {
+            sitemapManager = (ServiceManager) avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
+        } catch (ContextException e) {
+            throw new CascadingRuntimeException("Cannot get sitemap service manager", e);
+        }    	
+    	
+        AppleController app = instantiateController(className, sitemapManager);
 
         WebContinuation wk = null;
         if (!(app instanceof StatelessAppleController)) {
@@ -62,13 +71,6 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
             appleContext.put("continuation-id", wk.getId());
         }
 
-        // Use the current sitemap's service manager for components
-        ServiceManager sitemapManager;
-        try {
-            sitemapManager = (ServiceManager) avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-        } catch (ContextException e) {
-            throw new CascadingRuntimeException("Cannot get sitemap service manager", e);
-        }
 
         LifecycleHelper.setupComponent(app, getLogger(), appleContext, sitemapManager, null, true);
         processApple(params, redirector, app, wk);
@@ -93,10 +95,30 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
 
     }
 
-    protected AppleController instantiateController(String className) throws Exception {
-        Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
-        Object o = clazz.newInstance();
-        return (AppleController) o;
+    protected AppleController instantiateController(String appleName, ServiceManager sitemapManager) throws AppleNotFoundException {
+    	if(appleName.startsWith("#")) {
+    		String beanName = appleName.substring(1);
+    		try {
+    			return (AppleController) sitemapManager.lookup(beanName);
+    		} catch(ClassCastException e) {
+    			throw new AppleNotFoundException("The bean '" + beanName + "' doesn't implement the AppleController interface.", e);
+    		} catch (ServiceException e) {
+    			throw new AppleNotFoundException("Can't find any bean of name '" + beanName + "'.", e);
+			}
+    	}
+        AppleController appleController = null;
+		try {
+			Class clazz = Thread.currentThread().getContextClassLoader().loadClass(appleName);
+	        Object o = clazz.newInstance();
+	        appleController = (AppleController) o;			
+		} catch (ClassNotFoundException e) {
+			throw new AppleNotFoundException("Can't find a class of name '" + appleName + "'.", e);
+		} catch (InstantiationException e) {
+			throw new AppleNotFoundException("Can't instatiate the class '" + appleName + "'.", e);
+		} catch (IllegalAccessException e) {
+			throw new AppleNotFoundException("The class '" + appleName + "' can't be accessed. Check the class modifiers.", e);
+		}
+		return appleController;
     }
 
     private void processApple(List params, Redirector redirector, AppleController app, WebContinuation wk)
