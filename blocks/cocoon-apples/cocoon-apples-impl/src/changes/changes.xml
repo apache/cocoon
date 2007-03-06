@@ -24,7 +24,14 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC1" date="2007-02-05" description="unreleased">  
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased"> 
+      <action dev="reinhard" type="add">
+        Apples can Spring beans. In order to lookup a bean, prepand #, e.g. to lookup a bean of name 'myBean',
+        use &lt;map:call function="#myBean"/&gt;.
+      </action>         
+      <action dev="reinhard" type="add">
+        Add an AppleNotFoundException which informs why an Apple can't be initialized.
+      </action>      
       <action dev="reinhard" type="add">
         Add sendStatus() to the AppleResponse interface.
       </action>
