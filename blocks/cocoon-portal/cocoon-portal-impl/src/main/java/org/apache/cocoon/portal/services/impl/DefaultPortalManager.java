@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.cocoon.ajax.AjaxHelper;
+import org.apache.cocoon.ajax.BrowserUpdateTransformer;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalException;
@@ -98,6 +99,7 @@ public class DefaultPortalManager
 
     /**
      * Initialize
+     * @throws PortalException
      */
     public void init()
     throws PortalException {
@@ -161,7 +163,9 @@ public class DefaultPortalManager
         // only render the changed coplets
         if ( portalLayout == null && AjaxHelper.isAjaxRequest(req) ) {
             Layout rootLayout = profileManager.getLayout(null);
-            XMLUtils.startElement(ch, "coplets");
+            ch.startPrefixMapping("bu", BrowserUpdateTransformer.BU_NSURI);
+            ch.startElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
+
             final List changed = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(this.portalService);
             final Iterator i = changed.iterator();
             while ( i.hasNext() ) {
@@ -178,14 +182,20 @@ public class DefaultPortalManager
                 }
                 XMLUtils.endElement(ch, "coplet");
             }
-            XMLUtils.endElement(ch, "coplets");
+            ch.endElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document");
+            ch.endPrefixMapping("bu");
         } else {
             if ( StringUtils.isNotEmpty(copletId) ) {
-                XMLUtils.startElement(ch, "coplets");
+                ch.startPrefixMapping("bu", BrowserUpdateTransformer.BU_NSURI);
+                ch.startElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
+
                 final AttributesImpl a = new AttributesImpl();
                 a.addCDATAAttribute("id", copletId);
                 XMLUtils.startElement(ch, "coplet", a);
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
+                ch.startPrefixMapping("bu", BrowserUpdateTransformer.BU_NSURI);
+                ch.startElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
+
                 final AttributesImpl a = new AttributesImpl();
                 a.addCDATAAttribute("id", layoutId);
                 XMLUtils.startElement(ch, "layout", a);
@@ -209,9 +219,12 @@ public class DefaultPortalManager
             }
             if ( StringUtils.isNotEmpty(copletId) ) {
                 XMLUtils.endElement(ch, "coplet");
-                XMLUtils.endElement(ch, "coplets");
+                ch.endElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document");
+                ch.endPrefixMapping("bu");
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
                 XMLUtils.endElement(ch, "layout");
+                ch.endElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document");
+                ch.endPrefixMapping("bu");
             }
         }
 
