@@ -116,7 +116,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
 		} catch (InstantiationException e) {
 			throw new AppleNotFoundException("Can't instatiate the class '" + appleName + "'.", e);
 		} catch (IllegalAccessException e) {
-			throw new AppleNotFoundException("The class '" + appleName + "' can't be accessed. Check the class modifiers.", e);
+			throw new AppleNotFoundException("The class '" + appleName + "' can't be accessed. Check the class modifier.", e);
 		}
 		return appleController;
     }
