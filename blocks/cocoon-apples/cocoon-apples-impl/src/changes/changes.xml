@@ -26,7 +26,7 @@
   <body>
     <release version="1.0.0-RC1" date="2007-??-??" description="unreleased"> 
       <action dev="reinhard" type="add">
-        Apples can Spring beans. In order to lookup a bean, prepand #, e.g. to lookup a bean of name 'myBean',
+        Apples can also be Spring beans. In order to lookup a bean, prepand #, e.g. to lookup a bean of name 'myBean',
         use &lt;map:call function="#myBean"/&gt;.
       </action>         
       <action dev="reinhard" type="add">
