@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,10 @@ import org.xml.sax.SAXException;
 
 /**
  * <p>A serializer converting XHTML into plain old HTML.</p>
- *  
+ *
  * <p>For configuration options of this serializer, please look at the
  * {@link XHTMLSerializer} and {@link EncodingSerializer}.</p>
- * 
+ *
  * <p>Any of the XHTML document type declared or used will be converted into
  * its HTML 4.01 counterpart, and in addition to those a "compatible" doctype
  * can be supported to exploit a couple of shortcuts into MSIE's rendering
@@ -36,16 +36,16 @@ import org.xml.sax.SAXException;
  *
  * <dl>
  *   <dt>"<code>none</code>"</dt>
- *   <dd>Not to emit any dococument type declaration.</dd> 
+ *   <dd>Not to emit any dococument type declaration.</dd>
  *   <dt>"<code>compatible</code>"</dt>
- *   <dd>The HTML 4.01 Transitional (exploiting MSIE shortcut).</dd> 
+ *   <dd>The HTML 4.01 Transitional (exploiting MSIE shortcut).</dd>
  *   <dt>"<code>strict</code>"</dt>
- *   <dd>The HTML 4.01 Strict document type.</dd> 
+ *   <dd>The HTML 4.01 Strict document type.</dd>
  *   <dt>"<code>loose</code>"</dt>
- *   <dd>The HTML 4.01 Transitional document type.</dd> 
+ *   <dd>The HTML 4.01 Transitional document type.</dd>
  *   <dt>"<code>frameset</code>"</dt>
  *   <dd>The HTML 4.01 Frameset document type.</dd>
- * </dl> 
+ * </dl>
  *
  * @version $Id$
  */
@@ -73,6 +73,8 @@ public class HTMLSerializer extends XHTMLSerializer {
     /* ====================================================================== */
 
     private static final HTMLEncoder HTML_ENCODER = new HTMLEncoder();
+
+    protected boolean encodeCharacters = true;
 
     /**
      * Create a new instance of this <code>HTMLSerializer</code>
@@ -194,6 +196,10 @@ public class HTMLSerializer extends XHTMLSerializer {
             length++;
         }
 
+        // script and style are CDATA sections by default, so no encoding
+        if ( "SCRIPT".equals(name) || "STYLE".equals(name) ) {
+            this.encodeCharacters = false;
+        }
         super.startElementImpl(XHTML1_NAMESPACE, name, name, NAMESPACES, at);
     }
 
@@ -225,6 +231,22 @@ public class HTMLSerializer extends XHTMLSerializer {
         if (name.equals("META")) return;
         if (name.equals("PARAM")) return;
 
+        // script and style are CDATA sections by default, so no encoding
+        if ( "SCRIPT".equals(name) || "STYLE".equals(name) ) {
+            this.encodeCharacters = true;
+        }
         super.endElementImpl(XHTML1_NAMESPACE, name, name);
+    }
+
+    /**
+     * Encode and write a specific part of an array of characters.
+     */
+    protected void encode(char data[], int start, int length)
+    throws SAXException {
+        if ( !this.encodeCharacters ) {
+            this.write(data, start, length);
+            return;
+        }
+        super.encode(data, start, length);
     }
 }
