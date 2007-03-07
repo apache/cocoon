@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
@@ -36,9 +35,10 @@ import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.om.CopletDefinitionFeatures;
 import org.apache.cocoon.portal.om.CopletInstance;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspect;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext;
-import org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -48,9 +48,9 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class PortletAdapter 
+public class PortletAdapter
     extends AbstractCopletAdapter
-    implements PortalManagerAspect, CopletDecorationProvider, Receiver, Parameterizable {
+    implements RequestProcessorAspect, ResponseProcessorAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
     /** Name of the temporary coplet instance attribute holding the portlet window. */
     public static final String PORTLET_WINDOW_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window";
@@ -161,18 +161,19 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#prepare(org.apache.cocoon.portal.services.aspects.PortalManagerAspectPrepareContext)
+     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
-    public void prepare(PortalManagerAspectPrepareContext aspectContext)
-    throws ProcessingException {
+    public void process(RequestProcessorAspectContext aspectContext) {
         // process the events
         aspectContext.invokeNext();
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.PortalManagerAspect#render(org.apache.cocoon.portal.services.aspects.PortalManagerAspectRenderContext, org.xml.sax.ContentHandler, java.util.Properties)
+     * @see org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect#render(org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext, org.xml.sax.ContentHandler, java.util.Properties)
      */
-    public void render(PortalManagerAspectRenderContext aspectContext, ContentHandler ch, Properties properties)
+    public void render(ResponseProcessorAspectContext aspectContext,
+                       ContentHandler ch,
+                       Properties properties)
     throws SAXException {
         final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
 

@@ -28,46 +28,20 @@
     <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>cocoon-portal-portlet-impl</artifactId>
+  <artifactId>cocoon-portal-portlet-newimpl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Portal Block Portlet Implementation</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-portal-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-portal-bridges-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>castor</groupId>
-      <artifactId>castor</artifactId>
-      <version>1.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xerces</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.apache.pluto</groupId>
       <artifactId>pluto-container</artifactId>
-      <version>1.1.0-beta1</version>
+      <version>1.1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

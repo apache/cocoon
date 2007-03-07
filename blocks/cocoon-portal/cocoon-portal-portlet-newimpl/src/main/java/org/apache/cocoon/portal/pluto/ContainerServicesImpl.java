@@ -21,14 +21,16 @@ import javax.portlet.PortalContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.pluto.OptionalContainerServices;
 import org.apache.pluto.RequiredContainerServices;
-import org.apache.pluto.internal.InternalPortletWindow;
 import org.apache.pluto.spi.PortalCallbackService;
+import org.apache.pluto.spi.optional.PortalAdministrationService;
 import org.apache.pluto.spi.optional.PortletEnvironmentService;
+import org.apache.pluto.spi.optional.PortletInfoService;
 import org.apache.pluto.spi.optional.PortletInvokerService;
 import org.apache.pluto.spi.optional.PortletPreferencesService;
+import org.apache.pluto.spi.optional.PortletRegistryService;
 
 /**
- * 
+ *
  * @version $Id$
  *
  */
@@ -54,27 +56,34 @@ public class ContainerServicesImpl
         return this.portalContext;
     }
 
-    /**
-     * @see org.apache.pluto.OptionalContainerServices#getPortletEnvironmentService()
-     */
+    public PortalAdministrationService getPortalAdministrationService() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     public PortletEnvironmentService getPortletEnvironmentService() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /**
-     * @see org.apache.pluto.OptionalContainerServices#getPortletInvokerService(org.apache.pluto.internal.InternalPortletWindow)
-     */
-    public PortletInvokerService getPortletInvokerService(InternalPortletWindow arg0) {
+    public PortletInfoService getPortletInfoService() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /**
-     * @see org.apache.pluto.OptionalContainerServices#getPortletPreferencesService()
-     */
+    public PortletInvokerService getPortletInvokerService() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     public PortletPreferencesService getPortletPreferencesService() {
         // TODO Auto-generated method stub
         return null;
     }
+
+    public PortletRegistryService getPortletRegistryService() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
