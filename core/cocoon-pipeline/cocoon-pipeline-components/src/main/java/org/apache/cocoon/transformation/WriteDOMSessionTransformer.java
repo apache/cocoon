@@ -58,7 +58,10 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
     public static final String DOM_ROOT_ELEMENT = "dom-root-element";
 
     private boolean buildDom = false;
-    private boolean sessionAvailable = false;
+    /**
+     * component was correctly setup
+     */
+    private boolean setup = false;
 
     private Session session;
     private DOMBuilder builder;
@@ -75,7 +78,7 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
         this.session = null;
         this.builder = null;
         this.buildDom = false;
-        this.sessionAvailable = false;
+        this.setup = false;
     }
 
     /* BEGIN SitemapComponent methods */
@@ -90,11 +93,11 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
             DOMName = parameters.getParameter(WriteDOMSessionTransformer.DOM_NAME, null);
             rootElement = parameters.getParameter(WriteDOMSessionTransformer.DOM_ROOT_ELEMENT, null);
             if (DOMName != null && rootElement != null) {
-                // only now we know it is usefull to store something in the session
+                // only now we know it is useful to store something in the session
                 getLogger().debug("WriteSessionTransformer: " + WriteDOMSessionTransformer.DOM_NAME + "=" +
                                   DOMName + "; " + WriteDOMSessionTransformer.DOM_ROOT_ELEMENT + "=" +
                                   rootElement);
-                sessionAvailable = true;
+                setup = true;
                 storedPrefixMap = new HashMap();
             } else {
                 getLogger().error("WriteSessionTransformer: need " + WriteDOMSessionTransformer.DOM_NAME +
@@ -114,7 +117,7 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
         super.startPrefixMapping(prefix, uri);
         if (buildDom) {
             builder.startPrefixMapping(prefix, uri);
-        } else {
+        } else if (setup) {
             storePrefixMapping(prefix, uri);
         }
     }
@@ -122,7 +125,7 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
     public void startElement(String uri, String name, String raw, Attributes attributes)
     throws SAXException {
         // only build the DOM tree if session is available
-        if (name.equalsIgnoreCase(rootElement) && sessionAvailable) {
+        if (setup && name.equalsIgnoreCase(rootElement)) {
             getLogger().debug("WriteSessionTransformer: start building DOM tree");
             buildDom = true;
             builder = new DOMBuilder();
@@ -137,7 +140,7 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
 
     public void endElement(String uri, String name, String raw)
             throws SAXException {
-        if (name.equalsIgnoreCase(rootElement) && sessionAvailable) {
+        if (setup && name.equalsIgnoreCase(rootElement)) {
             buildDom = false;
             builder.endElement(uri, name, raw);
             builder.endDocument();
@@ -178,10 +181,11 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
     }
 
     protected void launchStoredMappings() throws SAXException {
-        Iterator it = storedPrefixMap.keySet().iterator();
+        Iterator it = storedPrefixMap.entrySet().iterator();
         while (it.hasNext()) {
-            String pre = (String) it.next();
-            String uri = (String) storedPrefixMap.get(pre);
+            Map.Entry entry = (Map.Entry) it.next();
+            String pre = (String) entry.getKey();
+            String uri = (String) entry.getValue();
             getLogger().debug("WriteSessionTransformer: launching prefix mapping[ pre: " + pre + " uri: " + uri + " ]");
             builder.startPrefixMapping(pre, uri);
         }
