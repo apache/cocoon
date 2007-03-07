@@ -58,6 +58,8 @@ public class CocoonReloadingListener extends ReloadingListener {
                 changedFileParentPath.endsWith("config/spring")) {            // local Spring bean configurations
             log.info("Configuration file change detected: " + changedFile);
             reload = true;
+        } else {
+            log.debug("File change detected: " + changedFile);                // any other file change
         }
     }
 
