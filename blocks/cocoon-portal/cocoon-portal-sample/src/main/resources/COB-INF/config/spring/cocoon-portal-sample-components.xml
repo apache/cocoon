@@ -78,7 +78,6 @@
       |
       +-->
     <portal:request-processor-aspects id="org.apache.cocoon.portal.services.PortalManager.requestAspects">
-      <portal:aspect ref="org.apache.cocoon.portal.services.LinkService"/>
       <!--  The client should not cache the page. -->
       <portal:aspect type="no-client-caching"/>
       <!-- Use the action counter with great care. We recommend turning it off. -->
@@ -106,7 +105,6 @@
       |
       +-->
     <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects">
-      <portal:aspect type="page-labels"/>
       <!-- Add your aspects here -->
     </portal:profile-manager-aspects>
 </beans>

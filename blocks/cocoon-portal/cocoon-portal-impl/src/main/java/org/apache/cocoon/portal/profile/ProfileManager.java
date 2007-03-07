@@ -24,6 +24,7 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.services.aspects.AspectChain;
 
 /**
  * The profile manager provides access to the portal profile (or parts
@@ -89,4 +90,6 @@ public interface ProfileManager {
      * Get a specific coplet type for the current user.
      */
     CopletType getCopletType(String id);
+
+    AspectChain getProfileManagerAspectChain();
 }

@@ -16,13 +16,16 @@
  */
 package org.apache.cocoon.portal.spring;
 
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.aspects.DynamicAspect;
+import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
@@ -47,11 +50,21 @@ public class RegistrationBeanPostProcessor
      * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
      */
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if ( bean instanceof DynamicAspect && bean instanceof ResponseProcessorAspect ) {
-            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((ResponseProcessorAspect)bean);
-        }
-        if ( bean instanceof DynamicAspect && bean instanceof RequestProcessorAspect ) {
-            ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((RequestProcessorAspect)bean);
+        if ( bean instanceof DynamicAspect ) {
+            final PortalService portalService = (PortalService) this.beanFactory.getBean(PortalService.class.getName());
+            try {
+                if ( bean instanceof ResponseProcessorAspect ) {
+                    portalService.getPortalManager().getResponseProcessorAspectChain().addAspect(bean, null, 0);
+                }
+                if ( bean instanceof RequestProcessorAspect ) {
+                    portalService.getPortalManager().getRequestProcessorAspectChain().addAspect(bean, null, -1);
+                }
+                if ( bean instanceof ProfileManagerAspect ) {
+                    portalService.getProfileManager().getProfileManagerAspectChain().addAspect(bean, null, -1);
+                }
+            } catch (PortalException pe) {
+                throw new BeanInitializationException("Unable to register dynamic aspect of bean " + beanName, pe);
+            }
         }
         return bean;
     }
