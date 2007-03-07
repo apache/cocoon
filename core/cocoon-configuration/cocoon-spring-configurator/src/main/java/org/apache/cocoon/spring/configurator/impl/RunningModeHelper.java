@@ -47,6 +47,9 @@ public abstract class RunningModeHelper {
      * Determine the running mode.
      * A non-null system property will have precedence over everything else.
      * The system default running mode will be used if the passed parameter mode is null.
+     *
+     * @param mode The default running mode.
+     * @return The current running mode.
      * @see #PROPERTY_RUNNING_MODE
      * @see SettingsDefaults#DEFAULT_RUNNING_MODE
      */
@@ -62,10 +65,16 @@ public abstract class RunningModeHelper {
 
     /**
      * Check if the value for the running mode is valid.
+     * Currently this method does not check anything. All modes (apart from null)
+     * are valid.
+     * @param mode Check if the mode is a valid mode.
      * @throws IllegalArgumentException if the mode is invalid
      */
     public static void checkRunningMode(String mode)
     throws IllegalArgumentException {
+        if ( mode == null ) {
+            throw new IllegalArgumentException("Running mode can't be null.");
+        }
         /*
         if ( !Arrays.asList(SettingsDefaults.RUNNING_MODES).contains(mode) ) {
             final String msg =

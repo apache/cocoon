@@ -29,6 +29,7 @@ public interface BlockResourcesHolder {
     /**
      * Return a map with deployed block names as keys and the url of the deployed
      * resources as value.
+     * @return The map with the block contexts.
      */
     Map getBlockContexts();
 }

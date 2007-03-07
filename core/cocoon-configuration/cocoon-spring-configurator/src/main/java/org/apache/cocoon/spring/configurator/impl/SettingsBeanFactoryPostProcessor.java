@@ -95,9 +95,10 @@ public class SettingsBeanFactoryPostProcessor
 
     /**
      * Set the running mode.
+     * @param mode The new running mode.
      */
-    public void setRunningMode(String runningMode) {
-        this.runningMode = runningMode;
+    public void setRunningMode(String mode) {
+        this.runningMode = mode;
     }
 
     /**

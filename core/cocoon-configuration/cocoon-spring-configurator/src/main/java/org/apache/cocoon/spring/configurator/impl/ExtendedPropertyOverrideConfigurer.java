@@ -73,7 +73,11 @@ public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigur
         this.locations = list;
     }
 
-    /** Set the settings. */
+    /**
+     * Set the settings.
+     *
+     * @param object The settings object.
+     */
     public void setSettings(Settings object) {
         this.settings = object;
     }
