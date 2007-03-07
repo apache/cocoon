@@ -59,6 +59,13 @@ public class RwmPropertiesTest extends TestCase {
         assertEquals("interpolatedValue:A", cocooonProps.getProperty("b"));        
     }
 
+    public void testLoadExcludedLibs() throws Exception {
+        RwmProperties p = createTestProperties();
+        Set as = p.getExcludedLibProps();
+        assertEquals(2, as.size());  
+        assertTrue(as.contains("com.mygroup:myartifact"));
+    }
+    
     public void testLoadingBasedirs() throws Exception {
         RwmProperties p = createTestProperties();
         Set as = p.getClassesDirs();
