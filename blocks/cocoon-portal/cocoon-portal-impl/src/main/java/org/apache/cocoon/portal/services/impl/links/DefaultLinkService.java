@@ -33,6 +33,7 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.services.LinkService;
+import org.apache.cocoon.portal.services.aspects.DynamicAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
 
@@ -45,7 +46,7 @@ import org.apache.cocoon.portal.util.AbstractBean;
  */
 public class DefaultLinkService
     extends AbstractBean
-    implements LinkService {
+    implements LinkService, DynamicAspect {
 
     /** Default port used for http. */
     protected int defaultPort = 80;

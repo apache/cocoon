@@ -117,28 +117,28 @@ public class DefaultLayoutFactory
 
     protected static long idCounter = System.currentTimeMillis();
 
-    /** 
+    /**
      * Configure a layout
      */
-    protected void configureLayout(Configuration layoutConf) 
+    protected void configureLayout(Configuration layoutConf)
     throws ConfigurationException {
         LayoutDescription desc = new LayoutDescription();
         final String type = layoutConf.getAttribute("type");
-   
+
         // unique test
         if ( this.layouts.get(type) != null) {
             throw new ConfigurationException("Layout type must be unique. Double definition for " + type);
         }
         desc.setType(type);
-        desc.setClassName(layoutConf.getAttribute("class"));        
+        desc.setClassName(layoutConf.getAttribute("class"));
         desc.setCreateId(layoutConf.getAttributeAsBoolean("create-id", false));
         desc.setItemClassName(layoutConf.getAttribute("item-class", null));
         desc.setDefaultIsStatic(layoutConf.getAttributeAsBoolean("default-is-static", false));
 
         // the renderers
         final String defaultRenderer = layoutConf.getChild("renderers").getAttribute("default");
-        desc.setDefaultRendererName(defaultRenderer); 
-         
+        desc.setDefaultRendererName(defaultRenderer);
+
         final Configuration[] rendererConfs = layoutConf.getChild("renderers").getChildren("renderer");
         if ( rendererConfs != null ) {
             boolean found = false;
@@ -161,7 +161,7 @@ public class DefaultLayoutFactory
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void configure(Configuration configuration) 
+    public void configure(Configuration configuration)
     throws ConfigurationException {
         final Configuration[] layoutsConf = configuration.getChild("layouts").getChildren("layout");
         for(int i=0; i < layoutsConf.length; i++ ) {
@@ -176,7 +176,7 @@ public class DefaultLayoutFactory
     /**
      * @see org.apache.cocoon.portal.services.LayoutFactory#newInstance(java.lang.String)
      */
-    public Layout newInstance(String layoutType) 
+    public Layout newInstance(String layoutType)
     throws LayoutException {
         return this.newInstance(layoutType, null);
     }
@@ -184,7 +184,7 @@ public class DefaultLayoutFactory
     /**
      * @see org.apache.cocoon.portal.services.LayoutFactory#newInstance(java.lang.String, java.lang.String)
      */
-    public Layout newInstance(String layoutType, String id) 
+    public Layout newInstance(String layoutType, String id)
     throws LayoutException {
         LayoutDescription layoutDescription = (LayoutDescription)this.layouts.get( layoutType );
 
@@ -216,6 +216,8 @@ public class DefaultLayoutFactory
     }
 
     /**
+     * Inform this bean about a remove layout event.
+     * @param event The remove layout event
      * @see Receiver
      */
     public void inform(RemoveLayoutEvent event) {

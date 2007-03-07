@@ -33,6 +33,7 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.aspects.AspectChain;
 import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.portal.util.AbstractBean;
@@ -43,8 +44,8 @@ import org.springframework.core.Ordered;
  *
  * @version $Id$
  */
-public abstract class AbstractProfileManager 
-    extends AbstractBean 
+public abstract class AbstractProfileManager
+    extends AbstractBean
     implements ProfileManager, Receiver, Ordered {
 
     /** The chain for the configured profile manager aspects. */
@@ -56,6 +57,13 @@ public abstract class AbstractProfileManager
      */
     public void setAspectChain(AspectChainImpl a) {
         this.chain = a;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getProfileManagerAspectChain()
+     */
+    public AspectChain getProfileManagerAspectChain() {
+        return this.chain;
     }
 
     /**
@@ -114,7 +122,7 @@ public abstract class AbstractProfileManager
                         if ( cid.getCopletDefinition() != null ) {
                             // now invoke login on each instance
                             CopletAdapter adapter;
-                            adapter = this.portalService.getCopletAdapter(cid.getCopletDefinition().getCopletType().getCopletAdapterName());                            
+                            adapter = this.portalService.getCopletAdapter(cid.getCopletDefinition().getCopletType().getCopletAdapterName());
                             adapter.login( cid );
                         }
                     }
