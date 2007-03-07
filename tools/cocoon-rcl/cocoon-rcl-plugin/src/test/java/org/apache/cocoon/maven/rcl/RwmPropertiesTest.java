@@ -41,9 +41,9 @@ public class RwmPropertiesTest extends TestCase {
             assertEquals("file:/F:/blocks/myBlock2/some-other-dir/src/main/resources/COB-INF", 
                     springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block2/contextPath"));     
         } else {
-            assertEquals("/home/test/myBlock4/src/main/resources/COB-INF", 
+            assertEquals("file:/home/test/myBlock4/src/main/resources/COB-INF", 
                     springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block4/contextPath"));
-            assertEquals("/home/test/myBlock5/some-other-dir/src/main/resources/COB-INF", 
+            assertEquals("file:/home/test/myBlock5/some-other-dir/src/main/resources/COB-INF", 
                     springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block5/contextPath"));            
         }
         assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block3/contextPath").endsWith("src/main/resources/COB-INF"));
