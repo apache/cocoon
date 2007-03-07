@@ -32,23 +32,44 @@ public class RwmPropertiesTest extends TestCase {
     public void testLoadingSpringProps() throws Exception {
         RwmProperties p = createTestProperties();
         Properties springProps = p.getSpringProperties();
-        assertEquals(8, springProps.size());
-        // test variable interpolation
-        assertEquals("interpolatedValue:A", springProps.getProperty("b"));
+        assertEquals(9, springProps.size());
         // test setting the correct context URL if a *%classes-dir property was set
         assertTrue(springProps.containsKey("org.apache.cocoon.cocoon-rcl-plugin-demo.block/contextPath"));
-        assertEquals("file:/F:/blocks/myBlock1/src/main/resources/COB-INF", springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/contextPath"));
-        assertEquals("file:/F:/blocks/myBlock2/src/main/resources/COB-INF", 
-                springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block2/contextPath"));     
+        if(File.separatorChar == '\\') {
+            assertEquals("file:/F:/blocks/myBlock1/src/main/resources/COB-INF", 
+                    springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block1/contextPath"));
+            assertEquals("file:/F:/blocks/myBlock2/some-other-dir/src/main/resources/COB-INF", 
+                    springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block2/contextPath"));     
+        } else {
+            assertEquals("/home/test/myBlock4/src/main/resources/COB-INF", 
+                    springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block4/contextPath"));
+            assertEquals("/home/test/myBlock5/some-other-dir/src/main/resources/COB-INF", 
+                    springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block5/contextPath"));            
+        }
         assertTrue(springProps.getProperty("org.apache.cocoon.cocoon-rcl-plugin-demo.block3/contextPath").endsWith("src/main/resources/COB-INF"));
+        // other property overrider configurer properties
+        assertEquals("5", springProps.getProperty("org.apache.cocoon.someBean/someProperty"));
+    }
+    
+    public void testLoadingCocoonProps() throws Exception {
+        RwmProperties p = createTestProperties();
+        Properties cocooonProps = p.getCocoonProperties();
+        assertEquals(2, cocooonProps.size());        
+        // test variable interpolation
+        assertEquals("interpolatedValue:A", cocooonProps.getProperty("b"));        
     }
 
     public void testLoadingBasedirs() throws Exception {
         RwmProperties p = createTestProperties();
         Set as = p.getClassesDirs();
-        assertEquals(6, as.size());
-        assertTrue(as.contains("file:/F:/blocks/myBlock/target/classes"));
-        assertTrue(as.contains("file:/F:/blocks/myBlock1/target/classes"));      
+        assertEquals(9, as.size());
+        if(File.separatorChar == '\\') {
+            assertTrue(as.contains("file:/F:/blocks/myBlock/target/classes"));
+            assertTrue(as.contains("file:/F:/blocks/myBlock1/target/classes"));
+            assertTrue(as.contains("file:/C:/blah"));            
+        } else {
+            assertTrue(as.contains("file:/nix/foo"));
+        }
     }      
     
     protected RwmProperties createTestProperties() throws Exception {    

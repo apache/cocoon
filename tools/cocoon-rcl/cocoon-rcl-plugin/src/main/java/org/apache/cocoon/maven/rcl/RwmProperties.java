@@ -18,7 +18,6 @@ package org.apache.cocoon.maven.rcl;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -91,7 +90,7 @@ public class RwmProperties {
             }
             
             // copy all other properties
-            else if(!key.endsWith(CLASSES_DIR)) {
+            else if(!key.endsWith(CLASSES_DIR) && key.indexOf('/') > -1) {
                 springProps.put(key, this.props.getString(key));
             }
             
@@ -119,9 +118,17 @@ public class RwmProperties {
         }        
         return returnSet;
     }
-    
-}
 
+    public Properties getCocoonProperties() {
+        Properties cocoonProps = new Properties();
+        for(Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+            if(key.indexOf(CLASSES_DIR) == -1 &&
+                    key.indexOf('/') == -1) {
+                cocoonProps.put(key, this.props.getString(key));
+            }
+        }
+        return cocoonProps;
+    }
     
-
-    
+}    

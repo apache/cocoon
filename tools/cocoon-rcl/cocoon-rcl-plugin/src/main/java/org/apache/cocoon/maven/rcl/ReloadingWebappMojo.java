@@ -26,7 +26,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,6 +47,7 @@ import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -69,14 +69,17 @@ public class ReloadingWebappMojo extends AbstractMojo {
     private static final String WEB_INF_APP_CONTEXT = "WEB-INF/applicationContext.xml";
 
     private static final String WEB_INF_LOG4J = "WEB-INF/log4j.xml";
-
+    
     private static final String WEB_INF_LIB = "WEB-INF/lib";
     
     private static final String WEB_INF_COCOON_SPRING_PROPS = "WEB-INF/cocoon/spring/rcl.properties";
 
+    private static final String WEB_INF_COCOON_PROPS = "WEB-INF/cocoon/properties/rcl.properties";   
+
     private static final String WEB_INF_RCL_URLCL_CONF = "WEB-INF/cocoon/rclwrapper.urlcl.conf";
     
-    private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "WEB-INF/cocoon/rclwrapper.rcl.conf";    
+    private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "WEB-INF/cocoon/rclwrapper.rcl.conf";
+
 
     /**
      * The directory that contains the Cocoon web application.
@@ -189,6 +192,9 @@ public class ReloadingWebappMojo extends AbstractMojo {
         
         // based on the RCL configuration file, create a Spring properties file
         createSpringProperties(webAppBaseDir, props);
+        
+        // based on the RCL configuration file, create a Cocoon properties file
+        createCocoonProperties(webAppBaseDir, props);        
 
     }
 
@@ -223,17 +229,18 @@ public class ReloadingWebappMojo extends AbstractMojo {
             FileWriter fw = new FileWriter(urlClConfFile);
             for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
-                fw.write(new File(dir).toURL().toExternalForm() + "\n");  
+                fw.write(dir + "\n");
                 this.getLog().debug("Adding classes-dir to URLClassLoader configuration: " + dir);
             }
-            for(Iterator aIt = this.project.getArtifacts().iterator(); aIt.hasNext();) {
-                Artifact a = (Artifact) aIt.next();
-                try {
-                    fw.write(a.getFile().toURL().toExternalForm() + "\n");
-                } catch (MalformedURLException e) {
-                    throw new MojoExecutionException("Error while creating URL for artifact " + a.getArtifactId());
-                }                
-                this.getLog().debug("Adding dependency to URLClassLoader configuration: " + a.getArtifactId());
+            
+            Set artifacts = project.getArtifacts();
+            ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
+            for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
+                Artifact artifact = (Artifact) iter.next();
+                if (!artifact.isOptional() && filter.include(artifact)) {
+                    fw.write(artifact.getFile().toURL().toExternalForm() + "\n");
+                    this.getLog().debug("Adding dependency to URLClassLoader configuration: " + artifact.getArtifactId());
+                }
             }
             fw.close();
         } catch(IOException e) {
@@ -246,6 +253,17 @@ public class ReloadingWebappMojo extends AbstractMojo {
         try {
             FileOutputStream springPropsOs = new FileOutputStream(springPropFile);
             props.getSpringProperties().store(springPropsOs, "Spring properties as read from " + this.rclPropertiesFile.toURL());
+            springPropsOs.close();
+        } catch (IOException e) {
+            throw new MojoExecutionException("Can't write to  " + springPropFile.getAbsolutePath(), e);
+        }
+    }
+    
+    protected void createCocoonProperties(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
+        File springPropFile = createPath(new File(webAppBaseDir, WEB_INF_COCOON_PROPS));
+        try {
+            FileOutputStream springPropsOs = new FileOutputStream(springPropFile);
+            props.getCocoonProperties().store(springPropsOs, "Cocoon properties as read from " + this.rclPropertiesFile.toURL());
             springPropsOs.close();
         } catch (IOException e) {
             throw new MojoExecutionException("Can't write to  " + springPropFile.getAbsolutePath(), e);
