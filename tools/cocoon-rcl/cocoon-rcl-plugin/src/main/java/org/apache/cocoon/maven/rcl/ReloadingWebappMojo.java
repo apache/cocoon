@@ -227,19 +227,24 @@ public class ReloadingWebappMojo extends AbstractMojo {
         File urlClConfFile = createPath(new File(webAppBaseDir, WEB_INF_RCL_URLCL_CONF));
         try {
             FileWriter fw = new FileWriter(urlClConfFile);
+            Set excludeLibProps = props.getExcludedLibProps();
+            
             for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
                 fw.write(dir + "\n");
-                this.getLog().debug("Adding classes-dir to URLClassLoader configuration: " + dir);
+                this.getLog().debug("Adding classes-dir (URLClassLoader configuration): " + dir);
             }
             
             Set artifacts = project.getArtifacts();
             ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
             for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
                 Artifact artifact = (Artifact) iter.next();
-                if (!artifact.isOptional() && filter.include(artifact)) {
+                if (!artifact.isOptional() && filter.include(artifact) &&
+                        !excludeLibProps.contains(artifact.getGroupId() + ":" + artifact.getArtifactId())) {
                     fw.write(artifact.getFile().toURL().toExternalForm() + "\n");
-                    this.getLog().debug("Adding dependency to URLClassLoader configuration: " + artifact.getArtifactId());
+                    this.getLog().debug("Adding library (URLClassLoader configuration): " + artifact.getArtifactId());
+                } else {
+                    this.getLog().debug("Skipping library (URLClassLoader configuration): " + artifact.getArtifactId());
                 }
             }
             fw.close();

@@ -33,6 +33,7 @@ public class RwmProperties {
     private static final String COB_INF_DIR = "src/main/resources/COB-INF";
     private static final String BLOCK_CONTEXT_URL_PARAM = "/contextPath";
     private static final String CLASSES_DIR = "%classes-dir"; 
+    private static final String EXCLUDE_LIB = "%exclude-lib"; 
     private static final String TARGET_CLASSES_DIR = "target/classes";
     
     private Configuration props;
@@ -42,8 +43,39 @@ public class RwmProperties {
     }
     
     public Set getClassesDirs() throws MojoExecutionException {
-        return getFilteredPropertiesValuesAsSet(CLASSES_DIR);
+        Set returnSet = new HashSet();
+        for (Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+            if (key.endsWith(CLASSES_DIR)) {
+                String[] values = this.props.getStringArray(key);
+                for (int i = 0; i < values.length; i++) {
+                    String path = values[i];
+                    String url = null;
+                    try {
+                        url = new File(path).toURL().toExternalForm();
+                    } catch (MalformedURLException e) {
+                        throw new MojoExecutionException("Can't create URL to  " + path, e);
+                    }
+                    returnSet.add(url);
+                }
+            }
+        }        
+        return returnSet;
     }
+    
+    public Set getExcludedLibProps() throws MojoExecutionException {
+        Set returnSet = new HashSet();
+        for (Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+            if (key.endsWith(EXCLUDE_LIB)) {
+                String[] values = this.props.getStringArray(key);
+                for (int i = 0; i < values.length; i++) {
+                    returnSet.add(values[i]);
+                }
+            }
+        }        
+        return returnSet;
+    }    
     
     public Properties getSpringProperties() throws MojoExecutionException {
         Properties springProps = new Properties();
@@ -97,33 +129,13 @@ public class RwmProperties {
         } 
         return springProps;
     }    
-    
-    private Set getFilteredPropertiesValuesAsSet(String filter) throws MojoExecutionException {
-        Set returnSet = new HashSet();
-        for (Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
-            String key = (String) rclIt.next();
-            if (key.endsWith(filter)) {
-                String[] values = this.props.getStringArray(key);
-                for (int i = 0; i < values.length; i++) {
-                    String path = values[i];
-                    String url = null;
-                    try {
-                        url = new File(path).toURL().toExternalForm();
-                    } catch (MalformedURLException e) {
-                        throw new MojoExecutionException("Can't create URL to  " + path, e);
-                    }
-                    returnSet.add(url);
-                }
-            }
-        }        
-        return returnSet;
-    }
 
     public Properties getCocoonProperties() {
         Properties cocoonProps = new Properties();
         for(Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
             String key = (String) rclIt.next();
             if(key.indexOf(CLASSES_DIR) == -1 &&
+                    key.indexOf(EXCLUDE_LIB) == -1 &&
                     key.indexOf('/') == -1) {
                 cocoonProps.put(key, this.props.getString(key));
             }
