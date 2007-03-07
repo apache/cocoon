@@ -25,7 +25,8 @@ package org.apache.cocoon.portal.services.aspects;
 public interface ProfileManagerAspectContext extends BasicAspectContext {
 
     /**
-     * Invoke next aspect .
+     * Invoke next aspect.
+     * @param profile The profile information.
      */
-    void invokeNext(Object object);
+    void invokeNext(Object profile);
 }

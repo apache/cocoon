@@ -16,29 +16,22 @@
  */
 package org.apache.cocoon.portal.services.aspects;
 
-import java.util.Properties;
-
-import org.apache.cocoon.portal.PortalService;
 
 /**
- * The base interface for all aspect contexts.
- * This interface provides basic access to some environment information like
- * the current {@link PortalService} and the configuration for the aspect.
+ * This is a marker interface for marking a bean as a dynamic aspect.
+ * A dynamic aspect does not need to be configured in the configuration.
+ * If the corresponding bean is configured, it is added to the aspect
+ * configuration automatically.
+ *
+ * @see ProfileManagerAspect
+ * @see RequestProcessorAspect
+ * @see ResponseProcessorAspect
+ * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect
  *
  * @since 2.2
  * @version $Id$
  */
-public interface BasicAspectContext {
+public interface DynamicAspect {
 
-    /**
-     * Get the {@link Properties} of the aspect.
-     * @return The aspect properties.
-     */
-    Properties getAspectProperties();
-
-    /**
-     * Get the portal service.
-     * @return The portal service.
-     */
-    PortalService getPortalService();
+  // just a marker interface
 }

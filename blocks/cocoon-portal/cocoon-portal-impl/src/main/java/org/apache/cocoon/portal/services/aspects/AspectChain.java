@@ -16,29 +16,32 @@
  */
 package org.apache.cocoon.portal.services.aspects;
 
+import java.util.Iterator;
 import java.util.Properties;
 
-import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.PortalException;
 
 /**
- * The base interface for all aspect contexts.
- * This interface provides basic access to some environment information like
- * the current {@link PortalService} and the configuration for the aspect.
+ * Reusable implementation of an aspect chain.
  *
  * @since 2.2
  * @version $Id$
  */
-public interface BasicAspectContext {
+public interface AspectChain {
 
-    /**
-     * Get the {@link Properties} of the aspect.
-     * @return The aspect properties.
-     */
-    Properties getAspectProperties();
+    Properties EMPTY_PROPERTIES = new Properties();
 
-    /**
-     * Get the portal service.
-     * @return The portal service.
-     */
-    PortalService getPortalService();
+    Class getAspectClass();
+
+    void addAspect(Object aspect, Properties config)
+    throws PortalException;
+
+    void addAspect(Object aspect, Properties config, int index)
+    throws PortalException;
+
+    boolean hasAspects();
+
+    Iterator getAspectsIterator();
+
+    Iterator getPropertiesIterator();
 }

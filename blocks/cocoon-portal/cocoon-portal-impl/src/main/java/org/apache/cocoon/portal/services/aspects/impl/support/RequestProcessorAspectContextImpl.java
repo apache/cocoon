@@ -19,7 +19,7 @@ package org.apache.cocoon.portal.services.aspects.impl.support;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
 
 /**
@@ -32,7 +32,7 @@ public final class RequestProcessorAspectContextImpl
     implements RequestProcessorAspectContext {
 
     public RequestProcessorAspectContextImpl(PortalService service,
-                                             AspectChain    chain) {
+                                             AspectChainImpl    chain) {
         super(service, chain);
     }
 

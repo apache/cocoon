@@ -23,7 +23,7 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 
 /**
  * This chain holds all configured renderer aspects for one renderer.
@@ -41,7 +41,7 @@ import org.apache.cocoon.portal.services.aspects.support.AspectChain;
  *
  * @version $Id$
  */
-public final class RendererAspectChain extends AspectChain {
+public final class RendererAspectChain extends AspectChainImpl {
 
     /** The list of the configuration objects for each renderer aspects. */
     protected List configs;
@@ -65,7 +65,7 @@ public final class RendererAspectChain extends AspectChain {
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.aspects.support.AspectChain#addAspect(java.lang.Object, java.util.Properties, int)
+     * @see org.apache.cocoon.portal.services.aspects.support.AspectChainImpl#addAspect(java.lang.Object, java.util.Properties, int)
      */
     public void addAspect(Object aspect, Properties config, int index) throws PortalException {
         if ( configs == null ) {

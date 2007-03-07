@@ -34,7 +34,7 @@ import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.springframework.core.Ordered;
 
@@ -48,13 +48,13 @@ public abstract class AbstractProfileManager
     implements ProfileManager, Receiver, Ordered {
 
     /** The chain for the configured profile manager aspects. */
-    protected AspectChain chain;
+    protected AspectChainImpl chain;
 
     /**
      * Set the event chain.
      * @param a A chain.
      */
-    public void setAspectChain(AspectChain a) {
+    public void setAspectChain(AspectChainImpl a) {
         this.chain = a;
     }
 

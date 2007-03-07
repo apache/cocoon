@@ -17,7 +17,7 @@
 package org.apache.cocoon.portal.spring;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.services.aspects.DynamicAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.springframework.beans.BeansException;
@@ -47,10 +47,10 @@ public class RegistrationBeanPostProcessor
      * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
      */
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if ( bean instanceof CopletAdapter && bean instanceof ResponseProcessorAspect ) {
+        if ( bean instanceof DynamicAspect && bean instanceof ResponseProcessorAspect ) {
             ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((ResponseProcessorAspect)bean);
         }
-        if ( bean instanceof CopletAdapter && bean instanceof RequestProcessorAspect ) {
+        if ( bean instanceof DynamicAspect && bean instanceof RequestProcessorAspect ) {
             ((PortalService)this.beanFactory.getBean(PortalService.class.getName())).getPortalManager().register((RequestProcessorAspect)bean);
         }
         return bean;

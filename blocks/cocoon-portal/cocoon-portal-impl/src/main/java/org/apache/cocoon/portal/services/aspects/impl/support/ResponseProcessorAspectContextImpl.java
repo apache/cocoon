@@ -21,7 +21,7 @@ import java.util.Properties;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -36,7 +36,7 @@ public final class ResponseProcessorAspectContextImpl
     implements ResponseProcessorAspectContext {
 
     public ResponseProcessorAspectContextImpl(PortalService service,
-                                              AspectChain    chain) {
+                                              AspectChainImpl    chain) {
         super(service, chain);
     }
 

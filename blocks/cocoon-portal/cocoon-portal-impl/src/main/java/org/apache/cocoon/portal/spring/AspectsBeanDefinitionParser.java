@@ -21,7 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -48,7 +49,7 @@ public class AspectsBeanDefinitionParser extends AbstractElementParser {
 
     public AspectsBeanDefinitionParser(final String className) {
         this.baseClass = className;
-        this.aspectChainClass = AspectChain.class;
+        this.aspectChainClass = AspectChainImpl.class;
     }
 
     public AspectsBeanDefinitionParser(final String className, Class aspectChainClass) {
