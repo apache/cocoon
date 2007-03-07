@@ -59,7 +59,7 @@ public interface PortalManager {
     /**
      * Render the portal.
      * @param ch         The content handler receiving the sax events.
-     * @param Properties A properties object (can be null)
+     * @param properties A properties object (can be null)
      * @throws SAXException
      */
     void render(ContentHandler ch,

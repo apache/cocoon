@@ -23,7 +23,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspect;
 import org.apache.cocoon.portal.services.aspects.ProfileManagerAspectContext;
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.portal.services.aspects.support.BasicAspectContextImpl;
 
 /**
@@ -45,7 +45,7 @@ public final class ProfileManagerAspectContextImpl
     protected Object result;
 
     public ProfileManagerAspectContextImpl(PortalService service,
-                                           AspectChain   chain,
+                                           AspectChainImpl   chain,
                                            int           phase) {
         super(service, chain);
         this.phase = phase;
@@ -87,7 +87,7 @@ public final class ProfileManagerAspectContextImpl
 
     /**
      * Return the resulting profile depending on the phase.
-     * @return
+     * @return The resulting profile.
      */
     public Object getResult() {
         return this.result;

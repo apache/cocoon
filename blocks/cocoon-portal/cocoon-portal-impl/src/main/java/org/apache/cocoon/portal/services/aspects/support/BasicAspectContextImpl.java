@@ -43,7 +43,7 @@ public abstract class BasicAspectContextImpl implements BasicAspectContext {
     protected Properties aspectProperties;
 
     public BasicAspectContextImpl(PortalService service,
-                                  AspectChain   chain) {
+                                  AspectChainImpl   chain) {
         this.portalService = service;
         if ( chain != null ) {
             this.aspectsIterator = chain.getAspectsIterator();

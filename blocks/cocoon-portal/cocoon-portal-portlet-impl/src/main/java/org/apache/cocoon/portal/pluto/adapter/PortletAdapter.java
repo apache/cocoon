@@ -52,6 +52,7 @@ import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
+import org.apache.cocoon.portal.services.aspects.DynamicAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
@@ -82,7 +83,7 @@ import org.xml.sax.SAXException;
  */
 public class PortletAdapter
     extends AbstractCopletAdapter
-    implements RequestProcessorAspect, ResponseProcessorAspect, CopletDecorationProvider, Receiver, Parameterizable {
+    implements RequestProcessorAspect, ResponseProcessorAspect, DynamicAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
     /** Name of the temporary coplet instance attribute holding the portlet window. */
     public static final String PORTLET_WINDOW_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window";

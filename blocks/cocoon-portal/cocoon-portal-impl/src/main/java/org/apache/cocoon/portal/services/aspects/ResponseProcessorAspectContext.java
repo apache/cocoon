@@ -29,7 +29,10 @@ public interface ResponseProcessorAspectContext
     extends BasicAspectContext {
 
     /**
-     * Invoke next aspect
+     * Invoke next aspect.
+     * @param ch The content handler for rendering.
+     * @param parameters Optional parameters for rendering.
+     * @throws SAXException If anything goes wrong.
      */
     void invokeNext(ContentHandler ch,
                     Properties     parameters)

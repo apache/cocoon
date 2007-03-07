@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalException;
+import org.apache.cocoon.portal.services.aspects.AspectChain;
 
 /**
  * Reusable implementation of an aspect chain.
@@ -30,9 +30,7 @@ import org.apache.cocoon.portal.PortalException;
  * @since 2.2
  * @version $Id$
  */
-public class AspectChain {
-
-    public static final Properties EMPTY_PROPERTIES = new Properties();
+public class AspectChainImpl implements AspectChain {
 
     /** The aspect class. */
     protected final Class aspectClass;
@@ -46,7 +44,7 @@ public class AspectChain {
     /** Do we have any aspects? */
     protected boolean process = false;
 
-    public AspectChain(Class aClass, List aspects, List properties)
+    public AspectChainImpl(Class aClass, List aspects, List properties)
     throws PortalException {
         this.aspectClass = aClass;
         if ( aspects.size() != properties.size() ) {
@@ -59,17 +57,30 @@ public class AspectChain {
         }
     }
 
-    public AspectChain(Class aClass) {
+    public AspectChainImpl(Class aClass) {
         this.aspectClass = aClass;
         this.aspects = new ArrayList(3);
         this.configs = new ArrayList(3);
     }
 
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.AspectChain#getAspectClass()
+     */
+    public Class getAspectClass() {
+        return this.aspectClass;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.AspectChain#addAspect(java.lang.Object, java.util.Properties)
+     */
     public void addAspect(Object aspect, Properties config)
     throws PortalException {
         this.addAspect(aspect, config, -1);
     }
 
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.AspectChain#addAspect(java.lang.Object, java.util.Properties, int)
+     */
     public void addAspect(Object aspect, Properties config, int index)
     throws PortalException {
         if ( !this.aspectClass.isInstance(aspect) ) {
@@ -86,25 +97,24 @@ public class AspectChain {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.AspectChain#hasAspects()
+     */
     public boolean hasAspects() {
         return this.process;
     }
 
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.AspectChain#getAspectsIterator()
+     */
     public Iterator getAspectsIterator() {
         return this.aspects.iterator();
     }
 
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.AspectChain#getPropertiesIterator()
+     */
     public Iterator getPropertiesIterator() {
         return this.configs.iterator();
-    }
-
-    public void dispose(ServiceManager manager) {
-        final Iterator i = this.aspects.iterator();
-        while (i.hasNext()) {
-            final Object component = i.next();
-            manager.release(component);
-        }
-        this.aspects.clear();
-        this.configs.clear();
     }
 }

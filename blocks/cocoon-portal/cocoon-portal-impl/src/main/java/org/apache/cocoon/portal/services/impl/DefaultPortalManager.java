@@ -39,7 +39,7 @@ import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
 import org.apache.cocoon.portal.services.aspects.impl.support.RequestProcessorAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.impl.support.ResponseProcessorAspectContextImpl;
-import org.apache.cocoon.portal.services.aspects.support.AspectChain;
+import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
@@ -56,16 +56,16 @@ public class DefaultPortalManager
 	implements PortalManager, RequestProcessorAspect, ResponseProcessorAspect {
 
     /** The aspect chain for additional request processing. */
-    protected AspectChain requestChain;
+    protected AspectChainImpl requestChain;
 
     /** The aspect chain for additional response processing. */
-    protected AspectChain responseChain;
+    protected AspectChainImpl responseChain;
 
     /**
      * Set the request aspect chain.
      * @param a A chain.
      */
-    public void setRequestAspectChain(AspectChain a) {
+    public void setRequestAspectChain(AspectChainImpl a) {
         this.requestChain = a;
     }
 
@@ -73,7 +73,7 @@ public class DefaultPortalManager
      * Set the response aspect chain.
      * @param a A chain.
      */
-    public void setResponseAspectChain(AspectChain a) {
+    public void setResponseAspectChain(AspectChainImpl a) {
         this.responseChain = a;
     }
 
@@ -104,11 +104,11 @@ public class DefaultPortalManager
     public void init()
     throws PortalException {
         if ( this.requestChain == null ) {
-            this.requestChain = new AspectChain(RequestProcessorAspect.class);
+            this.requestChain = new AspectChainImpl(RequestProcessorAspect.class);
         }
         this.requestChain.addAspect(this, null);
         if ( this.responseChain == null ) {
-            this.responseChain = new AspectChain(ResponseProcessorAspect.class);
+            this.responseChain = new AspectChainImpl(ResponseProcessorAspect.class);
         }
         this.responseChain.addAspect(this, null);
     }
