@@ -28,7 +28,6 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 
 /**
@@ -36,17 +35,21 @@ import org.springframework.beans.factory.ListableBeanFactory;
  * from a spring bean factory.
  * The beans are available through their configured bean id.
  *
+ * The map has a lazy implementation: the beans are not searched on instantiation
+ * but the first time the map is accessed. This avoids any startup ordering problems.
+ *
+ * By default the map searches in the bean factory it is used in and in all the parent
+ * bean factories (if there are any). This behaviour can be changed by calling the
+ * {@link #setCheckParent(boolean)} method.
+ *
  * @version $Id$
  * @since 1.0.1
  */
 public class BeanMap
-    implements Map, BeanFactoryAware, InitializingBean {
+    implements Map, BeanFactoryAware {
 
     /** The real map. */
     protected Map beanMap = new HashMap();
-
-    /** The bean names. */
-    protected Set beanNames = new HashSet();
 
     /** Is the map initialized? */
     protected boolean initialized = false;
@@ -57,13 +60,21 @@ public class BeanMap
     /** The class for all beans in this map. */
     protected Class beanClass;
 
+    /** Do we strip the prefix from the bean name? */
     protected boolean stripPrefix = true;
+
+    /** Do we check the parent factories? */
     protected boolean checkParent = true;
 
-    protected void load() {
+    /**
+     * Get all the bean's from the bean factory and put them into
+     * a map using their id.
+     * @param beanNames The bean names to load.
+     */
+    protected void load(Set beanNames) {
         final String prefix1 = this.beanClass.getName() + '.';
         final String prefix2 = this.beanClass.getName() + '/';
-        final Iterator i = this.beanNames.iterator();
+        final Iterator i = beanNames.iterator();
         while ( i.hasNext() ) {
             final String beanName = (String)i.next();
             String key = beanName;
@@ -74,41 +85,45 @@ public class BeanMap
         }
     }
 
+    /**
+     * Check if the bean is already initialized.
+     * If not, the bean's are searched in the bean factory.
+     */
     protected void checkInit() {
         if ( !this.initialized ) {
             synchronized (this) {
                 if ( !this.initialized ) {
+                    // although it is unlikely, but if this bean is used outside spring
+                    // it will just contain an empty map
+                    if ( this.beanFactory != null ) {
+                        final Set beanNames = new HashSet();
+                        this.getBeanNames(this.beanFactory, beanNames);
+                        this.load(beanNames);
+                    }
                     this.initialized = true;
-                    this.load();
                 }
             }
         }
     }
 
     /**
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     * Get all bean names for the given type.
+     * @param factory The bean factory.
+     * @param beanNames The set containing the resulting bean names.
      */
-    public void afterPropertiesSet() throws Exception {
-        this.beanNames.clear();
-        this.getBeanNames(this.beanFactory, this.beanNames);
-    }
-
-    /** 
-     * Initialize this bean.
-     */
-    protected void getBeanNames(ListableBeanFactory factory, Set names) {
+    protected void getBeanNames(ListableBeanFactory factory, Set beanNames) {
         // check parent first
         if ( this.checkParent ) {
             if ( factory instanceof HierarchicalBeanFactory ) {
                 if ( ((HierarchicalBeanFactory)factory).getParentBeanFactory() != null ) {
-                    this.getBeanNames((ListableBeanFactory)((HierarchicalBeanFactory)factory).getParentBeanFactory(), names);
+                    this.getBeanNames((ListableBeanFactory)((HierarchicalBeanFactory)factory).getParentBeanFactory(), beanNames);
                 }
             }
         }
         // get all bean names for our class
-        final String[] beanNames = factory.getBeanNamesForType(this.beanClass);
-        for (int i = 0; i < beanNames.length; i++) {
-            names.add(beanNames[i]);
+        final String[] names = factory.getBeanNamesForType(this.beanClass);
+        for (int i = 0; i < names.length; i++) {
+            beanNames.add(names[i]);
         }
     }
 

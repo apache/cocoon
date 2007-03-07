@@ -61,6 +61,7 @@ public abstract class WebAppContextUtils {
 
     /**
      * Notify about entering this context.
+     * @param webAppContext The current web application context.
      * @return A handle which should be passed to {@link #leavingContext(WebApplicationContext, Object)}.
      */
     public static Object enteringContext(WebApplicationContext webAppContext) {
@@ -76,6 +77,7 @@ public abstract class WebAppContextUtils {
 
     /**
      * Notify about leaving this context.
+     * @param webAppContext The current web application context.
      * @param handle     The returned handle from {@link #enteringContext(WebApplicationContext)}.
      */
     public static void leavingContext(WebApplicationContext webAppContext, Object handle) {

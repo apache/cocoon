@@ -39,6 +39,7 @@ public class ChildSettingsBeanFactoryPostProcessor
 
     /**
      * Set the unique name for this settings context.
+     * @param newName The new name.
      */
     public void setName(String newName) {
         this.name = newName;

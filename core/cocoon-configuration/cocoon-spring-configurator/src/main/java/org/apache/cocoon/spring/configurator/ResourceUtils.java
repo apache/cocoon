@@ -78,6 +78,10 @@ public abstract class ResourceUtils {
     /**
      * Read all property files from the given directory and apply them to the
      * supplied properties.
+     * @param propertiesPath The directory path.
+     * @param properties The properties object where all the read properties are applied to.
+     * @param resourceLoader The resource loader to load the property files.
+     * @param logger Optional logger for debugging.
      */
     public static void readProperties(String         propertiesPath,
                                       Properties     properties,
@@ -152,6 +156,7 @@ public abstract class ResourceUtils {
      * In addition all resources contained in a directory named
      * WEB-INF/classes/cocoon are sorted (in alphabetical) order
      * after all other files.
+     * @return A new comparator for resources.
      */
     public static Comparator getResourceComparator() {
         return new ResourceComparator();
@@ -196,10 +201,12 @@ public abstract class ResourceUtils {
 
     /**
      * Return the properties added by Maven.
+     * @param groupId The group identifier of the artifact.
+     * @param artifactId The artifact identifier.
      * @return Returns a properties object or null if the properties can't be found/read.
      */
-    public static Properties getPOMProperties(String groupId, String versionId) {
-        final String resourceName = "META-INF/maven/" + groupId + "/" + versionId + "/pom.properties";
+    public static Properties getPOMProperties(String groupId, String artifactId) {
+        final String resourceName = "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties";
         try {
             final Properties p = new Properties();
             final InputStream resourceAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
