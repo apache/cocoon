@@ -88,7 +88,7 @@ public class PortalStartup extends AbstractLogEnabled
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("Initializing portlet container...");
             }
-            container.init(servletContext);
+            container.init(this.servletContext);
 
             // Save portlet container to the servlet context scope.
             this.servletContext.setAttribute(CONTAINER_KEY, container);
@@ -101,7 +101,7 @@ public class PortalStartup extends AbstractLogEnabled
             		+ ex.getMessage(), ex);
         }
     }
-    
+
     /**
      * Destroyes the portlet container and removes it from servlet context.
      * @param servletContext  the servlet context.
