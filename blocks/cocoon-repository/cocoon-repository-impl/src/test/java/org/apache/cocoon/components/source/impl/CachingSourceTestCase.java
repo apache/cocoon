@@ -100,7 +100,7 @@ public class CachingSourceTestCase extends ContainerTestCase {
         CachingSource.SourceMeta meta4 = source.getResponseMeta();
         resolver.release(source);
 
-        // Source is refreshed -- but meta data should not change
+        // Source is refreshed -- meta data changes
         assertNotSame(meta1, meta4);
         assertEquals(meta1.getContentLength(), meta4.getContentLength());
         assertTrue(meta1.getLastModified() != meta4.getLastModified());
