@@ -41,6 +41,37 @@
     </bean>
 
   <!--+
+      | Coplet Adapters
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter"
+          class="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
+          parent="org.apache.cocoon.portal.util.AbstractBean" abstract="true">
+      <property name="cache" ref="org.apache.cocoon.caching.Cache"/>
+      <property name="runnableManager" ref="org.apache.cocoon.components.thread.RunnableManager"/>
+    </bean>
+
+    <!--+
+        | This is the pipeline/uri based adapter.
+        +-->
+    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/uri"
+          class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"
+          parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
+      <property name="notifyingBuilder" ref="org.apache.cocoon.components.notification.NotifyingBuilder"/>
+      <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    </bean>
+
+    <!--+
+        |  This is the application adapter.
+        +-->
+    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/application"
+          class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"
+          parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
+      <property name="notifyingBuilder" ref="org.apache.cocoon.components.notification.NotifyingBuilder"/>
+      <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    </bean>
+
+  <!--+
       | Renderer Aspects
       |
       +-->
@@ -220,4 +251,11 @@
       +-->
     <configurator:bean-map id="org.apache.cocoon.portal.layout.renderer.RendererMap"
                            type="org.apache.cocoon.portal.layout.renderer.Renderer"/>
+
+  <!--+
+      | Coplet Adapter map
+      |
+      +-->
+    <configurator:bean-map id="org.apache.cocoon.portal.coplet.adapter.CopletAdapterMap"
+                           type="org.apache.cocoon.portal.coplet.adapter.CopletAdapter"/>
 </beans>

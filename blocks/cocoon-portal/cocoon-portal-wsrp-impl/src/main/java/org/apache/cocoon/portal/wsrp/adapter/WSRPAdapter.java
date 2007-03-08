@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -40,10 +41,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.serializers.EncodingSerializer;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -58,6 +55,9 @@ import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.services.aspects.DynamicAspect;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.cocoon.portal.wsrp.consumer.ConsumerEnvironmentImpl;
 import org.apache.cocoon.portal.wsrp.consumer.ProducerDescription;
@@ -111,11 +111,9 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @version $Id$
  */
-public class WSRPAdapter 
+public class WSRPAdapter
     extends AbstractCopletAdapter
-    implements CopletDecorationProvider,
-               Parameterizable,
-               Receiver {
+    implements CopletDecorationProvider, Receiver, RequestProcessorAspect, DynamicAspect {
 
     /** Key to store the consumer map into the coplet instance data object as a temporary attribute. */
     public static final String ATTRIBUTE_NAME_CONSUMER_MAP = "wsrp-consumer-map";
@@ -140,13 +138,15 @@ public class WSRPAdapter
 
     /** Unique name of the consumer. */
     public static final String CONSUMER_URL = "http://cocoon.apache.org/portal/wsrp-consumer";
-    
+
     /** Name of the service. */
     public static final String consumerAgent = "Apache Cocoon Portal." + org.apache.cocoon.Constants.VERSION;
-    
+
+    public static final String REQUEST_PARAMETER_NAME = "cocoon-wsrpevent";
+
     /** The consumer environment implementation. */
     protected ConsumerEnvironmentImpl consumerEnvironment;
-    
+
     /** Stores the current coplet instance data per thread. */
     protected final ThreadLocal copletInstance = new ThreadLocal();
 
@@ -154,7 +154,7 @@ public class WSRPAdapter
     protected UserContextProvider userContextProvider;
 
     /** Location of the wsrp configuration. */
-    protected String wsrpConfigLocation;
+    protected String wsrpConfigLocation = "config/wsrp-config.xml";
 
     /** Initialized? */
     protected boolean initialized = false;
@@ -162,45 +162,49 @@ public class WSRPAdapter
     /** The wsrp configuration. */
     protected Configuration wsrpConfiguration;
 
-    /** The configuration for this adapter. */
-    protected Parameters parameters;
+    protected SourceResolver sourceResolver;
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        super.service(serviceManager);
-        this.userContextProvider = (UserContextProvider)this.manager.lookup(UserContextProvider.ROLE);
+    protected Properties properties;
+
+    protected ServiceManager manager;
+
+    public void setSourceResolver(SourceResolver sourceResolver) {
+        this.sourceResolver = sourceResolver;
     }
 
-    /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters params) throws ParameterException {
-        this.wsrpConfigLocation = params.getParameter("wsrp-config", "config/wsrp-config.xml");
-        this.parameters = params;
+    public void setUserContextProvider(UserContextProvider userContextProvider) {
+        this.userContextProvider = userContextProvider;
+    }
+
+    public void setConfigLocation(String location) {
+        this.wsrpConfigLocation = location;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
+    public void setServiceManager(ServiceManager manager) {
+        this.manager = manager;
     }
 
     /**
      * Sets the <tt>WSRPLogger</tt>, the <tt>producerConfig</tt> and the <tt>consumerEnvironment</tt><br/>
-     * 
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     *
      */
-    public void initialize() throws Exception {
-        super.initialize();
+    public void init() throws Exception {
         LogManager.setLogManager(new WSRPLogManager(new WSRPLogger(this.getLogger())));
         this.consumerEnvironment = new ConsumerEnvironmentImpl();
-        this.consumerEnvironment.init(this.portalService, 
+        this.consumerEnvironment.init(this.portalService,
                                       this);
         this.consumerEnvironment.setConsumerAgent(consumerAgent);
     }
 
     /**
      * Removes all portlets, producers and users out of the <tt>consumerEnvironment</tt>-registries<br/>
-     * 
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     *
      */
-    public void dispose() {
+    public void destroy() {
         if ( this.consumerEnvironment != null ) {
             this.consumerEnvironment.getPortletRegistry().removeAllPortlets();
 
@@ -208,24 +212,19 @@ public class WSRPAdapter
 
             this.consumerEnvironment.getUserRegistry().removeAllUsers();
         }
-        if ( this.manager != null ) {
-            this.manager.release(this.userContextProvider);
-            this.userContextProvider = null;
-        }
         try {
             ContainerUtil.dispose(this.consumerEnvironment);
             this.consumerEnvironment = null;
         } catch (Throwable t) {
             this.getLogger().error("Destruction failed!", t);
         }
-        super.dispose();
     }
 
     /**
      * Gets the required information of the producer, user, wsrp-portlet, window-states, window-modes<br/>
      * and stores its into the copletInstanceData<br/>
      * After that it initiates the <tt>getServiceDescription()</tt>-call<br/>
-     * 
+     *
      * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void login(CopletInstance coplet) {
@@ -238,7 +237,7 @@ public class WSRPAdapter
         if ( producerId == null ) {
             // if the producer can't be found, we simply return
             this.getLogger().error("Producer not configured in wsrp coplet " + copletData.getId());
-            return;            
+            return;
         }
         final Producer producer = consumerEnvironment.getProducerRegistry().getProducer(producerId);
         if ( producer == null ) {
@@ -248,7 +247,7 @@ public class WSRPAdapter
         }
 
         // get the wsrp user and store it as an attribute on the instance
-        final String currentUserID = this.portalService.getUserService().getUser().getUserName();       
+        final String currentUserID = this.portalService.getUserService().getUser().getUserName();
         User user = this.consumerEnvironment.getUserRegistry().getUser(currentUserID);
         if ( user == null ) {
             // create a new user
@@ -263,7 +262,7 @@ public class WSRPAdapter
         if ( portletHandle == null ) {
             // if the portlet handle can't be found, we simply return
             this.getLogger().error("Portlet handle not configured in wsrp coplet " + copletData.getId());
-            return;            
+            return;
         }
 
         // get the wsrp portlet
@@ -295,9 +294,9 @@ public class WSRPAdapter
 
         try {
             // this call includes the getServiceDescription()-Invocation
-            // additionally register() initCookie() and so on will be handled 
+            // additionally register() initCookie() and so on will be handled
             // (within ProducerImpl and PortletDriverImpl)
-            getSimplePortletWindowSession(wsrpportlet, 
+            getSimplePortletWindowSession(wsrpportlet,
                                           portletInstanceKey,
                                           user);
             final PortletDescription desc = producer.getPortletDescription(portletHandle);
@@ -315,10 +314,10 @@ public class WSRPAdapter
 	/**
      * Checks the values of the <tt>portlet-key</tt> and the <tt>user</tt> for current portlet-instance<br/>
      * After that all passed the <tt>getMarkup()</tt>-call will be initiated<br />
-     * 
+     *
 	 * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
 	 */
-	public void streamContent(CopletInstance coplet, ContentHandler contentHandler) 
+	protected void streamContent(CopletInstance coplet, ContentHandler contentHandler)
     throws SAXException {
         try {
             // set the coplet in the thread local variable to give other components access to
@@ -334,7 +333,7 @@ public class WSRPAdapter
             if ( user == null ) {
                 throw new SAXException("WSRP configuration is missing: user.");
             }
-            
+
             final String portletInstanceKey = (String)coplet.getTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY);
 
             // getMarkup()
@@ -378,10 +377,10 @@ public class WSRPAdapter
             this.setCurrentCopletInstanceData(null);
         }
 	}
-    
+
     /**
      * Releases all sessions (<tt>userSession, groupSession, portletSession</tt>)<br/>
-     * 
+     *
      * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void logout(CopletInstance coplet) {
@@ -391,7 +390,7 @@ public class WSRPAdapter
         User user = (User)coplet.getTemporaryAttribute(ATTRIBUTE_NAME_USER);
         final String portletInstanceKey = (String)coplet.getTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY);
         Producer producer = consumerEnvironment.getProducerRegistry().getProducer(portletKey.getProducerId());
-        
+
         // releaseSession()
         try {
             UserSession userSession = consumerEnvironment.getSessionHandler().getUserSession(portletKey.getProducerId(), user.getUserID());
@@ -401,29 +400,29 @@ public class WSRPAdapter
             SessionContext sessionContext = portletSession.getSessionContext();
             WSRPPortlet wsrpportlet = consumerEnvironment.getPortletRegistry().getPortlet(portletKey);
             PortletDriver portletDriver = consumerEnvironment.getPortletDriverRegistry().getPortletDriver(wsrpportlet);
-    
+
             if (sessionContext != null) {
                 String[] sessions = new String[1];
                 sessions[0] = new String (sessionContext.getSessionID());
                 portletDriver.releaseSessions(sessions, user.getUserID());
             }
-            
+
             userSession.removeGroupSession(portletDescription.getGroupID());
         } catch (WSRPException e) {
             this.getLogger().error("session deregister()", e);
         }
     }
-    
+
     /**
      * After getting the <tt>userSession</tt> and <tt>groupSession</tt> it performs the <tt>getServiceDescription()</tt>-call<br/>
-     *  
+     *
      * @param portlet
      * @param portletInstanceKey
      * @param user
      * @return SimplePortletWindowSession
      * @throws WSRPException
      */
-    public SimplePortletWindowSession getSimplePortletWindowSession(WSRPPortlet portlet, 
+    public SimplePortletWindowSession getSimplePortletWindowSession(WSRPPortlet portlet,
                                                                     String portletInstanceKey,
                                                                     User user)
     throws WSRPException {
@@ -473,18 +472,18 @@ public class WSRPAdapter
     /**
      * Performs an blocking interaction with the given portlet and session.<br/>
      * If the response to this call is a redirect URL's it won't be followed.<br/>
-     * 
+     *
      * An optionally returned markup context is store in the window session<br/>
      * and should be processed by the portlet driver instead of making a new<br/>
      * getMarkup() call.<br/>
-     * 
+     *
      * @param portlet The portlet on which this action should be performed
      * @param windowSession The window session of the portlet on which the action should
      *        be performed
      * @param user The user on which this action should be performed
      * @param request The request with all required information for the call
      **/
-    protected void performBlockingInteraction(WSRPPortlet portlet, 
+    protected void performBlockingInteraction(WSRPPortlet portlet,
                                               SimplePortletWindowSession windowSession,
                                               User user,
                                               Request request) {
@@ -526,7 +525,7 @@ public class WSRPAdapter
 
     /**
      * Retrieves the markup generated by the portlet.
-     * 
+     *
      * @param portlet
      * @param windowSession
      * @param user
@@ -554,46 +553,46 @@ public class WSRPAdapter
 
     /**
      * Creates a <tt>String</tt> consists of the producer-id_portlet-handle_coplet-id_user-name <br/>
-     * 
+     *
      * @param key includes the essential values
      * @param coplet current <tt>CopletInstanceData</tt>-object
      * @param userName
-     * @return the unique string which represents the portlet-instance 
+     * @return the unique string which represents the portlet-instance
      * */
-    protected String getPortletInstanceKey(PortletKey key, 
+    protected String getPortletInstanceKey(PortletKey key,
                                            CopletInstance coplet,
                                            String userName) {
         final StringBuffer buffer = new StringBuffer(key.getProducerId());
         buffer.append('_').append(key.getPortletHandle()).append('_');
         buffer.append(coplet.getId()).append('_').append(userName);
-        return buffer.toString();    
+        return buffer.toString();
     }
-    
+
     /**
-     * Gets all required information like <tt>portletKey, portletInstanceKey, userName, portletModes, windowStates, 
+     * Gets all required information like <tt>portletKey, portletInstanceKey, userName, portletModes, windowStates,
      * interactionState</tt> and the <tt>navigationalStat</tt><br/>
-     * 
+     *
      * After that it decides with the <tt>URL_TYPE</tt> to perform the <tt>performBlockingInteraction()</tt>-call or
      * do some render- alternatively some resource-specific things<br/>
-     * 
+     *
      * @see Receiver
      */
     public void inform(WSRPEvent event) {
         final CopletInstance coplet = event.getTarget();
         this.setCurrentCopletInstanceData(coplet);
-        
+
         try {
             PortletKey portletKey = (PortletKey)coplet.getTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_KEY);
             final String portletInstanceKey = (String)coplet.getTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY);
             WSRPPortlet wsrpPortlet = consumerEnvironment.getPortletRegistry().getPortlet(portletKey);
             User user = (User) coplet.getTemporaryAttribute(ATTRIBUTE_NAME_USER);
-            
+
             final HttpServletRequest requestObject = this.portalService.getProcessInfoProvider().getRequest();
 
             Request request = new RequestImpl();
             String portletMode = requestObject.getParameter(Constants.PORTLET_MODE);
             String windowState = requestObject.getParameter(Constants.WINDOW_STATE);
-            
+
             request.setInteractionState(requestObject.getParameter(Constants.INTERACTION_STATE));
             SimplePortletWindowSession windowSession = getSimplePortletWindowSession(wsrpPortlet, portletInstanceKey, user);
             windowSession.setNavigationalState(requestObject.getParameter(Constants.NAVIGATIONAL_STATE));
@@ -603,11 +602,11 @@ public class WSRPAdapter
             }
             if (windowState != null) {
                 if ( !windowState.equals(windowSession.getWindowState()) ) {
-                    
+
                     final Layout rootLayout = this.portalService.getProfileManager().getLayout(null);
                     final Layout layout = LayoutFeatures.searchLayout(this.portalService, coplet.getId(), rootLayout);
                     final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService);
-                    if ( fullScreenLayout != null 
+                    if ( fullScreenLayout != null
                          && fullScreenLayout.equals( layout )
                          && !windowState.equals(WindowStates._maximized) ) {
                         Event e = new CopletInstanceSizingEvent( coplet, CopletInstance.SIZE_FULLSCREEN );
@@ -636,9 +635,9 @@ public class WSRPAdapter
                     request.addFormParameter(parameter, requestObject.getParameter(parameter));
                 }
                 performBlockingInteraction(wsrpPortlet, windowSession, user, request);
-            
+
             }
-                
+
         } catch (WSRPException e) {
             this.getLogger().error("Error during processing wsrp event.", e);
         } finally {
@@ -655,7 +654,7 @@ public class WSRPAdapter
 
     /**
      * Add a new producer<br/>
-     * 
+     *
      * @param desc The producer description.
      * @return Returns true if the producer could be added.
      */
@@ -665,7 +664,7 @@ public class WSRPAdapter
 
     /**
      * This sets the current coplet instance data for the thread <br/>
-     * 
+     *
      * @param coplet The coplet instance data or null to clear the information.
      */
     public void setCurrentCopletInstanceData(CopletInstance coplet) {
@@ -674,7 +673,7 @@ public class WSRPAdapter
 
     /**
      * Return the current coplet instance data<br/>
-     * 
+     *
      * @return Returns the instance or null.
      */
     public CopletInstance getCurrentCopletInstanceData() {
@@ -737,11 +736,9 @@ public class WSRPAdapter
             synchronized (this) {
                 if (! this.initialized ) {
                     this.initialized = true;
-                    SourceResolver resolver = null;
                     Source source = null;
                     try {
-                        resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-                        source = resolver.resolveURI(this.wsrpConfigLocation);
+                        source = this.sourceResolver.resolveURI(this.wsrpConfigLocation);
                         DefaultConfigurationBuilder dcb = new DefaultConfigurationBuilder();
                         this.wsrpConfiguration = dcb.build(source.getInputStream());
                     } catch (ConfigurationException ce) {
@@ -750,14 +747,9 @@ public class WSRPAdapter
                         this.getLogger().error("Unable to read wsrp configuration: " + this.wsrpConfigLocation, ioe);
                     } catch (SAXException sae) {
                         this.getLogger().error("Unable to read wsrp configuration: " + this.wsrpConfigLocation, sae);
-                    } catch (ServiceException se) {
-                        throw new RuntimeException("Unable to get source resolver.", se);
                     } finally {
-                        if ( resolver != null ) {
-                            resolver.release(source);
-                        }
-                        this.manager.release(resolver);
-                    }            
+                        this.sourceResolver.release(source);
+                    }
                 }
             }
         }
@@ -774,8 +766,8 @@ public class WSRPAdapter
     /**
      * Get the adapter configuration.
      */
-    public Parameters getAdapterConfiguration() {
-        return this.parameters;
+    public Properties getAdapterConfiguration() {
+        return this.properties;
     }
 
     /**
@@ -825,7 +817,7 @@ public class WSRPAdapter
                     if ( pm == null ) {
                         pm = Modes._view;
                     }
-                    if ( !pm.equals(Modes._edit) 
+                    if ( !pm.equals(Modes._edit)
                          && ArrayUtils.contains(supportedModes, Modes._edit) ) {
                         final Map p = new HashMap();
                         p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
@@ -840,23 +832,23 @@ public class WSRPAdapter
                         p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
                         p.put(Constants.PORTLET_MODE, Modes._help);
 
-                        final String link = urlGenerator.getRenderURL(p);                        
+                        final String link = urlGenerator.getRenderURL(p);
                         modes.add(new DecorationAction("help-uri", link));
-                    }                
+                    }
                     if ( !pm.equals(Modes._view)
                         && ArrayUtils.contains(supportedModes, Modes._view) ) {
                         final Map p = new HashMap();
                         p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
                         p.put(Constants.PORTLET_MODE, Modes._view);
 
-                        final String link = urlGenerator.getRenderURL(p);                        
+                        final String link = urlGenerator.getRenderURL(p);
                         modes.add(new DecorationAction("view-uri", link));
-                    } 
+                    }
                 }
             } catch (WSRPException ignore) {
                 // we ignore this
             } finally {
-                this.setCurrentCopletInstanceData(null);                
+                this.setCurrentCopletInstanceData(null);
             }
         }
         return modes;
@@ -886,7 +878,7 @@ public class WSRPAdapter
                         ws = WindowStates._normal;
                     }
 
-                    if ( !ws.equals(WindowStates._minimized) 
+                    if ( !ws.equals(WindowStates._minimized)
                          && ArrayUtils.contains(supportedWindowStates, WindowStates._minimized)) {
                         final Map p = new HashMap();
                         p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
@@ -903,21 +895,21 @@ public class WSRPAdapter
 
                         final String link = urlGenerator.getRenderURL(p);
                         states.add(new DecorationAction(DecorationAction.WINDOW_STATE_NORMAL, link));
-                    } 
+                    }
                     if ( !ws.equals(WindowStates._maximized)
                           && ArrayUtils.contains(supportedWindowStates, WindowStates._maximized)) {
                         final Map p = new HashMap();
                         p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
                         p.put(Constants.WINDOW_STATE, WindowStates._maximized);
 
-                        final String link = urlGenerator.getRenderURL(p);                    
+                        final String link = urlGenerator.getRenderURL(p);
                         states.add(new DecorationAction(DecorationAction.WINDOW_STATE_MAXIMIZED, link));
                     }
                 }
             } catch (WSRPException ignore) {
                 // we ignore this
             } finally {
-                this.setCurrentCopletInstanceData(null);                
+                this.setCurrentCopletInstanceData(null);
             }
         }
         return states;
@@ -940,5 +932,31 @@ public class WSRPAdapter
             title = copletInstanceData.getTitle();
         }
         return title;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
+     */
+    public void process(RequestProcessorAspectContext context) {
+        final org.apache.cocoon.environment.Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
+        final String[] values = request.getParameterValues("cocoon-wsrpevent");
+        if ( values != null && values.length == 1 ) {
+            // create a wsrp event, first build map of parameters
+            final Map parameters = new HashMap();
+            final Enumeration parameterNames = request.getParameterNames();
+            while ( parameterNames.hasMoreElements() ) {
+                final String name = (String)parameterNames.nextElement();
+                if ( !REQUEST_PARAMETER_NAME.equals(name) ) {
+                    final String value = request.getParameter(name);
+                    parameters.put(name, value);
+                }
+            }
+            final String copletid = values[0];
+            final CopletInstance cid = context.getPortalService().getProfileManager().getCopletInstance(copletid);
+
+            final Event e = new WSRPEvent(cid, parameters);
+            context.getPortalService().getEventManager().send(e);
+        }
+        context.invokeNext();
     }
 }

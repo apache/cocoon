@@ -108,18 +108,7 @@ public class PortletAdapter
         super.logout(coplet);
     }
 
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        super.dispose();
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize() throws Exception {
-        super.initialize();
+    public void init() throws Exception {
         this.enableFullScreen = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_FULL_SCREEN_ENABLED, Constants.DEFAULT_CONFIGURATION_FULL_SCREEN_ENABLED);
         this.enableMaximized = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_MAXIMIZED_ENABLED, Constants.DEFAULT_CONFIGURATION_MAXIMIZED_ENABLED);
         this.initContainer();

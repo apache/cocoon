@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  * This is the "portlet" implementation.
  * A coplet adapter is the interface between the portal engine and
  * the implementation of a coplet.
- * Usually there is only one instance of an adapter (= singleton). 
+ * Usually there is only one instance of an adapter (= singleton).
  * Whenever an instance of this coplet is rendered, the
  * adapter is invoked to render the coplet.
  *
@@ -55,8 +55,6 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public interface CopletAdapter {
-
-    String ROLE = CopletAdapter.class.getName();
 
     /**
      * Initialize the coplet definition.

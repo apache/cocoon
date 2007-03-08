@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,11 +16,12 @@
  */
 package org.apache.cocoon.portal.wsrp.consumer;
 
+import java.util.Properties;
+
 import oasis.names.tc.wsrp.v1.types.StateChange;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
@@ -41,7 +42,7 @@ import org.apache.wsrp4j.util.WindowStates;
 
 /**
  * Implements the consumer environment interface. <br/>
- * 
+ *
  * @version $Id$
  **/
 public class ConsumerEnvironmentImpl
@@ -56,7 +57,7 @@ public class ConsumerEnvironmentImpl
 
     /**
      * Initialize the consumer
-     * 
+     *
      * @param service
      * @param adapter
      * @throws Exception
@@ -65,10 +66,10 @@ public class ConsumerEnvironmentImpl
                      WSRPAdapter adapter)
     throws Exception {
         this.adapter = adapter;
-        Parameters params = adapter.getAdapterConfiguration();
+        final Properties params = adapter.getAdapterConfiguration();
         this.setConsumerAgent("not set");
 
-        // To define the locales per end-user 
+        // To define the locales per end-user
         // the configuration must be set within UserContextProviderImpl
         // the following lines define the global locales
         String[] supportedLocales = new String[1];
@@ -92,27 +93,27 @@ public class ConsumerEnvironmentImpl
         // define portlet state change behaviour
         this.setPortletStateChange(StateChange.readWrite);
 
-        // define the mime types the consumer supports        
+        // define the mime types the consumer supports
         this.setMimeTypes(new String[] { Constants.MIME_TYPE_HTML });
 
-        // define the character sets the consumer supports        
+        // define the character sets the consumer supports
         this.setCharacterEncodingSet(new String[] { Constants.UTF_8 });
 
         // set the authentication method the consumer uses
         this.setUserAuthentication(ConsumerConstants.NONE);
 
         // THE ORDER IN WHICH THE FOLLOWING OBJECTS ARE INSTANCIATED IS IMPORTANT
-        this.setUserRegistry((UserRegistry)adapter.createObject(params.getParameter("user-registry-class", UserRegistryImpl.class.getName())));
-        this.setSessionHandler((SessionHandler)adapter.createObject(params.getParameter("session-handler-class", SessionHandlerImpl.class.getName())));
-        this.setProducerRegistry((ProducerRegistry)adapter.createObject(params.getParameter("producer-registry-class", ProducerRegistryImpl.class.getName())));
-        this.setPortletRegistry((PortletRegistry)adapter.createObject(params.getParameter("portlet-registry-class", PortletRegistryImpl.class.getName())));
+        this.setUserRegistry((UserRegistry)adapter.createObject(params.getProperty("user-registry-class", UserRegistryImpl.class.getName())));
+        this.setSessionHandler((SessionHandler)adapter.createObject(params.getProperty("session-handler-class", SessionHandlerImpl.class.getName())));
+        this.setProducerRegistry((ProducerRegistry)adapter.createObject(params.getProperty("producer-registry-class", ProducerRegistryImpl.class.getName())));
+        this.setPortletRegistry((PortletRegistry)adapter.createObject(params.getProperty("portlet-registry-class", PortletRegistryImpl.class.getName())));
 
-        this.setTemplateComposer((URLTemplateComposer)adapter.createObject(params.getParameter("url-template-composer-class", URLTemplateComposerImpl.class.getName())));
-        this.setURLRewriter((URLRewriter)adapter.createObject(params.getParameter("url-rewriter-class", URLRewriterImpl.class.getName())));
+        this.setTemplateComposer((URLTemplateComposer)adapter.createObject(params.getProperty("url-template-composer-class", URLTemplateComposerImpl.class.getName())));
+        this.setURLRewriter((URLRewriter)adapter.createObject(params.getProperty("url-rewriter-class", URLRewriterImpl.class.getName())));
 
-        this.setPortletDriverRegistry((PortletDriverRegistry)adapter.createObject(params.getParameter("portlet-driver-registry-class", PortletDriverRegistryImpl.class.getName())));
+        this.setPortletDriverRegistry((PortletDriverRegistry)adapter.createObject(params.getProperty("portlet-driver-registry-class", PortletDriverRegistryImpl.class.getName())));
 
-        this.urlGenerator = (URLGenerator)adapter.createObject(params.getParameter("url-generator-class", URLGeneratorImpl.class.getName()));
+        this.urlGenerator = (URLGenerator)adapter.createObject(params.getProperty("url-generator-class", URLGeneratorImpl.class.getName()));
         this.getTemplateComposer().setURLGenerator(this.urlGenerator);
         this.getURLRewriter().setURLGenerator(this.urlGenerator);
     }
@@ -123,14 +124,14 @@ public class ConsumerEnvironmentImpl
     public URLGenerator getURLGenerator() {
         return this.urlGenerator;
     }
-    
+
     /**
      * @see org.apache.wsrp4j.consumer.driver.GenericConsumerEnvironment#getSupportedLocales()
      */
     public String[] getSupportedLocales() {
         CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
         User user = (User)coplet.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
-        
+
         return ((UserContextExtension)user.getUserContext()).getSupportedLocales();
     }
 
@@ -140,7 +141,7 @@ public class ConsumerEnvironmentImpl
     public String getUserAuthentication() {
         CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
         User user = (User)coplet.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
-        
+
         return ((UserContextExtension)user.getUserContext()).getUserAuthentication();
     }
 

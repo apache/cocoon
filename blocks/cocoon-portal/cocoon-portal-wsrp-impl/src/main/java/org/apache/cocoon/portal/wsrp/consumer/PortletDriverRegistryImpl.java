@@ -39,7 +39,7 @@ public class PortletDriverRegistryImpl
 
     /** All portletDrivers the consumerEnvironment needs. */
     protected final Hashtable portletDrivers = new Hashtable();
-    
+
     /** The consumer environment. */
     protected ConsumerEnvironment consumerEnv;
 
@@ -63,9 +63,9 @@ public class PortletDriverRegistryImpl
     /**
      * Get an portlet driver for the given portlet. If there is no portlet driver
      * object cached a new portlet driver will be created and returned.
-     * 
+     *
      * @param portlet The portlet the returned portlet driver is bound to.
-     * 
+     *
      * @return The portlet driver for this portlet.
      **/
     public PortletDriver getPortletDriver(WSRPPortlet portlet)
@@ -73,7 +73,7 @@ public class PortletDriverRegistryImpl
         PortletDriver driver = null;
 
         if ((driver = (PortletDriver)portletDrivers.get(portlet.getPortletKey().toString())) == null) {
-            String driverClass = this.adapter.getAdapterConfiguration().getParameter("portlet-driver-class", PortletDriverImpl.class.getName());
+            String driverClass = this.adapter.getAdapterConfiguration().getProperty("portlet-driver-class", PortletDriverImpl.class.getName());
             try {
                 driver = (PortletDriverImpl)this.adapter.createObject(driverClass);
             } catch (Exception e) {
@@ -87,7 +87,7 @@ public class PortletDriverRegistryImpl
 
     /**
      * Get all cached portlet drivers.
-     * 
+     *
      * @return Iterator with all portlet drivers in the registry.
      **/
     public Iterator getAllPortletDrivers() {

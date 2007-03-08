@@ -32,22 +32,6 @@
     <role name="org.apache.cocoon.portal.profile.ProfileLS"
           default-class="org.apache.cocoon.portal.profile.impl.MapProfileLS"/>
 
-  <!--+
-      | Coplet Adapters
-      |
-      +-->
-    <!--+
-        | This is the pipeline/uri based adapter.
-        +-->
-    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/uri"
-          default-class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"/>
-
-    <!--+
-        |  This is the application adapter.
-        +-->
-    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/application"
-          default-class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"/>
-
 
   <!--+
       | Coplet and Layout Source.
@@ -77,14 +61,6 @@
     <role name="org.apache.cocoon.portal.PortalService"
           default-class="org.apache.cocoon.portal.impl.PortalServiceImpl"
           shorthand="portal-service"/>
-
-  <!--+
-      | Page Label Manager.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.impl.PageLabelManager"
-          default-class="org.apache.cocoon.portal.impl.PageLabelManager"
-          shorthand="page-label-manager"/>
 
   <!--+
       | Layout Factory.

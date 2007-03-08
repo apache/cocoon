@@ -33,7 +33,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This coplet adapter is used to connect to external applications that are 
+ * This coplet adapter is used to connect to external applications that are
  * plugged into the portal.
  *
  * TODO: Decide if we still need this adapter.
@@ -44,9 +44,9 @@ public class ApplicationCopletAdapter extends URICopletAdapter {
     /**
      * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, java.lang.String, org.xml.sax.ContentHandler)
      */
-    public void streamContent(final CopletInstance coplet,
-                              final String uri,
-                              final ContentHandler contentHandler)
+    protected void streamContent(final CopletInstance coplet,
+                                 final String uri,
+                                 final ContentHandler contentHandler)
     throws SAXException {
         try {
             super.streamContent(coplet, uri, contentHandler);
@@ -79,7 +79,7 @@ public class ApplicationCopletAdapter extends URICopletAdapter {
             if ( addParams.booleanValue() ) {
                 final StringBuffer uri = new StringBuffer(event.getLink());
                 boolean hasParams = (uri.toString().indexOf("?") != -1);
-                
+
                 // append parameters - if any
                 LinkService linkService = this.portalService.getLinkService();
                 final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();

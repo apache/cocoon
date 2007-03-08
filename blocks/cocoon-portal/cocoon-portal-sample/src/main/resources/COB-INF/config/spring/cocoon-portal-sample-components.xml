@@ -30,7 +30,7 @@
   <!-- Include default beans -->
   <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
 
-  <!-- If you don't need WSRP support, you can remove the following include -->
+  <!-- If you don't need WSRP support, you can remove the following include: -->
   <import resource="classpath:org/apache/cocoon/portal/wsrp/cocoon-portal-wsrp-components.xml"/>
 
   <!--+
@@ -85,11 +85,6 @@
       <!-- aspect type="action-counter"/ -->
       <portal:aspect type="frame"/>
       <portal:aspect type="link"/>
-      <!-- Uncomment the following when using PageLabels
-        <portal:aspect type="page-label"/>
-      -->
-      <!-- Comment the following out if you don't need WSRP: --> 
-      <portal:aspect type="wsrp"/>
     </portal:request-processor-aspects>
 
   <!--+
@@ -107,4 +102,5 @@
     <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects">
       <!-- Add your aspects here -->
     </portal:profile-manager-aspects>
+
 </beans>

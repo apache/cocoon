@@ -34,11 +34,9 @@
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
 
-  <!-- If you don't need JSR 168 support, you can remove the following include. -->
+  <!-- If you don't need JSR 168 support, you can remove the following include. 
   <include src="resource://org/apache/cocoon/portal/pluto/portal-pluto.roles"/>
-
-  <!-- If you don't need WSRP support, you can remove the following include -->
-  <include src="resource://org/apache/cocoon/portal/wsrp/portal-wsrp.roles"/>
+  -->
 
   <!-- We use Castor for persisting/mapping the profiles to XML: -->
   <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
@@ -129,10 +127,5 @@
       </layout>
     </layouts>
   </portal-layout-factory>
-
-  <wsrp-adapter>
-     <!-- This is the WSRP configuration containing the producers etc. -->
-     <parameter name="wsrp-config" value="config/wsrp-config.xml"/>
-  </wsrp-adapter>
 
 </components>
