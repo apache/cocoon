@@ -72,7 +72,7 @@ public class ReloadingClassloaderManager {
                 rl.addReloadNotificationListener(classloader);
                 fam.addListener(directory, rl);
             }
-            
+            fam.start();
             ReloadingClassloaderManager.reloadingClassloader = classloader;
         }
         return ReloadingClassloaderManager.reloadingClassloader;
