@@ -70,7 +70,7 @@ public class CachingSourceTestCase extends ContainerTestCase {
     }
 
     public void testCachingURI() throws Exception {
-        String uri = "caching:http://www.google.com/?cocoon:cache-expires=1";
+        String uri = "caching:http://slashdot.org/?cocoon:cache-expires=1";
 
         CachingSource source;
 
@@ -82,18 +82,16 @@ public class CachingSourceTestCase extends ContainerTestCase {
         CachingSource.SourceMeta meta2 = source.getResponseMeta();
         resolver.release(source);
 
-        assertTrue(meta1.getMimeType() == meta2.getMimeType());
-        assertTrue(meta1.getContentLength() == meta2.getContentLength());
-        assertTrue(meta1.getLastModified() == meta2.getLastModified());
+        // Source is cached -- same meta data
+        assertSame(meta1, meta2);
 
         source = (CachingSource) resolver.resolveURI(uri);
         source.refresh();
         CachingSource.SourceMeta meta3 = source.getResponseMeta();
         resolver.release(source);
 
-        assertTrue(meta1.getMimeType() == meta3.getMimeType());
-        assertTrue(meta1.getContentLength() == meta3.getContentLength());
-        assertTrue(meta1.getLastModified() == meta3.getLastModified());
+        // Source is still cached -- still same meta data
+        assertSame(meta1, meta3);
 
         Thread.sleep(1100);
 
@@ -101,18 +99,20 @@ public class CachingSourceTestCase extends ContainerTestCase {
         source.refresh();
         CachingSource.SourceMeta meta4 = source.getResponseMeta();
         resolver.release(source);
-        assertTrue(meta1 != meta4);
-        assertTrue(meta1.getContentLength() == meta4.getContentLength());
+
+        // Source is refreshed -- but meta data should not change
+        assertNotSame(meta1, meta4);
+        assertEquals(meta1.getContentLength(), meta4.getContentLength());
         assertTrue(meta1.getLastModified() != meta4.getLastModified());
         assertEquals(meta1.getMimeType(), meta4.getMimeType());
     }
 
     public void testRefreshSyncURI() throws Exception {
-        testRefreshURI("caching", "http://www.google.com/");
+        testRefreshURI("caching", "http://slashdot.org/");
     }
 
 //    public void testRefreshAsyncURI() throws Exception {
-//        testRefreshURI("async-caching", "http://www.google.com/");
+//        testRefreshURI("async-caching", "http://slashdot.org/");
 //    }
 
     private void testRefreshURI(final String scheme, final String uri) throws Exception {
@@ -126,9 +126,9 @@ public class CachingSourceTestCase extends ContainerTestCase {
         CachingSource.SourceMeta meta2 = source.getResponseMeta();
         resolver.release(source);
 
-        assertTrue(meta1 == meta2);
-        assertTrue(meta1.getContentLength() == meta2.getContentLength());
-        assertTrue(meta1.getLastModified() == meta2.getLastModified());
+        assertSame(meta1, meta2);
+        assertEquals(meta1.getContentLength(), meta2.getContentLength());
+        assertEquals(meta1.getLastModified(), meta2.getLastModified());
 
         Thread.sleep(1200);
 
@@ -136,8 +136,8 @@ public class CachingSourceTestCase extends ContainerTestCase {
         CachingSource.SourceMeta meta3 = source.getResponseMeta();
         resolver.release(source);
 
-        assertTrue(meta1 != meta3);
-        assertTrue(meta1.getContentLength() == meta3.getContentLength());
+        assertNotSame(meta1, meta3);
+        assertEquals(meta1.getContentLength(), meta3.getContentLength());
         assertTrue(meta1.getLastModified() != meta3.getLastModified());
         assertEquals(meta1.getMimeType(), meta3.getMimeType());
     }
