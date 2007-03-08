@@ -146,7 +146,8 @@ public class SitemapTagsToDaisy {
                             newDocs++;
                         } else {
                             ComponentDocs oldDocs = getComponentDocs(daisyDoc);
-                            if (!docs.equals(oldDocs) || updateCollections(daisyDoc, blockName)) {
+                            boolean collectionsNeedUpdating = updateCollections(daisyDoc, blockName);
+                            if (collectionsNeedUpdating || !docs.equals(oldDocs)) {
                                 System.out.println("Will update the document for " + currentClass.getFullyQualifiedName());
                                 updateDocument(daisyDoc, docs);
                                 updatedDocs++;
