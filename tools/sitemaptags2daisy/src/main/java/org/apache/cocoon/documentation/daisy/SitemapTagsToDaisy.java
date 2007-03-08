@@ -28,10 +28,7 @@ import java.util.Locale;
 
 import org.outerj.daisy.htmlcleaner.HtmlCleanerFactory;
 import org.outerj.daisy.htmlcleaner.HtmlCleanerTemplate;
-import org.outerj.daisy.repository.Document;
-import org.outerj.daisy.repository.Repository;
-import org.outerj.daisy.repository.Credentials;
-import org.outerj.daisy.repository.RepositoryManager;
+import org.outerj.daisy.repository.*;
 import org.outerj.daisy.repository.query.QueryHelper;
 import org.outerj.daisy.repository.clientimpl.RemoteRepositoryManager;
 import org.xml.sax.InputSource;
@@ -75,9 +72,10 @@ public class SitemapTagsToDaisy {
     private static final String DAISY_SHORTDESCR_PART = "SitemapComponentShortDescription";
     private static final String DAISY_DOCTYPE = "SitemapComponent";
 
+    private static final String COLLECTION_PREFIX = "cdocs-";
+
     private HtmlCleanerTemplate htmlCleanerTemplate;
     private Repository daisyRepository;
-    private String daisyCollection;
     private boolean simulate;
 
     public static void main(String[] args) throws Exception {
@@ -118,8 +116,6 @@ public class SitemapTagsToDaisy {
             }
         }
 
-        daisyCollection = "documentation";
-
         JavaDocBuilder javaDocBuilder = getJavaDocBuilder(rootPath);
 
         JavaClass[] allClasses = javaDocBuilder.getClasses();
@@ -150,7 +146,7 @@ public class SitemapTagsToDaisy {
                             newDocs++;
                         } else {
                             ComponentDocs oldDocs = getComponentDocs(daisyDoc);
-                            if (!docs.equals(oldDocs)) {
+                            if (!docs.equals(oldDocs) || updateCollections(daisyDoc, blockName)) {
                                 System.out.println("Will update the document for " + currentClass.getFullyQualifiedName());
                                 updateDocument(daisyDoc, docs);
                                 updatedDocs++;
@@ -241,7 +237,7 @@ public class SitemapTagsToDaisy {
         else if (subPath.startsWith("blocks-tobeconverted/"))
             subPath = subPath.substring("blocks-tobeconverted/".length());
         else if (subPath.startsWith("core/"))
-            subPath = subPath.substring("core/".length());
+            return "core"; // all subprojects below core are considered to be block "core"
         else
             return null;
 
@@ -423,8 +419,7 @@ public class SitemapTagsToDaisy {
      */
     private Document getDaisyDoc(ComponentDocs docs) throws Exception {
         String query = "select id where documentType = " + QueryHelper.formatString(DAISY_DOCTYPE)
-                + " and InCollection(" + QueryHelper.formatString(daisyCollection)
-                + ") and $JavaClassName = " + QueryHelper.formatString(docs.className);
+                + " and $JavaClassName = " + QueryHelper.formatString(docs.className);
         SearchResultDocument.SearchResult.Rows.Row[] rows = daisyRepository.getQueryManager().performQuery(query, Locale.US).getSearchResult().getRows().getRowArray();
         if (rows.length == 0) {
             return null;
@@ -465,6 +460,60 @@ public class SitemapTagsToDaisy {
         return docs;
     }
 
+    /**
+     * Updates the Daisy collections the document belongs too, if needed, and returns true if updated.
+     */
+    private boolean updateCollections(Document daisyDoc, String blockName) throws Exception {
+        if (blockName != null) {
+            boolean belongsToRequiredCollection = false;
+            boolean updated = false;
+            String expectedCollection = COLLECTION_PREFIX + blockName;
+
+            DocumentCollection[] collections = daisyDoc.getCollections().getArray();
+            for (int i = 0; i < collections.length; i++) {
+                String collectionName = collections[i].getName();
+                if (collectionName.equals(expectedCollection)) {
+                    belongsToRequiredCollection = true;
+                } else if (collectionName.startsWith(COLLECTION_PREFIX)) {
+                    // belongs to cdocs- collection it shouldn't belong too
+                    updated = true;
+                    daisyDoc.removeFromCollection(collections[i]);
+                }
+            }
+
+            if (!belongsToRequiredCollection) {
+                DocumentCollection collection = null;
+                CollectionManager collectionManager = daisyRepository.getCollectionManager();
+                try {
+                    try {
+                        collection = collectionManager.getCollectionByName(expectedCollection, false);
+                    } catch (CollectionNotFoundException e) {
+                        // ok, collection will be null
+                    }
+
+                    if (collection == null) {
+                        System.out.println("Will create collection " + expectedCollection);
+                        if (!simulate) {
+                            collection = collectionManager.createCollection(expectedCollection);
+                            collection.save();
+                        }
+                    }
+                } catch (RepositoryException e) {
+                    throw new Exception("Error trying to get or create the collection " + expectedCollection, e);
+                }
+
+                if (!simulate) // when in simulate mode, collection might not have been created
+                    daisyDoc.addToCollection(collection);
+
+                updated = true;
+            }
+
+            return updated;
+        } else {
+            return false;
+        }
+    }
+
     private void updateDocument(Document daisyDoc, ComponentDocs docs) throws Exception {
         updateField(daisyDoc, DAISY_BLOCK_FIELD, docs.blockName);
         updateField(daisyDoc, DAISY_CACHEABLE_FIELD, docs.cacheInfo);
@@ -497,7 +546,7 @@ public class SitemapTagsToDaisy {
 
     private void createDocument(ComponentDocs docs, String name) throws Exception {
         Document daisyDoc = daisyRepository.createDocument(name, DAISY_DOCTYPE);
-        daisyDoc.addToCollection(daisyRepository.getCollectionManager().getCollection(daisyCollection, false));
+        updateCollections(daisyDoc, docs.blockName);
         updateDocument(daisyDoc, docs);
     }
 
