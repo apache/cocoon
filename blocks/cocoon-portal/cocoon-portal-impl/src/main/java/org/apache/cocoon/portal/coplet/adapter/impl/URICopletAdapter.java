@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
@@ -41,24 +39,26 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class URICopletAdapter 
+public class URICopletAdapter
     extends AbstractCopletAdapter {
 
     /** The source resolver */
     protected SourceResolver resolver;
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        super.service( aManager );
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+    protected NotifyingBuilder notifyingBuilder;
+
+    public void setSourceResolver(SourceResolver resolver) {
+        this.resolver = resolver;
+    }
+
+    public void setNotifyingBuilder(NotifyingBuilder notifyingBuilder) {
+        this.notifyingBuilder = notifyingBuilder;
     }
 
     /**
      * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
      */
-    public void streamContent(CopletInstance coplet, ContentHandler contentHandler)
+    protected void streamContent(CopletInstance coplet, ContentHandler contentHandler)
     throws SAXException {
         final String uri = (String)coplet.getCopletDefinition().getAttribute("uri");
         if ( uri == null ) {
@@ -67,7 +67,7 @@ public class URICopletAdapter
         this.streamContent( coplet, uri, contentHandler);
     }
 
-    protected void streamContent(final CopletInstance coplet, 
+    protected void streamContent(final CopletInstance coplet,
                                  final String uri,
                                  final ContentHandler contentHandler)
     throws SAXException {
@@ -86,7 +86,7 @@ public class URICopletAdapter
                     if ( list.contains( coplet )) {
                         // add parameters
                         if ( uri.startsWith("cocoon:raw:") ) {
-                            sourceUri = "cocoon:" + uri.substring(11); 
+                            sourceUri = "cocoon:" + uri.substring(11);
                         }
                     } else {
                         // remove parameters
@@ -115,17 +115,6 @@ public class URICopletAdapter
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( this.resolver );
-            this.resolver = null;
-        }
-        super.dispose();
-    }
-
-    /**
      * Render the error content for a coplet
      * @param coplet  The coplet instance data
      * @param handler The content handler
@@ -133,7 +122,7 @@ public class URICopletAdapter
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(CopletInstance coplet, 
+    protected boolean renderErrorContent(CopletInstance coplet,
                                          ContentHandler     handler,
                                          Exception          error)
     throws SAXException {
@@ -143,22 +132,16 @@ public class URICopletAdapter
             //         and use directly the error-uri from now on
 
             if ( uri.startsWith("cocoon:") && error != null) {
-                // Create a Notifying
-                NotifyingBuilder notifyingBuilder = null;
+                // Create a Notifying object - if builder is set
                 Notifying currentNotifying = null;
-                try {
-                    notifyingBuilder= (NotifyingBuilder)this.manager.lookup(NotifyingBuilder.ROLE);
+                if ( this.notifyingBuilder != null ) {
                     currentNotifying = notifyingBuilder.build(this, error);
-                } catch (Exception ignore) {
-                    // ignore
-                } finally {
-                    this.manager.release(notifyingBuilder);
                 }
 
                 final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
                 // Add it to the object model
                 if ( currentNotifying != null ) {
-                    objectModel.put(org.apache.cocoon.Constants.NOTIFYING_OBJECT, currentNotifying);                    
+                    objectModel.put(org.apache.cocoon.Constants.NOTIFYING_OBJECT, currentNotifying);
                     objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, error);
                 }
 
@@ -172,7 +155,7 @@ public class URICopletAdapter
 
                 this.streamContent( coplet, uri, handler);
             }
-   
+
             return true;
         }
         return false;

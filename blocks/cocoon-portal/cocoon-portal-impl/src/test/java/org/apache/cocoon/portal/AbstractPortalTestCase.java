@@ -29,6 +29,7 @@ import org.apache.cocoon.CocoonTestCase;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.impl.PortalServiceImpl;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.processing.ProcessInfoProvider;
@@ -38,7 +39,7 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
  * test cases.
  * It provides a service manager with a setup portal service etc.
  *
- * $Id$ 
+ * $Id$
  */
 public abstract class AbstractPortalTestCase extends CocoonTestCase {
 
@@ -60,7 +61,7 @@ public abstract class AbstractPortalTestCase extends CocoonTestCase {
             public String getServletName() {
                 return "cocoon";
             }
-            
+
         };
     }
 
@@ -88,6 +89,11 @@ public abstract class AbstractPortalTestCase extends CocoonTestCase {
         rendererMap.setComponentClassName(HashMap.class.getName());
         rendererMap.setRole(Renderer.class.getName()+"Map");
         info.addComponent(rendererMap);
+        // CopletAdapterMap
+        final ComponentInfo copletAdapterMap = new ComponentInfo();
+        copletAdapterMap.setComponentClassName(HashMap.class.getName());
+        copletAdapterMap.setRole(CopletAdapter.class.getName()+"Map");
+        info.addComponent(copletAdapterMap);
         // Add portal service
         final ComponentInfo portalServiceInfo = new ComponentInfo();
         portalServiceInfo.setComponentClassName(PortalServiceImpl.class.getName());

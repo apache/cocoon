@@ -19,7 +19,6 @@ package org.apache.cocoon.portal.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +96,7 @@ public class PortalServiceImpl
     protected Map renderers = Collections.EMPTY_MAP;
 
     /** The used coplet adapters. */
-    protected Map copletAdapters = new HashMap();
+    protected Map copletAdapters = Collections.EMPTY_MAP;
 
     /** The coplet factory. */
     protected CopletFactory copletFactory;
@@ -124,6 +123,7 @@ public class PortalServiceImpl
         this.manager = serviceManager;
         this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
         this.renderers = (Map)this.manager.lookup(Renderer.class.getName()+"Map");
+        this.copletAdapters = (Map)this.manager.lookup(CopletAdapter.class.getName()+"Map");
     }
 
     /**
@@ -151,11 +151,6 @@ public class PortalServiceImpl
             this.servletContext.removeAttribute(PortalService.class.getName());
         }
         if ( this.manager != null ) {
-            Iterator i = this.copletAdapters.values().iterator();
-            while (i.hasNext()) {
-                this.manager.release(i.next());
-            }
-            this.copletAdapters.clear();
             this.manager.release(this.profileManager);
             this.profileManager = null;
             this.manager.release(this.linkService);
@@ -331,12 +326,7 @@ public class PortalServiceImpl
     public CopletAdapter getCopletAdapter(String name) {
         CopletAdapter o = (CopletAdapter) this.copletAdapters.get( name );
         if ( o == null ) {
-            try {
-                o = (CopletAdapter) this.manager.lookup( CopletAdapter.ROLE + '/' + name );
-                this.copletAdapters.put( name, o );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup coplet adapter with name " + name, e);
-            }
+            throw new PortalRuntimeException("Unable to lookup coplet adapter with name " + name);
         }
         return o;
     }

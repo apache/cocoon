@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.CachedResponse;
@@ -38,7 +36,7 @@ import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
-import org.apache.cocoon.portal.util.AbstractComponent;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -54,7 +52,7 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  * implementation. It already provides several base features which can
  * be used by sub classes.
  *
- * This adapter adds a caching mechanism. The result of the called coplet is cached until a 
+ * This adapter adds a caching mechanism. The result of the called coplet is cached until a
  * {@link org.apache.cocoon.portal.event.CopletInstanceEvent} for that coplet instance
  * is received. The content can eiter be cached in the user session or globally. The default
  * is the user session.
@@ -64,7 +62,7 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  * <tr>
  *   <th>buffer</th>
  *   <td>Shall the content of the coplet be buffered? If a coplet is
- *       buffered, errors local to the coplet are caught and a not 
+ *       buffered, errors local to the coplet are caught and a not
  *       availability notice is delivered instead. Buffering does not
  *       cache responses for subsequent requests.</td>
  *   <td></td>
@@ -91,7 +89,7 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  *   <th>ignore-sizing-events</th>
  *   <td>
  *     The cached content of a coplet is invalidated if an event for this coplet is received.
- *     If sizing events should be ignored, turn on this configuration. 
+ *     If sizing events should be ignored, turn on this configuration.
  *   </td>
  *   <td></td>
  *   <td>boolean</td>
@@ -131,14 +129,14 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  *
  * @version $Id$
  */
-public abstract class AbstractCopletAdapter 
-    extends AbstractComponent
+public abstract class AbstractCopletAdapter
+    extends AbstractBean
     implements CopletAdapter, Receiver {
 
     /** The configuration name for buffering. */
     public static final String CONFIGURATION_BUFFERING = "buffer";
 
-    /** The configuration name for timeout. */    
+    /** The configuration name for timeout. */
     public static final String CONFIGURATION_TIMEOUT = "timeout";
 
     /** The configuration name for enabling/disabling the cache. */
@@ -162,33 +160,19 @@ public abstract class AbstractCopletAdapter
 
     /** This temporary attribute can be set on the instance to not cache the current response. */
     public static final String DO_NOT_CACHE = "doNotCache";
-    
+
     /** The cache to use for global caching. */
     protected Cache cache;
 
     /** The runnable manager for starting background tasks. */
     protected RunnableManager runnableManager;
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        super.service(aManager);
-        this.cache = (Cache)this.manager.lookup(Cache.ROLE);
-        this.runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.cache);
-            this.cache = null;
-            this.manager.release(this.runnableManager);
-            this.runnableManager = null;
-        }
-        super.dispose();
+    public void setRunnableManager(RunnableManager runnableManager) {
+        this.runnableManager = runnableManager;
     }
 
     /**
@@ -224,9 +208,9 @@ public abstract class AbstractCopletAdapter
     /**
      * Implement this and not toSAX().
      */
-    public abstract void streamContent(CopletInstance coplet, 
-                                       ContentHandler contentHandler)
-    throws SAXException; 
+    protected abstract void streamContent(CopletInstance coplet,
+                                          ContentHandler contentHandler)
+    throws SAXException;
 
     /**
      * This method streams the content of a coplet instance data.
@@ -263,7 +247,7 @@ public abstract class AbstractCopletAdapter
                     }
                     error = loader.exception;
                     if ( error != null && this.getLogger().isWarnEnabled() ) {
-                        this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), error);                        
+                        this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), error);
                     }
                 } else {
                     this.streamContentAndCache( coplet, buffer );
@@ -274,7 +258,7 @@ public abstract class AbstractCopletAdapter
                 this.getLogger().error("Unable to get content of coplet: " + coplet.getId(), exception);
             } catch (Throwable t ) {
                 error = new ProcessingException("Unable to get content of coplet: " + coplet.getId(), t);
-                this.getLogger().error("Unable to get content of coplet: " + coplet.getId(), t);                
+                this.getLogger().error("Unable to get content of coplet: " + coplet.getId(), t);
             }
 
             if ( read ) {
@@ -286,7 +270,7 @@ public abstract class AbstractCopletAdapter
                     XMLUtils.startElement( contentHandler, "p");
                     XMLUtils.data( contentHandler, "The coplet " + coplet.getId() + " is currently not available.");
                     XMLUtils.endElement(contentHandler, "p");
-                    contentHandler.endDocument();                
+                    contentHandler.endDocument();
                 }
             }
         } else {
@@ -329,11 +313,11 @@ public abstract class AbstractCopletAdapter
                 coplet.removeTemporaryAttribute(DO_NOT_CACHE);
                 if ( cacheGlobal ) {
                     final String key = this.getCacheKey(coplet);
-                    this.cache.remove(key); 
+                    this.cache.remove(key);
                 } else {
                     coplet.removeTemporaryAttribute(CACHE);
                 }
-                this.streamContent(coplet, contentHandler);                
+                this.streamContent(coplet, contentHandler);
             } else {
 
                 XMLByteStreamCompiler bc = new XMLByteStreamCompiler();
@@ -426,7 +410,7 @@ public abstract class AbstractCopletAdapter
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(CopletInstance coplet, 
+    protected boolean renderErrorContent(CopletInstance coplet,
                                          ContentHandler     handler,
                                          Exception          error)
     throws SAXException {
@@ -529,7 +513,7 @@ public abstract class AbstractCopletAdapter
                 }
             }
         }
-        return buffer.toString();            
+        return buffer.toString();
     }
 }
 
@@ -541,7 +525,7 @@ final class LoaderThread implements Runnable {
     private final CountDown             finished;
     Exception exception;
 
-    public LoaderThread(AbstractCopletAdapter adapter, 
+    public LoaderThread(AbstractCopletAdapter adapter,
                          CopletInstance coplet,
                          ContentHandler handler) {
         this.adapter = adapter;

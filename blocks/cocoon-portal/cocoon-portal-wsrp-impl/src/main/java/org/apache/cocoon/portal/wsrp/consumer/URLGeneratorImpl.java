@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
-import org.apache.cocoon.portal.wsrp.adapter.WSRPRequestProcessorAspect;
 import org.apache.wsrp4j.consumer.URLGenerator;
 import org.apache.wsrp4j.util.Constants;
 
@@ -78,7 +77,7 @@ public class URLGeneratorImpl
         // we create a usual portal link first with
         // all the infos
         String portalLink = this.generateUrl(params);
-        
+
         // now we replace the portal pipeline with
         // the resource pipeline
         int linkEndPos = portalLink.indexOf('?');
@@ -88,7 +87,7 @@ public class URLGeneratorImpl
         buffer.append(portalLink.substring(0, pipelineStartPos+1));
         buffer.append("wsrprsc");
         buffer.append(portalLink.substring(linkEndPos));
-        return buffer.toString(); 
+        return buffer.toString();
     }
 
     /**
@@ -102,7 +101,7 @@ public class URLGeneratorImpl
     /**
      * Generate the url.<br/>
      * We simply create a new wsrp event and use the portal link service.<br/>
-     * 
+     *
      * @param params Url-parameters
      * @return portal-url including all required attributes
      */
@@ -111,11 +110,11 @@ public class URLGeneratorImpl
             params = new HashMap();
         }
         Boolean secureLink = null;
-        if ( "true".equalsIgnoreCase((String)params.get(Constants.SECURE_URL)) ) { 
+        if ( "true".equalsIgnoreCase((String)params.get(Constants.SECURE_URL)) ) {
             secureLink = Boolean.TRUE;
         }
         final CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
-        params.put(WSRPRequestProcessorAspect.REQUEST_PARAMETER_NAME, coplet.getId());
+        params.put(WSRPAdapter.REQUEST_PARAMETER_NAME, coplet.getId());
         final StringBuffer buffer = new StringBuffer(this.service.getLinkService().getRefreshLinkURI(secureLink));
         boolean hasParams = buffer.indexOf("?") > 0;
         Iterator i = params.entrySet().iterator();

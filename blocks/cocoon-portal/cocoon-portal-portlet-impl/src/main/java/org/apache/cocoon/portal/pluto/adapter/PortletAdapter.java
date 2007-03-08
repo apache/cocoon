@@ -28,9 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.serializers.EncodingSerializer;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
@@ -54,9 +53,9 @@ import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
 import org.apache.cocoon.portal.services.aspects.DynamicAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
+import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspectContext;
-import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
@@ -83,7 +82,7 @@ import org.xml.sax.SAXException;
  */
 public class PortletAdapter
     extends AbstractCopletAdapter
-    implements RequestProcessorAspect, ResponseProcessorAspect, DynamicAspect, CopletDecorationProvider, Receiver, Parameterizable {
+    implements RequestProcessorAspect, ResponseProcessorAspect, DynamicAspect, CopletDecorationProvider, Receiver {
 
     /** Name of the temporary coplet instance attribute holding the portlet window. */
     public static final String PORTLET_WINDOW_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window";
@@ -109,20 +108,22 @@ public class PortletAdapter
     /** The Portlet Container environment. */
     protected PortletContainerEnvironmentImpl portletContainerEnvironment;
 
-    /** The configuration. */
-    protected Parameters parameters;
-
     /** Is full-screen enabled? */
     protected boolean enableFullScreen;
 
     /** Is maximized enabled? */
     protected boolean enableMaximized;
 
-    /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters params) throws ParameterException {
-        this.parameters = params;
+    protected Properties properties;
+
+    protected ServiceManager manager;
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
+    public void setServiceManager(ServiceManager manager) {
+        this.manager = manager;
     }
 
     /**
@@ -177,8 +178,8 @@ public class PortletAdapter
     /**
      * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
      */
-    public void streamContent(CopletInstance coplet,
-                              ContentHandler contentHandler)
+    protected void streamContent(CopletInstance coplet,
+                                 ContentHandler contentHandler)
     throws SAXException {
         try {
             final String portletEntityId = (String) getConfiguration(coplet, "portlet");
@@ -226,9 +227,10 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     * Destroy this component.
+     * Shutdown Pluto.
      */
-    public void dispose() {
+    public void destroy() {
         try {
             ContainerUtil.dispose(this.portletContainerEnvironment);
             this.portletContainerEnvironment = null;
@@ -239,14 +241,13 @@ public class PortletAdapter
         } catch (Throwable t) {
             this.getLogger().error("Destruction failed!", t);
         }
-        super.dispose();
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     * Initialize this component.
+     * Setup Pluto.
      */
-    public void initialize() throws Exception {
-        super.initialize();
+    public void init() throws Exception {
         this.enableFullScreen = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_FULL_SCREEN_ENABLED, Constants.DEFAULT_CONFIGURATION_FULL_SCREEN_ENABLED);
         this.enableMaximized = this.portalService.getConfigurationAsBoolean(Constants.CONFIGURATION_MAXIMIZED_ENABLED, Constants.DEFAULT_CONFIGURATION_MAXIMIZED_ENABLED);
         this.initContainer();
@@ -279,7 +280,7 @@ public class PortletAdapter
 
             this.portletContainerEnvironment = new PortletContainerEnvironmentImpl();
             this.portletContainerEnvironment.setLogger(this.getLogger());
-            ContainerUtil.parameterize(this.portletContainerEnvironment, this.parameters);
+            ContainerUtil.parameterize(this.portletContainerEnvironment, Parameters.fromProperties(this.properties));
             ContainerUtil.service(this.portletContainerEnvironment, this.manager);
             ContainerUtil.initialize(this.portletContainerEnvironment);
 
