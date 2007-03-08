@@ -21,24 +21,27 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.Constants;
+import org.apache.cocoon.portal.util.AbstractBean;
+import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 
 /**
- * 
+ *
  * @version $Id$
  *
  */
 public class PortalContextImpl
-    extends AbstractLogEnabled
+    extends AbstractBean
     implements PortalContext {
 
-    protected String versionInfo = "Apache Cocoon/" + Constants.VERSION;
+    protected static final String IDENTIFIER = "Apache Cocoon Portal/";
+
+    protected final String versionInfo;
 
     protected final Map properties = new HashMap();
 
@@ -47,6 +50,12 @@ public class PortalContextImpl
     protected final List windowStates = new ArrayList();
 
     public PortalContextImpl() {
+        final Properties pomProps = ResourceUtils.getPOMProperties("org.apache.cocoon", "cocoon-portal-portlet-impl");
+        if ( pomProps != null ) {
+            this.versionInfo = IDENTIFIER + pomProps.getProperty("version");
+        } else {
+            this.versionInfo = IDENTIFIER + "unknown";
+        }
         this.portletModes.add(new PortletMode("view"));
         this.portletModes.add(new PortletMode("edit"));
         this.portletModes.add(new PortletMode("help"));

@@ -16,18 +16,19 @@
  */
 package org.apache.cocoon.portal.pluto;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import javax.servlet.ServletContext;
+
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
 import org.apache.pluto.PortletContainerFactory;
 import org.springframework.web.context.ServletContextAware;
 
-import javax.servlet.ServletContext;
-
 /**
  * @version $Id$
  */
-public class PortalStartup extends AbstractLogEnabled
+public class PortalStartup
+    extends AbstractBean
     implements ServletContextAware {
 
     protected ServletContext servletContext;

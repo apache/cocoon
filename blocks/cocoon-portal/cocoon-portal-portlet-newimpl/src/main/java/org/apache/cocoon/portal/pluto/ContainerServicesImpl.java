@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.pluto;
 
 import javax.portlet.PortalContext;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.pluto.OptionalContainerServices;
 import org.apache.pluto.RequiredContainerServices;
 import org.apache.pluto.spi.PortalCallbackService;
@@ -35,7 +35,7 @@ import org.apache.pluto.spi.optional.PortletRegistryService;
  *
  */
 public class ContainerServicesImpl
-    extends AbstractLogEnabled
+    extends AbstractBean
     implements RequiredContainerServices, OptionalContainerServices {
 
     protected PortalContext portalContext = new PortalContextImpl();
