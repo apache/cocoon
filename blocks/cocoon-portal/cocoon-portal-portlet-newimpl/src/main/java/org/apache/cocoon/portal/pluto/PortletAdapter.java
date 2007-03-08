@@ -24,9 +24,6 @@ import java.util.Properties;
 import javax.portlet.WindowState;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
@@ -50,7 +47,7 @@ import org.xml.sax.SAXException;
  */
 public class PortletAdapter
     extends AbstractCopletAdapter
-    implements RequestProcessorAspect, ResponseProcessorAspect, CopletDecorationProvider, Receiver, Parameterizable {
+    implements RequestProcessorAspect, ResponseProcessorAspect, CopletDecorationProvider, Receiver {
 
     /** Name of the temporary coplet instance attribute holding the portlet window. */
     public static final String PORTLET_WINDOW_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window";
@@ -70,21 +67,11 @@ public class PortletAdapter
     /** Name of attribute in the coplet definition storing the portlet identifier. */
     public static final String PORTLET_ATTRIBUTE_NAME = "portlet";
 
-    /** The configuration. */
-    protected Parameters parameters;
-
     /** Is full-screen enabled? */
     protected boolean enableFullScreen;
 
     /** Is maximized enabled? */
     protected boolean enableMaximized;
-
-    /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters params) throws ParameterException {
-        this.parameters = params;
-    }
 
     /**
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstance)
