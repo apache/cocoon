@@ -1,0 +1,47 @@
+IndexOptions FancyIndexing DescriptionWidth=* NameWidth=*
+IndexIgnore  HEADER.html README.html CVS images styles
+HeaderName   HEADER.html
+ReadmeName   README.html
+
+AddDescription "<b>Latest</b> distribution (Unix)"                        "*-latest-src.tar.gz"
+AddDescription "<b>Latest</b> distribution (Win.)"                        "*-latest-src.zip"
+AddDescription "<b>Latest</b> binary distribution for JDK 1.2/1.3 (Unix)" "*-latest-bin.tar.gz"
+AddDescription "<b>Latest</b> binary distribution for JDK 1.2/1.3 (Win.)" "*-latest-bin.zip"
+AddDescription "<b>Latest</b> binary distribution for JDK 1.4 (Unix)"     "*-latest-vm14-bin.tar.gz"
+AddDescription "<b>Latest</b> binary distribution for JDK 1.4 (Win.)"     "*-latest-vm14-bin.zip"
+AddDescription "Binary distribution for JDK 1.4 (Unix)"                   "*-vm14-bin.tar.gz"
+AddDescription "Binary distribution for JDK 1.4 (Win.)"                   "*-vm14-bin.zip"
+AddDescription "Binary distribution for JDK 1.4 (Java)"                   "*-vm14-bin.jar"
+AddDescription "Binary distribution for JDK 1.2/1.3 (Unix)"               "*-bin.tar.gz"
+AddDescription "Binary distribution for JDK 1.2/1.3 (Win.)"               "*-bin.zip"
+AddDescription "Binary distribution for JDK 1.2/1.3 (Java)"               "*-bin.jar"
+AddDescription "Cocoon 2.1 distribution (Unix, source only)"              "*2.1*-src.tar.gz"
+AddDescription "Cocoon 2.1 distribution (Win., source only)"              "*2.1*-src.zip"
+AddDescription "Source distribution (Java)"                               "*-src.jar"
+AddDescription "Source distribution (Win.)"                               "*-src.zip"
+AddDescription "Source distribution (Java)"                               "*-src.jar"
+AddDescription "Combined (source+binary) distribution (Unix)"             "*.tar.gz"
+AddDescription "Combined (source+binary) distribution (Win.)"             "*.zip"
+AddDescription "Combined (source+binary) distribution (Java)"             "*.jar"
+AddDescription "SIG Signature"                                            "*.sig"
+AddDescription "ASC Signature"                                            "*.asc"
+AddDescription "MD5 Signature"                                            "*.md5"
+AddDescription "Old binary distributions archive" BINARIES
+AddDescription "Source distributions archive" SOURCES
+AddDescription "Historic distributions archive" OLD
+AddDescription "Apache Lenya distributions archives" lenya 
+AddDescription "Apache Software License"      license.txt
+
+AddIcon ./images/arcred.gif   .tar.gz
+AddIcon ./images/arcblu.gif   .zip
+AddIcon ./images/arcgrn.gif   .bz2
+AddIcon ./images/arcwht.gif   .jar
+AddIcon ./images/sign.gif     .md5 .sig .asc
+AddIcon ./images/default.gif  .txt
+AddIcon ./images/binaries.gif BINARIES
+AddIcon ./images/sources.gif  SOURCES
+AddIcon ./images/sources.gif  lenya 
+AddIcon ./images/old.gif      OLD
+AddIcon ./images/parent.gif   ..
+AddIcon ./images/sources.gif  ^^DIRECTORY^^
+DefaultIcon ./images/default.gif
