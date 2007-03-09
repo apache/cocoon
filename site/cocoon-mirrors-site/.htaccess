@@ -1,5 +1,5 @@
 IndexOptions FancyIndexing DescriptionWidth=* NameWidth=*
-IndexIgnore  HEADER.html README.html images styles
+IndexIgnore  HEADER.html README.html images styles .svn
 HeaderName   HEADER.html
 ReadmeName   README.html
 
