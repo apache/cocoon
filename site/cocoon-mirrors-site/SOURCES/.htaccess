@@ -1,7 +1,0 @@
-AddIcon ../images/arcred.gif   .tar.gz
-AddIcon ../images/arcblu.gif   .zip
-AddIcon ../images/arcgrn.gif   .bz2
-AddIcon ../images/arcwht.gif   .jar
-AddIcon ../images/sign.gif     .md5 .sig .asc
-AddIcon ../images/parent.gif   ..
-DefaultIcon ../images/default.gif
