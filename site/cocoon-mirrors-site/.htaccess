@@ -1,5 +1,5 @@
 IndexOptions FancyIndexing DescriptionWidth=* NameWidth=*
-IndexIgnore  HEADER.html README.html CVS images styles
+IndexIgnore  HEADER.html README.html images styles
 HeaderName   HEADER.html
 ReadmeName   README.html
 
@@ -17,20 +17,22 @@ AddDescription "Binary distribution for JDK 1.2/1.3 (Win.)"               "*-bin
 AddDescription "Binary distribution for JDK 1.2/1.3 (Java)"               "*-bin.jar"
 AddDescription "Cocoon 2.1 distribution (Unix, source only)"              "*2.1*-src.tar.gz"
 AddDescription "Cocoon 2.1 distribution (Win., source only)"              "*2.1*-src.zip"
-AddDescription "Source distribution (Java)"                               "*-src.jar"
+AddDescription "Source distribution (Unix)"                               "*-src.tar.gz"
 AddDescription "Source distribution (Win.)"                               "*-src.zip"
 AddDescription "Source distribution (Java)"                               "*-src.jar"
+AddDescription "Documentation (Unix)"                                     "*-docs.tar.gz"
+AddDescription "Documentation (Win.)"                                     "*-docs.zip"
 AddDescription "Combined (source+binary) distribution (Unix)"             "*.tar.gz"
 AddDescription "Combined (source+binary) distribution (Win.)"             "*.zip"
 AddDescription "Combined (source+binary) distribution (Java)"             "*.jar"
 AddDescription "SIG Signature"                                            "*.sig"
 AddDescription "ASC Signature"                                            "*.asc"
 AddDescription "MD5 Signature"                                            "*.md5"
-AddDescription "Old binary distributions archive" BINARIES
-AddDescription "Source distributions archive" SOURCES
-AddDescription "Historic distributions archive" OLD
-AddDescription "Apache Lenya distributions archives" lenya 
-AddDescription "Apache Software License"      license.txt
+AddDescription "Apache Software License"                                  license.txt
+AddDescription "Old binary distributions archive"                         BINARIES
+AddDescription "Source distributions archive"                             SOURCES
+AddDescription "Historic distributions archive"                           OLD
+AddDescription "Materials from events"                                    events
 
 AddIcon ./images/arcred.gif   .tar.gz
 AddIcon ./images/arcblu.gif   .zip
