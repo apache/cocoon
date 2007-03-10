@@ -24,12 +24,20 @@
          Note, that you can use properties for value substitution.
     -->
     <appender name="COCOON_DEFAULT" class="org.apache.log4j.FileAppender">
-        <param name="File"   value="\${org.apache.cocoon.work.directory}/cocoon-logs/log4j.log" />
-        <param name="Append" value="false" />       
+        <param name="File"   value="\${org.apache.cocoon.work.directory}/cocoon-logs/log4j.log"/>
+        <param name="Append" value="true"/>       
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%t %-5p %c{2} - %m%n"/>
+          <param name="ConversionPattern" value="%d{ISO8601} %t %-5p %c{2} - %m%n"/>
         </layout>     
     </appender>
+    
+    <category name="org.apache.commons.jci">
+      <priority value="DEBUG" />
+    </category>  
+    
+    <category name="org.apache.cocoon.tools.rcl">
+      <priority value="DEBUG" />
+    </category>      
 
     $if(useConsoleAppender)$
     <appender name="COCOON_DEFAULT_CONSOLE" class="org.apache.log4j.ConsoleAppender">
@@ -37,8 +45,8 @@
             <param name="ConversionPattern" value="%t %-5p %c{2} - %m%n"/>
         </layout>     
     </appender>
-    $endif$
 
+    $endif$
     <root>
       <priority value="\${org.apache.cocoon.log4j.loglevel}"/>
       <appender-ref ref="COCOON_DEFAULT" />
@@ -46,4 +54,5 @@
       <appender-ref ref="COCOON_DEFAULT_CONSOLE" />
     $endif$
     </root>
+
 </log4j:configuration>
