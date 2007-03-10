@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.servlet;
+package org.apache.cocoon.tools.rcl.wrapper.servlet;
 
 import java.io.IOException;
 
@@ -25,6 +25,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -35,6 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
  * @version $Id$
  */
 public class ReloadingSpringFilter implements Filter {
+    
+    private final Log log = LogFactory.getLog(ReloadingSpringFilter.class);    
 
     private FilterConfig config;
 
@@ -59,6 +63,10 @@ public class ReloadingSpringFilter implements Filter {
 
                 // create the new Spring application context
                 springContextLoader.initWebApplicationContext(this.config.getServletContext());
+                
+                if(log.isDebugEnabled()) {
+                    log.debug("Reloaded Spring application context.");
+                }                
             }
         }
         // continue processing the request

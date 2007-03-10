@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.servlet;
+package org.apache.cocoon.tools.rcl.wrapper.servlet;
 
 import java.io.File;
 
@@ -57,9 +57,11 @@ public class CocoonReloadingListener extends ReloadingListener {
                 changedFilePath.endsWith(".xmap.xml") ||                      // any sitemap that ends with xmap.xml (sitemaps)
                 changedFileParentPath.endsWith("config/spring")) {            // local Spring bean configurations
             log.info("Configuration file change detected: " + changedFile);
+            System.out.println("Configuration file change detected: " + changedFile);
             reload = true;
         } else {
             log.debug("File change detected: " + changedFile);                // any other file change
+            reload = true;
         }
     }
 
