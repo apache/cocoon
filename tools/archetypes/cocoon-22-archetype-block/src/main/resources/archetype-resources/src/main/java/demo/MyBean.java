@@ -18,7 +18,7 @@ package demo;
 
 public class MyBean {
     
-    public String message = "This is a message coming from a Spring bean.";
+    private String message = "This is a message coming from a Spring bean.";
 
     public void setMessage(String message) {
         this.message = message;
