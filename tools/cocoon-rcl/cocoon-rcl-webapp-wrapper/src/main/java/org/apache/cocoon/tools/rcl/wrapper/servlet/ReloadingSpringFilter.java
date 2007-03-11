@@ -31,6 +31,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.support.ServletContextFactoryBean;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
@@ -61,26 +63,43 @@ public class ReloadingSpringFilter implements Filter {
                     throw new ServletException("Cannot load class " + ContextLoader.class.getName(), e);
                 }
                 
-                ApplicationContext oldAc = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
-                this.log.debug("Old application context: " + oldAc);
-                Object o = oldAc.getBean("global-bean");
-                this.log.debug("o[old]: " + o.toString());                
+                // debugging code
+                try {
+                    ApplicationContext oldAc = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
+                    this.log.debug("Old application context: " + oldAc);
+                    Object o = oldAc.getBean("global-bean");
+                    this.log.debug("o[old]: " + o.toString());             
+                } catch(Exception e) {
+                }
+                // debugging code end
                 
                 // close old Spring application context
                 springContextLoader.closeWebApplicationContext(this.config.getServletContext());
                 this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
                 // create the new Spring application context
+                ServletContextFactoryBean b = new ServletContextFactoryBean();
+                b.setServletContext(this.config.getServletContext());
                 XmlWebApplicationContext xac = (XmlWebApplicationContext) springContextLoader.initWebApplicationContext(this.config.getServletContext());
-                DefaultResourceLoader drl = (DefaultResourceLoader) xac;
-                drl.setClassLoader(cl);
-                xac.refresh();
-                Object o1 = xac.getBean("global-bean");
-                this.log.debug("o[new]: " + o1.toString());
+                
+                // debugging code
+                try {
+                    DefaultResourceLoader drl = (DefaultResourceLoader) xac;
+                    drl.setClassLoader(cl);
+                    xac.refresh();
+                    Object o1 = xac.getBean("global-bean");
+                    this.log.debug("o[new]: " + o1.toString());
+                } catch(Exception e) {
+                }
+                // debugging code end
                 
                 if(log.isDebugEnabled()) {
                     log.debug("Reloaded Spring application context: " + xac);
                 }                
+                
+                
+                RequestContextHolder.resetRequestAttributes();
+                
             }
         }
         // continue processing the request
