@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.Context;
@@ -27,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
 /**
@@ -36,7 +39,7 @@ import org.xml.sax.SAXException;
  * <code>encoding</code> - see {@link #setEncoding}<br>
  * <code>expires</code> - see {@link #setExpires}.
  */
-public class LinkRewriterReader extends AbstractReader {
+public class LinkRewriterReader extends AbstractReader implements CacheableProcessingComponent {
 
     /** The default logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
@@ -195,5 +198,13 @@ public class LinkRewriterReader extends AbstractReader {
 
         return inputSource.getMimeType();
     }
+
+	public Serializable getKey() {
+		return inputSource.getURI();
+	}
+
+	public SourceValidity getValidity() {
+		return inputSource.getValidity();
+	}
 
 }
