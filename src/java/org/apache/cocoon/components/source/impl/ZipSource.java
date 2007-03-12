@@ -43,7 +43,6 @@ public class ZipSource extends AbstractLogEnabled
     private Source archive;
     private String filePath;
 
-
     public ZipSource(String protocol, Source archive, String filePath) {
         this.protocol = protocol;
         this.archive = archive;
@@ -91,14 +90,12 @@ public class ZipSource extends AbstractLogEnabled
         }
     }
 
-    public InputStream getInputStream()
-    throws IOException, SourceNotFoundException {
-
+    public InputStream getInputStream() throws IOException, SourceNotFoundException {
         ZipInputStream zipStream = new ZipInputStream(this.archive.getInputStream());
         try {
             ZipEntry entry = findEntry(zipStream);
             if (entry == null) {
-                throw new SourceNotFoundException("File " + filePath + " is not found in the archive " +
+                throw new SourceNotFoundException("File " + this.filePath + " is not found in the archive " +
                                                   this.archive.getURI());
             }
 
@@ -125,7 +122,7 @@ public class ZipSource extends AbstractLogEnabled
     }
 
     public String getURI() {
-        return this.protocol + this.archive.getURI() + "!/" + this.filePath;
+        return this.protocol + ":" + this.archive.getURI() + "!/" + this.filePath;
     }
 
     public String getScheme() {
@@ -171,4 +168,5 @@ public class ZipSource extends AbstractLogEnabled
     public long getLastModified() {
         return this.archive.getLastModified();
     }
+    
 }
