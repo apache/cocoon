@@ -95,10 +95,7 @@ public class ReloadingSpringFilter implements Filter {
                 
                 if(log.isDebugEnabled()) {
                     log.debug("Reloaded Spring application context: " + xac);
-                }                
-                
-                
-                RequestContextHolder.resetRequestAttributes();
+                }
                 
             }
         }
