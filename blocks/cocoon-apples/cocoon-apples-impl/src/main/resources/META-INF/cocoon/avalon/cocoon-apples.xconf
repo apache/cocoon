@@ -15,9 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!--+
-    |
     | SVN $Id$
     +-->
 <components>
@@ -27,7 +25,12 @@
       name="apples" logger="apples">
     </component-instance>
   	<component-instance 
-  		class="org.apache.cocoon.components.flow.apples.ServiceApplesProcessor" 
+  		class="org.apache.cocoon.components.flow.apples.SpringApplesProcessor" 
+  		name="spring-apples" logger="spring-apples">
+  	</component-instance>  	    
+    <!-- The name 'service-apples' has been deprecated -->
+  	<component-instance 
+  		class="org.apache.cocoon.components.flow.apples.SpringApplesProcessor" 
   		name="service-apples" logger="service-apples">
   	</component-instance>
   </flow-interpreters>

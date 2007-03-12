@@ -67,13 +67,11 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
             appleContext.put("continuation-id", wk.getId());
         }
 
-
         LifecycleHelper.setupComponent(app, getLogger(), appleContext, sitemapManager, null, true);
         processApple(params, redirector, app, wk);
     }
 
     public void handleContinuation(String continuationId, List params, Redirector redirector) throws Exception {
-
         WebContinuation wk = this.continuationsMgr.lookupWebContinuation(continuationId, getInterpreterID());
         if (wk == null) {
             // Throw an InvalidContinuationException to be handled inside the
@@ -88,7 +86,6 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
         // TODO access control checks? exception to be thrown for illegal
         // access?
         processApple(params, redirector, app, wk);
-
     }
 
     protected AppleController instantiateController(String appleName, ServiceManager sitemapManager) throws AppleNotFoundException {
