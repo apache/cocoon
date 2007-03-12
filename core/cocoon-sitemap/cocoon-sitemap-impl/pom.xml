@@ -153,17 +153,17 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>2.0.2</version>
+      <version>2.0.3</version>
     </dependency>   
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>2.0.2</version>
+      <version>2.0.3</version>
     </dependency>    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      <version>2.0.2</version>
+      <version>2.0.3</version>
       <exclusions>
         <exclusion>
           <groupId>avalon-framework</groupId>
@@ -174,12 +174,12 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      <version>2.0.2</version>
+      <version>2.0.3</version>
     </dependency>      
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      <version>2.0.2</version>
+      <version>2.0.3</version>
     </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
