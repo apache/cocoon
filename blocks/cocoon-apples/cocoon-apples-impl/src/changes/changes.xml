@@ -26,8 +26,8 @@
   <body>
     <release version="1.0.0-RC1" date="2007-??-??" description="unreleased"> 
       <action dev="reinhard" type="add">
-        Apples can also be Spring beans. In order to lookup a bean, prepand #, e.g. to lookup a bean of name 'myBean',
-        use &lt;map:call function="#myBean"/&gt;.
+        Apples can also be Spring beans. In order to lookup a bean, use the "spring-apples" interpreter. The former
+        "service-apples" interpreter has been deprecated.
       </action>         
       <action dev="reinhard" type="add">
         Add an AppleNotFoundException which informs why an Apple can't be initialized.
