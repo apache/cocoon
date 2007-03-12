@@ -53,14 +53,11 @@ public class ZipSourceFactory extends AbstractLogEnabled
 
     private ServiceManager manager;
 
-
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
-
-    public Source getSource(String location, Map parameters)
-    throws IOException, MalformedURLException {
+    public Source getSource(String location, Map parameters) throws IOException, MalformedURLException {
         // Checks URL syntax
         int protocolEnd = location.indexOf(":");
         if (protocolEnd == -1) {
@@ -73,7 +70,7 @@ public class ZipSourceFactory extends AbstractLogEnabled
         }
 
         // Get protocol. Protocol is configurable via cocoon.xconf
-        final String protocol = location.substring(0, protocolEnd - 1);
+        final String protocol = location.substring(0, protocolEnd);
 
         // Get archive URL
         final String archiveURL = location.substring(protocolEnd + 1, archiveEnd);
@@ -108,4 +105,5 @@ public class ZipSourceFactory extends AbstractLogEnabled
             this.manager.release(resolver);
         }
     }
+    
 }
