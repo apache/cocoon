@@ -181,6 +181,10 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="VG" type="fix">
+      CForms: Submit widget now inherits validate attribute value from the
+      ancestor widget, if it is specified.
+    </action>
     <action dev="CZ" type="fix">
       Serializers block: Correctly handle content of script and style tag as cdata for html.
     </action>
