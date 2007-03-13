@@ -166,7 +166,8 @@ public class CachingPointProcessingPipeline
     /**
      * Cache longest cacheable path plus cache points.
      */
-    protected void cacheResults(Environment environment, OutputStream os)  throws Exception {
+    protected CachedResponse cacheResults(Environment environment, OutputStream os)  throws Exception {
+    	CachedResponse completeCachedResponse = null;
 
         if (this.toCacheKey != null) {
             if ( this.cacheCompleteResponse ) {
@@ -179,6 +180,7 @@ public class CachingPointProcessingPipeline
                 response.setContentType(environment.getContentType());
                 this.cache.store(this.toCacheKey.copy(),
                                  response);
+                completeCachedResponse = response;
                 //
                 // Scan back along the pipelineCacheKey for
                 // for any cachepoint(s)
@@ -232,6 +234,7 @@ public class CachingPointProcessingPipeline
 
             }
         }
+        return completeCachedResponse;
     }
 
     /**

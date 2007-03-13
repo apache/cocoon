@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -91,8 +93,10 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
     protected Store transientStore = null;
 
-    /** Abstract method defined in subclasses */
-    protected abstract void cacheResults(Environment environment,
+    /** Abstract method defined in subclasses 
+     * @return <u>complete</u> cached response or <code>null</code><br>
+     *         See issue COCOON-2009 for discussion*/
+    protected abstract CachedResponse cacheResults(Environment environment,
             OutputStream os)
         throws Exception;
 
@@ -365,7 +369,14 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 // Now that we have processed the pipeline,
                 // we do the actual caching
                 //
-                cacheResults(environment,os);
+                CachedResponse completeCachedResponse = cacheResults(environment,os);
+                
+                if (completeCachedResponse != null) {
+                	//Dirty work-around for setting Last-Modified header as there is no appoporiate method
+                	//org.apache.cocoon.environment.http.HttpEnvironment.isResponseModified will set it and the result of
+                	//the actual check is neither meaningful nor important here
+                	environment.isResponseModified(completeCachedResponse.getLastModified());
+                }
 
             } catch (Exception e) {
                 handleException(e);
@@ -373,6 +384,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 releaseLock(this.toCacheKey);
             }
 
+            //Request has been succesfully processed, set approporiate status code
+            environment.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
 
@@ -897,7 +910,9 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
         } catch (Exception e) {
             handleException(e);
         }
-
+        
+        //Request has been succesfully processed, set approporiate status code
+        environment.setStatus(HttpServletResponse.SC_OK);
         return true;
     }
 

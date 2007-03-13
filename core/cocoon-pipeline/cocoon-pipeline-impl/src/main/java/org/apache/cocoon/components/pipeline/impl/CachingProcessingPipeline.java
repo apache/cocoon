@@ -43,7 +43,7 @@ public class CachingProcessingPipeline extends AbstractCachingProcessingPipeline
     /**
     * Cache longest cacheable key
     */
-    protected void cacheResults(Environment environment, OutputStream os)  throws Exception {
+    protected CachedResponse cacheResults(Environment environment, OutputStream os)  throws Exception {
         if (this.toCacheKey != null) {
             // See if there is an expires object for this resource.
             Long expiresObj = (Long) environment.getObjectModel().get(ObjectModelHelper.EXPIRES_OBJECT);
@@ -61,7 +61,9 @@ public class CachingProcessingPipeline extends AbstractCachingProcessingPipeline
             }
 
             this.cache.store(this.toCacheKey, response);
+            return response;
         }
+        return null;
     }
 
     /**
