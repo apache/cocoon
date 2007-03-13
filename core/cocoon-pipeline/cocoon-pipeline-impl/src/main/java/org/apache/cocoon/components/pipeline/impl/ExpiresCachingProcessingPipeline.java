@@ -39,6 +39,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * This pipeline implementation caches the complete content for a defined
  * period of time (expires).
@@ -165,6 +167,8 @@ public class ExpiresCachingProcessingPipeline
             handleException(e);
         }
 
+        //Request has been succesfully processed, set approporiate status code
+        environment.setStatus(HttpServletResponse.SC_OK);
         return true;
     }
 
@@ -352,6 +356,8 @@ public class ExpiresCachingProcessingPipeline
             handleException(e);
         }
 
+        //Request has been succesfully processed, set approporiate status code
+        environment.setStatus(HttpServletResponse.SC_OK);
         return true;
     }
 }
