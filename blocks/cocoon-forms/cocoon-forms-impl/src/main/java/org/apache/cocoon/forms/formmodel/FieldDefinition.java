@@ -46,7 +46,7 @@ public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
                                      getLocation());
         }
 
-        FieldDefinition other = (FieldDefinition)definition;
+        FieldDefinition other = (FieldDefinition) definition;
 
         this.required = other.required;
         this.whitespaceTrim = other.whitespaceTrim;
