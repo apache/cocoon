@@ -21,7 +21,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -34,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
+import org.apache.commons.collections.iterators.IteratorEnumeration;
+
 /**
  * Create a HttpServletRequest from an URL, that is used while calling e.g. a block.
  * 
@@ -45,6 +51,12 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     private Hashtable attributes = new Hashtable();
     private RequestParameters parameters;
     private String encoding;
+    private Map headers = new HashMap();
+    
+	/**
+	 * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3 
+	 */
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
     public BlockCallHttpServletRequest(URI uri) {
         this.uri = uri;
@@ -113,28 +125,45 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
      */
     public long getDateHeader(String name) {
-        return -1;
+    	String header = getHeader(name);
+    	if (header == null) return -1;
+    	try {
+			return dateFormat.parse(header).getTime();
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+    }
+    
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
+     */
+    public void setDateHeader(String name, long date) {
+        setHeader(name, dateFormat.format(new Date(date)));
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
      */
     public String getHeader(String name) {
-        return null;
+        return (String)headers.get(name);
+    }
+    
+    public void setHeader(String name, String value) {
+    	headers.put(name, value);
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
      */
     public Enumeration getHeaderNames() {
-        return null;
+        return new IteratorEnumeration(headers.keySet().iterator());
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
      */
     public Enumeration getHeaders(String name) {
-        return null;
+        return new IteratorEnumeration(headers.values().iterator());
     }
 
     /* (non-Javadoc)
@@ -149,7 +178,16 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
      */
     public int getIntHeader(String name) {
-        return -1;
+    	String header = getHeader(name);
+    	if (header == null) return -1;
+    	return Integer.parseInt(header);
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
+     */
+    public void setIntHeader(String name, int value) {
+        setHeader(name, String.valueOf(value));
     }
 
     /* (non-Javadoc)

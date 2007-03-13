@@ -61,6 +61,10 @@ public final class ServletConnection {
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
     
+    /** If already connected */
+    private boolean connected; 
+    
+    private InputStream responseBody;
 
     /**
      * Construct a new object
@@ -88,16 +92,14 @@ public final class ServletConnection {
 
         this.request = new BlockCallHttpServletRequest(blockURI);
         this.response = new BlockCallHttpServletResponse();
+        
+        this.connected = false;
     }
     
-    public void connect() throws IOException {}
-
-    /**
-     * Return an <code>InputStream</code> object to read from the source.
-     * @throws Exception 
-     */
-    public InputStream getInputStream() throws IOException, ServletException {
-
+    public void connect() throws IOException, ServletException {
+    	//if already connected, do nothing
+    	if (connected) return;
+    	
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.response.setOutputStream(os);
         RequestDispatcher dispatcher = null;
@@ -117,12 +119,58 @@ public final class ServletConnection {
             
             byte[] out = os.toByteArray();
             
-            return new ByteArrayInputStream(out);
+            responseBody = new ByteArrayInputStream(out);
         } finally {
             os.close();
         }
+        connected = true;
     }
 
+    /**
+     * Return an <code>InputStream</code> object to read from the source.
+     * @throws Exception 
+     */
+    public InputStream getInputStream() throws IOException, ServletException {
+    	connect();
+    	return responseBody;
+    }
+
+    public void setIfModifiedSince(long ifmodifiedsince) {
+    	if (connected)
+    	    throw new IllegalStateException("Already connected");
+    	request.setDateHeader("If-Modified-Since", ifmodifiedsince);
+    }
+    
+    public long getLastModified() {
+    	return getHeaderFieldDate("Last-Modified", 0);
+    }
+    
+    public long getHeaderFieldDate(String name, long Default) {
+    	try {
+    	    return response.getDateHeader(name);
+    	} catch (Exception e) { }
+    	return Default;
+    }
+    
+    public String getHeaderField(String name) {
+    	try {
+			connect();
+		} catch (Exception e) {
+			return null;
+		}
+    	return response.getHeader(name);
+    }
+    
+    public int getResponseCode() throws IOException {
+    	if (!connected)
+			try {
+				connect();
+			} catch (ServletException e) {
+				throw new IOException("Could not get response status code");
+			}
+    	return response.getStatus();
+    }
+    
     // Parse the block protocol.
     private URI parseBlockURI(URI uri) throws URISyntaxException {
         // Can't happen
