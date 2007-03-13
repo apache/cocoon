@@ -15,11 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<fd:library
-  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
-  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+<fd:library xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+            xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
   <fd:widgets>
-    
     <fd:import prefix="ext" uri="library_form1.xml"/>
     
     <fd:class id="class1" extends="ext:class1">
@@ -37,7 +35,7 @@
       <fd:widgets>
         <fd:repeater id="fields-rec-1">
           <fd:widgets>
-            
+
             <fd:field id="field-rec-1">
               <fd:label>Field (recursive) 1:</fd:label>
               <fd:datatype base="string"/>
@@ -71,14 +69,14 @@
       <fd:widgets>
         <fd:repeater id="fields-rec-2">
           <fd:widgets>
-            
+
             <fd:field id="field-rec-2">
               <fd:label>Field (recursive) 2:</fd:label>
               <fd:datatype base="string"/>
             </fd:field>
-            
+
             <fd:new id="rec-class-1"/>
-            
+
             <!-- these actions will act on the "tasks" repeater in which this class is inlined -->
             <fd:row-action id="add" command="add-after">
               <fd:label>+</fd:label>
