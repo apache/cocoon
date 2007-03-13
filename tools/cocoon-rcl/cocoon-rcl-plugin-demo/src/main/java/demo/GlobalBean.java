@@ -18,6 +18,14 @@ package demo;
 
 public class GlobalBean {
     
-    public String message = "This is a message coming from the global Bean!";
+    private String message = "This is a message coming from the global Bean!";
 
+    public String getMessage() {
+        return message;
+    }    
+    
+    public String toString() {
+        return "[message] " + this.message;
+    }
+    
 }
