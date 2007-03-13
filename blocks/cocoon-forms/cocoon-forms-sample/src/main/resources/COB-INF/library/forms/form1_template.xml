@@ -16,9 +16,10 @@
   limitations under the License.
 -->
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
-  xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
-  xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+
   <title>Form libraries sample</title>
   <content>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
@@ -30,14 +31,14 @@
           <ft:widget id="field2"/>
           <ft:widget id="myField3"/>
           <ft:widget id="myField4"/>
-          <ft:widget id="myField5"/>  
-          <ft:widget id="myBeer"/>                               
-          <ft:widget id="myEmail"/>   
+          <ft:widget id="myField5"/>
+          <ft:widget id="myBeer"/>
+          <ft:widget id="myEmail"/>
           <ft:widget id="myAccount"/>
-          <ft:widget id="myAccount1"/>      
+          <ft:widget id="myAccount1"/>
         </fi:items>
       </fi:group>
-      
+
       <ft:widget-label id="contacts"/><br/>
       <ft:repeater-size id="contacts"/>
       <table border="1">
@@ -78,7 +79,7 @@
           </td>
         </tr>
       </table>
-      
+
       <ft:class id="rec-class-1">
         <table border="1">
           <tr>
@@ -111,11 +112,11 @@
           </jx:choose>
         </table>
       </ft:class>
-      
+
       <p>
         <em>Recursive inter-library class/new inclusion madness:</em>
       </p>
-      
+
       <ft:class id="rec-class-2">
         <table border="1">
           <tr>
@@ -150,11 +151,12 @@
           </jx:choose>
         </table>
       </ft:class>
-      
+
       <ft:new id="rec-class-1"/>
-      
+
       <input type="submit"/>
-      
+      <ft:widget id="cancel"/>
+
     </ft:form-template>
   </content>
 </page>

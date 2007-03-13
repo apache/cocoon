@@ -15,11 +15,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<fb:library
-  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
-  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
-  >
-  
+<fb:library xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+            xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
   <fb:import prefix="ext" uri="library_form1_binding.xml"/>
   
   <fb:class id="class1" extends="ext:class1">
