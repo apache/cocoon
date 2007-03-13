@@ -32,6 +32,8 @@ import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Element;
 
 /**
+ * Form binding library.
+ *
  * @version $Id$
  */
 public class Library extends AbstractLogEnabled {
@@ -46,19 +48,16 @@ public class Library extends AbstractLogEnabled {
 	protected Map inclusions = new HashMap();
 
 	// shared object with dependencies
-	protected Object shared = new Object();
+	protected final Object shared = new Object();
 
 	protected String sourceURI;
 	protected JXPathBindingManager.Assistant assistant;
 
 
-	public Library(LibraryManager lm) {
-		manager = lm;
-	}
-
-	public void setAssistant(JXPathBindingManager.Assistant assistant) {
-		this.assistant = assistant;
-	}
+	public Library(LibraryManager lm, JXPathBindingManager.Assistant assistant) {
+		this.manager = lm;
+        this.assistant = assistant;
+    }
 
 	public void setSourceURI(String uri) {
 		sourceURI = uri;
@@ -68,10 +67,10 @@ public class Library extends AbstractLogEnabled {
 		return sourceURI;
 	}
 
-	public boolean dependenciesHaveChanged() throws Exception {
-        Iterator it = this.inclusions.values().iterator();
-        while (it.hasNext()) {
-            Dependency dep = (Dependency) it.next();
+	public boolean dependenciesHaveChanged() throws LibraryException {
+        Iterator i = this.inclusions.values().iterator();
+        while (i.hasNext()) {
+            Dependency dep = (Dependency) i.next();
             if (!dep.isValid()) {
                 return true;
             }
@@ -87,20 +86,17 @@ public class Library extends AbstractLogEnabled {
 	 * @param key the key
 	 * @param sourceURI the source of the library to be know as "key"
 	 * @return true if there was no such key used before, false otherwise
+     * @throws LibraryException if unable to load included library
 	 */
 	public boolean includeAs(String key, String sourceURI)
     throws LibraryException {
-		try {
-			// library keys may not contain ":"!
-            if ((!inclusions.containsKey(key) || key.indexOf(SEPARATOR) > -1)
-                    && manager.load(sourceURI, this.sourceURI) != null) {
-                inclusions.put(key, new Dependency(sourceURI));
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            throw new LibraryException("Could not include library '" + sourceURI + "'", e);
+        // library keys may not contain ":"!
+        if (!inclusions.containsKey(key) || key.indexOf(SEPARATOR) > -1) {
+            manager.load(sourceURI, this.sourceURI);
+            inclusions.put(key, new Dependency(sourceURI));
+            return true;
         }
+        return false;
     }
 
 	public Binding getBinding(String key) throws LibraryException {
@@ -117,11 +113,12 @@ public class Library extends AbstractLogEnabled {
         }
 
         if (librarykey != null) {
-            if (inclusions.containsKey(librarykey)) {
+            Dependency dependency = (Dependency) inclusions.get(librarykey);
+            if (dependency != null) {
                 try {
-                    return manager.load(((Dependency) inclusions.get(librarykey)).dependencySourceURI, sourceURI).getBinding(definitionkey);
+                    return manager.load(dependency.dependencyURI, sourceURI).getBinding(definitionkey);
                 } catch (Exception e) {
-                    throw new LibraryException("Couldn't get Library key='" + librarykey + "' source='" + inclusions.get(librarykey) + "", e);
+                    throw new LibraryException("Couldn't get library '" + librarykey + "' source='" + dependency + "'", e);
                 }
             } else {
                 throw new LibraryException("Library '" + librarykey + "' does not exist! (lookup: '" + key + "')");
@@ -143,6 +140,10 @@ public class Library extends AbstractLogEnabled {
     }
 
     public void addBinding(Binding binding) throws LibraryException {
+        if (binding == null) {
+            return;
+        }
+
         if (definitions.containsKey(binding.getId())) {
             throw new LibraryException("Library already contains a binding with this ID!");
         }
@@ -151,7 +152,7 @@ public class Library extends AbstractLogEnabled {
 
         definitions.put(binding.getId(), binding);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug(this + ": Put binding with id: " + binding.getId());
+            getLogger().debug(this + ": Added binding '" + binding.getId() + "'");
         }
     }
 
@@ -159,31 +160,19 @@ public class Library extends AbstractLogEnabled {
     /**
 	 * Encapsulates a uri to designate an import plus a timestamp so previously reloaded
 	 */
-	public class Dependency {
-		private String dependencySourceURI;
-		private Object shared;
+	protected class Dependency {
+		private final String dependencyURI;
+		private final Object shared;
 
-		public Dependency(String dependencySourceURI) throws Exception {
-			this.dependencySourceURI = dependencySourceURI;
-
-			Library lib = manager.load(this.dependencySourceURI,sourceURI);
+		public Dependency(String dependencySourceURI) throws LibraryException {
+			this.dependencyURI = dependencySourceURI;
+			Library lib = manager.load(this.dependencyURI,sourceURI);
 			this.shared = lib.shared;
 		}
 
 		public boolean isValid() throws LibraryException {
-            try {
-                if (manager.get(dependencySourceURI, sourceURI)) {
-                    Library lib = manager.load(dependencySourceURI, sourceURI);
-
-                    if (this.shared == lib.shared) {
-                        return true;
-                    }
-                }
-
-                return false;
-            } catch (Exception forward) {
-                throw new LibraryException("Exception occured while checking dependency validity!", forward);
-            }
+            Library lib = manager.get(dependencyURI, sourceURI);
+            return lib != null && this.shared == lib.shared;
         }
 	}
 

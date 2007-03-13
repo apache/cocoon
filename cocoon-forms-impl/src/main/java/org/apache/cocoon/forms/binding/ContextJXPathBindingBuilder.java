@@ -77,7 +77,8 @@ public class ContextJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building context binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building context binding",
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }

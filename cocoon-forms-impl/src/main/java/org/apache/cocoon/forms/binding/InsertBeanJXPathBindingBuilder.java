@@ -69,7 +69,8 @@ public class InsertBeanJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building a insert-bean binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building a insert-bean binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }

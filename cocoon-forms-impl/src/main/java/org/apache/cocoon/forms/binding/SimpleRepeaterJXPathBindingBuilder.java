@@ -86,8 +86,8 @@ public class SimpleRepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building repeater binding defined at " +
-                    DomHelper.getLocation(bindingElem), e);
+            throw new BindingException("Error building repeater binding", e,
+                                       DomHelper.getLocationObject(bindingElem));
         }
     }
 }

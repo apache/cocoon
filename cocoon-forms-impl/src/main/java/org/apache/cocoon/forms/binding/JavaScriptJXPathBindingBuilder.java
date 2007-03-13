@@ -170,10 +170,11 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase
             result.enableLogging(getLogger());
             return result;
 
-        } catch(BindingException be) {
-            throw be;
-        } catch(Exception e) {
-            throw new BindingException("Cannot build binding at " + DomHelper.getLocation(element), e);
+        } catch (BindingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BindingException("Cannot build binding", e,
+                                       DomHelper.getLocationObject(element));
         }
     }
 }

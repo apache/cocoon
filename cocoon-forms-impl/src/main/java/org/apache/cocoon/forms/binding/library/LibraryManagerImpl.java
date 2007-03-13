@@ -16,9 +16,7 @@
  */
 package org.apache.cocoon.forms.binding.library;
 
-import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -34,6 +32,7 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.forms.CacheManager;
 import org.apache.cocoon.forms.binding.JXPathBindingManager;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.location.LocationImpl;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -43,24 +42,22 @@ import org.xml.sax.InputSource;
  */
 public class LibraryManagerImpl extends AbstractLogEnabled
                                 implements LibraryManager, Serviceable, Configurable,
-                                           Initializable, Disposable, ThreadSafe, Component {
+                                           Disposable, ThreadSafe, Component {
 
 	protected static final String PREFIX = "CocoonFormBindingLibrary:";
 
-	private ServiceManager serviceManager;
-    private Configuration configuration;
+	private ServiceManager manager;
     private CacheManager cacheManager;
 
     private JXPathBindingManager bindingManager;
 
 
     public void configure(Configuration configuration) throws ConfigurationException {
-        this.configuration = configuration;
-        getLogger().debug("Gotten a config: top level element: "+this.configuration);
+        // TODO Read config to "preload" libraries
     }
 
     public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
+        this.manager = serviceManager;
         this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
     }
 
@@ -68,130 +65,124 @@ public class LibraryManagerImpl extends AbstractLogEnabled
     	this.bindingManager = bindingManager;
     }
 
-    public void initialize() throws Exception {
-        // read config to "preload" libraries
+    public Library get(String sourceURI) throws LibraryException {
+        return get(sourceURI, null);
     }
 
-    public boolean get(String librarysource) throws Exception {
-    	return get(librarysource,null);
-    }
-
-    public boolean get(String librarysource, String relative) throws Exception {
+    public Library get(String sourceURI, String baseURI) throws LibraryException {
     	SourceResolver sourceResolver = null;
         Source source = null;
-
-        if (getLogger().isDebugEnabled())
-        	getLogger().debug("Checking if library is in cache: '"+librarysource+"' relative to '"+relative+"'");
-
-        Library lib = null;
-        boolean result = false;
-
         try {
-            sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
-            source = sourceResolver.resolveURI(librarysource, relative, null);
-
-            lib = (Library)this.cacheManager.get(source, PREFIX);
-
-            if( lib != null && lib.dependenciesHaveChanged() ) {
-            	result = false;
-            	this.cacheManager.set(null,source,PREFIX); //evict?
+            try {
+                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+                source = sourceResolver.resolveURI(sourceURI, baseURI, null);
+            } catch (Exception e) {
+                throw new LibraryException("Unable to resolve library.",
+                                           e, new LocationImpl("[LibraryManager]", sourceURI));
             }
-            else if( lib == null )
-            	result = false;
-            else
-            	result = true;
-        } catch(Exception e) {
-        	if(getLogger().isErrorEnabled())
-            	getLogger().error("Problem getting library '"+librarysource+"' relative to '"+relative+"'!",e);
-        	throw e;
+
+            Library lib = (Library) this.cacheManager.get(source, PREFIX);
+            if (lib != null && lib.dependenciesHaveChanged()) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Library IS REMOVED from cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                }
+                this.cacheManager.remove(source, PREFIX); // evict?
+                return null;
+            }
+
+            if (getLogger().isDebugEnabled()) {
+                if (lib != null) {
+                    getLogger().debug("Library IS in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                } else {
+                    getLogger().debug("Library IS NOT in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                }
+            }
+
+            return lib;
         } finally {
-            if (source != null)
+            if (source != null) {
                 sourceResolver.release(source);
-            if (sourceResolver != null)
-            	serviceManager.release(sourceResolver);
+            }
+            if (sourceResolver != null) {
+                manager.release(sourceResolver);
+            }
         }
-
-        if(getLogger().isDebugEnabled()) {
-        	if(result)
-        		getLogger().debug("Library IS in cache : '"+librarysource+"' relative to '"+relative+"'");
-        	else
-        		getLogger().debug("Library IS NOT in cache : '"+librarysource+"' relative to '"+relative+"'");
-        }
-
-        return result;
     }
 
-    public Library load(String librarysource) throws Exception {
-    	return load(librarysource,null);
+    public Library load(String sourceURI) throws LibraryException {
+        return load(sourceURI, null);
     }
 
-	public Library load(String librarysource, String relative) throws Exception {
+	public Library load(String sourceURI, String baseURI) throws LibraryException {
 		SourceResolver sourceResolver = null;
         Source source = null;
-        Document libraryDocument = null;
 
-        Library lib = null;
-
-        if(getLogger().isDebugEnabled())
-        	getLogger().debug("Getting library instance: '"+librarysource+"' relative to '"+relative+"'");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Loading library: '" + sourceURI + "' relative to '" + baseURI + "'");
+        }
 
         try {
-            sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
-            source = sourceResolver.resolveURI(librarysource, relative, null);
-
-            lib = (Library)this.cacheManager.get(source, PREFIX);
-
-            if( lib != null && lib.dependenciesHaveChanged() ) {
-            	if(getLogger().isDebugEnabled())
-                	getLogger().debug("Library dependencies changed, invalidating!");
-
-            	lib = null;
+            try {
+                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+                source = sourceResolver.resolveURI(sourceURI, baseURI, null);
+            } catch (Exception e) {
+                throw new LibraryException("Unable to resolve library.",
+                                           e, new LocationImpl("[LibraryManager]", sourceURI));
             }
 
-            if( lib == null ) {
-            	if(getLogger().isDebugEnabled())
-                	getLogger().debug("Library not in cache, creating!");
+            Library lib = (Library) this.cacheManager.get(source, PREFIX);
+            if (lib != null && lib.dependenciesHaveChanged()) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Library IS EXPIRED in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                }
+                lib = null;
+            }
+
+            if (lib == null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Library IS NOT in cache, loading: '" + sourceURI + "' relative to '" + baseURI + "'");
+                }
 
             	try {
                     InputSource inputSource = new InputSource(source.getInputStream());
                     inputSource.setSystemId(source.getURI());
-                    libraryDocument = DomHelper.parse(inputSource, this.serviceManager);
 
+                    Document doc = DomHelper.parse(inputSource, this.manager);
                     lib = newLibrary();
-                    lib.buildLibrary(libraryDocument.getDocumentElement());
+                    lib.buildLibrary(doc.getDocumentElement());
 
                     this.cacheManager.set(lib,source,PREFIX);
-
                 } catch (Exception e) {
-                    throw new CascadingException("Could not parse form definition from " +
-                                                 source.getURI(), e);
+                    throw new LibraryException("Unable to load library.",
+                                               e, new LocationImpl("[LibraryManager]", source.getURI()));
                 }
             }
-        } finally {
-            if (source != null)
-                sourceResolver.release(source);
-            if (sourceResolver != null)
-            	serviceManager.release(sourceResolver);
-        }
 
-        return lib;
+            return lib;
+        } finally {
+            if (source != null) {
+                sourceResolver.release(source);
+            }
+            if (sourceResolver != null) {
+                manager.release(sourceResolver);
+            }
+        }
 	}
 
 	public Library newLibrary() {
-		Library lib = new Library(this);
+		Library lib = new Library(this, bindingManager.getBuilderAssistant());
         lib.enableLogging(getLogger());
-        lib.setAssistant(this.bindingManager.getBuilderAssistant());
-
-        if(getLogger().isDebugEnabled())
-        	getLogger().debug("Created new library! "+lib);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Created new library! " + lib);
+        }
 
         return lib;
 	}
 
 	public void dispose() {
-		this.serviceManager.release(this.cacheManager);
+		this.manager.release(this.cacheManager);
 	    this.cacheManager = null;
-	    this.serviceManager = null;
+	    this.manager = null;
 	}
 
 	public void debug(String msg) {

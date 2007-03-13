@@ -168,7 +168,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             }
         }
         if (getLogger().isDebugEnabled())
-            getLogger().debug("done loading rows " + toString());
+            getLogger().debug("done loading rows " + this);
     }
 
     /**
@@ -290,7 +290,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 //            }
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving rows " + toString());
+            getLogger().debug("done saving rows " + this);
         }
     }
 

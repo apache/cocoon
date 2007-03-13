@@ -91,8 +91,9 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
             // invoke this method with this new beast.
             addMethod.invoke(parent, args);
 
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("InsertBean performed.");
+            }
         } catch (Exception e) {
             throw new CascadingRuntimeException("InsertBean failed.", e);
         }
@@ -125,7 +126,7 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
         // });
         //
         // if (getLogger().isDebugEnabled())
-        //     getLogger().debug("done registered factory for inserting node -- " + toString());
+        //     getLogger().debug("done registered factory for inserting node -- " + this);
     }
 
     public String toString() {

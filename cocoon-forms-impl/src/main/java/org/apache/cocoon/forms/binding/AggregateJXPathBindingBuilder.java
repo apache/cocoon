@@ -64,7 +64,8 @@ public class AggregateJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building aggregate field binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building aggregate field binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }

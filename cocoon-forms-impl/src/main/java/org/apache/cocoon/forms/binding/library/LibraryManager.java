@@ -25,7 +25,7 @@ package org.apache.cocoon.forms.binding.library;
  */
 public interface LibraryManager {
 
-	String ROLE = LibraryManager.class.getName();
+    String ROLE = LibraryManager.class.getName();
 
     /**
      * Create new instance of the {@link Library}.
@@ -39,7 +39,7 @@ public interface LibraryManager {
      * @param sourceURI URI of the library source.
      * @return Library loaded from the source URI.
      */
-	Library load(String sourceURI) throws Exception;
+    Library load(String sourceURI) throws LibraryException;
 
     /**
      * Loads (and caches) a library from specified source URI, resolved relative
@@ -49,7 +49,7 @@ public interface LibraryManager {
      * @param baseURI Base URI of the library source.
      * @return Library loaded from the source URI.
      */
-	Library load(String sourceURI, String baseURI) throws Exception;
+    Library load(String sourceURI, String baseURI) throws LibraryException;
 
     /**
      * Get the cached instance of the library loaded from the specified source
@@ -58,7 +58,7 @@ public interface LibraryManager {
      * @param sourceURI URI of the library source.
      * @return Cached instance of the library, or null if it was not loaded.
      */
-	boolean get(String sourceURI) throws Exception;
+    Library get(String sourceURI) throws LibraryException;
 
     /**
      * Get the cached instance of the library loaded from the specified source
@@ -68,5 +68,5 @@ public interface LibraryManager {
      * @param baseURI Base URI of the library source.
      * @return Cached instance of the library, or null if it was not loaded.
      */
-	boolean get(String sourceURI, String baseURI) throws Exception;
+    Library get(String sourceURI, String baseURI) throws LibraryException;
 }

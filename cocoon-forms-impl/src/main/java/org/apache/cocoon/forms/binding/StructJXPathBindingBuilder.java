@@ -67,7 +67,8 @@ public class StructJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building struct binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building struct binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }

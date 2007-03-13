@@ -17,7 +17,6 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.util.location.LocationAttributes;
 
 import org.w3c.dom.Element;
 
@@ -69,12 +68,12 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
     throws BindingException {
         if (bindingElm.hasAttribute("unique-row-id")) {
             throw new BindingException("Attribute 'unique-row-id' is no more supported, use <fb:identity> instead",
-                                       LocationAttributes.getLocation(bindingElm));
+                                       DomHelper.getLocationObject(bindingElm));
         }
 
         if (bindingElm.hasAttribute("unique-path")) {
             throw new BindingException("Attribute 'unique-path' is no more supported, use <fb:identity> instead",
-                                       LocationAttributes.getLocation(bindingElm));
+                                       DomHelper.getLocationObject(bindingElm));
         }
 
         try {
@@ -92,7 +91,7 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
             String adapterClass =
             	DomHelper.getAttribute(bindingElm, "adapter-class", null);
 
-//          do inheritance
+            // do inheritance
             RepeaterJXPathBinding otherBinding = (RepeaterJXPathBinding)assistant.getContext().getSuperBinding();
             JXPathBindingBase[] existingOnBind = null;
             JXPathBindingBase[] existingOnDelete = null;
@@ -184,8 +183,8 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building repeater binding defined at " +
-                            DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building repeater binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }

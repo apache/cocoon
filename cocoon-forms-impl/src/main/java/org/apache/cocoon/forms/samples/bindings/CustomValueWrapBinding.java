@@ -82,7 +82,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
      * @return the configured binding
      * @throws BindingException when the creation fails
      */
-    public static Binding createBinding(Element config) throws BindingException{
+    public static Binding createBinding(Element config) throws BindingException {
 
         try {
             String pfx = DomHelper.getAttribute(config, "prefixchar", null);
@@ -93,7 +93,8 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
             
             return new CustomValueWrapBinding(prefixChar, suffixChar);
         } catch (Exception e) {
-            throw new BindingException("Could not create instance of CustomValueWrapBinding." ,e);
+            throw new BindingException("Could not create instance of CustomValueWrapBinding.", e,
+                                       DomHelper.getLocationObject(config));
         }
     }
 }

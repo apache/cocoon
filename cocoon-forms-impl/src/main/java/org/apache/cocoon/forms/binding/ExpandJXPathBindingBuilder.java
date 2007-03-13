@@ -28,8 +28,8 @@ import org.w3c.dom.Element;
  */
 public class ExpandJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.forms.binding.JXPathBindingBuilderBase#buildBinding(org.w3c.dom.Element, org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant)
+	/**
+	 * @see JXPathBindingBuilderBase#buildBinding(Element, JXPathBindingManager.Assistant)
 	 */
 	public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant)
     throws BindingException {
@@ -37,15 +37,16 @@ public class ExpandJXPathBindingBuilder extends JXPathBindingBuilderBase {
 		Library lib = assistant.getContext().getLocalLibrary();
 
 		String id = DomHelper.getAttribute(bindingElm, "id", null);
-
         if (id == null) {
-            throw new BindingException("Attribute id is required! (at " + DomHelper.getLocation(bindingElm) + ")");
+            throw new BindingException("Attribute id is required",
+                                       DomHelper.getLocationObject(bindingElm));
         }
 
         try {
             return (JXPathBindingBase) lib.getBinding(id);
         } catch (LibraryException e) {
-            throw new BindingException("Could not expand binding from library! (at " + DomHelper.getLocation(bindingElm) + ")", e);
+            throw new BindingException("Could not expand binding from library", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }

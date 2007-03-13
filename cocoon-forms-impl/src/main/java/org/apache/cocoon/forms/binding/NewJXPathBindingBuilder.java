@@ -61,7 +61,8 @@ public class NewJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building new binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building new binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }
