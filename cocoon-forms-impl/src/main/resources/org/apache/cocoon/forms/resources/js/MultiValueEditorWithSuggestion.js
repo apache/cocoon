@@ -72,7 +72,7 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
         postCreate: function() {
             this.entry.dataUrl = this.dataUrl;
             this.entry.dataProvider.searchUrl = this.dataUrl;
-            dojo.event.connect(this.entry.textInputNode, "onkeypress", this, "_processInputKey");
+            dojo.event.connect("after", this.entry, "_handleKeyEvents", this, "_processInputKey");
         },
 
         _readData: function(origFrag) {
