@@ -65,9 +65,10 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget widget = selectWidget(frmModel, this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        if (!(widget instanceof Union))
+        if (!(widget instanceof Union)) {
             throw new RuntimeException("Binding: Expected Union widget, but received class: \"" +
                     widget.getClass().getName() + "\".");
+        }
         Union unionWidget = (Union)widget;
         Binding[] subBindings = getChildBindings();
         if (subBindings != null) {
@@ -77,7 +78,7 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
             }
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done loading " + toString());
+            getLogger().debug("done loading " + this);
         }
     }
 
@@ -97,7 +98,7 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
             }
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + toString());
+            getLogger().debug("done saving " + this);
         }
     }
 

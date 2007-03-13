@@ -63,7 +63,7 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
     public void doSave(Widget frmModel, JXPathContext jxpc) {
         jxpc.setValue("@" + this.name, this.value);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + toString());
+            getLogger().debug("done saving " + this);
         }
     }
 

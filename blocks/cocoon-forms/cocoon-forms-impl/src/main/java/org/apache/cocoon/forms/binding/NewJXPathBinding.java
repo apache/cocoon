@@ -58,7 +58,7 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
     private void resolve() throws BindingException {
         classBinding = getClass(widgetId);
         if (classBinding == null) {
-            throw new BindingException("Class \"" + widgetId + "\" does not exist");
+            throw new BindingException("Class '" + widgetId + "' does not exist");
         }
     }
 

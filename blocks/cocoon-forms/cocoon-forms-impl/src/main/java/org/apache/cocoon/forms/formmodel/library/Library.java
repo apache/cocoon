@@ -94,6 +94,7 @@ public class Library extends AbstractLogEnabled {
      * @param key the key
      * @param sourceURI the source of the library to be know as "key"
      * @return true if there was no such key used before, false otherwise
+     * @throws LibraryException if unable to load included library
      */
     public boolean includeAs(String key, String sourceURI)
     throws LibraryException {
@@ -106,7 +107,6 @@ public class Library extends AbstractLogEnabled {
     }
 
     public WidgetDefinition getDefinition(String key) throws LibraryException {
-
         String librarykey = null;
         String definitionkey = key;
 
@@ -125,7 +125,7 @@ public class Library extends AbstractLogEnabled {
                 try {
                     return manager.load(dependency.dependencyURI, sourceURI).getDefinition(definitionkey);
                 } catch (Exception e) {
-                    throw new LibraryException("Couldn't get Library key='" + librarykey + "' source='" + dependency + "", e);
+                    throw new LibraryException("Couldn't get library '" + librarykey + "' source='" + dependency + "'", e);
                 }
             } else {
                 throw new LibraryException("Library '" + librarykey + "' does not exist! (lookup: '" + key + "')");

@@ -19,8 +19,6 @@ public class TreeModelJXPath extends JXPathBindingBase {
 	
     /**
      * Constructs FieldJXPathBinding.
-     *
-     * @param convertor may be null
      */
     public TreeModelJXPath(JXPathBindingBuilderBase.CommonAttributes commonAtts,
                               String widgetId,
@@ -52,7 +50,7 @@ public class TreeModelJXPath extends JXPathBindingBase {
     }
 
 	public void doSave(Widget frmModel, JXPathContext jxpc)
-			throws BindingException {
+    throws BindingException {
 		// Does nothing
 	}
 

@@ -166,22 +166,25 @@ public class RepeaterJXPathAdapter implements RepeaterAdapter {
 		public int compare(Object o1, Object o2) {
 			RepeaterItem i1 = (RepeaterItem) o1;
 			RepeaterItem i2 = (RepeaterItem) o2;
-			Object val1 = null;
+
+            Object val1;
 			if (i1.getRow() != null) {
 				val1 = i1.getRow().getChild(field).getValue();
 			} else {
 				val1 = i1.getContext().getValue(path);
 			}
-			Object val2 = null;
+
+            Object val2;
 			if (i2.getRow() != null) {
 				val2 = i2.getRow().getChild(field).getValue();
 			} else {
 				val2 = i2.getContext().getValue(path);
 			}
-			if (val1 instanceof Comparable) {
-				return ((Comparable)val1).compareTo(val2);
-			}
-			return val1.toString().compareTo(val2.toString());
+
+            if (val1 instanceof Comparable) {
+                return ((Comparable) val1).compareTo(val2);
+            }
+            return val1.toString().compareTo(val2.toString());
 		}
 
 	}
@@ -194,8 +197,8 @@ public class RepeaterJXPathAdapter implements RepeaterAdapter {
 		public int compare(Object o1, Object o2) {
 			RepeaterItem i1 = (RepeaterItem) o1;
 			RepeaterItem i2 = (RepeaterItem) o2;
-			return ((Integer)i1.getHandle()).compareTo((Integer)i2.getHandle());
-		}
+            return ((Integer) i1.getHandle()).compareTo((Integer) i2.getHandle());
+        }
 	}
 
 	public RepeaterItem generateItem(RepeaterRow row) {

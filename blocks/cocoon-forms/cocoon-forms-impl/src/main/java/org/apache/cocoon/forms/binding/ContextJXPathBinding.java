@@ -86,11 +86,12 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
         if (ptr.getNode() != null) {
             JXPathContext subContext = jxpc.getRelativeContext(ptr);
             super.doLoad(frmModel, subContext);
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("done loading " + toString());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("done loading " + this);
+            }
         } else {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("non-existent path: skipping " + toString());
+                getLogger().debug("non-existent path: skipping " + this);
             }
         }
     }
@@ -112,7 +113,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
         JXPathContext subContext = jxpc.getRelativeContext(ptr);
         super.doSave(frmModel, subContext);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + toString());
+            getLogger().debug("done saving " + this);
         }
     }
 

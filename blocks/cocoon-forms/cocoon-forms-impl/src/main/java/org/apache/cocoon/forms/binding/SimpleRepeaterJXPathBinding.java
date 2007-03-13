@@ -112,14 +112,14 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
             }
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done loading rows " + toString());
+            getLogger().debug("done loading rows " + this);
         }
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx)
     throws BindingException {
         // Find the repeater
-        Repeater repeater = (Repeater)selectWidget(frmModel, this.repeaterId);
+        Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
 
         if (repeater.getSize() == 0 && this.deleteIfEmpty) {
             // Repeater is empty : erase all
@@ -138,8 +138,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
                         this.rowPath + '[' + (i+1) + ']');
                 JXPathContext rowContext =
                     repeaterContext.getRelativeContext(rowPtr);
-                this.rowBinding.saveFormToModel(repeater.getRow(i),
-                        rowContext);
+                this.rowBinding.saveFormToModel(repeater.getRow(i), rowContext);
             }
         }
     }

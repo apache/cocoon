@@ -89,7 +89,7 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
         // });
         //
         // if (getLogger().isDebugEnabled())
-        //     getLogger().debug("done registered factory for inserting node -- " + toString());
+        //     getLogger().debug("done registered factory for inserting node -- " + this);
     }
 
     public String toString() {

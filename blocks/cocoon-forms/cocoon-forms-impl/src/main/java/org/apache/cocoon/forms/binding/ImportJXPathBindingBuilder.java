@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  */
 public class ImportJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
-	/* (non-Javadoc)
+	/**
 	 * @see JXPathBindingBuilderBase#buildBinding(Element, JXPathBindingManager.Assistant)
 	 */
 	public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant)
@@ -39,18 +39,18 @@ public class ImportJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
         String prefix = DomHelper.getAttribute(bindingElm, "prefix", null);
         String uri = DomHelper.getAttribute(bindingElm, "uri", null);
-
         if (prefix == null || uri == null) {
-            throw new BindingException("Import needs to specify both @uri and @prefix! (at " + DomHelper.getLocation(bindingElm) + ")");
+            throw new BindingException("Import needs to specify both @uri and @prefix!",
+                                       DomHelper.getLocationObject(bindingElm));
         }
 
         try {
             lib.includeAs(prefix, uri);
         } catch (LibraryException e) {
-            throw new BindingException("Could not import library !(at " + DomHelper.getLocation(bindingElm) + ")", e);
+            throw new BindingException("Could not import library", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
 
         return new ImportJXPathBinding();
 	}
-
 }

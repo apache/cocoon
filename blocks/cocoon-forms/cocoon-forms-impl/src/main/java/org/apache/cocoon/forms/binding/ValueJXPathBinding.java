@@ -118,7 +118,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
 
         widget.setValue(value);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Done loading " + toString() + " -- value= " + value);
+            getLogger().debug("Done loading " + this + " -- value= " + value);
         }
     }
 
@@ -163,7 +163,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
         }
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + toString() + " -- value= " + value + " -- on-update == " + update);
+            getLogger().debug("done saving " + this + " -- value= " + value + " -- on-update == " + update);
         }
     }
 

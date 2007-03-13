@@ -120,8 +120,8 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             // Call action listeners, if any
             super.fireActionEvent(event);
 
-            Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
-            
+            Repeater repeater = ((RepeaterAction) event.getSource()).getRepeater();
+
             // and actually delete the rows
             for (int i = repeater.getSize() - 1; i >= 0; i--) {
                 Repeater.RepeaterRow row = repeater.getRow(i);
@@ -129,15 +129,15 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                     repeater.removeRow(i);
                 }
             }
-            
+
             if (repeater instanceof EnhancedRepeater) {
-            	try {
-					((EnhancedRepeater)repeater).refreshPage();
-				} catch (BindingException e) {
-					throw new CascadingRuntimeException("Error refreshing repeater page", e);
-				}
+                try {
+                    ((EnhancedRepeater) repeater).refreshPage();
+                } catch (BindingException e) {
+                    throw new CascadingRuntimeException("Error refreshing repeater page", e);
+                }
             }
-            
+
         }
     }
 
@@ -153,18 +153,18 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             super(repeaterName);
             this.insertRows = insertRows;
 
-            this.addActionListener(new ActionListener() {
+            addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
                     if (repeater instanceof EnhancedRepeater) {
                     	try {
-							((EnhancedRepeater)repeater).goToPage(((EnhancedRepeater)repeater).getMaxPage());
-						} catch (BindingException e) {
+                            ((EnhancedRepeater) repeater).goToPage(((EnhancedRepeater) repeater).getMaxPage());
+                        } catch (BindingException e) {
 							throw new CascadingRuntimeException("Error switching page", e);
 						}
                     }
-                    for (int i=0; i<AddRowActionDefinition.this.insertRows; i++) {
-                        repeater.addRow(); 
+                    for (int i = 0; i < AddRowActionDefinition.this.insertRows; i++) {
+                        repeater.addRow();
                     }
                 }
             });

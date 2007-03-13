@@ -140,8 +140,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
             } catch (BindingException e) {
                 throw e;
             } catch (Exception e) {
-                throw new BindingException("Error creating binding from " +
-                        source.getURI(), e);
+                throw new BindingException("Error creating binding from " + source.getURI(), e);
             }
         }
 
@@ -157,8 +156,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
                 source = sourceResolver.resolveURI(bindingURI);
             } catch (Exception e) {
-                throw new BindingException("Error resolving binding source: " +
-                        bindingURI);
+                throw new BindingException("Error resolving binding source: " + bindingURI);
             }
             return createBinding(source);
         } finally {
@@ -174,8 +172,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
     public Binding createBinding(Element bindingElement) throws BindingException {
         Binding binding = null;
         if (BindingManager.NAMESPACE.equals(bindingElement.getNamespaceURI())) {
-            binding = getBuilderAssistant()
-            .getBindingForConfigurationElement(bindingElement);
+            binding = getBuilderAssistant().getBindingForConfigurationElement(bindingElement);
             ((JXPathBindingBase) binding).enableLogging(getLogger());
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Creation of new binding finished. " + binding);
@@ -217,14 +214,12 @@ public class JXPathBindingManager extends AbstractLogEnabled
         private BindingBuilderContext context = new BindingBuilderContext();
         private Stack contextStack = new Stack();
 
-
         private JXPathBindingBuilderBase getBindingBuilder(String bindingType)
         throws BindingException {
             try {
                 return (JXPathBindingBuilderBase) bindingBuilderSelector.select(bindingType);
             } catch (ServiceException e) {
-                throw new BindingException("Cannot handle binding element with " + "name \"" +
-                                           bindingType + "\".", e);
+                throw new BindingException("Cannot handle binding element '" + bindingType + "'.", e);
             }
         }
 
@@ -240,10 +235,9 @@ public class JXPathBindingManager extends AbstractLogEnabled
             boolean flag = false;
             if (context.getLocalLibrary() == null) {
                 // FIXME Use newLibrary()?
-                Library lib = new Library(libraryManager);
+                Library lib = new Library(libraryManager, getBuilderAssistant());
                 lib.enableLogging(getMyLogger());
                 context.setLocalLibrary(lib);
-                lib.setAssistant(getBuilderAssistant());
                 lib.setSourceURI(LocationAttributes.getURI(configElm));
                 flag = true;
             }
@@ -251,8 +245,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
             if (context.getLocalLibrary() != null && configElm.hasAttribute("extends")) {
                 try {
                     context.setSuperBinding(context.getLocalLibrary().getBinding(configElm.getAttribute("extends")));
-
-                } catch(LibraryException e) {
+                } catch (LibraryException e) {
                     // throw new RuntimeException("Error extending binding! (at "+DomHelper.getLocation(configElm)+")", e);
                     throw new NestableRuntimeException("Error extending binding! (at " + DomHelper.getLocation(configElm) + ")", e);
                 }
@@ -261,7 +254,6 @@ public class JXPathBindingManager extends AbstractLogEnabled
             }
 
             JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
-
             if (flag && childBinding != null) {
                 childBinding.setEnclosingLibrary(context.getLocalLibrary());
             }
@@ -322,8 +314,9 @@ public class JXPathBindingManager extends AbstractLogEnabled
          */
         public JXPathBindingBase[] makeChildBindings(Element parentElement, JXPathBindingBase[] existingBindings)
         throws BindingException {
-            if (existingBindings == null)
+            if (existingBindings == null) {
                 existingBindings = new JXPathBindingBase[0];
+            }
 
             if (parentElement != null) {
                 Element[] childElements = DomHelper.getChildElements(
@@ -331,20 +324,20 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 if (childElements.length > 0) {
                     JXPathBindingBase[] childBindings = new JXPathBindingBase[childElements.length];
                     for (int i = 0; i < childElements.length; i++) {
-
                         pushContext();
                         context.setSuperBinding(null);
 
                         String id = DomHelper.getAttribute(childElements[i], "id", null);
                         String path = DomHelper.getAttribute(childElements[i], "path", null);
-                        if(context.getLocalLibrary()!=null && childElements[i].getAttribute("extends")!=null) {
+                        if (context.getLocalLibrary() != null && childElements[i].getAttribute("extends") != null) {
                             try {
                                 context.setSuperBinding(context.getLocalLibrary().getBinding(childElements[i].getAttribute("extends")));
 
-                                if(context.getSuperBinding() == null) // not found in library
-                                    context.setSuperBinding(getBindingByIdOrPath(id,path,existingBindings));
-
-                            } catch(LibraryException e) {
+                                if (context.getSuperBinding() == null) {
+                                    // not found in library
+                                    context.setSuperBinding(getBindingByIdOrPath(id, path, existingBindings));
+                                }
+                            } catch (LibraryException e) {
                                 throw new BindingException("Error extending binding! (at "+DomHelper.getLocation(childElements[i])+")",e);
                             }
                         }

@@ -62,7 +62,7 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Union unionWidget = (Union)frmModel;
+        Union unionWidget = (Union) frmModel;
         if (widgetId.equals(unionWidget.getValue())) {
             // JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
             Binding[] subBindings = getChildBindings();
@@ -73,7 +73,7 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
                 }
             }
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("done loading " + toString());
+                getLogger().debug("done loading " + this);
             }
         }
     }
@@ -84,7 +84,7 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        Union unionWidget = (Union)frmModel;
+        Union unionWidget = (Union) frmModel;
         if (widgetId.equals(unionWidget.getValue())) {
             // JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
             Binding[] subBindings = getChildBindings();
@@ -95,7 +95,7 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
                 }
             }
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("done saving " + toString());
+                getLogger().debug("done saving " + this);
             }
         }
     }

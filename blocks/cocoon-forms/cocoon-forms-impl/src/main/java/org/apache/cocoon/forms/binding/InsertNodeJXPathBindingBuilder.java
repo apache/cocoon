@@ -63,7 +63,7 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
             String src = DomHelper.getAttribute(bindingElm, "src", null);
             if (src != null) {
                 ServiceManager manager = assistant.getServiceManager();
-                SourceResolver sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+                SourceResolver sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
                 Source source = null;
                 try {
                     source = sourceResolver.resolveURI(src);
@@ -72,14 +72,18 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
                     String xpath = DomHelper.getAttribute(bindingElm, "xpath", null);
                     if (xpath != null) {
-                        XPathProcessor xpathProcessor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
+                        XPathProcessor xpathProcessor = (XPathProcessor) manager.lookup(XPathProcessor.ROLE);
                         try {
                             Node node = xpathProcessor.selectSingleNode(document, xpath);
-                            if (node == null)
-                                throw new BindingException("XPath expression \"" + xpath + "\" didn't return a result.");
-                            if (!(node instanceof Element))
-                                throw new BindingException("XPath expression \"" + xpath + "\" did not return an element node.");
-                            element = (Element)node;
+                            if (node == null) {
+                                throw new BindingException("XPath expression '" + xpath + "' didn't return a result.",
+                                                           DomHelper.getLocationObject(bindingElm));
+                            }
+                            if (!(node instanceof Element)) {
+                                throw new BindingException("XPath expression '" + xpath + "' did not return an element node.",
+                                                           DomHelper.getLocationObject(bindingElm));
+                            }
+                            element = (Element) node;
                         } finally {
                             manager.release(xpathProcessor);
                         }
@@ -92,7 +96,7 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
                     }
                     manager.release(sourceResolver);
                 }
-            } else if(bindingElm.hasChildNodes()) {
+            } else if (bindingElm.hasChildNodes()) {
                 // FIXME: using the binding's document prevents it to be garbage collected.
                 //        --> create a new Document and use doc.importNode();
                 domTemplate = bindingElm.getOwnerDocument().createDocumentFragment();
@@ -101,7 +105,7 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 for (int i = 0; i < size; i++) {
                     Node node = nested.item(i).cloneNode(true);
                     if (node.getNodeType() == Node.ELEMENT_NODE) {
-                        LocationAttributes.remove((Element)node, true);
+                        LocationAttributes.remove((Element) node, true);
                     }
                     domTemplate.appendChild(node);
                 }
@@ -118,8 +122,11 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
             }
 
             return new InsertNodeJXPathBinding(commonAtts, domTemplate);
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building the insert-node binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building the insert-node binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }
