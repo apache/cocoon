@@ -70,7 +70,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
         super.doLoad(aggregate, subContext);
         aggregate.combineFields();
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Done loading " + toString());
+            getLogger().debug("Done loading " + this);
         }
     }
 
@@ -87,7 +87,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
                 jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doSave(aggregate, subContext);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Done saving " + toString());
+            getLogger().debug("Done saving " + this);
         }
     }
 

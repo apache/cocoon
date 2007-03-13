@@ -107,12 +107,14 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
             //TODO: should we eventually remove this?
             //throw an error if people are still using the old-style @read-only or @readonly
             if (DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false)) {
-                throw new BindingException("Error in binding file " + location
-                        + "\nThe usage of the attribute @readonly has been deprecated in favour of @direction.");
+                throw new BindingException("Error in the binding." +
+                                           "\nThe usage of the attribute @readonly has been deprecated in favour of @direction.",
+                                           DomHelper.getLocationObject(bindingElm));
             }
             if (DomHelper.getAttributeAsBoolean(bindingElm, "read-only", false)) {
-                throw new BindingException("Error in binding file " + location
-                        + "\nThe usage of the attribute @read-only has been deprecated in favour of @direction.");
+                throw new BindingException("Error in the binding." +
+                                           "\nThe usage of the attribute @read-only has been deprecated in favour of @direction.",
+                                           DomHelper.getLocationObject(bindingElm));
             }
 
             String direction = DomHelper.getAttribute(bindingElm, "direction", "both");
@@ -130,9 +132,11 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
             Map nsDeclarationMap = DomHelper.getInheritedNSDeclarations(bindingElm);
             // we (actually jxpath) doesn't support un-prefixed namespace-declarations:
             // so we decide to break on those above silently ignoring them
-            if (nsDeclarationMap != null && nsDeclarationMap.values().contains(null))
-                throw new BindingException("Error in binding file " + location
-                                + "\nBinding doesn't support having namespace-declarations without explicit prefixes.");
+            if (nsDeclarationMap != null && nsDeclarationMap.values().contains(null)) {
+                throw new BindingException("Error in the binding." +
+                                           "\nBinding doesn't support having namespace-declarations without explicit prefixes.",
+                                           DomHelper.getLocationObject(bindingElm));
+            }
 
             String jxPathFactoryName = bindingElm.getAttribute("jxpath-factory");
             AbstractFactory jxPathFactory = null;
@@ -141,7 +145,8 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
                     Class jxPathFactoryClass = JXPathBindingBuilderBase.class.getClassLoader().loadClass(jxPathFactoryName);
                     jxPathFactory = (AbstractFactory)jxPathFactoryClass.newInstance();
                 } catch (Exception e) {
-                    throw new BindingException("Error with specified jxpath factory " + jxPathFactoryName, e);
+                    throw new BindingException("Error with specified jxpath factory " + jxPathFactoryName, e,
+                                               DomHelper.getLocationObject(bindingElm));
                 }
             }
 
@@ -149,33 +154,38 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
      }
 
     public static CommonAttributes mergeCommonAttributes(CommonAttributes existing, CommonAttributes extra) {
-
-    	if (extra == null) {
+        if (extra == null) {
             return existing;
         }
 
         Boolean leniency;
-        if (existing.leniency == null)
+        if (existing.leniency == null) {
             leniency = extra.leniency;
-        else
+        } else {
             leniency = existing.leniency;
+        }
 
         String strLeniency = null;
-        if (leniency != null)
+        if (leniency != null) {
             strLeniency = leniency.toString();
+        }
 
         String direction = existing.direction;
-        if (extra.direction != null) // was defined
+        if (extra.direction != null) {
+            // was defined
             direction = extra.direction;
+        }
 
         AbstractFactory jxPathFactory = existing.jxPathFactory;
-        if (extra.jxPathFactory != null)
+        if (extra.jxPathFactory != null) {
             jxPathFactory = extra.jxPathFactory;
+        }
 
         return new CommonAttributes(extra.location, direction, strLeniency, extra.nsDeclarations, jxPathFactory);
     }
@@ -185,7 +195,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
      * member fields indicating the activity of the separate load and save
      * actions of a given binding.
      */
-    public static class CommonAttributes{
+    public static class CommonAttributes {
 
         /**
          * store direction (load/save enabledness) too for easier merging
@@ -221,7 +231,8 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
         CommonAttributes(String location, String direction, String leniency,
                          Map nsDeclarations, AbstractFactory jxPathFactory){
-            this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency), nsDeclarations, jxPathFactory);
+            this(location, isLoadEnabled(direction), isSaveEnabled(direction),
+                 decideLeniency(leniency), nsDeclarations, jxPathFactory);
             this.direction = direction;
         }
 

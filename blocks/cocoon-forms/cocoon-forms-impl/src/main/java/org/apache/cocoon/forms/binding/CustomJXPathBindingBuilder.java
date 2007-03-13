@@ -143,7 +143,8 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building custom binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building custom binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }

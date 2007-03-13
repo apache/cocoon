@@ -16,19 +16,29 @@
  */
 package org.apache.cocoon.forms.binding.library;
 
-import org.apache.avalon.framework.CascadingException;
+import org.apache.cocoon.forms.binding.BindingException;
+import org.apache.cocoon.util.location.Location;
 
 /**
  * This exception is thrown when something specific to the library system goes wrong.
  *
  * @version $Id$
  */
-public class LibraryException extends CascadingException {
+public class LibraryException extends BindingException {
+
     public LibraryException(String message) {
         super(message);
     }
 
-    public LibraryException(String message, Exception e) {
-        super(message, e);
+    public LibraryException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public LibraryException(String message, Location location) {
+        super(message, location);
+    }
+
+    public LibraryException(String message, Throwable cause, Location location) {
+        super(message, cause, location);
     }
 }

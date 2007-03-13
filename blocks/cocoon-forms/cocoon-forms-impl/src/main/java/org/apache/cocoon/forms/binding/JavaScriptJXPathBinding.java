@@ -130,7 +130,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             }
         } else {
             if (getLogger().isInfoEnabled()) {
-                getLogger().info("[Javascript Binding] - saveForm: No code available on the javascript binding with id \"" + this.getId() + "\"");
+                getLogger().info("[Javascript Binding] - saveForm: No code available on the javascript binding with id '" + getId() + "'");
             }
         }
     }

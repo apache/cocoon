@@ -176,7 +176,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         }
 
         if (getLogger().isDebugEnabled())
-            getLogger().debug("done loading rows " + toString());
+            getLogger().debug("done loading rows " + this);
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {

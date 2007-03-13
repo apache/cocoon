@@ -74,7 +74,7 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
     public Locale getLocale() { return convertorLocale; }
 
     public void doLoad(Widget frmModel, JXPathContext jctx) throws BindingException {
-        Widget widget = selectWidget(frmModel,this.multiValueId);
+        Widget widget = selectWidget(frmModel, this.multiValueId);
         if (widget == null) {
             throw new BindingException("The widget with the ID [" + this.multiValueId
                     + "] referenced in the binding does not exist in the form definition.");
@@ -112,8 +112,9 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
             widget.setValue(list.toArray());
         }
 
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("done loading values " + toString());
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done loading values " + this);
+        }
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
@@ -167,7 +168,7 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
 
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + toString() + " -- on-update == " + update);
+            getLogger().debug("done saving " + this + " -- on-update == " + update);
         }
 
 

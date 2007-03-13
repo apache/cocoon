@@ -102,9 +102,8 @@ public class TempRepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException(
-                    "Error building temp-repeater binding defined at " +
-                    DomHelper.getLocation(bindingElem), e);
+            throw new BindingException("Error building temp-repeater binding", e,
+                                       DomHelper.getLocationObject(bindingElem));
         }
     }
 }

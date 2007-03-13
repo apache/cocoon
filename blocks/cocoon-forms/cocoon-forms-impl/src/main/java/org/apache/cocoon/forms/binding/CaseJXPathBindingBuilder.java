@@ -65,7 +65,8 @@ public class CaseJXPathBindingBuilder extends JXPathBindingBuilderBase {
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building case binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException("Error building case binding", e,
+                                       DomHelper.getLocationObject(bindingElm));
         }
     }
 }
