@@ -28,6 +28,11 @@ public class SubmitDefinition extends ActionDefinition {
 
     private boolean validateForm;
 
+    
+    public SubmitDefinition() {
+        validateForm = true;
+    }
+
     /**
      * initialize this definition with the other, sort of like a copy constructor
      */

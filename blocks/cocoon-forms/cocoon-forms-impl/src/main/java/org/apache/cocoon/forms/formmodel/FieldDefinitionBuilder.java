@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * Builds {FieldDefinition}s.
+ * Builds {@link FieldDefinition}s.
  *
  * @version $Id$
  */
@@ -39,14 +39,15 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
         super.setupDefinition(widgetElement, definition);
 
         // parse "@required"
-        if(widgetElement.hasAttribute("required"))
+        if (widgetElement.hasAttribute("required")) {
             definition.setRequired(DomHelper.getAttributeAsBoolean(widgetElement, "required", false));
+        }
 
         // parse "@whitespace"
         Whitespace whitespace = Whitespace.getEnum(DomHelper.getAttribute(widgetElement, "whitespace", "trim"));
-        if(whitespace == null) {
+        if (whitespace == null) {
             throw new FormsException("Unknown value for 'whitespace' attribute; valid values are 'trim', 'trim-start', 'trim-end', and 'preserve'.",
-                    DomHelper.getLocationObject(widgetElement));
+                                     DomHelper.getLocationObject(widgetElement));
         }
         definition.setWhitespaceTrim(whitespace);
 
