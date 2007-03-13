@@ -42,7 +42,7 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * @version $Id: BlockServlet.java 496060 2007-01-14 11:03:06Z danielf $
+ * @version $Id$
  */
 public class ServletService extends HttpServlet
     implements ApplicationContextAware, ServletContextAware, BeanNameAware,
