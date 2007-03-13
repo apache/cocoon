@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -37,7 +38,7 @@ import org.springframework.beans.factory.BeanCreationException;
 /**
  * Use this servlet as entry point to Cocoon. It wraps the @link {@link TreeProcessor} and delegates
  * all requests to it.
- * 
+ *
  * @version $Id$
  */
 public class SitemapServlet extends HttpServlet {
@@ -48,21 +49,31 @@ public class SitemapServlet extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
-        
+
         this.processor = new RequestProcessor(this.getServletContext());
     }
 
     /**
      * Process the incoming request using the Cocoon tree processor.
      */
-    protected void service(HttpServletRequest request, HttpServletResponse response) 
+    protected void service(HttpServletRequest request, HttpServletResponse response)
     	throws ServletException, IOException {
 
         this.processor.service(request, response);
     }
-    
+
+    /**
+     * @see javax.servlet.GenericServlet#destroy()
+     */
+    public void destroy() {
+        if ( this.processor != null ) {
+            this.processor.destroy();
+        }
+        super.destroy();
+    }
+
     protected class RequestProcessor extends org.apache.cocoon.servlet.RequestProcessor {
-        private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap"; 
+        private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap";
         private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
 
         private Configuration treeProcessorConfiguration;
@@ -89,7 +100,7 @@ public class SitemapServlet extends HttpServlet {
             // create the tree processor
             try {
                 TreeProcessor treeProcessor =  new TreeProcessor();
-                // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all. 
+                // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all.
                 processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
                         this.log,
                         null,
@@ -99,6 +110,13 @@ public class SitemapServlet extends HttpServlet {
                 throw new BeanCreationException("Could not create TreeProcessor", e);
             }
             return processor;
+        }
+
+        protected void destroy() {
+            if ( this.processor != null ) {
+                ContainerUtil.dispose(this.processor);
+                this.processor = null;
+            }
         }
 
         /* (non-Javadoc)
@@ -118,7 +136,7 @@ public class SitemapServlet extends HttpServlet {
 
         /**
          * Create an Avalon Configuration @link {@link Configuration} that configures the tree processor.
-         * @throws IOException 
+         * @throws IOException
          */
         private Configuration createTreeProcessorConfiguration(ServletContext servletContext)
         throws IOException {
@@ -129,7 +147,7 @@ public class SitemapServlet extends HttpServlet {
             String sitemapPath = servletContext.getInitParameter(SITEMAP_PATH_PROPERTY);
             if (sitemapPath== null)
                 sitemapPath= DEFAULT_SITEMAP_PATH;
-            
+
             String sitemapURI;
             URL uri = servletContext.getResource(sitemapPath);
             if (uri == null)
@@ -149,6 +167,6 @@ public class SitemapServlet extends HttpServlet {
         // block servlet context this is not certain to happen in this servlet as
         // it can have been called from a block protocol.
         protected void cleanup() {
-        }        
+        }
     }
 }
