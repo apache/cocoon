@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * TODO Plenty of work left to have a meaningfull implementation of all methods
  *
- * @version $Id: BlockConnection.java 496060 2007-01-14 11:03:06Z danielf $
+ * @version $Id$
  */
 public final class ServletConnection {
 
