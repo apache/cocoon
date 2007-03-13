@@ -20,7 +20,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -38,8 +43,17 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     private PrintWriter writer;
     private boolean committed;
     private Locale locale;
+    private int statusCode;
+
+    private Map headers;
+    
+	/**
+	 * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3 
+	 */
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
     public BlockCallHttpServletResponse() {
+    	headers = new HashMap();
     }
 
     /* (non-Javadoc)
@@ -53,28 +67,31 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
      */
     public void addDateHeader(String name, long date) {
-        // Ignore
+    	//this class does not support multivalue headers
+        setDateHeader(name, date);
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String, java.lang.String)
      */
     public void addHeader(String name, String value) {
-        // Ignore
+    	//this class does not support multivalue headers
+    	setHeader(name, value);
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String, int)
      */
     public void addIntHeader(String name, int value) {
-        // Ignore
+    	//this class does not support multivalue headers
+    	setIntHeader(name, value);
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#containsHeader(java.lang.String)
      */
     public boolean containsHeader(String name) {
-        return false;
+        return headers.containsKey(name);
     }
 
     /* (non-Javadoc)
@@ -265,21 +282,47 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
      */
     public void setDateHeader(String name, long date) {
-        // Ignore
+        setHeader(name, dateFormat.format(new Date(date)));
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
+     */    
+    public long getDateHeader(String name) {
+    	String header = getHeader(name);
+    	if (header == null) return -1;
+    	try {
+			return dateFormat.parse(header).getTime();
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String, java.lang.String)
      */
     public void setHeader(String name, String value) {
-        // Ignore
+        headers.put(name, value);
+    }
+
+    public String getHeader(String name) {
+    	return (String)headers.get(name);
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
      */
     public void setIntHeader(String name, int value) {
-        // Ignore
+        setHeader(name, String.valueOf(value));
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
+     */
+    public int getIntHeader(String name) {
+    	String header = getHeader(name);
+    	if (header == null) return -1;
+    	return Integer.parseInt(header);
     }
 
     /* (non-Javadoc)
@@ -297,14 +340,18 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.http.HttpServletResponse#setStatus(int)
      */
     public void setStatus(int sc) {
-        // Ignore
+        this.statusCode = sc;
+    }
+
+    public int getStatus() {
+    	return this.statusCode;
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
      */
     public void setStatus(int sc, String sm) {
-        // Ignore
+        throw new UnsupportedOperationException("This method has been deprecated");
     }
 
     public String getContentType() {
