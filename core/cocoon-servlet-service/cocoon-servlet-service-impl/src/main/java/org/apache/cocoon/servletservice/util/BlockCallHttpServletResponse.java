@@ -294,7 +294,7 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     	try {
 			return dateFormat.parse(header).getTime();
 		} catch (ParseException e) {
-			throw new IllegalArgumentException(e);
+			throw new RuntimeException(e);
 		}
     }
 
