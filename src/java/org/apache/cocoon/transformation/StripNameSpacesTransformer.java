@@ -22,8 +22,6 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
