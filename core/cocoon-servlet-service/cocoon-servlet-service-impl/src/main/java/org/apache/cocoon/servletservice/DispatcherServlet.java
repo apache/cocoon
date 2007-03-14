@@ -35,7 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -55,44 +55,26 @@ public class DispatcherServlet
     private static final String MOUNT_PATH = "mountPath";
 
     /** All registered mountable servlets. */
-    private Map mountableServlets = new HashMap();
-
-    /**
-     * The Spring bean factory.
-     */
-    private ListableBeanFactory beanFactory;
+    private Map mountableServlets;
+    
+    /** The startup date of the Spring application context used to setup the  mountable servlets. */
+    private long applicationContextStartDate;
     
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
 
-    
     public void init() throws ServletException {
-    	// get the beanFactory from the web application context
-        this.beanFactory =
-            WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-        
-        // setup logger
-        this.logger.info("DispatcherServlet is initializing");
-        
-        // the returned map contains the bean names as key and the beans as values
-        final Map servlets = 
-            BeanFactoryUtils.beansOfTypeIncludingAncestors(this.beanFactory, Servlet.class);
-        
-        // register and initialize the servlets that has a mount path property
-        final Iterator i = servlets.values().iterator();
-        while ( i.hasNext() ) {
-            final Servlet servlet = (Servlet) i.next();
-            BeanWrapperImpl wrapper = new BeanWrapperImpl(servlet);
-            if (wrapper.isReadableProperty(MOUNT_PATH)) {
-                String mountPath = (String) wrapper.getPropertyValue(MOUNT_PATH);
-                this.logger.debug("DispatcherServlet: initializing servlet " + servlet + " at " + mountPath);
-                this.mountableServlets.put(mountPath, servlet);
-            }
-        }
+        createMountableServletsMap();
         this.log("Block dispatcher was initialized successfully.");        
     }
 
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        ApplicationContext appContext =
+            WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+        if (appContext.getStartupDate() != this.applicationContextStartDate) {
+            createMountableServletsMap(); 
+        }
+        
         String path = req.getPathInfo();
         path = path == null ? "" : path;
         // find the servlet which mount path is the longest prefix of the path info
@@ -122,6 +104,36 @@ public class DispatcherServlet
         }
         
         servlet.service(request, res);
+    }
+    
+    private void createMountableServletsMap() {
+        Map mServlets = new HashMap();
+        // get the beanFactory from the web application context
+        ApplicationContext appContext =
+            WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+
+        // the returned map contains the bean names as key and the beans as values
+        final Map servlets = 
+            BeanFactoryUtils.beansOfTypeIncludingAncestors(appContext, Servlet.class);
+        
+        // register and initialize the servlets that have a mount path property
+        final Iterator i = servlets.values().iterator();
+        while ( i.hasNext() ) {
+            final Servlet servlet = (Servlet) i.next();
+            BeanWrapperImpl wrapper = new BeanWrapperImpl(servlet);
+            if (wrapper.isReadableProperty(MOUNT_PATH)) {
+                String mountPath = (String) wrapper.getPropertyValue(MOUNT_PATH);
+                this.logger.debug("DispatcherServlet: initializing servlet " + servlet + " at " 
+                        + mountPath);
+                mServlets.put(mountPath, servlet);
+            }
+        }
+        this.mountableServlets = mServlets;
+        
+        // set the application context start date
+        this.applicationContextStartDate =  appContext.getStartupDate();
+        
+        this.logger.info("DispatcherServlet is (re)set the table of mountable servlets based on " + appContext);        
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {
