@@ -17,11 +17,7 @@
 
 package org.apache.cocoon.forms.datatype;
 
-import java.net.MalformedURLException;
-
 import java.util.Locale;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.xml.dom.DOMBuilder;
