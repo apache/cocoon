@@ -130,7 +130,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     	try {
 			return dateFormat.parse(header).getTime();
 		} catch (ParseException e) {
-			throw new IllegalArgumentException(e);
+			throw new RuntimeException(e);
 		}
     }
     
