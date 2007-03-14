@@ -31,13 +31,13 @@
         </layout>     
     </appender>
     
-    <category name="org.apache.commons.jci">
+    <!--category name="org.apache.commons.jci">
       <priority value="DEBUG" />
-    </category>  
+    </category-->  
     
-    <category name="org.apache.cocoon.tools.rcl">
+    <!--category name="org.apache.cocoon.tools.rcl">
       <priority value="DEBUG" />
-    </category>      
+    </category-->      
 
     $if(useConsoleAppender)$
     <appender name="COCOON_DEFAULT_CONSOLE" class="org.apache.log4j.ConsoleAppender">
