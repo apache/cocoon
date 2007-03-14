@@ -18,8 +18,7 @@
   limitations under the License.
 -->
 <beans>
-  <bean id="local-bean" class="demo.LocalBean" scope="singleton">
-    <property name="message" value="This is a message coming from a Spring bean."/>
+  <bean id="local-bean" class="demo.LocalBean" scope="prototype">
     <property name="globalBean" ref="global-bean"/>
   </bean>
 </beans>
