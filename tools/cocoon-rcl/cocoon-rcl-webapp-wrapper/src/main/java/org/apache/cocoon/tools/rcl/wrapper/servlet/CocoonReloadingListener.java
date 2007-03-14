@@ -34,33 +34,32 @@ public class CocoonReloadingListener extends ReloadingListener {
 
     public void onFileChange(File file) {
         super.onFileChange(file);
-        changeDetected(file);
+        changeDetected(file, "update");
     }
     
     public void onFileDelete(File file) {
         super.onFileDelete(file);
-        changeDetected(file);
+        changeDetected(file, "delete");
     }
     
     public void onFileCreate(File file) {
         super.onFileCreate(file);
-        changeDetected(file);
+        changeDetected(file, "create");
     }   
     
-    protected void changeDetected(File changedFile) {
+    protected void changeDetected(File changedFile, String operation) {
         String changedFileParentPath = changedFile.getParent().replace('\\', '/');
         String changedFilePath = changedFile.getAbsolutePath().replace('\\', '/');        
 
-        if(changedFileParentPath.endsWith("META-INF/cocoon/spring") ||        // global Spring beans configurations
-                changedFileParentPath.endsWith("config/avalon") ||            // global Avalon components
-                changedFilePath.endsWith(".xmap") ||                          // any file that ends with xmap (sitemaps)
-                changedFilePath.endsWith(".xmap.xml") ||                      // any sitemap that ends with xmap.xml (sitemaps)
-                changedFileParentPath.endsWith("config/spring")) {            // local Spring bean configurations
-            log.info("Configuration file change detected: " + changedFile);
-            System.out.println("Configuration file change detected: " + changedFile);
+        if(changedFileParentPath.endsWith("META-INF/cocoon/spring") ||              // global Spring beans configurations
+                changedFileParentPath.endsWith("config/avalon") ||                  // global Avalon components
+                changedFilePath.endsWith(".xmap") ||                                // any file that ends with xmap (sitemaps)
+                changedFilePath.endsWith(".xmap.xml") ||                            // any sitemap that ends with xmap.xml (sitemaps)
+                changedFileParentPath.endsWith("config/spring")) {                  // local Spring bean configurations
+            log.debug("Configuration file change detected [" + operation + "]: " + changedFile);
             reload = true;
         } else {
-            log.debug("File change detected: " + changedFile);                // any other file change
+            log.debug("File change detected [" + operation + "]: " + changedFile);  // any other file change
             reload = true;
         }
     }
