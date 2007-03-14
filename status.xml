@@ -181,6 +181,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="AG" type="add">
+      Core: Update log4j to 1.2.14.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2023" due-to="Larry Ruiz" due-to-email="lruiz@agssa.net">
       CForms: MultivalueEditorWihtSuggestion doesn't add values to the listbox on Internet Explorer.
     </action>
