@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.binding;
 
-import org.apache.cocoon.util.location.LocatedException;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.forms.FormsException;
 

@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.formmodel.tree;
 
-import java.awt.AWTEventMulticaster;
 import java.util.EventListener;
 
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
