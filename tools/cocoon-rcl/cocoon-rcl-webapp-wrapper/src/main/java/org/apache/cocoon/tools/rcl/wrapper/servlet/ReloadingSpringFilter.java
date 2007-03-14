@@ -28,10 +28,8 @@ import javax.servlet.ServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.support.ServletContextFactoryBean;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
@@ -52,7 +50,7 @@ public class ReloadingSpringFilter implements Filter {
             ServletException {
         
         if(CocoonReloadingListener.isReload()) {
-            synchronized (this) {
+            synchronized (this) {            
                 // load the spring context loader from the reloading classloader
                 ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
                 ContextLoader springContextLoader = null;
@@ -62,18 +60,12 @@ public class ReloadingSpringFilter implements Filter {
                 } catch (Exception e) {
                     throw new ServletException("Cannot load class " + ContextLoader.class.getName(), e);
                 }
-                
-                // debugging code
-                try {
-                    ApplicationContext oldAc = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
-                    this.log.debug("Old application context: " + oldAc);
-                    Object o = oldAc.getBean("global-bean");
-                    this.log.debug("o[old]: " + o.toString());             
-                } catch(Exception e) {
-                }
-                // debugging code end
-                
+
                 // close old Spring application context
+                if(log.isDebugEnabled()) {                
+                    ApplicationContext oldAc = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
+                    this.log.debug("Removing old application context: " + oldAc);      
+                }
                 springContextLoader.closeWebApplicationContext(this.config.getServletContext());
                 this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
@@ -81,22 +73,9 @@ public class ReloadingSpringFilter implements Filter {
                 ServletContextFactoryBean b = new ServletContextFactoryBean();
                 b.setServletContext(this.config.getServletContext());
                 XmlWebApplicationContext xac = (XmlWebApplicationContext) springContextLoader.initWebApplicationContext(this.config.getServletContext());
-                
-                // debugging code
-                try {
-                    DefaultResourceLoader drl = (DefaultResourceLoader) xac;
-                    drl.setClassLoader(cl);
-                    xac.refresh();
-                    Object o1 = xac.getBean("global-bean");
-                    this.log.debug("o[new]: " + o1.toString());
-                } catch(Exception e) {
-                }
-                // debugging code end
-                
                 if(log.isDebugEnabled()) {
-                    log.debug("Reloaded Spring application context: " + xac);
+                    log.debug("Reloading Spring application context: " + xac);
                 }
-                
             }
         }
         // continue processing the request
@@ -108,7 +87,6 @@ public class ReloadingSpringFilter implements Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
         this.config = filterConfig;
-        
     }
  
 }
