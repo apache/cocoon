@@ -60,10 +60,15 @@ public class JavaScriptHelper {
         Context ctx = Context.enter();
         Script script;
         try {
-            script = ctx.compileReader(new StringReader(jsText), // in
-                                       sourceName == null ? "<unknown>" : sourceName, // sourceName
-                                       DomHelper.getLineLocation(element), // lineNo
-                                       null); // securityDomain
+            
+            script = ctx.compileReader(
+                // To use rhino1.5r4-continuations-R26.jar as a workaround for COCOON-1579: Uncomment the next line.
+                // getRootScope(null), //scope
+                new StringReader(jsText), // in
+                sourceName == null ? "<unknown>" : sourceName, // sourceName
+                DomHelper.getLineLocation(element), // lineNo
+                null // securityDomain
+             );
         } finally {
             Context.exit();
         }
