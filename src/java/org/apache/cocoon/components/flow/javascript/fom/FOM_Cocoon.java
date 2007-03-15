@@ -326,6 +326,8 @@ public class FOM_Cocoon extends ScriptableObject {
      */
     public Object jsFunction_getComponent(String id)
         throws Exception {
+        // To use rhino1.5r4-continuations-R26.jar as a workaround for COCOON-1579: Uncomment the next line and comment the original return.
+        // return getServiceManager().lookup(id);
         return org.mozilla.javascript.Context.javaToJS(getServiceManager().lookup(id), getParentScope());
     }
 
