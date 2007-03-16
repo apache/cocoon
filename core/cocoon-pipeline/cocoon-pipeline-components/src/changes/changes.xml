@@ -24,7 +24,12 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">
+    <release version="1.0.0-RC1-SNAPSHOT" date="TBA" description="Unreleased">
+      <action dev="vgritsenko" type="add">
+        Implement support of XMLizable exceptions in the ExceptionGenerator
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-02-12" description="Milestone release">
       <action dev="joerg" type="fix" issue="COCOON-1977" due-to="Ellis Pritchard">
         Fix threading issue with internal cache in ResourceReader.
       </action>
