@@ -677,7 +677,7 @@
           <outputDirectory>target</outputDirectory>
           <workDirectory>target/assembly</workDirectory>
         </configuration>
-      </plugin>
+      </plugin> 
     </plugins>
   </build>
 
@@ -847,6 +847,26 @@
   </properties>
 
   <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.0-alpha-3</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>          
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>all-reports</id>
       <pluginRepositories>
