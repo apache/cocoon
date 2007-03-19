@@ -28,7 +28,7 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-configuration-api</artifactId>
@@ -60,7 +60,7 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
       </plugin>
@@ -72,7 +72,31 @@
           <collection>cdocs-configuration-api</collection>          
           <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin>
+      </plugin-->
     </plugins> 
   </build>
+  
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.0-alpha-3</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>          
+        </plugins>
+      </build>
+    </profile>    
+  </profiles>
+  
 </project>
