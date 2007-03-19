@@ -76,6 +76,22 @@
     </plugins> 
   </build>
   
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Maven central repository</name>
+      <url>http://repo1.maven.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+        <!-- only look for jars here when they are not present locally -->
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>  
+  
   <profiles>
     <profile>
       <id>release</id>
