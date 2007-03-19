@@ -29,7 +29,7 @@
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>3</version>
-    <!--relativePath>../../pom.xml</relativePath-->
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-configuration-api</artifactId>
   <version>1.0.1-SNAPSHOT</version>
@@ -45,6 +45,12 @@
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.configuration-api.relPath}</url>
     </site>
+    <repository>
+      <id>cocoon-staging-repo</id>
+      <name>staging release repository</name>
+      <!-- available via http: http://people.apache.org/builds/cocoon -->
+      <url>scpexe://people.apache.org/www/people.apache.org/builds/cocoon</url>
+    </repository>    
   </distributionManagement>
 
   <properties>
