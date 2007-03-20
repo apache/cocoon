@@ -331,6 +331,7 @@
         <xsd:group ref="pipeline-content"/>
         <xsd:element ref="handle-errors" minOccurs="0" maxOccurs="1"/>
       </xsd:sequence>
+      <xsd:attribute name="id" type="xs:ID" use="optional"/>
       <xsd:attribute name="type" type="xsd:string" use="optional"/>
       <xsd:attribute name="internal-only" type="xsd:string" use="optional"/>
     </xsd:complexType>
