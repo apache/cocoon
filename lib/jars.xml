@@ -260,7 +260,7 @@
       donated to the Apache Software Foundation by Jonathan Locke.
     </description>
     <used-by>sitemap matchers</used-by>
-    <lib>endorsed/jakarta-regexp-1.4.jar</lib>
+    <lib>endorsed/jakarta-regexp-1.5.jar</lib>
     <homepage>http://jakarta.apache.org/regexp/</homepage>
   </file>
 
