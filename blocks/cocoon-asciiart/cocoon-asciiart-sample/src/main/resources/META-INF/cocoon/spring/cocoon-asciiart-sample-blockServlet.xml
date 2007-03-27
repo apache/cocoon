@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -15,13 +15,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    |
-    | $Id$
-    +-->
-<map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:generators>
-    <map:generator name="asciiart-svg" logger="sitemap.generator.asciiart-svg"
-                   src="org.apache.cocoon.generation.asciiart.AsciiArtSVGGenerator"/>
-  </map:generators>
-</map:components>
+
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+
+    <bean id="org.apache.cocoon.asciiart.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+        <servlet:context mount-path="/cocoon-asciiart-sample" context-path="blockcontext:/cocoon-asciiart-sample/"/>
+    </bean>
+</beans>
