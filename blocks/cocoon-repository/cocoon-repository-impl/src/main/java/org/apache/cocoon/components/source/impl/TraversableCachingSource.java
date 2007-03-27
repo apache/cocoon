@@ -40,8 +40,9 @@ public class TraversableCachingSource extends CachingSource implements Traversab
                                     int expires,
                                     String cacheName,
                                     boolean async,
-                                    boolean eventAware) {
-        super(protocol, uri, sourceUri, source, expires, cacheName, async, eventAware);
+                                    boolean eventAware, 
+                                    boolean fail) {
+        super(protocol, uri, sourceUri, source, expires, cacheName, async, eventAware, fail);
         this.factory = factory;
     }
 
@@ -154,7 +155,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
 
     protected final TraversableCachingSource createSource(String uri, String wrappedUri, Source wrapped)
     throws SourceException {
-        return (TraversableCachingSource) this.factory.createCachingSource(uri, wrappedUri, wrapped, expires, cacheName);
+        return (TraversableCachingSource) this.factory.createCachingSource(uri, wrappedUri, wrapped, expires, cacheName, fail);
     }
 
     protected SourceMeta readMeta(Source source) throws SourceException {
