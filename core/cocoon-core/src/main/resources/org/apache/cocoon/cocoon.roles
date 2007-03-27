@@ -140,10 +140,6 @@
         shorthand="notifying-builder"
         default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>
 
-  <role name="org.apache.cocoon.caching.Cache"
-        shorthand="cache"
-        default-class="org.apache.cocoon.caching.impl.CacheImpl"/>
-
   <!-- i18n components for resource bundle handling -->
   <role name="org.apache.cocoon.i18n.BundleFactory"
         shorthand="i18n-bundles"
