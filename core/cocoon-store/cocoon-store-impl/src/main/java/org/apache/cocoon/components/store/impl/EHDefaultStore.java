@@ -116,6 +116,7 @@ public class EHDefaultStore implements Store {
     private static final long TIME_TO_IDLE_SECONDS = 0L;
     private static final boolean USE_WORK_DIRECTORY = false;
     private static final boolean USE_CACHE_DIRECTORY = false;
+    private static final String DEFAULT_CACHE_NAME = "cocoon-ehcache";    
 
     private static final String CONFIG_FILE = "org/apache/cocoon/components/store/impl/ehcache.xml";
 
@@ -126,7 +127,7 @@ public class EHDefaultStore implements Store {
     private Cache cache;
     private CacheManager cacheManager;
 
-    private final String cacheName;
+    private String cacheName;
 
     // configuration options
     private int maxObjects = MAXOBJECTS;
@@ -156,9 +157,8 @@ public class EHDefaultStore implements Store {
 
     // ---------------------------------------------------- Lifecycle
 
-    public EHDefaultStore() {
-        instanceCount++;
-        this.cacheName = "cocoon-ehcache-" + instanceCount;
+    public EHDefaultStore() {    
+        
     }
 
     /**
@@ -348,13 +348,21 @@ public class EHDefaultStore implements Store {
         } catch (IOException e) {
             throw new Exception("Unable to set directory", e);
         }
+        
+        String config = org.apache.commons.io.IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE));
+        config = StringUtils.replace(config, "${diskstorepath}", this.diskStorePath);        
+        this.cacheManager = CacheManager.create(new ByteArrayInputStream(config.getBytes("utf-8")));        
+        if(this.cacheManager.getCache(DEFAULT_CACHE_NAME) != null) {
+            instanceCount++;
+            this.cacheName = DEFAULT_CACHE_NAME + "-" + instanceCount;
+        } else {
+            this.cacheName = DEFAULT_CACHE_NAME;
+        }          
+                
 
         // read configuration - we have to replace the diskstorepath in the configuration
         // as the diskStorePath argument of the Cache constructor is ignored and set by the
         // CacheManager! (see bug COCOON-1927)
-        String config = org.apache.commons.io.IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE));
-        config = StringUtils.replace(config, "${diskstorepath}", this.diskStorePath);
-        this.cacheManager = CacheManager.create(new ByteArrayInputStream(config.getBytes("utf-8")));
         this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
                 this.timeToLiveSeconds, this.timeToIdleSeconds, this.diskPersistent, 120);
         this.cacheManager.addCache(this.cache);
@@ -446,7 +454,7 @@ public class EHDefaultStore implements Store {
         try {
             final List keys = this.cache.getKeysNoDuplicateCheck();
             if (!keys.isEmpty()) {
-            	// TODO find a way to get to the LRU one.
+                // TODO find a way to get to the LRU one.
                 final Serializable key = (Serializable) keys.get(0);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Freeing cache");
