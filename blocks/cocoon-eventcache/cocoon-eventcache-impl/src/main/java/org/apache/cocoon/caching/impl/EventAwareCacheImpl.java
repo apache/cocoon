@@ -20,8 +20,6 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.EventAware;
@@ -29,6 +27,8 @@ import org.apache.cocoon.caching.EventRegistry;
 import org.apache.cocoon.caching.validity.Event;
 import org.apache.cocoon.caching.validity.EventValidity;
 import org.apache.cocoon.components.source.impl.SitemapSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
@@ -38,8 +38,9 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
  * 
  * @version $Id$
  */
-public class EventAwareCacheImpl extends CacheImpl implements Initializable,
-                                                              EventAware {
+public class EventAwareCacheImpl extends CacheImpl implements Initializable, EventAware {
+
+    private Log logger = LogFactory.getLog(getClass());       
     
 	private EventRegistry eventRegistry;
 
@@ -71,23 +72,6 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
         super.store(key, response);
 	}
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.caching.Cache#store(java.io.Serializable, org.apache.cocoon.caching.CachedResponse)
-     
-    public void store(Serializable key, CachedResponse response)
-        throws ProcessingException {
-        // TODO Auto-generated method stub
-        super.store(key, response);
-    }*/
-
-    /**
-     * Look up the EventRegistry 
-     */
-	public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
-        this.eventRegistry = (EventRegistry)this.manager.lookup(EventRegistry.ROLE);
-	}
-
 	/**
      * Un-register this key in the EventRegistry in addition to 
      * removing it from the Store
@@ -109,8 +93,8 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
         if (keys == null) return;
         for (int i=0;i<keys.length; i++) {
             if (keys[i] != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Processing cache event, found Pipeline key: " + keys[i].toString());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Processing cache event, found Pipeline key: " + keys[i].toString());
                 }
                 /* every pck associated with this event needs to be
                  * removed -- regardless of event mapping. and every 
@@ -149,24 +133,13 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
         for (int i=0; i<keys.length; i++) {
             if (!this.containsKey(keys[i])) {
                 this.eventRegistry.removeKey(keys[i]);
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Cache key no longer valid: " + 
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Cache key no longer valid: " + 
                             keys[i]);
                 }
             }
         }
     }
-
-    /**
-     * Release resources
-     */
-	public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.eventRegistry);
-            this.eventRegistry = null;
-        }
-		super.dispose();
-	}
 
     private void examineValidity(SourceValidity val, Serializable key) {
         if (val instanceof AbstractAggregatedValidity) {
@@ -191,10 +164,14 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
     }
 
     private void handleEventValidity(EventValidity val, Serializable key) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Found EventValidity: " + val.toString());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Found EventValidity: " + val.toString());
         }
         this.eventRegistry.register(val.getEvent(),key); 
+    }
+    
+    public void setEventRegistry(EventRegistry eventRegistry) {
+        this.eventRegistry = eventRegistry;
     }
 
 }
