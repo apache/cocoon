@@ -83,6 +83,7 @@ public class CachingSource extends AbstractLogEnabled
 
     public static final String CACHE_EXPIRES_PARAM = "cache-expires";
     public static final String CACHE_NAME_PARAM = "cache-name";
+    public static final String CACHE_FAIL_PARAM = "cache-fail";
 
     private static final SourceMeta DUMMY = new SourceMeta();
 
@@ -100,16 +101,17 @@ public class CachingSource extends AbstractLogEnabled
     /** The source object for the real content */
     protected Source source;
 
-
     /** The ServiceManager */
     protected ServiceManager manager;
 
     /** The current cache */
     protected Cache cache;
 
-
     /** The cached response (if any) */
     private CachedSourceResponse response;
+    
+    /** The cached response (if any) */
+    private CachedSourceResponse previousResponse;
 
     /** Did we just update meta info? */
     private boolean freshMeta;
@@ -117,8 +119,11 @@ public class CachingSource extends AbstractLogEnabled
     /** The key used in the store */
     final protected IdentifierCacheKey cacheKey;
 
-    /** number of seconds before cached object becomes invalid */
+    /** Number of seconds before cached object becomes invalid */
     final protected int expires;
+    
+    /** Fail because of a syncronous refresh excpetion */
+    final protected boolean fail;
 
     /** cache key extension */
     final protected String cacheName;
@@ -138,7 +143,8 @@ public class CachingSource extends AbstractLogEnabled
                          final int expires,
                          final String cacheName,
                          final boolean async,
-                         final boolean eventAware) {
+                         final boolean eventAware,
+                         final boolean fail) {
         this.protocol = protocol;
         this.uri = uri;
         this.sourceUri = sourceUri;
@@ -147,6 +153,7 @@ public class CachingSource extends AbstractLogEnabled
         this.cacheName = cacheName;
         this.async = async;
         this.eventAware = eventAware;
+        this.fail = fail;
 
         String key = "source:" + getSourceURI();
         if (cacheName != null) {
@@ -177,6 +184,10 @@ public class CachingSource extends AbstractLogEnabled
         }
 
         this.response = (CachedSourceResponse) this.cache.get(this.cacheKey);
+        // save response if subsequent request should never fail
+        if(!fail) {
+            this.previousResponse = this.response;
+        }
 
         if (this.response == null) {
             if (getLogger().isDebugEnabled()) {
@@ -202,6 +213,7 @@ public class CachingSource extends AbstractLogEnabled
      */
     public void dispose() {
         this.response = null;
+        this.previousResponse = null;
         this.source = null;
         this.manager = null;
         this.cache = null;
@@ -230,7 +242,9 @@ public class CachingSource extends AbstractLogEnabled
 
     private void clearResponse() {
         this.response = null;
-        this.cache.remove(this.cacheKey);
+        if(!fail) {
+            this.cache.remove(this.cacheKey);
+        }
     }
 
     /**
@@ -283,19 +297,34 @@ public class CachingSource extends AbstractLogEnabled
     protected byte[] getXMLResponse() throws SAXException, IOException, CascadingIOException {
         CachedSourceResponse response = getResponse();
 
-        if (response.getXMLResponse() == null) {
-            if (!this.freshMeta) {
-                /* always refresh meta in this case */
-                response.setExtra(readMeta(this.source));
-                this.freshMeta = true;
-            }
-            if (((SourceMeta) response.getExtra()).exists()) {
-                if (response.getBinaryResponse() == null) {
-                    response.setBinaryResponse(readBinaryResponse(this.source));
+        try {
+            if (response.getXMLResponse() == null) {
+                if (!this.freshMeta) {
+                    /* always refresh meta in this case */
+                    response.setExtra(readMeta(this.source));
+                    this.freshMeta = true;
                 }
-                response.setXMLResponse(readXMLResponse(this.source, response.getBinaryResponse(), this.manager));
+                if (((SourceMeta) response.getExtra()).exists()) {
+                    if (response.getBinaryResponse() == null) {
+                        response.setBinaryResponse(readBinaryResponse(this.source));
+                    }
+                    response.setXMLResponse(readXMLResponse(this.source, response.getBinaryResponse(), this.manager));
+                }
+                setResponse(response);
             }
-            setResponse(response);
+        } catch (Exception e) {
+            if(!fail && this.previousResponse != null) {
+                response = cloneResponse(this.previousResponse);
+                setResponse(cloneResponse(response));       
+            } else { // rethrow exception
+                if (e instanceof SAXException) {
+                    throw (SAXException) e;
+                } else if (e instanceof IOException) {
+                    throw (IOException) e;
+                } else if (e instanceof CascadingIOException) {
+                    throw (IOException) e;
+                }
+            }
         }
 
         return response.getXMLResponse();
@@ -308,6 +337,15 @@ public class CachingSource extends AbstractLogEnabled
             // Could not initialize meta. Return default meta values.
             return DUMMY;
         }
+    }
+    
+    private CachedSourceResponse cloneResponse(final CachedSourceResponse orig) {
+        CachedSourceResponse c = new CachedSourceResponse(this.getCacheValidities());
+        c.setBinaryResponse(orig.getBinaryResponse());
+        c.setContentType(orig.getContentType());
+        c.setExtra(orig.getExtra());
+        c.setXMLResponse(orig.getXMLResponse());
+        return c;
     }
 
     // ---------------------------------------------------- Source implementation

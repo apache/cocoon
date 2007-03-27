@@ -325,9 +325,10 @@ public class CachingSourceFactory extends AbstractLogEnabled
 
         int expires = params.getParameterAsInteger(CachingSource.CACHE_EXPIRES_PARAM, defaultExpires);
         String cacheName = params.getParameter(CachingSource.CACHE_NAME_PARAM, null);
+        boolean fail = params.getParameterAsBoolean(CachingSource.CACHE_FAIL_PARAM, false);
 
         Source source = this.resolver.resolveURI(uri);
-        return createCachingSource(location, uri, source, expires, cacheName);
+        return createCachingSource(location, uri, source, expires, cacheName, fail);
     }
 
     /**
@@ -337,7 +338,8 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                                 String wrappedUri,
                                                 Source wrappedSource,
                                                 int expires,
-                                                String cacheName)
+                                                String cacheName,
+                                                boolean fail)
     throws SourceException {
 
         CachingSource source;
@@ -352,7 +354,8 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                                                  expires,
                                                                  cacheName,
                                                                  isAsync(),
-                                                                 eventAware);
+                                                                 eventAware,
+                                                                 fail);
             } else {
                 source = new TraversableCachingSource(this,
                                                       getScheme(),
@@ -362,7 +365,8 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                                       expires,
                                                       cacheName,
                                                       isAsync(),
-                                                      eventAware);
+                                                      eventAware,
+                                                      fail);
             }
         } else {
             source = new CachingSource(getScheme(),
@@ -372,7 +376,8 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                        expires,
                                        cacheName,
                                        isAsync(),
-                                       eventAware);
+                                       eventAware,
+                                       fail);
         }
 
         // set the required components directly for speed
