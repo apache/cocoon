@@ -17,14 +17,45 @@
 package org.apache.cocoon.components.thread;
 
 /**
- * The ThreadPool interface gives access to methods needed to inspect and use
- * of  a pool of threads
- *
+ * The ThreadPool interface gives access to methods needed to inspect and use of
+ * a pool of threads
+ * 
  * @version $Id$
  */
 public interface ThreadPool {
 
-    //~ Instance fields --------------------------------------------------------
+    // ~ Instance fields
+    // --------------------------------------------------------
+
+    /** The default queue size */
+    public static int DEFAULT_QUEUE_SIZE = -1;
+
+    /** The default maximum pool size */
+    public static int DEFAULT_MAX_POOL_SIZE = 5;
+
+    /** The default minimum pool size */
+    public static int DEFAULT_MIN_POOL_SIZE = 5;
+
+    /** The default thread priority */
+    public static String DEFAULT_THREAD_PRIORITY = "NORM";
+
+    /** The default daemon mode */
+    public static boolean DEFAULT_DAEMON_MODE = false;
+
+    /** The default keep alive time */
+    public static long DEFAULT_KEEP_ALIVE_TIME = 60000L;
+
+    /** The default way to shutdown gracefully */
+    public static boolean DEFAULT_SHUTDOWN_GRACEFUL = false;
+
+    /** The default shutdown waittime time */
+    public static int DEFAULT_SHUTDOWN_WAIT_TIME = -1;
+
+    /** The default shutdown waittime time */
+    public static String DEFAULT_THREADPOOL_NAME = "default";
+
+    /** The default shutdown waittime time */
+    public static String DEFAULT_BLOCK_POLICY = "RUN";
 
     /** ThreadPool block policy ABORT */
     String POLICY_ABORT = "ABORT";
@@ -44,102 +75,199 @@ public interface ThreadPool {
     /** The Role name */
     String ROLE = ThreadPool.class.getName();
 
-    //~ Methods ----------------------------------------------------------------
+    // ~ Methods
+    // ----------------------------------------------------------------
 
     /**
-     * The blocking policy used
-     *
-     * @return DOCUMENT ME!
-     */
-    String getBlockPolicy();
+         * Gets the block policy
+         * 
+         * @return Returns the blockPolicy.
+         */
+    public String getBlockPolicy();
 
     /**
-     * How long will a thread in this pool be idle before it is allowed to be
-     * garbage collected
-     *
-     * @return maximum idle time
-     */
-    long getKeepAliveTime();
+         * Gets the maximum queue size
+         * 
+         * @return maximum size of the queue (0 if isQueued() == false)
+         */
+    public int getMaxQueueSize();
 
     /**
-     * How many threads are in this pool at maximum
-     *
-     * @return maximum size of pool
-     */
-    int getMaximumPoolSize();
+         * Gets the name of the thread pool
+         * 
+         * @return name of the thread pool
+         */
+    public String getName();
 
     /**
-     * Maximum size of the queue
-     *
-     * @return current size of queue
-     */
-    int getMaximumQueueSize();
+         * Gets the priority used to create Threads
+         * 
+         * @return {@link Thread#MIN_PRIORITY}, {@link Thread#NORM_PRIORITY},
+         *         or {@link Thread#MAX_PRIORITY}
+         */
+    public int getPriority();
 
     /**
-     * How many threads are in this pool at minimum
-     *
-     * @return minimum size of pool
-     */
-    int getMinimumPoolSize();
+         * Gets the queue size of the thread pool
+         * 
+         * @return current size of the queue (0 if isQueued() == false)
+         */
+    public int getQueueSize();
 
     /**
-     * The Name of this thread pool
-     *
-     * @return The name
-     */
-    String getName();
+         * Whether this DefaultThreadPool has a queue
+         * 
+         * @return Returns the m_isQueued.
+         */
+    public boolean isQueued();
 
     /**
-     * How many threads are currently in this pool
-     *
-     * @return current size of pool
-     */
-    int getPoolSize();
+         * Execute a command
+         * 
+         * @param command
+         *                The {@link Runnable} to execute
+         * 
+         * @throws InterruptedException
+         *                 In case of interruption
+         */
+    public void execute(Runnable command) throws InterruptedException;
 
     /**
-     * Get the thread priority used by this pool
-     *
-     * @return current size of queue
-     */
-    int getPriority();
+         * Set the blocking policy
+         * 
+         * @param blockPolicy
+         *                The blocking policy value
+         */
+    void setBlockPolicy(String blockPolicy);
 
     /**
-     * Current size of the queue.
-     *
-     * @return current size of queue. If the size of the queue is not
-     *         maintained by an implementation -1 should be returned.
-     */
-    int getQueueSize();
+         * DOCUMENT ME!
+         * 
+         * @param name
+         *                The name to set.
+         */
+    void setName(String name);
 
     /**
-     * Whether this ThreadPool has a queue
-     *
-     * @return Returns true if this ThreadPool has a queue
-     */
-    boolean isQueued();
+         * Sets the shutdownGraceful (true if graceful)
+         * 
+         * @param shutdownGraceful
+         *                The shutdownGraceful to set.
+         */
+    void setShutdownGraceful(boolean shutdownGraceful);
 
     /**
-     * Returns true if a shutDown method has succeeded in terminating all
-     * threads
-     *
-     * @return Whether a shutDown method has succeeded in terminating all
-     *         threads
-     */
-    boolean isTerminatedAfterShutdown();
+         * Returns true if shutdown is graceful
+         * 
+         * @return Returns the shutdownGraceful.
+         */
+    public boolean isShutdownGraceful();
 
     /**
-     * Execute a command using this pool
-     *
-     * @param command a {@link Runnable} to execute
-     *
-     * @throws InterruptedException In case of interruption
-     */
-    void execute( Runnable command )
-    throws InterruptedException;
+         * Sets the shutdownWaitTime in milliseconds
+         * 
+         * @param shutdownWaitTimeMs
+         *                The shutdownWaitTimeMs to set.
+         */
+    void setShutdownWaitTimeMs(int shutdownWaitTimeMs);
 
     /**
-     * Terminates all threads possibly awaiting processing all elements
-     * currently in queue.
-     */
+         * Gets the shutdownWaitTime in milliseconds
+         * 
+         * @return Returns the shutdownWaitTimeMs.
+         */
+    public int getShutdownWaitTimeMs();
+
+    /**
+         * Gets the keepAliveTime in milliseconds
+         * 
+         * @return the keepAliveTime
+         */
+    public long getKeepAliveTime();
+
+    /**
+         * Sets the keepAliveTime in milliseconds
+         * 
+         * @param keepAliveTime
+         *                the keepAliveTime to set
+         */
+    public void setKeepAliveTime(long keepAliveTime);
+
+    /**
+         * Gets the maximum pool size
+         * 
+         * @return the maxPoolSize
+         */
+    public int getMaxPoolSize();
+
+    /**
+         * Sets the maximum pool size
+         * 
+         * @param maxPoolSize
+         *                the maxPoolSize to set
+         */
+    public void setMaxPoolSize(int maxPoolSize);
+
+    /**
+         * Gets the minimum pool size
+         * 
+         * @return the minPoolSize
+         */
+    public int getMinPoolSize();
+
+    /**
+         * Sets the minimum pool size
+         * 
+         * @param minPoolSize
+         *                the minPoolSize to set
+         */
+    public void setMinPoolSize(int minPoolSize);
+
+    /**
+         * Sets the priority of this thread pool: {@link Thread#MIN_PRIORITY},
+         * {@link Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+         * 
+         * @param priority
+         *                the priority to set
+         */
+    public void setPriority(int priority);
+
+    /**
+         * Sets the queue size of the thread pool
+         * 
+         * @param queueSize
+         *                the queueSize to set
+         */
+    public void setQueueSize(int queueSize);
+
+    /**
+         * Terminates all threads possibly awaiting processing all elements
+         * currently in queue.
+         */
     void shutdown();
+
+    /**
+         * Returns true if thread runs as daemon
+         * 
+         * @return the daemon
+         */
+    public boolean isDaemon();
+
+    /**
+         * Set to true if thread shall run as daemon
+         * 
+         * @param daemon
+         *                the daemon to set
+         */
+    public void setDaemon(boolean daemon);
+
+    /**
+         * Returns true if a shutDown method has succeeded in terminating all
+         * threads
+         * 
+         * @return Whether a shutDown method has succeeded in terminating all
+         *         threads
+         */
+    public boolean isTerminatedAfterShutdown();
+
 }
