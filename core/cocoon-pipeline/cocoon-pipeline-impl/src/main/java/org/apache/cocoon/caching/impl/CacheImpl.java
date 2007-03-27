@@ -19,18 +19,11 @@ package org.apache.cocoon.caching.impl;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.CachedResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.Store;
 
 /**
@@ -42,33 +35,12 @@ import org.apache.excalibur.store.Store;
  * @since 2.1
  * @version $Id$
  */
-public class CacheImpl
-extends AbstractLogEnabled
-implements Cache, ThreadSafe, Serviceable, Disposable, Parameterizable {
+public class CacheImpl implements Cache {
 
+    private Log logger = LogFactory.getLog(getClass());    
+    
     /** The store containing the cached responses */
     protected Store store;
-
-    /** The service manager */
-    protected ServiceManager manager;
-
-    /**
-     * Serviceable Interface
-     */
-    public void service (ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
-    /**
-     * Disposable Interface
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.store);
-            this.store = null;
-            this.manager = null;
-        }
-    }
 
     /**
      * Store a cached response
@@ -134,17 +106,16 @@ implements Cache, ThreadSafe, Serviceable, Disposable, Parameterizable {
 	public boolean containsKey(Serializable key) {
 		return this.store.containsKey(key);
 	}
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+    
+    /**
+     * Set the Store implementation
      */
-    public void parameterize(Parameters parameters) throws ParameterException {
-        String storeName = parameters.getParameter("store", Store.ROLE);
-        try {
-            this.store = (Store)this.manager.lookup(storeName);
-        } catch (ServiceException e) {
-            throw new ParameterException("Unable to lookup store: " + storeName, e);
-        }
+    public void setStore(Store store) {
+        this.store = store;
     }
+    
+    private Log getLogger() {
+        return this.logger;
+    }    
 
 }
