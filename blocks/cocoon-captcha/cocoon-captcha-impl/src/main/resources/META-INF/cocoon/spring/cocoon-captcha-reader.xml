@@ -1,4 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -15,15 +17,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    |
-    | $Id: cocoon-template.xmap 400052 2006-05-05 11:49:33Z giacomo $
-    +-->
-<map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:readers>
-    <map:reader name="captcha"
-                logger="sitemap.reader.captcha"
-                src="org.apache.cocoon.reading.CaptchaReader"/>
-  </map:readers>
-</map:components>
 
+<!-- @version $Id$ -->
+
+<!--+
+    | Readers circumvent the XML oriented SAX pipeline model, think of a reader
+    | being a generator and a serializer at once thus a pipeline may not
+    | contain any generator, transformer or serializer in addition to a
+    | reader. They are useful for delivering binary content like images.
+    +-->
+<beans>
+  <bean name="org.apache.cocoon.reading.Reader/captcha"
+        class="org.apache.cocoon.reading.CaptchaReader"
+        scope="prototype">
+  </bean>
+</beans>

@@ -30,9 +30,7 @@
     </map:generators>
   </map:components>
   
-  <map:flow language="javascript">
-    <map:script src="captcha.js"/>
-  </map:flow>
+  <map:flow language="javascript" />
 
   <map:pipelines>
     <map:pipeline type="caching">
@@ -81,7 +79,8 @@
       </map:match>
       
       <map:match pattern="**.jx">
-        <map:generate type="jx" src="{1}.jx"/>
+        <map:generate src="{1}.jx"/>
+        <map:transform type="jx" />
         <map:serialize type="html"/>
       </map:match>
       
