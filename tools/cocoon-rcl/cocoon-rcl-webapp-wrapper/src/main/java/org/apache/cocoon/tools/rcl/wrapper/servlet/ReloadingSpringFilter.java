@@ -27,7 +27,6 @@ import javax.servlet.ServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.ServletContextFactoryBean;
@@ -50,7 +49,7 @@ public class ReloadingSpringFilter implements Filter {
             ServletException {
         
         if(CocoonReloadingListener.isReload()) {
-            synchronized (this) {            
+            synchronized (this) {         
                 // load the spring context loader from the reloading classloader
                 ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
                 ContextLoader springContextLoader = null;
@@ -62,17 +61,19 @@ public class ReloadingSpringFilter implements Filter {
                 }
 
                 // close old Spring application context
-                if(log.isDebugEnabled()) {                
-                    ApplicationContext oldAc = WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
-                    this.log.debug("Removing old application context: " + oldAc);      
+                XmlWebApplicationContext oldAc = (XmlWebApplicationContext) 
+                        WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
+                     oldAc.close();
+                if(log.isDebugEnabled()) {                     
+                    this.log.debug("Removing old application context: " + oldAc);
                 }
-                springContextLoader.closeWebApplicationContext(this.config.getServletContext());
                 this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
                 // create the new Spring application context
                 ServletContextFactoryBean b = new ServletContextFactoryBean();
                 b.setServletContext(this.config.getServletContext());
-                XmlWebApplicationContext xac = (XmlWebApplicationContext) springContextLoader.initWebApplicationContext(this.config.getServletContext());
+                XmlWebApplicationContext xac = (XmlWebApplicationContext) springContextLoader.
+                        initWebApplicationContext(this.config.getServletContext());
                 if(log.isDebugEnabled()) {
                     log.debug("Reloading Spring application context: " + xac);
                 }
