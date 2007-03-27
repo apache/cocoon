@@ -25,7 +25,10 @@
 <document>
   <body>
     <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">  
-      
+      <action dev="felixk" type="update">
+         Refactored ThreadPool. Break out the ThreadPool into a bean. This will
+         make it easier to configure custom thread pools for the RunnableManager.
+      </action>
     </release>
   </body>
 </document>
