@@ -145,14 +145,11 @@ public abstract class AbstractTestCase extends TestCase {
     }
 
     protected void createBeanFactory() throws Exception {
-        try {
-            ClassPathResource cpr = new ClassPathResource(getClass().getName().replace('.', '/') + ".spring.xml");
-            this.beanFactory = new XmlBeanFactory(cpr);
-        } catch (Exception e) {
-            if (e instanceof IOException) {
-                this.beanFactory = new DefaultListableBeanFactory();
-            }
-            throw e;
+        ClassPathResource cpr = new ClassPathResource(getClass().getName().replace('.', '/') + ".spring.xml");
+        if(cpr.exists()) {
+            this.beanFactory = new XmlBeanFactory(cpr);                
+        } else {
+            this.beanFactory = new DefaultListableBeanFactory();
         }
         this.addSettings();
     }
