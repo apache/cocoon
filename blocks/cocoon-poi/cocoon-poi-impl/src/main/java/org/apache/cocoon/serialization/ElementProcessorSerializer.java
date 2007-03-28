@@ -27,7 +27,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.elementprocessor.CannotCreateElementProcessorException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
-import org.apache.cocoon.components.elementprocessor.NoOpElementProcessor;
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
 
 import org.xml.sax.Attributes;
@@ -53,7 +52,6 @@ public abstract class ElementProcessorSerializer
     extends AbstractLogEnabled implements Serializer, Serviceable {
 
     private final Stack openElements;
-    private final ElementProcessor noOpElementProcessor;
     
     protected ServiceManager manager;
 
@@ -65,7 +63,6 @@ public abstract class ElementProcessorSerializer
      */
     public ElementProcessorSerializer() {
         this.openElements = new Stack();
-        this.noOpElementProcessor = new NoOpElementProcessor();
     }
 
     public void service(ServiceManager manager) {
@@ -140,7 +137,7 @@ public abstract class ElementProcessorSerializer
     }
 
     private ElementProcessor getCurrentElementProcessor() {
-        return this.openElements.empty() ? this.noOpElementProcessor
+        return this.openElements.empty() ? null
                                          : (ElementProcessor)this.openElements.peek();
     }
 
@@ -234,7 +231,10 @@ public abstract class ElementProcessorSerializer
      *            the character data
      */
     public void characters(final char [] ch, final int start, final int length) throws SAXException {
-        getCurrentElementProcessor().acceptCharacters(cleanupArray(ch, start, length));
+        ElementProcessor currentElementProcessor = getCurrentElementProcessor();
+        if (currentElementProcessor != null) {
+            currentElementProcessor.acceptCharacters(cleanupArray(ch, start, length));
+        }
     }
 
     /**
@@ -270,7 +270,10 @@ public abstract class ElementProcessorSerializer
      *            the character data
      */
     public void ignorableWhitespace(final char [] ch, final int start, final int length) throws SAXException {
-        getCurrentElementProcessor().acceptWhitespaceCharacters(cleanupArray(ch, start, length));
+        ElementProcessor currentElementProcessor = getCurrentElementProcessor();
+        if (currentElementProcessor != null) {
+            currentElementProcessor.acceptWhitespaceCharacters(cleanupArray(ch, start, length));
+        }
     }
 
     /**
