@@ -364,14 +364,6 @@ public class CachingSourceFactory extends AbstractLogEnabled
     throws SourceException {
 
         CachingSource source;
-        
-        CachingSourceValidityStrategy validityStrategy;
-        if(this.eventAware) {
-            validityStrategy = new EventAwareCachingSourceValidityStrategy();
-        } else {
-            validityStrategy = new ExpiresCachingSourceValidityStrategy();
-            
-        }
 
         if (wrappedSource instanceof TraversableSource) {
             if (wrappedSource instanceof InspectableSource) {
@@ -383,7 +375,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                                                  expires,
                                                                  cacheName,
                                                                  isAsync(),
-                                                                 validityStrategy,
+                                                                 this.validityStrategy,
                                                                  fail);
             } else {
                 source = new TraversableCachingSource(this,
@@ -394,7 +386,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                                       expires,
                                                       cacheName,
                                                       isAsync(),
-                                                      validityStrategy,
+                                                      this.validityStrategy,
                                                       fail);
             }
         } else {
@@ -405,7 +397,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                        expires,
                                        cacheName,
                                        isAsync(),
-                                       validityStrategy,
+                                       this.validityStrategy,
                                        fail);
         }
 
