@@ -87,12 +87,14 @@ public class DefaultRunnableManager implements InitializingBean,
          * Initialize
          */
     public void afterPropertiesSet() throws Exception {
-	final Iterator iter = workerThreadPools.keySet().iterator();
-	while (iter.hasNext()) {
-	    final String key = (String) iter.next();
-	    final ThreadPool pool = (ThreadPool) workerThreadPools.get(key);
-	    synchronized (pools) {
-		pools.put(pool.getName(), pool);
+	if (workerThreadPools != null) {
+	    final Iterator iter = workerThreadPools.keySet().iterator();
+	    while (iter.hasNext()) {
+		final String key = (String) iter.next();
+		final ThreadPool pool = (ThreadPool) workerThreadPools.get(key);
+		synchronized (pools) {
+		    pools.put(pool.getName(), pool);
+		}
 	    }
 	}
 
