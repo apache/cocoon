@@ -16,6 +16,8 @@
  */
 package org.apache.cocoon;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +36,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -140,9 +144,16 @@ public abstract class AbstractTestCase extends TestCase {
         this.getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, staticWebApplicationContext);
     }
 
-    protected void createBeanFactory()
-    throws Exception {
-        this.beanFactory = new DefaultListableBeanFactory();
+    protected void createBeanFactory() throws Exception {
+        try {
+            ClassPathResource cpr = new ClassPathResource(getClass().getName().replace('.', '/') + ".spring.xml");
+            this.beanFactory = new XmlBeanFactory(cpr);
+        } catch (Exception e) {
+            if (e instanceof IOException) {
+                this.beanFactory = new DefaultListableBeanFactory();
+            }
+            throw e;
+        }
         this.addSettings();
     }
 
