@@ -40,9 +40,9 @@ public class TraversableCachingSource extends CachingSource implements Traversab
                                     int expires,
                                     String cacheName,
                                     boolean async,
-                                    boolean eventAware, 
+                                    CachingSourceValidityStrategy validityStrategy, 
                                     boolean fail) {
-        super(protocol, uri, sourceUri, source, expires, cacheName, async, eventAware, fail);
+        super(protocol, uri, sourceUri, source, expires, cacheName, async, validityStrategy, fail);
         this.factory = factory;
     }
 

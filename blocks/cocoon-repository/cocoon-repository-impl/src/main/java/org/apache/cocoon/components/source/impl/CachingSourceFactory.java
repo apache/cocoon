@@ -64,13 +64,15 @@ import org.apache.cocoon.components.source.helpers.SourceRefresher;
  * <p>
  * The URL needs to contain the URL of the cached source, an expiration
  * period in seconds, and optionally a cache key:
- * <code>cached:http://www.apache.org/[?cocoon:cache-expires=60][&cocoon:cache-name=main]</code>.
+ * <code>cached:http://www.apache.org/[?cocoon:cache-expires=60][&cocoon:cache-name=main][&cocoon:cache-fail=true]</code>.
  * </p>
  * <p>
  * The above examples shows how the real source <code>http://www.apache.org/</code>
  * is wrapped and the cached contents is used for <code>60</code> seconds.
  * The second querystring parameter instructs that the cache key be extended with the string
- * <code>main</code>. This allows the use of multiple cache entries for the same source.
+ * <code>main</code>. This allows the use of multiple cache entries for the same source. The <code>cache-fail</code>
+ * argument lets subsequent syncronous requests, that have to be refreshed, fail, in the case
+ * that the wrapped source can't be reached. The default value for <code>cache-fail</code> is <code>true</code>.
  * </p>
  * <p>
  * This factory creates either instances of {@link org.apache.cocoon.components.source.impl.CachingSource}
@@ -131,6 +133,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
     private static final String CACHE_ROLE_PARAM = "cache-role";
     private static final String REFRESHER_ROLE_PARAM = "refresher-role";
     private static final String DEFAULT_EXPIRES_PARAM = "default-expires";
+    private static final String DEFAULT_VALIDITY_STRATEGY = ExpiresCachingSourceValidityStrategy.class.getName();
 
     // ---------------------------------------------------- Instance variables
 
@@ -143,6 +146,12 @@ public class CachingSourceFactory extends AbstractLogEnabled
     /** Event aware ? */
     private boolean eventAware;
 
+    /** Validity strategy implementation: class name */
+    private String validityStrategyClassName = DEFAULT_VALIDITY_STRATEGY;
+    
+    /** Validity strategy implementation: class name */
+    private CachingSourceValidityStrategy validityStrategy;
+    
     /** The role of the cache */
     private String cacheRole;
 
@@ -188,6 +197,18 @@ public class CachingSourceFactory extends AbstractLogEnabled
 
         // 'event-aware' parameter
         this.eventAware = parameters.getParameterAsBoolean(EVENT_AWARE_PARAM, false);
+        
+        if(this.eventAware == true) {
+            this.validityStrategyClassName = 
+                "org.apache.cocoon.components.source.impl.EventAwareCachingSourceValidityStrategy";
+        }
+        try {
+            this.validityStrategy = (CachingSourceValidityStrategy) 
+                getClass().getClassLoader().loadClass(this.validityStrategyClassName).newInstance();
+        } catch(Exception cce) {
+            throw new ConfigurationException("Can't create class for '" + 
+                    this.validityStrategyClassName + "'.", cce);
+        }
 
         // 'cache-role' parameter
         this.cacheRole = parameters.getParameter(CACHE_ROLE_PARAM, Cache.ROLE);
@@ -343,6 +364,14 @@ public class CachingSourceFactory extends AbstractLogEnabled
     throws SourceException {
 
         CachingSource source;
+        
+        CachingSourceValidityStrategy validityStrategy;
+        if(this.eventAware) {
+            validityStrategy = new EventAwareCachingSourceValidityStrategy();
+        } else {
+            validityStrategy = new ExpiresCachingSourceValidityStrategy();
+            
+        }
 
         if (wrappedSource instanceof TraversableSource) {
             if (wrappedSource instanceof InspectableSource) {
@@ -354,7 +383,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                                                  expires,
                                                                  cacheName,
                                                                  isAsync(),
-                                                                 eventAware,
+                                                                 validityStrategy,
                                                                  fail);
             } else {
                 source = new TraversableCachingSource(this,
@@ -365,7 +394,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                                       expires,
                                                       cacheName,
                                                       isAsync(),
-                                                      eventAware,
+                                                      validityStrategy,
                                                       fail);
             }
         } else {
@@ -376,7 +405,7 @@ public class CachingSourceFactory extends AbstractLogEnabled
                                        expires,
                                        cacheName,
                                        isAsync(),
-                                       eventAware,
+                                       validityStrategy,
                                        fail);
         }
 

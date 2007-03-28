@@ -31,7 +31,6 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.excalibur.xmlizer.XMLizer;
@@ -39,10 +38,8 @@ import org.apache.excalibur.xmlizer.XMLizer;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.caching.EventAware;
 import org.apache.cocoon.caching.IdentifierCacheKey;
-import org.apache.cocoon.caching.validity.EventValidity;
-import org.apache.cocoon.caching.validity.NamedEvent;
+
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -58,7 +55,7 @@ import org.xml.sax.SAXException;
  *
  * <h2>Syntax for Protocol</h2>
  * <pre>
- *   cached:http://www.apache.org/[?cocoon:cache-expires=60&cocoon:cache-name=main]
+ *   cached:http://www.apache.org/[?cocoon:cache-expires=60&cocoon:cache-name=main][&cocoon:cache-fail=true]
  * </pre>
  *
  * <p>The above examples show how the real source <code>http://www.apache.org</code>
@@ -70,6 +67,10 @@ import org.xml.sax.SAXException;
  * Specifying <code>-1</code> will yield the cached response to be considered valid
  * always. Value <code>0</code> can be used to achieve the exact opposite. That is to say,
  * the cached contents will be thrown out and updated immediately and unconditionally.<p>
+ * 
+ * <p>The <code>cache-fail</code> argument lets subsequent syncronous requests, that have to be 
+ * refreshed, fail, in the case that the wrapped source can't be reached. The default value 
+ * for <code>cache-fail</code> is <code>true</code>.
  *
  * @version $Id$
  */
@@ -131,10 +132,12 @@ public class CachingSource extends AbstractLogEnabled
     /** asynchronic refresh strategy ? */
     final protected boolean async;
 
-    final protected boolean eventAware;
+    
+    private CachingSourceValidityStrategy validityStrategy;
 
     /**
      * Construct a new object.
+     * @param validityStrategy2 
      */
     public CachingSource(final String protocol,
                          final String uri,
@@ -143,7 +146,7 @@ public class CachingSource extends AbstractLogEnabled
                          final int expires,
                          final String cacheName,
                          final boolean async,
-                         final boolean eventAware,
+                         final CachingSourceValidityStrategy validityStrategy, 
                          final boolean fail) {
         this.protocol = protocol;
         this.uri = uri;
@@ -152,7 +155,7 @@ public class CachingSource extends AbstractLogEnabled
         this.expires = expires;
         this.cacheName = cacheName;
         this.async = async;
-        this.eventAware = eventAware;
+        this.validityStrategy = validityStrategy;
         this.fail = fail;
 
         String key = "source:" + getSourceURI();
@@ -580,56 +583,17 @@ public class CachingSource extends AbstractLogEnabled
         if (this.response == null) {
             return false;
         }
-
-        if (eventAware) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Cached response of source does not expire");
-            }
-            return true;
-        }
-
-        final SourceValidity[] validities = this.response.getValidityObjects();
-        boolean valid = true;
-
-        final ExpiresValidity expiresValidity = (ExpiresValidity) validities[0];
-        final SourceValidity sourceValidity = validities[1];
-
-        if (expiresValidity.isValid() != SourceValidity.VALID) {
-            int validity = sourceValidity != null? sourceValidity.isValid() : SourceValidity.INVALID;
-            if (validity == SourceValidity.INVALID ||
-                    validity == SourceValidity.UNKNOWN &&
-                            sourceValidity.isValid(source.getValidity()) != SourceValidity.VALID) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Response expired, invalid for " + getSourceURI());
-                }
-                valid = false;
-            } else {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Response expired, still valid for " + getSourceURI());
-                }
-                // set new expiration period
-                validities[0] = new ExpiresValidity(getExpiration());
-            }
-        } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Response not expired for " + getSourceURI());
-            }
-        }
-
-        return valid;
+        return this.validityStrategy.checkValidity(this.response, this.source, this.getExpiration());
     }
 
     protected SourceValidity[] getCacheValidities() {
-        if (this.cache instanceof EventAware) {
-            // use event caching strategy, the associated event is the source uri
-            return new SourceValidity[] { new EventValidity(new NamedEvent(this.source.getURI())) };
-        } else {
-            // we need to store both the cache expiration and the original source validity
-            // the former is to determine whether to recheck the latter (see checkValidity)
-            return new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() };
-        }
+        return validityStrategy.getCacheValidities(this, source);
     }
 
+    public void setValidityStrategy(CachingSourceValidityStrategy s) {
+        this.validityStrategy = s;
+    }
+    
     /**
      * Data holder for caching Source meta info.
      */
