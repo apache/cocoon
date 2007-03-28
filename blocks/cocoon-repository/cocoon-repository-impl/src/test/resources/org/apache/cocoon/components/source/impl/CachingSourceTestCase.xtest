@@ -37,11 +37,6 @@
        default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"
   />
 
-  <role name="org.apache.cocoon.caching.Cache"
-        shorthand="cache"
-        default-class="org.apache.cocoon.caching.impl.CacheImpl"
-  />
-
   <role name="org.apache.cocoon.components.source.helpers.SourceRefresher"
         shorthand="delay-refresher"
         default-class="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
@@ -79,8 +74,6 @@
   <store logger="core.persistentstore">
     <parameter name="directory" value="cachingsourcetest"/>
   </store>
-
-  <cache logger="core.cache"/>
 
   <delay-refresher logger="core.refresher">
     <parameter name="write-interval" value="10"/>
