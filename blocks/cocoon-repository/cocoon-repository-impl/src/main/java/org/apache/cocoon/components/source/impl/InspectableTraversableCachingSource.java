@@ -43,9 +43,9 @@ public class InspectableTraversableCachingSource extends TraversableCachingSourc
                                                int expires,
                                                String cacheName,
                                                boolean async,
-                                               boolean eventAware, 
+                                               CachingSourceValidityStrategy validityStrategy, 
                                                boolean fail) {
-        super(factory, protocol, uri, sourceUri, (TraversableSource) source, expires, cacheName, async, eventAware, fail);
+        super(factory, protocol, uri, sourceUri, (TraversableSource) source, expires, cacheName, async, validityStrategy, fail);
     }
 
     private InspectableSource getInspectableSource() {
