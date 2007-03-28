@@ -758,7 +758,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
          * @see org.quartz.spi.QuartzThreadPool#getPoolSize()
          */
         public int getPoolSize() {
-            return this.executor.getMaximumPoolSize();
+            return this.executor.getMaxPoolSize();
         }
 
         /* (non-Javadoc)
