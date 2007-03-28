@@ -15,14 +15,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+<map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://apache.org/cocoon/sitemap/1.0 http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd"
+ xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   
   <map:flow language="javascript">
     <map:script src="demo.js"/>
   </map:flow>
   
   <map:pipelines>
-    <map:pipeline>
+    <map:pipeline id="demo">
       <map:match pattern="">
         <map:call function="demo"/>
       </map:match>
@@ -30,6 +32,27 @@
         <map:generate src="demo.xml" type="jx"/>
         <map:serialize type="xml"/>
       </map:match>
+    </map:pipeline>
+    
+    <map:pipeline id="internal-resource" internal-only="true">
+      <!-- Put matchers for internal (accessible only to Cocoon blocks) resources here
+        More details: http://cocoon.zones.apache.org/daisy/cdocs-site-main/g2/1345.html -->
+      <map:match pattern="resource/internal/**">
+        <map:read src="resource/internal/{1}"/>
+      </map:match>
+    </map:pipeline>
+    
+    <map:pipeline id="external-resource">
+      <!-- Put matchers for extnernal (accessible to the outside world, e.g. browser) resources here. 
+        More details: http://cocoon.zones.apache.org/daisy/cdocs-site-main/g2/1345.html -->
+      <map:match pattern="resource/external/**">
+        <map:read src="resource/external/{1}"/>
+      </map:match>
+    </map:pipeline>
+    
+    <map:pipeline id="service">
+      <!-- Put your servlet service matchers here.
+        More details: http://cocoon.zones.apache.org/daisy/cdocs-site-main/g2/1345.html -->
     </map:pipeline>
   </map:pipelines>
   
