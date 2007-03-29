@@ -55,12 +55,12 @@ public class CocoonReloadingListener extends ReloadingListener {
                 changedFileParentPath.endsWith("config/avalon") ||                  // global Avalon components
                 changedFilePath.endsWith(".xmap") ||                                // any file that ends with xmap (sitemaps)
                 changedFilePath.endsWith(".xmap.xml") ||                            // any sitemap that ends with xmap.xml (sitemaps)
+                changedFilePath.endsWith(".java") ||                                // any Java class change
                 changedFileParentPath.endsWith("config/spring")) {                  // local Spring bean configurations
             log.debug("Configuration file change detected [" + operation + "]: " + changedFile);
             reload = true;
         } else {
             log.debug("File change detected [" + operation + "]: " + changedFile);  // any other file change
-            reload = true;
         }
     }
 
