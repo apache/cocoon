@@ -114,7 +114,7 @@ public class CacheImpl implements Cache {
         this.store = store;
     }
     
-    private Log getLogger() {
+    protected Log getLogger() {
         return this.logger;
     }    
 
