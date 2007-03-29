@@ -57,7 +57,7 @@ public class SimpleCache extends CacheImpl {
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        super.parameterize(parameters);
+        //super.parameterize(parameters);
         this.baseDirectory = parameters.getParameter("baseDirectory");
         final File dir = new File(this.baseDirectory);
         dir.mkdirs();
