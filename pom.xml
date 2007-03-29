@@ -358,6 +358,18 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>gkossakowski</id>
+      <name>Grzegorz Kossakowski</name>
+      <email>gkossakowski@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
 
   <issueManagement>
