@@ -80,7 +80,7 @@ public class RwmPropertiesTest extends TestCase {
     }      
     
     protected RwmProperties createTestProperties() throws Exception {    
-        return new RwmProperties(getResourcesFromClassLoaderAsFile("rcl.properties"));
+        return new RwmProperties(getResourcesFromClassLoaderAsFile("rcl.properties"), new File(""));
     }
     
     protected File getResourcesFromClassLoaderAsFile(String fileName) throws IOException {

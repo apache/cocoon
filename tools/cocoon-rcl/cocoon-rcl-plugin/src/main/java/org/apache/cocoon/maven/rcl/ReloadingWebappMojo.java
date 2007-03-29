@@ -91,9 +91,9 @@ public class ReloadingWebappMojo extends AbstractMojo {
     /**
      * The directory that contains the Cocoon web application.
      * 
-     * @parameter expression="${cocoon.rcl.properties}"
+     * @parameter expression="./rcl.properties"
      */
-    private File rclPropertiesFile = new File("./rcl.properties");    
+    private File rclPropertiesFile;    
 
     /**
      * Use socket appender
@@ -211,7 +211,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
     protected RwmProperties readProperties() throws MojoExecutionException {
         RwmProperties props = null;
         try {
-            props  = new RwmProperties(this.rclPropertiesFile);
+            props  = new RwmProperties(this.rclPropertiesFile, this.project.getBasedir());
         } catch (ConfigurationException e) {
             throw new MojoExecutionException("Can't read " + this.rclPropertiesFile.getAbsolutePath(), e);
         }

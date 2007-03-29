@@ -37,9 +37,11 @@ public class RwmProperties {
     private static final String TARGET_CLASSES_DIR = "target/classes";
     
     private Configuration props;
-
-    public RwmProperties(File propsFile) throws ConfigurationException {
-        props = new PropertiesConfiguration(propsFile);
+    private File basedir;
+    
+    public RwmProperties(File propsFile, File basedir) throws ConfigurationException {
+        this.props = new PropertiesConfiguration(propsFile);
+        this.basedir = basedir;
     }
     
     public Set getClassesDirs() throws MojoExecutionException {
@@ -52,7 +54,7 @@ public class RwmProperties {
                     String path = values[i];
                     String url = null;
                     try {
-                        url = new File(path).toURL().toExternalForm();
+                        url = getUrlAsString(path);
                     } catch (MalformedURLException e) {
                         throw new MojoExecutionException("Can't create URL to  " + path, e);
                     }
@@ -86,7 +88,7 @@ public class RwmProperties {
             if(key.endsWith(BLOCK_CONTEXT_URL_PARAM)) {
                 String path = null;
                 try {
-                    path = new File(this.props.getString(key)).toURL().toExternalForm();
+                    path = this.getUrlAsString(this.props.getString(key));
                 } catch (MalformedURLException e) {
                     throw new MojoExecutionException("Can't create URL to  " + path, e);
                 }            
@@ -97,7 +99,7 @@ public class RwmProperties {
             else if(key.endsWith(CLASSES_DIR) && !CLASSES_DIR.equals(key)) {
                 String path = null;
                 try {
-                    path = new File(this.props.getString(key)).toURL().toExternalForm();
+                    path = this.getUrlAsString(this.props.getString(key));
                 } catch (MalformedURLException e) {
                     throw new MojoExecutionException("Can't create URL to  " + this.props.getString(key), e);
                 }  
@@ -141,6 +143,21 @@ public class RwmProperties {
             }
         }
         return cocoonProps;
+    }
+    
+    private String getUrlAsString(String path) throws MalformedURLException {
+        // find out if the path is relative or absolute
+        boolean absolute = false;
+        if(path.indexOf(':') == 1 || path.startsWith("/")) {
+            absolute = true;
+        }
+        File p = null;
+        if(absolute) {
+            p = new File(path);
+        } else {
+            p = new File(this.basedir, path);
+        }
+        return p.toURI().toASCIIString();
     }
     
 }    
