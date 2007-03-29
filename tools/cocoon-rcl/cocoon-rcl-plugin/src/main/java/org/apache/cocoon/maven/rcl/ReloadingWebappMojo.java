@@ -172,9 +172,11 @@ public class ReloadingWebappMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         // check if this plugin is useful at all
         if(!project.getPackaging().equals("jar") || 
-                !(new File(project.getBasedir(), "src/main/resources/COB-INF").exists())) {
+                !(new File(project.getBasedir(), "src/main/resources/COB-INF").exists()) ||
+                !rclPropertiesFile.exists()) {
             getLog().info("Don't execute the Cocoon RCL plugin becaues either its packaging " + 
-                    "type is not 'jar' or it doesn't have a directory 'src/main/resources/COB-INF'.");
+                    "type is not 'jar' or it doesn't have a directory 'src/main/resources/COB-INF' or " + 
+                    "there is no rcl.properties file in the block's base directory.");
             return;
         }
         
