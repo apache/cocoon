@@ -84,9 +84,9 @@ public class ReloadingWebappMojo extends AbstractMojo {
     /**
      * The directory that contains the Cocoon web application.
      * 
-     * @parameter expression="${cocoon.rcl.target}"
+     * @parameter expression="./target/rcl"
      */
-    private File target = new File("./target/rcl");
+    private File target;
     
     /**
      * The directory that contains the Cocoon web application.
@@ -170,12 +170,22 @@ public class ReloadingWebappMojo extends AbstractMojo {
     private MavenProject project;    
 
     public void execute() throws MojoExecutionException {
+        // check if this plugin is useful at all
+        if(!project.getPackaging().equals("jar") || 
+                !(new File(project.getBasedir(), "src/main/resources/COB-INF").exists())) {
+            getLog().info("Don't execute the Cocoon RCL plugin becaues either its packaging " + 
+                    "type is not 'jar' or it doesn't have a directory 'src/main/resources/COB-INF'.");
+            return;
+        }
+        
         getLog().info("Creating a reloading Cocoon web application.");
         
         // create web application containing all necessary files (web.xml, applicationContext.xml, log4j.xconf)
         File webAppBaseDir = new File(target, "webapp");
-        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_WEB_XML), createPath(new File(webAppBaseDir, WEB_INF_WEB_XML)));
-        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_APP_CONTEXT), createPath(new File(webAppBaseDir, WEB_INF_APP_CONTEXT)));
+        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_WEB_XML), 
+                createPath(new File(webAppBaseDir, WEB_INF_WEB_XML)));
+        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_APP_CONTEXT), 
+                createPath(new File(webAppBaseDir, WEB_INF_APP_CONTEXT)));
         writeLog4jXml(webAppBaseDir);        
 
         // copy rcl webapp wrapper and all its dependencies to WEB-INF/lib
