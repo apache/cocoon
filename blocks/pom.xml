@@ -45,7 +45,8 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- Commented, until commons-jci is available at Maven central -->
+      <!--plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-rcl-plugin</artifactId>
         <version>1.0.0-M1-SNAPSHOT</version>
@@ -57,7 +58,7 @@
             </goals>
           </execution>
         </executions>        
-      </plugin>
+      </plugin-->
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
