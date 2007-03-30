@@ -16,42 +16,46 @@
  */
 package org.apache.cocoon.template.script;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.StringTemplateParser;
 import org.apache.cocoon.template.script.event.StartDocument;
+import org.apache.cocoon.util.location.LocationUtils;
+
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
+
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
 
 /**
  * @version $Id$
  */
-public class DefaultScriptManager
-  extends AbstractLogEnabled
-  implements Serviceable, Disposable, ScriptManager, ThreadSafe {
+public class DefaultScriptManager extends AbstractLogEnabled
+                                  implements Serviceable, Disposable, ScriptManager,
+                                             ThreadSafe {
+
+    private static final String JX_STORE_PREFIX = "jxtg:";
+
+    private String stringTemplateParserName;
 
     private ServiceManager manager;
-    private final static String JX_STORE_PREFIX = "jxtg:";
     private Store store;
     private InstructionFactory instructionFactory;
-    private ServiceSelector stringTemplateParserSelector;
     private StringTemplateParser stringTemplateParser;
-    private String stringTemplateParserName = "jxtg";
 
     public DefaultScriptManager() {
+        stringTemplateParserName = "jxtg";
     }
 
     /**
@@ -59,27 +63,23 @@ public class DefaultScriptManager
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.store = (Store) this.manager.lookup(Store.TRANSIENT_STORE);
-        this.instructionFactory = (InstructionFactory) this.manager.lookup(InstructionFactory.ROLE);
-        this.stringTemplateParserSelector = (ServiceSelector) this.manager.lookup(StringTemplateParser.ROLE
-                + "Selector");
-        this.stringTemplateParser = (StringTemplateParser) this.stringTemplateParserSelector
-                .select(this.stringTemplateParserName);
+        this.store = (Store) manager.lookup(Store.TRANSIENT_STORE);
+        this.instructionFactory = (InstructionFactory) manager.lookup(InstructionFactory.ROLE);
+        this.stringTemplateParser = (StringTemplateParser)
+                manager.lookup(StringTemplateParser.ROLE + "/" + stringTemplateParserName);
     }
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
+        if (stringTemplateParser != null) {
+            manager.release(stringTemplateParser);
+            stringTemplateParser = null;
+        }
+        if (this.manager != null) {
             this.manager.release(this.store);
             this.manager.release(this.instructionFactory);
-            if ( this.stringTemplateParserSelector != null ) {
-                this.stringTemplateParserSelector.release(this.stringTemplateParser);
-                this.manager.release(this.stringTemplateParserSelector);
-                this.stringTemplateParserSelector = null;
-                this.stringTemplateParser = null;
-            }
             this.store = null;
             this.instructionFactory = null;
             this.manager = null;
@@ -142,14 +142,19 @@ public class DefaultScriptManager
             }
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + uri + "'.", se);
-        } catch (Exception exc) {
-            throw new SAXParseException(exc.getMessage(), location, exc);
+        } catch (ProcessingException e) {
+            throw ProcessingException.throwLocated(null, e, LocationUtils.getLocation(location));
+        } catch (Exception e) {
+            throw new SAXParseException(e.getMessage(), location, e);
         } finally {
-            if (input != null)
+            if (input != null) {
                 resolver.release(input);
-            if (resolver != null)
+            }
+            if (resolver != null) {
                 manager.release(resolver);
+            }
         }
+
         return doc;
     }
 }
