@@ -16,22 +16,22 @@
  */
 package org.apache.cocoon.components.web3.impl;
 
+import java.net.URL;
+import java.util.Date;
+import java.util.Properties;
+
+import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.cocoon.components.web3.Web3Client;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.excalibur.pool.Poolable;
-
-import com.sap.mw.jco.JCO;
 import com.sap.mw.jco.IRepository;
-
-import java.net.URL;
-import java.util.Properties;
-import java.util.Date;
+import com.sap.mw.jco.JCO;
 
 /**
- * The standard interface for R3Clients in Web3.
+ * TBD
  *
  * @since 2.1
  * @version $Id$
@@ -42,29 +42,20 @@ implements Web3Client, Disposable, Recyclable, Poolable {
     protected JCO.Client client;
     protected String repository;
 
-    /**
-     * @see org.apache.cocoon.components.web3.Web3Client#initClient(com.sap.mw.jco.JCO.Client)
-     */
     public void initClient(JCO.Client client) {
         this.client = client;
         this.repository = "" + (new Date ()).getTime();
     }
 
-    /**
-     * @see org.apache.cocoon.components.web3.Web3Client#releaseClient()
-     */
     public void releaseClient() {
         JCO.releaseClient(this.client);
         this.client = null;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        this.client = null;
         this.repository = null;
     }
+
+    public void recycle() { }
+    
+    public void dispose() { }
     
     public IRepository getRepository() {
         if (null != this.repository) {
@@ -252,10 +243,5 @@ implements Web3Client, Disposable, Recyclable, Poolable {
     public void setThroughput(JCO.Throughput throughput) {
         this.client.setThroughput (throughput);
     }   
-    
-    public void recycle() {
-        this.client = null;
-        this.repository = null;
-    }
     
 }
