@@ -16,23 +16,23 @@
  */
 package org.apache.cocoon.components.web3.impl;
 
-import org.apache.cocoon.components.web3.Web3DataSource;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.cocoon.util.ClassUtils;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import org.apache.cocoon.components.web3.Web3DataSource;
+import org.apache.cocoon.util.ClassUtils;
 
 import EDU.oswego.cs.dl.util.concurrent.Mutex;
 
@@ -50,8 +50,8 @@ public class Web3DataSourceSelectorImpl
     /** The service manager instance */
     protected ServiceManager manager;
     protected Configuration configuration;
-    private static Hashtable pools = new Hashtable();
-    private static Mutex lock = new Mutex();
+    private static final Hashtable pools = new Hashtable();
+    private static final Mutex lock = new Mutex();
 
     /**
      * Set the current <code>ServiceManager</code> instance used by this
@@ -145,8 +145,7 @@ public class Web3DataSourceSelectorImpl
                 enumeration.hasMoreElements();
                 ) {
                 sid = (String) enumeration.nextElement();
-                pool =
-                    (Web3DataSource) Web3DataSourceSelectorImpl.pools.get(sid);
+                pool = (Web3DataSource) Web3DataSourceSelectorImpl.pools.get(sid);
                 pool.dispose();
             }
             Web3DataSourceSelectorImpl.pools.clear();
@@ -154,6 +153,6 @@ public class Web3DataSourceSelectorImpl
         } finally {
             Web3DataSourceSelectorImpl.lock.release();
         }
-        Web3DataSourceSelectorImpl.lock = null;
     }
+
 }
