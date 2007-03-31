@@ -26,6 +26,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
@@ -51,7 +52,7 @@ public class Web3RfcTransformer extends AbstractTransformer
 implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
     
     /** The service manager instance */
-    protected ServiceManager  manager;
+    protected ServiceManager    manager;
     protected Web3DataSource    web3source;
     
     protected Web3Client        connection;
@@ -70,33 +71,27 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
     protected String            default_backend;
     protected String            streamer;
     protected HashMap           tags                = new HashMap();
-    
-    public void setup(SourceResolver resolver, Map objectModel,
-                    String source, Parameters parameters) 
-    throws SAXException {
-        
-        try {
-            backend = parameters.getParameter("system");
-        }
-        catch (Exception x) {
-            if ( null == backend ) {
-                getLogger().warn("No backend configured! Try to use configuration");
-                backend = default_backend;
-            }
-        }
+
+    public void configure(final Configuration configuration) throws ConfigurationException {
+        this.default_backend = configuration.getChild("system").getValue(null);
     }
 
-    public void service(ServiceManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         initTags();
     }
-    
-    public void configure(final Configuration configuration)
-        throws ConfigurationException {
-            
-        this.default_backend = configuration.getChild("system").getValue(null);
+
+    public void setup(SourceResolver resolver, Map objectModel,
+                      String source, Parameters parameters) throws SAXException {
+        try {
+            this.backend = parameters.getParameter("system");
+        }
+        catch (Exception x) {
+            getLogger().warn("No backend configured! Try to use configuration");
+            this.backend = this.default_backend;
+        }
     }
-     
+
     public void recycle() {
         this.connection            = null;
         this.repository            = null;
@@ -121,33 +116,10 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
     }
     
     /**
-    * Receive notification of the beginning of a document.
-    */
-    public void startDocument() 
-    throws SAXException {
-        
-        if ( null != super.contentHandler ) {
-            super.contentHandler.startDocument();
-        }    
-    }
-
-    /**
-    * Receive notification of the end of a document.
-    */
-    public void endDocument() 
-    throws SAXException {
-
-        if ( null != super.contentHandler) {
-            super.contentHandler.endDocument();
-        }  
-    }
-
-    /**
     * Receive notification of the beginning of an element.
     */
     public void startElement(String uri, String loc, String raw, Attributes a)
-        throws SAXException {    
-            
+        throws SAXException {
         if ( Web3.URI.equals( uri ) && !this.error ) { 
             switch ( Integer.parseInt( (String) this.tags.get( loc ))) {
                 case INCLUDE_ELEM: 
@@ -170,13 +142,13 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
                         getLogger().error (error, ex);   
                         
                         error = ex.getMessage();
-                        attributes.clear();
-                        super.contentHandler.startElement(uri, loc, raw, a);                
-                        super.contentHandler.startElement(uri, Web3.PROCESSING_X_ELEM, 
-                            Web3.PROCESSING_X_ELEM, attributes);
-                        super.contentHandler.characters(error.toCharArray(), 0, 
+                        this.attributes.clear();
+                        super.startElement(uri, loc, raw, a);                
+                        super.startElement(uri, Web3.PROCESSING_X_ELEM, 
+                            Web3.PROCESSING_X_ELEM, this.attributes);
+                        super.characters(error.toCharArray(), 0, 
                             error.length());
-                        super.contentHandler.endElement(uri, Web3.PROCESSING_X_ELEM, 
+                        super.endElement(uri, Web3.PROCESSING_X_ELEM, 
                             Web3.PROCESSING_X_ELEM);
                         this.error = true;
                     } 
@@ -218,16 +190,15 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
                     getLogger().error("Invalid element " + loc);
             }
         } 
-        else if (super.contentHandler != null) {
-            super.contentHandler.startElement(uri, loc, raw, a);
+        else {
+            super.startElement(uri, loc, raw, a);
         }
     }
 
     /**
     * Receive notification of the end of an element.
     */
-    public void characters(char c[], int start, int len)
-    throws SAXException {
+    public void characters(char c[], int start, int len) throws SAXException {
         String theValue = new String(c, start, len).trim();
         if ( null != this.fillMe ) {
             if ( "".equals( theValue )) {
@@ -245,18 +216,14 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
             }
         } 
         else {
-            if (super.contentHandler != null) {
-                super.contentHandler.characters(c, start, len);
-            }
+            super.characters(c, start, len);
         }
     }
 
     /**
     * Receive notification of the end of an element.
     */
-    public void endElement(String uri, String loc, String raw)
-        throws SAXException 
-    {
+    public void endElement(String uri, String loc, String raw) throws SAXException {
         if ( Web3.URI.equals(uri) && !this.error ) {
             switch ( Integer.parseInt( (String) this.tags.get( loc ))) {
                 case INCLUDE_ELEM: 
@@ -268,15 +235,15 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
                             (ServiceSelector) 
                             this.manager.lookup( Web3Streamer.ROLE + "Selector" );
                         w3s = (Web3Streamer) streamerSelector.select( this.streamer );
-                        w3s.stream( this.function,  super.contentHandler );
+                        w3s.stream( this.function,  this.contentHandler );
                     } 
                     catch (Exception x) {
                         this.attributes.clear();
-                        super.contentHandler.startElement(uri, Web3.ABAP_EXCEPTION_ELEM, 
+                        super.startElement(uri, Web3.ABAP_EXCEPTION_ELEM, 
                             Web3.ABAP_EXCEPTION_ELEM, this.attributes);
-                        super.contentHandler.characters(x.getMessage ().toCharArray(), 
+                        super.characters(x.getMessage ().toCharArray(), 
                             0, x.getMessage ().length());
-                        super.contentHandler.endElement(uri, Web3.ABAP_EXCEPTION_ELEM, 
+                        super.endElement(uri, Web3.ABAP_EXCEPTION_ELEM, 
                             Web3.ABAP_EXCEPTION_ELEM);                    
                         getLogger().error(x.getMessage(), x);
                     } 
@@ -285,7 +252,7 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
                         if ( null != streamerSelector ) {
                             streamerSelector.release( w3s );
                         }
-                        manager.release( streamerSelector );
+                        this.manager.release( streamerSelector );
                     }
                     this.connection = null;
                     this.repository = null;
@@ -300,8 +267,8 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
                 break;
             } 
         }
-        else if (super.contentHandler != null) {
-            super.contentHandler.endElement(uri,loc,raw);
+        else {
+            super.endElement(uri,loc,raw);
         }
     }
 
@@ -315,7 +282,6 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
     protected final static int TABLE_ELEM       = 8;
     
     protected void initTags() {
-        
         this.tags.put( Web3.INCLUDE_ELEM,   "1" );
         this.tags.put( Web3.IMPORT_ELEM,    "2" );        
         this.tags.put( Web3.EXPORT_ELEM,    "3" );        
@@ -325,5 +291,5 @@ implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
         this.tags.put( Web3.STRUCTURE_ELEM, "7" );     
         this.tags.put( Web3.TABLE_ELEM,     "8" );         
     }
-}
 
+}

@@ -24,21 +24,20 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.web3.Web3DataSource;
 import org.apache.cocoon.util.ClassUtils;
 
 import EDU.oswego.cs.dl.util.concurrent.Mutex;
 
 /**
- * The Default implementation for R3DataSources in Web3.  This uses the
- * normal <code>com.sap.mw.jco.JCO</code> classes.
+ * TBD
  *
  * @since 2.1
  * @version $Id$
@@ -112,12 +111,7 @@ public class Web3DataSourceSelectorImpl
                             true,
                             ClassUtils.getClassLoader());
                     pool = (Web3DataSource) theClass.newInstance();
-                    if (pool instanceof LogEnabled) {
-                        ((LogEnabled) pool).enableLogging(getLogger());
-                    }
-                    pool.service(this.manager);
-                    pool.configure(c);
-                    pool.initialize();
+                    LifecycleHelper.setupComponent(pool, getLogger(), null, this.manager, c);
                     Web3DataSourceSelectorImpl.pools.put(obj, pool);
                 }
             }
