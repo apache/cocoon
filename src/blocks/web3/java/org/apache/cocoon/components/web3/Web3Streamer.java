@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,8 +32,8 @@ import org.apache.avalon.framework.component.Component;
  */
 public interface Web3Streamer extends Component {
 
-    String ROLE = "org.apache.cocoon.components.web3.Web3Streamer";
-    
+    String ROLE = Web3Streamer.class.getName();
+
     void stream(JCO.Function function, 
         ContentHandler contentHandler) throws SAXException;
 }
