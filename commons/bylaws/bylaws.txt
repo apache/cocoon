@@ -1,0 +1,64 @@
+(Note: This is a summary of ideas about what could/should be part of our bylaws some time in the future. 
+Of course a vote is required to make them official.)
+
+BYLAWS
+********************************************************************************
+
+MISSION
+ - XML pipelines (narrow sense)
+ - web application framework (broader sense)
+
+ROLES AND RESPONSIBILITIES
+ - see http://www.apache.org/foundation/how-it-works.html
+ - each Cocoon committer is invited to join the PMC membership. There is NO vote required.
+ - each committer/PMC member can request to change into an emeritus status. coming back does NOT require a further vote
+   sending a message to private@cocoon.apache.org is enough
+
+GIVING CREDIT TO CONTRIBUTORS
+ - http://marc.info/?l=xml-cocoon-dev&m=117394069331060&w=2
+ - non committers: changes docs
+
+RELEASING
+ - procedure
+ - formal technical requirements (binaries, sources, javadocs, checksums, gpg singed, license, license header)
+
+STATUS
+ - each project has a changes.xml
+   * detailed log about what has changed
+   * give credit to contributors
+   
+COMMIT RIGHTS
+ - (of course) all Cocoon committers
+ - additionally all Excalibur, Forrest and Lenya committers too
+ - Cocoon committers have commit  rights for: Forrest, Lenya
+
+VERSIONING
+ - meaning of major, minor, patch level
+ - block compatibility
+ - library upgrades
+ 
+SUB PROJECTS AND BLOCKS
+ - what is a sub project
+ - what's the difference of a block and a sub project
+ - voting rules for setting up sub projects
+
+VOTING
+ - committer votings: consensus, at least three +1
+ - release votings: majority, at least three +1
+ - vetoes
+ - a vote has to stay open for at least 72 hours
+ - votes have to be done in public. The only exception is security issues.
+ 
+ -> copying what Ant/Forrest developed?
+ 
+ Questions:
+ - What happens in the case of three +3 and two -1? Is this enough for
+ - What happens in the case of a tie? (chair decision?)
+  
+ 
+COMMUNICATION
+ - purpose of dev/users/private/doc/commits 
+
+REPORTING
+ - PMC chair drafts the report and sends it to private@, 48 hours for review before
+   sending it to the board
