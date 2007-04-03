@@ -73,46 +73,31 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * or {@link org.apache.cocoon.components.source.impl.TraversableCachingSource}
  * depending on the whether the wrapped Source is an instance of TraversableSource.
  * </p>
- *
- * <h2>Parameters</h2>
- * <table><tbody>
- * <tr>
- *  <th>cache-role (String)</th>
- *  <td>Role of component used as cache.</td>
- *  <td>opt</td>
- *  <td>String</td>
- *  <td><code>{@link Cache#ROLE}</code></td>
- * </tr>
- * <tr>
- *  <th>refresher-role (String)</th>
- *  <td>Role of component used for refreshing sources.</td>
- *  <td>opt</td>
- *  <td>String</td>
- *  <td><code>{@link org.apache.cocoon.components.source.helpers.SourceRefresher#ROLE}</code></td>
- * </tr>
- * <tr>
- *  <th>async (boolean)</th>
- *  <td>Indicated if the cached source should be refreshed asynchronously.</td>
- *  <td>opt</td>
- *  <td>String</td>
- *  <td><code>false</code></td>
- * </tr>
- * <tr>
- *  <th>event-aware (boolean)</th>
- *  <td>Whether to use event-based cache invalidation.</td>
- *  <td>opt</td>
- *  <td>String</td>
- *  <td><code>false</code></td>
- * </tr>
- * <tr>
- *  <th>default-expires (int)</th>
- *  <td>Default expiration value for if it is not specified on the Source itself.</td>
- *  <td>opt</td>
- *  <td>String</td>
- *  <td><code>-1</code></td>
- * </tr>
- * </tbody></table>
- *
+ * <p>
+ * If other types of sources should be supported, subclass this class and override the method 
+ * {@link #instantiateSource(String, String, Source, int, String, boolean)}.
+ * </p>
+ * <p>
+ * In order to use the CachingSourceFactory in Cocoon, you have to set it up as Spring bean. For this purpose
+ * you can use the abstract bean definition with the name 
+ * <code>org.apache.excalibur.source.SourceFactory/caching::abstract</code>:
+ * <br>
+ * <code>
+ *   &lt;bean name=&quot;org.apache.excalibur.source.SourceFactory/caching::abstract&quot;
+ *     class=&quot;org.apache.cocoon.components.source.impl.CachingSourceFactory&quot;
+ *     abstract=&quot;true&quot;&gt;
+ *     &lt;property name=&quot;cache&quot; ref=&quot;org.apache.cocoon.caching.Cache&quot;/&gt;
+ *     &lt;property name=&quot;sourceResolver&quot; ref=&quot;org.apache.excalibur.source.SourceResolver&quot;/&gt;
+ *     &lt;property name=&quot;serviceManager&quot; ref=&quot;org.apache.avalon.framework.service.ServiceManager&quot;/&gt;
+ *     &lt;property name=&quot;validityStrategy&quot;&gt;
+ *       &lt;bean class=&quot;org.apache.cocoon.components.source.impl.ExpiresCachingSourceValidityStrategy&quot;/&gt;        
+ *     &lt;/property&gt;
+ *   &lt;/bean&gt;      
+ * </p>
+ * <p>
+ * It is also possible to override dependencies partially there.
+ * </p>
+ * 
  * @version $Id$
  * @since 2.1.1
  */
@@ -299,13 +284,9 @@ public class CachingSourceFactory implements URIAbsolutizer, SourceFactory {
     }
 
     // ---------------------------------------------------- URIAbsolutizer
-    // implementation
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.excalibur.source.URIAbsolutizer#absolutize(java.lang.String,
-     *      java.lang.String)
+    /**
+     * @see org.apache.excalibur.source.URIAbsolutizer#absolutize(java.lang.String, java.lang.String)
      */
     public String absolutize(String baseURI, String location) {
         return SourceUtil.absolutize(baseURI, location, true);
@@ -313,36 +294,58 @@ public class CachingSourceFactory implements URIAbsolutizer, SourceFactory {
 
     // ---------------------------------------------------- Set dependencies
     
+    /**
+     * Mandatory dependency on an implementation of {@link Cache}.
+     */
     public void setCache(Cache cache) {
         this.cache = cache;
     }
     
+    /**
+     * Mandatory dependency on an implementation of {@link CachingSourceValidityStrategy}.
+     */
     public void setValidityStrategy(CachingSourceValidityStrategy validityStrategy) {
         this.validityStrategy = validityStrategy;
     }   
     
+    /**
+     * Mandatory dependency on an implementation of {@link ServiceManager}.
+     */    
     public void setServiceManager(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
     
+    /**
+     * Mandatory dependency on an implementation of {@link SourceResolver}.
+     */    
     public void setSourceResolver(SourceResolver resolver) {
         this.resolver = resolver;
     }
     
+    /**
+     * Mandatory property of the used URI schema.
+     */    
     public void setScheme(String scheme) {
         this.scheme = scheme;
     }
  
-    // optional
-    
+    /**
+     * Optional dependency on an implementation of {@link SourceRefresher}.
+     */      
     public void setSourceRefresher(SourceRefresher refresher) {
         this.refresher = refresher;
     }
     
+    /**
+     * Optional property whether the source is asyncronous. The default value is <code>false</code>.
+     */    
     public void setAsync(boolean async) {
         this.async = async;
     }
     
+    /**
+     * Optional property the default expiry time in seconds. Default is <code>-1</code> which means that is valid forever.
+     */       
     public void setDefaultExpires(int expires) {
         this.defaultExpires = expires;
     }    
