@@ -44,11 +44,11 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testResolveURI() throws Exception {
-        testResolveURI("caching", URI);
+        testResolveURI("cached", URI);
     }
 
     public void testResolveAsyncURI() throws Exception {
-        testResolveURI("async-caching", URI);
+        testResolveURI("async-cached", URI);
     }
 
     private void testResolveURI(final String scheme, final String uri) throws Exception {
@@ -70,7 +70,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testCachingURI() throws Exception {
-        String uri = "caching:http://slashdot.org/?cocoon:cache-expires=1";
+        String uri = "cached:http://slashdot.org/?cocoon:cache-expires=1";
 
         CachingSource source;
 
@@ -108,7 +108,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testRefreshSyncURI() throws Exception {
-        testRefreshURI("caching", "http://slashdot.org/");
+        testRefreshURI("cached", "http://slashdot.org/");
     }
 
 //    public void testRefreshAsyncURI() throws Exception {
@@ -143,7 +143,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testCachingTraversableSource() throws Exception {
-        String scheme = "caching";
+        String scheme = "cached";
         File cwd = new File(".").getCanonicalFile();
         String childURI = cwd.toURL().toString();
         String parentURI = cwd.getParentFile().toURL().toString();
@@ -182,7 +182,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
 
     public void testGetContents() throws Exception {
         // resolve CachingSource
-        String scheme = "caching";
+        String scheme = "cached";
         String uri = "resource://org/apache/cocoon/components/source/impl/cachingsourcetest.xml";
         CachingSource source = (CachingSource) resolver.resolveURI(scheme + ":" + uri);
 
