@@ -83,7 +83,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * <code>org.apache.excalibur.source.SourceFactory/caching::abstract</code>:
  * <br>
  * <code>
- *   &lt;bean name=&quot;org.apache.excalibur.source.SourceFactory/caching::abstract&quot;
+ *   &lt;bean name=&quot;org.apache.excalibur.source.SourceFactory/cached::abstract&quot;
  *     class=&quot;org.apache.cocoon.components.source.impl.CachingSourceFactory&quot;
  *     abstract=&quot;true&quot;&gt;
  *     &lt;property name=&quot;cache&quot; ref=&quot;org.apache.cocoon.caching.Cache&quot;/&gt;

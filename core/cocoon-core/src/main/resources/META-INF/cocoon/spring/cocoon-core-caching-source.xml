@@ -24,7 +24,7 @@
       | An abstract CachingSource bean definition providing correct dependencies for most
       | usage scenarios. This avoid code duplication.
       +-->
-  <bean name="org.apache.excalibur.source.SourceFactory/caching::abstract"
+  <bean name="org.apache.excalibur.source.SourceFactory/cached::abstract"
     class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
     abstract="true">
     <property name="cache" ref="org.apache.cocoon.caching.Cache"/>
@@ -35,10 +35,10 @@
     </property>
   </bean>          
 
-  <bean name="org.apache.excalibur.source.SourceFactory/caching"
+  <bean name="org.apache.excalibur.source.SourceFactory/cached"
     class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
-    parent="org.apache.excalibur.source.SourceFactory/caching::abstract"
-    p:scheme="caching"/>
+    parent="org.apache.excalibur.source.SourceFactory/cached::abstract"
+    p:scheme="cached"/>
     
   <bean name="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
     class="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
@@ -51,10 +51,10 @@
     <property name="avalonContext" ref="org.apache.avalon.framework.context.Context"/>
   </bean>       
   
-  <bean name="org.apache.excalibur.source.SourceFactory/async-caching"
+  <bean name="org.apache.excalibur.source.SourceFactory/async-cached"
     class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
-    parent="org.apache.excalibur.source.SourceFactory/caching::abstract"
-    p:scheme="async-caching"
+    parent="org.apache.excalibur.source.SourceFactory/cached::abstract"
+    p:scheme="async-cached"
     p:async="true">
     <property name="sourceRefresher" ref="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"/>
   </bean>
