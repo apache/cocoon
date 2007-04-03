@@ -20,6 +20,9 @@ import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.excalibur.source.Source;
 
 /**
+ * The InspectableAwareCachingSourceFactory inherits from {@link CachingSourceFactory} and only
+ * adds support for wrapped sources of type {@link InspectableSource}.
+ * 
  * @version $Id$
  */
 public class InspectableAwareCachingSourceFactory extends CachingSourceFactory {
