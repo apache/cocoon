@@ -37,11 +37,6 @@
        default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"
   />
 
-  <role name="org.apache.cocoon.components.source.helpers.SourceRefresher"
-        shorthand="delay-refresher"
-        default-class="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
-  />
-
   <role name="org.apache.excalibur.xml.sax.SAXParser"
         shorthand="xml-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"
@@ -61,23 +56,11 @@
  <components>
 
   <source-factories>
-   <component-instance class="org.apache.cocoon.components.source.impl.CachingSourceFactory" name="caching" logger="core.cachingsource"/>
-   <component-instance class="org.apache.cocoon.components.source.impl.CachingSourceFactory" name="async-caching" logger="core.asynchcachingsource">
-     <parameter name="async" value="true"/>
-   </component-instance>
    <component-instance class="org.apache.cocoon.components.source.impl.XMLizableSourceFactory" name="xml" logger="core.xmlsource"/>
    <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file" logger="core.filesource"/>
    <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource" logger="core.resourcesource"/>
    <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
-
-  <store logger="core.persistentstore">
-    <parameter name="directory" value="cachingsourcetest"/>
-  </store>
-
-  <delay-refresher logger="core.refresher">
-    <parameter name="write-interval" value="10"/>
-  </delay-refresher>
 
   <xmlizer logger="core.xmlizer">
     <parser mime-type="text/xml" role="org.apache.excalibur.xml.sax.SAXParser"/>
