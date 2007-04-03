@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.core.container.ContainerTestCase;
+import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.xml.LoggingContentHandler;
 import org.apache.cocoon.xml.SaxBuffer;
@@ -32,13 +32,13 @@ import org.apache.excalibur.source.SourceResolver;
 /**
  * TODO describe class
  */
-public class CachingSourceTestCase extends ContainerTestCase {
+public class CachingSourceTestCase extends SitemapComponentTestCase {
 
     private static final String URI = "resource://org/apache/cocoon/components/source/impl/cachingsourcetest.xml?foo=bar";
 
     SourceResolver resolver;
 
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
         resolver = (SourceResolver) lookup(SourceResolver.ROLE);
     }

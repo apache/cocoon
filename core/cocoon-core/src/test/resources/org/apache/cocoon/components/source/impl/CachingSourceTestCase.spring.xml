@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
-    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
-    <!--
+<!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
   this work for additional information regarding copyright ownership.
@@ -17,10 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
   
-  <bean name="org.apache.cocoon.caching.Cache" class="org.apache.cocoon.caching.impl.CacheImpl">
-    <property name="store" ref="org.apache.excalibur.store.Store"/>
-  </bean>  
-  
+  <import resource="classpath:META-INF/cocoon/spring/cocoon-core-caching-source.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/cocoon-pipeline-impl-cache.xml"/>
+    
 </beans>
