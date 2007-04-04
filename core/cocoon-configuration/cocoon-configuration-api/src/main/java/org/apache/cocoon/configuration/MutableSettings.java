@@ -111,6 +111,7 @@ public class MutableSettings implements Settings {
         this.configurationReloadDelay = SettingsDefaults.DEFAULT_CONFIGURATION_RELOAD_DELAY;
         this.containerEncoding = SettingsDefaults.DEFAULT_CONTAINER_ENCODING;
         this.runningMode = mode;
+        this.creationTime = System.currentTimeMillis();
     }
 
     /**
