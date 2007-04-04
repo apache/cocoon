@@ -38,6 +38,7 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.URIAbsolutizer;
+import org.springframework.beans.factory.BeanNameAware;
 
 /**
  * This class implements a proxy like source caches the contents of the source
@@ -101,7 +102,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * @version $Id$
  * @since 2.1.1
  */
-public class CachingSourceFactory implements URIAbsolutizer, SourceFactory {
+public class CachingSourceFactory implements URIAbsolutizer, SourceFactory, BeanNameAware {
 
     private Log logger = LogFactory.getLog(getClass());        
     
@@ -321,13 +322,6 @@ public class CachingSourceFactory implements URIAbsolutizer, SourceFactory {
     public void setSourceResolver(SourceResolver resolver) {
         this.resolver = resolver;
     }
-    
-    /**
-     * Mandatory property of the used URI schema.
-     */    
-    public void setScheme(String scheme) {
-        this.scheme = scheme;
-    }
  
     /**
      * Optional dependency on an implementation of {@link SourceRefresher}.
@@ -348,6 +342,13 @@ public class CachingSourceFactory implements URIAbsolutizer, SourceFactory {
      */       
     public void setDefaultExpires(int expires) {
         this.defaultExpires = expires;
+    }
+
+    // ---------------------------------------------------- BeanNameAware
+    
+    public void setBeanName(String beanName) {
+        int pos = beanName.lastIndexOf('/');
+        this.scheme = beanName.substring(pos + 1);
     }    
     
 }
