@@ -53,14 +53,17 @@ public class CocoonReloadingListener extends ReloadingListener {
 
         if(changedFileParentPath.endsWith("META-INF/cocoon/spring") ||              // global Spring beans configurations
                 changedFileParentPath.endsWith("config/avalon") ||                  // global Avalon components
-                changedFilePath.endsWith(".xmap") ||                                // any file that ends with xmap (sitemaps)
-                changedFilePath.endsWith(".xmap.xml") ||                            // any sitemap that ends with xmap.xml (sitemaps)
-                changedFilePath.endsWith(".java") ||                                // any Java class change
-                changedFileParentPath.endsWith("config/spring")) {                  // local Spring bean configurations
-            log.debug("Configuration file change detected [" + operation + "]: " + changedFile);
+//                changedFilePath.endsWith(".xmap") ||                                // any file that ends with xmap (sitemaps)
+//                changedFilePath.endsWith(".xmap.xml") ||                            // any sitemap that ends with xmap.xml (sitemaps)
+                changedFilePath.endsWith(".class") ||                         // Java class file change
+                changedFileParentPath.endsWith("config/spring")                     // local Spring bean configurations
+           ) {                
+            log.debug("Configuration or .class file change detected [" + operation + "]: " + changedFile);
+            System.out.println("Configuration or .class file change detected [" + operation + "]: " + changedFile);
             reload = true;
         } else {
-            log.debug("File change detected [" + operation + "]: " + changedFile);  // any other file change
+            log.debug("Other file change detected, no reload [" + operation + "]: " + changedFile);  // any other file change
+            System.out.println("Other file change detected, no reload [" + operation + "]: " + changedFile);
         }
     }
 
