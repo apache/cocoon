@@ -37,8 +37,7 @@
 
   <bean name="org.apache.excalibur.source.SourceFactory/cached"
     class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
-    parent="org.apache.excalibur.source.SourceFactory/cached::abstract"
-    p:scheme="cached"/>
+    parent="org.apache.excalibur.source.SourceFactory/cached::abstract"/>
     
   <bean name="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
     class="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
@@ -54,7 +53,6 @@
   <bean name="org.apache.excalibur.source.SourceFactory/async-cached"
     class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
     parent="org.apache.excalibur.source.SourceFactory/cached::abstract"
-    p:scheme="async-cached"
     p:async="true">
     <property name="sourceRefresher" ref="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"/>
   </bean>
