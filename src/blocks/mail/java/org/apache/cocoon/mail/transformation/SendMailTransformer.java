@@ -38,6 +38,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -367,7 +368,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 this.bodyMimeType = DEFAULT_BODY_MIMETYPE;
             }
 
-            startTextRecording();
+            Properties outputProperties = new Properties();
+            if (this.bodyMimeType.equals("text/plain"))
+            	outputProperties.put(OutputKeys.METHOD, "text");
+            else if (this.bodyMimeType.equals("text/html"))
+            	outputProperties.put(OutputKeys.METHOD, "html");
+            startSerializedXMLRecording(outputProperties);
             this.mode = MODE_BODY;
         } else if (name.equals(ELEMENT_ATTACHMENT)) {
             this.attachmentDescriptor = new AttachmentDescriptor(attr.getValue("name"),
@@ -427,7 +433,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         } else if (name.equals(ELEMENT_MAILBODY)) {
             String strB = null;
             try {
-                strB = endTextRecording();
+                strB = endSerializedXMLRecording();
             } catch (Exception e) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Mail: No Body as String in config-file available");
