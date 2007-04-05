@@ -36,6 +36,7 @@
     <property name="maxMemObjects" value="${org.apache.cocoon.store.maxobjects}"/>
     <property name="useCacheDirectory" value="${org.apache.cocoon.store.use-cache-directory}"/>
     <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
+    <property name="storeJanitor" ref="org.apache.excalibur.store.StoreJanitor"/>
   </bean>
 
   <!--
