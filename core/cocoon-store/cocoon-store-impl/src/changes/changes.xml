@@ -54,7 +54,8 @@
         at http://marc.info/?t=117563247800004&amp;r=1&amp;w=2.
       </action>        
       <action dev="reinhard" type="update">
-        Make the maximum number of disk objects configureable.
+        Make the maximum number of disk objects configureable. The default value
+        is 50000.
       </action>    
     </release>    
     <release version="1.0.0-M1" date="2007-03-02" description="released">  
