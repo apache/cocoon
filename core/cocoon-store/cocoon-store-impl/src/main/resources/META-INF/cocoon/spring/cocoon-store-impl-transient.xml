@@ -31,5 +31,6 @@
   <bean name="org.apache.excalibur.store.Store/TransientStore" class="org.apache.cocoon.components.store.impl.DefaultTransientStore"
         init-method="init" destroy-method="destroy">
     <property name="maxObjects" value="${org.apache.cocoon.store.transient.maxobjects}"/>
+    <property name="storeJanitor" ref="org.apache.excalibur.store.StoreJanitor"/>    
   </bean>
 </beans>

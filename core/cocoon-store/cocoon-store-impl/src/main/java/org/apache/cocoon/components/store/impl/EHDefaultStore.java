@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.Store;
+import org.apache.excalibur.store.StoreJanitor;
 
 /**
  * <p>Store implementation based on EHCache (http://ehcache.sourceforge.net/)
@@ -128,6 +129,7 @@ public class EHDefaultStore implements Store {
     private BootstrapCacheLoader bootstrapCacheLoader = null;
 
     private Settings settings;
+    private StoreJanitor storeJanitor;
     private String cacheName;    
     private String directory;    
     private File workDir;
@@ -266,6 +268,14 @@ public class EHDefaultStore implements Store {
     public void setSettings(Settings settings) {
         this.settings = settings;
     }    
+    
+    /**
+     * Use the {@link StoreJanitor} to take care of freeing memory.
+     * @param storeJanitor
+     */
+    public void setStoreJanitor(StoreJanitor storeJanitor) {
+        this.storeJanitor = storeJanitor;
+    }
 
     public Log getLogger() {
         return this.logger;
@@ -384,9 +394,11 @@ public class EHDefaultStore implements Store {
                         this.registeredEventListeners,
                         this.bootstrapCacheLoader,
                         this.maxDiskObjects);
-                        
         
         this.cacheManager.addCache(this.cache);
+        if(this.storeJanitor != null) {
+            storeJanitor.register(this);
+        }
         getLogger().info("EHCache cache \"" + this.cacheName + "\" initialized");
     }
 
@@ -394,6 +406,9 @@ public class EHDefaultStore implements Store {
      * Shutdown the CacheManager.
      */
     public void destroy() {
+        if(this.storeJanitor != null) {
+            storeJanitor.unregister(this);
+        }        
         /*
          * EHCache can be a bitch when shutting down. Basically every cache registers
          * a hook in the Runtime for every persistent cache, that will be executed when
