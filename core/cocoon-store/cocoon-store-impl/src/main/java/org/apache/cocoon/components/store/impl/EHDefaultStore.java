@@ -29,6 +29,9 @@ import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
+import net.sf.ehcache.bootstrap.BootstrapCacheLoader;
+import net.sf.ehcache.event.RegisteredEventListeners;
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.util.IOUtils;
@@ -36,35 +39,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.store.Store;
-import org.apache.excalibur.store.StoreJanitor;
 
 /**
- * Store implementation based on EHCache.
- * (http://ehcache.sourceforge.net/)
- * Configure the store. 
- * <br/>
- * The following options can be used:
- * <ul>
- *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
- *  <li><code>overflow-to-disk</code> (true) - Whether to spool elements to disk after
- *   maxobjects has been exceeded.</li>
- * <li><code>eternal</code> (true) - whether or not entries expire. When set to
- * <code>false</code> the <code>timeToLiveSeconds</code> and
- * <code>timeToIdleSeconds</code> parameters are used to determine when an
- * item expires.</li>
- * <li><code>timeToLiveSeconds</code> (0) - how long an entry may live in the cache
- * before it is removed. The entry will be removed no matter how frequently it is retrieved.</li>
- * <li><code>timeToIdleSeconds</code> (0) - the maximum time between retrievals
- * of an entry. If the entry is not retrieved for this period, it is removed from the
- * cache.</li>
- *  <li><code>use-cache-directory</code> (false) - If true the <i>cache-directory</i>
- *   context entry will be used as the location of the disk store. 
- *   Within the servlet environment this is set in web.xml.</li>
- *  <li><code>use-work-directory</code> (false) - If true the <i>work-directory</i>
- *   context entry will be used as the location of the disk store.
- *   Within the servlet environment this is set in web.xml.</li>
- *  <li><code>directory</code> - Specify an alternative location of the disk store.
- * </ul>
+ * <p>Store implementation based on EHCache (http://ehcache.sourceforge.net/)
+ * Configure the store using the setter methods.</p>
  * 
  * <p>
  * Setting <code>eternal</code> to <code>false</code> but not setting
@@ -101,6 +79,7 @@ import org.apache.excalibur.store.StoreJanitor;
  * <p>
  * <code>disk-persistent</code> Whether the disk store persists between restarts of
  * the Virtual Machine. The default value is true.
+ * </p>
  *
  * @version $Id$
  */
@@ -108,12 +87,14 @@ public class EHDefaultStore implements Store {
 
     // ---------------------------------------------------- Constants
 
-    private static final int MAXOBJECTS = 10000;
+    private static final int MAX_MEM_OBJECTS = 10000;
+    private static final int MAX_DISK_OBJECTS = 50000;
     private static final boolean OVERFLOW_TO_DISK = true;
     private static final boolean DISK_PERSISTENT = true;
     private static final boolean ETERNAL = true;
     private static final long TIME_TO_LIVE_SECONDS = 0L;
     private static final long TIME_TO_IDLE_SECONDS = 0L;
+    private static final long DISK_EXPIRY_THREAD_INTERVAL_SECONDS = 120;
     private static final boolean USE_WORK_DIRECTORY = false;
     private static final boolean USE_CACHE_DIRECTORY = false;
     private static final String DEFAULT_CACHE_NAME = "cocoon-ehcache";    
@@ -123,14 +104,17 @@ public class EHDefaultStore implements Store {
     private static int instanceCount = 0;
 
     // ---------------------------------------------------- Instance variables
-
+    
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());    
+    
+    // EHCache
     private Cache cache;
     private CacheManager cacheManager;
 
-    private String cacheName;
-
     // configuration options
-    private int maxObjects = MAXOBJECTS;
+    private int maxMemObjects = MAX_MEM_OBJECTS;
+    private int maxDiskObjects = MAX_DISK_OBJECTS;
     private boolean overflowToDisk = OVERFLOW_TO_DISK;
     private boolean diskPersistent = DISK_PERSISTENT;
     private boolean eternal = ETERNAL;
@@ -138,28 +122,17 @@ public class EHDefaultStore implements Store {
     private long timeToIdleSeconds = TIME_TO_IDLE_SECONDS;
     private boolean useCacheDirectory = USE_CACHE_DIRECTORY;
     private boolean useWorkDirectory = USE_WORK_DIRECTORY;
-    private String directory;
-    /** The service manager */
+    private long diskExpiryThreadIntervalSeconds = DISK_EXPIRY_THREAD_INTERVAL_SECONDS;   
+    private MemoryStoreEvictionPolicy memoryStoreEvictionPolicy = null;
+    private RegisteredEventListeners registeredEventListeners = null;
+    private BootstrapCacheLoader bootstrapCacheLoader = null;
 
-    /** By default we use the logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
-
-    /** The store janitor */
-    private StoreJanitor storeJanitor;
-    
-    /** The settings object */
     private Settings settings;
-
+    private String cacheName;    
+    private String directory;    
     private File workDir;
     private File cacheDir;
-
     private String diskStorePath;  // The directory to be used a disk store path. Uses java.io.tmpdir if the argument is null.
-
-    // ---------------------------------------------------- Lifecycle
-
-    public EHDefaultStore() {    
-        
-    }
 
     /**
      *  <li><code>directory</code> - Specify an alternative location of the disk store.
@@ -190,11 +163,19 @@ public class EHDefaultStore implements Store {
     }
 
     /**
-     * <code>maxobjects</code> (10000) - The maximum number of in-memory objects.
-     * @param maxObjects
+     * <code>maxMemobjects</code> (10000) - The maximum number of in-memory objects.
+     * @param maxMemobjects
      */
-    public void setMaxObjects(int maxObjects) {
-        this.maxObjects = maxObjects;
+    public void setMaxMemObjects(int maxMemObjects) {
+        this.maxMemObjects = maxMemObjects;
+    }
+    
+    /**
+     * <code>maxDiskObjects</code> (50000) - The maximum number of disc objects.
+     * @param maxDiskObjects
+     */
+    public void setMaxDiskObjects(int maxDiskObjects) {
+        this.maxDiskObjects = maxDiskObjects;
     }
 
     /**
@@ -224,7 +205,41 @@ public class EHDefaultStore implements Store {
     public void setTimeToLiveSeconds(long timeToLiveSeconds) {
         this.timeToLiveSeconds = timeToLiveSeconds;
     }
+    
+    /**
+     * <li><code>diskExpiryThreadIntervalSeconds</code> (120) - The number of seconds 
+     * between runs of the disk expiry thread.</li>
+     * @param diskExpiryThreadIntervalSeconds
+     */
+    public void setDiskExpiryThreadIntervalSeconds(int diskExpiryThreadIntervalSeconds) {
+        this.diskExpiryThreadIntervalSeconds = diskExpiryThreadIntervalSeconds;
+    }    
 
+    /**
+     * <li><code>memoryStoreEvictionPolicy</code> (null) - Tone of LRU, LFU and FIFO. If 
+     * null, it will be set to LRU.</li>
+     * @param memoryStoreEvictionPolicy
+     */    
+    public void setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy memoryStoreEvictionPolicy) {
+        this.memoryStoreEvictionPolicy = memoryStoreEvictionPolicy;
+    }    
+ 
+    /**
+     * A notification service. Optionally null, in which case a new one with no registered listeners will be created.
+     * @param registeredEventListeners
+     */
+    public void setRegisteredEventListeners(RegisteredEventListeners registeredEventListeners) {
+        this.registeredEventListeners = registeredEventListeners;
+    }    
+        
+    /**
+     * The BootstrapCacheLoader to use to populate the cache when it is first initialised. Null if none is required.
+     * @param bootstrapCacheLoader
+     */
+    public void setBootstrapCacheLoader(BootstrapCacheLoader bootstrapCacheLoader) {
+        this.bootstrapCacheLoader = bootstrapCacheLoader;
+    }    
+            
     /**
      *  <li><code>use-cache-directory</code> (false) - If true the <i>cache-directory</i>
      *   context entry will be used as the location of the disk store. 
@@ -244,6 +259,13 @@ public class EHDefaultStore implements Store {
     public void setUseWorkDirectory(boolean useWorkDirectory) {
         this.useWorkDirectory = useWorkDirectory;
     }
+    
+    /**
+     * @param settings the settings to set
+     */
+    public void setSettings(Settings settings) {
+        this.settings = settings;
+    }    
 
     public Log getLogger() {
         return this.logger;
@@ -251,20 +273,6 @@ public class EHDefaultStore implements Store {
 
     public void setLogger(Log l) {
         this.logger = l;
-    }
-
-    /**
-     * @param settings the settings to set
-     */
-    public void setSettings(Settings settings) {
-        this.settings = settings;
-    }
-
-    /**
-     * @param storeJanitor the storeJanitor to set
-     */
-    public void setStoreJanitor(StoreJanitor storeJanitor) {
-        this.storeJanitor = storeJanitor;
     }
 
     /**
@@ -359,14 +367,26 @@ public class EHDefaultStore implements Store {
             this.cacheName = DEFAULT_CACHE_NAME;
         }          
                 
-
         // read configuration - we have to replace the diskstorepath in the configuration
         // as the diskStorePath argument of the Cache constructor is ignored and set by the
         // CacheManager! (see bug COCOON-1927)
-        this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
-                this.timeToLiveSeconds, this.timeToIdleSeconds, this.diskPersistent, 120);
+        this.cache = new Cache(
+                        this.cacheName,
+                        this.maxMemObjects,
+                        this.memoryStoreEvictionPolicy,
+                        this.overflowToDisk,
+                        this.diskStorePath,
+                        this.eternal,
+                        this.timeToLiveSeconds,
+                        this.timeToIdleSeconds,
+                        this.diskPersistent,
+                        this.diskExpiryThreadIntervalSeconds,
+                        this.registeredEventListeners,
+                        this.bootstrapCacheLoader,
+                        this.maxDiskObjects);
+                        
+        
         this.cacheManager.addCache(this.cache);
-        this.storeJanitor.register(this);
         getLogger().info("EHCache cache \"" + this.cacheName + "\" initialized");
     }
 
@@ -374,9 +394,6 @@ public class EHDefaultStore implements Store {
      * Shutdown the CacheManager.
      */
     public void destroy() {
-        if (this.storeJanitor != null)
-            this.storeJanitor.unregister(this);
-
         /*
          * EHCache can be a bitch when shutting down. Basically every cache registers
          * a hook in the Runtime for every persistent cache, that will be executed when

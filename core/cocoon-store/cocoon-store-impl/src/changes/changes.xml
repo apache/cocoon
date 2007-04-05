@@ -24,8 +24,43 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">  
-      
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
+      <action dev="reinhard" type="fix">
+        Move all Spring configuration files into the "cocoon-store-impl" namespace.
+      </action>       
+      <action dev="reinhard" type="fix">
+        MRUMemoryStore registers at StoreJanitor only in that case, if StoreJanitor
+        is set as dependency. Assuming that in many cases the MRUMemoryStore is
+        used for often requested resources like compiled XSLTTemplates or i18n resource bundles,
+        it doesn't make sense to remove them as most probably they will be added
+        within one of the next requests hiting Cocoon. Find more information
+        at http://marc.info/?t=117563247800004&amp;r=1&amp;w=2.
+      </action>       
+      <action dev="reinhard" type="add">
+        Expose all configuration properties that EHCache provides via setter methods.
+        Using them, EHDefaultStore can be completly configured in the Spring bean
+        definition. This allows setting maxElementsInMemory, memoryStoreEvictionPolicy, 
+        overflowToDisk, diskStorePath, eternal, timeToLiveSeconds, timeToIdleSeconds, 
+        diskPersistent, diskExpiryThreadIntervalSeconds, registeredEventListeners, 
+        bootstrapCacheLoader, maxElementsOnDisk. See the 1.2.4 constructor at 
+        http://ehcache.sourceforge.net/javadoc/net/sf/ehcache/Cache.html for
+        details.
+      </action>        
+      <action dev="reinhard" type="fix">
+        EHDefaultStore doesn't register at StoreJanitor anymore. The usage of
+        StoreJanitor to remove elements from EHDefaultStore was contra-productive,
+        because EHCache provides its own invalidation mechanisms which are more
+        sophisticated than the removal of random items. Find more information
+        at http://marc.info/?t=117563247800004&amp;r=1&amp;w=2.
+      </action>        
+      <action dev="reinhard" type="update">
+        Make the maximum number of disk objects configureable.
+      </action>    
+    </release>    
+    <release version="1.0.0-M1" date="2007-03-02" description="released">  
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>    
     </release>
   </body>
 </document>

@@ -117,7 +117,9 @@ public class MRUMemoryStore implements Store {
 
         this.cache = new Hashtable((int) (this.maxObjects * 1.2));
         this.mrulist = new LinkedList();
-        this.storeJanitor.register(this);
+        if(this.storeJanitor != null) {
+            this.storeJanitor.register(this);
+        }
     }
 
     /**
