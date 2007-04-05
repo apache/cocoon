@@ -17,21 +17,18 @@
 package org.apache.cocoon.tools.rcl.wrapper.servlet;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.ServletContextFactoryBean;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
  * This servlet filter reloads the Spring application context whenever a relevant change in the
@@ -49,33 +46,22 @@ public class ReloadingSpringFilter implements Filter {
             ServletException {
         
         if(CocoonReloadingListener.isReload()) {
-            synchronized (this) {         
+            synchronized (this) {        
+                log.info("Performing a reload of the Spring application context.");
+                System.out.println("Performing a reload of the Spring application context.");                
                 // load the spring context loader from the reloading classloader
                 ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
-                ContextLoader springContextLoader = null;
+                Object reloader = null;
                 try {
-                    Class contextLoaderClass = cl.loadClass(ContextLoader.class.getName());
-                    springContextLoader = (ContextLoader) contextLoaderClass.newInstance();
+                    reloader = cl.loadClass("org.apache.cocoon.tools.rcl.springreloader.SpringReloader").newInstance();
                 } catch (Exception e) {
-                    throw new ServletException("Cannot load class " + ContextLoader.class.getName(), e);
+                    throw new ServletException("Can't create SpringReloader.", e);
                 }
-
-                // close old Spring application context
-                XmlWebApplicationContext oldAc = (XmlWebApplicationContext) 
-                        WebApplicationContextUtils.getRequiredWebApplicationContext(this.config.getServletContext());
-                     oldAc.close();
-                if(log.isDebugEnabled()) {                     
-                    this.log.debug("Removing old application context: " + oldAc);
-                }
-                this.config.getServletContext().removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-
-                // create the new Spring application context
-                ServletContextFactoryBean b = new ServletContextFactoryBean();
-                b.setServletContext(this.config.getServletContext());
-                XmlWebApplicationContext xac = (XmlWebApplicationContext) springContextLoader.
-                        initWebApplicationContext(this.config.getServletContext());
-                if(log.isDebugEnabled()) {
-                    log.debug("Reloading Spring application context: " + xac);
+                try {
+                    Method reloadMethod = reloader.getClass().getMethod("reload", new Class[]{ServletContext.class} ); 
+                    reloadMethod.invoke(reloader, new Object[]{config.getServletContext()});
+                } catch(Exception e) {
+                    new ServletException("Problems occurred, while invoking the SpringReloader reload method.", e);
                 }
             }
         }
