@@ -64,6 +64,10 @@ import org.apache.maven.project.artifact.MavenMetadataSource;
  */
 public class ReloadingWebappMojo extends AbstractMojo {
 
+    private static final String LIB_VERSION_WRAPPER = "1.0.0-M1-SNAPSHOT";
+    
+    private static final String LIB_VERSION_SPRING_RELOADER = "1.0.0-M1-SNAPSHOT";    
+    
     private static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
 
     private static final String WEB_INF_APP_CONTEXT = "WEB-INF/applicationContext.xml";
@@ -247,8 +251,15 @@ public class ReloadingWebappMojo extends AbstractMojo {
                 this.getLog().debug("Adding classes-dir (URLClassLoader configuration): " + dir);
             }
             
+            // add all project artifacts
             Set artifacts = project.getArtifacts();
             ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
+            
+            // add the Spring reloader lib
+            Set springReloaderArtifacts = getDependencies("org.apache.cocoon", "cocoon-rcl-spring-reloader", 
+                            LIB_VERSION_SPRING_RELOADER, "jar");
+            artifacts.addAll(springReloaderArtifacts);
+            
             for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
                 Artifact artifact = (Artifact) iter.next();
                 if (!artifact.isOptional() && filter.include(artifact) &&
@@ -288,7 +299,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
     }
 
     protected void copyRclWrapperLibs(File webAppBaseDir) throws MojoExecutionException {
-        Set rclWebappDependencies = getDependencies("org.apache.cocoon",  "cocoon-rcl-webapp-wrapper", "1.0.0-M1-SNAPSHOT", "jar");        
+        Set rclWebappDependencies = getDependencies("org.apache.cocoon",  "cocoon-rcl-webapp-wrapper", LIB_VERSION_WRAPPER, "jar");        
         for (Iterator rclIt = rclWebappDependencies.iterator(); rclIt.hasNext();) {
             Artifact artifact = (Artifact) rclIt.next();
             try {
