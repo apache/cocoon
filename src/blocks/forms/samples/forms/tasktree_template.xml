@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+      
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  
+  <!-- Debugging utility that dumps the result of widget.getChildren().
+       Sometimes useful when setting up recursive templates ! -->
+  <jx:macro name="dump">
+    <jx:parameter name="iterator"/>
+    
+    <jx:if test="${iterator.hasNext()}">
+      ${iterator.next()} -
+      <dump iterator="${iterator}"/>
+    </jx:if>
+  </jx:macro>
+  
+  <title>Task list editor</title>
+  
+  <style type="text/css">
+    /* The actions buttons, placed on the right */
+    .actions {
+      float: right;
+      padding-top: 0.2em;
+    }
+    
+    /* A "section" contains a task, related actions and subtasks */
+    div.section {
+      padding-top: 0.4em;
+      padding-bottom: 0.4em;
+      padding-left: 0.4em;
+      border: 1px dotted black;
+      margin-top: 0.4em;
+      margin-bottom: -1px;
+    }
+    
+    /* Indent sub-sections (recursively) */
+    div.section div.section {
+      margin-left: 3em;
+      border-right: none;
+    }
+    
+    /* Change bg color depending on nesting depth */
+    div.section div.section { background-color: #F0F0F0; }
+    div.section div.section div.section { background-color: #E0E0E0; }
+    div.section div.section div.section div.section { background-color: #D0D0D0; }
+    div.section div.section div.section div.section div.section { background-color: #C0C0C0; }
+    
+  </style>
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+    
+      <ft:class id="task-class">
+        <div class="section">
+          <ft:group id="task">
+            <span class="actions">
+              <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
+              <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
+              <ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
+              <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+            </span>
+            Title: <ft:widget id="title"/>
+            From <ft:widget id="start"><fi:styling size="10"/></ft:widget>
+            to <ft:widget id="end"><fi:styling size="10"/></ft:widget>
+            
+            <!-- Recurse -->
+            <ft:new id="tasklist-class"/>
+            
+          </ft:group>
+        </div>
+      </ft:class>
+      
+      <ft:class id="tasklist-class">
+        <!-- Show the "Add subtask" button only if there are currently no subtasks.
+             If there are some, more subtasks can be added using the "+" button -->
+        <ft:repeater id="tasks">
+          <div>
+          <jx:choose>
+            <jx:when test="${repeater.getSize() > 0}">
+              <ft:repeater-rows>
+                <!-- recurse -->
+                <ft:new id="task-class"/>
+              
+              </ft:repeater-rows>
+            </jx:when>
+            <jx:otherwise>
+          </jx:otherwise>
+        </jx:choose>
+          </div>
+        </ft:repeater>
+             <ft:widget id="addsub">
+              <fi:styling type="link"/>
+            </ft:widget>
+     </ft:class>
+      
+      Project name: <ft:widget id="name"/>
+      
+      <br/>
+      
+      <ft:new id="tasklist-class"/>
+      
+      <br/>
+      
+      <ft:widget id="ok"/>
+      <br/>
+      <a href="do-taskTree.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+    </ft:form-template>
+  </content>
+</page>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fb:library xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+            xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+  <fb:import prefix="ext" uri="library_form1_binding.xml"/>
+  
+  <fb:class id="class1" extends="ext:class1">
+    <fb:value id="field1-2" path="field12"/>
+  </fb:class>
+  
+  <fb:expand id="ext:field2"/>
+  
+
+  <fb:class id="rec-class-1">
+    <fb:repeater id="fields-rec-1" parent-path="fields-rec-1" row-path="row-rec-1">
+      <fb:on-bind>
+        <fb:value id="field-rec-1" path="field-rec-1"/>
+        <fb:new id="rec-class-2"/>
+      </fb:on-bind>
+      <fb:on-insert-row>
+        <fb:insert-node>
+          <row-rec-1/>
+        </fb:insert-node>
+      </fb:on-insert-row>
+      <fb:on-delete-row>
+        <fb:delete-node/>
+      </fb:on-delete-row>
+    </fb:repeater>
+  </fb:class>
+  
+  <fb:class id="rec-class-2">
+    <fb:repeater id="fields-rec-2" parent-path="fields-rec-2" row-path="row-rec-2">
+      <fb:on-bind>
+        <fb:value id="field-rec-2" path="field-rec-2"/>
+        <fb:new id="rec-class-1"/>
+      </fb:on-bind>
+      <fb:on-insert-row>
+        <fb:insert-node>
+          <row-rec-2/>
+        </fb:insert-node>
+      </fb:on-insert-row>
+      <fb:on-delete-row>
+        <fb:delete-node/>
+      </fb:on-delete-row>
+    </fb:repeater>
+  </fb:class>
+
+  
+</fb:library>
