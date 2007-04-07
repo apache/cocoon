@@ -19,6 +19,7 @@ package org.apache.cocoon.portal.acting;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.acting.AbstractAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
@@ -31,7 +32,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * @version CVS $Id$
  */
 public class ObjectModelAction 
-extends AbstractAction {
+extends AbstractAction implements ThreadSafe {
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
