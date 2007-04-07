@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <h4 class="samplesGroup">Calculated widgets sample</h4>
+  <title>Sample form</title>
+  <content>
+
+  
+    <p>This is an example of how calculated fields can be used for an invoice form. The invoice business rules are :
+    </p>
+    <ul>
+      <li>VAT is always 20% of total price.</li>
+      <li>Locale is: ${cocoon.parameters.getParameter('locale')}</li>
+      <li>Boxes contain 10 items each, and we cannot mix different articles in the same box.</li>
+      <li>As a bonus you receive 2 shipment-free boxes if you buy more than 10 boxes, 15 if you buy more than 50, 30 if you buy more than 100.</li>
+      <li>You can choose different couriers with different costs.</li>
+      <jx:set var="xhtmlcontentTest" value="&lt;html&gt; Hello &lt;b&gt; world! &lt;/b&gt; &lt;/html&gt;"/>
+      <li>String to XML demo = <jx:out value="${Packages.org.apache.cocoon.xml.StringXMLizable(xhtmlcontentTest)}"/></li>
+    </ul>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+      <!-- manual layout of fields, without use of a fi:group -->
+      <ft:widget-label id="articles"/><br/>
+      <ft:repeater id="articles">
+        <div dojoType="forms:CFormsRepeater" orderable="true">
+          <table border="1">
+            <thead>
+              <tr>
+                <th><ft:repeater-widget-label id="articles" widget-id="description"/></th>
+                <th><ft:repeater-widget-label id="articles" widget-id="items"/></th>
+                <th><ft:repeater-widget-label id="articles" widget-id="price"/></th>
+                <th><ft:repeater-widget-label id="articles" widget-id="subtotal"/></th>
+                <th><ft:repeater-widget-label id="articles" widget-id="vat"/></th>
+                <th><ft:repeater-widget-label id="articles" widget-id="total"/></th>
+                <th><ft:repeater-widget-label id="articles" widget-id="select"/></th>
+              </tr>
+            </thead>
+            <tbody>
+              <jx:choose>
+                <jx:when test="${widget.getChild('articles').getSize() == 0}">
+                  <tr><td colspan="7" align="center"><em>There are no articles to display</em></td></tr>
+                </jx:when>
+                <jx:otherwise>
+                  <ft:repeater-rows>
+                    <tr>
+                      <td><ft:widget id="description"/></td>
+                      <td><ft:widget id="items"/></td>
+                      <td><ft:widget id="price"/></td>
+                      <td><ft:widget id="subtotal"/></td>
+                      <td><ft:widget id="vat"/></td>
+                      <td><ft:widget id="total"/></td>
+                      <td><ft:widget id="select"/></td>
+                    </tr>
+                  </ft:repeater-rows>
+                </jx:otherwise>
+              </jx:choose>
+            </tbody>
+          </table>
+          <p>
+            <ft:widget id="../addarticle"/>
+            <ft:widget id="../removearticles"/>
+          </p>
+        </div>
+      </ft:repeater>
+      <fi:group>
+        <fi:styling layout="row"/>
+        <fi:items>
+          <ft:widget id="totalitems"/>
+          <ft:widget id="totalitemscost"/>
+          <ft:widget id="totalvat"/>
+          <ft:widget id="totalcost"/>
+        </fi:items>
+      </fi:group>
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="boxes"/>
+          <ft:widget id="freeboxes"/>
+          <ft:widget id="courier"/>
+          <ft:widget id="couriercost"/>
+        </fi:items>
+      </fi:group>
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="grandtotal"/>
+        </fi:items>
+      </fi:group>
+      <input type="submit"/>
+      
+    </ft:form-template>
+  </content>
+</page>

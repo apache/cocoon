@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | @version $Id$
+    +-->
+<html xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <head>
+    <title>
+      Employees of the Cocoon company
+    </title>
+  </head>
+  <body>
+    <jx:choose>
+      <jx:when test="${employees.size() == 0}">
+        <p>There are no employees. Quick, <a href="do_edit_employee">let's hire a new one!</a></p>
+      </jx:when>
+      <jx:otherwise>
+        <table class="data" width="100%">
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Department</th>
+            <th />
+          </tr>
+          <jx:forEach var="person" items="${employees}">
+            <tr>
+              <td>${person.name}</td>
+              <td>${person.description}</td>
+              <td>${dao.department.get(person.department_id).name}</td>
+              <td>
+                <a href="do_edit_employee?id=${person.id}">Edit</a> &#160;
+                <a href="do_delete_employee?id=${person.id}"
+                  onclick="return confirm('Remove this employee?')">
+                  Delete
+                </a>
+              </td>
+            </tr>
+          </jx:forEach>
+        </table>
+        
+        <p>
+          <span style="float: right; font-size: 80%">Hint: try to delete all employees!</span>
+          <a class="button" href="do_edit_employee">Add a new employee</a>
+        </p>
+      </jx:otherwise>
+    </jx:choose>
+
+  </body>
+</html>
