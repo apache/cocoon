@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -39,7 +40,7 @@ import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
  * @version CVS $Id$
  */
 public class CopletSetDataAction 
-extends ServiceableAction {
+extends ServiceableAction implements ThreadSafe {
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)

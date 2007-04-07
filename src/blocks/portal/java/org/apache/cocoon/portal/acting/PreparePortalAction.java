@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
@@ -34,7 +35,7 @@ import org.apache.cocoon.portal.PortalService;
  * @version CVS $Id$
  */
 public class PreparePortalAction
-extends ServiceableAction {
+extends ServiceableAction implements ThreadSafe {
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
