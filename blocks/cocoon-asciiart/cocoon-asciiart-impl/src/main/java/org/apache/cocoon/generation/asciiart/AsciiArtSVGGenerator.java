@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -50,6 +52,8 @@ import org.xml.sax.helpers.AttributesImpl;
 public class AsciiArtSVGGenerator
     extends AbstractGenerator
     implements CacheableProcessingComponent {
+
+    static final Log log = LogFactory.getLog(AsciiArtSVGGenerator.class);    
 
     /**
      * The input source
@@ -153,8 +157,8 @@ public class AsciiArtSVGGenerator
     public void generate()
     throws IOException, SAXException, ProcessingException {
         try {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Source " + super.source +
+            if (log.isDebugEnabled()) {
+                log.debug("Source " + super.source +
                                   " resolved to " + this.inputSource.getURI());
             }
 
