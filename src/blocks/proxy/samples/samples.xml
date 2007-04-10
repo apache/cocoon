@@ -23,12 +23,13 @@
   </group>
 
   <group name="Web Site Syndication">
-    <!-- Sample disabled as it references xmlforms
-    <sample name="Examples" href="wsproxy/">
+    <sample name="Simple Hello World sample" href="wsproxy/">
       Demonstrates how to embed one website's functionality into another.
       Using the WebServiceProxyGenerator remote web app integration is easy.
+      This sample only links the Hello World XML and transforms it to HTML,
+      which is rather trivial, but with having a look into the sitemap it should
+      give you the idea.
     </sample>
-    -->
     <sample name="Virtual Portal Demo" href="cocoonhive/">
       A more sophisticated example including Amazon and OpenWiki.
       Shows how a personalized portal can be built by connecting multiple remote
