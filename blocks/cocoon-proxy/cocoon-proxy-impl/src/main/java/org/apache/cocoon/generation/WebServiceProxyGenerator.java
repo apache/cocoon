@@ -112,11 +112,6 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
                 this.getLogger().debug("response: " + new String(response));
             }
 
-            /* TODO: Though I avoided the getResponseBodyAsString(), the content
-             *       seems not to be parsed correctly. Who cares about the encoding
-             *       in the XML declaration?
-             * {@link http://jakarta.apache.org/commons/httpclient/apidocs/org/apache/commons/httpclient/HttpMethodBase.html#getResponseBodyAsString()}
-             */
             ByteArrayInputStream responseStream = new ByteArrayInputStream(response);
             InputSource inputSource = new InputSource(responseStream);
             parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
