@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.util.NullOutputStream;
 
@@ -46,10 +47,12 @@ import org.apache.cocoon.util.NullOutputStream;
  */
 public class MultipartParser {
 
+    public static final String UPLOAD_STATUS_SESSION_ATTR = "org.apache.cocoon.servlet.multipartparser.status";
+
     private final static int FILE_BUFFER_SIZE = 4096;
 
     private static final int MAX_BOUNDARY_SIZE = 128;
-
+    
     private boolean saveUploadedFilesToDisk;
 
     private File uploadDirectory = null;
@@ -67,6 +70,12 @@ public class MultipartParser {
     private boolean oversized = false;
     
     private int contentLength;
+    
+    private HttpSession session;
+    
+    private boolean hasSession;
+    
+    private Hashtable uploadStatus;
     
     /**
      * Constructor, parses given request
@@ -131,7 +140,28 @@ public class MultipartParser {
             }
             this.parts.put(name, v);
         }
+
+        // upload progress bar support
+        this.session = request.getSession();
+        this.hasSession = this.session != null;
+        if (this.hasSession) {
+            this.uploadStatus = new Hashtable();
+            this.uploadStatus.put("started", new Boolean(false));
+            this.uploadStatus.put("finished", new Boolean(false));
+            this.uploadStatus.put("sent", new Integer(0));
+            this.uploadStatus.put("total", new Integer(request.getContentLength()));
+            this.uploadStatus.put("filename",  new String());
+            this.uploadStatus.put("error", new Boolean(false));
+            this.uploadStatus.put("uploadsdone", new Integer(0));
+            this.session.setAttribute(UPLOAD_STATUS_SESSION_ATTR, this.uploadStatus);
+        }
+
         parseParts(request.getContentLength(), request.getContentType(), request.getInputStream());    
+
+        if (this.hasSession) {
+            this.uploadStatus.put("finished", new Boolean(true));
+        }
+
         return this.parts;    
     }
     
@@ -222,6 +252,7 @@ public class MultipartParser {
         byte[] buf = new byte[FILE_BUFFER_SIZE];
         OutputStream out;
         File file = null;
+        boolean canceled = false;
 
         if (oversized) {
             out = new NullOutputStream();
@@ -252,7 +283,14 @@ public class MultipartParser {
 
             out = new FileOutputStream(file);
         }
-
+        
+        if (hasSession) { // upload widget support
+            this.uploadStatus.put("finished", new Boolean(false));
+            this.uploadStatus.put("started", new Boolean(true));
+            this.uploadStatus.put("widget", (String)headers.get("name"));
+            this.uploadStatus.put("filename", (String)headers.get("filename"));
+        }
+        
         int length = 0; // Track length for OversizedPart
         try {
             int read = 0;
@@ -261,6 +299,18 @@ public class MultipartParser {
                 read = in.read(buf);
                 length += read;
                 out.write(buf, 0, read);
+                
+                if (this.hasSession) {
+                    this.uploadStatus.put("sent", 
+                        new Integer(((Integer)this.uploadStatus.get("sent")).intValue() + read)
+                    );
+                }
+            }
+            if (this.hasSession) { // upload widget support
+                this.uploadStatus.put("uploadsdone", 
+                    new Integer(((Integer)this.uploadStatus.get("uploadsdone")).intValue() + 1)
+                );
+                this.uploadStatus.put("error", new Boolean(false));
             }
         } catch (IOException ioe) {
             // don't let incomplete file uploads pile up in the upload dir.
@@ -268,13 +318,16 @@ public class MultipartParser {
             out.close();
             out = null;
             if ( file!=null ) file.delete();
+            if (this.hasSession) { // upload widget support
+                this.uploadStatus.put("error", new Boolean(true));
+            }
             throw ioe;
         } finally {
             if ( out!=null ) out.close();
         }
         
         String name = (String)headers.get("name");
-        if (oversized) {
+        if (oversized || canceled) {
             this.parts.put(name, new RejectedPart(headers, length, this.contentLength, this.maxUploadSize));
         } else if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();

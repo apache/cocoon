@@ -181,6 +181,22 @@ public class ParamSaxBuffer extends SaxBuffer {
         }
     }
 
+    /**
+     * @param parameters map containing SaxBuffers
+     */
+    public String toString(Map parameters) throws SAXException {
+        final StringBuffer buffer = new StringBuffer();
+        for (Iterator i = bits(); i.hasNext();) {
+            SaxBit saxbit = (SaxBit)i.next();
+            if (saxbit instanceof Parameter) {
+                ((Parameter)saxbit).toString(buffer, parameters);
+            } else if (saxbit instanceof Characters) {
+                ((Characters) saxbit).toString(buffer);
+            }
+        }
+        return buffer.toString();
+    }
+
 
     final static class Parameter implements SaxBit {
         private final String name;
@@ -196,6 +212,13 @@ public class ParamSaxBuffer extends SaxBuffer {
             SaxBuffer value = (SaxBuffer)parameters.get(name);
             if (value != null) {
                 value.toSAX(contentHandler);
+            }
+        }
+
+        public void toString(StringBuffer result, Map parameters) throws SAXException {
+            String value = (String)parameters.get(name);
+            if (value != null) {
+                result.append(value.toString());
             }
         }
 
