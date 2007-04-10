@@ -74,8 +74,23 @@ to the jars in eclipse :
 For further information about the maven eclipse plugin visit 
 
   http://maven.apache.org/plugins/maven-eclipse-plugin/
+  
 
+HOW TO MOUNT THE PROJECTS IN INTELLIJ
+------------------------------------
 
+First, build all the projects as described above.
+Next, from /trunk, run
+
+  $ mvn -P allblocks idea:idea
+
+In IntelliJ select File - Open Project...  Navigate to the trunk directory and select cocoon.ipr.
+
+For further information about hte maven idea plugin visit
+
+  http://maven.apache.org/plugins/maven-idea-plugin/
+  
+  
 HOW TO START THE COCOON WEBAPP
 ------------------------------
 
