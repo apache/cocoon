@@ -49,9 +49,8 @@
     <map:pipeline>
       <map:match pattern="wsproxy/*">
         <map:generate type="wsproxy" label="xml"
-          src="http://{request:serverName}:{request:serverPort}{request:contextPath}/samples/xmlform/wizard?cocoon-view=xml"/>
-        <map:transform src="stylesheets/newWizard2html.xsl" />
-        <map:transform src="context://stylesheets/system/xmlform2html.xslt"/>
+          src="http://{request:serverName}:{request:serverPort}{request:contextPath}/samples/hello-world/hello.xml"/>
+        <map:transform src="context://samples/hello-world/style/xsl/page2html.xsl"/>
         <map:serialize type="html"/>
       </map:match>
     </map:pipeline>
