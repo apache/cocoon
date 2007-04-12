@@ -46,7 +46,8 @@
     <!-- sub projects -->
     <module>core/cocoon-configuration/cocoon-configuration-api</module>
     <module>core/cocoon-configuration/cocoon-spring-configurator</module>
-    <module>tools/cocoon-daisy-export-strategy</module>
+    <!-- non existing module, breaks the build -->
+    <!--module>tools/cocoon-daisy-export-strategy</module-->
   </modules>
 
   <repositories>
@@ -640,12 +641,13 @@
           </dependency>
         </dependencies>          
           <executions>
-            <execution>
+            <!-- uncommented until cocoon-daisy-export-strategy can be found -->
+            <!--execution>
               <phase>pre-site</phase>
               <goals>
                 <goal>export</goal>
               </goals>
-            </execution>
+            </execution-->
           </executions>
         </plugin>
       </plugins>
