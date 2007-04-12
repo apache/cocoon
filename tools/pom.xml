@@ -40,8 +40,9 @@
     <module>cocoon-block-deployer/cocoon-deployer-plugin</module>
     <module>cocoon-block-deployer/cocoon-deployer-plugin-demo</module>    
     <module>cocoon-maven-reports</module>
-    <!--module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
-    <module>cocoon-rcl/cocoon-rcl-plugin</module-->    
+    <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
+    <module>cocoon-rcl/cocoon-rcl-plugin</module>    
+    <module>cocoon-daisy-export-strategy</module>
   </modules>
 
   <scm>

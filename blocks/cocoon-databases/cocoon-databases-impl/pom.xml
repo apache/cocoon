@@ -19,9 +19,9 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
@@ -35,6 +35,36 @@
   <artifactId>cocoon-databases-impl</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Database Block Implementation</name>
+  <url>http://cocoon.apache.org/${docs.m.databases.relPath}</url>  
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1357</navDocId>
+          <collection>cdocs-databases</collection>             
+        </configuration>
+      </plugin>         
+    </plugins>    
+  </build>
+  
+  <properties>
+    <docs.name>Cocoon Databases Block</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.databases.relPath}</url>
+    </site>
+  </distributionManagement>  
   
   <dependencies>
     <dependency>

@@ -19,7 +19,6 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -35,6 +34,36 @@
   <version>1.0.0-RC1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Hsqldb Client Implementation</name>
+  <url>http://cocoon.apache.org/${docs.m.hsqldb-client.relPath}</url>  
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>0</navDocId>
+          <createSiteXmlOnly>true</createSiteXmlOnly>
+        </configuration>
+      </plugin>      
+    </plugins>
+  </build>  
+  
+  <properties>
+    <docs.name>${project.name}</docs.name>    
+    <docs.version>${docs.m.hsqldb-client.version}</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.hsqldb-client.relPath}</url>
+    </site>
+  </distributionManagement>  
 
   <dependencies>
     <dependency>

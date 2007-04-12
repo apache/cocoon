@@ -34,7 +34,37 @@
   <artifactId>cocoon-html-impl</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon HTML Block Implementation</name>
-
+  <url>http://cocoon.apache.org/${docs.m.html.relPath}</url>  
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1353</navDocId>
+          <collection>cdocs-html</collection>             
+        </configuration>
+      </plugin>         
+    </plugins>    
+  </build>
+  
+  <properties>
+    <docs.name>Cocoon HTML Block</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.html.relPath}</url>
+    </site>
+  </distributionManagement>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

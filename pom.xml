@@ -46,6 +46,7 @@
     <!-- sub projects -->
     <module>core/cocoon-configuration/cocoon-configuration-api</module>
     <module>core/cocoon-configuration/cocoon-spring-configurator</module>
+    <module>tools/cocoon-daisy-export-strategy</module>
   </modules>
 
   <repositories>
@@ -551,6 +552,10 @@
                 <path>${docs.m.auth.relPath}</path>
               </collection>
               <collection>
+                <name>cdocs-batik</name>
+                <path>${docs.m.batik.relPath}</path>
+              </collection>              
+              <collection>
                 <name>cdocs-captcha</name>
                 <path>${docs.m.captcha.relPath}</path>
               </collection>
@@ -594,26 +599,18 @@
                 <name>cdocs-template</name>
                 <path>${docs.m.template.relPath}</path>
               </collection>
-              <!--collection>
-                <name>cdocs-fop</name>
-                <path>${docs.m.fop.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-batik</name>
-                <path>${docs.m.batik.relPath}</path>
-              </collection>
               <collection>
                 <name>cdocs-html</name>
                 <path>${docs.m.html.relPath}</path>
               </collection>
               <collection>
-                <name>cdocs-link-rewriter</name>
-                <path>${docs.m.link-rewriter.relPath}</path>
+                <name>cdocs-linkrewriter</name>
+                <path>${docs.m.linkrewriter.relPath}</path>
               </collection>
               <collection>
-                <name>cdocs-database</name>
-                <path>${docs.m.database.relPath}</path>
-              </collection-->
+                <name>cdocs-databases</name>
+                <path>${docs.m.databases.relPath}</path>
+              </collection>
               <!-- Maven plugins -->
               <collection>
                 <name>cdocs-rcl-plugin</name>
@@ -633,12 +630,20 @@
                 &lt;/body&gt;
               &lt;/project&gt;
             </siteXmlContent>
+            <exportStrategyClass>org.daisycms.clientapp.maven.export.CocoonExportStrategy</exportStrategyClass>
           </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-daisy-export-strategy</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>          
           <executions>
             <execution>
               <phase>pre-site</phase>
               <goals>
-                <goal>cocoon</goal>
+                <goal>export</goal>
               </goals>
             </execution>
           </executions>
@@ -671,7 +676,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.2</version>
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
@@ -822,49 +827,48 @@
     <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
     <docs.m.spring-configurator.relPath>subprojects/configuration/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>
     <!-- Path and version properties: blocks -->
-    <docs.m.profiler.version>1.0</docs.m.profiler.version>
-    <docs.m.profiler.relPath>2.2/blocks/profiler/${docs.m.profiler.version}/</docs.m.profiler.relPath>
     <docs.m.ajax.version>1.0</docs.m.ajax.version>
     <docs.m.ajax.relPath>2.2/blocks/${docs.m.ajax.version}/</docs.m.ajax.relPath>
     <docs.m.auth.version>1.0</docs.m.auth.version>
     <docs.m.auth.relPath>2.2/blocks/${docs.m.auth.version}/</docs.m.auth.relPath>
+    <docs.m.batik.version>1.0</docs.m.batik.version>
+    <docs.m.batik.relPath>2.2/blocks/${docs.m.batik.version}/</docs.m.batik.relPath>    
     <docs.m.captcha.version>1.0</docs.m.captcha.version>
     <docs.m.captcha.relPath>2.2/blocks/${docs.m.captcha.version}/</docs.m.captcha.relPath>
     <docs.m.flowscript.version>1.0</docs.m.flowscript.version>
-    <docs.m.flowscript.relPath>2.2/blocks/${docs.m.flowscript.version}/</docs.m.flowscript.relPath>
+    <docs.m.flowscript.relPath>2.2/blocks/${docs.m.flowscript.version}/</docs.m.flowscript.relPath> 
     <docs.m.fop.version>1.0</docs.m.fop.version>
     <docs.m.fop.relPath>2.2/blocks/${docs.m.fop.version}/</docs.m.fop.relPath>
     <docs.m.forms.version>1.0</docs.m.forms.version>
     <docs.m.forms.relPath>2.2/blocks/${docs.m.forms.version}/</docs.m.forms.relPath>
+    <docs.m.mail.version>1.0</docs.m.mail.version>
+    <docs.m.mail.relPath>2.2/blocks/${docs.m.mail.version}/</docs.m.mail.relPath>
+    <docs.m.template.version>1.0</docs.m.template.version>
+    <docs.m.template.relPath>2.2/blocks/${docs.m.template.version}/</docs.m.template.relPath>
+    <docs.m.html.version>1.0</docs.m.html.version>
+    <docs.m.html.relPath>2.2/blocks/${docs.m.html.version}/</docs.m.html.relPath>
+    <docs.m.linkrewriter.version>1.0</docs.m.linkrewriter.version>
+    <docs.m.linkrewriter.relPath>2.2/blocks/${docs.m.link-rewriter.version}/</docs.m.linkrewriter.relPath>
+    <docs.m.databases.version>1.0</docs.m.databases.version>
+    <docs.m.databases.relPath>2.2/blocks/${docs.m.database.version}/</docs.m.databases.relPath>
+    <!-- unreleased blocks -->
     <docs.m.javaflow.version>1.0</docs.m.javaflow.version>
     <docs.m.javaflow.relPath>2.2/blocks/${docs.m.javaflow.version}/</docs.m.javaflow.relPath>
     <docs.m.lucene.version>1.0</docs.m.lucene.version>
-    <docs.m.lucene.relPath>2.2/blocks/${docs.m.lucene.version}/</docs.m.lucene.relPath>
-    <docs.m.mail.version>1.0</docs.m.mail.version>
-    <docs.m.mail.relPath>2.2/blocks/${docs.m.mail.version}/</docs.m.mail.relPath>
-    <docs.m.portal.version>1.0</docs.m.portal.version>
-    <docs.m.portal.relPath>2.2/blocks/${docs.m.portal.version}/</docs.m.portal.relPath>
+    <docs.m.lucene.relPath>2.2/blocks/${docs.m.lucene.version}/</docs.m.lucene.relPath>    
+    <docs.m.profiler.version>1.0</docs.m.profiler.version>
+    <docs.m.profiler.relPath>2.2/blocks/profiler/${docs.m.profiler.version}/</docs.m.profiler.relPath>        
     <docs.m.profiler.version>1.0</docs.m.profiler.version>
     <docs.m.profiler.relPath>2.2/blocks/${docs.m.profiler.version}/</docs.m.profiler.relPath>
+    <docs.m.portal.version>1.0</docs.m.portal.version>
+    <docs.m.portal.relPath>2.2/blocks/${docs.m.portal.version}/</docs.m.portal.relPath>
     <docs.m.serializers.version>1.0</docs.m.serializers.version>
-    <docs.m.serializers.relPath>2.2/blocks/${docs.m.serializers.version}/</docs.m.serializers.relPath>
-    <docs.m.template.version>1.0</docs.m.template.version>
-    <docs.m.template.relPath>2.2/blocks/${docs.m.template.version}/</docs.m.template.relPath>
-    <docs.m.fop.version>1.0</docs.m.fop.version>
-    <docs.m.fop.relPath>2.2/blocks/${docs.m.fop.version}/</docs.m.fop.relPath>
-    <!--docs.m.batik.version>1.0</docs.m.batik.version>
-    <docs.m.batik.relPath>2.2/blocks/${docs.m.batik.version}/</docs.m.batik.relPath>
-    <docs.m.html.version>1.0</docs.m.html.version>
-    <docs.m.html.relPath>2.2/blocks/${docs.m.html.version}/</docs.m.html.relPath>
-    <docs.m.link-rewriter.version>1.0</docs.m.link-rewriter.version>
-    <docs.m.link-rewriter.relPath>2.2/blocks/${docs.m.link-rewriter.version}/</docs.m.link-rewriter.relPath>
-    <docs.m.database.version>1.0</docs.m.database.version>
-    <docs.m.database.relPath>2.2/blocks/${docs.m.database.version}/</docs.m.database.relPath-->
+    <docs.m.serializers.relPath>2.2/blocks/${docs.m.serializers.version}/</docs.m.serializers.relPath>    
     <!-- Path and version properties: Blocks without Daisy documentation -->
-    <!--docs.m.hsqldb-server.version>1.0</docs.m.hsqldb-server.version>
+    <docs.m.hsqldb-server.version>1.0</docs.m.hsqldb-server.version>
     <docs.m.hsqldb-server.relPath>2.2/blocks/${docs.m.hsqldb-server.version}/</docs.m.hsqldb-server.relPath>
     <docs.m.hsqldb-client.version>1.0</docs.m.hsqldb-client.version>
-    <docs.m.hsqldb-client.relPath>2.2/blocks/${docs.m.database.version}/</docs.m.hsqldb-client.relPath-->
+    <docs.m.hsqldb-client.relPath>2.2/blocks/${docs.m.hsqldb-client.version}/</docs.m.hsqldb-client.relPath>
     <!-- Path and version properties: Maven plugins-->
     <docs.m.rcl-plugin.version>1.0</docs.m.rcl-plugin.version>
     <docs.m.rcl-plugin.relPath>2.2/maven-plugins/${docs.m.rcl-plugin.version}/</docs.m.rcl-plugin.relPath>
