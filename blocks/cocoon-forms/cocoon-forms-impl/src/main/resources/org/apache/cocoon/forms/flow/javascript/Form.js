@@ -220,10 +220,24 @@ Form.prototype.sendFormAndWait = function(uri, viewdata, ttl) {
                 var httpResponse = objectModel.get(org.apache.cocoon.environment.http.HttpEnvironment.HTTP_RESPONSE_OBJECT);
 
                 if (httpResponse) {
-                    httpResponse.setContentType("text/xml");
-                    var text = "<?xml version='1.0'?><bu:document xmlns:bu='" +
-                        org.apache.cocoon.ajax.BrowserUpdateTransformer.BU_NSURI +
-                        "'><bu:continue/></bu:document>";
+                    var text ="";
+                    if (cocoon.request.getParameter("dojo.transport")=="iframe") {
+			//MSIE accepts only HTML content when using the iframe
+			//dojo transport, so we have to wrap everything into
+			//html as demonstrated by IframeTransport-bu-styling.xsl
+                    	httpResponse.setContentType("text/html");
+                    	text = "<html><head><title>Browser Update Data-Island</title></head><body>"
+                    		+ "<form id='browser-update'>"
+                    		+ "<textarea name='continue'></textarea>"
+                    		+ "</form>"
+                    		+ "</body></html>";
+                    } else {
+                    	httpResponse.setContentType("text/xml");
+	                    text = "<?xml version='1.0'?><bu:document xmlns:bu='" +
+	                        org.apache.cocoon.ajax.BrowserUpdateTransformer.BU_NSURI +
+	                        "'><bu:continue/></bu:document>";
+	                    
+                    }
                     httpResponse.setContentLength(text.length);
                     httpResponse.writer.print(text);
                 } else {
