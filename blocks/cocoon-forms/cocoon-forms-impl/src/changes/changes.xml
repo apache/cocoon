@@ -27,7 +27,10 @@
         <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
           <action dev="reinhard" type="add">
             Initial creation.
-          </action>      
+          </action>
+          <action dev="ltrieloff" type="fix" issue="COCOON-2027">
+            Fixed AJAX form uploads with MSIE. Patch Contributed by Jan Oberst.
+          </action>
         </release>
       </body>
     </document>
