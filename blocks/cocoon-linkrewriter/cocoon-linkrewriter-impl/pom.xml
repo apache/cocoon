@@ -33,7 +33,37 @@
   <artifactId>cocoon-linkrewriter-impl</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Linkrewriter Block Implementation</name>
-
+  <url>http://cocoon.apache.org/${docs.m.linkrewriter.relPath}</url>  
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1355</navDocId>
+          <collection>cdocs-linkrewriter</collection>             
+        </configuration>
+      </plugin>         
+    </plugins>    
+  </build>
+  
+  <properties>
+    <docs.name>Cocoon Link Rewriter Block</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.linkrewriter.relPath}</url>
+    </site>
+  </distributionManagement>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

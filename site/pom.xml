@@ -51,23 +51,25 @@
         <!-- Cocoon Blocks -->
         <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
         <module>../blocks/cocoon-auth/cocoon-auth-impl</module>
-        <!--module>../blocks/cocoon-captcha/cocoon-captcha-impl</module-->
+        <module>../blocks/cocoon-captcha/cocoon-captcha-impl</module>
         <module>../blocks/cocoon-flowscript/cocoon-flowscript-impl</module>
         <module>../blocks/cocoon-fop/cocoon-fop-impl</module>
         <module>../blocks/cocoon-forms/cocoon-forms-impl</module>
-        <!--module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module-->
-        <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>
         <module>../blocks/cocoon-mail/cocoon-mail-impl</module>
-        <module>../blocks/cocoon-portal/cocoon-portal-impl</module>
-        <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>
-        <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
         <module>../blocks/cocoon-template/cocoon-template-impl</module>
-        <!--module>../blocks/cocoon-batik/cocoon-batik-impl</module>
+        <module>../blocks/cocoon-batik/cocoon-batik-impl</module>
         <module>../blocks/cocoon-html/cocoon-html-impl</module>
-        <module>../blocks/cocoon-link-rewriter/cocoon-link-rewriter-impl</module>
-        <module>../blocks/cocoon-database/cocoon-database-impl</module>
-        <module>../blocks/cocoon-database/cocoon-hsqldb-server-impl/cocoon-hsqldb-server-impl</module>
-        <module>../blocks/cocoon-database/cocoon-hsqldb-client-impl/cocoon-hsqldb-client-impl</module-->
+        <module>../blocks/cocoon-linkrewriter/cocoon-linkrewriter-impl</module>
+        <module>../blocks/cocoon-databases/cocoon-databases-impl</module>
+        <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-server</module>
+        <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module>
+        
+        <!-- Unreleased Cocoon Blocks -->        
+        <!--module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module-->        
+        <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>        
+        <module>../blocks/cocoon-portal/cocoon-portal-impl</module>      
+        <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>          
+        <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>        
         
         <!-- Subprojects -->
         <module>../core/cocoon-configuration/cocoon-configuration-api</module>
@@ -115,14 +117,6 @@
                   &lt;/project&gt;
                 </siteXmlContent>
               </configuration>
-              <executions>
-                <execution>
-                  <phase>pre-site</phase>
-                  <goals>
-                    <goal>cocoon</goal>
-                  </goals>
-                </execution>
-              </executions>
             </plugin>
           </plugins>
         </pluginManagement>

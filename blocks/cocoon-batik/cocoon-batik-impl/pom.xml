@@ -19,7 +19,6 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -35,6 +34,37 @@
   <artifactId>cocoon-batik-impl</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Batik Block Implementation</name>
+  <url>http://cocoon.apache.org/${docs.m.batik.relPath}</url>  
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <configuration>        
+          <navDocId>1349</navDocId>
+          <collection>cdocs-batik</collection>     
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>               
+        </configuration>
+      </plugin>         
+    </plugins>    
+  </build>
+
+  <properties>
+    <docs.name>Cocoon Batik Block</docs.name>    
+    <docs.version>1.0</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.batik.relPath}</url>
+    </site>
+  </distributionManagement>  
 
   <dependencies>
     <dependency>
