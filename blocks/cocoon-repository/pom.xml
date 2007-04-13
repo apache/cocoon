@@ -35,6 +35,6 @@
   <description/>
   <modules>
     <module>cocoon-repository-impl</module>
-    <module>cocoon-repository-samples</module>    
+    <!--module>cocoon-repository-samples</module--> 
   </modules>
 </project>
