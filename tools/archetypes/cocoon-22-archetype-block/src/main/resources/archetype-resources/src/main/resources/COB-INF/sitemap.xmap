@@ -43,7 +43,7 @@
     </map:pipeline>
     
     <map:pipeline id="external-resource">
-      <!-- Put matchers for extnernal (accessible to the outside world, e.g. browser) resources here. 
+      <!-- Put matchers for external (accessible to the outside world, e.g. browser) resources here. 
         More details: http://cocoon.zones.apache.org/daisy/cdocs-site-main/g2/1345.html -->
       <map:match pattern="resource/external/**">
         <map:read src="resource/external/{1}"/>
