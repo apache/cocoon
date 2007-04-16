@@ -9,14 +9,12 @@
     <!-- @daisy-start@ -->
     <menu name="Overview">
       <item href="1327_1_1.html" name="Overview"/>
-    </menu>
-    <menu name="All Sitemap Components">
-      <item href="1347_1_1.html" name="All Sitemap Components"/>
-    </menu>    
+    </menu>  
     <menu name="About Cocoon">
       <item href="1285_1_1.html" name="Welcome"/>
       <item href="1284_1_1.html" name="Versions"/>
       <item collapse="true" href="706_1_1.html" name="Who uses Cocoon?">
+        <item href="1347_1_1.html" name="All Sitemap Components"/>
         <item href="706_1_1.html" name="Live Sites - 2.2"/>
         <item href="705_1_1.html" name="Live Sites - 2.1.8"/>
         <item href="704_1_1.html" name="Live Sites - 2.1.7"/>
