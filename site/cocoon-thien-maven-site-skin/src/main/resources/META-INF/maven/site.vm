@@ -207,10 +207,10 @@
   </head>
   <body class="composite">
     <div id="banner">
-		<a href="$project.getProperties().get("docs.externalUrl")" id="bannerLeft">
+		<a href="$project.getProperties().get("docs.urlRelativizer")/" id="bannerLeft">
 			<img src="$PathTool.calculateLink( "images/cocoon-project-logo.png", $relativePath )" alt="Cocoon Project Logo" />
 		</a>
-		<a href="$project.getProperties().get("docs.externalUrl")" id="bannerRight">
+		<a href="$project.getProperties().get("docs.urlRelativizer")/" id="bannerRight">
 			<img src="$PathTool.calculateLink( "images/cocoon-logo.gif", $relativePath )" alt="Cocoon Logo" />
 		</a>
       <div class="clear">
@@ -222,10 +222,10 @@
       	#nameAndVersion()
      </div>
       <div class="xright">
-		  <a href="$project.getProperties().get("docs.externalUrl")/core-modules/">Cocoon Core</a> | 
-		  <a href="$project.getProperties().get("docs.externalUrl")/blocks/">Cocoon Blocks</a> |   
-		  <a href="$project.getProperties().get("docs.externalUrl")/subprojects/">Subprojects</a> |		  
-		  <a href="$project.getProperties().get("docs.externalUrl")/maven-plugins/">Maven Plugins</a>
+		  <a href="$project.getProperties().get("docs.urlRelativizer")core-modules/">Cocoon Core</a> | 
+		  <a href="$project.getProperties().get("docs.urlRelativizer")blocks/">Cocoon Blocks</a> |   
+		  <a href="$project.getProperties().get("docs.urlRelativizer")subprojects/">Subprojects</a> |		  
+		  <a href="$project.getProperties().get("docs.urlRelativizer")maven-plugins/">Maven Plugins</a>
       	  #links( $decoration.body.links )</div>
       <div class="clear">
         <hr/>
