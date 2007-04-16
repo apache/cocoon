@@ -20,48 +20,52 @@
 <!--+
     | @version $Id$
     +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   
-  <parent>
-    <groupId>org.apache.cocoon</groupId>
-    <artifactId>site</artifactId>
-    <version>1-SNAPSHOT</version>
-  </parent>  
-  
-  <artifactId>cocoon-22-site</artifactId>
+  <groupId>org.apache.cocoon</groupId>
+  <artifactId>cocoon-thien-maven-site-skin-demo</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   
-  <name>Cocoon 2.2 Site</name>
-  <url>http://cocoon.apache.org/${docs.m.site-22.relPath}</url>
+  <name>Cocoon Skin Demo</name>
   
   <properties>
     <docs.name>Cocoon 2.2</docs.name>    
-  </properties>      
-  
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.site-22.relPath}</url>
-    </site>
-  </distributionManagement>
+    <docs.urlRelativizer>../../../</docs.urlRelativizer>    
+  </properties>    
   
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>2.0-beta-5</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>    
+  
+  <reporting>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.0.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>project-team</report>
+              <report>dependencies</report>
+              <report>license</report>
+              <report>summary</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>
-          <navDocId>1328</navDocId>
-          <collection>cdocs-site-22</collection>
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
-        </configuration>
-      </plugin>   
     </plugins>
-  </build>
-  
+  </reporting>
+      
+
 </project>
