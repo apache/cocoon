@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <skin>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-thien-maven-site-skin</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </skin>
+  <body>
+    <!-- @daisy-start@ -->
+    <menu name="Overview">
+      <item href="1327_1_1.html" name="Overview"/>
+    </menu>
+    <menu name="All Sitemap Components">
+      <item href="1347_1_1.html" name="All Sitemap Components"/>
+    </menu>
+    <!-- @daisy-end@ -->
+  </body>
+</project>
