@@ -24,11 +24,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
-import org.daisycms.clientapp.facade.DaisyClientException;
-import org.daisycms.clientapp.facade.DaisyDocument;
-import org.daisycms.clientapp.facade.DaisyDocumentProxy;
-import org.daisycms.clientapp.facade.transformer.impl.ResourceXsltTransformerSource;
-import org.daisycms.clientapp.facade.util.XMLUtils;
+import org.daisycms.clientapp.adapter.DaisyClientException;
+import org.daisycms.clientapp.adapter.DaisyDocument;
+import org.daisycms.clientapp.adapter.DaisyDocumentProxy;
+import org.daisycms.clientapp.adapter.transformer.impl.ResourceXsltTransformerSource;
+import org.daisycms.clientapp.adapter.util.XMLUtils;
 import org.daisycms.clientapp.maven.export.DaisyExportMojo.StreamingInformation;
 import org.daisycms.clientapp.maven.export.strategy.DefaultExportStrategy;
 import org.outerj.daisy.repository.PartNotFoundException;
