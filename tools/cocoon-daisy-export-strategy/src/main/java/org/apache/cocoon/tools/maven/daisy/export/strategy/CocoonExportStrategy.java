@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License. 
  */
-package org.apache.cocoon.tools.maven.daisy.exporter;
+package org.apache.cocoon.tools.maven.daisy.export.strategy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -59,7 +59,7 @@ public class CocoonExportStrategy extends DefaultExportStrategy {
             XMLUtils.transform(
                     new ByteArrayInputStream(doc.asByteArray()), 
                     baos,
-                    new ResourceXsltTransformerSource("org/apache/cocoon/tools/maven/daisy/export/cocoon-doc-2-xdoc.xslt"),
+                    new ResourceXsltTransformerSource("org/apache/cocoon/tools/maven/daisy/export/strategy/cocoon-doc-2-xdoc.xslt"),
                     params);
             si.data = baos.toByteArray();  
             
