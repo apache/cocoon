@@ -18,12 +18,14 @@ package org.apache.cocoon.servletservice.components;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.servletservice.ServletConnection;
+import org.apache.cocoon.servletservice.postable.PostableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -35,7 +37,7 @@ import org.apache.excalibur.source.impl.AbstractSource;
  *
  * @version $Id$
  */
-public class ServletSource extends AbstractSource {
+public class ServletSource extends AbstractSource implements PostableSource {
     
     private ServletConnection servletConnection;
     /**
@@ -154,5 +156,9 @@ public class ServletSource extends AbstractSource {
 		}
     	
     }
+
+	public OutputStream getOutputStream() throws IOException {
+		return servletConnection.getOutputStream();
+	}
 
 }
