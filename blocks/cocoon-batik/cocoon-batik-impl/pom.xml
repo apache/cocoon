@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC1-SNAPSHOT</version>
+      
     </dependency>
     <!--
          TODO : add exclusions for xerces and rhino. 
@@ -78,72 +78,72 @@
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-awt-util</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-bridge</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-css</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-dom</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-ext</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-extension</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-gui-util</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-gvt</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-parser</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-rasterizer-ext</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-rasterizer</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-script</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-slideshow</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-squiggle</artifactId>
-      <version>1.6-1</version>
+      
       <exclusions>
         <exclusion>
           <groupId>avalon-framework</groupId>
@@ -158,27 +158,27 @@
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-svg-dom</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-svggen</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-svgpp</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-swing</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-transcoder</artifactId>
-      <version>1.6-1</version>
+      
       <exclusions>
         <exclusion>
           <groupId>avalon-framework</groupId>
@@ -193,28 +193,28 @@
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-ttf2svg</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-util</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-xml</artifactId>
-      <version>1.6-1</version>
+      
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      <version>2.4</version>
+      
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.2</version>
+      
       <scope>test</scope>
     </dependency>
   </dependencies>

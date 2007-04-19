@@ -48,7 +48,8 @@
     </site>
   </distributionManagement>
 
-  <scm><!-- repeated here so that maven-site is not appended -->
+  <scm>
+<!-- repeated here so that maven-site is not appended -->
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
     <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
