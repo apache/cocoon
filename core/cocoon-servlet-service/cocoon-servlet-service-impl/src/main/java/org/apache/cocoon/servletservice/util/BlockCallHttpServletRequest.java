@@ -18,6 +18,7 @@ package org.apache.cocoon.servletservice.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.Principal;
@@ -51,7 +52,10 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     private Hashtable attributes = new Hashtable();
     private RequestParameters parameters;
     private String encoding;
+    private String method;
     private Map headers = new HashMap();
+    
+    private ServletInputStream requestBody;
     
 	/**
 	 * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3 
@@ -170,8 +174,15 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.ServletRequest#getInputStream()
      */
     public ServletInputStream getInputStream() throws IOException {
-        // TODO Doesn't handle input streams yet
-        throw new UnsupportedOperationException();
+    	return requestBody;
+    }
+    
+    public void setInputStream(final InputStream inputStream) {
+    	requestBody = new ServletInputStream() {
+        	public int read() throws IOException {
+        		return inputStream.read();
+        	}
+        };
     }
 
     /* (non-Javadoc)
@@ -210,8 +221,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.http.HttpServletRequest#getMethod()
      */
     public String getMethod() {
-        // TODO Only implements GET yet
-        return "GET";
+        return method;
+    }
+    
+    public void setMethod(String method) {
+    	this.method = method;
     }
 
     /* (non-Javadoc)

@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -65,6 +66,7 @@ public final class ServletConnection {
     private boolean connected; 
     
     private InputStream responseBody;
+    private ByteArrayOutputStream requestBody;
 
     /**
      * Construct a new object
@@ -99,6 +101,8 @@ public final class ServletConnection {
     public void connect() throws IOException, ServletException {
     	//if already connected, do nothing
     	if (connected) return;
+    	
+    	request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
     	
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.response.setOutputStream(os);
@@ -169,6 +173,18 @@ public final class ServletConnection {
 				throw new IOException("Could not get response status code");
 			}
     	return response.getStatus();
+    }
+    
+    /**
+     * Returns an output stream that writes as POST to this connection.
+     * @return an output stream that writes as POST to this connection.
+     * @throws IllegalStateException - if already connected
+     */
+    public OutputStream getOutputStream() throws IllegalStateException {
+    	if (connected) throw new IllegalStateException("You cannot write to the connection already connected.");
+    	if (requestBody == null) requestBody = new ByteArrayOutputStream();
+    	return requestBody;
+    	
     }
     
     // Parse the block protocol.
