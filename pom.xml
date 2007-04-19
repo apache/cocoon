@@ -63,6 +63,16 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+<repository>
+      <id>reinhard-m2-snapshot-repository</id>
+      <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -1181,6 +1191,11 @@
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-xml-impl</artifactId>
+        <version>1.0.0-RC1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xmldb-impl</artifactId>
         <version>1.0.0-SNAPSHOT</version>
       </dependency>
@@ -1337,6 +1352,11 @@
         <groupId>daisy</groupId>
         <artifactId>daisy-jmsclient-api</artifactId>
         <version>1.5-dev</version>
+      </dependency>
+      <dependency>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+        <version>1.0.0-20070418.125604-1</version>
       </dependency>
       <dependency>
         <groupId>daisy</groupId>
@@ -1844,6 +1864,11 @@
         <artifactId>myfaces-api</artifactId>
         <version>r233484</version>
       </dependency>
+      <dependency>
+        <groupId>myfaces</groupId>
+        <artifactId>myfaces-impl</artifactId>
+        <version>r233484</version>
+      </dependency>
       <!-- TODO: Next two have same artifactId but different groupId ?? -->
       <dependency>
         <groupId>nekodtd</groupId>
@@ -2056,6 +2081,11 @@
       <dependency>
         <groupId>xmldb</groupId>
         <artifactId>xmldb-api</artifactId>
+        <version>20030701</version>
+      </dependency>
+      <dependency>
+        <groupId>xmldb</groupId>
+        <artifactId>xmldb-common</artifactId>
         <version>20030701</version>
       </dependency>
       <dependency>

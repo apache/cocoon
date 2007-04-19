@@ -48,12 +48,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC1-SNAPSHOT</version>
+      
     </dependency>
     <dependency>
       <groupId>jfor</groupId>
       <artifactId>jfor</artifactId>
-      <version>0.7.1</version>
+      
     </dependency>
   </dependencies>
 </project>
