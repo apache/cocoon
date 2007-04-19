@@ -86,5 +86,11 @@
         <op type="convolve" prefix="convolve-" />
       </effects>
     </map:reader>
+    
+    <map:reader logger="imageop" name="image-op-overlay" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="overlay" prefix="overlay-" />
+      </effects>
+    </map:reader>
   </map:readers>
 </map:components>
