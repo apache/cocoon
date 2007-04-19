@@ -16,10 +16,12 @@
  */
 package org.apache.cocoon.reading.imageop;
 
+import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
-public interface ImageOperation extends GenericImageOperation {
+public interface CombineImagesOperation extends GenericImageOperation {
+    
+    WritableRaster combine(BufferedImage source, BufferedImage overlay);
 
-    WritableRaster apply( WritableRaster raster );
-
+    String getOverlayURI();
 }
