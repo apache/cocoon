@@ -106,5 +106,8 @@
     <sample href="logo2.png/blur" name="Image Blurred">
       The image is blurred with a medium strength convolve operation.
     </sample>
+    <sample href="logo.jpg/overlay/cocoon.png/5/5" name="Image Overlay">
+      The image is gets overlayed by another one with transparency.
+    </sample>
   </group>
 </samples>
