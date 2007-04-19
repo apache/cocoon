@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
@@ -548,8 +546,6 @@ public abstract class AbstractProcessingPipeline
             handleException(e);
         }
 
-        //Request has been succesfully processed, set approporiate status code
-        environment.setStatus(HttpServletResponse.SC_OK);
         return true;
     }
 
@@ -661,8 +657,6 @@ public abstract class AbstractProcessingPipeline
             handleException(e);
         }
         
-        //Request has been succesfully processed, set approporiate status code
-        environment.setStatus(HttpServletResponse.SC_OK);
         return true;
     }
 
