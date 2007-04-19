@@ -31,20 +31,20 @@
   
   <artifactId>cocoon-maven-plugins-site</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  
   <name>Cocoon Maven Plugins Site</name>
-  <url>http://cocoon.apache.org</url>
+  <url>http://cocoon.apache.org/${docs.m.site-maven-plugins.relPath}</url>
+  
+  <properties>
+    <docs.name>Cocoon Maven Plugins</docs.name> 
+    <docs.version>${docs.m.core.version}</docs.version>       
+  </properties>    
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/maven-plugins/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.site-maven-plugins.relPath}</url>
     </site>
-  </distributionManagement>
-  
-  <properties>
-    <docs.name>Maven Plugins</docs.name>    
-  </properties>    
+  </distributionManagement> 
   
   <build>
     <plugins>

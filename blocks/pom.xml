@@ -20,7 +20,9 @@
 <!--+
     | @version $Id$
     +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
   <parent>
@@ -30,7 +32,8 @@
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
   <version>4-SNAPSHOT</version>
-  <name>Cocoon Blocks [modules]</name>
+  <name>Cocoon Blocks [modules]</name>     
+  
   <build>
     <plugins>
       <plugin>
@@ -88,6 +91,7 @@
       </plugin>             
     </plugins>
   </build>
+  
   <modules>
     <module>cocoon-ajax/cocoon-ajax-impl</module>
     <module>cocoon-ajax/cocoon-ajax-sample</module>    
@@ -104,6 +108,7 @@
     <module>cocoon-template/cocoon-template-sample</module>    
     <module>cocoon-samples-style/cocoon-samples-style-default</module>
   </modules>
+  
   <profiles>
     <profile>
       <id>allblocks</id>
@@ -182,9 +187,11 @@
       </modules>
     </profile>
   </profiles>
+  
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</developerConnection>
     <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</url>
   </scm>
+  
 </project>

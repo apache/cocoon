@@ -36,7 +36,7 @@
   <url>http://cocoon.apache.org/${docs.m.site-22.relPath}</url>
   
   <properties>
-    <docs.name>Cocoon 2.2</docs.name>    
+    <docs.name>Cocoon 2.2</docs.name>
   </properties>      
   
   <distributionManagement>

@@ -37,6 +37,10 @@
       <name>Cocoon Site [modules]</name>
       <url>http://cocoon.apache.org</url>
       
+      <properties> 
+        <docs.urlRelativizer>../</docs.urlRelativizer>
+      </properties>      
+      
       <modules>
         <!-- Category sites -->
         <module>cocoon-main-site</module>
@@ -49,8 +53,8 @@
         <module>cocoon-configuration-site</module>
         
         <!-- Cocoon Blocks -->
-        <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
-        <module>../blocks/cocoon-auth/cocoon-auth-impl</module>
+        <!--module>../blocks/cocoon-ajax/cocoon-ajax-impl</module-->
+        <!--module>../blocks/cocoon-auth/cocoon-auth-impl</module>
         <module>../blocks/cocoon-captcha/cocoon-captcha-impl</module>
         <module>../blocks/cocoon-flowscript/cocoon-flowscript-impl</module>
         <module>../blocks/cocoon-fop/cocoon-fop-impl</module>
@@ -62,14 +66,14 @@
         <module>../blocks/cocoon-linkrewriter/cocoon-linkrewriter-impl</module>
         <module>../blocks/cocoon-databases/cocoon-databases-impl</module>
         <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-server</module>
-        <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module>
+        <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module-->
         
         <!-- Unreleased Cocoon Blocks -->        
-        <!--module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module-->        
+        <!--module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module>        
         <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>        
         <module>../blocks/cocoon-portal/cocoon-portal-impl</module>      
         <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>          
-        <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>        
+        <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module-->        
         
         <!-- Subprojects -->
         <module>../core/cocoon-configuration/cocoon-configuration-api</module>
@@ -78,7 +82,7 @@
         <module>../core/cocoon-servlet-service/cocoon-servlet-service-components</module>
         
         <!-- Maven plugins -->
-        <module>../tools/cocoon-rcl/cocoon-rcl-plugin</module>
+        <!--module>../tools/cocoon-rcl/cocoon-rcl-plugin</module!-->
         
         <!-- Core modules -->
         <module>../core/cocoon-core</module>
@@ -96,7 +100,7 @@
         <module>../core/cocoon-xml/cocoon-xml-impl</module>
         <module>../core/cocoon-xml/cocoon-xml-resolver</module>
       </modules>
-      
+            
       <build>
         <pluginManagement>
           <plugins>
@@ -108,7 +112,7 @@
                   &lt;project&gt;
                   &lt;skin&gt;
                   &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
-                  &lt;artifactId&gt;cocoon-maven-site-skin&lt;/artifactId&gt;
+                  &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
                   &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
                   &lt;/skin&gt;
                   &lt;body&gt;
