@@ -34,9 +34,9 @@
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Servlet Service Implementation</name>
   <description>
-  	The servlet service framework makes it easy to use servlets as Spring components.
-  	It also contains functionality so that a servlet service can call other servlet
-  	services that it is connected to in the Spring configuration.
+    The servlet service framework makes it easy to use servlets as Spring components.
+    It also contains functionality so that a servlet service can call other servlet
+    services that it is connected to in the Spring configuration.
   </description>
   <url>http://cocoon.apache.org/${docs.m.servlet-service-impl.relPath}</url>    
   

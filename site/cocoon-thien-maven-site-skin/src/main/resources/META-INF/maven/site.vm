@@ -222,10 +222,10 @@
       	#nameAndVersion()
      </div>
       <div class="xright">
-		  <a href="$project.getProperties().get("docs.urlRelativizer")core-modules/">Cocoon Core</a> | 
-		  <a href="$project.getProperties().get("docs.urlRelativizer")blocks/">Cocoon Blocks</a> |   
-		  <a href="$project.getProperties().get("docs.urlRelativizer")subprojects/">Subprojects</a> |		  
-		  <a href="$project.getProperties().get("docs.urlRelativizer")maven-plugins/">Maven Plugins</a>
+		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Cocoon Core</a> | 
+		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Cocoon Blocks</a> |   
+		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a> |		  
+		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins</a>
       	  #links( $decoration.body.links )</div>
       <div class="clear">
         <hr/>

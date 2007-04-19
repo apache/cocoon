@@ -44,7 +44,7 @@
     <dependency>
       <groupId>org.daisycms</groupId>
       <artifactId>daisy-maven-plugin</artifactId>  
-      <version>1.0.0-SNAPSHOT</version> 
+      <version>1.0.0-20070418.125604-1</version> 
     </dependency>
   </dependencies>
 

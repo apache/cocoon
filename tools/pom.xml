@@ -42,8 +42,7 @@
     <module>cocoon-maven-reports</module>
     <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
     <module>cocoon-rcl/cocoon-rcl-plugin</module>
-    <!-- directory does not exist, breaks the build -->    
-    <!--module>cocoon-daisy-export-strategy</module-->
+    <module>cocoon-daisy-export-strategy</module>
   </modules>
 
   <scm>

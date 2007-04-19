@@ -36,7 +36,8 @@
   <url>http://cocoon.apache.org/${docs.m.site-servlet-service.relPath}</url>
   
   <properties>
-    <docs.name>Cocoon Servlet Service</docs.name>    
+    <docs.name>Cocoon Servlet Service</docs.name>   
+    <docs.version>${docs.m.site-servlet-service.version}</docs.version>        
   </properties>      
   
   <distributionManagement>
