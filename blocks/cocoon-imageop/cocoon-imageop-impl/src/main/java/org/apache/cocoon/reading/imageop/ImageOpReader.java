@@ -195,11 +195,19 @@ final public class ImageOpReader
         }
         Iterator list = effectsStack.iterator();
         WritableRaster src = image.getRaster();
+        BufferedImage newImage = null;
+        
         while( list.hasNext() ) {
             GenericImageOperation op = (GenericImageOperation) list.next();
             WritableRaster r;
             if (op instanceof ImageOperation) {
                 r = ((ImageOperation) op).apply( src );
+                
+	            if(getLogger().isDebugEnabled()) {
+	                getLogger().debug( "In Bounds: " + r.getBounds() );
+	            }
+	            src = r.createWritableTranslatedChild( 0, 0 );
+	            
             } else if (op instanceof CombineImagesOperation) {
                 CombineImagesOperation cio = (CombineImagesOperation) op;
                 String uri = cio.getOverlayURI();
@@ -220,23 +228,21 @@ final public class ImageOpReader
                     throw new ProcessingException("Source '" + uri + "' for combine image operation cannot be read.", e);
                 }
                 
-                r = cio.combine(image, secondImage);
+                newImage = cio.combine(image, secondImage);
+                image = newImage;
+                src = image.getRaster();
             } else {
                 continue;
             }
-            
-            if(getLogger().isDebugEnabled()) {
-                getLogger().debug( "In Bounds: " + r.getBounds() );
-            }
-            src = r.createWritableTranslatedChild( 0, 0 );
         }
-        ColorModel cm = image.getColorModel();
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug( "Out Bounds: " + src.getBounds() );
+        if (newImage == null) {        	
+	        ColorModel cm = image.getColorModel();
+	        if (getLogger().isDebugEnabled()) {
+	            getLogger().debug( "Out Bounds: " + src.getBounds() );
+	        }
+	        newImage = new BufferedImage( cm, src, true, new Hashtable() );
+	        // Not sure what this should really be --------------^^^^^
         }
-        BufferedImage newImage = new BufferedImage( cm, src, true, new Hashtable() );
-        // Not sure what this should really be --------------^^^^^
-
         int minX = newImage.getMinX();
         int minY = newImage.getMinY();
         int width = newImage.getWidth();

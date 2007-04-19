@@ -57,12 +57,12 @@ public class OverlayOperation implements CombineImagesOperation {
         }
     }
     
-    public WritableRaster combine(BufferedImage image, BufferedImage overlay) {
+    public BufferedImage combine(BufferedImage image, BufferedImage overlay) {
         if (!enabled) {
-            return image.getRaster();
+            return image;
         }
         
-        BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = result.createGraphics();
         
         // first copy the original image into the result
@@ -74,7 +74,7 @@ public class OverlayOperation implements CombineImagesOperation {
         // then overlay the second image with alpha compositing turned on
         g.drawImage(overlay, offset_x, offset_y, null);        
         
-        return result.getRaster();
+        return result;
     }
 
     public String getKey() {

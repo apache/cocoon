@@ -21,7 +21,7 @@ import java.awt.image.WritableRaster;
 
 public interface CombineImagesOperation extends GenericImageOperation {
     
-    WritableRaster combine(BufferedImage source, BufferedImage overlay);
+    BufferedImage combine(BufferedImage source, BufferedImage overlay);
 
     String getOverlayURI();
 }
