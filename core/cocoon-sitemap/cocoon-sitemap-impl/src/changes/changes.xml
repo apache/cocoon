@@ -24,8 +24,15 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">  
-      
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
+      <action dev="reinhard" type="add" due-to="Jochen Seifarth" due-to-email="jochen.seifarth@web.de" issue="COCOON-1354">
+        &lt;map:serialize status-code=&quot;{}&quot;/&gt; supports variable resolution.
+      </action>  
+    </release> 
+    <release version="1.0.0-M1" date="2007-03-02" description="released">  
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>    
     </release>
   </body>
 </document>

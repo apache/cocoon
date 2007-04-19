@@ -41,7 +41,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
 
     private VariableResolver mimeType;
 
-    private int statusCode;
+    private VariableResolver statusCode;
 
     private Map parameters;
 
@@ -55,8 +55,8 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
      */
     public SerializeNode(String name,
                          VariableResolver source,
-                         VariableResolver mimeType,
-                         int statusCode) {
+                         VariableResolver mimeType, 
+                         VariableResolver statusCode) {
         this.serializerName = name;
         this.source = source;
         this.mimeType = mimeType;
@@ -125,9 +125,14 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
                                desc.mimeType);
 
         // Set status code if there is one
-        if (this.statusCode >= 0) {
-            env.setStatus(this.statusCode);
+        int statusCodeInt = -1;
+        try {
+            statusCodeInt = new Integer(this.statusCode.resolve(context, env.getObjectModel())).intValue();
+        } catch (NumberFormatException nfe) {
+            this.getLogger().warn("It was tried to set a non-integer as status code. " +
+                    "This value was ignored and default status code remains.", nfe);
         }
+        env.setStatus(statusCodeInt);        
 
         if (!context.isBuildingPipelineOnly()) {
             // Process pipeline
