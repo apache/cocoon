@@ -34,6 +34,7 @@ import org.apache.cocoon.components.flow.WebContinuationDataBean;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 
@@ -43,6 +44,7 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
+import org.springframework.context.ApplicationContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -59,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -290,6 +293,7 @@ public class StatusGenerator extends ServiceableGenerator
         }
         genSettings();
         genVMStatus();
+        genBeans();
         genProperties();
         if (this.showLibrary) {
             genLibrarylist();
@@ -297,6 +301,58 @@ public class StatusGenerator extends ServiceableGenerator
 
         // End root element.
         super.contentHandler.endElement(NAMESPACE, "statusinfo", "statusinfo");
+    }
+
+    private void genBeans() throws SAXException {
+        startGroup("Spring Beans");
+        
+        Stack acStack = new Stack();
+
+        // get the hierarchy of Spring ApplicationContexts (BeanFactories)
+        {
+            ApplicationContext appContext =
+                WebAppContextUtils.getCurrentWebApplicationContext();
+            
+            acStack.push(appContext);
+            
+            while (appContext.getParent() != null) {
+                appContext = appContext.getParent();
+                acStack.push(appContext);
+            }
+        }
+        
+        int index = 0;
+        final int total = acStack.size();
+        
+        while (acStack.size() > 0) {
+            ApplicationContext ac = (ApplicationContext) acStack.pop();
+            
+            String acName;
+            if (index == (total-2)) {
+                acName = "Global ApplicationContext (" + ac.getDisplayName() + ")";
+            } else if (index == (total-1)) {
+                acName = "Sitemap ApplicationContext (" + ac.getDisplayName() + ")";                
+            } else {
+                acName = ac.getDisplayName();
+            }
+
+            List values = new ArrayList();
+            String[] names = ac.getBeanDefinitionNames();
+            for (int i=0,iEnd=names.length; i < iEnd; i++) {
+                String name = names[i];
+                Class type = ac.getType(name);
+                if (type == null) {
+                    values.add(name + " => ???");
+                } else {
+                    values.add(name + " => " + ac.getType(name).getName());
+                }
+            }
+            addMultilineValue(acName, values);
+            
+            index++;
+        }
+        
+        endGroup();
     }
 
     private void genContinuationsTree() throws SAXException {
