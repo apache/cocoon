@@ -32,13 +32,14 @@
         MRUMemoryStore registers at StoreJanitor only in that case, if StoreJanitor
         is set as dependency. By default it is set.
       </action>  
-      <!--action dev="reinhard" type="fix"> I reverted this fix as we should vote on this.
-        EHDefaultStore doesn't register at StoreJanitor anymore. The usage of
-        StoreJanitor to remove elements from EHDefaultStore was contra-productive,
+      <action dev="reinhard" type="fix">
+        The usage of  StoreJanitor to remove elements from EHDefaultStore was contra-productive,
         because EHCache provides its own invalidation mechanisms which are more
         sophisticated than the removal of random items. Find more information
-        at http://marc.info/?t=117563247800004&amp;r=1&amp;w=2.
-      </action-->            
+        at http://marc.info/?t=117563247800004&amp;r=1&amp;w=2. In order to use EHDefaultStore
+        again, we would need access to EHCache internals so that we don't remove the
+        wrong items.
+      </action>            
       <action dev="reinhard" type="add">
         Expose all configuration properties that EHCache provides via setter methods.
         Using them, EHDefaultStore can be completly configured in the Spring bean
