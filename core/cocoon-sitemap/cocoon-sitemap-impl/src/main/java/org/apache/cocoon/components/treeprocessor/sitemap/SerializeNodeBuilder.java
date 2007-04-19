@@ -61,7 +61,7 @@ public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
             type,
             VariableResolverFactory.getResolver(config.getAttribute("src", null), this.manager),
             VariableResolverFactory.getResolver(mimeType, this.manager),
-            config.getAttributeAsInteger("status-code", -1)
+            VariableResolverFactory.getResolver(config.getAttribute("status-code", null), this.manager)
         );
         this.node.setPipelineHints(this.pipelineHints);
         return this.treeBuilder.setupNode(node, config);
