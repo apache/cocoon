@@ -1,0 +1,92 @@
+/**
+ * 
+ */
+package org.apache.cocoon.servletservice.postable.components;
+
+import java.io.IOException;
+import java.util.Map;
+
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.generation.AbstractGenerator;
+import org.apache.cocoon.servletservice.postable.PostableSource;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.xml.sax.SAXException;
+
+/**
+ * 
+ *
+ */
+public class ServletServiceGenerator extends AbstractGenerator {
+	
+	private Log logger = LogFactory.getLog(getClass());
+	private SAXParser saxParser;
+	
+	private PostableSource servletSource;
+	
+    public void init() {
+        this.enableLogging(new CLLoggerWrapper(this.logger));
+    }
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.generation.Generator#generate()
+	 */
+	public void generate() throws IOException, SAXException, ProcessingException {
+        try {
+            SourceUtil.parse(saxParser, this.servletSource, super.xmlConsumer);
+        } catch (SAXException e) {
+            SourceUtil.handleSAXException(this.servletSource.getURI(), e);
+        }
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+	 */
+	public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, par);
+        String service;
+		try {
+			service = parameters.getParameter("service");
+		} catch (ParameterException e) {
+			throw new ProcessingException(e);
+		}
+		
+        Source inputSource;
+        try {
+        	try {
+        		servletSource = (PostableSource)resolver.resolveURI(service);
+        	} catch (ClassCastException e) {
+        		throw new ProcessingException("Resolved '" + service + "' to source that is not postable. Use servlet: protocol for service calls.");
+        	}
+            inputSource = super.resolver.resolveURI(src);
+            
+        } catch (SourceException se) {
+            throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
+        }
+        
+        if (getLogger().isDebugEnabled()) {
+        	getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
+            getLogger().debug("Source " + super.source + " resolved to " + inputSource.getURI());
+        }
+        
+        IOUtils.copy(inputSource.getInputStream(), servletSource.getOutputStream());
+	}
+
+	public SAXParser getSaxParser() {
+		return saxParser;
+	}
+
+	public void setSaxParser(SAXParser saxParser) {
+		this.saxParser = saxParser;
+	}
+
+}
