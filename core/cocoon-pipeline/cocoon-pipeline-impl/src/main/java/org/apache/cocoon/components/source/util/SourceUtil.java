@@ -226,6 +226,7 @@ public abstract class SourceUtil {
 	 *
 	 * @param  source    the data
 	 * @throws ProcessingException if no suitable converter is found
+	 * @deprecated use {@link #parse(SAXParser, Source, ContentHandler)} instead
 	 */
 	public static void parse(ServiceManager manager, Source source, ContentHandler handler) throws SAXException, IOException, ProcessingException {
 	    if (source instanceof XMLizable) {
@@ -234,9 +235,7 @@ public abstract class SourceUtil {
 	        SAXParser parser = null;
 	        try {
 	            parser = (SAXParser) manager.lookup(SAXParser.ROLE);
-	            parser.parse(getInputSource(source), handler);
-	        } catch (SourceException e) {
-	            throw SourceUtil.handle(e);
+	            parse(parser, source, handler);
 	        } catch (ServiceException e) {
 	            throw new ProcessingException("Exception during parsing source.", e);
 	        } finally {
@@ -244,6 +243,29 @@ public abstract class SourceUtil {
 	        }
 	    }
 	}
+	
+	/**
+	 * Generates SAX events from the given source by parsing it.
+	 *
+	 * <p><b>NOTE</b>: If the implementation can produce lexical events,
+	 * care should be taken that <code>handler</code> can actually
+	 * directly implement the LexicalHandler interface!</p>
+	 *
+	 * @param  source    the data
+	 * @throws ProcessingException if error during processing source data occurs
+	 */
+	public static void parse(SAXParser parser, Source source, ContentHandler handler) throws SAXException, IOException, ProcessingException {
+	    if (source instanceof XMLizable) {
+	        toSAX((XMLizable) source, handler);
+	    } else {
+	        try {
+	            parser.parse(getInputSource(source), handler);
+	        } catch (SourceException e) {
+	            throw SourceUtil.handle(e);
+	        }
+	    }
+	}
+	
 
 	/**
 	 * Generates a DOM from the given source
