@@ -27,6 +27,9 @@
         <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
           <action dev="reinhard" type="add">
             Initial creation.
+          </action>
+          <action dev="ltrieloff" type="add" issue="COCOON-2048">
+            Added OverlayOperation contributed by Alexander Klimetschek
           </action>      
         </release>
       </body>

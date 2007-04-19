@@ -33,6 +33,7 @@
       <component-instance name="color" class="org.apache.cocoon.reading.imageop.ColorOperation" logger="imageop" />
       <component-instance name="shear" class="org.apache.cocoon.reading.imageop.ShearOperation" logger="imageop" />
       <component-instance name="crop" class="org.apache.cocoon.reading.imageop.CropOperation" logger="imageop" />
+      <component-instance name="overlay" class="org.apache.cocoon.reading.imageop.OverlayOperation" logger="imageop" />
     </image-operations>
     
 </components>

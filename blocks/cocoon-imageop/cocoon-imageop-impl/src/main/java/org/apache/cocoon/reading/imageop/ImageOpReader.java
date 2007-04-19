@@ -19,18 +19,20 @@ package org.apache.cocoon.reading.imageop;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-import javax.imageio.spi.ImageWriterSpi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriter;
+import javax.imageio.spi.ImageWriterSpi;
+import javax.imageio.stream.ImageOutputStream;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -44,6 +46,8 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.reading.ResourceReader;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceNotFoundException;
 import org.xml.sax.SAXException;
 
 /**
@@ -62,6 +66,7 @@ final public class ImageOpReader
     private ArrayList       effectsStack;
     private ServiceSelector operationSelector;
     private ServiceManager  manager;
+    private SourceResolver  resolver;
 
     /**
      * Read reader configuration
@@ -83,7 +88,7 @@ final public class ImageOpReader
     public void service( ServiceManager man )
     throws ServiceException {
         this.manager = man;
-        operationSelector = (ServiceSelector) man.lookup( ImageOperation.ROLE + "Selector" );
+        operationSelector = (ServiceSelector) man.lookup( GenericImageOperation.ROLE + "Selector" );
     }
     
     /**
@@ -103,11 +108,13 @@ final public class ImageOpReader
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
+        this.resolver = resolver;
+        
         format = par.getParameter("output-format", FORMAT_DEFAULT);
         if(getLogger().isInfoEnabled()) {
             getLogger().info( src + " --> " + format );
         }
-        setupEffectsStack( par );
+        setupEffectsStack( par, resolver );
     }
 
     protected void processStream( InputStream inputStream ) 
@@ -149,7 +156,7 @@ final public class ImageOpReader
         b.append( ':' );
         Iterator list = effectsStack.iterator();
         while( list.hasNext() ) {
-            ImageOperation op = (ImageOperation) list.next();
+            GenericImageOperation op = (GenericImageOperation) list.next();
             b.append( op.getKey() );
             b.append( ':' );
         }
@@ -167,30 +174,57 @@ final public class ImageOpReader
         for( int i=0 ; i < ops.length ; i++ ) {
             String type = ops[i].getAttribute( "type" );
             String prefix = ops[i].getAttribute( "prefix", type + "-" );
-            ImageOperation op = (ImageOperation) operationSelector.select( type );
+            GenericImageOperation op = (GenericImageOperation) operationSelector.select( type );
             op.setPrefix( prefix );
             effectsStack.add( op );
         }
     }
 
-    private void setupEffectsStack( Parameters params )
+    private void setupEffectsStack( Parameters params, SourceResolver resolver )
     throws ProcessingException {
         Iterator list = effectsStack.iterator();
         while( list.hasNext() ) {
-            ImageOperation op = (ImageOperation) list.next();
+            GenericImageOperation op = (GenericImageOperation) list.next();
             op.setup( params );
         }
     }
 
-    private BufferedImage applyEffectsStack( BufferedImage image ) {
+    private BufferedImage applyEffectsStack( BufferedImage image ) throws ProcessingException {
         if( effectsStack.size() == 0 ) {
             return image;
         }
         Iterator list = effectsStack.iterator();
         WritableRaster src = image.getRaster();
         while( list.hasNext() ) {
-            ImageOperation op = (ImageOperation) list.next();
-            WritableRaster r = op.apply( src );
+            GenericImageOperation op = (GenericImageOperation) list.next();
+            WritableRaster r;
+            if (op instanceof ImageOperation) {
+                r = ((ImageOperation) op).apply( src );
+            } else if (op instanceof CombineImagesOperation) {
+                CombineImagesOperation cio = (CombineImagesOperation) op;
+                String uri = cio.getOverlayURI();
+                Source secondImageSource;
+                try {
+                    secondImageSource = resolver.resolveURI(uri);
+                } catch (MalformedURLException e) {
+                    throw new ProcessingException("URI for second image of combine image operation has a malformed URL: " + uri, e);
+                } catch (IOException e) {
+                    throw new ProcessingException("Source '" + uri + "' for combine image operation cannot be resolved.", e);
+                }
+                BufferedImage secondImage;
+                try {
+                    secondImage = ImageIO.read(secondImageSource.getInputStream());
+                } catch (SourceNotFoundException e) {
+                    throw new ProcessingException("Source '" + uri + "' for combine image operation cannot be found.", e);
+                } catch (IOException e) {
+                    throw new ProcessingException("Source '" + uri + "' for combine image operation cannot be read.", e);
+                }
+                
+                r = cio.combine(image, secondImage);
+            } else {
+                continue;
+            }
+            
             if(getLogger().isDebugEnabled()) {
                 getLogger().debug( "In Bounds: " + r.getBounds() );
             }
