@@ -200,6 +200,18 @@
       </roles>
       <timezone>-7</timezone>
     </developer>
+     <developer>
+        <id>hepabolu</id>
+        <name>Helma van der Linden</name>
+        <email>hepabolu@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
     <developer>
       <id>anathaniel</id>
       <name>Alfred Nathaniel</name>
