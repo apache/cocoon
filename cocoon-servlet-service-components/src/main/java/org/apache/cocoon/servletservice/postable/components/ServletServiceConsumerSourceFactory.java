@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
@@ -29,8 +31,9 @@ public class ServletServiceConsumerSourceFactory implements SourceFactory {
 	private ProcessInfoProvider processInfoProvider;
 
 	public Source getSource(String location, Map parameters) throws IOException, MalformedURLException {
-		return new ServletServiceConsumerSource(processInfoProvider.getRequest());
-		
+		HttpServletRequest request = processInfoProvider.getRequest();
+		if (!"POST".equals(request)) throw new MalformedURLException("Cannot create consumer source for request that is not POST.");
+		return new ServletServiceConsumerSource(request);
 	}
 
 	public void release(Source source) {
