@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.servletservice.ServletConnection;
 import org.apache.cocoon.servletservice.postable.PostableSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -112,6 +114,7 @@ public class ServletSource extends AbstractSource implements PostableSource {
 		private static final long serialVersionUID = 1793646888814956538L;
 		
 		private transient ServletConnection servletConnection;
+		private transient Log logger = LogFactory.getLog(getClass());
     	private long lastModified;
 
 		public ServletValidity(ServletConnection servletConnection) {
@@ -141,6 +144,8 @@ public class ServletSource extends AbstractSource implements PostableSource {
 						default: return 0; 
 					}
 				} catch (Exception e) {
+					if (logger.isDebugEnabled())
+						logger.debug("Exception occured while checking for validity", e);
 					return 0;
 				}
 			}
