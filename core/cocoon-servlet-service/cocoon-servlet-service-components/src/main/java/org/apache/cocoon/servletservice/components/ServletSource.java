@@ -40,6 +40,8 @@ import org.apache.excalibur.source.impl.AbstractSource;
  * @version $Id$
  */
 public class ServletSource extends AbstractSource implements PostableSource {
+	
+	private transient Log logger = LogFactory.getLog(getClass());
     
     private ServletConnection servletConnection;
     /**
@@ -89,7 +91,14 @@ public class ServletSource extends AbstractSource implements PostableSource {
 	}
 
 	public SourceValidity getValidity() {
-		return this.validity;
+		try {
+			connect();
+		} catch (Exception e) {
+			if (logger.isDebugEnabled())
+				logger.debug("Exception occured while making servlet request", e);
+			return null;
+		}
+		return servletConnection.getLastModified() > 0 ? this.validity : null;
 	}
 
 	/**
@@ -145,7 +154,7 @@ public class ServletSource extends AbstractSource implements PostableSource {
 					}
 				} catch (Exception e) {
 					if (logger.isDebugEnabled())
-						logger.debug("Exception occured while checking for validity", e);
+						logger.debug("Exception occured while checking for cache entry for servlet source is still valid", e);
 					return 0;
 				}
 			}
