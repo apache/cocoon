@@ -102,7 +102,10 @@ public final class ServletConnection {
     	//if already connected, do nothing
     	if (connected) return;
     	
-    	request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
+    	if (requestBody != null) {
+    		request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
+    		request.setMethod("POST");
+    	}
     	
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.response.setOutputStream(os);
