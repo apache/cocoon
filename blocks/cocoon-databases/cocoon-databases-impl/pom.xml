@@ -39,15 +39,12 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
           <navDocId>1357</navDocId>
-          <collection>cdocs-databases</collection>             
+          <collection>cdocs-databases</collection>   
+          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>                    
         </configuration>
       </plugin>         
     </plugins>    
@@ -55,7 +52,7 @@
   
   <properties>
     <docs.name>Cocoon Databases Block</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.version>${docs.m.databases.version}</docs.version>
   </properties>  
   
   <distributionManagement>
@@ -83,4 +80,5 @@
       
     </dependency>
   </dependencies>
+  
 </project>

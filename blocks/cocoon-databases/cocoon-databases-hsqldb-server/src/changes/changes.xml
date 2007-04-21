@@ -22,13 +22,19 @@
     |
     | @version $Id$
     +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
+<document>
+  <body>
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
+      
+    </release>
+    <release version="1.0.0-M1" date="2007-03-02" description="released">    
+      <action type="update" dev="CZ">
+        Remove dependencies to Avalon and to Cocoon core.
+      </action>          
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>      
+    </release>
+  </body>
+</document>
     

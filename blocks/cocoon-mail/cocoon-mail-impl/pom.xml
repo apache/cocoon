@@ -35,22 +35,23 @@
   <artifactId>cocoon-mail-impl</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Mail Block Implementation</name>
+  <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>  
 
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/blocks/mail/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.mail.relPath}</url>
     </site>
   </distributionManagement>
 
   <properties>
     <docs.name>Cocoon Mail</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.version>${docs.m.mail.version}</docs.version>
   </properties>
 
   <build>
     <plugins>
-      <!--plugin>
+      <plugin>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
@@ -58,7 +59,7 @@
           <collection>cdocs-mail</collection>          
           <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
         </configuration>
-      </plugin-->      
+      </plugin>      
     </plugins>
   </build>
 

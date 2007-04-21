@@ -20,7 +20,8 @@
 <!--+
     | @version $Id$
     +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
@@ -33,8 +34,11 @@
   </parent>
   <artifactId>cocoon-databases-hsqldb-server</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
-  <name>Cocoon Hsqldb Block Implementation</name>
+  <name>Cocoon Hsqldb Server Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.hsqldb-server.relPath}</url>  
+  <description>
+    Start a Hsql database server as part of your Cocoon application.
+  </description>
   
   <build>
     <plugins>
@@ -64,28 +68,45 @@
       <url>${docs.deploymentBaseUrl}/${docs.m.hsqldb-server.relPath}</url>
     </site>
   </distributionManagement>    
+  
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.0.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>project-team</report>
+              <report>dependencies</report>
+              <report>license</report>
+              <report>summary</report>
+              <report>index</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>  
 
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-thread-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
 </project>

@@ -33,17 +33,18 @@
   <version>1.0.0-RC1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Authentication Block Implementation</name>
+  <url>http://cocoon.apache.org/${docs.m.auth.relPath}</url>      
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/blocks/auth/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.auth.relPath}</url>
     </site>
-  </distributionManagement>
+  </distributionManagement>  
   
   <properties>
     <docs.name>Cocoon Authentication</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.version>${docs.m.auth.version}</docs.version>
   </properties>
   
   <build>

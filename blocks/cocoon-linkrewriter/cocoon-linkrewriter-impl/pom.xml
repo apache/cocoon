@@ -53,8 +53,8 @@
   </build>
   
   <properties>
-    <docs.name>Cocoon Link Rewriter Block</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.name>Cocoon Linkrewriter Block</docs.name>    
+    <docs.version>${docs.m.linkrewriter.version}</docs.version>
   </properties>  
   
   <distributionManagement>

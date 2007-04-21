@@ -25,14 +25,22 @@
     <title>Changes Cocoon FlowScript Implementation</title>
   </properties>
   <body>
-    <release version="1.0.0-M2-SNAPSHOT" date="2007-00-00" description="unreleased">
-      <action dev="CZ" type="add">
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
+ 
+    </release>        
+    <release version="1.0.0-M2" date="2007-03-02" description="released">
+      <action dev="cziegeler" type="add">
         Make settings bean and web application context available via the cocoon object in
         flow script (cocoon.settings and cocoon.applicationContext).
       </action>
-      <action dev="JH" type="fix" fixes-bug="COCOON-1811" due-to="Rob Berens">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-1811" due-to="Rob Berens">
         Allow dynamic loading of JavaScript objects even when scope is locked.
       </action>
     </release> 
+    <release version="1.0.0-M1" date="2006-12-19" description="released">
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>    
+    </release>    
   </body>
 </document>

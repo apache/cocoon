@@ -56,7 +56,7 @@
 
   <properties>
     <docs.name>Cocoon Batik Block</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.version>${docs.m.batik.version}</docs.version>
   </properties>  
   
   <distributionManagement>
