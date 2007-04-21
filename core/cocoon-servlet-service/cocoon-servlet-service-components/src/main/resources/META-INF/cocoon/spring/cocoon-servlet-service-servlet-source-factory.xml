@@ -25,6 +25,8 @@
       |
       | Each source factory adds a special uri schemes to the system.
       +-->
-  <bean name="org.apache.excalibur.source.SourceFactory/servlet" class="org.apache.cocoon.servletservice.components.ServletSourceFactory"/>
+  <bean name="org.apache.excalibur.source.SourceFactory/servlet" class="org.apache.cocoon.servletservice.components.ServletSourceFactory">
+    <property name="store" ref="org.apache.excalibur.store.Store"/>
+  </bean>
 
 </beans>
