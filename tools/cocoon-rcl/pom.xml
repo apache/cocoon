@@ -34,6 +34,7 @@
   <modules>
     <module>cocoon-rcl-webapp-wrapper</module>
     <module>cocoon-rcl-plugin</module>
+    <module>cocoon-rcl-spring-reloader</module>    
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-rcl</connection>
