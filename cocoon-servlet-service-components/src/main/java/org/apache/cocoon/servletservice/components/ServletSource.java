@@ -35,50 +35,55 @@ import org.apache.excalibur.source.impl.AbstractSource;
 import org.apache.excalibur.store.Store;
 
 /**
- * Implementation of a {@link Source} that gets its content by
- * invoking the Servlet. 
- *
+ * Implementation of a {@link Source} that gets its content by invoking the Servlet.
+ * 
  * @version $Id$
  */
 public class ServletSource extends AbstractSource implements PostableSource {
-	
+
 	private transient Log logger = LogFactory.getLog(getClass());
-    
-    private ServletConnection servletConnection;
-    
-    /**
-     * The store is used to store values of Last-Modified header (if it exists). This store is required because in {@link #getValidity()}
-     * we need value of Last-Modified header of previous response in order to perform conditional GET.
-     * @see Broken caching of servlet: source in some cases thread 
-     * 		(http://news.gmane.org/find-root.php?group=gmane.text.xml.cocoon.devel&article=72801) 
-     */
-    private Store store;
-    
-    private boolean connected;
-    
-    public ServletSource(String location, Store store) throws IOException {
-        // the systemId (returned by getURI()) is by default null
-        // using the block uri is a little bit questionable as it only is valid
-        // whithin the current block, not globally
-    	this.store = store;
-        setSystemId(location);
-        this.servletConnection = new ServletConnection(location);
-        connected = false;
-    }
 
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.impl.AbstractSource#getInputStream()
-     */
-    public InputStream getInputStream() throws IOException, SourceException {
-        try {
-        	connect();
-            return this.servletConnection.getInputStream();
-        } catch (ServletException e) {
-            throw new CascadingIOException(e.getMessage(), e);
-        }
-    }
+	private ServletConnection servletConnection;
 
-	/* (non-Javadoc)
+	/**
+	 * The store is used to store values of Last-Modified header (if it exists). This store is required because in
+	 * {@link #getValidity()} we need value of Last-Modified header of previous response in order to perform conditional
+	 * GET.
+	 * 
+	 * @see Broken caching of servlet: source in some cases thread
+	 *      (http://news.gmane.org/find-root.php?group=gmane.text.xml.cocoon.devel&article=72801)
+	 */
+	private Store store;
+
+	private boolean connected;
+
+	public ServletSource(String location, Store store) throws IOException {
+		// the systemId (returned by getURI()) is by default null
+		// using the block uri is a little bit questionable as it only is valid
+		// whithin the current block, not globally
+		this.store = store;
+		setSystemId(location);
+		this.servletConnection = new ServletConnection(location);
+		connected = false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.excalibur.source.impl.AbstractSource#getInputStream()
+	 */
+	public InputStream getInputStream() throws IOException, SourceException {
+		try {
+			connect();
+			return this.servletConnection.getInputStream();
+		} catch (ServletException e) {
+			throw new CascadingIOException(e.getMessage(), e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.apache.excalibur.source.impl.AbstractSource#getValidity()
 	 */
 	public SourceValidity getValidity() {
@@ -91,8 +96,10 @@ public class ServletSource extends AbstractSource implements PostableSource {
 			return null;
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.apache.excalibur.source.impl.AbstractSource#getLastModified()
 	 */
 	public long getLastModified() {
@@ -107,49 +114,56 @@ public class ServletSource extends AbstractSource implements PostableSource {
 	}
 
 	/**
-     * Returns true always.
-     * @see org.apache.excalibur.source.Source#exists()
-     */
-    public boolean exists() {
-        return true;
-    }
-    
+	 * Returns true always.
+	 * 
+	 * @see org.apache.excalibur.source.Source#exists()
+	 */
+	public boolean exists() {
+		return true;
+	}
+
 	public OutputStream getOutputStream() throws IOException {
 		return servletConnection.getOutputStream();
 	}
-	
-    private void connect() throws IOException, ServletException {
-    	if (connected) return;
-    	long lastModified = getStoredLastModified();
-    	if (lastModified > 0)
-    		servletConnection.setIfModifiedSince(lastModified);
-    	servletConnection.connect();
-    	connected = true;
-    	//If header is present, Last-Modified value will be stored for further use in conditional gets
-    	setStoredLastModified(servletConnection.getLastModified());
-    }
-    
-    /**
-     * Returns Last-Modified value from previous response if present. Otherwise 0 is returned.
-     * @return Last-Modified value from previous response if present. Otherwise 0 is returned.
-     */
-    private long getStoredLastModified() {
-    	Long lastModified = (Long)store.get(calculateInternalKey());
-    	return lastModified != null ? lastModified.longValue() : 0;
+
+	private void connect() throws IOException, ServletException {
+		if (connected)
+			return;
+		long lastModified = getStoredLastModified();
+		if (lastModified > 0)
+			servletConnection.setIfModifiedSince(lastModified);
+		servletConnection.connect();
+		connected = true;
+		// If header is present, Last-Modified value will be stored for further
+		// use in conditional gets
+		setStoredLastModified(servletConnection.getLastModified());
 	}
-    
-    /**
-     * Stores value of Last-Modified header in {@link #store}.
-     * @param lastModified value that will be stored in {@link #store}. Only positive values will be stored.
-     * @throws IOException if exception occured while storing value 
-     */
-    private void setStoredLastModified(long lastModified) throws IOException {
-    	String key = calculateInternalKey();
-    	store.remove(key);
-    	if (lastModified > 0)
-    		store.store(key, new Long(lastModified));
-    }
-    
+
+	/**
+	 * Returns Last-Modified value from previous response if present. Otherwise 0 is returned.
+	 * 
+	 * @return Last-Modified value from previous response if present. Otherwise 0 is returned.
+	 */
+	private long getStoredLastModified() {
+		Long lastModified = (Long) store.get(calculateInternalKey());
+		return lastModified != null ? lastModified.longValue() : 0;
+	}
+
+	/**
+	 * Stores value of Last-Modified header in {@link #store}.
+	 * 
+	 * @param lastModified
+	 *            value that will be stored in {@link #store}. Only positive values will be stored.
+	 * @throws IOException
+	 *             if exception occured while storing value
+	 */
+	private void setStoredLastModified(long lastModified) throws IOException {
+		String key = calculateInternalKey();
+		store.remove(key);
+		if (lastModified > 0)
+			store.store(key, new Long(lastModified));
+	}
+
 	/**
 	 * @return key that will be used to store value of Last-Modified header
 	 */
@@ -157,37 +171,44 @@ public class ServletSource extends AbstractSource implements PostableSource {
 		return ServletSource.class.getName() + "$" + getURI();
 	}
 
-    private final class ServletValidity implements SourceValidity {
-    	
-    	/**
+	private final class ServletValidity implements SourceValidity {
+
+		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1793646888814956538L;
-		
-    	private int responseCode;
+
+		private int responseCode;
 
 		public ServletValidity(int responseCode) {
 			setResponseCode(responseCode);
-    	}
+		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.apache.excalibur.source.SourceValidity#isValid()
 		 */
 		public int isValid() {
 			return 0;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.apache.excalibur.source.SourceValidity#isValid(org.apache.excalibur.source.SourceValidity)
 		 */
 		public int isValid(SourceValidity newValidity) {
 			if (newValidity instanceof ServletValidity) {
-				ServletValidity newServletValidity = (ServletValidity)newValidity;
-				
+				ServletValidity newServletValidity = (ServletValidity) newValidity;
+
 				switch (newServletValidity.getResponseCode()) {
-						case HttpServletResponse.SC_NOT_MODIFIED: return SourceValidity.VALID;
-						case HttpServletResponse.SC_OK: return SourceValidity.INVALID;
-						default: return 0;
+				case HttpServletResponse.SC_NOT_MODIFIED:
+					return SourceValidity.VALID;
+				case HttpServletResponse.SC_OK:
+					return SourceValidity.INVALID;
+				default:
+					return 0;
 				}
 			}
 			return SourceValidity.UNKNOWN;
@@ -199,7 +220,7 @@ public class ServletSource extends AbstractSource implements PostableSource {
 
 		public void setResponseCode(int responseCode) {
 			this.responseCode = responseCode;
-		}    	
-    }
+		}
+	}
 
 }
