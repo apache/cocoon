@@ -35,6 +35,10 @@
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
+  
+  <prerequisites>
+    <maven>2.0.6</maven>
+  </prerequisites>
 
   <modules>
     <module>blocks</module>
@@ -2498,31 +2502,30 @@
     <!-- Path and version properties: blocks -->
     <docs.m.ajax.version>1.0</docs.m.ajax.version>
     <docs.m.ajax.relPath>blocks/2.2/blocks/ajax/${docs.m.ajax.version}/</docs.m.ajax.relPath>
-    
     <docs.m.auth.version>1.0</docs.m.auth.version>
     <docs.m.auth.relPath>2.2/blocks/auth/${docs.m.auth.version}/</docs.m.auth.relPath>
     <docs.m.batik.version>1.0</docs.m.batik.version>
-    <docs.m.batik.relPath>2.2/blocks/batik/${docs.m.batik.version}/</docs.m.batik.relPath>    
+    <docs.m.batik.relPath>2.2/blocks/batik/${docs.m.batik.version}/</docs.m.batik.relPath>
     <docs.m.captcha.version>1.0</docs.m.captcha.version>
     <docs.m.captcha.relPath>2.2/blocks/captcha/${docs.m.captcha.version}/</docs.m.captcha.relPath>
+    <docs.m.databases.version>1.0</docs.m.databases.version>
+    <docs.m.databases.relPath>2.2/blocks/databases/${docs.m.databases.version}/</docs.m.databases.relPath>    
     <docs.m.flowscript.version>1.0</docs.m.flowscript.version>
     <docs.m.flowscript.relPath>2.2/blocks/flowscript/${docs.m.flowscript.version}/</docs.m.flowscript.relPath> 
     <docs.m.fop.version>1.0</docs.m.fop.version>
     <docs.m.fop.relPath>2.2/blocks/fop/${docs.m.fop.version}/</docs.m.fop.relPath>
     <docs.m.forms.version>1.0</docs.m.forms.version>
     <docs.m.forms.relPath>2.2/blocks/forms/${docs.m.forms.version}/</docs.m.forms.relPath>
+    <docs.m.html.version>1.0</docs.m.html.version>
+    <docs.m.html.relPath>2.2/blocks/html/${docs.m.html.version}/</docs.m.html.relPath>    
+    <docs.m.linkrewriter.version>1.0</docs.m.linkrewriter.version>
+    <docs.m.linkrewriter.relPath>2.2/blocks/linkrewriter/${docs.m.linkrewriter.version}/</docs.m.linkrewriter.relPath>    
     <docs.m.mail.version>1.0</docs.m.mail.version>
     <docs.m.mail.relPath>2.2/blocks/mail/${docs.m.mail.version}/</docs.m.mail.relPath>
     <docs.m.template.version>1.0</docs.m.template.version>
     <docs.m.template.relPath>2.2/blocks/template/${docs.m.template.version}/</docs.m.template.relPath>
-    <docs.m.html.version>1.0</docs.m.html.version>
-    <docs.m.html.relPath>2.2/blocks/html/${docs.m.html.version}/</docs.m.html.relPath>
-    <docs.m.linkrewriter.version>1.0</docs.m.linkrewriter.version>
-    <docs.m.linkrewriter.relPath>2.2/blocks/linkrewriter/${docs.m.link-rewriter.version}/</docs.m.linkrewriter.relPath>
-    <docs.m.databases.version>1.0</docs.m.databases.version>
-    <docs.m.databases.relPath>2.2/blocks/databases/${docs.m.database.version}/</docs.m.databases.relPath>
     <!-- unreleased blocks -->
-    <docs.m.javaflow.version>1.0</docs.m.javaflow.version>
+    <!--docs.m.javaflow.version>1.0</docs.m.javaflow.version>
     <docs.m.javaflow.relPath>2.2/blocks/${docs.m.javaflow.version}/</docs.m.javaflow.relPath>
     <docs.m.lucene.version>1.0</docs.m.lucene.version>
     <docs.m.lucene.relPath>2.2/blocks/${docs.m.lucene.version}/</docs.m.lucene.relPath>    
@@ -2533,12 +2536,12 @@
     <docs.m.portal.version>1.0</docs.m.portal.version>
     <docs.m.portal.relPath>2.2/blocks/${docs.m.portal.version}/</docs.m.portal.relPath>
     <docs.m.serializers.version>1.0</docs.m.serializers.version>
-    <docs.m.serializers.relPath>2.2/blocks/${docs.m.serializers.version}/</docs.m.serializers.relPath>    
+    <docs.m.serializers.relPath>2.2/blocks/${docs.m.serializers.version}/</docs.m.serializers.relPath-->    
     <!-- Path and version properties: Blocks without Daisy documentation -->
     <docs.m.hsqldb-server.version>1.0</docs.m.hsqldb-server.version>
-    <docs.m.hsqldb-server.relPath>2.2/blocks/${docs.m.hsqldb-server.version}/</docs.m.hsqldb-server.relPath>
+    <docs.m.hsqldb-server.relPath>2.2/blocks/hsqldb-server/${docs.m.hsqldb-server.version}/</docs.m.hsqldb-server.relPath>
     <docs.m.hsqldb-client.version>1.0</docs.m.hsqldb-client.version>
-    <docs.m.hsqldb-client.relPath>2.2/blocks/${docs.m.hsqldb-client.version}/</docs.m.hsqldb-client.relPath>
+    <docs.m.hsqldb-client.relPath>2.2/blocks/hsqldb-client/${docs.m.hsqldb-client.version}/</docs.m.hsqldb-client.relPath>
     <!-- Path and version properties: Maven plugins-->
     <docs.m.rcl-plugin.version>1.0</docs.m.rcl-plugin.version>
     <docs.m.rcl-plugin.relPath>2.2/maven-plugins/${docs.m.rcl-plugin.version}/</docs.m.rcl-plugin.relPath>

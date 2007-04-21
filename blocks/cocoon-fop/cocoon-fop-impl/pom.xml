@@ -34,17 +34,18 @@
   <artifactId>cocoon-fop-impl</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon FOP Block Implementation</name>
+  <url>http://cocoon.apache.org/${docs.m.fop.relPath}</url>    
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/blocks/fop/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.fop.relPath}</url>
     </site>
-  </distributionManagement>
+  </distributionManagement>  
   
   <properties>
-    <docs.name>Cocoon FOP</docs.name>
-    <docs.version>1.0</docs.version>
+    <docs.name>Cocoon FOP</docs.name>    
+    <docs.version>${docs.m.fop.version}</docs.version>
   </properties>
   
   <build>

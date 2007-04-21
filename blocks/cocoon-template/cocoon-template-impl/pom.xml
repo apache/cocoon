@@ -34,6 +34,19 @@
   <artifactId>cocoon-template-impl</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Template Framework Block Implementation</name>
+  <url>http://cocoon.apache.org/${docs.m.template.relPath}</url>    
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.template.relPath}</url>
+    </site>
+  </distributionManagement>
+  
+  <properties>
+    <docs.name>Cocoon Template</docs.name>    
+    <docs.version>${docs.m.template.version}</docs.version>
+  </properties>  
   
   <dependencies>
     <dependency>
@@ -95,16 +108,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/blocks/template/${docs.version}/</url>
-    </site>
-  </distributionManagement>
-  <properties>
-    <docs.name>Cocoon Template</docs.name>    
-    <docs.version>1.0</docs.version>
-  </properties>     
+
   <build>
     <plugins>
       <plugin>
@@ -118,4 +122,5 @@
       </plugin>         
     </plugins>    
   </build>
+  
 </project>
