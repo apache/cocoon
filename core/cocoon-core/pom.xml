@@ -121,7 +121,7 @@
   
   <properties>
     <docs.name>Cocoon Core</docs.name>    
-    <docs.version>2.2</docs.version>
+    <docs.version>${docs.m.core.version}</docs.version>
   </properties>  
   
   <distributionManagement>
