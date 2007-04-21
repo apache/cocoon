@@ -36,9 +36,9 @@
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
   
-  <prerequisites>
+  <!--prerequisites>
     <maven>2.0.6</maven>
-  </prerequisites>
+  </prerequisites-->
 
   <modules>
     <module>blocks</module>
