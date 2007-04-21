@@ -26,6 +26,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.URIAbsolutizer;
+import org.apache.excalibur.store.Store;
 
 /**
  * This class implements the servlet: protocol.
@@ -38,6 +39,11 @@ public final class ServletSourceFactory implements SourceFactory,
 
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
+    
+    /**
+     * Store that will be used by {@link ServletSource}.
+     */
+    private Store store; 
 
     private Log getLogger() {
         return this.logger;
@@ -55,7 +61,7 @@ public final class ServletSourceFactory implements SourceFactory,
             getLogger().debug("Creating source object for " + location);
         }
 
-        return new ServletSource(location);
+        return new ServletSource(location, store);
     }
 
     /*
@@ -80,5 +86,13 @@ public final class ServletSourceFactory implements SourceFactory,
     public String absolutize(String baseURI, String location) {
         return SourceUtil.absolutize(baseURI, location, true);
     }
+
+	public Store getStore() {
+		return store;
+	}
+
+	public void setStore(Store store) {
+		this.store = store;
+	}
 
 }
