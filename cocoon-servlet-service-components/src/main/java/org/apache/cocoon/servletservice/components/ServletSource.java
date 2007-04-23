@@ -44,7 +44,8 @@ public class ServletSource extends AbstractSource implements PostableSource {
 	private transient Log logger = LogFactory.getLog(getClass());
 
 	private ServletConnection servletConnection;
-
+	private String location;
+	
 	/**
 	 * The store is used to store values of Last-Modified header (if it exists). This store is required because in
 	 * {@link #getValidity()} we need value of Last-Modified header of previous response in order to perform conditional
@@ -63,6 +64,7 @@ public class ServletSource extends AbstractSource implements PostableSource {
 		// whithin the current block, not globally
 		this.store = store;
 		setSystemId(location);
+		this.location = location;
 		this.servletConnection = new ServletConnection(location);
 		connected = false;
 	}
@@ -75,6 +77,12 @@ public class ServletSource extends AbstractSource implements PostableSource {
 	public InputStream getInputStream() throws IOException, SourceException {
 		try {
 			connect();
+			//FIXME: This is not the most elegant solution
+			if (servletConnection.getResponseCode() != HttpServletResponse.SC_OK) {
+				//most probably, servlet returned 304 (not modified) and we need to perform second request to get data
+				servletConnection = new ServletConnection(location);
+				servletConnection.connect();
+			}
 			return this.servletConnection.getInputStream();
 		} catch (ServletException e) {
 			throw new CascadingIOException(e.getMessage(), e);
