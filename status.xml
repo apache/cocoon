@@ -181,6 +181,10 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="JJ" type="fix" fixes-bug="COCOON-1315" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
+      I18n (ParamSaxBuffer): when substitution params like {0} are split over multiple character
+      events, do not write out extra garbage characters.
+    </action>
     <action dev="RG" type="fix">
       Portal: Marked PreparePortalAction, CopletSetDataAction, and ObjectModelAction ThreadSafe
     </action>
