@@ -97,7 +97,7 @@ public class ParamSaxBuffer extends SaxBuffer {
                     // provides the '}'
                     previous_ch = new char[end - i];
                     System.arraycopy(ch, i, previous_ch, 0, end - i);
-                    break;
+                    return;
                 }
                 addBit(new Parameter(name.toString()));
 
