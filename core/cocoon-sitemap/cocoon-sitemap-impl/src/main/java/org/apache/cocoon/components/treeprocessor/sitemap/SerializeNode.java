@@ -132,7 +132,6 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
                 Integer resolvedStatusCode = new Integer(this.statusCode.resolve(context, env.getObjectModel()));
                 statusCodeInt = resolvedStatusCode.intValue();
             }
-            System.out.println("statusCodeInt=" + statusCodeInt);            
         } catch (NumberFormatException nfe) {
             this.getLogger().warn("It was tried to set a non-integer as status code. " +
                     "This value was ignored and default status code remains.", nfe);
