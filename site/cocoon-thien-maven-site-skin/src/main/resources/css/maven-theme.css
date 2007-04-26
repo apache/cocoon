@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ /*
 body {
   background-color: #fff;
   font-family: Verdana, Helvetica, Arial, sans-serif;
@@ -24,15 +25,19 @@ body {
   background-repeat: repeat-y;
   font-size: 13px;
   padding: 0px;
-}
-td, select, input, li{
+} */
+td, select, input {
   font-family: Verdana, Helvetica, Arial, sans-serif;
   font-size: 12px;
   color:#333333;
 }
-code{
-  font-size: 12px;
+code {
+	border:1px solid #aaaaaa;
+	background: #efefef;
+	font-size: 110%;
+	padding:10px;
 }
+/*
 a {
   text-decoration: none;
 }
@@ -45,6 +50,8 @@ a:visited  {
 a:active, a:hover {
   color:#990000;
 }
+*/
+
 #legend li.externalLink {
   background: url(../images/external.png) left top no-repeat;
   padding-left: 18px;
@@ -102,28 +109,32 @@ p { margin: 0.4em 0em 0.5em 0em;
 }
 
 table.bodyTable th {
-  color: white;
-  background-color: #bbb;
-  text-align: left;
-  font-weight: bold;
+	background: #0086b3;
+	color: #fff;
 }
 
+/*
 table.bodyTable th, table.bodyTable td {
   font-size: 11px;
 }
+*/
 
+/*
 table.bodyTable tr.a {
   background-color: #ddd;
 }
+*/
 
 table.bodyTable tr.b {
-  background-color: #eee;
+  background: #cce7f0;
 }
 
+/*
 .source {
   border: 1px solid #999;
   overflow:auto
 }
+
 dt {
   padding: 4px 4px 4px 24px;
   color: #333333;
@@ -134,22 +145,26 @@ dt {
   background-repeat: no-repeat;
   background-position: left bottom;
 }
+*/
 .subsectionTitle {
   font-size: 13px;
   font-weight: bold;
   color: #666;
 
 }
-
+/*
 table {
   font-size: 10px;
 }
+*/
+
 .xright a:link, .xright a:visited, .xright a:active {
   color: #666;
 }
 .xright a:hover {
   color: #003300;
 }
+/*
 #banner {
   height: 68px;
   background: #294563; 
@@ -182,8 +197,12 @@ table {
   border-top: solid #ccc 1px; 
   color: #333333;
 }
-
+*/
 .errormark, .warningmark, .donemark, .infomark {
+	margin-top: 1em;
+	padding: 0 0 0 45px;
+/*	background: url(../images/errors.gif) no-repeat 10px 7px; */
+	border: 1px solid #9bcd52;
   background: url(../images/icon_error_sml.gif) no-repeat;
 }
 
@@ -199,7 +218,7 @@ table {
   background-image: url(../images/icon_info_sml.gif);
 }
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #bodyColumn {
   margin-left:215px;
@@ -234,8 +253,9 @@ table {
   padding-left:10px;
   margin-left: 0px;  
 }
+/*
 #leftColumn {
- // background-color: rgb(239, 239, 239);
+  background-color: rgb(239, 239, 239);
 }
 #projectName {
   float:left;
@@ -365,3 +385,4 @@ li {
 #downloadbox a {
     white-space: nowrap;
 }
+*/
