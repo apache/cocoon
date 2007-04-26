@@ -125,7 +125,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
                                desc.mimeType);
 
         // Set status code if there is one
-        int statusCodeInt = -1;
+        int statusCodeInt = 200;
         try {
             String statusCodeString = this.statusCode.resolve(context, env.getObjectModel());
             if(null != statusCodeString) {
