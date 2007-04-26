@@ -108,7 +108,19 @@
   </organization>
 
   <developers>
-    <developer>
+     <developer>
+        <id>ugo</id>
+        <name>Ugo Cei</name>
+        <email>ugo@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
       <id>crossley</id>
       <name>David Crossley</name>
       <email>crossley@apache.org</email>
@@ -120,7 +132,19 @@
       </roles>
       <timezone>+10</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>tcurdt</id>
+        <name>Torsten Curdt</name>
+        <email>tcurdt at apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
       <id>bdelacretaz</id>
       <name>Bertrand Delacretaz</name>
       <email>bdelacretaz@apache.org</email>
@@ -168,7 +192,19 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>vgritsenko</id>
+        <name>Vadim Gritsenko</name>
+        <email>vgritsenko@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>-5</timezone>
+     </developer>
+     <developer>
       <id>joerg</id>
       <name>Joerg Heinicke</name>
       <email>joerg@apache.org</email>
@@ -192,7 +228,19 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>ahochsteger</id>
+        <name>Andreas Hochsteger</name>
+        <email>ahochsteger@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
       <id>jjohnston</id>
       <name>Jason Johnston</name>
       <email>jjohnston@apache.org</email>
@@ -204,6 +252,30 @@
       </roles>
       <timezone>-7</timezone>
     </developer>
+     <developer>
+        <id>felixk</id>
+        <name>Felix Knecht</name>
+        <email>felixk@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
+        <id>gkossakowski</id>
+        <name>Grzegorz Kossakowski</name>
+        <email>gkossakowski@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
      <developer>
         <id>hepabolu</id>
         <name>Helma van der Linden</name>
@@ -277,118 +349,34 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>asavory</id>
+        <name>Andrew Savory</name>
+        <email>asavory@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+0</timezone>
+     </developer>     
+     <developer>
+        <id>ltrieloff</id>
+        <name>Lars Trieloff</name>
+        <email>lars@trieloff.net</email>
+        <organization>Mindquarry GmbH</organization>
+        <organizationUrl>http://www.mindquarry.com</organizationUrl>
+        <roles>
+           <role>PMC member</role>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
       <id>cziegeler</id>
       <name>Carsten Ziegeler</name>
       <email>cziegeler@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>vgritsenko</id>
-      <name>Vadim Gritsenko</name>
-      <email>vgritsenko@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>-5</timezone>
-    </developer>
-    <developer>
-      <id>ugo</id>
-      <name>Ugo Cei</name>
-      <email>ugo@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>asavory</id>
-      <name>Andrew Savory</name>
-      <email>asavory@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+0</timezone>
-    </developer>
-    <developer>
-      <id>ltrieloff</id>
-      <name>Lars Trieloff</name>
-      <email>lars@trieloff.net</email>
-      <organization>Mindquarry GmbH</organization>
-      <organizationUrl>http://www.mindquarry.com</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>hepabolu</id>
-      <name>Helma van der Linden</name>
-      <email>hepabolu@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>ahochsteger</id>
-      <name>Andreas Hochsteger</name>
-      <email>ahochsteger@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>tcurdt</id>
-      <name>Torsten Curdt</name>
-      <email>tcurdt at apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>felixk</id>
-      <name>Felix Knecht</name>
-      <email>felixk@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>gkossakowski</id>
-      <name>Grzegorz Kossakowski</name>
-      <email>gkossakowski@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
