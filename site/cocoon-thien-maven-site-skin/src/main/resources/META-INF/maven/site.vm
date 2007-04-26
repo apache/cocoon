@@ -270,5 +270,11 @@ $project.getProperties().get("docs.urlRelativizer")
     <div id="footer">
       <p>&#169;#copyright() The Apache Software Foundation, design by Thien Luh</p>
     </div>
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      _uacct = "UA-1740622-3";
+      urchinTracker();
+    </script>    
   </body>
 </html>
