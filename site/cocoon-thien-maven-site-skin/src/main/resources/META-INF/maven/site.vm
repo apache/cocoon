@@ -49,7 +49,7 @@
 #end
 
 #macro ( menuItem $item )
-  #set ( $collapse = "none" )
+  #set ( $collapse = "" )
   #set ( $currentItemHref = $PathTool.calculateLink( $item.href, $relativePath ) )
   #set ( $currentItemHref = $currentItemHref.replaceAll( "\\", "/" ) )
 
@@ -63,17 +63,17 @@
 ##    #end
 
 ## start Cocoon specific modification    
-    #set ( $collapse = "collapsed" )
+    #set ( $collapse = "class='menuCollapse'" )
 ## end Cocoon specific modification    
 
     #set ( $display = false )
     #displayTree( $display $item )
 
     #if ( $alignedFileName == $currentItemHref || $display )
-      #set ( $collapse = "expanded" )
+      #set ( $collapse = "class='menuExpand'" )
     #end
   #end
-  <li class="$collapse">
+  <li $collapse>
     #if ( $item.img )
       #if ( ! ( $item.img.toLowerCase().startsWith("http") || $item.img.toLowerCase().startsWith("https") ) )
         #set ( $src = $PathTool.calculateLink( $item.img, $relativePath ) )
@@ -89,7 +89,7 @@
       <a href="$currentItemHref">$item.name</a>
     #end
   #if ( $item && $item.items && $item.items.size() > 0 )
-    #if ( $collapse == "expanded" )
+    #if ( $collapse == "class='menuExpand'" )
       <ul>
         #foreach( $subitem in $item.items )
           #menuItem( $subitem )
@@ -101,16 +101,20 @@
 #end
 
 #macro ( mainMenu $menus )
-  #foreach( $menu in $menus )
-    #if ( $menu.name )
-    <h5>$menu.name</h5>
-    #end
-    <ul>
-      #foreach( $item in $menu.items )
-        #menuItem( $item )
+  <ul id="menu">
+    #foreach( $menu in $menus )
+    <li>
+      #if ( $menu.name )
+        $menu.name
       #end
-    </ul>
+      <ul>
+        #foreach( $item in $menu.items )
+          #menuItem( $item )
+        #end
+      </ul>
+    </li>
   #end
+  </ul>
 #end
 
 #macro ( copyright )
@@ -191,6 +195,12 @@
   #end
 #end
 
+#macro (externalUrl )
+  #if( $project.getProperties().get("docs.urlRelativizer") )
+$project.getProperties().get("docs.urlRelativizer")
+  #end
+#end
+
 <html>
   <head>
     <title>#title()</title>
@@ -205,57 +215,60 @@
     #end
     <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
   </head>
-  <body class="composite">
-    <div id="banner">
-		<a href="$project.getProperties().get("docs.urlRelativizer")/" id="bannerLeft">
-			<img src="$PathTool.calculateLink( "images/cocoon-project-logo.png", $relativePath )" alt="Cocoon Project Logo" />
-		</a>
-		<a href="$project.getProperties().get("docs.urlRelativizer")/" id="bannerRight">
-			<img src="$PathTool.calculateLink( "images/cocoon-logo.gif", $relativePath )" alt="Cocoon Logo" />
-		</a>
-      <div class="clear">
-        <hr/>
-      </div>
+  <body>
+    <div id="breadtrail">
+     	<p><a href="http://www.apache.org">Apache</a> &raquo; <a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon</a> &raquo;</p>
     </div>
-    <div id="breadcrumbs">
-      <div id="projectName">     
-      	#nameAndVersion()
-     </div>
-      <div class="xright">
-		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Cocoon Core</a> | 
-		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Cocoon Blocks</a> |   
-		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a> |		  
-		  <a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins</a>
-      	  #links( $decoration.body.links )</div>
-      <div class="clear">
-        <hr/>
+    <div id="top">
+      <div id="header">
+      		<div class="projectlogo">
+		  	     <a href="$project.getProperties().get("docs.urlRelativizer")"><img class="logoImage" 
+			         src="$PathTool.calculateLink( "images/cocoon_logo.jpg", $relativePath )"
+			          alt="Apache Cocoon" border="0" /></a>
+		      </div>
+		      <div class="grouplogo">
+			       <p class="grouptitle"><a href="$project.getProperties().get("docs.urlRelativizer")">The Apache Cocoon Project</a><img 
+			         src="$PathTool.calculateLink( "images/apache-logo.jpg", $relativePath )" alt="Cocoon Project Logo" /></p>
+  			     <form class="searchbox" action="http://www.google.com/search" method="get">
+        				<input value="cocoon.apache.org" name="sitesearch" type="hidden" />
+				        <input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google" />&nbsp; 
+				        <input class="searchboxsubmit" name="Search" value="Search" type="submit" />
+			       </form>
+	       </div>
+		     </div>		     
+		     <div id="projectBar">
+		       <p class="cocoonHome"><a href="$project.getProperties().get("docs.urlRelativizer")"><img 
+		       src="$PathTool.calculateLink( "images/pmc-home.gif", $relativePath )" 
+		       alt="Back to Apache Cocoon homepage" 
+		       border="0" title="Back to Apache Cocoon homepage" /></a></p>
+		       <h1 class="projectTitle"><a href="#">#nameAndVersion()</a></h1>
+		       <ul class="projectList">
+			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Cocoon Core</a></li>
+			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Cocoon Blocks</a></li>
+			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></li>
+			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins</a></li>
+	        	</ul>
+	       </div>
+      	 <div class="projectBarClear"><!-- --></div>
       </div>
-    </div>
-    <div id="leftColumn">
-      <div id="navcolumn">
+<!-- end of top -->
+
+    <div id="content">
        #mainMenu( $decoration.body.menus )
+<!--
        #poweredByLogo( $decoration.poweredBy )
-      <div id="lastPublished">
-	    #set ( $format = "dd/MM/yyyy" )
-	    $dateFormat.applyPattern( $format )
-	    #set ( $dateToday = $dateFormat.format( $currentDate ) )  
-        $i18n.getString( "site-renderer", $locale, "template.lastpublished" ): $dateToday
-      </div>       
-      </div>
+       <div id="lastPublished">
+	        #set ( $format = "dd/MM/yyyy HH:mm" )
+	        $dateFormat.applyPattern( $format )
+	        #set ( $dateToday = $dateFormat.format( $currentDate ) )  
+         $i18n.getString( "site-renderer", $locale, "template.lastpublished" ): $dateToday
+       </div>
+-->
+				 $bodyContent
     </div>
-    <div id="bodyColumn">
-      <div id="contentBox">
-        $bodyContent
-      </div>
-    </div>
-    <div class="clear">
-      <hr/>
-    </div>
+    <!-- end of content -->
     <div id="footer">
-      <div class="xright">&#169;#copyright()</div>
-      <div class="clear">
-        <hr/>
-      </div>
+      <p>&#169;#copyright() The Apache Software Foundation, design by Thien Luh</p>
     </div>
   </body>
 </html>
