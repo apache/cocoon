@@ -16,13 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ 
 body {
   margin: 0px;
   padding: 0px;
 }
+
+/* mimic contentBody in site */
+.section {
+   	margin: 0 20px 0 185px;
+	padding: 0;
+}
+/* reverse for subsections */
+
+.section .section {
+   margin: 0;
+}
+
 img {
   border:none;
 }
+
+/*
 table {
   padding:0px;
   width: 100%;
@@ -160,4 +175,4 @@ div.clear hr{
   padding: 12px;
   margin: 1em 7px 1em 7px;
 }
-
+*/
