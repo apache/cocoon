@@ -374,6 +374,20 @@
         <timezone>+1</timezone>
      </developer>
      <developer>
+      <id>sylvain</id>
+      <name>Sylvain Wallez</name>
+      <email>sylvain@apache.org</email>
+      <url>http://bluxte.net</url>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>ASF member</role>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+     </developer>
+     <developer>
       <id>cziegeler</id>
       <name>Carsten Ziegeler</name>
       <email>cziegeler@apache.org</email>
