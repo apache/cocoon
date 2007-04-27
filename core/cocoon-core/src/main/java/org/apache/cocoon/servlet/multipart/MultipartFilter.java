@@ -86,7 +86,7 @@ public class MultipartFilter implements Filter{
             this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
             this.servletSettings = new ServletSettings(this.settings);
             String containerEncoding;
-            final String encoding = settings.getContainerEncoding();
+            final String encoding = this.settings.getContainerEncoding();
             if ( encoding == null ) {
                 containerEncoding = "ISO-8859-1";
             } else {
@@ -116,6 +116,7 @@ public class MultipartFilter implements Filter{
         HttpServletResponse response = (HttpServletResponse) res;
         try{
             request = this.requestFactory.getServletRequest(request);
+            filterChain.doFilter(request, response);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem in multipart filter. Unable to create request.", e);
@@ -137,10 +138,10 @@ public class MultipartFilter implements Filter{
                 getLogger().error("MultipartFilter got an exception while trying to cleanup the uploaded files.", e);
             }
         }
-        filterChain.doFilter(request, response);
     }
 
     protected Logger getLogger() {
         return this.log;
     }
+    
 }
