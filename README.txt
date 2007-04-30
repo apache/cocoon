@@ -10,7 +10,7 @@ PREREQUISITES
 -------------
 You need a JDK, 1.4.x or 1.5.x.
 
-Maven 2 must be installed (at least 2.0.4??).
+Maven 2 must be installed (at least 2.0.5).
 
 
 MAVEN REPOSITORY MIRRORS
