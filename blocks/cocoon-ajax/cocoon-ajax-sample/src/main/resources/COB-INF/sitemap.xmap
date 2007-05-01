@@ -53,6 +53,7 @@
      <map:match pattern="*.html">
        <map:generate type="jx" src="{1}.xml"/>
        <map:call resource="simple-page2html"/>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize type="html"/>
      </map:match>
 
@@ -66,17 +67,6 @@
        <map:serialize type="html"/>
      </map:match>
 
-     <!-- Generic pipeline to load resources in jars -->
-     <map:match pattern="resources/*/**">
-       <map:select type="resource-exists">
-         <map:when test="{0}">
-           <map:read src="{0}"/>
-         </map:when>
-         <map:otherwise>
-           <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
-         </map:otherwise>
-       </map:select>
-     </map:match>
   </map:pipeline>
 </map:pipelines>
 </map:sitemap>

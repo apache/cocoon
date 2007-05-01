@@ -110,7 +110,7 @@ dojo.widget.defineWidget(
         _getStatus: function() {
             if (this._busy) return; // only one request at a time
             dojo.io.bind({
-                url: new dojo.uri.Uri(djConfig["baseRelativePath"], "../../../_cocoon/system/ajax/upload/status"),
+                url: new dojo.uri.Uri("servlet:/system/upload/status"),
                 mimetype: "text/json",
                 handle: dojo.lang.hitch(this, function(type, data, evt) {
                     if (type == "load") {
