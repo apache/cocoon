@@ -38,7 +38,7 @@
     <plugins>
       <plugin>
         <groupId>org.apache.cocoon</groupId>
-        <artifactId>cocoon-rcl-plugin</artifactId>
+        <artifactId>cocoon-maven-plugin</artifactId>
         <version>1.0.0-M1-SNAPSHOT</version>
       </plugin>    
       <plugin>
@@ -85,27 +85,14 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-components</artifactId>
-      
     </dependency>      
-    <!--dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-forms-impl</artifactId>
-      <version>1.0.0-RC1-SNAPSHOT</version>
-    </dependency-->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-spring-configurator</artifactId>
-      
     </dependency>
   </dependencies>
   
