@@ -39,11 +39,6 @@
     <finalName>cocoon-apples-sample</finalName>
     <plugins>
       <plugin>
-        <groupId>org.apache.cocoon</groupId>
-        <artifactId>cocoon-deployer-plugin</artifactId>
-        <version>1.0.0-M2-SNAPSHOT</version>
-      </plugin>
-      <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty6-plugin</artifactId>
         <version>6.0.0beta10</version>
@@ -65,27 +60,22 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-apples-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
-      
     </dependency>
   </dependencies>
   
