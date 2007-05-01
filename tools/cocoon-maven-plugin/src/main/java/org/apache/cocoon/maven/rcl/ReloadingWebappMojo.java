@@ -60,6 +60,8 @@ import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.project.artifact.MavenMetadataSource;
 
 /**
+ * The ReloadingWebappMojo creates a web application environment for a Cocoon block.
+ * 
  * @goal rcl
  * @requiresProject true
  * @requiresDependencyResolution runtime
@@ -97,28 +99,28 @@ public class ReloadingWebappMojo extends AbstractMojo {
     private File target;
     
     /**
-     * The directory that contains the Cocoon web application.
+     * The central property file that contains all information about where to find blocks.
      * 
      * @parameter expression="./rcl.properties"
      */
     private File rclPropertiesFile;    
 
     /**
-     * Use socket appender
+     * Logging: Use socket appender?
      * 
      * @parameter expression="${cocoon.rcl.log4j.useSocketAppender}"
      */
     private boolean useSocketAppender = false;
 
     /**
-     * Use console appender
+     * Logging: Use console appender?
      * 
      * @parameter expression="${cocoon.rcl.log4j.useConsoleAppender}"
      */
     private boolean useConsoleAppender = false;
 
     /**
-     * Use a custom log4j xml configuration file.
+     * Logging: Use a custom log4j xml configuration file=
      * 
      * @parameter expression="${cocoon.rcl.log4j.conf}"
      */
