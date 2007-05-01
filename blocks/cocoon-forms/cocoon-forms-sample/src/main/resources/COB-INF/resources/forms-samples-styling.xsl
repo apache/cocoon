@@ -23,11 +23,12 @@
       | want advanced styling of widgets, change it here!
       | See xsl:include as composition and xsl:import as extension/inheritance.
       +-->
-  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-page-styling.xsl"/>
-  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-advanced-field-styling.xsl"/>
+  <xsl:include href="servlet:forms:/resource/internal/xsl/forms-page-styling.xsl"/>
+  <xsl:include href="servlet:forms:/resource/internal/xsl/forms-advanced-field-styling.xsl"/>
 
-  <!-- Location of the resources directory, where JS libs and icons are stored -->
-  <xsl:param name="resources-uri">resources</xsl:param>
+  <!-- Location of the resources directories, where JS libs and icons are stored -->
+  <xsl:param name="dojo-resources"/>
+  <xsl:param name="forms-resources"/>
   
   <xsl:template match="head">
     <head>

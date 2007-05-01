@@ -14,7 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
+cocoon.load("servlet:forms:/resource/internal/flow/javascript/Form.js");
 
 function registration() {
     var form = new Form("forms/registration.xml");

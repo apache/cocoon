@@ -34,6 +34,7 @@
   <artifactId>cocoon-forms-impl</artifactId>
   <name>Cocoon Forms Block Implementation</name>
   <version>1.0.0-RC1-SNAPSHOT</version>
+  <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>    
   
   <build>
     <plugins>
@@ -107,6 +108,11 @@
       
     </dependency>
     <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-components</artifactId>
+      <version>1.0.0-RC1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>org.outerj.daisy</groupId>
       <artifactId>daisy-htmlcleaner</artifactId>
       
@@ -158,12 +164,13 @@
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/blocks/forms/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.forms.relPath}</url>
     </site>
   </distributionManagement>
   
   <properties>
     <docs.name>Cocoon Forms</docs.name>
-    <docs.version>1.0</docs.version>
+    <docs.version>${docs.m.forms.version}</docs.version>
   </properties>
+  
 </project>

@@ -36,7 +36,7 @@
 	
 	    var resolver = cocoon.getComponent(org.apache.excalibur.source.SourceResolver.ROLE);
         var filename = filter;
-	    var src = resolver.resolveURI("context://samples/" + filename);
+	    var src = resolver.resolveURI("./" + filename);
 	    var suggestions = [];
 	    if (src.exists() && src.isCollection()) {
 	        // A directory: list its children

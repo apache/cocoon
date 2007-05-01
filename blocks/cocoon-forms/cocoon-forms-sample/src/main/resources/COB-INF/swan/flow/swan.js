@@ -21,7 +21,7 @@
 
   importPackage(org.apache.cocoon.forms.formmodel);
 
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
+cocoon.load("servlet:forms:/resource/internal/flow/javascript/Form.js");
 
 function binding_gui(form) {
     editor_gui(form, "binding");

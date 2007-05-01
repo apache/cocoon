@@ -21,7 +21,7 @@
 
   importPackage(org.apache.cocoon.forms.formmodel);
 
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
+cocoon.load("servlet:forms:/resource/internal/flow/javascript/Form.js");
 
 function show_form1(form) {
     process_form(form, "form1", "forms/form1_data.xml");

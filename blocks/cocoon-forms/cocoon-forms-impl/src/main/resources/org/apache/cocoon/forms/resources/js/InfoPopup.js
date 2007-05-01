@@ -36,10 +36,10 @@ dojo.widget.defineWidget(
         isContainer: true,
         icon: "",
 
-        templatePath: cocoon.resourcesUri + "/forms/js/templates/InfoPopup.html",
-        templateCssPath: cocoon.resourcesUri + "/forms/js/templates/InfoPopup.css",
+        templatePath: cocoon.formsResourcesUri + "/js/templates/InfoPopup.html",
+        templateCssPath: cocoon.formsResourcesUri + "/js/templates/InfoPopup.css",
 
-        closeIconURL: cocoon.resourcesUri + "/forms/js/templates/images/close.gif",
+        closeIconURL: cocoon.formsResourcesUri + "/js/templates/images/close.gif",
 
         containerToggle: "plain", /* plain, explode, wipe, fade */
 
@@ -48,7 +48,7 @@ dojo.widget.defineWidget(
         postMixInProperties: function(args, frag, parent) {
             cocoon.forms.InfoPopup.superclass.postMixInProperties(this, args, frag, parent);
 
-            this.iconURL = cocoon.resourcesUri + "/forms/js/templates/images/" + this.icon;
+            this.iconURL = cocoon.formsResourcesUri + "/js/templates/images/" + this.icon;
         },
 
         attachTemplateNodes: function(){

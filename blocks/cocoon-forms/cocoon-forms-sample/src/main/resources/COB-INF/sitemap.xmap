@@ -30,8 +30,8 @@
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="other">
         <catalogue id="other" name="OtherMessages" location="messages"/>
-        <catalogue id="forms" name="messages" location="resource://org/apache/cocoon/forms/system/i18n"/>
-        <catalogue id="upload" name="messages" location="resource://org/apache/cocoon/ajax/system/i18n"/>
+        <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n"/>
+        <catalogue id="upload" name="messages" location="servlet:ajax:/resource/internal/i18n"/>
       </catalogues>
     </map:transformer>
   </map:transformers>
@@ -161,7 +161,8 @@
        <map:transform type="i18n">
        </map:transform>
        <map:transform src="resources/forms-samples-styling.xsl">
-         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+ 		 <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+         <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
        </map:transform>
        <map:transform type="i18n">
        </map:transform>
@@ -201,7 +202,7 @@
      <map:match pattern="_cocoon/forms/suggest">
         <map:generate type="suggestion-list"/>
         <map:transform type="i18n"/>
-        <map:transform src="resource://org/apache/cocoon/forms/resources/selection-list2json.xsl"/>
+        <map:transform src="servlet:forms:/resource/internal/xsl/selection-list2json.xsl"/>
         <map:serialize type="json"/>
      </map:match>
 
@@ -210,7 +211,7 @@
      </map:match>
      <map:match pattern="*.json-combo-data">
         <map:generate type="jx" src="forms/{1}json.xml"/>
-        <map:transform src="resource://org/apache/cocoon/forms/resources/selection-list2json.xsl"/>
+       <map:transform src="servlet:forms:/resource/internal/xsl/selection-list2json.xsl"/>
         <map:serialize type="json"/>
      </map:match>      
 
@@ -227,11 +228,13 @@
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl">
-         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+ 		 <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+         <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
          <map:parameter name="dojo-locale" value="{flow-attr:locale}"/>
        </map:transform>
        <map:transform type="i18n">
        </map:transform>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize/>
      </map:match>
 
@@ -250,19 +253,21 @@
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl">
-         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+ 		 <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+         <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
          <map:parameter name="dojo-debug" value="true"/><!-- set to true to turn on dojo debugging in the Browser -->
          <map:parameter name="dojo-locale" value="{flow-attr:locale}"/>
        </map:transform>
        <map:transform type="i18n">
          <map:parameter name="locale" value="{flow-attribute:locale}"/>
        </map:transform>
+       <map:transform type="servletLinkRewriter"/>
        <map:select type="ajax-request">
          <map:when test="true"><!-- sending a partial Browser Update -->
             <map:select type="request-parameter">
               <map:parameter name="parameter-name" value="dojo.transport"/>
               <map:when test="iframe"><!-- sending BU via iFrameIO -->
-                <map:transform src="resource://org/apache/cocoon/forms/resources/IframeTransport-bu-styling.xsl"/>
+                <map:transform src="servlet:forms:/resource/internal/xsl/IframeTransport-bu-styling.xsl"/>
                 <map:serialize type="xhtml"/><!-- this is REALLY important -->
               </map:when>
               <map:otherwise><!-- sending BU via XHR -->
@@ -496,7 +501,8 @@
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
        <map:transform src="resources/forms-samples-styling.xsl">
-         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+         <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+         <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
        </map:transform>
        <map:serialize/>
      </map:match>
@@ -504,18 +510,6 @@
      <map:match pattern="htmlarea-success-pipeline">
        <map:generate type="jx" src="forms/htmlarea_success.jx"/>
        <map:serialize type="xml"/>
-     </map:match>
-
-     <!-- System-provided resources
-          If needed, you can override them with your own pipelines before -->
-
-     <!-- for developers: load directly from the source tree, rather than from the jars
-      <map:match pattern="resources/*/**">
-        <map:read src="file://{realpath:}/../../src/blocks/{1}/trunk/java/org/apache/cocoon/{1}/resources/{2}"/>
-      </map:match>
-       -->
-     <map:match pattern="resources/*/**">
-       <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
      </map:match>
      
      <!--
@@ -577,7 +571,8 @@
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl">
-         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+         <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+         <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
        </map:transform>
        <map:serialize type="html" />
      </map:match>

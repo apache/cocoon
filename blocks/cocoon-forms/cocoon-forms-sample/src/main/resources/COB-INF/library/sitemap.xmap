@@ -24,7 +24,7 @@
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="other">
           <catalogue id="other" name="OtherMessages" location="messages"/>
-          <catalogue id="forms" name="messages" location="resource://org/apache/cocoon/forms/system/i18n"/>
+          <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n"/>
         </catalogues>
       </map:transformer>
     </map:transformers>
@@ -112,7 +112,8 @@
           <map:parameter name="file" value="forms/{1}_template.xml"/>
         </map:call>
         <map:transform src="../resources/forms-samples-styling.xsl">
-          <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
         </map:transform>
         <map:serialize/>
       </map:match>
@@ -128,10 +129,6 @@
           <map:parameter name="file" value="resources/result_jx.xml"/>
         </map:call>
         <map:serialize type="xml"/>
-      </map:match>
-      
-      <map:match pattern="resources/*/**">
-        <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
       </map:match>
       
       

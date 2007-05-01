@@ -24,7 +24,7 @@
 
   <fd:widgets>    
     <fd:tree id="directories" root-visible="true" selection="single">
-      <fd:tree-model type="source" src="context://samples/blocks/forms">
+      <fd:tree-model type="source" src=".">
         <!-- keep only directories -->
         <fd:fileset>
           <fd:exclude pattern="*"/>
