@@ -112,7 +112,7 @@
         <artifactId>daisy-maven-plugin</artifactId>
         <configuration>        
           <navDocId>1296</navDocId>
-          <collection>cdocs-rcl-plugin</collection>          
+          <collection>cdocs-maven-plugin</collection>          
           <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
         </configuration>
       </plugin>        
@@ -129,15 +129,15 @@
   </reporting>  
   
   <properties>
-    <docs.name>Cocoon Reloading Classloader - Maven 2 Plugin</docs.name>    
-    <docs.version>1.0</docs.version>
+    <docs.name>${project.name}</docs.name>    
+    <docs.version>${docs.m.maven-plugin.version}</docs.version>
   </properties>    
   
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/maven-plugins/reloading-classloader-plugin/${docs.version}/</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.maven-plugin.relPath}</url>
     </site>
-  </distributionManagement>   
+  </distributionManagement>     
    
 </project>

@@ -67,7 +67,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-<repository>
+    <repository>
       <id>reinhard-m2-snapshot-repository</id>
       <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
       <releases>
@@ -2293,8 +2293,8 @@
               </collection>
               <!-- Maven plugins -->
               <collection>
-                <name>cdocs-rcl-plugin</name>
-                <path>${docs.m.rcl-plugin.relPath}</path>
+                <name>cdocs-maven-plugin</name>
+                <path>${docs.m.maven-plugin.relPath}</path>
               </collection>
             </collections>
             <siteXmlContent>
@@ -2545,8 +2545,8 @@
     <docs.m.hsqldb-client.version>1.0</docs.m.hsqldb-client.version>
     <docs.m.hsqldb-client.relPath>2.2/blocks/hsqldb-client/${docs.m.hsqldb-client.version}/</docs.m.hsqldb-client.relPath>
     <!-- Path and version properties: Maven plugins-->
-    <docs.m.rcl-plugin.version>1.0</docs.m.rcl-plugin.version>
-    <docs.m.rcl-plugin.relPath>2.2/maven-plugins/${docs.m.rcl-plugin.version}/</docs.m.rcl-plugin.relPath>
+    <docs.m.maven-plugin.version>1.0</docs.m.maven-plugin.version>
+    <docs.m.maven-plugin.relPath>2.2/maven-plugins/${docs.m.rcl-plugin.version}/</docs.m.maven-plugin.relPath>
   </properties>
 
   <profiles>
