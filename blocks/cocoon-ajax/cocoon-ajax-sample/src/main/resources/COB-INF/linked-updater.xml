@@ -21,7 +21,7 @@
   <script type="text/javascript">
 	// djConfig = { isDebug: true };
   </script>
-  <script type="text/javascript" src="${cocoon.request.contextPath}/_cocoon/resources/dojo/dojo.js"/>
+	<script type="text/javascript" src="servlet:ajax:/resource/external/dojo/dojo.js"/>
   <!--<script type="text/javascript" src="${cocoon.request.contextPath}/_cocoon/resources/ajax/cocoon.js"/>-->
   <script type="text/javascript">
     dojo.require("dojo.widget.*");
