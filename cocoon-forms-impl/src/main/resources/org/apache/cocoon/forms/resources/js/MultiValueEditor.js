@@ -39,9 +39,9 @@ dojo.widget.defineWidget(
 
         cformsIdPrefix: "id-prefix-not-set",
 
-        resourcesUri: cocoon.resourcesUri, // to make this available to the template
+        formsResourcesUri: cocoon.formsResourcesUri, // to make this available to the template
 
-        templatePath: cocoon.resourcesUri + "/forms/js/templates/MultiValueEditor.html",
+        templatePath: cocoon.formsResourcesUri + "/js/templates/MultiValueEditor.html",
 
         fillInTemplate: function(args, frag) {
             cocoon.forms.MultiValueEditor.superclass.fillInTemplate(this, args, frag);

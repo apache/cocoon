@@ -20,7 +20,7 @@
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
 
   <!-- Import the macros that define CForms template elements -->
-  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="servlet:forms:/resource/internal/generation/jx-macros.xml"/>
   <h4 class="samplesGroup">Inline editing</h4>
   <title>Inline editing</title>
   <script type="text/javascript">

@@ -20,7 +20,7 @@
     <map:transformers default="xslt">
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="dreamteam">
-          <catalogue id="forms" name="messages" location="resource://org/apache/cocoon/forms/system/i18n"/>
+          <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n"/>
           <catalogue id="dreamteam" name="DreamTeamMessages" location="messages"/>
         </catalogues>
       </map:transformer>
@@ -92,7 +92,8 @@
         <map:generate type="jx" src="content/teamTemplate.jx"/>
         <map:transform type="browser-update"/>
         <map:transform src="../resources/forms-samples-styling.xsl">
-          <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
         </map:transform>        
         <map:select type="ajax-request">
           <map:when test="true">
@@ -135,9 +136,6 @@
       <!-- ========================================= -->
       <!-- images                                    -->
       <!-- ========================================= -->
-      <map:match pattern="resources/*/**">
-        <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
-      </map:match>
       <map:match pattern="flags/*.gif">
         <map:read mime-type="image/gif" src="resources/flags/{1}.gif"/>
       </map:match>

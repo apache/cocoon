@@ -20,7 +20,7 @@
   xmlns:ft="http://apache.org/cocoon/forms/1.0#template">
 
   <jx:import
-    uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml" />
+    uri="servlet:forms:/resource/internal/generation/jx-macros.xml" />
 
   <title>Sample enhanced repeater</title>
   <content>

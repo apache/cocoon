@@ -64,7 +64,8 @@
           <map:parameter name="file" value="{1}.tpl.xml"/>
         </map:call>
          <map:transform src="../resources/forms-samples-styling.xsl">
-           <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+           <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+           <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
          </map:transform>        
        <map:select type="ajax-request">
          <map:when test="true">

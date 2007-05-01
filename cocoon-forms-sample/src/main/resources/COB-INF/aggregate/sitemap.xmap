@@ -69,7 +69,8 @@
           <map:parameter name="file" value="{1}_template.xml"/>
         </map:call>
         <map:transform src="../resources/forms-samples-styling.xsl">
-          <map:parameter name="resources-uri" value="../resources"/>
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
          </map:transform>
         <map:serialize/>
       </map:match>

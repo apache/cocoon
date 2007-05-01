@@ -29,7 +29,7 @@
     <map:transformer name="browser-update" src="org.apache.cocoon.ajax.BrowserUpdateTransformer"/>
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="forms">
-        <catalogue id="forms" name="messages" location="resource://org/apache/cocoon/forms/system/i18n"/>
+        <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n"/>
       </catalogues>
     </map:transformer>
   </map:transformers>
@@ -56,17 +56,6 @@
       <map:call continuation="{request-param:continuation-id}"/>
     </map:match>
 
-    <!-- Static resource, read either locally or from the jars -->
-    <map:match pattern="resources/*/**">
-      <map:select type="resource-exists">
-        <map:when test="{0}">
-          <map:read src="{0}"/>
-        </map:when>
-        <map:otherwise>
-          <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
-        </map:otherwise>
-      </map:select>
-    </map:match>
   </map:pipeline>
   
   <!-- Internal URLs -->

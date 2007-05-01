@@ -81,25 +81,26 @@
       var cocoon;
       if (!cocoon)
         cocoon = {};
-      cocoon.resourcesUri = "<xsl:value-of select="$resources-uri"/>";
+      cocoon.formsResourcesUri = "<xsl:value-of select="$forms-resources"/>";
     </script>
-    <script src="{$resources-uri}/dojo/dojo.js" type="text/javascript"/>           <!-- load dojo -->
+    <script src="{$dojo-resources}/dojo.js" type="text/javascript"/>           <!-- load dojo -->
     <script type="text/javascript">dojo.require("dojo.widget.*");</script>         <!-- require dojo.widget for auto-loading -->
     <xsl:if test="$dojo-debug = 'true'">                                           <!-- require console etc. for dojo debug, if requested -->
         <script type="text/javascript">dojo.require("dojo.debug.console"); dojo.require("dojo.widget.Tree");</script>
     </xsl:if>
-    <script src="{$resources-uri}/forms/js/forms-lib.js" type="text/javascript"/>  <!-- load legacy scripts -->
+    <script src="{$forms-resources}/js/forms-lib.js" type="text/javascript"/>  <!-- load legacy scripts -->
     <!-- load forms library -->
     <script type="text/javascript">
-    dojo.registerModulePath("cocoon.forms", "../forms/js");                        <!-- tell dojo how to find our forms module. NB: (since 2.1.11, replaces cocoon.js) -->
+    dojo.registerModulePath("cocoon.forms", "<xsl:value-of select='concat($forms-resources, "/js")'/>");                        <!-- tell dojo how to find our forms module. NB: (since 2.1.11, replaces cocoon.js) -->
     dojo.require("cocoon.forms.common");                                           <!-- tell dojo we require the commons library -->
+    dojo.require("cocoon.forms.manifest");                                         <!-- tell dojo we require cocoon.forms.manifest registering namespace handler -->
     dojo.addOnLoad(cocoon.forms.callOnLoadHandlers);                               <!-- ask dojo to run our onLoad handlers -->
     </script>    
     <xsl:copy-of select="fi:init/node()"/>                                         <!-- copy optional initialisation from form template -->    
     <xsl:if test="/*/fi:googlemap">                                                <!-- googlemap-key TODO: This looks broken to me (JQ) -->
       <script src="/*/fi:googlemap/fi:key" type="text/javascript"/>
     </xsl:if>
-    <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms/css/forms.css"/>
+    <link rel="stylesheet" type="text/css" href="{$forms-resources}/css/forms.css"/>
   </xsl:template>
   
   <xsl:template match="fi:init"/>                                                  <!-- ignore, was handled above -->

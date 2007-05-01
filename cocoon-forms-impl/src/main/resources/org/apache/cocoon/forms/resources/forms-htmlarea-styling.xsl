@@ -24,13 +24,14 @@
       +-->
 
   <xsl:param name="htmlarea-lang">en</xsl:param>
+  <xsl:param name="forms-resources"/>
 
   <xsl:template match="head" mode="forms-htmlarea">
     <script type="text/javascript">
-      _editor_url = "<xsl:value-of select="concat($resources-uri, '/forms/htmlarea/')"/>";
+      _editor_url = "<xsl:value-of select="concat($forms-resources, '/htmlarea/')"/>";
       _editor_lang = "<xsl:value-of select="$htmlarea-lang"/>";
     </script>
-    <script type="text/javascript" src="{$resources-uri}/forms/htmlarea/htmlarea.js"></script>
+    <script type="text/javascript" src="{$forms-resources}/htmlarea/htmlarea.js"></script>
   </xsl:template>
 
   <xsl:template match="body" mode="forms-htmlarea"/>
