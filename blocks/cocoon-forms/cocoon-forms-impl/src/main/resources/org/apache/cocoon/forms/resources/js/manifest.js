@@ -61,9 +61,9 @@ dojo.provide("cocoon.forms.manifest");
     };
 
 
-    dojo.registerModulePath("cocoon.ajax", "../ajax/js"); // cocoon.forms has a dependency on the cocoon.ajax module libraries
-    
-    dojo.registerModulePath("cocoon.forms", "../forms/js");
+    dojo.registerModulePath("cocoon.ajax", "servlet:ajax:/resource/external/ajax/js"); // cocoon.forms has a dependency on the cocoon.ajax module libraries
+
+    dojo.registerModulePath("cocoon.forms", "servlet:/resource/external/forms/js");
     dojo.registerNamespace("forms", "cocoon.forms", formsResolver);
     
 })();

@@ -22,7 +22,7 @@
  *
  * @version $Id$
  */
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
+cocoon.load("servlet:forms:/resource/internal/flow/javascript/Form.js");
 cocoon.load("flow/jdbi.js");
 importClass(org.apache.cocoon.forms.formmodel.WidgetState);
 

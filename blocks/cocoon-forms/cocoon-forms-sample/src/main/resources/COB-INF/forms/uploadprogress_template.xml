@@ -61,7 +61,7 @@
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
     
-    <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+    <jx:import uri="servlet:forms:/resource/internal/generation/jx-macros.xml"/>
     
     <h4 class="samplesGroup">Upload Progress Sample</h4>
     <title>Upload Progress Sample</title>

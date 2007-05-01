@@ -33,22 +33,22 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
     {
         widgetsInTemplate: true,
         cformsIdPrefix: "id-prefix-not-set",
-        dataUrl: "_cocoon/forms/suggest",
+        dataUrl: "servlet:/suggest",
         styleClass: "",
         popupUri: "",
         popupSize: "",
         popupLinkText: "",
-        resourcesUri: cocoon.resourcesUri,
-        templatePath: cocoon.resourcesUri + "/forms/js/templates/MultiValueEditorWithSuggestion.html",
+        resourcesUri: cocoon.formsResourcesUri,
+        templatePath: cocoon.formsResourcesUri + "/js/templates/MultiValueEditorWithSuggestion.html",
 
         _setUpDataUrl: function() {
             var dataUrl = this.dataUrl;
             if (!dataUrl || dataUrl == "") {
-                dataUrl = "_cocoon/forms/suggest/" + this.widgetId + "?filter=%{searchString}";
+                dataUrl = "servlet:/suggest/" + this.widgetId + "?filter=%{searchString}";
             } else {
                 var strings = dataUrl.split("?");
                 if (strings.length > 1) {
-                    if (strings[0] == "_cocoon/forms/suggest") {
+                    if (strings[0] == "servlet:/suggest") {
                         strings[0] += "/" + this.widgetId;
                     }
                     dataUrl = strings[0] + "?" + strings[1] + "&";

@@ -14,7 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
+cocoon.load("servlet:forms:/resource/internal/flow/javascript/Form.js");
 
 function form1(form) {
     var locale = determineLocale();
@@ -228,7 +228,7 @@ function do_fileExplorer() {
 function do_sampleTree() {
     var form = new Form("forms/sampletree_model.xml");
     var resolver = cocoon.getComponent(org.apache.excalibur.source.SourceResolver.ROLE);
-    var model = new org.apache.cocoon.forms.formmodel.tree.SourceTreeModel(resolver, "context://samples/blocks/forms");
+    var model = new org.apache.cocoon.forms.formmodel.tree.SourceTreeModel(resolver, ".");
     form.getChild("files").setModel(model);
     form.showForm("sampletree-display-pipeline.jx");
     cocoon.sendPage("xmlresult-display-pipeline.jx",

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
+cocoon.load("servlet:forms:/resource/internal/flow/javascript/Form.js");
 
 Bean.prototype.date;
 Bean.prototype.phone;

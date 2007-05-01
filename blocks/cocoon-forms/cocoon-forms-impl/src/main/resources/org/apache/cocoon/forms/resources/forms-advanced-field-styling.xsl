@@ -29,13 +29,15 @@
   <xsl:import href="resource://org/apache/cocoon/forms/resources/forms-field-styling.xsl"/>
   <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-calendar-styling.xsl"/>
   <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-htmlarea-styling.xsl"/>
+  
+  <xsl:param name="forms-resources"/>
 
   <xsl:template match="head" mode="forms-field">
     <xsl:apply-imports/>
-    <script src="{$resources-uri}/forms/mattkruse-lib/AnchorPosition.js" type="text/javascript"/>
-    <script src="{$resources-uri}/forms/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
-    <script src="{$resources-uri}/forms/mattkruse-lib/OptionTransfer.js" type="text/javascript"/>
-    <script src="{$resources-uri}/forms/mattkruse-lib/selectbox.js" type="text/javascript"/>
+    <script src="{$forms-resources}/mattkruse-lib/AnchorPosition.js" type="text/javascript"/>
+    <script src="{$forms-resources}/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
+    <script src="{$forms-resources}/mattkruse-lib/OptionTransfer.js" type="text/javascript"/>
+    <script src="{$forms-resources}/mattkruse-lib/selectbox.js" type="text/javascript"/>
     <xsl:apply-templates select="." mode="forms-htmlarea"/>
   </xsl:template>
 

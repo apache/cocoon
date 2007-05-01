@@ -19,6 +19,8 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
+  <xsl:param name="forms-resources"/>
+  
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
       +-->
@@ -85,7 +87,7 @@
             </xsl:attribute>
             <xsl:copy-of select="fi:label/node()"/>
             <xsl:if test="fi:items/*//fi:validation-message">
-              <span class="forms-validation-message forms validation-message">&#160;<img src="{$resources-uri}/forms/js/templates/images/validation-message.gif"/>&#160;</span>
+              <span class="forms-validation-message forms validation-message">&#160;<img src="{$forms-resources}/js/templates/images/validation-message.gif"/>&#160;</span>
             </xsl:if>
           </span>
         </xsl:for-each>
@@ -161,7 +163,7 @@
           </xsl:for-each>
         </select>
         <xsl:if test="fi:items/*//fi:validation-message">
-          <span class="forms-validation-message forms validation-message">&#160;<img src="{$resources-uri}/forms/js/templates/images/validation-message.gif"/>&#160;</span>
+          <span class="forms-validation-message forms validation-message">&#160;<img src="{$forms-resources}/js/templates/images/validation-message.gif"/>&#160;</span>
         </xsl:if>
       </legend>
       <!-- a div for each of the items -->

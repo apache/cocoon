@@ -17,7 +17,7 @@
 -->
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"  xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
    <!-- Import the macros that define CForms template elements -->
-   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+   <jx:import uri="servlet:forms:/resource/internal/generation/jx-macros.xml"/>
   <h4 class="samplesGroup">AJAX sample</h4>
   <title>Cocoon suggests</title>
   <content>
@@ -28,7 +28,7 @@
 
     <ft:form-template action="continue" method="POST" ajax="true">
       <ft:continuation-id/>
-      Choose a file in Cocoon's samples. The suggestion-list is written in JavaScript
+      Choose a file in Forms's samples. The suggestion-list is written in JavaScript
       (server side) and scans the samples directory with the input given.
       <br/>
       <ft:widget id="path" type="suggest"/>

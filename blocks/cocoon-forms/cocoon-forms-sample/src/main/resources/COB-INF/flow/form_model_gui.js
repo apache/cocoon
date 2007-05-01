@@ -19,7 +19,7 @@
 * @version $Id$
 */
 
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
+cocoon.load("servlet:forms:/resource/internal/flow/javascript/Form.js");
 
 function form_model_gui(form) {
 
