@@ -70,7 +70,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testCachingURI() throws Exception {
-        String uri = "cached:http://slashdot.org/?cocoon:cache-expires=1";
+        String uri = "cached:http://slashdot.org/?cocoon:cache-expires=2";
 
         CachingSource source;
 
@@ -93,7 +93,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
         // Source is still cached -- still same meta data
         assertSame(meta1, meta3);
 
-        Thread.sleep(1100);
+        Thread.sleep(2100);
 
         source = (CachingSource) resolver.resolveURI(uri);
         source.refresh();
