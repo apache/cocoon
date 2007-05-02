@@ -28,5 +28,14 @@
       </map:match>
 
     </map:pipeline>
+    
+    <map:pipeline id="service">
+      <!-- This basic service pipeline takes POSTed XML and applays simple transformation on it -->
+      <map:match pattern="basic-service">
+        <map:generate src="service-consumer:"/>
+        <map:transform src="service-test.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
   </map:pipelines>
 </map:sitemap>
