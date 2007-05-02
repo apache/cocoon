@@ -116,7 +116,7 @@
   #end
     <li class="menuVersions">Versions
        <ul>
-									<li><a href="$project.getProperties().get("docs.urlRelativizer")/2.1/">Cocoon 2.1</a></li>
+									<li><a href="$project.getProperties().get("docs.urlRelativizer")2.1/">Cocoon 2.1</a></li>
 									<li><a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon 2.2</a></li>
        </ul>
     </li>
