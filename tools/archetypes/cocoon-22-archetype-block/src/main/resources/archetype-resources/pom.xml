@@ -36,7 +36,7 @@
            In order to use it, you have to build it yourself and activate the section below. -->
       <!--plugin>
         <groupId>org.apache.cocoon</groupId>
-        <artifactId>cocoon-rcl-plugin</artifactId>
+        <artifactId>cocoon-maven-plugin</artifactId>
         <version>1.0.0-M1-SNAPSHOT</version>
       </plugin>
       <plugin>
