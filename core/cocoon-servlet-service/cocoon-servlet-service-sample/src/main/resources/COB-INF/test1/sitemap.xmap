@@ -42,6 +42,17 @@
         <map:generate src="resource://META-INF/classes/test.xml"/>
         <map:serialize type="xml"/>
       </map:match>
+      
+      <!-- This is a test of basic servlet services functionality
+           servletService generator makes a HTTP POST request on servlet:test2:/basic-service.
+           Generator posts content of test.xml file and returns to the pipeline result of service call.
+      -->
+      <map:match pattern="test5">
+        <map:generate type="servletService" src="test.xml">
+          <map:parameter name="service" value="servlet:test2:/basic-service"/>
+        </map:generate>
+        <map:serialize type="xml"/>
+      </map:match>
 
       <map:match pattern="sub/**">
         <map:mount uri-prefix="sub" src="sub/"/>
