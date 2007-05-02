@@ -76,6 +76,10 @@
       <artifactId>cocoon-util</artifactId>
       
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml-api</artifactId>
+    </dependency>
     <!-- Excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components</groupId>
