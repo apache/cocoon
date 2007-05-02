@@ -86,9 +86,9 @@ public class ServletServiceGenerator extends AbstractGenerator {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
         
-        if (getLogger().isDebugEnabled()) {
-        	getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
-            getLogger().debug("Source " + super.source + " resolved to " + inputSource.getURI());
+        if (logger.isDebugEnabled()) {
+        	logger.debug("Source " + service + " resolved to " + servletSource.getURI());
+            logger.debug("Source " + super.source + " resolved to " + inputSource.getURI());
         }
         
         IOUtils.copy(inputSource.getInputStream(), servletSource.getOutputStream());
