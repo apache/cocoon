@@ -2379,8 +2379,8 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0-alpha-2</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
