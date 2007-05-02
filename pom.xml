@@ -35,10 +35,6 @@
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
-  
-  <!--prerequisites>
-    <maven>2.0.6</maven>
-  </prerequisites-->
 
   <modules>
     <module>blocks</module>
@@ -2381,7 +2377,26 @@
           <outputDirectory>target</outputDirectory>
           <workDirectory>target/assembly</workDirectory>
         </configuration>
-      </plugin> 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce-once</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[2.0.6,)</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
