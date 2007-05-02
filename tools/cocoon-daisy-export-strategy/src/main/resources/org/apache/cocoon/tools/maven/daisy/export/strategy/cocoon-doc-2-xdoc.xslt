@@ -19,8 +19,7 @@
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
    xmlns:p="http://outerx.org/daisy/1.0#publisher" xmlns:d="http://outerx.org/daisy/1.0"
-   xmlns:ns="http://outerx.org/daisy/1.0"
-   exclude-result-prefixes="p d ns">
+   xmlns:ns="http://outerx.org/daisy/1.0" exclude-result-prefixes="p d ns">
 
    <xsl:output method="xml"/>
    <xsl:output omit-xml-declaration="no"/>
@@ -86,6 +85,8 @@
       |
       | The markup here is so specific that it only works for the home page, so
       | we need to make sure that it is only used for that page.
+      |
+      | It also depends on special settings in the Daisy page
       +-->
    <xsl:template match="d:document[@typeId='14']">
       <div id="intro">
@@ -97,41 +98,51 @@
          <div id="bodyText">
             <div id="getting">
                <div id="gettingStarted">
-                  <div><!-- this is required to be a div, a p is removed from the end result -->
+                  <div>
+                     <!-- this is required to be a div, a p is removed from the end result -->
                      <img alt="Getting Started" src="images/getting-started.gif"/>
                   </div>
                   <h2>Getting Started</h2>
                   <ul>
-                        <xsl:apply-templates
-                           select="d:parts/d:part[@typeId='2']/html/body//ul[contains(@id,'gettingStartedList')]/*"
-                        />
+                     <xsl:apply-templates
+                        select="d:parts/d:part[@typeId='2']/html/body//ul[contains(@id,'gettingStartedList')]/*"
+                     />
                   </ul>
                </div>
                <div id="gettingBetter">
-                  <div><!-- this is required to be a div, a p is removed from the end result -->
+                  <div>
+                     <!-- this is required to be a div, a p is removed from the end result -->
                      <img alt="Getting Better" src="images/getting-better.gif"/>
                   </div>
                   <h2>Getting Better</h2>
                   <ul>
                      <xsl:apply-templates
-                        select="d:parts/d:part[@typeId='2']/html/body//ul[contains(@id,'gettingBetterList')]/*"/>
+                        select="d:parts/d:part[@typeId='2']/html/body//ul[contains(@id,'gettingBetterList')]/*"
+                     />
                   </ul>
                </div>
                <div id="gettingInvolved">
-                  <div><!-- this is required to be a div, a p is removed from the end result -->
+                  <div>
+                     <!-- this is required to be a div, a p is removed from the end result -->
                      <img alt="Getting Involved" src="images/getting-involved.gif"/>
                   </div>
                   <h2>Getting Involved</h2>
                   <ul>
-                        <xsl:apply-templates
-                           select="d:parts/d:part[@typeId='2']/html/body//ul[contains(@id,'gettingInvolvedList')]/*"
-                        />
+                     <xsl:apply-templates
+                        select="d:parts/d:part[@typeId='2']/html/body//ul[contains(@id,'gettingInvolvedList')]/*"
+                     />
                   </ul>
                </div>
                <div id="gettingDownload">
-                  <div class="downloadVersion"><xsl:copy-of select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText1')]"/>
+                  <div class="downloadVersion">
+                     <xsl:copy-of
+                        select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText1')]"
+                     />
                   </div>
-                  <div class="moreDownload"><xsl:copy-of select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText2')]"/>
+                  <div class="moreDownload">
+                     <xsl:copy-of
+                        select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText2')]"
+                     />
                   </div>
                </div>
             </div>
@@ -149,12 +160,12 @@
       <div class="editUrl">
          <div>
             <!-- this is required to be a div, a p is removed from the end result -->
-            <em>Errors and Improvements?</em> If you see any errors or potential improvements
-            in this document please help us: <a href="{$editUrl}">View, Edit or comment</a> on
-            the latest development version (registration required). </div>
+            <em>Errors and Improvements?</em> If you see any errors or potential improvements in
+            this document please help us: <a href="{$editUrl}">View, Edit or comment</a> on the
+            latest development version (registration required). </div>
       </div>
    </xsl:template>
-         
+
    <!--+
       | Work-around for tables as the Maven site plugin changes the attributes of 
       | table, tr and td.
@@ -199,13 +210,15 @@
 
    <!--+
       | Includes
+      |
+      | Mark them with an enclosing div so we can restyle the main headings such as h1.docTitle
       +-->
    <xsl:template match="p:daisyPreparedInclude">
       <xsl:variable name="id" select="@id"/>
       <div class="includedDoc">
-      <xsl:apply-templates
-         select="/p:publisherResponse/p:document/p:preparedDocuments/p:preparedDocument[@id = $id]/p:publisherResponse/d:document"
-      />
+         <xsl:apply-templates
+            select="/p:publisherResponse/p:document/p:preparedDocuments/p:preparedDocument[@id = $id]/p:publisherResponse/d:document"
+         />
       </div>
    </xsl:template>
 
@@ -243,45 +256,58 @@
       </h4>
    </xsl:template>
    <xsl:template match="h5">
-      <xsl:apply-templates/>
+      <h5>
+         <xsl:apply-templates/>
+      </h5>
+   </xsl:template>
+   <xsl:template match="pre">
+      <!-- only to remove namespaces -->
+      <pre>
+        <xsl:apply-templates/>
+      </pre>
    </xsl:template>
    <!-- surround all p elements that have an attribute to some div equivalent -->
    <xsl:template match="p[@class='warning']">
       <div class="warning">
-         <strong style="color:red;font-weight:bold">Warning: </strong>
+         <div>
+         <strong>Warning: </strong>
          <xsl:apply-templates/>
+         </div>
       </div>
    </xsl:template>
    <xsl:template match="p[@class='note']">
       <div class="note">
+         <div>
          <strong>Note: </strong>
          <xsl:apply-templates/>
+         </div>
       </div>
    </xsl:template>
    <xsl:template match="p[@class='fixme']">
       <div class="fixme">
-         <strong style="color:blue">Fixme: </strong>
+         <div>
+         <strong>Fixme: </strong>
          <xsl:apply-templates/>
+         </div>
       </div>
    </xsl:template>
 
    <!-- format search results -->
    <xsl:template match="d:searchResult[@styleHint='news']">
       <div class="news">
-         
-            <xsl:for-each select="d:rows/d:row">
-               <dl class="news">
-                  <dt>
-                     <xsl:value-of select="d:value[1]"/>
-                  </dt>
-                  <dd>
+
+         <xsl:for-each select="d:rows/d:row">
+            <dl class="news">
+               <dt>
+                  <xsl:value-of select="d:value[1]"/>
+               </dt>
+               <dd>
                   <xsl:value-of select="d:value[2]"/> [<a
-                     href="daisy:{@documentId}@{@branchId}:{@languageId}">more</a>]
-                  </dd>
-                  <dd class="newsMeta">submitted by <xsl:value-of select="d:value[4]"/>,
-                        <xsl:value-of select="d:value[3]"/></dd>
-               </dl>
-            </xsl:for-each>
+                     href="daisy:{@documentId}@{@branchId}:{@languageId}">more</a>] </dd>
+               <dd class="newsMeta">submitted by <xsl:value-of select="d:value[4]"/>, <xsl:value-of
+                     select="d:value[3]"/></dd>
+            </dl>
+         </xsl:for-each>
       </div>
    </xsl:template>
 
