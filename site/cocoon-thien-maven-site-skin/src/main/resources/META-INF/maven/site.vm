@@ -114,6 +114,12 @@
       </ul>
     </li>
   #end
+    <li class="menuVersions">Versions
+       <ul>
+									<li><a href="$project.getProperties().get("docs.urlRelativizer")/2.1/">Cocoon 2.1</a></li>
+									<li><a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon 2.2</a></li>
+       </ul>
+    </li>
   </ul>
 #end
 
@@ -195,11 +201,6 @@
   #end
 #end
 
-#macro (externalUrl )
-  #if( $project.getProperties().get("docs.urlRelativizer") )
-$project.getProperties().get("docs.urlRelativizer")
-  #end
-#end
 
 <html>
   <head>
@@ -241,7 +242,7 @@ $project.getProperties().get("docs.urlRelativizer")
 		       src="$PathTool.calculateLink( "images/pmc-home.gif", $relativePath )" 
 		       alt="Back to Apache Cocoon homepage" 
 		       border="0" title="Back to Apache Cocoon homepage" /></a></p>
-		       <h1 class="projectTitle"><a href="#">#nameAndVersion()</a></h1>
+		       <h1 class="projectTitle"><a href="$project.getProperties().get("docs.urlRelativizer")">#nameAndVersion()</a></h1>
 		       <ul class="projectList">
 			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Cocoon Core</a></li>
 			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Cocoon Blocks</a></li>

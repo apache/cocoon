@@ -22,7 +22,7 @@ body {
   padding: 0px;
 }
 
-/* mimic contentBody in site */
+/* mimic contentBody in site.css */
 .section {
    	margin: 0 20px 0 185px;
 	padding: 0;
@@ -34,7 +34,12 @@ body {
 }
 
 img {
-  border:none;
+  border: none;
+}
+
+acronym {
+  cursor: help;
+  border-bottom: 1px dotted #0086b3;
 }
 
 /*
@@ -43,10 +48,6 @@ table {
   width: 100%;
   margin-left: -2px;
   margin-right: -2px;
-}
-acronym {
-  cursor: help;
-  border-bottom: 1px dotted #feb;
 }
 table.bodyTable th, table.bodyTable td {
   padding: 2px 4px 2px 4px;
@@ -159,9 +160,6 @@ div.clear hr{
 .navSectionHead {
   font-weight: bold;
   font-size: x-small;
-}
-.section {
-  padding: 4px;
 }
 #footer {
   padding: 3px 10px 3px 10px;
