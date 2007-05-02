@@ -32,7 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.xml.sax.SAXException;
 
 /**
