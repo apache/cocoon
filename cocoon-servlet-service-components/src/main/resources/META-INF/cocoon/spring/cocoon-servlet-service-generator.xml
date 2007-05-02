@@ -21,7 +21,7 @@
 
   <bean name="org.apache.cocoon.generation.Generator/servletService"
       class="org.apache.cocoon.servletservice.postable.components.ServletServiceGenerator" init-method="init">
-      <property name="saxParser" ref="org.apache.excalibur.xml.sax.SAXParser"/>
+      <property name="saxParser" ref="org.apache.cocoon.core.xml.SAXParser"/>
   </bean>
 
 </beans>
