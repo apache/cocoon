@@ -20,7 +20,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
   <bean name="org.apache.cocoon.generation.Generator/servletService"
-      class="org.apache.cocoon.servletservice.postable.components.ServletServiceGenerator" init-method="init">
+      class="org.apache.cocoon.servletservice.postable.components.ServletServiceGenerator" init-method="init" scope="prototype">
       <property name="saxParser" ref="org.apache.cocoon.core.xml.SAXParser"/>
   </bean>
 
