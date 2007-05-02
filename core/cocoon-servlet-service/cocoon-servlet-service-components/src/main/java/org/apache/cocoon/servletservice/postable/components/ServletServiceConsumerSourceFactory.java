@@ -32,7 +32,8 @@ public class ServletServiceConsumerSourceFactory implements SourceFactory {
 
 	public Source getSource(String location, Map parameters) throws IOException, MalformedURLException {
 		HttpServletRequest request = processInfoProvider.getRequest();
-		if (!"POST".equals(request)) throw new MalformedURLException("Cannot create consumer source for request that is not POST.");
+		if (!"POST".equals(request.getMethod()))
+			throw new MalformedURLException("Cannot create consumer source for request that is not POST.");
 		return new ServletServiceConsumerSource(request);
 	}
 
