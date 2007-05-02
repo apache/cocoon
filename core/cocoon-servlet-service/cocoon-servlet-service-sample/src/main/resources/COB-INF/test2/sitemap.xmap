@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:pipelines>
@@ -28,7 +28,7 @@
       </map:match>
 
     </map:pipeline>
-    
+
     <map:pipeline id="service">
       <!-- This basic service pipeline takes POSTed XML and applays simple transformation on it -->
       <map:match pattern="basic-service">
