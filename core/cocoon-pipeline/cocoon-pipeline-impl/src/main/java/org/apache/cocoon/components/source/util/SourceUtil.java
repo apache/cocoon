@@ -37,7 +37,7 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.excalibur.xmlizer.XMLizer;
 import org.apache.regexp.RE;
@@ -232,10 +232,12 @@ public abstract class SourceUtil {
 	    if (source instanceof XMLizable) {
 	        toSAX((XMLizable) source, handler);
 	    } else {
-	        SAXParser parser = null;
+	        org.apache.excalibur.xml.sax.SAXParser parser = null;
 	        try {
-	            parser = (SAXParser) manager.lookup(SAXParser.ROLE);
-	            parse(parser, source, handler);
+	            parser = (org.apache.excalibur.xml.sax.SAXParser) manager.lookup(org.apache.excalibur.xml.sax.SAXParser.ROLE);
+	            parser.parse(getInputSource(source), handler);
+	        } catch (SourceException e) {
+	        	throw SourceUtil.handle(e);
 	        } catch (ServiceException e) {
 	            throw new ProcessingException("Exception during parsing source.", e);
 	        } finally {
