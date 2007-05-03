@@ -51,7 +51,7 @@ dojo.provide("cocoon.ajax.manifest");
 		return map[domain][name];    
 	}
     
-    dojo.registerModulePath("cocoon.ajax", "servlet://resource/external/ajax/js");
+    dojo.registerModulePath("cocoon.ajax", "servlet:/resource/external/ajax/js");
 	dojo.registerNamespace("ajax", "cocoon.ajax", ajaxResolver);
 
 })();
