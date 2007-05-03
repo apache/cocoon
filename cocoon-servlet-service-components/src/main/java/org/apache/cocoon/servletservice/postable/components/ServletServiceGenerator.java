@@ -32,7 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
-import org.apache.cocoon.core.xml.SAXParser;
+import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.SAXException;
 
 /**
@@ -86,9 +86,9 @@ public class ServletServiceGenerator extends AbstractGenerator {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
         
-        if (logger.isDebugEnabled()) {
-        	logger.debug("Source " + service + " resolved to " + servletSource.getURI());
-            logger.debug("Source " + super.source + " resolved to " + inputSource.getURI());
+        if (getLogger().isDebugEnabled()) {
+        	getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
+            getLogger().debug("Source " + super.source + " resolved to " + inputSource.getURI());
         }
         
         IOUtils.copy(inputSource.getInputStream(), servletSource.getOutputStream());
