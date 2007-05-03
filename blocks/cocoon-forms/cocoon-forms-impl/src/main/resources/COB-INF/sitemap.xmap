@@ -41,6 +41,11 @@
       <map:match pattern="resource/internal/generation/**">
       	<map:read src="resource://org/apache/cocoon/forms/generation/{1}"/>
       </map:match>
+
+      <map:match pattern="resources/forms/**">
+        <map:read src="resource://org/apache/cocoon/forms/resources/{1}" />
+      </map:match>
+
     </map:pipeline>
     
     <map:pipeline id="external-resource">
