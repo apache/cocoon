@@ -116,7 +116,7 @@
     <!-- Repository for the commons-jci -->
     <repository>
       <id>apache-m2-snapshot</id>
-      <name>Apache Maven 1 Repository</name>
+      <name>Apache Maven 2 Repository</name>
       <url>http://people.apache.org/repo/m2-snapshot-repository</url>
       <releases>
         <enabled>true</enabled>

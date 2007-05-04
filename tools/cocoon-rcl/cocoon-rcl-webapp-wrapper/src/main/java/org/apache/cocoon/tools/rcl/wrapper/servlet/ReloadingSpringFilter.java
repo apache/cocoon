@@ -18,6 +18,7 @@ package org.apache.cocoon.tools.rcl.wrapper.servlet;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Properties;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -39,16 +40,17 @@ import org.apache.commons.logging.LogFactory;
 public class ReloadingSpringFilter implements Filter {
     
     private final Log log = LogFactory.getLog(ReloadingSpringFilter.class);    
+    
+    private static final String WEB_INF_RCLWRAPPER_PROPERTIES = "/WEB-INF/cocoon/rclwrapper.properties";         
 
     private FilterConfig config;
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
             ServletException {
         
-        if(CocoonReloadingListener.isReload()) {
+        if(isReloadingEnabled() && CocoonReloadingListener.isReload()) {
             synchronized (this) {        
                 log.info("Performing a reload of the Spring application context.");
-                System.out.println("Performing a reload of the Spring application context.");                
                 // load the spring context loader from the reloading classloader
                 ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
                 Object reloader = null;
@@ -74,6 +76,13 @@ public class ReloadingSpringFilter implements Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
         this.config = filterConfig;
+    }
+    
+    private boolean isReloadingEnabled() throws IOException {
+        Properties rclProps = new Properties();
+        rclProps.load(this.config.getServletContext().getResourceAsStream(WEB_INF_RCLWRAPPER_PROPERTIES));
+        String reloadingEnabled = rclProps.getProperty("reloading.spring.enabled", "true");
+        return reloadingEnabled.trim().toLowerCase().equals("true");
     }
  
 }
