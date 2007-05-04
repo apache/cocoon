@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
@@ -89,6 +90,8 @@ public class ReloadingWebappMojo extends AbstractMojo {
     private static final String WEB_INF_RCL_URLCL_CONF = "WEB-INF/cocoon/rclwrapper.urlcl.conf";
     
     private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "WEB-INF/cocoon/rclwrapper.rcl.conf";
+    
+    private static final String WEB_INF_RCLWRAPPER_PROPERTIES = "/WEB-INF/cocoon/rclwrapper.properties";     
 
 
     /**
@@ -118,6 +121,13 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * @parameter expression="${cocoon.rcl.log4j.useConsoleAppender}"
      */
     private boolean useConsoleAppender = false;
+    
+    /**
+     * Enable reloading or just use this goal to produce a web application environment.
+     * 
+     * @parameter
+     */
+    private boolean reloadingSpringEnabled = true;
 
     /**
      * Logging: Use a custom log4j xml configuration file=
@@ -217,6 +227,9 @@ public class ReloadingWebappMojo extends AbstractMojo {
         
         // based on the RCL configuration file, create a Cocoon properties file
         createCocoonProperties(webAppBaseDir, props);
+        
+        // create RCL properties
+        createProperties(webAppBaseDir);
         
         // apply xpatch files
         applyXpatchFiles(webAppBaseDir, props);
@@ -320,6 +333,17 @@ public class ReloadingWebappMojo extends AbstractMojo {
                     + artifact.getVersion() + ":" + artifact.getType());
         }
     }
+    
+    protected void createProperties(File webAppBaseDir) throws MojoExecutionException {
+        File rclProps = createPath(new File(webAppBaseDir, WEB_INF_RCLWRAPPER_PROPERTIES));       
+        try {
+            Properties props = new Properties();
+            props.setProperty("reloading.spring.enabled", Boolean.toString(this.reloadingSpringEnabled));
+            props.save(new FileOutputStream(rclProps), "Reloading Classloader Properties");
+        } catch (IOException e) {
+            throw new MojoExecutionException("Can't write to  " + rclProps.getAbsolutePath(), e);
+        } 
+    }    
 
     protected void writeLog4jXml(File webAppBaseDir) throws MojoExecutionException {
         Map log4jTemplateMap = new HashMap();
