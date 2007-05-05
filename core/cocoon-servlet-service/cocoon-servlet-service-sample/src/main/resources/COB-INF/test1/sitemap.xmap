@@ -49,8 +49,21 @@
       -->
       <map:match pattern="test5">
         <map:generate type="servletService" src="test.xml">
-          <map:parameter name="service" value="servlet:test2:/basic-service"/>
+          <map:parameter name="service" value="servlet:test2:/basic-service?caller=generator"/>
         </map:generate>
+        <map:serialize type="xml"/>
+      </map:match>
+      
+      <!-- This is a test of basic servlet services functionality
+        servletService transformer makes a HTTP POST request on servlet:test2:/basic-service.
+        Transformer posts content of the incoming SAX stream (here it's just content of test.xml file) 
+        and returns to the pipeline result of service call.
+      -->      
+      <map:match pattern="test6">
+        <map:generate src="test.xml"/>
+        <map:transform type="servletService">
+          <map:parameter name="service" value="servlet:test2:/basic-service?caller=transformer"/>
+        </map:transform>
         <map:serialize type="xml"/>
       </map:match>
 

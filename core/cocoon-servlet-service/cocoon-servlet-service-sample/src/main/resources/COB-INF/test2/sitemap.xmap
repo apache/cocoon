@@ -33,7 +33,9 @@
       <!-- This basic service pipeline takes POSTed XML and applays simple transformation on it -->
       <map:match pattern="basic-service">
         <map:generate src="service-consumer:"/>
-        <map:transform src="service-test.xsl"/>
+        <map:transform src="service-test.xsl">
+          <map:parameter name="caller" value="{request-param:caller}"/>
+        </map:transform>
         <map:serialize type="xml"/>
       </map:match>
     </map:pipeline>
