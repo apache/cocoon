@@ -17,9 +17,11 @@
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:param name="caller"/>
+  
     <xsl:template match="/*">
         <test-result>
-            This text comes from service!
+            This text comes from service! (called by <xsl:value-of select="$caller"/>)
             <original-content>
                 <xsl:copy-of select="."/>
             </original-content>
