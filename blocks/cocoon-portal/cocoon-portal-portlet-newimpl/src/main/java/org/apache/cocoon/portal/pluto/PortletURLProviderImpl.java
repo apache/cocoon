@@ -36,42 +36,42 @@ import org.apache.pluto.spi.PortletURLProvider;
  *
  * @version $Id$
  */
-public class PortletURLProviderImpl 
+public class PortletURLProviderImpl
        implements PortletURLProvider, CopletInstanceEvent, ConvertableEvent {
-    
+
     /** The new portlet mode */
     protected PortletMode mode;
-    
+
     /** The new window state */
     protected WindowState state;
-    
+
     /** Is this an action */
     protected boolean action;
-    
+
     /** Secure link? */
     protected Boolean secure;
-    
+
     /** Clear parameters */
     protected boolean clearParameters;
-    
+
     /** Parameters */
     protected Map parameters;
-    
+
     /** The generated url */
     protected String generatedURL;
     private final LinkService linkService;
 
     /** Tbe coplet instance id. */
-    protected final String copletId;
+    protected final String copletInstanceId;
 
     /**
      * Constructor
      */
-    public PortletURLProviderImpl(PortletWindow portletWindow,
-                                  PortalService service,
-                                  String        copletInstanceId) {
+    public PortletURLProviderImpl(PortalService      service,
+                                  PortletWindow      portletWindow,
+                                  String             copletInstanceId) {
         this.linkService = service.getLinkService();
-        this.copletId = copletInstanceId;
+        this.copletInstanceId = copletInstanceId;
     }
 
     /**
@@ -83,7 +83,7 @@ public class PortletURLProviderImpl
                                   String        eventData) {
         this.linkService = service.getLinkService();
         final PortletURLConverter urlConverter = new PortletURLConverter(eventData);
-        this.copletId = urlConverter.getCopletId();
+        this.copletInstanceId = urlConverter.getCopletId();
         this.mode = urlConverter.getMode();
         this.state = urlConverter.getState();
         this.action = urlConverter.isAction();
@@ -97,7 +97,7 @@ public class PortletURLProviderImpl
      */
     private PortletURLProviderImpl(PortletURLProviderImpl original) {
         this.linkService = original.linkService;
-        this.copletId = original.copletId;
+        this.copletInstanceId = original.copletInstanceId;
         this.mode = original.mode;
         this.state = original.state;
         this.action = original.action;
@@ -144,7 +144,7 @@ public class PortletURLProviderImpl
     public void setParameters(Map parameters) {
         this.parameters = parameters;
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */
@@ -165,7 +165,7 @@ public class PortletURLProviderImpl
     /**
      * @see org.apache.cocoon.portal.event.CopletInstanceEvent#getTarget()
      */
-    public CopletInstance getTarget() {        
+    public CopletInstance getTarget() {
         return null;//((PortletEntityImpl)this.portletWindow.getPortletEntity()).getCopletInstanceData();
     }
 
@@ -175,7 +175,7 @@ public class PortletURLProviderImpl
      */
     public String asString() {
         PortletURLConverter urlConverter = new PortletURLConverter();
-        urlConverter.setCopletId(this.copletId);
+        urlConverter.setCopletId(this.copletInstanceId);
         if (this.mode != null) {
             urlConverter.setMode(this.mode);
         }
