@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.pluto.PortletWindow;
 import org.apache.pluto.spi.PortalCallbackService;
 import org.apache.pluto.spi.PortletURLProvider;
@@ -28,21 +29,22 @@ import org.apache.pluto.spi.ResourceURLProvider;
 /**
  * @version $Id$
  */
-public class PortalCallbackServiceImpl implements PortalCallbackService {
+public class PortalCallbackServiceImpl
+    extends AbstractBean
+    implements PortalCallbackService {
 
     /**
      * @see org.apache.pluto.spi.PortalCallbackService#addResponseProperty(javax.servlet.http.HttpServletRequest, org.apache.pluto.PortletWindow, java.lang.String, java.lang.String)
      */
     public void addResponseProperty(HttpServletRequest request, PortletWindow window, String name, String value) {
-        // TODO Auto-generated method stub        
+        // TODO Auto-generated method stub
     }
 
     /**
      * @see org.apache.pluto.spi.PortalCallbackService#getPortletURLProvider(javax.servlet.http.HttpServletRequest, org.apache.pluto.PortletWindow)
      */
     public PortletURLProvider getPortletURLProvider(HttpServletRequest request, PortletWindow window) {
-        // TODO Auto-generated method stub
-        return null;
+        return new PortletURLProviderImpl(this.portalService, window, null);
     }
 
     /**
@@ -66,7 +68,7 @@ public class PortalCallbackServiceImpl implements PortalCallbackService {
      */
     public void setResponseProperty(HttpServletRequest request, PortletWindow window, String name, String value) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
@@ -74,6 +76,6 @@ public class PortalCallbackServiceImpl implements PortalCallbackService {
      */
     public void setTitle(HttpServletRequest request, PortletWindow window, String title) {
         // TODO Auto-generated method stub
-        
+
     }
 }
