@@ -397,7 +397,21 @@
     </developer>
   </developers>
 
-  <issueManagement>
+   <contributors>
+      <contributor>
+         <name>Tay Thien Luh</name>
+         <email>thienluh@gmail.com</email>
+         <url/>
+         <organization>Jayway</organization>
+         <organizationUrl>http://http://malaysia.jayway.net/design</organizationUrl>
+         <roles>
+            <role>webdesigner</role>
+         </roles>
+         <timezone>+8</timezone>
+      </contributor>
+   </contributors>
+   
+    <issueManagement>
     <system>jira</system>
     <url>https://issues.apache.org/jira/browse/COCOON</url>
   </issueManagement>

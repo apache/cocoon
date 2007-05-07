@@ -47,7 +47,8 @@ evolved from the Woody donation made by Outerthought
 The initial code of the official Cocoon authentication block (CAuth)
 evolved from the CoWarp donation made by Carsten Ziegeler (cziegeler@osoco.org).
 
-The website design was contributed by Thien Luh and donated to Cocoon by Jayway (http://malaysia.jayway.net/design). 
+The website design was contributed by Tay Thien Luh and donated to Cocoon by 
+Jayway (http://malaysia.jayway.net/design). 
 The implementation in the site generation code was done by Helma van der Linden. 
 
  Credits of included software
