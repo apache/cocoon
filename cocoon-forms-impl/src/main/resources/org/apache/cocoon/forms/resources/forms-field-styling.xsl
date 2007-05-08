@@ -72,16 +72,17 @@
       |       <xsl:attribute name="onload">cocoon.forms.callOnLoadHandlers(); <xsl:value-of select="@onload"/></xsl:attribute>
       +-->
   <xsl:template match="head" mode="forms-field">
+    <xsl:variable name="doubleQuote">&#34;</xsl:variable>
     <script type="text/javascript">
       var djConfig = {};
       <xsl:if test="$dojo-debug = 'true'">                                           <!-- turn on debugging, if requested -->
         <xsl:text> djConfig.isDebug = true; </xsl:text>
       </xsl:if>
-      djConfig.locale = "<xsl:value-of select="$dojoLocale"/>";
+      <xsl:value-of select="concat('djConfig.locale = ', $doubleQuote, $dojoLocale, $doubleQuote, ';')"/>
       var cocoon;
       if (!cocoon)
         cocoon = {};
-      cocoon.formsResourcesUri = "<xsl:value-of select="$forms-resources"/>";
+      <xsl:value-of select="concat('cocoon.formsResourcesUri = ', $doubleQuote, $forms-resources, $doubleQuote, ';')"/>
     </script>
     <script src="{$dojo-resources}/dojo.js" type="text/javascript"/>           <!-- load dojo -->
     <script type="text/javascript">dojo.require("dojo.widget.*");</script>         <!-- require dojo.widget for auto-loading -->
@@ -91,7 +92,7 @@
     <script src="{$forms-resources}/js/forms-lib.js" type="text/javascript"/>  <!-- load legacy scripts -->
     <!-- load forms library -->
     <script type="text/javascript">
-    dojo.registerModulePath("cocoon.forms", "<xsl:value-of select='concat($forms-resources, "/js")'/>");                        <!-- tell dojo how to find our forms module. NB: (since 2.1.11, replaces cocoon.js) -->
+    <xsl:value-of select="concat('dojo.registerModulePath(', $doubleQuote, 'cocoon.forms', $doubleQuote, ', ', $doubleQuote, $forms-resources, '/js', $doubleQuote, ');')"/>                        <!-- tell dojo how to find our forms module. NB: (since 2.1.11, replaces cocoon.js) -->
     dojo.require("cocoon.forms.common");                                           <!-- tell dojo we require the commons library -->
     dojo.require("cocoon.forms.manifest");                                         <!-- tell dojo we require cocoon.forms.manifest registering namespace handler -->
     dojo.addOnLoad(cocoon.forms.callOnLoadHandlers);                               <!-- ask dojo to run our onLoad handlers -->
@@ -836,6 +837,7 @@
     
     <!-- we need a unique id without . as js variable-->
     <xsl:variable name="jsid" select="generate-id(@id)"/>
+    <xsl:variable name="doubleQuote">&#34;</xsl:variable>
     
     <!-- the map-div and (optional), the geocoding input field -->
     <div>
@@ -847,18 +849,18 @@
     
     <!-- map creation -->
     <script type="text/javascript">
-        var map_<xsl:value-of select="$jsid"/> = new GMap2(document.getElementById("<xsl:value-of select="@id"/>"),[G_HYBRID_MAP]);
-        map_<xsl:value-of select="$jsid"/>.addControl(new GLargeMapControl());
-        map_<xsl:value-of select="$jsid"/>.addControl(new GScaleControl());
-        map_<xsl:value-of select="$jsid"/>.addControl(new GMapTypeControl());
-        map_<xsl:value-of select="$jsid"/>.setCenter(new GLatLng(<xsl:value-of select="fi:value/@lat"/>, <xsl:value-of select="fi:value/@lng"/>), <xsl:value-of select="fi:value/@zoom"/>);
+        <xsl:value-of select="concat('var map_', $jsid, ' = new GMap2(document.getElementById(', $doubleQuote, @id, $doubleQuote, '),[G_HYBRID_MAP]);')"/>
+        <xsl:value-of select="concat('map_', $jsid, '.addControl(new GLargeMapControl());')"/>
+        <xsl:value-of select="concat('map_', $jsid, '.addControl(new GScaleControl());')"/>
+        <xsl:value-of select="concat('map_', $jsid, '.addControl(new GMapTypeControl());')"/>
+        <xsl:value-of select="concat('map_', $jsid, '.setCenter(new GLatLng(', fi:value/@lat, ', ', fi:value/@lng, '), ', fi:value/@zoom, ');')"/>
         
-        GEvent.addListener(map_<xsl:value-of select="$jsid"/>, "dragend", function() {
-          document.getElementById("<xsl:value-of select="@id"/>_lng").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().x);
-          document.getElementById("<xsl:value-of select="@id"/>_lat").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().y);
+        <xsl:value-of select="concat('GEvent.addListener(map_', $jsid, ', ', $doubleQuote, 'dragend', $doubleQuote, ', function()')"/> {
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, @id, '_lng', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().x);')"/>
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, @id, '_lat', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().y);')"/>
         });
-        GEvent.addListener(map_<xsl:value-of select="$jsid"/>, "zoomend", function(oldLevel,newLevel) {
-          document.getElementById("<xsl:value-of select="@id"/>_zoom").value=newLevel;
+        <xsl:value-of select="concat('GEvent.addListener(map_', $jsid, ', ', $doubleQuote, 'zoomend', $doubleQuote, ', function(oldLevel,newLevel)')"/> {
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, @id, '_zoom', $doubleQuote, ').value=newLevel;')"/>
         });
         
         <xsl:apply-templates select="fi:value/fi:markers/fi:marker"/>
@@ -881,13 +883,14 @@
     
     <!-- we need a unique id without . as js variable-->
     <xsl:variable name="jsid" select="generate-id(../../../@id)"/>
+    <xsl:variable name="doubleQuote">&#34;</xsl:variable>
     
-    var marker = new GMarker(new GLatLng(<xsl:value-of select="@lat"/>, <xsl:value-of select="@lng"/>));
+    <xsl:value-of select="concat('var marker = new GMarker(new GLatLng(', @lat, ', ', @lng, '));')"/>
     GEvent.addListener(marker, "click", function() {
-      marker.openInfoWindowHtml("<xsl:value-of select="fi:text"/>");
-      document.getElementById("<xsl:value-of select="../../../@id"/>_current").value=<xsl:value-of select="position()"/>
+      <xsl:value-of select="concat('marker.openInfoWindowHtml(', $doubleQuote, fi:text, $doubleQuote, ');')"/>
+      <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../../@id, '_current', $doubleQuote, ').value=', position())"/>
     });
-    map_<xsl:value-of select="$jsid"/>.addOverlay(marker);
+    <xsl:value-of select="concat('map_', $jsid, '.addOverlay(marker);')"/>
   </xsl:template>
   
   <!-- usermarker: user-click on map places this marker -->
@@ -895,15 +898,16 @@
     
     <!-- we need a unique id without . as js variable-->
     <xsl:variable name="jsid" select="generate-id(../../@id)"/>
+    <xsl:variable name="doubleQuote">&#34;</xsl:variable>
     
-    var usermarker_<xsl:value-of select="$jsid"/> = new GMarker(new GLatLng(<xsl:value-of select="@lat"/>, <xsl:value-of select="@lng"/>));
-    map_<xsl:value-of select="$jsid"/>.addOverlay(usermarker_<xsl:value-of select="$jsid"/>);
-    GEvent.addListener(map_<xsl:value-of select="$jsid"/>, "click", function(overlay,point) {
-      usermarker_<xsl:value-of select="$jsid"/>.setPoint(point);
-      document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lng").value=point.x;
-      document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lat").value=point.y;
+    <xsl:value-of select="concat('var usermarker_', $jsid, ' = new GMarker(new GLatLng(', @lat, ', ', @lng, '));')"/>
+    <xsl:value-of select="concat('map_', $jsid, '.addOverlay(usermarker_', $jsid, ');')"/>
+    <xsl:value-of select="concat('GEvent.addListener(map_', $jsid, ', ', $doubleQuote, 'click', $doubleQuote, ', function(overlay,point)')"/> {
+      <xsl:value-of select="concat('usermarker_', $jsid, '.setPoint(point);')"/>
+      <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_usermarker-lng', $doubleQuote, ').value=point.x;')"/>
+      <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_usermarker-lat', $doubleQuote, ').value=point.y;')"/>
     });
-    usermarker_<xsl:value-of select="$jsid"/>.showAddress = function showAddress(address) {
+    <xsl:value-of select="concat('usermarker_', $jsid, '.showAddress = function showAddress(address)')"/> {
       var geocoder = new GClientGeocoder();
       geocoder.getLatLng(
       address,
@@ -911,12 +915,12 @@
         if (!point) {
           alert(address + " not found");
         } else {
-          usermarker_<xsl:value-of select="$jsid"/>.setPoint(point);
-          map_<xsl:value-of select="$jsid"/>.setCenter(point);
-          document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lng").value=point.x;
-          document.getElementById("<xsl:value-of select="../../@id"/>_usermarker-lat").value=point.y;
-          document.getElementById("<xsl:value-of select="../../@id"/>_lng").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().x);
-          document.getElementById("<xsl:value-of select="../../@id"/>_lat").setAttribute("value",map_<xsl:value-of select="$jsid"/>.getCenter().y);
+          <xsl:value-of select="concat('usermarker_', $jsid, '.setPoint(point);')"/>
+          <xsl:value-of select="concat('map_', $jsid, '.setCenter(point);')"/>
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_usermarker-lng', $doubleQuote, ').value=point.x;')"/>
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_usermarker-lat, $doubleQuote, ').value=point.y;')"/>
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_lng', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().x);')"/>
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_lat', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().y);')"/>
         }
       });
     }

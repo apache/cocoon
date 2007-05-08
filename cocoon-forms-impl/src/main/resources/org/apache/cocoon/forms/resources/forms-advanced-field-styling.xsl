@@ -80,9 +80,14 @@
   <xsl:template match="fi:multivaluefield[fi:styling/@list-type='double-listbox']">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
-    <xsl:variable name="browser-variable"><xsl:value-of select="translate($id, '.', '_')"/>_jsWidget</xsl:variable>
+    <xsl:variable name="browser-variable">
+      <xsl:value-of select="concat(translate($id, '.', '_'), '_jsWidget')"/>
+    </xsl:variable>
+    <xsl:variable name="singleQuote">&#39;</xsl:variable>
 
-    <script type="text/javascript">var <xsl:value-of select="$browser-variable"/>;</script>
+    <script type="text/javascript">
+      <xsl:value-of select="concat('var ', $browser-variable, ';')"/>
+    </script>
     <div id="{@id}" class="forms-doubleList forms doubleList" title="{fi:hint}">
       <table>
         <xsl:if test="fi:styling/fi:available-label|fi:styling/fi:selected-label">
@@ -166,7 +171,9 @@
           </td>
         </tr>
       </table>
-      <script type="text/javascript"><xsl:value-of select="$browser-variable"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>', <xsl:value-of select="@listening = 'true' and not(fi:styling/@submit-on-change = 'false')"/>);</script>
+      <script type="text/javascript">
+        <xsl:value-of select="concat($browser-variable, ' = forms_createOptionTransfer(', $singleQuote, @id, $singleQuote, ',', @listening = 'true' and not(fi:styling/@submit-on-change = 'false'), ');')" />
+      </script>
     </div>
   </xsl:template>
 
