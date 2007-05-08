@@ -918,7 +918,7 @@
           <xsl:value-of select="concat('usermarker_', $jsid, '.setPoint(point);')"/>
           <xsl:value-of select="concat('map_', $jsid, '.setCenter(point);')"/>
           <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_usermarker-lng', $doubleQuote, ').value=point.x;')"/>
-          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_usermarker-lat, $doubleQuote, ').value=point.y;')"/>
+          <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_usermarker-lat', $doubleQuote, ').value=point.y;')"/>
           <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_lng', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().x);')"/>
           <xsl:value-of select="concat('document.getElementById(', $doubleQuote, ../../@id, '_lat', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().y);')"/>
         }
