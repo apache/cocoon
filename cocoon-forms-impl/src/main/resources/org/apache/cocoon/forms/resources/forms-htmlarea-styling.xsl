@@ -54,7 +54,7 @@
         <!-- use an 'ad hoc'  configuration -->
         <script  type="text/javascript">
           var handler = new Object();    
-          <xsl:value-of select="concat('handler.fieldId = ', $doubleQuote, @id), $doubleQuote, ';'"/>
+          <xsl:value-of select="concat('handler.fieldId = ', $doubleQuote, @id, $doubleQuote, ';')"/>
           handler.forms_onload = function() {
             <xsl:value-of select="concat('var id = ', $doubleQuote, @id, $doubleQuote, ';')"/>
             var textarea = document.getElementById(id);
