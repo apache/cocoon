@@ -186,18 +186,20 @@
   <xsl:template name="formsOnShow">
     <xsl:param name="id"/>
     <xsl:param name="active"/>
+    <xsl:variable name="doubleQuote">&#34;</xsl:variable>
+    
     <script type="text/javascript">
       if (window.onTabShownHandlers == undefined)
         window.onTabShownHandlers = new Object();
       var currentHandlers = new Object();
       var initialHandler = null;
-      window.onTabShownHandlers["<xsl:value-of select="$id"/>"] = currentHandlers;
+      <xsl:value-of select="concat('window.onTabShownHandlers[', $doubleQuote, $id, $doubleQuote, '] = currentHandlers;')"/>
       <xsl:for-each select="fi:items/fi:*">
         <xsl:variable name="pos" select="position() - 1"/>
           <xsl:if test="@formsOnShow">
-            currentHandlers["<xsl:value-of select="concat($id, '_items_', $pos)"/>"] = "<xsl:value-of select="@formsOnShow"/>";
+            <xsl:value-of select="concat('currentHandlers[', $doubleQuote, $id, '_items_', $pos, $doubleQuote, '] = ', $doubleQuote, @formsOnShow, $doubleQuote, ';')"/>
             <xsl:if test="$active = $pos">
-               initialHandler = "<xsl:value-of select="@formsOnShow"/>";
+               <xsl:value-of select="concat('initialHandler = ', $doubleQuote, @formsOnShow, $doubleQuote, ';')"/>
             </xsl:if>
           </xsl:if>
       </xsl:for-each>
