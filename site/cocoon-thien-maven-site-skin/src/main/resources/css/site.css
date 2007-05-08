@@ -39,7 +39,7 @@ ol li {
   padding-left: 5px;
 }
 tt {
-	font-size: 1.3em;
+	font-size: 130%;
 }
 pre {	border:1px solid #aaaaaa;	background: #efefef;	font-size: 110%;	padding:10px;}table {	margin: 0 0 10px 0;	width: 99.5%;	border: 1px solid #cce7f0;}table th, table td {	padding: 4px;}thead {	background: #0086b3;	color: #fff;}tbody {	background: #e5f3f7;}table .alt {	background: #cce7f0;}/* Header part
 --------------------------------------*/
