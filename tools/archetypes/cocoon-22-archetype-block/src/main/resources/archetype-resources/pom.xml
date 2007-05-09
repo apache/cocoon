@@ -38,6 +38,15 @@
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-maven-plugin</artifactId>
         <version>1.0.0-M1-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <id>rcl</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>rcl</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
