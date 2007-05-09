@@ -45,27 +45,10 @@ public class CocoonExportStrategy extends DefaultExportStrategy {
         //   documentTypeId ==  2 --> SimpleDocument
         //   documentTypeId ==  5 --> CocoonDocument
         //   documentTypeId == 13 --> NewsItem
-        if(documentTypeId == 2 || documentTypeId == 5 || documentTypeId == 13 || documentTypeId == 14) {
-            si.relativeName = PATH_XDOCS + DaisyDocumentProxy.createUniqeFileName(doc) + ".xml";
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            
-            Map params = new HashMap();
-            params.put("editUrl", editUrl + doc.getDocId() + "?branch=" + doc.getBranchId() + "&language=" + doc.getLanguageId());
-            if(author != null) {
-                params.put("author", author);
-                params.put("documentName", doc.getDocument().getName());
-            }
-          
-            XMLUtils.transform(
-                    new ByteArrayInputStream(doc.asByteArray()), 
-                    baos,
-                    new ResourceXsltTransformerSource("org/apache/cocoon/tools/maven/daisy/export/strategy/cocoon-doc-2-xdoc.xslt"),
-                    params);
-            si.data = baos.toByteArray();  
-            
-            si.containsLinksToBeRewritten = true;
-        }  
-        
+        //   documentTypeId == 12 --> SitemapComponent
+        if(documentTypeId == 2 || documentTypeId == 5 || documentTypeId == 12 || documentTypeId == 13 || documentTypeId == 14) {
+            transformDocument(doc, editUrl, author, si, "org/apache/cocoon/tools/maven/daisy/export/strategy/cocoon-doc-2-xdoc.xslt");
+        } 
         //   documentTypeId ==  3 --> Image
         else if(documentTypeId == 3) {
             si.relativeName = PATH_RESOURCES_IMAGES + DaisyDocumentProxy.createUniqeFileName(doc) + ".img";
@@ -83,6 +66,27 @@ public class CocoonExportStrategy extends DefaultExportStrategy {
             return null;
         }
         return si;
+    }
+
+    private void transformDocument(DaisyDocument doc, String editUrl, String author, StreamingInformation si, String stylesheet) {
+        si.relativeName = PATH_XDOCS + DaisyDocumentProxy.createUniqeFileName(doc) + ".xml";
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        Map params = new HashMap();
+        params.put("editUrl", editUrl + doc.getDocId() + "?branch=" + doc.getBranchId() + "&language=" + doc.getLanguageId());
+        if(author != null) {
+            params.put("author", author);
+            params.put("documentName", doc.getDocument().getName());
+        }
+        
+        XMLUtils.transform(
+                new ByteArrayInputStream(doc.asByteArray()), 
+                baos,
+                new ResourceXsltTransformerSource(stylesheet),
+                params);
+        si.data = baos.toByteArray();  
+        
+        si.containsLinksToBeRewritten = true;
     }
 
 }

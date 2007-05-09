@@ -77,6 +77,48 @@
       </xsl:choose>
    </xsl:template>
 
+   <xsl:template match="d:document[@typeId='12']">
+     <div id="contentBody">
+       <div id="bodyText">
+         <h1 class="docTitle">
+           <xsl:value-of select="@name"/>
+         </h1>
+         <h1>Summary</h1>
+         <xsl:if test="not(d:parts/d:part[@typeId='17']/html/body/*)">
+           <p>No summary available. The summary needs to be defined using the 
+              <tt>@cocoon.sitemap.component.documentation</tt>
+              annotation in the Java source file for this component:
+           </p>
+         </xsl:if>
+         <xsl:apply-templates select="d:parts/d:part[@typeId='17']/html/body/*"/>          
+         <h1>Basic information</h1>
+         <table>
+           <tr>
+             <th>Component type</th>
+             <td><xsl:value-of select="d:fields/d:field[@name='JavaClassName']/d:string/@valueFormatted"/></td>
+           </tr>
+           <tr>
+             <th>Cocoon block</th>
+             <td><xsl:value-of select="d:fields/d:field[@name='CocoonComponentReference']/d:string/@valueFormatted"/></td>
+           </tr>
+           <tr>
+             <th>Java class</th>
+             <td><xsl:value-of select="d:fields/d:field[@name='CocoonBlock']/d:string/@valueFormatted"/></td>
+           </tr>
+           <tr>
+             <th>Cachable</th>
+             <td><xsl:value-of select="d:fields/d:field[@name='SitemapComponentCacheabilityInfo']/d:string/@valueFormatted"/></td>
+           </tr>
+         </table>
+         <h1>Documentation</h1>
+         <xsl:if test="not(d:parts/d:part[@typeId='18']/html/body/*)">
+           <p>No documentation available yet.</p>
+         </xsl:if>
+         <xsl:apply-templates select="d:parts/d:part[@typeId='18']/html/body/*"/>                   
+       </div>
+       <xsl:call-template name="addEditUrl"/>       
+     </div>     
+   </xsl:template>
 
    <!--+
       | WebpageWithSidebar (typeId=14)
@@ -310,7 +352,47 @@
          </xsl:for-each>
       </div>
    </xsl:template>
-
+   
+  <xsl:template match="d:searchResult[@styleHint='sitemap-components']">
+    <xsl:call-template name="createComponentTable">
+      <xsl:with-param name="type" select="'Generator'"/>
+    </xsl:call-template>
+    <xsl:call-template name="createComponentTable">
+      <xsl:with-param name="type" select="'Transformer'"/>
+    </xsl:call-template>    
+    <xsl:call-template name="createComponentTable">
+      <xsl:with-param name="type" select="'Serializer'"/>
+    </xsl:call-template>     
+    <xsl:call-template name="createComponentTable">
+      <xsl:with-param name="type" select="'Matcher'"/>
+    </xsl:call-template>    
+    <xsl:call-template name="createComponentTable">
+      <xsl:with-param name="type" select="'Selector'"/>
+    </xsl:call-template>   
+    <xsl:call-template name="createComponentTable">
+      <xsl:with-param name="type" select="'Action'"/>
+    </xsl:call-template>           
+  </xsl:template>
+   
+  <xsl:template name="createComponentTable">
+    <xsl:param name="type"/>
+    <h1><xsl:value-of select="$type"/>s</h1>
+    <table>
+      <tr>
+        <th>Block</th>
+        <th>Name</th>
+        <th></th>
+      </tr>  
+      <xsl:for-each select="d:rows/d:row[d:value[1]=$type]">
+        <tr>
+          <td><xsl:value-of select="./d:value[2]"/></td>
+          <td><xsl:value-of select="./d:value[3]"/></td>
+          <td><a href="daisy:{@documentId}">[details]</a></td>
+        </tr> 
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+   
    <xsl:template match="d:searchResult">
       <div class="warning">
          <strong style="color:red;font-weight:bold">Warning: There is no styling for this query
@@ -319,15 +401,15 @@
    </xsl:template>
 
    <!--+
-      | default templates
-      +-->
-   <xsl:template match="*|@*|node()" priority="-2">
-      <xsl:copy>
+       | default templates
+       +-->
+    <xsl:template match="*|@*|node()" priority="-2">
+       <xsl:copy>
          <xsl:apply-templates select="@*|node()"/>
-      </xsl:copy>
-   </xsl:template>
-   <xsl:template match="text()" priority="-1">
+       </xsl:copy>
+    </xsl:template>
+    <xsl:template match="text()" priority="-1">
       <xsl:value-of select="."/>
-   </xsl:template>
+    </xsl:template>
 
 </xsl:stylesheet>
