@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,8 +37,8 @@ import org.apache.excalibur.store.Store;
  */
 public class CacheImpl implements Cache {
 
-    private Log logger = LogFactory.getLog(getClass());    
-    
+    private Log logger = LogFactory.getLog(getClass());
+
     /** The store containing the cached responses */
     protected Store store;
 
@@ -51,13 +51,13 @@ public class CacheImpl implements Cache {
     public void store(Serializable     key,
                       CachedResponse   response)
     throws ProcessingException {
-        if ( this.getLogger().isInfoEnabled()) {
-            this.getLogger().info("Caching new response for " + key);
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Caching new response for " + key);
         }
         try {
             this.store.store(key, response);
-        } catch (IOException ioe) {
-            throw new ProcessingException("Unable to cache response.", ioe);
+        } catch (IOException e) {
+            throw new ProcessingException("Unable to cache response.", e);
         }
     }
 
@@ -68,10 +68,9 @@ public class CacheImpl implements Cache {
      *                    request
      */
     public CachedResponse get(Serializable key) {
-        final CachedResponse r = (CachedResponse)this.store.get(key);
-        if ( this.getLogger().isInfoEnabled()) {
-            this.getLogger().info("Cached response for " + key + " : " + 
-                                   (r == null ? "not found" : "found"));
+        final CachedResponse r = (CachedResponse) this.store.get(key);
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Cache " + (r == null ? "MISS" : "HIT") + " for " + key);
         }
         return r;
     }
@@ -83,18 +82,18 @@ public class CacheImpl implements Cache {
      *                    request
      */
     public void remove(Serializable key) {
-        if ( this.getLogger().isInfoEnabled()) {
-            this.getLogger().info("Removing cached response for " + key); 
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Removing cached response for " + key);
         }
         this.store.remove(key);
     }
 
     /**
-     * clear cache of all cached responses 
+     * clear cache of all cached responses
      */
     public void clear() {
-        if ( this.getLogger().isInfoEnabled()) {
-            this.getLogger().info("Clearing cache"); 
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Clearing cache");
         }
         // FIXME this clears the whole store!
         this.store.clear();
@@ -106,16 +105,15 @@ public class CacheImpl implements Cache {
 	public boolean containsKey(Serializable key) {
 		return this.store.containsKey(key);
 	}
-    
+
     /**
      * Set the Store implementation
      */
     public void setStore(Store store) {
         this.store = store;
     }
-    
+
     protected Log getLogger() {
         return this.logger;
-    }    
-
+    }
 }
