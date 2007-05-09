@@ -291,7 +291,9 @@ public class TraxProcessor extends AbstractLogEnabled
             return handlerAndValidity;
         } catch (Exception e) {
             Throwable realEx = errorListener.getThrowable();
-            if (realEx == null) realEx = e;
+            if (realEx == null) {
+                realEx = e;
+            }
 
             if (realEx instanceof RuntimeException) {
                 throw (RuntimeException)realEx;
@@ -425,15 +427,6 @@ public class TraxProcessor extends AbstractLogEnabled
             getLogger().debug("getTemplates: stylesheet " + id);
         }
 
-        SourceValidity newValidity = stylesheet.getValidity();
-
-        // Only stylesheets with validity are stored
-        if (newValidity == null) {
-            // Remove an old template
-            m_store.remove(key);
-            return null;
-        }
-
         // Stored is an array of the templates and the caching time and list of
         // includes
         Object[] templateAndValidityAndIncludes = (Object[]) m_store.get(key);
@@ -442,17 +435,18 @@ public class TraxProcessor extends AbstractLogEnabled
             return null;
         }
 
-        // Check template modification time
+        // Check template validity
         SourceValidity storedValidity = (SourceValidity) templateAndValidityAndIncludes[1];
         int valid = storedValidity.isValid();
-        boolean isValid;
-        if (valid == 0) {
-            valid = storedValidity.isValid(newValidity);
-            isValid = (valid == 1);
-        } else {
-            isValid = (valid == 1);
+        if (valid == SourceValidity.UNKNOWN) {
+            SourceValidity newValidity = stylesheet.getValidity();
+            if (newValidity != null) {
+                valid = storedValidity.isValid(newValidity);
+            }
         }
-        if (!isValid) {
+
+        // Only valid stylesheets are stored
+        if (valid != SourceValidity.VALID) {
             m_store.remove(key);
             return null;
         }
@@ -472,23 +466,19 @@ public class TraxProcessor extends AbstractLogEnabled
                     aggregated.add(storedValidity);
 
                     valid = storedValidity.isValid();
-                    isValid = false;
-                    if (valid == 0) {
+                    if (valid == SourceValidity.UNKNOWN) {
                         Source includedSource = null;
                         try {
                             includedSource = m_resolver.resolveURI((String) pair[0]);
                             SourceValidity included = includedSource.getValidity();
                             if (included != null) {
                                 valid = storedValidity.isValid(included);
-                                isValid = (valid == 1);
                             }
                         } finally {
                             m_resolver.release(includedSource);
                         }
-                    } else {
-                        isValid = (valid == 1);
                     }
-                    if (!isValid) {
+                    if (valid != SourceValidity.VALID) {
                         m_store.remove(key);
                         return null;
                     }
