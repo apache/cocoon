@@ -179,7 +179,7 @@ public class SourceTreeModel implements TreeModel {
     }
 
     public void removeTreeModelListener(TreeModelListener l) {
-        helper.addTreeModelListener(l);
+        helper.removeTreeModelListener(l);
     }
 
     public Object getNode(TreePath path) {
