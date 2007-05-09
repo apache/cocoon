@@ -1,18 +1,18 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed  under the  License is distributed on an "AS IS" BASIS,
  * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
  * implied.
- * 
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -67,12 +67,14 @@ import org.xml.sax.XMLFilter;
 /**
  * Adaptation of Excalibur's XSLTProcessor implementation to allow for better
  * error reporting.
- * 
+ *
  * @version $Id$
  * @since 2.1.8
  */
-public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, Serviceable, Initializable, Disposable, Parameterizable,
-        Recyclable, URIResolver {
+public class TraxProcessor extends AbstractLogEnabled
+                           implements XSLTProcessor, Serviceable, Initializable,
+                                      Disposable, Parameterizable, Recyclable, URIResolver {
+
     /** The store service instance */
     protected Store m_store;
 
@@ -107,7 +109,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
 
     /**
      * Compose. Try to get the store
-     * 
+     *
      * @avalon.service interface="XMLizer"
      * @avalon.service interface="SourceResolver"
      * @avalon.service interface="Store/TransientStore" optional="true"
@@ -170,26 +172,28 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
     }
 
     /**
-     * @see org.apache.excalibur.xml.xslt.XSLTProcessor#getTransformerHandler(org.apache.excalibur.source.Source)
+     * @see org.apache.excalibur.xml.xslt.XSLTProcessor#getTransformerHandler(Source)
      */
     public TransformerHandler getTransformerHandler(final Source stylesheet) throws XSLTProcessorException {
         return getTransformerHandler(stylesheet, null);
     }
 
     /**
-     * @see org.apache.excalibur.xml.xslt.XSLTProcessor#getTransformerHandler(org.apache.excalibur.source.Source,
-     *      org.xml.sax.XMLFilter)
+     * @see org.apache.excalibur.xml.xslt.XSLTProcessor#getTransformerHandler(Source, XMLFilter)
      */
-    public TransformerHandler getTransformerHandler(final Source stylesheet, final XMLFilter filter) throws XSLTProcessorException {
+    public TransformerHandler getTransformerHandler(final Source stylesheet, final XMLFilter filter)
+    throws XSLTProcessorException {
         final XSLTProcessor.TransformerHandlerAndValidity validity = getTransformerHandlerAndValidity(stylesheet, filter);
         return validity.getTransfomerHandler();
     }
 
-    public TransformerHandlerAndValidity getTransformerHandlerAndValidity(final Source stylesheet) throws XSLTProcessorException {
+    public TransformerHandlerAndValidity getTransformerHandlerAndValidity(final Source stylesheet)
+    throws XSLTProcessorException {
         return getTransformerHandlerAndValidity(stylesheet, null);
     }
 
-    public TransformerHandlerAndValidity getTransformerHandlerAndValidity(Source stylesheet, XMLFilter filter) throws XSLTProcessorException {
+    public TransformerHandlerAndValidity getTransformerHandlerAndValidity(Source stylesheet, XMLFilter filter)
+    throws XSLTProcessorException {
 
         final String id = stylesheet.getURI();
         TransformerHandlerAndValidity handlerAndValidity;
@@ -205,7 +209,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         } catch(Exception e) {
             throw new XSLTProcessorException("Error retrieving template", e);
         }
-        
+
         TraxErrorListener errorListener = new TraxErrorListener(getLogger(), stylesheet.getURI());
         try{
             if (getLogger().isDebugEnabled()) {
@@ -264,7 +268,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
                 handler.getTransformer().setURIResolver(this);
 
                 // Create aggregated validity
-                AggregatedValidity aggregated = null;
+                AggregatedValidity aggregated;
                 if (validity != null && m_checkIncludes) {
                     List includes = (List) m_includesMap.get(id);
                     if (includes != null) {
@@ -288,15 +292,15 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         } catch (Exception e) {
             Throwable realEx = errorListener.getThrowable();
             if (realEx == null) realEx = e;
-            
+
             if (realEx instanceof RuntimeException) {
                 throw (RuntimeException)realEx;
             }
-            
+
             if (realEx instanceof XSLTProcessorException) {
                 throw (XSLTProcessorException)realEx;
             }
-            
+
             throw new XSLTProcessorException("Exception when creating Transformer from " + stylesheet.getURI(), realEx);
         }
     }
@@ -310,7 +314,8 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         }
     }
 
-    public void transform(final Source source, final Source stylesheet, final Parameters params, final Result result) throws XSLTProcessorException {
+    public void transform(final Source source, final Source stylesheet, final Parameters params, final Result result)
+    throws XSLTProcessorException {
         try {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug(
@@ -405,7 +410,8 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         return _factory;
     }
 
-    private TransformerHandlerAndValidity getTemplates(Source stylesheet, String id) throws IOException, TransformerException {
+    private TransformerHandlerAndValidity getTemplates(Source stylesheet, String id)
+    throws IOException, TransformerException {
         if (!m_useStore) {
             return null;
         }
@@ -453,7 +459,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
 
         // Check includes
         if (m_checkIncludes) {
-            AggregatedValidity aggregated = null;
+            AggregatedValidity aggregated;
             List includes = (List) templateAndValidityAndIncludes[2];
             if (includes != null) {
                 aggregated = new AggregatedValidity();
@@ -498,8 +504,9 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
     }
 
     private void putTemplates(Templates templates, Source stylesheet, String id) throws IOException {
-        if (!m_useStore)
+        if (!m_useStore) {
             return;
+        }
 
         // we must augment the template ID with the factory classname since one
         // transformer implementation cannot handle the instances of a
@@ -523,16 +530,16 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
     /**
      * Called by the processor when it encounters an xsl:include, xsl:import, or
      * document() function.
-     * 
+     *
      * @param href
      *            An href attribute, which may be relative or absolute.
      * @param base
      *            The base URI in effect when the href attribute was
      *            encountered.
-     * 
+     *
      * @return A Source object, or null if the href cannot be resolved, and the
      *         processor should try to resolve the URI itself.
-     * 
+     *
      * @throws TransformerException
      *             if an error occurs when trying to resolve the URI.
      */
@@ -617,7 +624,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
      * Return a new <code>InputSource</code> object that uses the
      * <code>InputStream</code> and the system ID of the <code>Source</code>
      * object.
-     * 
+     *
      * @throws IOException
      *             if I/O error occured.
      */
