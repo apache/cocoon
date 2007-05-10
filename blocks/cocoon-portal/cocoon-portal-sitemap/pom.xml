@@ -32,45 +32,21 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Portal Block Sitemap</name>
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/blocks/portal/${docs.version}/</url>
-    </site>
-  </distributionManagement>
-  <properties>
-    <docs.name>Cocoon Portal</docs.name>    
-    <docs.version>1.0</docs.version>
-  </properties>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>1234</navDocId>
-          <collection>cdocs-portal</collection>          
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-portal-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
 </project>
