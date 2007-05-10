@@ -40,24 +40,7 @@
   <description>
     JDBC access of a Hsql database.
   </description>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>0</navDocId>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>  
-  
+
   <properties>
     <docs.name>${project.name}</docs.name>    
     <docs.version>${docs.m.hsqldb-client.version}</docs.version>
@@ -100,5 +83,22 @@
       <artifactId>hsqldb</artifactId>
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>        
+              <createSiteXmlOnly>true</createSiteXmlOnly>
+            </configuration>
+          </plugin>  
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>      
   
 </project>
