@@ -46,8 +46,6 @@
     <!-- sub projects -->
     <module>core/cocoon-configuration/cocoon-configuration-api</module>
     <module>core/cocoon-configuration/cocoon-spring-configurator</module>
-    <!-- documentation -->
-    <module>site/cocoon-thien-maven-site-skin</module>
   </modules>
 
   <repositories>
@@ -2302,6 +2300,10 @@
     </profile>
     <profile>
       <id>daisy</id>
+      <modules>
+        <module>tools/cocoon-daisy-export-strategy</module>        
+        <module>site/cocoon-thien-maven-site-skin</module>      
+      </modules>
       <repositories>  
         <repository>
           <id>cocoon.dev</id>

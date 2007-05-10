@@ -40,7 +40,6 @@
     <module>cocoon-maven-reports</module>
     <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
     <module>cocoon-rcl/cocoon-rcl-spring-reloader</module>        
-    <module>cocoon-daisy-export-strategy</module>
   </modules>
 
   <scm>
