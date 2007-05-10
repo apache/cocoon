@@ -50,13 +50,13 @@
       <!-- Commented, until commons-jci is available at Maven central -->
       <!--plugin>
         <groupId>org.apache.cocoon</groupId>
-        <artifactId>cocoon-rcl-plugin</artifactId>
+        <artifactId>cocoon-maven-plugin</artifactId>
         <version>1.0.0-M1-SNAPSHOT</version>
         <executions>
           <execution>
             <phase>compile</phase>
             <goals>
-              <goal>webapp</goal>
+              <goal>rcl</goal>
             </goals>
           </execution>
         </executions>        

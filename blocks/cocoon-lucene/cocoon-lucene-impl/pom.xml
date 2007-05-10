@@ -33,41 +33,47 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Lucene Block Implementation</name>
+  
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/blocks/lucene/${docs.version}/</url>
     </site>
   </distributionManagement>
+  
   <properties>
     <docs.name>Cocoon Lucene</docs.name>    
     <docs.version>1.0</docs.version>
   </properties>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>1232</navDocId>
-          <collection>cdocs-lucene</collection>          
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>
   
-  <description/>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>lucene</groupId>
       <artifactId>lucene</artifactId>
-      
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>        
+              <navDocId>1232</navDocId>
+              <collection>cdocs-lucene</collection>          
+              <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>  
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>  
+  
 </project>

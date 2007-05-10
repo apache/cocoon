@@ -46,22 +46,23 @@
     </site>
   </distributionManagement>
   
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>
-          <navDocId>1328</navDocId>
-          <collection>cdocs-site-22</collection>
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
-        </configuration>
-      </plugin>   
-    </plugins>
-  </build>
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1328</navDocId>
+              <collection>cdocs-site-22</collection>
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
+            </configuration>
+          </plugin>  
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>  
   
 </project>

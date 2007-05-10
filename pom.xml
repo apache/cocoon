@@ -23,18 +23,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>  
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
     <version>4</version>
   </parent>
-  <packaging>pom</packaging>
+
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
   <version>4-SNAPSHOT</version>
   <name>Apache Cocoon</name>
-  <url>http://cocoon.apache.org</url>
   <inceptionYear>1999</inceptionYear>
+  <url>http://cocoon.apache.org</url>
 
   <modules>
     <module>blocks</module>
@@ -62,41 +63,8 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-    </repository>
-    <repository>
-      <id>reinhard-m2-snapshot-repository</id>
-      <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
+    </repository>   
   </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>reinhard-m2-snapshot-repository</id>
-      <url>http://www.apache.org/~reinhard/m2-snapshot-repository</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-    <!-- Activate this element if you want to use snapshot versions of plugins
-    <pluginRepository>
-      <id>apache.snapshot</id>
-      <url>http://svn.apache.org/maven-snapshot-repository</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>snapshots</id>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </pluginRepository>
-    -->
-  </pluginRepositories>
 
   <organization>
     <name>The Apache Software Foundation</name>
@@ -104,19 +72,19 @@
   </organization>
 
   <developers>
-     <developer>
-        <id>ugo</id>
-        <name>Ugo Cei</name>
-        <email>ugo@apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+1</timezone>
-     </developer>
-     <developer>
+    <developer>
+      <id>ugo</id>
+      <name>Ugo Cei</name>
+      <email>ugo@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>crossley</id>
       <name>David Crossley</name>
       <email>crossley@apache.org</email>
@@ -128,19 +96,19 @@
       </roles>
       <timezone>+10</timezone>
     </developer>
-     <developer>
-        <id>tcurdt</id>
-        <name>Torsten Curdt</name>
-        <email>tcurdt at apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+1</timezone>
-     </developer>
-     <developer>
+    <developer>
+      <id>tcurdt</id>
+      <name>Torsten Curdt</name>
+      <email>tcurdt at apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>bdelacretaz</id>
       <name>Bertrand Delacretaz</name>
       <email>bdelacretaz@apache.org</email>
@@ -188,19 +156,19 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-     <developer>
-        <id>vgritsenko</id>
-        <name>Vadim Gritsenko</name>
-        <email>vgritsenko@apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>-5</timezone>
-     </developer>
-     <developer>
+    <developer>
+      <id>vgritsenko</id>
+      <name>Vadim Gritsenko</name>
+      <email>vgritsenko@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+    <developer>
       <id>joerg</id>
       <name>Joerg Heinicke</name>
       <email>joerg@apache.org</email>
@@ -224,19 +192,19 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-     <developer>
-        <id>ahochsteger</id>
-        <name>Andreas Hochsteger</name>
-        <email>ahochsteger@apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+1</timezone>
-     </developer>
-     <developer>
+    <developer>
+      <id>ahochsteger</id>
+      <name>Andreas Hochsteger</name>
+      <email>ahochsteger@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>jjohnston</id>
       <name>Jason Johnston</name>
       <email>jjohnston@apache.org</email>
@@ -248,42 +216,42 @@
       </roles>
       <timezone>-7</timezone>
     </developer>
-     <developer>
-        <id>felixk</id>
-        <name>Felix Knecht</name>
-        <email>felixk@apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+1</timezone>
-     </developer>
-     <developer>
-        <id>gkossakowski</id>
-        <name>Grzegorz Kossakowski</name>
-        <email>gkossakowski@apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+1</timezone>
-     </developer>
-     <developer>
-        <id>hepabolu</id>
-        <name>Helma van der Linden</name>
-        <email>hepabolu@apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+1</timezone>
-     </developer>
+    <developer>
+      <id>felixk</id>
+      <name>Felix Knecht</name>
+      <email>felixk@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>gkossakowski</id>
+      <name>Grzegorz Kossakowski</name>
+      <email>gkossakowski@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>hepabolu</id>
+      <name>Helma van der Linden</name>
+      <email>hepabolu@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
     <developer>
       <id>anathaniel</id>
       <name>Alfred Nathaniel</name>
@@ -345,31 +313,31 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-     <developer>
-        <id>asavory</id>
-        <name>Andrew Savory</name>
-        <email>asavory@apache.org</email>
-        <organization>ASF</organization>
-        <organizationUrl>http://www.apache.org</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+0</timezone>
-     </developer>     
-     <developer>
-        <id>ltrieloff</id>
-        <name>Lars Trieloff</name>
-        <email>lars@trieloff.net</email>
-        <organization>Mindquarry GmbH</organization>
-        <organizationUrl>http://www.mindquarry.com</organizationUrl>
-        <roles>
-           <role>PMC member</role>
-           <role>Committer</role>
-        </roles>
-        <timezone>+1</timezone>
-     </developer>
-     <developer>
+    <developer>
+      <id>asavory</id>
+      <name>Andrew Savory</name>
+      <email>asavory@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+0</timezone>
+    </developer>
+    <developer>
+      <id>ltrieloff</id>
+      <name>Lars Trieloff</name>
+      <email>lars@trieloff.net</email>
+      <organization>Mindquarry GmbH</organization>
+      <organizationUrl>http://www.mindquarry.com</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>sylvain</id>
       <name>Sylvain Wallez</name>
       <email>sylvain@apache.org</email>
@@ -382,8 +350,8 @@
         <role>Committer</role>
       </roles>
       <timezone>+1</timezone>
-     </developer>
-     <developer>
+    </developer>
+    <developer>
       <id>cziegeler</id>
       <name>Carsten Ziegeler</name>
       <email>cziegeler@apache.org</email>
@@ -1382,11 +1350,6 @@
         <version>1.5-dev</version>
       </dependency>
       <dependency>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <version>1.0.0-20070418.125604-1</version>
-      </dependency>
-      <dependency>
         <groupId>daisy</groupId>
         <artifactId>daisy-repository-api</artifactId>
         <version>1.5-dev</version>
@@ -1416,6 +1379,11 @@
         <artifactId>daisy-util</artifactId>
         <version>1.5-dev</version>
       </dependency>
+      <dependency>
+        <groupId>org.daisycms</groupId>
+        <artifactId>daisy-maven-plugin</artifactId>
+       <version>1.0.0-alpha-1</version>
+      </dependency>  
       <dependency>
         <groupId>ojb</groupId>
         <artifactId>db-ojb</artifactId>
@@ -2071,171 +2039,6 @@
           <artifactId>maven-war-plugin</artifactId>
           <version>2.0.2</version>
         </plugin>
-        <plugin>
-          <groupId>org.daisycms</groupId>
-          <artifactId>daisy-maven-plugin</artifactId>
-          <version>1.0.0-20070418.125604-1</version>
-          <configuration>
-            <repoUrl>${docs.repoUrl}</repoUrl>
-            <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
-            <daisyServerId>cocoon-daisy</daisyServerId>
-            <cleanSiteXml>true</cleanSiteXml>
-            <author>The Cocoon Community</author>
-            <navDocId>0</navDocId>
-            <collections>
-              <!-- sites -->
-              <collection>
-                <name>cdocs-site-main</name>
-                <path>${docs.m.site-main.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-site-blocks</name>
-                <path>blocks/</path>
-              </collection>
-              <collection>
-                <name>cdocs-site-core-modules</name>
-                <path>${docs.m.site-core-modules.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-site-subprojects</name>
-                <path>${docs.m.subprojects.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-site-maven-plugins</name>
-                <path>${docs.m.site-maven-plugins.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-site-servlet-service</name>
-                <path>${docs.m.site-servlet-service.relPath}</path>
-              </collection>              
-              <collection>
-                <name>cdocs-site-configuration</name>
-                <path>${docs.m.site-configuration.relPath}</path>
-              </collection>              
-              <collection>
-                <name>cdocs-site-22</name>
-                <path>${docs.m.site-22.relPath}</path>
-              </collection>              
-              <!-- core -->
-              <collection>
-                <name>cdocs-core</name>
-                <path>${docs.m.core.relPath}</path>
-              </collection>
-              <!-- subprojects -->
-              <collection>
-                <name>cdocs-configuration-api</name>
-                <path>${docs.m.configuration-api.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-spring-configurator</name>
-                <path>${docs.m.spring-configurator.relPath}</path>
-              </collection>
-              <!-- blocks -->
-              <collection>
-                <name>cdocs-ajax</name>
-                <path>${docs.m.ajax.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-auth</name>
-                <path>${docs.m.auth.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-batik</name>
-                <path>${docs.m.batik.relPath}</path>
-              </collection>              
-              <collection>
-                <name>cdocs-captcha</name>
-                <path>${docs.m.captcha.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-flowscript</name>
-                <path>${docs.m.flowscript.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-fop</name>
-                <path>${docs.m.fop.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-forms</name>
-                <path>${docs.m.forms.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-javaflow</name>
-                <path>${docs.m.javaflow.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-lucene</name>
-                <path>${docs.m.lucene.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-mail</name>
-                <path>${docs.m.mail.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-portal</name>
-                <path>${docs.m.portal.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-profiler</name>
-                <path>${docs.m.profiler.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-serializers</name>
-                <path>${docs.m.serializers.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-template</name>
-                <path>${docs.m.template.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-html</name>
-                <path>${docs.m.html.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-linkrewriter</name>
-                <path>${docs.m.linkrewriter.relPath}</path>
-              </collection>
-              <collection>
-                <name>cdocs-databases</name>
-                <path>${docs.m.databases.relPath}</path>
-              </collection>
-              <!-- Maven plugins -->
-              <collection>
-                <name>cdocs-maven-plugin</name>
-                <path>${docs.m.maven-plugin.relPath}</path>
-              </collection>
-            </collections>
-            <siteXmlContent>
-              &lt;project&gt;
-                &lt;skin&gt;
-                  &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
-                  &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
-                  &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
-                &lt;/skin&gt;
-                &lt;body&gt;
-                  &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
-                  &lt;menu ref="reports" /&gt;
-                &lt;/body&gt;
-              &lt;/project&gt;
-            </siteXmlContent>
-            <exportStrategyClass>org.apache.cocoon.tools.maven.daisy.export.strategy.CocoonExportStrategy</exportStrategyClass>
-          </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.cocoon</groupId>
-            <artifactId>cocoon-daisy-export-strategy</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-          </dependency>
-        </dependencies>          
-          <executions>
-            <execution>
-              <phase>pre-site</phase>
-              <goals>
-                <goal>export</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -2275,7 +2078,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.0-beta-4</version>
+        <version>2.0-beta-5</version>
         <configuration>
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/${project.artifactId}</tagBase>
         </configuration>
@@ -2378,10 +2181,10 @@
   <properties>
     <!-- General Daisy plugin properties -->
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
-    <docs.urlRelativizer>../../../</docs.urlRelativizer>
+    <docs.urlRelativizer>../../../../</docs.urlRelativizer>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
     <!-- Path and version properties: sites -->
-    <docs.m.site-main.relPath></docs.m.site-main.relPath>
+    <docs.m.site-main.relPath>./</docs.m.site-main.relPath>
     <docs.m.site-22.relPath>2.2/</docs.m.site-22.relPath>
     <docs.m.site-blocks.relPath>2.2/blocks/</docs.m.site-blocks.relPath>
     <docs.m.site-core-modules.relPath>2.2/core-modules/</docs.m.site-core-modules.relPath>
@@ -2473,7 +2276,7 @@
     <docs.m.hsqldb-client.relPath>2.2/blocks/hsqldb-client/${docs.m.hsqldb-client.version}/</docs.m.hsqldb-client.relPath>
     <!-- Path and version properties: Maven plugins-->
     <docs.m.maven-plugin.version>1.0</docs.m.maven-plugin.version>
-    <docs.m.maven-plugin.relPath>2.2/maven-plugins/${docs.m.rcl-plugin.version}/</docs.m.maven-plugin.relPath>
+    <docs.m.maven-plugin.relPath>2.2/maven-plugins/maven-plugin/${docs.m.maven-plugin.version}/</docs.m.maven-plugin.relPath>
   </properties>
 
   <profiles>
@@ -2495,6 +2298,204 @@
             </executions>
           </plugin>          
         </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>daisy</id>
+      <repositories>  
+        <repository>
+          <id>cocoon.dev</id>
+          <url>http://people.apache.org/~reinhard/m2-daisy-staging-repository/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>        
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>cocoon.dev</id>
+          <url>http://people.apache.org/~reinhard/m2-daisy-staging-repository/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>        
+      </pluginRepositories>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.daisycms</groupId>
+              <artifactId>daisy-maven-plugin</artifactId>
+              <version>1.0.0-alpha-1</version>
+              <configuration>
+                <repoUrl>${docs.repoUrl}</repoUrl>
+                <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
+                <daisyServerId>cocoon-daisy</daisyServerId>
+                <cleanSiteXml>true</cleanSiteXml>
+                <author>The Cocoon Community</author>
+                <navDocId>0</navDocId>
+                <collections>
+                  <!-- sites -->
+                  <collection>
+                    <name>cdocs-site-main</name>
+                    <path>${docs.m.site-main.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-site-blocks</name>
+                    <path>${docs.m.site-blocks.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-site-core-modules</name>
+                    <path>${docs.m.site-core-modules.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-site-subprojects</name>
+                    <path>${docs.m.subprojects.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-site-maven-plugins</name>
+                    <path>${docs.m.site-maven-plugins.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-site-servlet-service</name>
+                    <path>${docs.m.site-servlet-service.relPath}</path>
+                  </collection>              
+                  <collection>
+                    <name>cdocs-site-configuration</name>
+                    <path>${docs.m.site-configuration.relPath}</path>
+                  </collection>              
+                  <collection>
+                    <name>cdocs-site-22</name>
+                    <path>${docs.m.site-22.relPath}</path>
+                  </collection>              
+                  <!-- core -->
+                  <collection>
+                    <name>cdocs-core</name>
+                    <path>${docs.m.core.relPath}</path>
+                  </collection>
+                  <!-- subprojects -->
+                  <collection>
+                    <name>cdocs-configuration-api</name>
+                    <path>${docs.m.configuration-api.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-spring-configurator</name>
+                    <path>${docs.m.spring-configurator.relPath}</path>
+                  </collection>
+                  <!-- blocks -->
+                  <collection>
+                    <name>cdocs-ajax</name>
+                    <path>${docs.m.ajax.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-auth</name>
+                    <path>${docs.m.auth.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-batik</name>
+                    <path>${docs.m.batik.relPath}</path>
+                  </collection>              
+                  <collection>
+                    <name>cdocs-captcha</name>
+                    <path>${docs.m.captcha.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-flowscript</name>
+                    <path>${docs.m.flowscript.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-fop</name>
+                    <path>${docs.m.fop.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-forms</name>
+                    <path>${docs.m.forms.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-javaflow</name>
+                    <path>${docs.m.javaflow.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-lucene</name>
+                    <path>${docs.m.lucene.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-mail</name>
+                    <path>${docs.m.mail.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-portal</name>
+                    <path>${docs.m.portal.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-profiler</name>
+                    <path>${docs.m.profiler.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-serializers</name>
+                    <path>${docs.m.serializers.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-template</name>
+                    <path>${docs.m.template.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-html</name>
+                    <path>${docs.m.html.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-linkrewriter</name>
+                    <path>${docs.m.linkrewriter.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-databases</name>
+                    <path>${docs.m.databases.relPath}</path>
+                  </collection>
+                  <!-- Maven plugins -->
+                  <collection>
+                    <name>cdocs-maven-plugin</name>
+                    <path>${docs.m.maven-plugin.relPath}</path>
+                  </collection>
+                </collections>
+                <siteXmlContent>
+                  &lt;project&gt;
+                  &lt;skin&gt;
+                  &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
+                  &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
+                  &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+                  &lt;/skin&gt;
+                  &lt;body&gt;
+                  &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
+                  &lt;menu ref="reports" /&gt;
+                  &lt;/body&gt;
+                  &lt;/project&gt;
+                </siteXmlContent>
+                <exportStrategyClass>org.apache.cocoon.tools.maven.daisy.export.strategy.CocoonExportStrategy</exportStrategyClass>
+              </configuration>
+              <dependencies>
+                <dependency>
+                  <groupId>org.apache.cocoon</groupId>
+                  <artifactId>cocoon-daisy-export-strategy</artifactId>
+                  <version>1.0.0-SNAPSHOT</version>
+                </dependency>
+              </dependencies>          
+              <executions>
+                <execution>
+                  <phase>pre-site</phase>
+                  <goals>
+                    <goal>export</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>            
+          </plugins>          
+        </pluginManagement>
       </build>
     </profile>
     <profile>
@@ -2590,6 +2591,20 @@
           </plugin>
         </plugins>
       </reporting>
+    </profile>
+    <profile>
+      <!-- Activate this profile if you want to use snapshot versions of plugins -->
+      <id>use-plugin-snapshots</id>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>apache.snapshot</id>
+          <url>http://svn.apache.org/maven-snapshot-repository</url>
+        </pluginRepository>
+        <pluginRepository>
+          <id>snapshots</id>
+          <url>http://snapshots.maven.codehaus.org/maven2</url>
+        </pluginRepository>    
+      </pluginRepositories>      
     </profile>
   </profiles>
 </project>
