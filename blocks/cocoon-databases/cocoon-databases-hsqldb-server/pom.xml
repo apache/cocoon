@@ -40,23 +40,6 @@
     Start a Hsql database server as part of your Cocoon application.
   </description>
   
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>0</navDocId>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>  
-  
   <properties>
     <docs.name>${project.name}</docs.name>    
     <docs.version>${docs.m.hsqldb-server.version}</docs.version>
@@ -108,5 +91,22 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>        
+              <createSiteXmlOnly>true</createSiteXmlOnly>
+            </configuration>
+          </plugin>  
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>    
   
 </project>
