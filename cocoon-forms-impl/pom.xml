@@ -54,18 +54,6 @@
           </excludes>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>
-          <navDocId>1255</navDocId>
-          <collection>cdocs-forms</collection>
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
   
@@ -157,5 +145,24 @@
     <docs.name>Cocoon Forms</docs.name>
     <docs.version>${docs.m.forms.version}</docs.version>
   </properties>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1255</navDocId>
+              <collection>cdocs-forms</collection>
+              <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>  
   
 </project>
