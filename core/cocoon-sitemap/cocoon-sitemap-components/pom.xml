@@ -38,24 +38,7 @@
     Implementation of basic actions, modules, some sources, matchers
     and selectors that are used in most Cocoon webapps.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.sitemap-components.relPath}</url>      
-  
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>0</navDocId>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>  
+  <url>http://cocoon.apache.org/${docs.m.sitemap-components.relPath}</url>
   
   <properties>
     <docs.name>${project.name}</docs.name>    
