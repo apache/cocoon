@@ -114,12 +114,16 @@
       </ul>
     </li>
   #end
+  #if ( $project.getProperties().get("docs.urlRelativizer") == "" || $project.getProperties().get("docs.urlRelativizer") == "./"  )
     <li class="menuVersions">Versions
-       <ul>
-									<li><a href="$project.getProperties().get("docs.urlRelativizer")2.1/">Cocoon 2.1</a></li>
-									<li><a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon 2.2</a></li>
-       </ul>
+      <ul>
+				<li><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></li>      
+			  <li><a href="$project.getProperties().get("docs.urlRelativizer")2.1/">Cocoon 2.1</a></li>
+			  <li><a href="$project.getProperties().get("docs.urlRelativizer")2.0/">Cocoon 2.0</a></li>
+			  <li><a href="$project.getProperties().get("docs.urlRelativizer")1.x/">Cocoon 1.x</a></li>			  
+      </ul>
     </li>
+  #end    
   </ul>
 #end
 
