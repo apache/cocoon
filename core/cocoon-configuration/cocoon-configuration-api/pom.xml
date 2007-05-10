@@ -60,19 +60,26 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>1313</navDocId>
-          <collection>cdocs-configuration-api</collection>          
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>
     </plugins> 
   </build>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>        
+              <navDocId>1313</navDocId>
+              <collection>cdocs-configuration-api</collection>          
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>  
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>      
+  
 </project>

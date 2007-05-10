@@ -38,24 +38,7 @@
     and support classes for making it easier to write sitemap components. 
   </description>
   <url>http://cocoon.apache.org/${docs.m.sitemap-impl.relPath}</url>    
-  
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>0</navDocId>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>  
-  
+
   <properties>
     <docs.name>${project.name}</docs.name>    
     <docs.version>${docs.m.sitemap-impl.version}</docs.version>
@@ -154,12 +137,10 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      
     </dependency>    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      
       <exclusions>
         <exclusion>
           <groupId>avalon-framework</groupId>
@@ -170,7 +151,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      
       <exclusions>
         <exclusion>
           <groupId>avalon-framework</groupId>
@@ -181,17 +161,14 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>
   </dependencies>

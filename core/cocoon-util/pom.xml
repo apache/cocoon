@@ -38,23 +38,6 @@
   </description>
   <url>http://cocoon.apache.org/${docs.m.util.relPath}</url>    
   
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>0</navDocId>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>  
-  
   <properties>
     <docs.name>${project.name}</docs.name>    
     <docs.version>${docs.m.util.version}</docs.version>
@@ -72,18 +55,15 @@
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>
       <artifactId>avalon-framework-impl</artifactId>
-      
     </dependency>
     <!-- Commons -->
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      
       <exclusions>
         <exclusion>
           <artifactId>logkit</artifactId>
@@ -98,13 +78,11 @@
     <dependency>
       <groupId>jakarta-regexp</groupId>
       <artifactId>jakarta-regexp</artifactId>
-      
     </dependency>
     <!-- Test Dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      
       <scope>test</scope>
     </dependency>
   </dependencies>

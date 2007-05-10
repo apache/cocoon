@@ -91,15 +91,26 @@
           </dependency>
         </dependencies>
       </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>
-          <navDocId>1221</navDocId>
-          <collection>cdocs-ajax</collection>
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1221</navDocId>
+              <collection>cdocs-ajax</collection>
+              <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>  
+  
 </project>

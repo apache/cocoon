@@ -48,30 +48,14 @@
     <docs.version>${docs.m.fop.version}</docs.version>
   </properties>
   
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>
-          <navDocId>1218</navDocId>
-          <collection>cdocs-fop</collection>
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>fop</groupId>
       <artifactId>fop</artifactId>
-      
       <exclusions>
         <exclusion>
           <groupId>avalon-framework</groupId>
@@ -94,7 +78,26 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-batik-impl</artifactId>
-      
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1218</navDocId>
+              <collection>cdocs-fop</collection>
+              <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>
+  
 </project>

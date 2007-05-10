@@ -48,20 +48,6 @@
     <docs.version>1.0</docs.version>
   </properties>
   
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>1231</navDocId>
-          <collection>cdocs-javaflow</collection>          
-          <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>
-  
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -93,5 +79,25 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>  
-  </repositories>    
+  </repositories>
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>        
+              <navDocId>1231</navDocId>
+              <collection>cdocs-javaflow</collection>          
+              <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>  
+   
 </project>

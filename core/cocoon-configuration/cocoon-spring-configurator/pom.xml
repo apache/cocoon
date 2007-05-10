@@ -59,15 +59,6 @@
         <configuration>
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/${project.artifactId}</tagBase>
         </configuration>
-      </plugin>    
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>1305</navDocId>
-          <collection>cdocs-spring-configurator</collection>          
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-        </configuration>
       </plugin>         
     </plugins> 
   </build>
@@ -76,17 +67,14 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-configuration-api</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      
       <exclusions>
         <exclusion>
           <artifactId>logkit</artifactId>
@@ -101,39 +89,32 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      
     </dependency>   
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      
     </dependency>    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      
     </dependency>   
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      
     </dependency>      
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      
     </dependency>             
   </dependencies>
   
@@ -158,5 +139,24 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</developerConnection>
     <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</url>    
   </scm>    
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>        
+              <navDocId>1305</navDocId>
+              <collection>cdocs-spring-configurator</collection>          
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>      
   
 </project>

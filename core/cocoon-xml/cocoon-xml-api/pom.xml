@@ -39,23 +39,6 @@
   </description>
   <url>http://cocoon.apache.org/${docs.m.xml-api.relPath}</url>    
   
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>0</navDocId>
-          <createSiteXmlOnly>true</createSiteXmlOnly>
-        </configuration>
-      </plugin>      
-    </plugins>
-  </build>  
-  
   <properties>
     <docs.name>${project.name}</docs.name>    
     <docs.version>${docs.m.xml-api.version}</docs.version>
