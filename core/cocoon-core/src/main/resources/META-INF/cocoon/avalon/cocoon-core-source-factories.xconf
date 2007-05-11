@@ -15,37 +15,67 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
 <components>
+
+  <source-resolver logger="core.source"/>
 
   <!--+
       | Source Factories
       |
-      | Each source factory adds a special uri schemes to the system.
+      | Each source factory adds a special uri scheme to the system.
       +-->
-  <source-factories>
-    <component-instance name="resource" class="org.apache.excalibur.source.impl.ResourceSourceFactory"/>
-    <component-instance name="context" class="org.apache.cocoon.components.source.impl.ContextSourceFactory"/>
-    <component-instance name="cocoon" class="org.apache.cocoon.components.source.impl.SitemapSourceFactory"/>
-    <component-instance name="blockcontext" class="org.apache.cocoon.components.source.impl.BlockContextSourceFactory"/>
-    <!--component-instance name="block" class="org.apache.cocoon.components.source.impl.BlockSourceFactory"/-->
-    
+  <source-factories logger="core.source">
+    <component-instance name="resource"
+                        logger="core.source"
+                        class="org.apache.excalibur.source.impl.ResourceSourceFactory"/>
+    <component-instance name="context"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.ContextSourceFactory"/>
+    <component-instance name="cocoon"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.SitemapSourceFactory"/>
+    <component-instance name="blockcontext"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.BlockContextSourceFactory"/>
+    <!--
+    <component-instance name="block"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.BlockSourceFactory"/>
+    -->
+
     <!--+
         | The "file:" source protocol is modifiable (can be written to) and
         | traversable (directory structures can be crawled).
         +-->
-    <component-instance name="file" class="org.apache.excalibur.source.impl.FileSourceFactory"/>
-    <component-instance name="upload" class="org.apache.cocoon.components.source.impl.PartSourceFactory"/>
-    <component-instance name="module" class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
-    <component-instance name="xmodule" class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
-    <component-instance name="zip" class="org.apache.cocoon.components.source.impl.ZipSourceFactory"/>
-    <component-instance name="empty" class="org.apache.cocoon.components.source.impl.EmptySourceFactory"/>
+    <component-instance name="file"
+                        logger="core.source"
+                        class="org.apache.excalibur.source.impl.FileSourceFactory"/>
+
+    <component-instance name="upload"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.PartSourceFactory"/>
+    <component-instance name="module"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
+    <component-instance name="xmodule"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
+    <component-instance name="zip"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.ZipSourceFactory"/>
+    <component-instance name="empty"
+                        logger="core.source"
+                        class="org.apache.cocoon.components.source.impl.EmptySourceFactory"/>
 
     <!--+
         | The "*" protocol handles all uri schemes that are not explicitely
         | specified. This includes all JDK standard protocols.
         +-->
-    <component-instance name="*" class="org.apache.excalibur.source.impl.URLSourceFactory"/>
+    <component-instance name="*"
+                        logger="core.source"
+                        class="org.apache.excalibur.source.impl.URLSourceFactory"/>
   </source-factories>
 
 </components>
