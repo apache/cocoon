@@ -26,22 +26,15 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
   
-  <parent>
-    <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon</artifactId>
-    <version>4-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-  
+  <groupId>org.apache.cocoon</groupId>
   <artifactId>site</artifactId>
   <version>1-SNAPSHOT</version>
   <name>Cocoon Site [modules]</name>
   <url>http://cocoon.apache.org</url>
-  
-  <properties> 
-    <docs.urlRelativizer>../</docs.urlRelativizer>
-  </properties>      
-  
+  <description>
+    This module is only used to invoke the site creation process.
+  </description>
+
   <modules>
     <!-- Category sites -->
     <module>cocoon-main-site</module>
@@ -70,11 +63,11 @@
     <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module>
     
     <!-- Unreleased Cocoon Blocks -->        
-    <!--module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module>        
+    <module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module>        
     <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>        
     <module>../blocks/cocoon-portal/cocoon-portal-impl</module>      
     <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>          
-    <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module-->        
+    <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>        
     
     <!-- Subprojects -->
     <module>../core/cocoon-configuration/cocoon-configuration-api</module>
@@ -86,7 +79,6 @@
     <module>../tools/cocoon-maven-plugin</module>
     
     <!-- Core modules -->
-    <module>../core/cocoon-core</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-components</module>
@@ -100,36 +92,32 @@
     <module>../core/cocoon-xml/cocoon-xml-api</module>
     <module>../core/cocoon-xml/cocoon-xml-impl</module>
     <module>../core/cocoon-xml/cocoon-xml-resolver</module>
+    <module>../core/cocoon-core</module>
   </modules>
   
-  <profiles>
-    <profile>
-      <id>daisy</id>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.daisycms</groupId>
-              <artifactId>daisy-maven-plugin</artifactId>
-              <configuration>
-                <siteXmlContent>
-                  &lt;project&gt;
-                  &lt;skin&gt;
-                  &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
-                  &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
-                  &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
-                  &lt;/skin&gt;
-                  &lt;body&gt;
-                  &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
-                  &lt;/body&gt;
-                  &lt;/project&gt;
-                </siteXmlContent>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>      
-    </profile>
-  </profiles>   
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>./target/deploy-site</url>
+    </site>
+  </distributionManagement>  
+
+  <!-- Minimal reporting configuration is required here, otherwise site
+       creation stops with an error -->
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.0.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>summary</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 
 </project>
