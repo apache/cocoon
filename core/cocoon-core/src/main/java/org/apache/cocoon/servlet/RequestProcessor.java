@@ -59,12 +59,14 @@ public class RequestProcessor {
     /** The servlet context. */
     protected final ServletContext servletContext;
 
+    /** Cocoon environment context. */
+    protected final Context environmentContext;
+
+    /** Configured servlet container encoding. Defaults to ISO-8859-1. */
     protected final String containerEncoding;
 
-    /** The logger. */
+    /** The access logger. */
     protected final Logger log;
-
-    protected final Context environmentContext;
 
     /** Root Cocoon Bean Factory. */
     protected final BeanFactory cocoonBeanFactory;
@@ -84,18 +86,22 @@ public class RequestProcessor {
      */
     protected RequestListener requestListener;
 
+
     public RequestProcessor(ServletContext servletContext) {
         this.servletContext = servletContext;
         this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
         this.servletSettings = new ServletSettings(this.settings);
+
         final String encoding = this.settings.getContainerEncoding();
         if ( encoding == null ) {
             this.containerEncoding = "ISO-8859-1";
         } else {
             this.containerEncoding = encoding;
         }
+
         this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
+
         this.processor = this.getProcessor();
         this.environmentContext = new HttpContext(this.servletContext);
         // get the optional request listener
@@ -111,7 +117,7 @@ public class RequestProcessor {
     public void setProcessor(Processor processor) {
         this.processor = processor;
     }
-    
+
     protected boolean rethrowExceptions() {
         return false;
     }
@@ -121,7 +127,7 @@ public class RequestProcessor {
      * on the specified <code>HttpServletResponse</code>.
      */
     public void service(HttpServletRequest request, HttpServletResponse res)
-    throws ServletException, IOException {        
+    throws ServletException, IOException {
         // used for timing the processing
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -147,11 +153,11 @@ public class RequestProcessor {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon servlet", e);
             }
-            
+
             if (rethrowExceptions()) {
                 throw new ServletException(e);
             }
-            
+
             RequestUtil.manageException(request, res, null, uri,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                             "Problem in creating the Environment", null, null, e,
@@ -190,7 +196,7 @@ public class RequestProcessor {
             if (rethrowExceptions()) {
                 throw new ServletException(e);
             }
-                 
+
             RequestUtil.manageException(request, res, env, uri,
                             HttpServletResponse.SC_NOT_FOUND,
                             "Resource Not Found",
@@ -258,7 +264,7 @@ public class RequestProcessor {
                 out.println((hide) ? " -->" : "</p>");
             }
         }
-        
+
         /*
          * Servlet Specification 2.2, 6.5 Closure of Response Object:
          *
