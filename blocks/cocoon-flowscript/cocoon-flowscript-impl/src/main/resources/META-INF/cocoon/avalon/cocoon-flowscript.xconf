@@ -15,6 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
 <components>
 
@@ -63,7 +64,10 @@
       |       the control flow.
       +-->
   <flow-interpreters default="javascript" logger="flow">
-    <component-instance exported="false" name="javascript" class="org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter">
+    <component-instance name="javascript"
+                        logger="flow"
+                        exported="false"
+                        class="org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter">
       <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/fom_system.js</load-on-startup>
       <!--
         <reload-scripts>true</reload-scripts>
