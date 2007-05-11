@@ -25,9 +25,10 @@
   
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>site</artifactId>
-    <version>1-SNAPSHOT</version>
-  </parent>  
+    <artifactId>cocoon</artifactId>
+    <version>4-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
   
   <artifactId>cocoon-servlet-service-site</artifactId>
   <version>1.0.0-SNAPSHOT</version>
@@ -37,7 +38,8 @@
   
   <properties>
     <docs.name>Cocoon Servlet Service</docs.name>   
-    <docs.version>${docs.m.site-servlet-service.version}</docs.version>        
+    <docs.version>${docs.m.site-servlet-service.version}</docs.version>       
+    <docs.urlRelativizer>../../</docs.urlRelativizer>         
   </properties>      
   
   <distributionManagement>
@@ -58,7 +60,19 @@
             <configuration>
               <navDocId>1326</navDocId>
               <collection>cdocs-site-servlet-service</collection>
-              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>          
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>  
+              <siteXmlContent>
+                &lt;project&gt;
+                &lt;skin&gt;
+                &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
+                &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
+                &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+                &lt;/skin&gt;
+                &lt;body&gt;
+                &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
+                &lt;/body&gt;
+                &lt;/project&gt;
+              </siteXmlContent>                           
             </configuration>
           </plugin>     
         </plugins>
