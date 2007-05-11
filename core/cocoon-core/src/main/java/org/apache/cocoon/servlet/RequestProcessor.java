@@ -94,15 +94,17 @@ public class RequestProcessor {
         this.servletSettings = new ServletSettings(this.settings);
 
         final String encoding = this.settings.getContainerEncoding();
-        if ( encoding == null ) {
+        if (encoding == null) {
             this.containerEncoding = "ISO-8859-1";
         } else {
             this.containerEncoding = encoding;
         }
 
-        this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
+        // Obtain access logger
+        // FIXME This used to be configurable via "servlet-logger" parameter in web.xml
+        this.log = ((Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE)).getChildLogger("access");
 
-        this.processor = this.getProcessor();
+        this.processor = getProcessor();
         this.environmentContext = new HttpContext(this.servletContext);
         // get the optional request listener
         if (this.cocoonBeanFactory.containsBean(RequestListener.ROLE)) {
@@ -111,7 +113,7 @@ public class RequestProcessor {
     }
 
     protected Processor getProcessor() {
-        return (Processor)this.cocoonBeanFactory.getBean(Processor.ROLE);
+        return (Processor) this.cocoonBeanFactory.getBean(Processor.ROLE);
     }
 
     public void setProcessor(Processor processor) {
@@ -139,7 +141,7 @@ public class RequestProcessor {
 
         // We got it... Process the request
         final String uri = getURI(request, res);
-        if ( uri == null ) {
+        if (uri == null) {
             // a redirect occured, so we are finished
             return;
         }
@@ -251,7 +253,7 @@ public class RequestProcessor {
                 show = !showTime.equalsIgnoreCase("no");
             }
             if (show) {
-                if ( timeString == null ) {
+                if (timeString == null) {
                     timeString = processTime(stopWatch.getTime());
                 }
                 boolean hide = this.servletSettings.isHideShowTime();
@@ -348,18 +350,17 @@ public class RequestProcessor {
                 try {
                     requestListener.onRequestStart(environment);
                 } catch (Exception e) {
-                    this.log.error("Error encountered monitoring request start: "
-                            + e.getMessage());
+                    getLogger().error("Error encountered monitoring request start", e);
                 }
             }
+
             result = this.processor.process(environment);
 
             if (this.requestListener != null) {
                 try {
                     requestListener.onRequestEnd(environment);
                 } catch (Exception e) {
-                    this.log.error("Error encountered monitoring request start: "
-                            + e.getMessage());
+                    getLogger().error("Error encountered monitoring request end",  e);
                 }
             }
 
@@ -372,18 +373,17 @@ public class RequestProcessor {
                 try {
                     requestListener.onRequestException(environment, any);
                 } catch (Exception e) {
-                    this.log.error("Error encountered monitoring request start: "
-                            + e.getMessage());
+                    getLogger().error("Error encountered monitoring request exception", e);
                 }
             }
+
             // reset response on error
             environment.tryResetResponse();
             throw any;
         } finally {
             EnvironmentHelper.leaveProcessor();
             environment.finishingProcessing();
-
-            EnvironmentHelper.checkEnvironment(environmentDepth, this.getLogger());
+            EnvironmentHelper.checkEnvironment(environmentDepth, getLogger());
         }
     }
 }
