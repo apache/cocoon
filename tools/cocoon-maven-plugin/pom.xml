@@ -106,16 +106,7 @@
         <configuration>
           <goalPrefix>cocoon</goalPrefix>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <configuration>        
-          <navDocId>1296</navDocId>
-          <collection>cdocs-maven-plugin</collection>          
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-        </configuration>
-      </plugin>        
+      </plugin>       
     </plugins>
   </build>
   
@@ -138,6 +129,25 @@
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.maven-plugin.relPath}</url>
     </site>
-  </distributionManagement>     
+  </distributionManagement> 
+  
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+		      <plugin>
+		        <groupId>org.daisycms</groupId>
+		        <artifactId>daisy-maven-plugin</artifactId>
+		        <configuration>        
+		          <navDocId>1296</navDocId>
+		          <collection>cdocs-maven-plugin</collection>          
+		          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+		        </configuration>
+		      </plugin> 
+        </plugins>
+      </build>      
+    </profile>
+  </profiles>          
    
 </project>
