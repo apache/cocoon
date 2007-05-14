@@ -24,6 +24,10 @@
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
     <bean id="org.apache.cocoon.template.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
-        <servlet:context mount-path="/cocoon-template-sample" context-path="blockcontext:/cocoon-template-sample/"/>
+        <servlet:context mount-path="/cocoon-template-sample" context-path="blockcontext:/cocoon-template-sample/">
+            <servlet:connections>
+                <entry key="sampleStyles" value-ref="org.apache.cocoon.samples.style.default.servlet"/>
+            </servlet:connections>
+        </servlet:context>
     </bean>
 </beans>
