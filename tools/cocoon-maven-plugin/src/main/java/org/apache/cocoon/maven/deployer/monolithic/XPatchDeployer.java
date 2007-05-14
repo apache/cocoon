@@ -75,11 +75,12 @@ public class XPatchDeployer extends SingleFileDeployer {
     }
 
     public void applyPatches(InputStream source, final String fileName) {
-        if (patches.size() == 0) {
-            // TODO should just copy the file without any transform
-        }
         try {
-            getLogger().info("Applying patches to: " + fileName);
+            if (patches.size() == 0) {
+                getLogger().info("No patches to aplly");
+            } else {
+                getLogger().info("Applying patches to: " + fileName);
+            }
             Document original = XMLUtils.parseXml(source);
             File outFile = FileUtils.createPath(new File(getBasedir(), fileName));
 
