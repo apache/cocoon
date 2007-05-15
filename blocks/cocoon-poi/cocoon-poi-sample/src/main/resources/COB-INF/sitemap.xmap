@@ -17,11 +17,33 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+<!-- =========================== Components =================================== -->
+
  <map:components>
   <map:serializers default="html">
     <map:serializer name="xls" src="org.apache.cocoon.serialization.HSSFSerializer"/>
   </map:serializers>
  </map:components>
+
+<!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+<!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
   <map:pipeline>
@@ -32,15 +54,14 @@
 
    <map:match pattern="welcome">
     <map:generate src="samples.xml"/>
-    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize/>
    </map:match>
 
    <map:match pattern="hello.xls">
-    <map:generate src="context://samples/hello-world/content/hello.xml"/>
-    <map:transform src="context://samples/hello-world/style/xsl/page2xls.xsl"/>
+    <map:generate src="servlet:main-sample:/hello-world/hello.xml"/>
+    <map:transform src="servlet:main-sample:/hello-world/style/xsl/page2xls.xsl"/>
     <map:serialize type="xls"/>
    </map:match>
 

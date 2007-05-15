@@ -18,7 +18,7 @@
 
 <xsamples xpath="/samples" unless="group[@name='POI']">
   <group name="POI">
-    <sample name="POI Block" href="poi/">
+    <sample name="POI Block" href="/cocoon-poi-sample/">
       You want to have excel sheets? Here they go ...
    </sample>
   </group>
