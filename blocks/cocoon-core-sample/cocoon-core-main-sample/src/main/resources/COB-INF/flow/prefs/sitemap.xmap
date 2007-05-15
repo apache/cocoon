@@ -26,7 +26,8 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -47,13 +48,14 @@
           +-->
       <map:match pattern="page/*">
         <map:generate type="jx" src="screens/{1}.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="/samples/flow/prefs/screens/{1}.xsp"/>
+          <map:parameter name="file" value="servlet:/flow/prefs/screens/{1}.xsp"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
     </map:pipeline>
