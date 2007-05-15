@@ -23,6 +23,22 @@
     <map:script src="calc.js"/>
   </map:flow>
 
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
   <map:pipelines>
     <map:pipeline>
       <!--+
@@ -30,13 +46,14 @@
           +-->     
       <map:match pattern="page/*">
         <map:generate type="jx" src="screens/{1}.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="/samples/flow/jxcalc/screens/{1}.xml"/>
+          <map:parameter name="file" value="servlet:/flow/jxcalc/screens/{1}.xml"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
     </map:pipeline>

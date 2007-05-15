@@ -27,7 +27,7 @@
      <title>
       <xsl:value-of select="title"/>
      </title>
-     <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
+     <link href="servlet:style-default:/styles/main.css" type="text/css" rel="stylesheet"/>
     </head>
     <body>
      <xsl:apply-templates/>

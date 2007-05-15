@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Main core samples']">
 
   <group name="Main core samples">
-    <sample name="Core samples (main group)" href="core-samples-main/">
+    <sample name="Core samples (main group)" href="/cocoon-core-samples-main/">
       Samples of the most important core components.
     </sample>
   </group>

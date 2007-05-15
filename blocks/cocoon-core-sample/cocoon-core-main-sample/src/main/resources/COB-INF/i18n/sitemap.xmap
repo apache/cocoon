@@ -97,9 +97,8 @@
         <map:parameter name="page" value="{../0}"/>
         <map:parameter name="locale" value="{../../locale}"/>
       </map:transform>
-      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
+      <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:resource>
   </map:resources>
@@ -111,7 +110,8 @@
     </map:view>
 
     <map:view name="pretty-content" from-label="content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -190,7 +190,8 @@
       <!-- Display this sitemap source -->
       <map:match pattern="sitemap.xmap">
         <map:generate src="sitemap.xmap"/>
-        <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+        <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
