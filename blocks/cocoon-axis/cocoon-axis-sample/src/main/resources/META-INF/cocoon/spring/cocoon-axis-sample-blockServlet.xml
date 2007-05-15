@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -16,10 +16,14 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Axis']">
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-  <group name="Axis">
-    <sample name="Axis Block" href="/cocoon-axis-sample/">Examples using Apache Axis to give access to Cocoon via SOAP.</sample>
-  </group>
-
-</xsamples>
+    <bean id="org.apache.cocoon.axis.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+        <servlet:context mount-path="/cocoon-axis-sample" context-path="blockcontext:/cocoon-axis-sample/" />
+    </bean>
+</beans>
