@@ -80,6 +80,11 @@
       <map:match pattern="">
         <map:call function="calculator"/>
       </map:match>
+      
+      <!-- Make screens available to be used by other (sample-)blocks -->
+      <map:match pattern="screens/**">
+        <map:read src="screens/{1}" />
+      </map:match>
 
     </map:pipeline>
   </map:pipelines>
