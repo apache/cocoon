@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='CAPTCHA']">
 
   <group name="CAPTCHA">
-    <sample name="CAPTCHA Block" href="captcha/">
+    <sample name="CAPTCHA Block" href="/cocoon-captcha-sample/">
       Example usages of CAPTCHAs.
     </sample>
   </group>

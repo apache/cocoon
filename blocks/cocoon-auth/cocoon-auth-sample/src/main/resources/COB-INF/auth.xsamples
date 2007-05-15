@@ -17,7 +17,7 @@
 -->
 <xsamples xpath="/samples" unless="group[@name='Auth Block']">
   <group name="Auth Block">
-    <sample name="Auth Block" href="cocoon-auth-sample/">
+    <sample name="Auth Block" href="/cocoon-auth-sample/">
       This is a demo of the authentication framework integrated into Cocoon. 
     </sample>
   </group>
