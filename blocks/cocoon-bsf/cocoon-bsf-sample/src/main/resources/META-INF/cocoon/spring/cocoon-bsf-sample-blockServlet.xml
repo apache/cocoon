@@ -26,7 +26,6 @@
     <bean id="org.apache.cocoon.bsf.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
         <servlet:context mount-path="/cocoon-bsf-sample" context-path="blockcontext:/cocoon-bsf-sample/">
             <servlet:connections>
-                <entry key="forms" value-ref="org.apache.cocoon.forms.impl.servlet"/>
                 <entry key="main-sample" value-ref="org.apache.cocoon.core.main.sample.servlet" />
                 <entry key="style-default" value-ref="org.apache.cocoon.samples.style.default.servlet" />
             </servlet:connections>
