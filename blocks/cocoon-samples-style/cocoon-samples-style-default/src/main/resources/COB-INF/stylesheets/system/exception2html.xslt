@@ -22,7 +22,6 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:ex="http://apache.org/cocoon/exception/1.0">
 
-  <xsl:param name="contextPath"/>
   <xsl:param name="realPath"/>
 
   <!-- let sitemap override default page title -->
@@ -34,7 +33,7 @@
         <title>
           <xsl:value-of select="$pageTitle"/>
         </title>
-        <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
+        <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
         <style>
           h1 { font-size: 200%; color: #336699; text-align: left; margin: 0px 0px 30px 0px; padding: 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
           p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 110%; border-width: 1px; border-style: dashed; border-color: #336699; }
@@ -45,7 +44,7 @@
           table { border-collapse: collapse; margin-top: 0.3em; }
           td { padding: 0.1em; }
         </style>
-        <script src="{$contextPath}/scripts/main.js" type="text/javascript">&#160;</script>
+        <script src="servlet:/scripts/main.js" type="text/javascript">&#160;</script>
       </head>
       <body>
         <xsl:attribute name="onload">

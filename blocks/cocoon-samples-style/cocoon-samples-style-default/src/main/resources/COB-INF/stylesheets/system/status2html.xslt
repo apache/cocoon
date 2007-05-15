@@ -28,14 +28,12 @@
                 xmlns:xalan="http://xml.apache.org/xalan"
                 exclude-result-prefixes="xalan">
  
-  <xsl:param name="contextPath"/>
-
   <xsl:template match="status:statusinfo">
     <html>
       <head>
         <title>Cocoon Status [<xsl:value-of select="@status:host"/>]</title>
-        <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
-        <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
+        <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
+        <script src="servlet:/scripts/main.js" type="text/javascript"/>
       </head>
 
       <body>

@@ -22,8 +22,6 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:error="http://apache.org/cocoon/error/2.1">
 
-  <xsl:param name="contextPath"/>
-
   <!-- let sitemap override default page title -->
   <xsl:param name="pageTitle" select="//error:notify/error:title"/>
 
@@ -33,7 +31,7 @@
         <title>
           <xsl:value-of select="$pageTitle"/>
         </title>
-        <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
+        <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
         <style>
           h1 { color: #336699; text-align: left; margin: 0px 0px 30px 0px; padding: 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
           p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 130%; border-width: 1px; border-style: dashed; border-color: #336699; }
@@ -41,7 +39,7 @@
           p.topped { padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
           pre { font-size: 120%; }
         </style>
-        <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
+        <script src="servlet:/scripts/main.js" type="text/javascript"/>
       </head>
       <body>
         <xsl:apply-templates select="." mode="onload"/>
