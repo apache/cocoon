@@ -19,9 +19,6 @@
   
   <map:pipelines>
     <map:pipeline>
-      <map:match pattern="**.cssX">
-        <map:read type="servletLinkRewriter" src="resources/{1}.css"/>
-      </map:match>
       <map:match pattern="**.css">
         <map:read src="resources/{1}.css"/>
       </map:match>
