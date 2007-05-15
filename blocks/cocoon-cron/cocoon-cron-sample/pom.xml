@@ -37,8 +37,15 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core-main-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-cron-impl</artifactId>
-      
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-samples-style-default</artifactId>
     </dependency>
   </dependencies>
 </project>
