@@ -23,14 +23,29 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <map:components>
-    <map:generators default="file">
-      <!-- use the new implementation of JX -->
-      <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator"/>
-    </map:generators>
-  </map:components>
-  
+<!-- =========================== Flows =================================== -->
+
   <map:flow language="javascript" />
+
+<!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+<!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
     <map:pipeline type="caching">
@@ -42,9 +57,8 @@
       <!-- list of samples -->
       <map:match pattern="welcome">
         <map:generate src="welcome.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
       
