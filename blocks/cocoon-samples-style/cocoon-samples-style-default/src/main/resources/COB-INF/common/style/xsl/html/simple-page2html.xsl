@@ -18,7 +18,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:param name="contextPath"/>
+  <xsl:param name="contextPath">servlet:/</xsl:param>
   <xsl:param name="servletPath" select="string('/samples')"/>
   <xsl:param name="sitemapURI"/>
 
@@ -30,7 +30,7 @@
    <html>
      <head>
        <title><xsl:value-of select="title"/></title>
-       <link rel="stylesheet" href="{$contextPath}/styles/main.css" title="Default Style"/>
+       <link rel="stylesheet" href="servlet:/styles/main.css" title="Default Style"/>
        <!-- copy local CSS, if any -->
        <xsl:copy-of select="style"/>
      </head>
