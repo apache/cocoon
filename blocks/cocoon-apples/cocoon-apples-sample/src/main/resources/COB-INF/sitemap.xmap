@@ -29,7 +29,7 @@
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="forms">
           <catalogue id="other" name="OtherMessages" location="messages"/>
-          <catalogue id="forms" name="FormsMessages" location="messages"/>
+          <catalogue id="forms" name="FormsMessages" location="servlet:forms:/resource/internal/i18n"/>
         </catalogues>
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
@@ -44,7 +44,8 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="block:cocoon-samples-style-default:stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -55,13 +56,13 @@
 
   <map:resources>
     <map:resource name="serialize-jx-screen" >
-      <map:transform src="block:cocoon-samples-style-default:common/style/xsl/html/simple-page2html.xsl">
+      <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-        <map:parameter name="contextPath" value="/blocks/cocoon-samples-style-default"/>
-        <map:parameter name="file" value="/samples/apples/{screen-src}"/>
+        <map:parameter name="file" value="servlet:/{screen-src}"/>
         <map:parameter name="remove" value="{0}"/>
       </map:transform>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html" />    
     </map:resource>
   </map:resources>
@@ -73,9 +74,8 @@
 
       <map:match pattern="">
         <map:generate src="welcome.xml"/>
-        <map:transform src="block:cocoon-samples-style-default:common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="/blocks/cocoon-samples-style-default"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
@@ -110,17 +110,17 @@
         <map:call function="org.apache.cocoon.components.flow.apples.samples.CalculationApple"/>
       </map:match>
 
-      <!--map:match pattern="calc/*">
-        <map:generate type="jx" src="block:cocoon-core-samples-main-sample:flow/jxcalc/screens/{1}.xml"/>
-        <map:transform src="block:cocoon-samples-style-default:common/style/xsl/html/simple-page2html.xsl">
+      <map:match pattern="calc/*">
+        <map:generate type="jx" src="servlet:main-sample:/flow/jxcalc/screens/{1}.xml"/>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="block:cocoon-core-samples-main-sample:flow/jxcalc/screens/{1}.xml"/>
+          <map:parameter name="file" value="servlet:main-sample:/flow/jxcalc/screens/{1}.xml"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
-      </map:match-->
+      </map:match>
 
 
       <!--+ 
