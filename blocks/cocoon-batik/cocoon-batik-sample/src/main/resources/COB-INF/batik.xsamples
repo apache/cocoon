@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Batik']">
 
   <group name="Batik">
-    <sample name="Batik Block" href="batik/">
+    <sample name="Batik Block" href="/cocoon-batik-sample/">
       Examples of rasterized SVG images.
     </sample>
   </group>
