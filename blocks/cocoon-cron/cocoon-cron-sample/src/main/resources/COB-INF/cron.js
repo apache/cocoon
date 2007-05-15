@@ -45,7 +45,7 @@ function cron() {
     var jobname = "";
     var message = "I'm here";
     var sleep = "23";
-    var pipeline = "samples/hello-world/hello.xml";
+    var pipeline = "cocoon-core-main-sample/hello-world/hello.xml";
     var cronexpr = "";
     var intervalexpr = "";
     var atexpr = "";
@@ -61,7 +61,7 @@ function cron() {
         }
 
         // Load log file content - last logsize lines.
-        var fileName = realPath + "/WEB-INF/logs/cocoon.log";
+        var fileName = realPath.substring(5) + "/../../cocoon-logs/log4j.log";
         var rdr = new java.io.BufferedReader(java.io.FileReader(fileName));
         var count = 0;
         var lines = new java.util.LinkedList();

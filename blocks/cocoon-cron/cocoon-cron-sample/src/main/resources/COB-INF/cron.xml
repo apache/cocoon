@@ -50,7 +50,7 @@
                 </td>
                 <td>${entry.schedule}</td>
                 <td>
-                  <a href="continue.${continuation.id}?action=remove&amp;name=${entry.name}">remove</a>
+                  <a href="continue.${cocoon.continuation.id}?action=remove&amp;name=${entry.name}">remove</a>
                 </td>
               </tr>
             </jx:forEach>
@@ -67,7 +67,7 @@
             Here you can define new CronJobs based on the sample class
             org.apache.cocoon.components.cron.TestCronJob.
           </p>
-          <form method="post" action="continue.${continuation.id}?action=add">
+          <form method="post" action="continue.${cocoon.continuation.id}?action=add">
             <table>
               <tr>
                 <td align="right">Name the new job should have:</td>
@@ -150,7 +150,7 @@
       <column>
         <section>
           <title>The Cron Scheduler Logfile</title>
-          <p><a href="continue.${continuation.id}">Refresh</a></p>
+          <p><a href="continue.${cocoon.continuation.id}">Refresh</a></p>
           <jx:forEach var="line" items="${log}">
             <code>${line}</code><br/>
           </jx:forEach>
