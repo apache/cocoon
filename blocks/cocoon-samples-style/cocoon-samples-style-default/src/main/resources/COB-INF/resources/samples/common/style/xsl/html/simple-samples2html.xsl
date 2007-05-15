@@ -19,12 +19,12 @@
 <!--+
     | Covert samples file to the HTML page. Uses styles/main.css stylesheet.
     |
-    | $Id$
+    | $Id: simple-samples2html.xsl 448464 2006-09-21 05:29:11Z crossley $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <xsl:param name="contextPath">servlet:/</xsl:param>
+  <xsl:param name="contextPath"/>
   <xsl:variable name="stdLinks" select="samples/links/link[not(@role)]"/>
   <xsl:variable name="seeAlsoLinks" select="samples/links/link[@role='see-also']"/>
 
@@ -33,13 +33,13 @@
       <head>
         <title>Apache Cocoon @version@</title>
         <link rel="SHORTCUT ICON" href="favicon.ico"/>
-        <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
+        <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
       </head>
       <body>
        <table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
          <tr>
            <td width="*">The Apache Software Foundation is proud to present...</td>
-           <td width="40%" align="center"><img border="0" src="servlet:/images/cocoon.gif"/></td>
+           <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
            <td width="30%" align="center">Version: <b>@version@</b></td>
          </tr>
        </table>

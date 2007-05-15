@@ -32,8 +32,8 @@
    <xsl:template match="/">
       <HTML>
          <HEAD>
-            <link href="/styles/prettycontent.css" type="text/css" rel="stylesheet"/>
-            <script src="/scripts/prettycontent.js" type="text/javascript"/>
+            <link href="servlet:/styles/prettycontent.css" type="text/css" rel="stylesheet"/>
+            <script src="servlet:/scripts/prettycontent.js" type="text/javascript"/>
          </HEAD>
          <BODY>
             <xsl:apply-templates/>
