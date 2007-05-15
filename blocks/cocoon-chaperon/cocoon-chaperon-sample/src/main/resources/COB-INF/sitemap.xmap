@@ -152,9 +152,8 @@
     <map:transform type="lexer"   src="grammars/error.xlex"/>
     <map:transform                src="stylesheets/error2page.xsl"/>
     <map:transform                src="stylesheets/wiki2xdoc.xsl" label="xdoc"/>
-    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform                src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
@@ -176,9 +175,8 @@
    
    <map:match pattern="welcome">
     <map:generate                src="misc/samples.xml"/>
-    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize/>
    </map:match>
 
@@ -207,9 +205,8 @@
     <map:transform type="lexer"   src="grammars/mathexp.xlex"/>
     <map:transform type="parser"  src="grammars/mathexp.xgrm"/>
     <map:transform                src="stylesheets/mathexp2html.xsl"/>
-    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform                src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
@@ -218,9 +215,8 @@
     <map:transform type="lexer"   src="cocoon:/quote.xlex"/>
     <map:transform type="parser"  src="cocoon:/quote.xgrm" label="ast"/>
     <map:transform                src="stylesheets/quote2page.xsl"/>
-    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform                src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
@@ -228,9 +224,8 @@
     <map:generate                 src="misc/patterntext.xml"/>
     <map:transform type="pattern" src="grammars/link.xlex"/>
     <map:transform                src="stylesheets/pattern2link.xsl"/>
-    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform                src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
@@ -243,9 +238,8 @@
      <map:parameter name="package" value="{1}"/>
      <map:parameter name="class"   value="{2}"/>
     </map:transform>
-    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
@@ -261,9 +255,8 @@
      <map:parameter name="package" value="{1}"/>
      <map:parameter name="class"   value="{2}"/>
     </map:transform>
-    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
