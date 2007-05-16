@@ -36,9 +36,8 @@
    
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
@@ -53,25 +52,22 @@
       <map:match pattern="browse/">
         <map:generate type="traversable" src="jcr://"/>
         <map:transform src="dir2samples.xsl"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet_style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
       <map:match pattern="browse/**/">
         <map:generate type="traversable" src="jcr://{1}/"/>
         <map:transform src="dir2samples.xsl"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
       <map:match pattern="browse/**">
         <map:generate src="jcr://{1}"/>
         <map:transform src="dir2samples.xsl"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 

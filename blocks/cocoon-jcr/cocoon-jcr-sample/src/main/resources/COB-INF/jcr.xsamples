@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='JCR']">
 
   <group name="JCR">
-    <sample name="JCR Block" href="jcr/">
+    <sample name="JCR Block" href="/cocoon-jcr-sample/">
       Java Content Repository (JSR-170) samples.
     </sample>
   </group>
