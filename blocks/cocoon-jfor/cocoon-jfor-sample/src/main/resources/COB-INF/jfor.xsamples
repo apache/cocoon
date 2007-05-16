@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='jfor']">
 
   <group name="jfor">
-    <sample name="jfor Block" href="jfor/">
+    <sample name="jfor Block" href="/cocoon-jfor-sample/">
       Examples of RTF document generation.
     </sample>
   </group>

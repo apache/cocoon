@@ -29,9 +29,8 @@
    
    <map:match pattern="welcome">
     <map:generate src="misc/samples.xml"/>
-    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize/>
    </map:match>
 
@@ -39,8 +38,8 @@
 
    <!-- hello world -->
    <map:match pattern="hello.rtf">
-    <map:generate src="context://samples/hello-world/content/hello.xml"/>
-    <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
+    <map:generate src="servlet:main-sample:/hello-world/hello.xml"/>
+    <map:transform src="servlet:main-sample:/hello-world/style/xsl/page2fo.xsl"/>
     <map:serialize type="fo2rtf"/>
    </map:match>
 
