@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:library
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <fd:widgets>
+    
+    <!-- describes a person -->
+    <fd:group id="person">
+      <fd:widgets>
+        
+        <fd:field id="firstname" required="true">
+          <fd:label>First Name:</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:field id="lastname" required="true">
+          <fd:label>Last Name:</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:field id="title">
+          <fd:label>Title:</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value="Mr."/>
+            <fd:item value="Ms."/>
+            <fd:item value="Mrs."/>
+          </fd:selection-list>
+        </fd:field>
+        
+      </fd:widgets>
+    </fd:group>
+    
+    <!-- basic address -->
+    <fd:group id="address">
+      <fd:widgets>
+        
+        <fd:field id="street" required="true">
+          <fd:label>Street:</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:field id="number" required="true">
+          <fd:label>Street Number:</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:field id="zipcode" required="true">
+          <fd:label>Postal Code:</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:field id="city" required="true">
+          <fd:label>City:</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:field id="country" required="true">
+          <fd:label>Country:</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value="AU">
+              <fd:label>Austria</fd:label>
+            </fd:item>
+            <fd:item value="BE">
+              <fd:label>Belgium</fd:label>
+            </fd:item>
+            <fd:item value="CY">
+              <fd:label>Cyprus</fd:label>
+            </fd:item>
+            <fd:item value="CZ">
+              <fd:label>Czech Republic</fd:label>
+            </fd:item>
+            <fd:item value="DA">
+              <fd:label>Denmark</fd:label>
+            </fd:item>
+            <fd:item value="ES">
+              <fd:label>Estonia</fd:label>
+            </fd:item>
+            <fd:item value="FI">
+              <fd:label>Finland</fd:label>
+            </fd:item>
+            <fd:item value="FR">
+              <fd:label>France</fd:label>
+            </fd:item>
+            <fd:item value="DE">
+              <fd:label>Germany</fd:label>
+            </fd:item>
+            <fd:item value="GR">
+              <fd:label>Greece</fd:label>
+            </fd:item>
+            <fd:item value="HU">
+              <fd:label>Hungary</fd:label>
+            </fd:item>
+            <fd:item value="IR">
+              <fd:label>Ireland</fd:label>
+            </fd:item>
+            <fd:item value="IT">
+              <fd:label>Italy</fd:label>
+            </fd:item>
+            <fd:item value="LV">
+              <fd:label>Latvia</fd:label>
+            </fd:item>
+            <fd:item value="LT">
+              <fd:label>Lithuania</fd:label>
+            </fd:item>
+            <fd:item value="LU">
+              <fd:label>Luxemburg</fd:label>
+            </fd:item>
+            <fd:item value="MT">
+              <fd:label>Malta</fd:label>
+            </fd:item>
+            <fd:item value="PL">
+              <fd:label>Poland</fd:label>
+            </fd:item>
+            <fd:item value="PO">
+              <fd:label>Portugal</fd:label>
+            </fd:item>
+            <fd:item value="SK">
+              <fd:label>Slovakia</fd:label>
+            </fd:item>
+            <fd:item value="SL">
+              <fd:label>Slovenia</fd:label>
+            </fd:item>
+            <fd:item value="ES">
+              <fd:label>Spain</fd:label>
+            </fd:item>
+            <fd:item value="SW">
+              <fd:label>Sweden</fd:label>
+            </fd:item>
+            <fd:item value="NL">
+              <fd:label>The Netherlands</fd:label>
+            </fd:item>
+            <fd:item value="UK">
+              <fd:label>United Kingdom</fd:label>
+            </fd:item>
+          </fd:selection-list>
+        </fd:field>
+        
+      </fd:widgets>
+    </fd:group>
+    
+    <!-- two dates -->
+    <fd:group id="duration">
+      <fd:widgets>
+        
+        <fd:field id="from">
+          <fd:label>From:</fd:label>
+          <fd:datatype base="date">
+            <fd:convertor>
+              <fd:patterns>
+                <fd:pattern>dd/MM/yyyy</fd:pattern>
+              </fd:patterns>
+            </fd:convertor>
+          </fd:datatype>
+        </fd:field>
+        <fd:field id="to">
+          <fd:label>To:</fd:label>
+          <fd:datatype base="date">
+            <fd:convertor>
+              <fd:patterns>
+                <fd:pattern>dd/MM/yyyy</fd:pattern>
+              </fd:patterns>
+            </fd:convertor>
+          </fd:datatype>
+        </fd:field>
+        
+      </fd:widgets>
+    </fd:group>
+    
+    <!-- One way of contacting someone -->
+    <fd:group id="contactInformation">
+      <fd:widgets>
+        
+        <fd:field id="kind" required="true">
+          <fd:label>Contact by</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value="email">
+              <fd:label>Email</fd:label>
+            </fd:item>
+            <fd:item value="phone">
+              <fd:label>Telephone or Fax</fd:label>
+            </fd:item>
+            <fd:item value="mail">
+              <fd:label>Postal Mail</fd:label>
+            </fd:item>
+          </fd:selection-list>
+        </fd:field>
+        
+        <fd:union id="info" case="kind">
+          <fd:widgets>
+            
+            <fd:field id="email" required="true">
+              <fd:label>Email Address:</fd:label>
+              <fd:datatype base="string"/>
+              <fd:validation>
+                <fd:email/>
+              </fd:validation>
+            </fd:field>
+            
+            <fd:aggregatefield id="phone" required="true">
+              <fd:label>Enter a phone number in +(country)-(area)-(extension) format</fd:label>
+              <fd:datatype base="string"/>
+              <fd:split pattern="\+([0-9]{1,3})-([0-9]{1,4})-([0-9]{5,7})">
+                <fd:map group="1" field="cntr"/>
+                <fd:map group="2" field="zone"/>
+                <fd:map group="3" field="number"/>
+                <fd:failmessage>The phone-number format is wrong, please try again.</fd:failmessage>
+              </fd:split>
+              <fd:combine expression='Concat("+", cntr, "-", zone, "-", number)'/>
+              <fd:widgets>
+                <fd:field id="cntr">
+                  <fd:datatype base="integer"/>
+                </fd:field>
+                <fd:field id="zone">
+                  <fd:datatype base="integer"/>
+                </fd:field>
+                <fd:field id="number">
+                  <fd:datatype base="integer"/>
+                </fd:field>
+              </fd:widgets>
+            </fd:aggregatefield>
+            
+            <fd:group id="mail"  required="true" extends="address"/>
+            
+          </fd:widgets>
+        </fd:union>
+        
+        <fd:field id="description">
+          <fd:label>Description:</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        
+        <fd:group id="validity" extends="duration">
+          <fd:label>This contact information is valid</fd:label>
+        </fd:group>
+        
+      </fd:widgets>
+    </fd:group>
+    
+    <!-- generic repeater -->
+    <fd:repeater id="genericRepeater">
+      <fd:widgets>
+        
+        <fd:row-action id="moveUp" command="move-up">
+          <fd:help>Move this record up.</fd:help>
+          <fd:label>Up</fd:label>
+        </fd:row-action>
+        
+        <fd:row-action id="moveDown" command="move-down">
+          <fd:help>Move this record down.</fd:help>
+          <fd:label>Down</fd:label>
+        </fd:row-action>
+        
+        <fd:row-action id="deleteRow" command="delete">
+          <fd:help>Remove this record.</fd:help>
+          <fd:label>Delete</fd:label>
+        </fd:row-action>
+        
+        <fd:row-action id="addNewRow" command="add-after">
+          <fd:help>Add a new record after this one.</fd:help>
+          <fd:label>Add</fd:label>
+        </fd:row-action>
+        
+      </fd:widgets>
+    </fd:repeater>
+    
+    <!-- person with an address -->
+    <fd:group id="postalPerson" extends="person">
+      <fd:widgets>
+        <fd:expand id="address"/>
+      </fd:widgets>
+    </fd:group>
+    
+    <!-- generic contact information for one person -->
+    <fd:group id="contact">
+      <fd:widgets>
+        
+        <fd:expand id="postalPerson"/>
+
+        <fd:repeater id="contactInformationRepeater" extends="genericRepeater">
+          <fd:widgets>
+            
+            <fd:expand id="contactInformation"/>
+            
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action repeater="contactInformationRepeater" command="add-row" id="contactInformationRepeaterAddRow">
+          <fd:label>Add new record</fd:label>
+          <fd:help>Add a new record.</fd:help>
+        </fd:repeater-action>
+        
+      </fd:widgets>
+    </fd:group>
+    
+  </fd:widgets>
+</fd:library>

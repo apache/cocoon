@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+
+    <site view="xsp">
+        <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
+        <backpointer>
+            <xsp:attribute name="name"><jpath:value-of select="product/category"/></xsp:attribute>
+            <xsp:attribute name="do">viewCategory.do?categoryId=<jpath:value-of select="product/category"/></xsp:attribute>
+        </backpointer>
+        <product>
+            <xsp:attribute name="name"><jpath:value-of select="product/name"/></xsp:attribute>
+            <jpath:for-each select="itemList" >
+                <item>
+                    <xsp:attribute name="productId"><jpath:value-of select="productId"/></xsp:attribute>
+                    <xsp:attribute name="id"><jpath:value-of select="itemId"/></xsp:attribute>
+                    <desc>
+                        <jpath:value-of select="attr1"/> 
+                        <jpath:value-of select="attr2"/> 
+                        <jpath:value-of select="attr3"/> 
+                        <jpath:value-of select="attr4"/> 
+                        <jpath:value-of select="attr5"/> 
+                    </desc>
+                    <price><jpath:value-of select="listPrice"/></price>
+                </item>
+            </jpath:for-each>
+            <situation>
+                <xsp:attribute name="firstPage"><jpath:value-of select="firstPage"/></xsp:attribute>
+                <xsp:attribute name="lastPage"><jpath:value-of select="lastPage"/></xsp:attribute>
+                <xsp:attribute name="continuation"><jpath:continuation/></xsp:attribute>
+            </situation>
+        </product>
+    </site>
+
+</xsp:page>
+

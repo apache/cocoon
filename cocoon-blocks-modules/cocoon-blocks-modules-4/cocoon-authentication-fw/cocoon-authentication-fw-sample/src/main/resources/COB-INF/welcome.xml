@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--
+  @version $Id: welcome.xml 491930 2007-01-02 20:44:30Z jeremy $
+-->
+<samples name="Authentication Framework Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <group name="Back">
+  <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+  <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  <sample name="Cocoon Forms Documentation" href="http://cocoon.apache.org/2.1/userdocs/basics/index.html">
+    Documentation is available on the Cocoon site.
+  </sample>
+ </group>
+
+  <group name="Authentication Framework">
+    <sample name="Authentication Framework Block" href="login">
+      This is a demo of the authentication framework integrated into Cocoon.
+    </sample>
+    <sample name="Authentication Framework Block (with Flow)" href="flow/login">
+      This is the same demo of the authentication framework, but using flow
+      instead of actions.
+    </sample>
+  </group>
+</samples>
