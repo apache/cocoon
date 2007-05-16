@@ -4,7 +4,6 @@
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>5-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-pipeline-api</artifactId>
   <version>1.0.0-RC2-SNAPSHOT</version>
