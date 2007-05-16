@@ -37,7 +37,10 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-eventcache-impl</artifactId>
-      
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-samples-style-default</artifactId>
     </dependency>
   </dependencies>
 </project>
