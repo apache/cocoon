@@ -32,7 +32,8 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -53,16 +54,15 @@
       <!-- list of samples -->
       <map:match pattern="welcome">
         <map:generate src="misc/samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
       <!-- hello world -->
       <map:match pattern="hello.pdf">
-        <map:generate src="context://samples/hello-world/content/hello.xml"/>
-        <map:transform src="context://samples/hello-world/style/xsl/page2itext.xsl"/>
+        <map:generate src="servlet:main-sample:/hello-world/hello.xml"/>
+        <map:transform src="servlet:main-sample:/hello-world/style/xsl/page2itext.xsl"/>
         <map:serialize type="itext2pdf">
           <map:parameter name="page-size" value="A4"/>
           <map:parameter name="page-orientation" value="portrait"/>
@@ -81,15 +81,17 @@
         <map:serialize type="itext2pdf"/>
       </map:match>
 
-      <!-- reuse the XSP caching example for our caching test -->
+      <!-- This would need to add the cocoon-xsp-sample block. Is this dependency desired? -->
+      <!-- reuse the XSP caching example for our caching test ->
       <map:match pattern="cache-test-*.pdf">
-        <!-- note that caching didn't work when accessing the XSP using the cocoon:/ protocol -->
+        <!- note that caching didn't work when accessing the XSP using the cocoon:/ protocol ->
         <map:generate src="../xsp/java/cacheable.xsp" type="serverpages"/>
         <map:transform src="cache-test/xsp-sample-to-itext.xsl">
           <map:parameter name="pages" value="{1}"/>
         </map:transform>
         <map:serialize type="itext2pdf"/>
       </map:match>
+      -->
 
     </map:pipeline>
   </map:pipelines>

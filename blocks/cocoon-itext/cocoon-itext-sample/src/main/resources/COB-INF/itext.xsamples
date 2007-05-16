@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='iText']">
 
   <group name="iText">
-    <sample name="iText Block" href="itext/">
+    <sample name="iText Block" href="/cocoon-itext-sample/">
       Examples of PDF document generation using iText.
     </sample>
   </group>
