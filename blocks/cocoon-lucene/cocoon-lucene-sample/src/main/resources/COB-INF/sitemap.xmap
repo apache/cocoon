@@ -45,7 +45,8 @@
   </map:view>
 
   <map:view from-label="content" name="pretty-content">
-   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+   <map:transform type="servletLinkRewriter" />
    <map:serialize type="html"/>
   </map:view>
 
@@ -66,6 +67,10 @@
   
   <map:pipeline>
   	
+    <map:match pattern="">
+      <map:redirect-to uri="welcome"/>
+    </map:match>
+
     <!-- mount query bean pipelines
       <map:match pattern="query/**">
         <map:mount src="query/sitemap.xmap" uri-prefix="query"/>
@@ -82,6 +87,7 @@
       <map:generate type="search"/>
       <map:transform type="log"/>
       <map:transform src="stylesheets/search2html.xsl"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize/>
     </map:match>
 
@@ -91,14 +97,14 @@
       </map:generate>
       <map:transform type="log"/>
       <map:transform src="stylesheets/search-index2html.xsl"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize/>
     </map:match>
 
     <map:match pattern="welcome">
       <map:generate src="welcome-index.xml"/>
-      <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
+      <map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl" />
+      <map:transform type="servletLinkRewriter" />
       <map:serialize/>
     </map:match>
 
@@ -108,9 +114,8 @@
 
     <map:match pattern="create-index.jx">
       <map:generate type="jx" src="create-index.jx"/>
-      <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
+      <map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl" />
+      <map:transform type="servletLinkRewriter" />
       <map:serialize/>
     </map:match>
 
