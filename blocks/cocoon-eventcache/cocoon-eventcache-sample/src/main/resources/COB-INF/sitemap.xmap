@@ -68,13 +68,13 @@
           <map:parameter name="DATE" value="{date:date}"/>
           <map:parameter name="KEY" value="{request-param:pageKey}"/>
         </map:generate>
-        <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
+        <map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
-	    <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-	    <map:parameter name="contextPath" value="{request:contextPath}"/>
-	    <map:parameter name="file" value="eventcache.xsp"/>
-	    <map:parameter name="remove" value="{0}"/>
-	  </map:transform>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="file" value="eventcache.xsp"/>
+          <map:parameter name="remove" value="{0}"/>
+	    </map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
     </map:pipeline>
