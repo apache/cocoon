@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Faces']">
 
   <group name="Faces">
-    <sample name="Faces Block" href="faces/welcome">
+    <sample name="Faces Block" href="/cocoon-faces-sample/">
       JavaServer Faces integration into Cocoon
     </sample>
   </group>
