@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='VALIDATION']">
 
   <group name="VALIDATION">
-    <sample name="VALIDATION Block" href="validation/">
+    <sample name="VALIDATION Block" href="/cocoon-validation-sample/">
       Example usages of XML Validation.
     </sample>
   </group>
