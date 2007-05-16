@@ -38,7 +38,18 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-petstore-impl</artifactId>
-      
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xsp-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-velocity-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-databases-hsqldb-server</artifactId>
     </dependency>
   </dependencies>
 </project>
