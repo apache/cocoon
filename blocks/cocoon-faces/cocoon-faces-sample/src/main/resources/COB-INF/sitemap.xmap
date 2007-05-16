@@ -51,7 +51,8 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -73,9 +74,8 @@
         -->
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
@@ -86,9 +86,8 @@
       <map:match pattern="*.view">
         <map:generate src="{1}.xml"/>
         <map:transform type="taglib"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-           <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
