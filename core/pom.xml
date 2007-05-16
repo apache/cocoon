@@ -80,7 +80,7 @@
     <url>https://svn.apache.org/repos/asf/cocoon/trunk/core</url>
   </scm>
 
-  <dependencyManagement>
+  <!--dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -177,7 +177,7 @@
         <version> 1.0.0-RC2-SNAPSHOT</version>
       </dependency>
     </dependencies>        
-  </dependencyManagement>
+  </dependencyManagement-->
     
   <profiles>
     <profile>
