@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='FOP']">
 
   <group name="FOP">
-    <sample name="FOP Block" href="fop/">
+    <sample name="FOP Block" href="/cocoon-fop-sample/">
       Examples of PDF document generation using FOP.
     </sample>
   </group>

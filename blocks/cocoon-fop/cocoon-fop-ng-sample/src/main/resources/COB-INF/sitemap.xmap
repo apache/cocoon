@@ -31,7 +31,8 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -46,8 +47,8 @@
 
   <map:resources>
     <map:resource name="hello">
-      <map:generate src="context://blocks/cocoon-core-main-sample/hello-world/content/hello.xml"/>
-      <map:transform label="xsl-fo" src="context://blocks/cocoon-core-main-sample/hello-world/style/xsl/page2fo.xsl"/>
+      <map:generate src="servlet:main-sample:/hello-world/hello.xml"/>
+      <map:transform label="xsl-fo" src="servlet:main-sample:/hello-world/style/xsl/page2fo.xsl"/>
     </map:resource>
   </map:resources>
 
@@ -62,9 +63,8 @@
       <!-- list of samples -->
       <map:match pattern="welcome">
         <map:generate src="misc/samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
