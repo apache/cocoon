@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='HTML']">
 
   <group name="HTML">
-    <sample name="HTML Block" href="html/">
+    <sample name="HTML Block" href="/cocoon-html-sample/">
       Example usages of HTML Block components.
     </sample>
   </group>
