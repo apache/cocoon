@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='JSP']">
 
   <group name="JSP">
-    <sample name="JSP Block" href="jsp/">
+    <sample name="JSP Block" href="/cocoon-jsp-sample/">
       Java Server Pages (JSP) usage with Cocoon
     </sample>
   </group>
