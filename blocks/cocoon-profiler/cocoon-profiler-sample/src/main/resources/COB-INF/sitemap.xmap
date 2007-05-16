@@ -26,7 +26,8 @@
   </map:view>
 
   <map:view from-label="content" name="pretty-content">
-    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+    <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
   </map:view>
 
@@ -47,9 +48,8 @@
    <map:match pattern="caching-testsite.html">
     <map:generate src="test.xml"/>
     <map:transform src="test2page.xsl"/>
-    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
@@ -62,9 +62,8 @@
    <map:match pattern="noncaching-testsite.html">
     <map:generate src="test.xml"/>
     <map:transform src="test2page.xsl"/>
-    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
@@ -80,9 +79,8 @@
 
    <map:match pattern="welcome">
     <map:generate src="samples.xml"/>
-    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize/>
    </map:match>
   
@@ -93,9 +91,8 @@
     <map:transform type="xalan" src="profile2page.xsl">
      <map:parameter name="use-request-parameters" value="true"/>
     </map:transform>
-    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+    <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
+    <map:transform type="servletLinkRewriter" />
     <map:serialize type="html"/>
    </map:match>
 
