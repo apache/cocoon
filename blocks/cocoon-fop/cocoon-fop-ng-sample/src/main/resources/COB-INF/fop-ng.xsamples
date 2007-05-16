@@ -20,7 +20,7 @@
 
 
   <group name="FOPNG">
-    <sample name="FOP NG Block" href="fop/">
+    <sample name="FOP NG Block" href="cocoon-fop-ng-sample/">
       Examples of PDF and other file format document generation using FOP 0.92beta and later.
     </sample>
   </group>
