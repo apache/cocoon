@@ -32,7 +32,7 @@
     <html>
       <head>
         <title>Apache Cocoon @version@</title>
-        <link rel="SHORTCUT ICON" href="favicon.ico"/>
+        <link rel="SHORTCUT ICON" href="servlet:/icons/cocoon.ico"/>
         <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
       </head>
       <body>

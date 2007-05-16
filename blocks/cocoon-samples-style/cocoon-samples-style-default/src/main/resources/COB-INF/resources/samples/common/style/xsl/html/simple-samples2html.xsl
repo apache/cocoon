@@ -32,14 +32,14 @@
     <html>
       <head>
         <title>Apache Cocoon @version@</title>
-        <link rel="SHORTCUT ICON" href="favicon.ico"/>
-        <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
+        <link rel="SHORTCUT ICON" href="servlet:/icons/cocoon.ico"/>
+        <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
       </head>
       <body>
        <table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
          <tr>
            <td width="*">The Apache Software Foundation is proud to present...</td>
-           <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
+           <td width="40%" align="center"><img border="0" src="servlet:/images/cocoon.gif"/></td>
            <td width="30%" align="center">Version: <b>@version@</b></td>
          </tr>
        </table>
