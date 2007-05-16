@@ -27,10 +27,10 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>4</version>
   </parent>
   <artifactId>cocoon-core-modules</artifactId>
-  <version>4-SNAPSHOT</version>
+  <version>4</version>
   <name>Cocoon Core [modules]</name>
   
   <modules>
@@ -38,9 +38,9 @@
     <module>cocoon-pipeline/cocoon-pipeline-api</module>
     <module>cocoon-pipeline/cocoon-pipeline-impl</module>
     <module>cocoon-pipeline/cocoon-pipeline-components</module>
-    <module>cocoon-servlet-service/cocoon-servlet-service-components</module>
+    <!--module>cocoon-servlet-service/cocoon-servlet-service-components</module>
     <module>cocoon-servlet-service/cocoon-servlet-service-impl</module>
-    <module>cocoon-servlet-service/cocoon-servlet-service-sample</module>
+    <module>cocoon-servlet-service/cocoon-servlet-service-sample</module-->
     <module>cocoon-sitemap/cocoon-sitemap-api</module>
     <module>cocoon-sitemap/cocoon-sitemap-impl</module>
     <module>cocoon-sitemap/cocoon-sitemap-components</module>   
@@ -48,7 +48,7 @@
     <module>cocoon-thread/cocoon-thread-api</module>
     <module>cocoon-thread/cocoon-thread-impl</module>
     <module>cocoon-util</module>
-    <module>cocoon-webapp</module>
+    <!--module>cocoon-webapp</module-->
     <module>cocoon-xml/cocoon-xml-api</module>
     <module>cocoon-xml/cocoon-xml-impl</module>
     <module>cocoon-xml/cocoon-xml-resolver</module>    
@@ -75,9 +75,9 @@
   </reporting>  
   
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/trunk/core</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-4</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-4</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-4</url>
   </scm>
   
   <profiles>
