@@ -26,7 +26,7 @@
     <html>
       <head>
         <title>Lucene Index</title>
-        <link title="Default Style" href="/styles/main.css" rel="stylesheet"/>
+        <link title="Default Style" href="servlet:style-default:/styles/main.css" rel="stylesheet"/>
       </head>
       <body >
         <a href="http://jakarta.apache.org/lucene/">
