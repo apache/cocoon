@@ -36,7 +36,10 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-validation-impl</artifactId>
-      
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-samples-style-default</artifactId>
     </dependency>
   </dependencies>
 </project>
