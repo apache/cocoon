@@ -63,7 +63,8 @@
   </map:view>  
 
   <map:view from-label="content" name="pretty-content">
-   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+   <map:transform type="servletLinkRewriter"/>
    <map:serialize type="html"/>
   </map:view>
 
@@ -75,8 +76,7 @@
  <map:resources>
    <!-- this will later become a virtual transformer -->
    <map:resource name="simple-page2html">
-     <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
+     <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
        <map:parameter name="servletPath" value="{request:servletPath}"/>
        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
        <map:parameter name="file" value="{file}"/>
@@ -102,9 +102,8 @@
 
      <map:match pattern="">
       <map:generate src="welcome.xml"/>
-      <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-         <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
+      <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+      <map:transform type="servletLinkRewriter"/>
       <map:serialize/>
      </map:match>
 
@@ -136,6 +135,7 @@
              <map:call resource="simple-page2html">
                <map:parameter name="file" value="forms/form1_success_jx.xml"/>
              </map:call>
+             <map:transform type="servletLinkRewriter"/>
              <map:serialize/>
            </map:act>
          </map:when>
@@ -166,6 +166,7 @@
        </map:transform>
        <map:transform type="i18n">
        </map:transform>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize/>
      </map:match>
         
@@ -289,6 +290,7 @@
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_template_jx.xml"/>
        </map:call>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize/>
      </map:match>
 
@@ -311,6 +313,7 @@
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_success_jx.xml"/>
        </map:call>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize/>
      </map:match>
 
@@ -493,8 +496,7 @@
        <map:transform type="i18n">
          <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
-       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-         <map:parameter name="contextPath" value="{request:contextPath}"/>
+       <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
          <map:parameter name="servletPath" value="{request:servletPath}"/>
          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
          <map:parameter name="file" value="forms/htmlarea_template.xml"/>
@@ -504,6 +506,7 @@
          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
        </map:transform>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize/>
      </map:match>
 
@@ -574,6 +577,7 @@
          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
        </map:transform>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize type="html" />
      </map:match>
 
@@ -582,6 +586,7 @@
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/binding/done.jx"/>
        </map:call>
+       <map:transform type="servletLinkRewriter"/>
        <map:serialize />
      </map:match>
      
