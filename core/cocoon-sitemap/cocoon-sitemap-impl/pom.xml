@@ -27,10 +27,10 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>4</version>
   </parent>
   <artifactId>cocoon-sitemap-impl</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC1</version>
   <name>Cocoon Sitemap Implementation</name>
   <description>
     The tree processor implementation of the sitemap with dependencies.
