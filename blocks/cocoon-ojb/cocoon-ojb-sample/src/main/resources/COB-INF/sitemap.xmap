@@ -22,8 +22,8 @@
     <map:transformers default="xslt">
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="other">
-          <catalogue id="other" name="OtherMessages" location="context://samples/blocks/forms/messages"/>
-          <catalogue id="forms" name="FormsMessages" location="context://samples/blocks/forms/messages"/>
+          <catalogue id="other" name="OtherMessages" location="servlet:forms:/resource/internal/i18n"/>
+          <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n" />
         </catalogues>
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
@@ -37,7 +37,8 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -58,21 +59,20 @@
 
       <map:match pattern="">
         <map:generate src="welcome.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-           <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
       <map:match pattern="*/xspdemo">
         <map:generate src="{1}/xsp/demo1.xsp" type="serverpages"/>
-        <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
+        <map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
           <map:parameter name="file" value="jdo/xsp/xspdemo.xsp"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
@@ -94,26 +94,29 @@
         <map:transform type="i18n">
           <map:parameter name="locale" value="en-US"/>
         </map:transform>
-        <map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:transform src="resources/forms-samples-styling.xsl">
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
+        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="file" value="forms/employee.xml"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
       <map:match pattern="jdo/forms/employee-form-success">
         <map:generate type="serverpages" src="forms/success.xsp"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="file" value="forms/success.xsp"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 

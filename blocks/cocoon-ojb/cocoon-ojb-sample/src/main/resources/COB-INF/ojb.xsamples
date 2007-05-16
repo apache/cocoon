@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='OJB']">
 
   <group name="OJB">
-    <sample name="OJB Block" href="ojb/">
+    <sample name="OJB Block" href="/cocoon-ojb-sample/">
       Apache Object/Relational Bridge.
     </sample>
   </group>

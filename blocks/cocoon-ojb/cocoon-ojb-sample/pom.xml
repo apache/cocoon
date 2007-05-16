@@ -38,25 +38,33 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ojb-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ojb-mocks</artifactId>
-      
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-databases-sample</artifactId>
-      
     </dependency>
 <!--  For now we have to depend on the querybean block as the ojb configuration contains
           mappings for some beans from the querybean block :( -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-querybean-impl</artifactId>
-      
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-forms-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-ajax-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-samples-style-default</artifactId>
     </dependency>
   </dependencies>
 </project>
