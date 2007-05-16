@@ -25,10 +25,10 @@
 
    <map:match pattern="">
      <map:generate src="samples.xml"/>
-     <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-     </map:transform>
-     <map:serialize/>
+     <!-- Make use of servlet services -->
+     <map:serialize type="servletService" mime-type="text/html">
+       <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+     </map:serialize>
    </map:match>
 
    <!-- ======================== XScript Samples ========================= -->
@@ -36,34 +36,50 @@
    <map:match pattern="xscript/getquote1">
      <map:generate src="pages/xscript/getquote1.xsp" type="serverpages"/>
      <map:transform src="stylesheets/soap-getquote1.xsl"/>
-     <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
+     <!-- Make use of servlet services -->
+     <map:serialize type="servletService" mime-type="text/html">
+       <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+     </map:serialize>
+     <!-- I can't see where these params are used in the dynamic-page2html.xsl
+     <map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>
         <map:parameter name="file" value="pages/{0}.xsp"/>
         <map:parameter name="remove" value="{0}"/>
      </map:transform>
+     <map:transform type="servletLinkRewriter" />
      <map:serialize/>
+     -->
    </map:match>
 
    <map:match pattern="xscript/*">
      <map:generate src="pages/xscript/{1}.xsp" type="serverpages"/>
-     <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
+     <!-- Make use of servlet services -->
+     <map:serialize type="servletService" mime-type="text/html">
+       <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+     </map:serialize>
+     <!-- I can't see where these params are used in the dynamic-page2html.xsl
+     <map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>
         <map:parameter name="file" value="pages/{0}.xsp"/>
         <map:parameter name="remove" value="{0}"/>
      </map:transform>
+     <map:transform type="servletLinkRewriter" />
      <map:serialize/>
+     -->
    </map:match>   
 
    <!-- ======================== XScript Samples ========================= -->
             
    <map:match pattern="*">
     <map:generate src="pages/{1}.xsp" type="serverpages"/>
-    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-    <map:serialize/>
+    <!-- Make use of servlet services -->
+    <map:serialize type="servletService" mime-type="text/html">
+      <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+    </map:serialize>
    </map:match>
 
    </map:pipeline>                
