@@ -37,7 +37,8 @@
       <map:serialize type="xml"/>
     </map:view>
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter"/>
       <map:serialize type="html"/>
     </map:view>
     <map:view name="links" from-position="last">
@@ -101,36 +102,36 @@
             <map:serialize type="xml"/>
           </map:when>
           <map:otherwise>
-            <map:transform src="context://samples/common/style/xsl/html/adding-header.xsl">
-              <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:transform src="servlet:style-default:/common/style/xsl/html/adding-header.xsl">
               <map:parameter name="servletPath" value="{request:servletPath}"/>
               <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
               <map:parameter name="file" value="content/teamTemplate.jx"/>
             </map:transform>
             <map:transform type="i18n"/>
+            <map:transform type="servletLinkRewriter"/>
             <map:serialize type="html"/>
           </map:otherwise>
         </map:select>
       </map:match>
       <map:match pattern="showTeam.form">
         <map:generate type="jx" src="content/showTeam.jx"/>
-        <map:transform src="context://samples/common/style/xsl/html/adding-header.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/adding-header.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="file" value="content/teamTemplate.jx"/>
         </map:transform>        
         <map:transform type="i18n"/>
+        <map:transform type="servletLinkRewriter"/>
         <map:serialize type="html"/>
       </map:match>
       <map:match pattern="home.form">
         <map:generate type="jx" src="content/main.jx"/>
-        <map:transform src="context://samples/common/style/xsl/html/adding-header.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/adding-header.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="file" value="content/teamTemplate.jx"/>
         </map:transform>        
+        <map:transform type="servletLinkRewriter"/>
         <map:serialize type="html"/>
       </map:match>
       <!-- ========================================= -->

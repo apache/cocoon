@@ -42,7 +42,8 @@
   </map:view>
 
   <map:view from-label="content" name="pretty-content">
-   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+   <map:transform type="servletLinkRewriter"/>
    <map:serialize type="html"/>
   </map:view>
 
@@ -54,8 +55,7 @@
  <map:resources>
    <!-- this will later become a virtual transformer -->
    <map:resource name="simple-page2html">
-     <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
+     <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
        <map:parameter name="servletPath" value="{request:servletPath}"/>
        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
        <map:parameter name="file" value="{file}"/>
@@ -92,6 +92,7 @@
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:transform type="servletLinkRewriter" />
        <map:serialize/>
      </map:match>
 
@@ -100,6 +101,7 @@
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_success_jx.xml"/>
        </map:call>
+       <map:transform type="servletLinkRewriter" />
        <map:serialize/>
      </map:match>
 
