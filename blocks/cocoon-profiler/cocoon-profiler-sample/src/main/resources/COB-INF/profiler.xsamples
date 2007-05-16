@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Profiler']">
 
   <group name="Profiler">
-    <sample name="Profiler Block" href="profiler/">
+    <sample name="Profiler Block" href="/cocoon-profiler-sample/">
       This example shows the usage of the Profiler component for
       profiling and debugging of pipelines.
     </sample>
