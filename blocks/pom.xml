@@ -148,6 +148,7 @@
         <module>cocoon-fop/cocoon-fop-ng-sample</module-->        
         <module>cocoon-html/cocoon-html-impl</module>
         <module>cocoon-html/cocoon-html-sample</module>        
+        <module>cocoon-imageop</module>  
         <module>cocoon-itext</module>
         <module>cocoon-javaflow</module>
         <!-- module>cocoon-jcr</module -->
