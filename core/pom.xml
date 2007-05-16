@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>4</version>
+    <version>4-SNAPSHOT</version>
   </parent>
   <artifactId>cocoon-core-modules</artifactId>
   <version>5-SNAPSHOT</version>
@@ -79,7 +79,7 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core</developerConnection>
     <url>https://svn.apache.org/repos/asf/cocoon/trunk/core</url>
   </scm>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -193,7 +193,7 @@
           </plugin> 
         </plugins>
       </build>      
-    </profile>
+    </profile>   
   </profiles>  
   
 </project>

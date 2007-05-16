@@ -26,7 +26,7 @@
   <packaging>jar</packaging>
 
   <parent>
-    <artifactId>cocoon-core-modules</artifactId>
+    <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>

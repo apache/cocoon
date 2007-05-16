@@ -33,7 +33,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>5-SNAPSHOT</version>
+  <version>4-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
@@ -47,6 +47,9 @@
     <!-- sub projects -->
     <module>core/cocoon-configuration/cocoon-configuration-api</module>
     <module>core/cocoon-configuration/cocoon-spring-configurator</module>
+    <module>core/cocoon-servlet-service/cocoon-servlet-service-components</module>
+    <module>core/cocoon-servlet-service/cocoon-servlet-service-impl</module>    
+    <module>core/cocoon-servlet-service/cocoon-servlet-service-sample</module>        
   </modules>
 
   <repositories>
@@ -767,12 +770,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-core</artifactId>
-        <version>2.2.0-RC1-SNAPSHOT</version>
+        <version>2.2.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-core</artifactId>
-        <version>2.2.0-RC1-SNAPSHOT</version>
+        <version>2.2.0-RC2-SNAPSHOT</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
@@ -944,22 +947,22 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-api</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-components</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
@@ -1076,17 +1079,17 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-api</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-components</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -1106,7 +1109,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-store-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -1131,12 +1134,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-thread-api</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-thread-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -1146,7 +1149,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-util</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -1182,12 +1185,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-api</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -1197,7 +1200,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-resolver</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2302,8 +2305,8 @@
       </modules>
       <repositories>  
         <repository>
-          <id>cocoon.dev</id>
-          <url>http://people.apache.org/~reinhard/m2-daisy-staging-repository/</url>
+          <id>cocoon-dev.org</id>
+          <url>http://cocoondev.org/repository2</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -2314,8 +2317,8 @@
       </repositories>
       <pluginRepositories>
         <pluginRepository>
-          <id>cocoon.dev</id>
-          <url>http://people.apache.org/~reinhard/m2-daisy-staging-repository/</url>
+          <id>cocoon-dev.org</id>
+          <url>http://cocoondev.org/repository2</url>
           <releases>
             <enabled>true</enabled>
           </releases>
