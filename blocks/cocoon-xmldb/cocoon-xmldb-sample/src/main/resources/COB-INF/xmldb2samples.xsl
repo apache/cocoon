@@ -25,7 +25,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:x="http://apache.org/cocoon/xmldb/1.0">
 
-  <xsl:import href="context://stylesheets/system/xml2html.xslt"/>
+  <xsl:import href="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
 
   <xsl:template match="/">
     <xsl:choose>
@@ -146,7 +146,7 @@
   </xsl:template>
 
   <xsl:template name="head">
-    <link href="/styles/prettycontent.css" type="text/css" rel="stylesheet"/>
-    <script src="/scripts/prettycontent.js" type="text/javascript"/>
+    <link href="servlet:style-default:/styles/prettycontent.css" type="text/css" rel="stylesheet"/>
+    <script src="servlet:style-default:/scripts/prettycontent.js" type="text/javascript"/>
   </xsl:template>
 </xsl:stylesheet>
