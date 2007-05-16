@@ -10,7 +10,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>5-SNAPSHOT</version>
+  <version>4-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
