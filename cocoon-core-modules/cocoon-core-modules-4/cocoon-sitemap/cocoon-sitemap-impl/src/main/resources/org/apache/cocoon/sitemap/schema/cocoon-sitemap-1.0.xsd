@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    | XML Schema for the sitemap
+    |
+    | @version $Id$
+    +-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://apache.org/cocoon/sitemap/1.0"
+            xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+            xmlns="http://apache.org/cocoon/sitemap/1.0">
+
+  <xsd:element name="sitemap">
+    <xsd:annotation>
+      <xsd:documentation>
+        This is the root element of a sitemap.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:all>
+        <xsd:element ref="components" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="resources" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="views" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="flow" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="action-sets" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="pipelines" minOccurs="1" maxOccurs="1"/>
+      </xsd:all>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="components">
+    <xsd:complexType>
+      <xsd:all>
+        <xsd:element ref="generators" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="transformers" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="serializers" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="readers" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="selectors" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="matchers" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="actions" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="pipes" minOccurs="0" maxOccurs="1"/>
+      </xsd:all>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="generators">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="generator" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="transformers">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="transformer" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="serializers">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="serializer" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="readers">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="reader" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="selectors">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="selector" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="matchers">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="matcher" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="actions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="action" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="pipes">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="pipe" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="generator">
+    <xsd:complexType>
+      <xsd:sequence>
+		<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+      <xsd:attribute name="pool-max" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="transformer">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+      <xsd:attribute name="pool-max" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="serializer">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+      <xsd:attribute name="mime-type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="pool-max" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="reader">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+      <xsd:attribute name="mime-type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="pool-max" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="selector">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="matcher">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="action">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="pipe">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="logger" type="xsd:string" use="optional"/>
+      <xsd:attribute name="pool-max" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="resources">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="resource" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="resource">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="pipeline-content"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="views">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="view" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="view">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="pipeline-content"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="from-label" type="xsd:string" use="optional"/>
+      <xsd:attribute name="from-position" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="flow">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="script" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="language" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="script">
+    <xsd:complexType>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="action-sets">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="action-set" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="action-set">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="act">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element ref="act" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="action" type="xsd:string" use="optional"/>
+            <xsd:attribute name="type" type="xsd:string" use="required"/>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="pipelines">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="component-configurations" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="pipeline" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="handle-errors" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="component-configurations">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+   </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="pipeline">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:group ref="pipeline-content"/>
+        <xsd:element ref="handle-errors" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="internal-only" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="parameter">
+    <xsd:complexType>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:group name="pipeline-content">
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="match"/>
+        <xsd:element ref="mount"/>
+        <xsd:element ref="call"/>
+        <xsd:element ref="aggregate"/>
+        <xsd:element ref="generate"/>
+        <xsd:element ref="transform"/>
+        <xsd:element ref="serialize"/>
+        <xsd:element ref="read"/>
+        <xsd:element ref="select"/>
+        <xsd:element ref="act"/>
+        <xsd:element ref="redirect-to"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:group>
+
+  <xsd:element name="match">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:group ref="pipeline-content"/>
+      </xsd:sequence>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="pattern" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="mount">
+    <xsd:complexType>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="check-reload" type="xsd:string" use="optional"/>
+      <xsd:attribute name="uri-prefix" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="call">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="resource" type="xsd:string" use="optional"/>
+      <xsd:attribute name="function" type="xsd:string" use="optional"/>
+      <xsd:attribute name="continuation" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="aggregate">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="part" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="element" type="xsd:string" use="required"/>
+      <xsd:attribute name="ns" type="xsd:string" use="optional"/>
+      <xsd:attribute name="prefix" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="part">
+    <xsd:complexType>
+      <xsd:attribute name="src" type="xsd:string" use="required"/>
+      <xsd:attribute name="element" type="xsd:string" use="optional"/>
+      <xsd:attribute name="ns" type="xsd:string" use="optional"/>
+      <xsd:attribute name="prefix" type="xsd:string" use="optional"/>
+      <xsd:attribute name="strip-root" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="generate">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="src" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="transform">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="src" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="serialize">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="src" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="status-code" type="xsd:string" use="optional"/>
+      <xsd:attribute name="label" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="read">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="src" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="mime-type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="select">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="when" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="otherwise" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="when">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="pipeline-content"/>
+      </xsd:sequence>
+      <xsd:attribute name="test" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="otherwise">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="pipeline-content"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="act">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:group ref="pipeline-content"/>
+      </xsd:sequence>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+      <xsd:attribute name="set" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="redirect-to">
+    <xsd:complexType>
+      <xsd:attribute name="uri" type="xsd:string" use="optional"/>
+      <xsd:attribute name="resource" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="handle-errors">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="pipeline-content"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
