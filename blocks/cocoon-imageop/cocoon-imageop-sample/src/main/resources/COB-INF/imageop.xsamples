@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Image Effects']">
 
   <group name="Image Effects">
-    <sample href="imageop/" name="Image Effects">
+    <sample href="/cocoon-imageop-sample/" name="Image Effects">
       Image Effects to be applied to images.
     </sample>
   </group>
