@@ -31,8 +31,9 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-      <map:serialize type="html"/>
+      <map:serialize type="servletService" mime-type="text/html">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
     </map:view>
 
     <map:view name="links" from-position="last">
@@ -50,18 +51,18 @@
    
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
-        <map:serialize/>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService" mime-type="text/html">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
       </map:match>
    
       <map:match pattern="xwelcome">
         <map:generate src="xmldb:xindice-embed:///db/cocoon/xsamples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
-        <map:serialize/>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService" mime-type="text/html">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
       </map:match>
 
       <map:match pattern="xmount/**">
@@ -79,18 +80,20 @@
         <map:match type="request-parameter" pattern="xpath">
           <map:generate src="xmldb:xindice-embed:///db/{../1}#{1}"/>
           <map:transform src="xmldb2samples.xsl"/>
-          <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-            <map:parameter name="contextPath" value="{request:contextPath}"/>
-          </map:transform>
-          <map:serialize/>
+          <map:transform type="servletLinkRewriter" />
+          <!-- Make use of servlet services -->
+          <map:serialize type="servletService" mime-type="text/html">
+            <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+          </map:serialize>
         </map:match>
 
         <map:generate src="xmldb:xindice-embed:///db/{1}"/>
         <map:transform src="xmldb2samples.xsl"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
-        <map:serialize/>
+        <map:transform type="servletLinkRewriter" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService" mime-type="text/html">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
       </map:match>
 
       <map:match pattern="db/**">

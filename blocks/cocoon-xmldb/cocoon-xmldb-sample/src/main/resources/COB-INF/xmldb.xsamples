@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='XML:DB']">
 
   <group name="XML:DB">
-    <sample name="XML:DB Block" href="xmldb/">
+    <sample name="XML:DB Block" href="/cocoon-xmldb-sample/">
       XML database samples.
     </sample>
   </group>
