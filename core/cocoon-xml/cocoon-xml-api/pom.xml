@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>4</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-xml-api</artifactId>
-  <version>1.0.0-RC1-SNAPSHOT</version>
+  <version>1.0.0-RC1</version>
   <name>Cocoon XML API</name>
   <description>
     DOMParser and SAXParser interface.
