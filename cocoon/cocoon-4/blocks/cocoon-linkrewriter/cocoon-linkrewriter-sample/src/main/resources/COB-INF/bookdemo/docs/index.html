@@ -1,0 +1,41 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+    <head>
+        <title>LinkRewriterTransformer: bookdemo sample</title>
+    </head>
+  <body>
+      <p>[<a href="../">../</a>] [<a href="book:Index">index</a>] [<a href="book:Overview">overview</a>] [<a href="book:Installing">installing</a>]</p>
+    <hr/>
+    <h1>LinkRewriter demo</h1>
+    <h2>/index.html</h2>
+
+    <p>This subsitemap demonstrates the LinkRewriterTransformer, which rewrites
+    links with the aid of configurable InputModules</p>
+    <p>This particular demo is set up so that links of the form
+    <code>book:XYZ</code> are resolved by looking in book.xml for the @label
+    XYZ, and then using the associated href, with ..'s added as appropriate.
+    This is done with an XMLFileModule and SimpleMappingMetaModule, defined in
+    cocoon.xconf.
+    </p>
+    <p>Here are two links to demonstrate</p>
+    <ul>
+      <li><a href="book:Overview">book:Overview</a></li>
+      <li><a href="book:Installing">book:Installing</a></li>
+    </ul>
+  </body>
+</html>

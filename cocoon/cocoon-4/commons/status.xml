@@ -1,0 +1,520 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE status [
+<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT developers (person+)>
+<!ELEMENT person EMPTY>
+<!ATTLIST person
+  name CDATA #REQUIRED
+  email CDATA #REQUIRED
+  id CDATA #REQUIRED
+>
+<!ELEMENT todo (actions+)>
+<!ELEMENT actions (action+)>
+<!ATTLIST actions
+  priority (high | medium | low) #REQUIRED
+>
+<!ELEMENT changes (release+)>
+<!ELEMENT release (action+)>
+<!ATTLIST release
+  version CDATA #REQUIRED
+  date CDATA #REQUIRED
+>
+<!ELEMENT action (#PCDATA | link | br | code | ul | strong)*>
+<!ATTLIST action
+  context (build | code | docs) #IMPLIED
+  assigned-to CDATA #IMPLIED
+  dev CDATA #IMPLIED
+  type (add | fix | remove | update) #IMPLIED
+  fixes-bug CDATA #IMPLIED
+  due-to CDATA #IMPLIED
+  due-to-email CDATA #IMPLIED
+>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT br EMPTY>
+<!ELEMENT strong (#PCDATA)>
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link
+  href CDATA #REQUIRED
+>
+<!ELEMENT ul (li)+>
+<!ELEMENT li (#PCDATA | link | br | code | ul)*>
+<!ENTITY eacute           "&#x000E9;">
+<!ENTITY ouml             "&#x000F6;">
+<!ENTITY uuml             "&#x000FC;">
+<!ENTITY ccedil           "&#x000E7;">
+]>
+
+<!-- @version $Id$ -->
+
+<status>
+ <developers>
+  <!-- in strict alphabetical order -->
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Nicola Ken Barozzi" email="nicolaken@apache.org" id="NKB"/>
+  <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
+  <person name="Mark Butler" email="butlermh@apache.org" id="MB"/>
+  <person name="Ugo Cei" email="ugo@apache.org" id="UC"/>
+  <person name="Tony Collen" email="tony@apache.org" id="ATC"/>
+  <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
+  <person name="David Crossley" email="crossley@apache.org" id="DC"/>
+  <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
+  <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
+  <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
+  <person name="Daniel Fagerstrom" email="danielf@apache.org" id="DF"/>
+  <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Antonio Gallardo" email="antonio@apache.org" id="AG"/>
+  <person name="Leszek Gawron" email="lgawron@apache.org" id="LG"/>
+  <person name="Simone Gianni" email="simoneg@apache.org" id="SG"/>
+  <person name="Ralph Goers" email="rgoers@apache.org" id="RG"/>
+  <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
+  <person name="Christian Haul" email="haul@apache.org" id="CH"/>
+  <person name="J&#246;rg Heinicke" email="joerg@apache.org" id="JH"/>
+  <person name="Jorg Heymans" email="jheymans@apache.org" id="JHS"/>
+  <person name="Unico Hommes" email="unico@apache.org" id="UH"/>
+  <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
+  <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
+  <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
+  <person name="Matthew Langham" email="mlangham@apache.org" id="BL"/>
+  <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Michael Melhem" email="michaelm@apache.org" id="MM"/>
+  <person name="Stephan Michels" email="stephan@apache.org" id="SMS"/>
+  <person name="John Morrison" email="morrijr@apache.org" id="JM"/>
+  <person name="Alfred Nathaniel" email="anathaniel@apache.org" id="AN"/>
+  <person name="Steven Noels" email="stevenn@apache.org" id="SN"/>
+  <person name="Christopher Oliver" email="coliver@apache.org" id="CO"/>
+  <person name="Giacomo Pati" email="giacomo@apache.org" id="GP"/>
+  <person name="Konstantin Piroumian" email="kpiroumian@apache.org" id="KP"/>
+  <person name="Marc Portier" email="mpo@apache.org" id="MPO"/>
+  <person name="Ovidiu Predescu" email="ovidiu@apache.org" id="OP"/>
+  <person name="Jean-Baptiste Quenot" email="jbq@apache.org" id="JBQ"/>
+  <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
+  <person name="Reinhard P&#246;tz" email="reinhard@apache.org" id="RP"/>
+  <person name="Gianugo Rabellino" email="gianugo@apache.org" id="GR"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Peter Royal" email="proyal@apache.org" id="PAR"/>
+  <person name="Paul Russell" email="prussell@apache.org" id="PR"/>
+  <person name="Andrew Savory" email="asavory@apache.org" id="AS"/>
+  <person name="Diana Shannon" email="shannon@apache.org" id="DS"/>
+  <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
+  <person name="Jeff Turner" email="jefft@apache.org" id="JT"/>
+  <person name="Upayavira" email="upayavira@apache.org" id="UV"/>
+  <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
+  <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
+  <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
+ </developers>
+
+  <todo>
+   <actions priority="high">
+    <action context="code" assigned-to="all">
+      Test, test, test :-)
+    </action>
+
+    <action context="build" assigned-to="open">
+      Complete (means put all allowed constructs and combinations)
+      the lint/sitemap.xmap file. Enhance the RELAX NG grammar for sitemap.
+    </action>
+
+    <action context="code" assigned-to="SW">
+      For 2.2: Views must start not from the first encountered label, but from the last one
+      (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172)
+    </action>
+
+    <action context="code" assigned-to="open">
+      Finish the design and contracts of flow. Add more tests and samples and
+      documentation.
+    </action>
+
+    <action context="code" assigned-to="open">
+      Finish the
+      <link href="plan/samples.html">refactoring of samples</link>
+    </action>
+
+    <action context="code" assigned-to="open">
+      Finish moving the scratchpad stuff in main trunk.
+    </action>
+   </actions>
+
+   <actions priority="medium">
+    <action context="code">
+      Ensure that recyclable components always release their references, even when
+      they are not pooled. The easiest way is to make them disposable and clean up
+      in dispose.
+    </action>
+
+    <action context="code">
+      Lucene is writing info to stdout when searching.
+    </action>
+
+    <action context="code">
+      Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
+      server: store fragments in the session rather than in a local store. <br/>
+      This couldn't work, because if you working with caching pipelines, you cannot be sure
+      that the entries are in the session(Stephan).
+    </action>
+
+    <action context="code" assigned-to="MPO">
+      Remove ContainerWidget concept from cforms.
+    </action>
+   </actions>
+  </todo>
+  <!-- These are the changes from the last 2.1.x version. -->
+ <changes>
+  <release version="@version@" date="@date@">
+    <action dev="JBQ" type="update" fixes-bug="COCOON-1706" due-to="Philippe Gassmann" due-to-email="philippe.gassmann@anyware-tech.com">
+      Allow TeeTransformer to run a system command for debugging purposes
+    </action>
+    <action dev="JBQ" type="update">
+      Ported various caching pipeline fixes and improvements from branch 2.1:
+      <ul>
+        <li>locking feature, see http://svn.apache.org/viewcvs.cgi?rev=379792&view=rev</li>
+        <li>COCOON-1279: caching point pipelines and smart caching, see http://issues.apache.org/jira/browse/COCOON-1279</li>
+        <li>COCOON-1799: Threads waste when reading a not found resource, see http://issues.apache.org/jira/browse/COCOON-1799</li>
+      </ul>
+    </action>
+    <action dev="VG" type="update">
+      Move BackgroundEnvironment from Cron block into the core.
+    </action>
+    <action dev="CZ" type="remove">
+      Remove deprecated WildcardHelper. Use WildcardMatcherHelper instead.
+    </action>
+    <action dev="CZ" type="fix">
+      Property files are read in alphabetical order to provide a reliable read order.
+    </action>
+    <action dev="CZ" type="add">
+      Add setting "org.apache.cocoon.sitemap.internalonly.disable" to disable all internal pipelines for
+      development purposes.
+    </action>
+    <action dev="CZ" type="remove">
+      Remove the SitemapConfigurable interface completly. The new include and property mechanism provides
+      a cleaner way of per sitemap configurations. (Compatibility for global sitemap variables is provided but
+      will be removed in later versions.)
+    </action>
+    <action dev="CZ" type="add">
+      Properties can now be defined on a per sitemap base. This includes different set of
+      properties for different running modes.
+    </action>
+    <action dev="CZ" type="add">
+      Add support for different running modes. This allows to have different configurations
+      for several environments like production, testing or development. On startup of Cocoon
+      one can select the running mode by using a system property.
+    </action>
+    <action dev="CZ" type="add">
+      Rewrote the whole core container by using Spring as the component container. It is now
+      possible to use Avalon based configuration files next to Spring style configuration files
+      and they are all "merged" and managed by one single container instance. Each sitemap
+      gets its own container with possibly own configuration.
+    </action>
+    <action dev="CZ" type="update">
+      Removed obsolete support for JCS.
+    </action>
+    <action dev="CZ" type="update">
+      XMLSerializer and XMLDeserializer are no longer managed components. Use the XMLByteStreamCompiler
+      and XMLByteStreamInterpreter classes directly.
+    </action>
+    <action dev="CZ" type="add">
+      Add hierarchical property configuration for reloading. The various components checking
+      for changes in files like sitemaps, xconfs or flow scripts can now be turned on or off
+      by a single property.
+    </action>
+    <action dev="GP" type="add">
+      Added JMX support to the core ECM++ 
+    </action>
+    <action dev="JH" type="fix" fixes-bug="COCOON-1700">
+      I18n: XMLResourceBundle checks now for both the new and the old namespace.
+    </action>
+    <action dev="CZ" type="update">
+      AbstractSAXTransformer supports removal of own namespace prefixes.
+    </action>
+    <action dev="CZ" type="update">
+      CInclude transformer now removes its namespace prefixes.
+    </action>
+    <action dev="AN" type="add" fixes-bug="COCOON-1616">
+      Source that declares namespace fails JXPath/Linkrewriter/Input Modules.
+    </action>
+    <action dev="CZ" type="update">
+      Each block has now it's own status file.
+    </action>
+    <action dev="LG" type="update">
+      Improved blocks build exclusion/inclusion. See blocks.properties for more info.
+    </action>
+    <action dev="BD" type="update">
+      Samples pages reorganized: the first page shows only the most important samples, selected
+      in src/webapp/samples/blocks/samples-pages.xml, and another page shows all samples.
+    </action>
+    <action dev="BD" type="update">
+      Core samples moved to new blocks: core-samples-main and core-samples-additional.
+    </action>
+    <action dev="CZ" type="update">
+      Update Avalon framework to 4.3, Avalon LogKit to 2.1, Excalibur Instrument to 2.1,
+      Excalibur Logger to 2.1, Excalibur Pool to 2.1, Excalibur SourceResolve to 2.1,
+      Excalibur Store to 2.1, Excalibur XMLUtils to 2.1 and Excalibur Database to 2.1.
+    </action>
+    <action dev="CZ" type="add">
+      Add property mechanism for Cocoon configuration. All settings for Cocoon can now
+      be configured using properties instead of putting them in web.xml.
+    </action>
+    <action dev="CZ" type="add">
+      Allow the use of property replacements in logging, xconf and sitemap configurations.
+    </action>
+    <action dev="CZ" type="add">
+      Use includes for logkit configurations and for sitemap components.
+    </action>
+    <action dev="JH" type="update">
+      Moved following components into core: TraversableGenerator, XPathTraversableGenerator (both from repository
+      block), CSVGenerator (from scratchpad block), FragmentExtractorTransformer and FragmentExtractorGenerator
+      (both from batik block).
+    </action>
+    <action dev="AN" type="add" fixes-bug="28045" due-to="Jon Evans" due-to-email="jon.evans@misgl.com">
+      Added CookieModule as a more convinient way to access cookie values as {cookie:query}
+      in alternative to {request:cookies[name='query']/value}.
+    </action>
+    <action dev="AN" type="add" fixes-bug="33388" due-to="Andrew Stevens" due-to-email="ats37@hotmail.com">
+      Added parameter "show-cocoon-version" to web.xml for configuring whether X-Cocoon-Version
+      response header should be sent.  Default is true.
+      In a security paranoid environment you may want to set it to false in order to hide from
+      the outside world which Cocoon version you are running.
+    </action>
+    <action dev="CZ" type="fix">
+      Fix a huge memory leak in error pipelines that was caused by unreleased components.
+    </action>
+    <action dev="CZ" type="update">
+      Remove deprecated emptyAttributes from the AbstractSAXTransformer.
+    </action>
+    <action dev="CZ" type="add">
+      Per sitemap classloader factory is configurable using the role name.
+    </action>
+    <action dev="BD" type="add">
+      The junit.test.include.* options in build.properties can be used to run only
+      a subset of JUnit tests, to shorten debugging cycles.
+    </action>
+   <action dev="DF" type="update">
+     Added reflection friendly utility methods for the Cocoon environment according to vote
+     http://marc.theaimsgroup.com/?t=111590936900001&amp;r=1&amp;w=2:
+     Map getAttributes(), Map getParameters(), Map getHeaders() for Request
+     and Map getAttributes() for Session and Context.
+   </action>
+   <action dev="LG" type="update">
+     Removed o.a.c.generation.JXTemplateGenerator from core.
+     Introduced o.a.c.template.jxtg.JXTemplateGenerator as the official templating language.
+     New commands available: &lt;jx:call macro="${macroName"}/&gt;
+     and &lt;jx:attribute name="${attributeName}" value="${attributeValue}"/&gt;
+   </action>
+   <action dev="VG" type="remove">
+     Removed EventRecorder (in o.a.c.t.helpers package).
+   </action>
+   <action dev="AG" type="remove">
+     Removed deprecated Pizza compiler support in XSP.
+   </action>
+   <action dev="SW" type="add">
+     Each sitemap can now have its own classpath using <code>&lt;map:classpath&gt;</code>. This allows
+     sitemap-specific components to be deployed locally with the sitemap. Reloading the sitemap
+     recreates the classloader, thus allowing hot reloading of changed classes.
+   </action>
+   <action dev="LG" type="fix" fixes-bug="33836" due-to="Niklas Therning" due-to-email="niklas@trillian.se">
+     Fix thread safety problem in JXTemplateGenerator.setup() concerning template script reparsing.
+   </action>
+   <action dev="LG" type="add">
+     Polish i18n for CForms.
+   </action>
+   <action dev="CZ" type="update">
+     Create proxies for pooled components. Pooled components can now be used in the same
+     way as thread safe components, the client code does not need to know if they are pooled anymore.
+   </action>
+   <action dev="TC" type="add">
+     javaflow: updated to the API change,
+     lazy method lookups,
+     cleaner context handling,
+     for the moment removed the dependency to the form block
+   </action>
+   <action dev="JH" type="fix" fixes-bug="33097">
+     Fixed caching of i18n bundles when using multiple locations.
+   </action>
+   <action dev="SW" type="add">
+     Add an experimental lazy loading in the service manager that dramatically speeds up Cocoon init time
+     (approx 4 times faster). To use it, set JAVA_OPTIONS="-Dorg.apache.cocoon.core.LazyMode=true" prior
+     to starting "cocoon.sh servlet".
+   </action>
+   <action dev="SW" type="add">
+     Add an include feature to xconf files and xmap files, to allow an easier configuration of the system.
+     The main cocoon.xconf is now a list of inclusion of the main core components and a
+     separate xconf file for each block. Additional role files can also be included.
+   </action>
+   <action dev="VG" type="remove">
+     Flowscript: Removed support for passing sitemap parameters into flowscript
+     function as positional arguments. Use cocoon.parameters instead.
+   </action>
+   <action dev="RP" type="update" due-to="Igor Bukanov" fixes-bug="31649" due-to-email="igor@fastmail.fm">
+     Use official Rhino implementation which supports continuations since 1.6. For the most
+     flowscripts there shouldn't be any issues, though there are differences that may lead
+     to compatibility issues:
+     <ul>
+        <li>catch(return)</li>
+        <li>catch(continue)</li>
+        <li>catch(break)</li>
+     </ul>
+     aren't supported any more. catch(break) can be replaced by passing the function
+     to cocoon.sendPageAndWait([pipeline], [bizdata], [function], [time-to-live]).
+     <br/>
+     catch(return) and catch(continue) e.g.
+     <code>
+  var pool = ...;
+  function someFunction() {
+       var conn = pool.getConnection();
+       ...
+       catch (break) {
+     conn.close();
+     conn = null;
+       }
+       catch (continue) {
+     conn = pool.getConnection();
+       }
+  }
+     </code>
+     can be replaced by catching the ContinuationException:
+     <code>
+       var pool = ...;
+  function someFunction() {
+       var conn = null;
+       try {
+     if (conn == null) {
+         conn = pool.getConnection();
+     }
+     ...
+       } finally {
+     conn.close();
+     conn = null;
+       }
+  }
+     </code>
+   </action>
+   <action dev="ATC" type="remove">
+     Removed the PHP block.
+   </action>
+   <action dev="CZ" type="update">
+     Remove support for Excalibur instrumentation.
+   </action>
+   <action dev="CZ" type="update">
+     Component, Composable, ComponentManager, ComponentSelector and ComponentException
+     are no longer support: Serviceable, ServiceManager, ServiceSelector and ServiceException
+     have to be used.
+   </action>
+   <action dev="CZ" type="add">
+     Own implementation of Avalon based container.
+   </action>
+   <action dev="RP" type="add" due-to="Adam Ratclif" fixes-bug="31359">
+     Apply patch: Add support for calling webservices from within Flowscript.
+   </action>
+   <action dev="CZ" type="add">
+     New getSitemapPath() method on the Request object to get the path to the
+     current sitemap even if you are in a sub sitemap. Added an abstract request
+     wrapper class as well.
+   </action>
+   <action dev="CZ" type="add">
+     Add scoped request attributes (global/request).
+   </action>
+   <action dev="CZ" type="update">
+     Update to servlet specification 2.3.
+   </action>
+   <action dev="AG" type="update">
+     Deprecate methods implementsInterface(String, String),
+     implementsInterface(Class, Class), lastModified(Class)
+     and which(Class) in org.apache.cocoon.util.ClassUtils
+     These methods will be removed on the next version.
+   </action>
+   <action dev="SW" type="update">
+     Move the sitemap engine to Serviceable (in replacement of Composable) and remove
+     SitemapComponentSelector and OutputComponentSelector that were no more needed.
+   </action>
+   <action dev="CZ" type="add">
+     Add profiling/debugging API for the sitemap.
+   </action>
+   <action dev="CZ" type="add">
+     Add sitemap versioning support to tree processor and remove unused
+     support for other tree based languages.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="28686">
+     Correct redirect handling for internal redirects.
+   </action>
+   <action dev="TC" type="remove">
+     SWF block: Removed the deprecated block and added a flash sample in the
+     hello world section.
+   </action>
+   <action dev="AG" type="update">
+     Deprecated methods in class org.apache.cocoon.util.IOUtils
+     to be removed in Cocoon 2.3:
+     <ul>
+       <li>String baseName(String filename)</li>
+       <li>Object bytesToObject(byte[] bytes)</li>
+       <li>Object deserializeObject(File file)</li>
+       <li>String fileComponent(String filename)</li>
+       <li>byte[] objectToBytes(Object object)</li>
+       <li>String pathComponent(String filename)</li>
+       <li>void serializeObject(File file, Object object)</li>
+       <li>void serializeString(File file, String string)</li>
+       <li>void serializeString(File file, String string, String encoding)</li>
+     </ul>
+   </action>
+   <action dev="AG" type="update">
+     Deprecated class org.apache.cocoon.util.JavaArchiveFilter.
+     To be removed in Cocoon 2.3. Moved to the deprecated dir.
+   </action>
+   <action dev="CZ" type="update">
+     Redesign the internal environment handling (request processing) and moved
+     private classes into own packages.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated RequestLifecycleComponent and GlobalRequestLifecycleComponent.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated (2.0.x) caching system; only 2.1.x is supported.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated sitemap related components and classes.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated Store implementations. Excalibur Store/JCS are used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated Parser and Entity Resolver. Excalibur XMLUtils is used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated XSLT Processor. Excalibur XMLUtils is used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated Source handling. Excalibur Sourceresolve is used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated getOutputStream() method from Environment.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated methods from SimpleCharStream, Notifier,
+     AbstractComplementaryConfigurableAction, StringUtils. Remove deprecated
+     parser constant from Constants and remove deprecated class
+     DefaultsMetaModule.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
+   </action>
+  </release>
+ </changes>
+
+</status>
+
