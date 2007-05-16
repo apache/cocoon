@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>4</version>
+    <version>4-SNAPSHOT</version>
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
   <version>4-SNAPSHOT</version>
