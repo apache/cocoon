@@ -31,9 +31,8 @@
 
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize type="html"/>
       </map:match>
     </map:pipeline>
@@ -49,8 +48,9 @@
     <map:pipeline>
       <map:match pattern="wsproxy/*">
         <map:generate type="wsproxy" label="xml"
-          src="http://{request:serverName}:{request:serverPort}{request:contextPath}/samples/hello-world/hello.xml"/>
-        <map:transform src="context://samples/hello-world/style/xsl/page2html.xsl"/>
+          src="http://{request:serverName}:{request:serverPort}{servlet:main-sample:/}hello-world/hello.xml"/>
+        <map:transform src="servlet:main-sample:/hello-world/style/xsl/page2html.xsl"/>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize type="html"/>
       </map:match>
     </map:pipeline>
