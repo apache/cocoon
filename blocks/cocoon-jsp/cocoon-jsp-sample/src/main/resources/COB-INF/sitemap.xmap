@@ -60,7 +60,8 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
+      <map:transform type="servletLinkRewriter" />
       <map:serialize type="html"/>
     </map:view>
 
@@ -78,9 +79,8 @@
    
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
         <map:serialize/>
       </map:match>
 
@@ -96,12 +96,12 @@
 
       <map:match pattern="*.jsp">
         <map:generate type="jsp" src="{1}.jsp"/>
-     	<map:transform src="context://samples/blocks/dynamic-page2html.xsl">
+     	<map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl">
      	   <map:parameter name="servletPath" value="{request:servletPath}"/>
      	   <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-     	   <map:parameter name="contextPath" value="{request:contextPath}"/>
-     	   <map:parameter name="file" value=".jsp"/>
+     	   <map:parameter name="file" value="{1}.jsp"/>
      	</map:transform>
+        <map:transform type="servletLinkRewriter" />
         <map:serialize type="html"/>
       </map:match>
 
