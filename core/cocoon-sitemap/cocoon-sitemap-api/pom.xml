@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>4</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-sitemap-api</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC1</version>
   <name>Cocoon Sitemap API</name>
   <description>
     Interfaces for the sitemap: Processor, actions, modules, flow, matching,
