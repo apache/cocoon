@@ -30,7 +30,7 @@
     <version>4</version>
   </parent>
   <artifactId>cocoon-core-modules</artifactId>
-  <version>4</version>
+  <version>5-SNAPSHOT</version>
   <name>Cocoon Core [modules]</name>
   
   <modules>
@@ -75,9 +75,9 @@
   </reporting>  
   
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-4</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-4</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-4</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/trunk/core</url>
   </scm>
   
   <profiles>
