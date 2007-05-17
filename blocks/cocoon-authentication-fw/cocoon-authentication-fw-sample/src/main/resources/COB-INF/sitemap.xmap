@@ -32,10 +32,10 @@
     <map:pipeline>
       <map:match pattern="">
         <map:generate src="welcome.xml" />
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}" />
-        </map:transform>
-        <map:serialize />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService" mime-type="text/html">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
       </map:match>
     </map:pipeline>
 
