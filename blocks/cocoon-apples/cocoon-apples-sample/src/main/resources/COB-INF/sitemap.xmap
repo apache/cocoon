@@ -80,7 +80,7 @@
             <map:match pattern="">
                 <map:generate src="welcome.xml" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                 </map:serialize>
             </map:match>
