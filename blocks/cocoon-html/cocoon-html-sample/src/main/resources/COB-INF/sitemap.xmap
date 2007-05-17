@@ -23,90 +23,92 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-<!-- =========================== Views =================================== -->
+    <!-- =========================== Views =================================== -->
 
-  <map:views>
-    <map:view from-label="content" name="content">
-      <map:serialize type="xml"/>
-    </map:view>
+    <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-    <map:view from-label="content" name="pretty-content">
-      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
-      <map:transform type="servletLinkRewriter" />
-      <map:serialize type="html"/>
-    </map:view>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
 
-    <map:view from-position="last" name="links">
-      <map:serialize type="links"/>
-    </map:view>
-  </map:views>
+        <map:view from-position="last" name="links">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-<!-- =========================== Pipelines ================================= -->
+    <!-- =========================== Pipelines ================================= -->
 
-  <map:pipelines>
-    <map:pipeline type="caching">
+    <map:pipelines>
+        <map:pipeline type="caching">
 
-      <map:match pattern="">
-        <map:redirect-to uri="welcome"/>
-      </map:match>
+            <map:match pattern="">
+                <map:redirect-to uri="welcome" />
+            </map:match>
 
-      <!-- list of samples -->
-      <map:match pattern="welcome">
-        <map:generate src="samples.xml"/>
-        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
-        <map:transform type="servletLinkRewriter" />
-        <map:serialize/>
-      </map:match>
+            <!-- list of samples -->
+            <map:match pattern="welcome">
+                <map:generate src="samples.xml" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
+            </map:match>
 
-      <!-- ================  TIDY  =========================== -->
+            <!-- ================  TIDY  =========================== -->
 
-      <map:match pattern="apache">
-        <map:generate type="html" src="http://cocoon.apache.org/news">
-          <map:parameter name="xpath" value="/html"/>
-        </map:generate>
-        <map:transform src="stylesheets/apache.xsl"/>
-        <map:serialize type="xhtml"/>
-      </map:match>
+            <map:match pattern="apache">
+                <map:generate type="html" src="http://cocoon.apache.org/news">
+                    <map:parameter name="xpath" value="/html" />
+                </map:generate>
+                <map:transform src="stylesheets/apache.xsl" />
+                <map:serialize type="xhtml" />
+            </map:match>
 
-      <!-- ================  NekoHTML  =========================== -->      
+            <!-- ================  NekoHTML  =========================== -->
 
-      <map:match pattern="apache-neko">
-        <map:generate type="nekohtml" src="http://cocoon.apache.org/news"/>
-        <map:transform src="stylesheets/apache-no-namespace.xsl"/>
-        <map:serialize type="xhtml"/>
-      </map:match>
+            <map:match pattern="apache-neko">
+                <map:generate type="nekohtml" src="http://cocoon.apache.org/news" />
+                <map:transform src="stylesheets/apache-no-namespace.xsl" />
+                <map:serialize type="xhtml" />
+            </map:match>
 
-      <!-- ================  HTMLTransformer ================= -->
+            <!-- ================  HTMLTransformer ================= -->
 
-      <map:match pattern="HTMLTransformer/input.xml">
-        <map:generate src="htmltransformer/input.xml"/>
-        <map:serialize type="xml"/>
-      </map:match>
+            <map:match pattern="HTMLTransformer/input.xml">
+                <map:generate src="htmltransformer/input.xml" />
+                <map:serialize type="xml" />
+            </map:match>
 
-      <map:match pattern="HTMLTransformer/parsed.xml">
-        <map:generate src="htmltransformer/input.xml"/>
-        <map:transform type="html">
-          <map:parameter name="tags" value="description,escaped-html"/>
-        </map:transform>
-        <map:transform src="htmltransformer/post-transformer-filter.xsl"/>
-        <map:serialize type="xhtml"/>
-      </map:match>
+            <map:match pattern="HTMLTransformer/parsed.xml">
+                <map:generate src="htmltransformer/input.xml" />
+                <map:transform type="html">
+                    <map:parameter name="tags" value="description,escaped-html" />
+                </map:transform>
+                <map:transform src="htmltransformer/post-transformer-filter.xsl" />
+                <map:serialize type="xhtml" />
+            </map:match>
 
-      <!-- ================  NekoHTMLTransformer ================= -->
+            <!-- ================  NekoHTMLTransformer ================= -->
 
-      <map:match pattern="NekoHTMLTransformer/input.xml">
-        <map:generate src="htmltransformer/input.xml"/>
-        <map:serialize type="xml"/>
-      </map:match>
+            <map:match pattern="NekoHTMLTransformer/input.xml">
+                <map:generate src="htmltransformer/input.xml" />
+                <map:serialize type="xml" />
+            </map:match>
 
-      <map:match pattern="NekoHTMLTransformer/parsed.xml">
-        <map:generate src="htmltransformer/input.xml"/>
-        <map:transform type="nekohtml">
-          <map:parameter name="tags" value="description,escaped-html"/>
-        </map:transform>
-        <map:transform src="htmltransformer/post-transformer-filter.xsl"/>
-        <map:serialize type="xhtml"/>
-      </map:match>
-    </map:pipeline>
-  </map:pipelines>
+            <map:match pattern="NekoHTMLTransformer/parsed.xml">
+                <map:generate src="htmltransformer/input.xml" />
+                <map:transform type="nekohtml">
+                    <map:parameter name="tags" value="description,escaped-html" />
+                </map:transform>
+                <map:transform src="htmltransformer/post-transformer-filter.xsl" />
+                <map:serialize type="xhtml" />
+            </map:match>
+        </map:pipeline>
+    </map:pipelines>
 </map:sitemap>
