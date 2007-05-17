@@ -120,6 +120,22 @@ public class ServletSource extends AbstractSource implements PostableSource {
 			return 0;
 		}
 	}
+	
+    /**
+     * The mime-type of the content described by this object.
+     * If the source is not able to determine the mime-type by itself
+     * this can be null.
+     */
+    public String getMimeType() {
+    	try {
+			connect();
+			return servletConnection.getContentType();
+		} catch (Exception e) {
+			if (logger.isDebugEnabled())
+				logger.debug("Exception occured while making servlet request", e);
+			return null;
+		}
+    }
 
 	/**
 	 * Returns true always.
