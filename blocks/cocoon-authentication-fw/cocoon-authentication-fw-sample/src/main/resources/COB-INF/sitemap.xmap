@@ -24,155 +24,180 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <!-- =========================== Flowscripts ================================= -->
-  <map:flow language="javascript" />
+    <!-- =========================== Views =================================== -->
 
-  <!-- =========================== Pipelines ================================= -->
-  <map:pipelines>
-    <map:pipeline>
-      <map:match pattern="">
-        <map:generate src="welcome.xml" />
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService" mime-type="text/html">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
-        </map:serialize>
-      </map:match>
-    </map:pipeline>
+    <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-    <!-- Non flow part -->
-    <map:pipeline>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
 
-      <!-- ================= -->
-      <!-- Simple login page -->
-      <!-- ================= -->
-      <map:match pattern="login">
-        <!-- if we are already logged in, redirect to the protected document -->
-        <map:act type="auth-loggedIn">
-          <map:parameter name="handler" value="demohandler" />
-          <map:redirect-to uri="protected" />
-        </map:act>
-        <map:generate src="docs/login.xml" />
-        <map:transform src="stylesheets/simple-page2html.xsl" />
-        <map:transform type="encodeURL" />
-        <map:serialize />
-      </map:match>
+        <map:view from-position="last" name="links">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-      <!-- ========================================= -->
-      <!-- Form target which performs auth service   -->
-      <!-- ========================================= -->
-      <map:match pattern="do-login">
-        <!-- try to login -->
-        <map:act type="auth-login">
-          <map:parameter name="handler" value="demohandler" />
-          <map:parameter name="parameter_name" value="{request-param:username}" />
-          <map:redirect-to uri="protected" />
-        </map:act>
-        <!-- something was wrong, try it again -->
-        <map:redirect-to uri="login" />
-      </map:match>
+    <!-- =========================== Flowscripts ================================= -->
 
-      <!-- ================ -->
-      <!-- Protected area   -->
-      <!-- ================ -->
-      <map:match pattern="protected">
-        <map:act type="auth-protect">
-          <map:parameter name="handler" value="demohandler" />
+    <map:flow language="javascript" />
 
-          <map:generate src="docs/protected.xml" />
-          <map:transform type="session" />
-          <map:transform src="stylesheets/simple-page2html.xsl" />
-          <map:transform type="encodeURL" />
-          <map:serialize />
-        </map:act>
-        <!-- something was wrong, redirect to login page -->
-        <map:redirect-to uri="login" />
-      </map:match>
+    <!-- =========================== Pipelines ================================= -->
 
-      <!-- ========================================= -->
-      <!-- Logout link which invalidates the session -->
-      <!-- ========================================= -->
-      <map:match pattern="do-logout">
-        <map:act type="auth-protect">
-          <map:parameter name="handler" value="demohandler" />
-          <map:act type="auth-logout" />
-        </map:act>
-        <map:redirect-to uri="login" />
-      </map:match>
-    </map:pipeline>
+    <map:pipelines>
+        <map:pipeline>
+            <map:match pattern="">
+                <map:generate src="welcome.xml" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
+            </map:match>
 
-    <!-- Flow part -->
-    <map:pipeline>
-      <!-- ================= -->
-      <!-- Simple login page -->
-      <!-- ================= -->
-      <map:match pattern="flow/login">
-        <map:call function="isLoggedIn">
-          <map:parameter name="handler" value="flowdemohandler" />
-          <map:parameter name="protected-redirect" value="protected" />
-          <map:parameter name="failure-internal" value="flow/internal/login" />
-        </map:call>
-      </map:match>
+            <map:match pattern="sitemap.xmap">
+                <map:read src="sitemap.xmap" mime-type="text/xml" />
+            </map:match>
+        </map:pipeline>
 
-      <!-- ========================================= -->
-      <!-- Form target which performs auth service   -->
-      <!-- ========================================= -->
-      <map:match pattern="flow/do-login">
-        <!-- try to login -->
-        <map:call function="login">
-          <map:parameter name="handler" value="flowdemohandler" />
-          <map:parameter name="parameter_name" value="{request-param:username}" />
-          <map:parameter name="protected-redirect" value="protected" />
-          <map:parameter name="failure-redirect" value="login" />
-        </map:call>
-      </map:match>
+        <!-- Non flow part -->
+        <map:pipeline>
 
-      <!-- ================ -->
-      <!-- Protected area   -->
-      <!-- ================ -->
-      <map:match pattern="flow/protected">
-        <map:call function="protect">
-          <map:parameter name="handler" value="flowdemohandler" />
-          <map:parameter name="protected-internal" value="flow/internal/protected" />
-          <map:parameter name="failure-redirect" value="login" />
-        </map:call>
-      </map:match>
+            <!-- ================= -->
+            <!-- Simple login page -->
+            <!-- ================= -->
+            <map:match pattern="login">
+                <!-- if we are already logged in, redirect to the protected document -->
+                <map:act type="auth-loggedIn">
+                    <map:parameter name="handler" value="demohandler" />
+                    <map:redirect-to uri="protected" />
+                </map:act>
+                <map:generate src="docs/login.xml" />
+                <map:transform src="stylesheets/simple-page2html.xsl" />
+                <map:transform type="encodeURL" />
+                <map:serialize />
+            </map:match>
 
-      <!-- ========================================= -->
-      <!-- Logout link which invalidates the session -->
-      <!-- ========================================= -->
-      <map:match pattern="flow/do-logout">
-        <map:call function="logout">
-          <map:parameter name="handler" value="flowdemohandler" />
-          <map:parameter name="failure-redirect" value="login" />
-        </map:call>
-      </map:match>
-    </map:pipeline>
+            <!-- ========================================= -->
+            <!-- Form target which performs auth service   -->
+            <!-- ========================================= -->
+            <map:match pattern="do-login">
+                <!-- try to login -->
+                <map:act type="auth-login">
+                    <map:parameter name="handler" value="demohandler" />
+                    <map:parameter name="parameter_name" value="{request-param:username}" />
+                    <map:redirect-to uri="protected" />
+                </map:act>
+                <!-- something was wrong, try it again -->
+                <map:redirect-to uri="login" />
+            </map:match>
 
-    <map:pipeline internal-only="true">
-      <!-- This is the authentication resource -->
-      <map:match pattern="authenticate">
-        <map:generate src="docs/userlist.xml" />
-        <map:transform src="stylesheets/authenticate.xsl">
-          <map:parameter name="use-request-parameters" value="true" />
-        </map:transform>
-        <map:serialize type="xml" />
-      </map:match>
+            <!-- ================ -->
+            <!-- Protected area   -->
+            <!-- ================ -->
+            <map:match pattern="protected">
+                <map:act type="auth-protect">
+                    <map:parameter name="handler" value="demohandler" />
 
-      <map:match pattern="flow/internal/login">
-        <map:generate src="docs/login.xml" />
-        <map:transform src="stylesheets/simple-page2html.xsl" />
-        <map:transform type="encodeURL" />
-        <map:serialize />
-      </map:match>
+                    <map:generate src="docs/protected.xml" />
+                    <map:transform type="session" />
+                    <map:transform src="stylesheets/simple-page2html.xsl" />
+                    <map:transform type="encodeURL" />
+                    <map:serialize />
+                </map:act>
+                <!-- something was wrong, redirect to login page -->
+                <map:redirect-to uri="login" />
+            </map:match>
 
-      <map:match pattern="flow/internal/protected">
-        <map:generate src="docs/protected.xml" />
-        <map:transform type="session" />
-        <map:transform src="stylesheets/simple-page2html.xsl" />
-        <map:transform type="encodeURL" />
-        <map:serialize />
-      </map:match>
-    </map:pipeline>
+            <!-- ========================================= -->
+            <!-- Logout link which invalidates the session -->
+            <!-- ========================================= -->
+            <map:match pattern="do-logout">
+                <map:act type="auth-protect">
+                    <map:parameter name="handler" value="demohandler" />
+                    <map:act type="auth-logout" />
+                </map:act>
+                <map:redirect-to uri="login" />
+            </map:match>
+        </map:pipeline>
 
-  </map:pipelines>
+        <!-- Flow part -->
+        <map:pipeline>
+            <!-- ================= -->
+            <!-- Simple login page -->
+            <!-- ================= -->
+            <map:match pattern="flow/login">
+                <map:call function="isLoggedIn">
+                    <map:parameter name="handler" value="flowdemohandler" />
+                    <map:parameter name="protected-redirect" value="protected" />
+                    <map:parameter name="failure-internal" value="flow/internal/login" />
+                </map:call>
+            </map:match>
+
+            <!-- ========================================= -->
+            <!-- Form target which performs auth service   -->
+            <!-- ========================================= -->
+            <map:match pattern="flow/do-login">
+                <!-- try to login -->
+                <map:call function="login">
+                    <map:parameter name="handler" value="flowdemohandler" />
+                    <map:parameter name="parameter_name" value="{request-param:username}" />
+                    <map:parameter name="protected-redirect" value="protected" />
+                    <map:parameter name="failure-redirect" value="login" />
+                </map:call>
+            </map:match>
+
+            <!-- ================ -->
+            <!-- Protected area   -->
+            <!-- ================ -->
+            <map:match pattern="flow/protected">
+                <map:call function="protect">
+                    <map:parameter name="handler" value="flowdemohandler" />
+                    <map:parameter name="protected-internal" value="flow/internal/protected" />
+                    <map:parameter name="failure-redirect" value="login" />
+                </map:call>
+            </map:match>
+
+            <!-- ========================================= -->
+            <!-- Logout link which invalidates the session -->
+            <!-- ========================================= -->
+            <map:match pattern="flow/do-logout">
+                <map:call function="logout">
+                    <map:parameter name="handler" value="flowdemohandler" />
+                    <map:parameter name="failure-redirect" value="login" />
+                </map:call>
+            </map:match>
+        </map:pipeline>
+
+        <map:pipeline internal-only="true">
+            <!-- This is the authentication resource -->
+            <map:match pattern="authenticate">
+                <map:generate src="docs/userlist.xml" />
+                <map:transform src="stylesheets/authenticate.xsl">
+                    <map:parameter name="use-request-parameters" value="true" />
+                </map:transform>
+                <map:serialize type="xml" />
+            </map:match>
+
+            <map:match pattern="flow/internal/login">
+                <map:generate src="docs/login.xml" />
+                <map:transform src="stylesheets/simple-page2html.xsl" />
+                <map:transform type="encodeURL" />
+                <map:serialize />
+            </map:match>
+
+            <map:match pattern="flow/internal/protected">
+                <map:generate src="docs/protected.xml" />
+                <map:transform type="session" />
+                <map:transform src="stylesheets/simple-page2html.xsl" />
+                <map:transform type="encodeURL" />
+                <map:serialize />
+            </map:match>
+        </map:pipeline>
+
+    </map:pipelines>
 </map:sitemap>
