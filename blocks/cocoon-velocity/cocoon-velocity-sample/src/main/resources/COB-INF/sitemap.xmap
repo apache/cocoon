@@ -32,8 +32,10 @@
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
 
         <map:view from-position="last" name="links">
@@ -48,16 +50,16 @@
             <!-- list of samples -->
             <map:match pattern="">
                 <map:generate src="samples.xml" />
-                <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                </map:transform>
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
             </map:match>
 
             <!-- hello world -->
             <map:match pattern="hello.vm">
                 <map:generate type="velocity" src="hello-page.vm" />
-                <map:transform src="context://samples/hello-world/style/xsl/page2itext.xsl" />
+                <map:transform src="servlet:main-sample:/hello-world/style/xsl/page2itext.xsl" />
                 <map:serialize />
             </map:match>
         </map:pipeline>
