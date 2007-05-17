@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Taglib']">
 
   <group name="Taglib">
-    <sample name="Taglib Block" href="taglib/">
+    <sample name="Taglib Block" href="/cocoon-taglib-sample/">
       Examples of taglib transformer usage.
     </sample>
   </group>
