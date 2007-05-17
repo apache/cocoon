@@ -27,6 +27,7 @@
         <servlet:context mount-path="/cocoon-ajax-sample" context-path="blockcontext:/cocoon-ajax-sample/">
             <servlet:connections>
                 <entry key="ajax" value-ref="org.apache.cocoon.ajax.impl.servlet"/>
+                <entry key="style-default" value-ref="org.apache.cocoon.samples.style.default.servlet" />
             </servlet:connections>
         </servlet:context>
     </bean>
