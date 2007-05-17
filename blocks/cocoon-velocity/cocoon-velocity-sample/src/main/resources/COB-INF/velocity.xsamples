@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Velocity']">
 
   <group name="Velocity">
-    <sample name="Velocity Block" href="velocity/">
+    <sample name="Velocity Block" href="/cocoon-velocity-sample/">
       Examples of generation using Velocity.
     </sample>
   </group>
