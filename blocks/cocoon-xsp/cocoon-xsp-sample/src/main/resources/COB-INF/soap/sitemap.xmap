@@ -20,13 +20,34 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+    <!-- =========================== Views =================================== -->
+
+    <map:views>
+        <map:view name="content" from-label="content">
+            <map:serialize type="xml" />
+        </map:view>
+
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
+
+    <!-- =========================== Pipelines ================================= -->
+
     <map:pipelines>
         <map:pipeline>
 
             <map:match pattern="">
                 <map:generate src="samples.xml" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                 </map:serialize>
             </map:match>
@@ -37,7 +58,7 @@
                 <map:generate src="pages/xscript/getquote1.xsp" type="serverpages" />
                 <map:transform src="stylesheets/soap-getquote1.xsl" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
                 </map:serialize>
                 <!-- I can't see where these params are used in the dynamic-page2html.xsl
@@ -56,7 +77,7 @@
             <map:match pattern="xscript/*">
                 <map:generate src="pages/xscript/{1}.xsp" type="serverpages" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
                 </map:serialize>
                 <!-- I can't see where these params are used in the dynamic-page2html.xsl
@@ -77,7 +98,7 @@
             <map:match pattern="*">
                 <map:generate src="pages/{1}.xsp" type="serverpages" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
                 </map:serialize>
             </map:match>
