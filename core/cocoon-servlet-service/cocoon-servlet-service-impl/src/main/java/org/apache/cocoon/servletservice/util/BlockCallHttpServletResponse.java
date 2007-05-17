@@ -275,9 +275,9 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
      */
     public void setContentType(String type) {
-        // Ignore
+        setHeader("Content-Type", type);
     }
-    
+
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
      */
@@ -355,8 +355,7 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     public String getContentType() {
-        // TODO Auto-generated method stub
-        return null;
+    	return getHeader("Content-Type");
     }
 
     public void setCharacterEncoding(String arg0) {
