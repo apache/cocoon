@@ -24,6 +24,8 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.serialization.AbstractSerializer;
 import org.apache.cocoon.servletservice.postable.PostableSource;
@@ -42,6 +44,7 @@ public class ServletServiceSerializer extends AbstractSerializer implements Site
 	private Log logger = LogFactory.getLog(getClass());
 
 	private PostableSource servletSource;
+	private Response response;
 
 	private SaxBuffer saxBuffer;
 	
@@ -71,6 +74,18 @@ public class ServletServiceSerializer extends AbstractSerializer implements Site
 
 		saxBuffer = new SaxBuffer();
 		setConsumer(saxBuffer);
+		
+		response = ObjectModelHelper.getResponse(objectModel);
+	}
+	
+	/**
+	 * This method returns dummy mime type to satisfy pipeline's requirement to have mime type determined at setup phase.
+	 * In this serializer case it's not possible to satisfy this requirement so dummy value is returned and real is set in the 
+	 * method {@link #endDocument()}.
+	 * @see http://article.gmane.org/gmane.text.xml.cocoon.devel/73261 for post explaining current (hacky) solution
+	 */
+	public String getMimeType() {
+		return "application/dummy-mime-type";
 	}
 
 	public void endDocument() throws SAXException {
@@ -88,6 +103,9 @@ public class ServletServiceSerializer extends AbstractSerializer implements Site
 			throw new SAXException("Exception occured while writing to the output stream of source '" + servletSource.getURI() + "'", e);
 		}
 		try {
+			//here real mime type is set, see getMimeType() method's comment
+			response.setHeader("Content-Type", servletSource.getMimeType());
+			
 			IOUtils.copy(servletSource.getInputStream(), super.output);
 		} catch (Exception e) {
 			throw new SAXException("Exception occured while copying response from the service to the output stream", e);
