@@ -18,74 +18,74 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <!-- indicates what flowscript to attach to this sitemap -->
-  <map:flow language="javascript">
-    <map:script src="calc.js"/>
-  </map:flow>
+    <!-- =========================== Flowscripts =================================== -->
 
-  <map:views>
-    <map:view name="content" from-label="content">
-      <map:serialize type="xml"/>
-    </map:view>
+    <map:flow language="javascript">
+        <map:script src="calc.js" />
+    </map:flow>
 
-    <map:view from-label="content" name="pretty-content">
-      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
-      <map:transform type="servletLinkRewriter" />
-      <map:serialize type="html"/>
-    </map:view>
+    <!-- =========================== Views =================================== -->
 
-    <map:view name="links" from-position="last">
-      <map:serialize type="links"/>
-    </map:view>
-  </map:views>
+    <map:views>
+        <map:view name="content" from-label="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-  <map:pipelines>
-    <map:pipeline>
-      <!--+
-          | produces the screens called by the flowscript
-          +-->     
-      <map:match pattern="page/*">
-        <map:generate type="jx" src="screens/{1}.xml"/>
-        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
-          <map:parameter name="servletPath" value="{request:servletPath}"/>
-          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="servlet:/flow/jxcalc/screens/{1}.xml"/>
-          <map:parameter name="remove" value="{0}"/>
-        </map:transform>
-        <map:transform type="servletLinkRewriter" />
-        <map:serialize/>
-      </map:match>
-    </map:pipeline>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
 
-    <map:pipeline>
-      <!--+
-          | matches the page with the continuation ID and calls the flowscript
-          | associated to this sitemap with the given continuation ID. The flow
-          | engine will then look into the continuation store, retrieve
-          | the correct continuation and resume execution of the flowscript
-          | with that continuation. This guarantees transparent state 
-          | resumption between requests without the need for anything else
-          | (cookies or URL-encoded session IDs)
-          +-->
-      <map:match pattern="continue.*">
-        <map:call continuation="{1}"/>
-      </map:match>
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-      <!--+
-          | matches the call to the beginning of the flow and calls the flow
-          | from its entry point which, in this case is the 'calculator()'
-          | javascript function.
-          +-->
-      <map:match pattern="">
-        <map:call function="calculator"/>
-      </map:match>
-      
-      <!-- Make screens available to be used by other (sample-)blocks -->
-      <map:match pattern="screens/**">
-        <map:read src="screens/{1}" />
-      </map:match>
+    <!-- =========================== Pipelines ================================= -->
+    <map:pipelines>
+        <map:pipeline>
+            <!--+
+                | produces the screens called by the flowscript
+                +-->
+            <map:match pattern="page/*">
+                <map:generate type="jx" src="screens/{1}.xml" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+                </map:serialize>
+            </map:match>
+        </map:pipeline>
 
-    </map:pipeline>
-  </map:pipelines>
+        <map:pipeline>
+            <!--+
+                | matches the page with the continuation ID and calls the flowscript
+                | associated to this sitemap with the given continuation ID. The flow
+                | engine will then look into the continuation store, retrieve
+                | the correct continuation and resume execution of the flowscript
+                | with that continuation. This guarantees transparent state 
+                | resumption between requests without the need for anything else
+                | (cookies or URL-encoded session IDs)
+                +-->
+            <map:match pattern="continue.*">
+                <map:call continuation="{1}" />
+            </map:match>
+
+            <!--+
+                | matches the call to the beginning of the flow and calls the flow
+                | from its entry point which, in this case is the 'calculator()'
+                | javascript function.
+                +-->
+            <map:match pattern="">
+                <map:call function="calculator" />
+            </map:match>
+
+            <!-- Make screens available to be used by other (sample-)blocks -->
+            <map:match pattern="screens/**">
+                <map:read src="screens/{1}" />
+            </map:match>
+
+        </map:pipeline>
+    </map:pipelines>
 </map:sitemap>
