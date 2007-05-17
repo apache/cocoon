@@ -16,13 +16,32 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
     <!-- =========================== Views =================================== -->
+
     <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
+
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view from-position="last" name="links">
+            <map:serialize type="links" />
+        </map:view>
+
         <map:view name="xml" from-label="xml">
             <map:serialize type="xml" />
         </map:view>
     </map:views>
+
     <!-- =========================== Pipelines ================================= -->
+
     <map:pipelines>
         <map:pipeline>
             <map:match pattern="">
@@ -31,9 +50,10 @@
 
             <map:match pattern="welcome">
                 <map:generate src="samples.xml" />
-                <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize type="html" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
             </map:match>
         </map:pipeline>
 

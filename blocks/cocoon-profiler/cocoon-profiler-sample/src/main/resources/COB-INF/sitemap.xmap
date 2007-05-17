@@ -26,9 +26,10 @@
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt" />
-            <map:transform type="servletLinkRewriter" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
 
         <map:view name="links" from-position="last">
@@ -48,9 +49,10 @@
             <map:match pattern="caching-testsite.html">
                 <map:generate src="test.xml" />
                 <map:transform src="test2page.xsl" />
-                <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize type="html" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+                </map:serialize>
             </map:match>
 
         </map:pipeline>
@@ -62,9 +64,10 @@
             <map:match pattern="noncaching-testsite.html">
                 <map:generate src="test.xml" />
                 <map:transform src="test2page.xsl" />
-                <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize type="html" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+                </map:serialize>
             </map:match>
 
         </map:pipeline>
@@ -79,9 +82,10 @@
 
             <map:match pattern="welcome">
                 <map:generate src="samples.xml" />
-                <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
             </map:match>
 
             <map:match pattern="profile.html">
@@ -91,9 +95,10 @@
                 <map:transform type="xalan" src="profile2page.xsl">
                     <map:parameter name="use-request-parameters" value="true" />
                 </map:transform>
-                <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize type="html" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+                </map:serialize>
             </map:match>
 
             <map:match pattern="profile2.html">
