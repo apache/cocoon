@@ -28,7 +28,7 @@
             </fd:datatype>
         </fd:output>
         <fd:imagemap id="map">
-            <fd:imageuri>/images/cocoon.gif</fd:imageuri>
+            <fd:imageuri>servlet:style-default:/images/cocoon.gif</fd:imageuri>
             <fd:hint>Click to show coordinates</fd:hint>
             <fd:on-action>
                 <javascript>onClickMap(event);</javascript>

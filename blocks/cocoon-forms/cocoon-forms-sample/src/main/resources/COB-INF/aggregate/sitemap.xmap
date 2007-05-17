@@ -23,58 +23,55 @@
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:views>
-    <map:view name="content" from-label="content">
-      <map:serialize type="xml"/>
-    </map:view>
-    <map:view from-label="content" name="pretty-content">
-      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
-      <map:transform type="servletLinkRewriter"/>
-      <map:serialize type="html"/>
-    </map:view>
-    <map:view name="links" from-position="last">
-      <map:serialize type="links"/>
-    </map:view>
-  </map:views>
- 
-  <map:resources>
-    <map:resource name="simple-page2html">
-      <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
-        <map:parameter name="servletPath" value="{request:servletPath}"/>
-        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-        <map:parameter name="file" value="{file}"/>
-        <map:parameter name="remove" value="{../0}"/>
-      </map:transform> 
-    </map:resource>
-  </map:resources>
 
-  <map:flow language="javascript">
-    <map:script src="example.js"/>
-  </map:flow>
+    <!-- =========================== Views =================================== -->
 
-  <map:pipelines>
-    <map:pipeline>
-      <map:match pattern="example">
-        <map:call function="example"/>
-      </map:match>
-      <map:match pattern="*.continue">
-        <map:call continuation="{1}"/>
-      </map:match>
+    <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-      <map:match pattern="*-display-pipeline">
-        <!-- pipeline to show the form -->
-        <map:generate type="jx" src="template-{1}.xml"/>
-        <map:transform type="forms"/>
-        <map:call resource="simple-page2html">
-          <map:parameter name="file" value="{1}_template.xml"/>
-        </map:call>
-        <map:transform src="../resources/forms-samples-styling.xsl">
-          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
-          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
-         </map:transform>
-         <map:transform type="servletLinkRewriter"/>
-        <map:serialize/>
-      </map:match>
-    </map:pipeline>
-  </map:pipelines>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view from-position="last" name="links">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
+
+    <!-- =========================== Flowscripts =================================== -->
+
+    <map:flow language="javascript">
+        <map:script src="example.js" />
+    </map:flow>
+
+    <!-- =========================== Pipelines =================================== -->
+
+    <map:pipelines>
+        <map:pipeline>
+            <map:match pattern="example">
+                <map:call function="example" />
+            </map:match>
+            <map:match pattern="*.continue">
+                <map:call continuation="{1}" />
+            </map:match>
+
+            <map:match pattern="*-display-pipeline">
+                <!-- pipeline to show the form -->
+                <map:generate type="jx" src="template-{1}.xml" />
+                <map:transform type="forms" />
+                <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
+                <map:transform src="../resources/forms-samples-styling.xsl">
+                    <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+                    <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+                </map:transform>
+                <map:transform type="servletLinkRewriter" />
+                <map:serialize />
+            </map:match>
+        </map:pipeline>
+    </map:pipelines>
 </map:sitemap>
