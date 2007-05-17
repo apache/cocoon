@@ -18,14 +18,6 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:param name="contextPath">servlet:/</xsl:param>
-  <xsl:param name="servletPath" select="string('/samples')"/>
-  <xsl:param name="sitemapURI"/>
-
-  <xsl:variable name="directory" select="substring-before($servletPath,$sitemapURI)"/>
-  <!-- assume that sitemapURIs don't occur in servletPath more than once -->
-  <xsl:variable name="sitemap" select="concat($directory,'sitemap.xmap')"/>
-
   <xsl:template match="page">
    <html>
      <head>
@@ -45,7 +37,7 @@
     <div class="resources">
       <a href="?cocoon-view=content">Content View</a>
       <a href="?cocoon-view=pretty-content">Source</a>
-      <a href="{$sitemap}?cocoon-view=pretty-content">Sitemap</a>
+      <a href="sitemap.xmap?cocoon-view=pretty-content">Sitemap</a>
       <xsl:for-each select="resources/resource">
         <xsl:variable name="href">
           <xsl:choose>
@@ -55,10 +47,10 @@
               <xsl:value-of select="@href"/>
             </xsl:when>
             <xsl:when test="@type='doc'">
-              <xsl:value-of select="concat($contextPath, '/docs/', @href)"/>
+              <xsl:value-of select="concat('docs/', @href)"/>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="concat($contextPath, '/', @href)"/>
+              <xsl:value-of select="@href"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>

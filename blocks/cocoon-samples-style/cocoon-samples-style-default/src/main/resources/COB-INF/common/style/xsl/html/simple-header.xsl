@@ -16,16 +16,11 @@
   limitations under the License.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:param name="servletPath" select="string('/samples')"/>
-  <xsl:param name="sitemapURI"/>
-  <xsl:variable name="directory" select="substring-before($servletPath,$sitemapURI)"/>
-  <!-- assume that sitemapURIs don't occur in servletPath more than once -->
-  <xsl:variable name="sitemap" select="concat($directory,'sitemap.xmap')"/>
   <xsl:template match="body">
     <div style="text-align:right;width:100%;">
       <a href="?cocoon-view=content">Content View</a> |
       <a href="?cocoon-view=pretty-content">Source</a> |
-      <a href="{$sitemap}?cocoon-view=pretty-content">Sitemap</a>
+      <a href="sitemap.xmap?cocoon-view=pretty-content">Sitemap</a>
     </div>
     <xsl:apply-templates/>
   </xsl:template>
