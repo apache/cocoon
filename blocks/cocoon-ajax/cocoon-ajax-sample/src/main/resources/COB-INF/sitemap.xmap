@@ -30,8 +30,7 @@
  <map:resources>
    <!-- this will later become a virtual transformer -->
    <map:resource name="simple-page2html">
-     <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
+     <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
        <map:parameter name="servletPath" value="{request:servletPath}"/>
        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
        <map:parameter name="file" value="{file}"/>
@@ -44,10 +43,10 @@
   <map:pipeline>
      <map:match pattern="">
       <map:generate src="welcome.xml"/>
-      <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-         <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize/>
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService" mime-type="text/html">
+        <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+      </map:serialize>
      </map:match>
 
      <map:match pattern="*.html">
