@@ -18,88 +18,88 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <map:components>
-  </map:components>
+    <!-- =========================== Views =================================== -->
 
-  <map:views>
-    <map:view name="content" from-label="content">
-      <map:serialize type="xml"/>
-    </map:view>
-  </map:views>
- 
-  <map:resources>
-    <!-- this will later become a virtual transformer -->
-    <map:resource name="simple-page2html">
-      <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl">
-        <map:parameter name="servletPath" value="{request:servletPath}"/>
-        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-        <map:parameter name="file" value="{file}"/>
-        <map:parameter name="remove" value="{../0}"/>
-      </map:transform> 
-    </map:resource>
-  </map:resources>
+    <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-  <!-- indicates what flowscript to attach to this sitemap -->
-  <map:flow language="javascript">
-    <map:script src="flow.js"/>
-  </map:flow>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
 
-  <map:pipelines>
+        <map:view name="form" from-label="form">
+            <map:serialize type="xml" />
+        </map:view>
 
-    <map:pipeline type="noncaching">
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-      <map:match pattern="*.continue">
-        <map:call continuation="{1}"/>
-      </map:match>
+    <!-- =========================== Flowscripts =================================== -->
 
-      <map:match pattern="*-display-pipeline">
-        <!-- pipeline to show the form -->
-        <map:generate src="{1}.tpl.xml" type="jx"/>
-         <map:transform type="browser-update"/>
-        <map:transform type="i18n">
-          <map:parameter name="locale" value="en-US"/>
-        </map:transform>
-        <map:call resource="simple-page2html">
-          <map:parameter name="file" value="{1}.tpl.xml"/>
-        </map:call>
-         <map:transform src="../resources/forms-samples-styling.xsl">
-           <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}"/>
-           <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}"/>
-         </map:transform>        
-         <map:transform type="servletLinkRewriter"/>
-         <map:select type="ajax-request">
-           <map:when test="true"><!-- sending a partial Browser Update -->
-             <map:select type="request-parameter">
-               <map:parameter name="parameter-name" value="dojo.transport" />
-               <map:when test="iframe"><!-- sending BU via iFrameIO -->
-                 <map:transform src="servlet:forms:/resource/internal/xsl/IframeTransport-bu-styling.xsl" />
-                 <map:serialize type="xhtml" /><!-- this is REALLY important -->
-               </map:when>
-               <map:otherwise><!-- sending BU via XHR -->
-                 <map:serialize type="xml" />
-               </map:otherwise>
-             </map:select>
-           </map:when>
-           <map:otherwise><!-- sending a complete page -->
-             <map:serialize type="html" />
-           </map:otherwise>
-         </map:select>
-      </map:match>
- 
-      <map:match pattern="*-result-pipeline.jx">
-        <map:generate type="jx" src="{1}-result.xml"/>
-        <map:call resource="simple-page2html">
-          <map:parameter name="file" value="{1}-success.xml"/>
-        </map:call>
-        <map:transform type="servletLinkRewriter"/>
-        <map:serialize/>
-      </map:match>
-      
-      <map:match pattern="*.do">
-        <map:call function="do_{1}"/>
-      </map:match>
+    <map:flow language="javascript">
+        <map:script src="flow.js" />
+    </map:flow>
 
-    </map:pipeline>
-  </map:pipelines>
+    <!-- =========================== Pipelines =================================== -->
+
+    <map:pipelines>
+        <map:pipeline type="noncaching">
+            <map:match pattern="*.continue">
+                <map:call continuation="{1}" />
+            </map:match>
+
+            <map:match pattern="*-display-pipeline">
+                <!-- pipeline to show the form -->
+                <map:generate src="{1}.tpl.xml" type="jx" />
+                <map:transform type="browser-update" />
+                <map:transform type="i18n">
+                    <map:parameter name="locale" value="en-US" />
+                </map:transform>
+                <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
+                <map:transform src="../resources/forms-samples-styling.xsl">
+                    <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+                    <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+                </map:transform>
+                <map:transform type="servletLinkRewriter" />
+                <map:select type="ajax-request">
+                    <map:when test="true"><!-- sending a partial Browser Update -->
+                        <map:select type="request-parameter">
+                            <map:parameter name="parameter-name" value="dojo.transport" />
+                            <map:when test="iframe"><!-- sending BU via iFrameIO -->
+                                <map:transform src="servlet:forms:/resource/internal/xsl/IframeTransport-bu-styling.xsl" />
+                                <map:serialize type="xhtml" /><!-- this is REALLY important -->
+                            </map:when>
+                            <map:otherwise><!-- sending BU via XHR -->
+                                <map:serialize type="xml" />
+                            </map:otherwise>
+                        </map:select>
+                    </map:when>
+                    <map:otherwise><!-- sending a complete page -->
+                        <map:serialize type="html" />
+                    </map:otherwise>
+                </map:select>
+            </map:match>
+
+            <map:match pattern="*-result-pipeline.jx">
+                <map:generate type="jx" src="{1}-result.xml" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+                </map:serialize>
+            </map:match>
+
+            <map:match pattern="*.do">
+                <map:call function="do_{1}" />
+            </map:match>
+
+        </map:pipeline>
+    </map:pipelines>
 
 </map:sitemap>
