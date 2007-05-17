@@ -97,7 +97,11 @@
                 <map:transform type="forms"/>
 
                 <!-- use standard forms stylesheet to convert output of FormsTransformer -->
-                <map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl"/>
+                <map:transform src="resources/forms-samples-styling.xsl">
+                    <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+                    <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+                </map:transform>
+                <map:transform type="servletLinkRewriter" />
 
                 <!-- and apply our standard transform after it -->
                 <map:call resource="html"/>

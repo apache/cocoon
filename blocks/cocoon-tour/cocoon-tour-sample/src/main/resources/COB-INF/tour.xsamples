@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Supersonic Tour']">
 
   <group name="Supersonic Tour">
-    <sample name="Supersonic Tour of Cocoon" href="tour/">
+    <sample name="Supersonic Tour of Cocoon" href="/cocoon-tour-sample/">
       Introduction and quick overview of the Cocoon Power Trio
         (Pipelines, Flow, Forms)
     </sample>
