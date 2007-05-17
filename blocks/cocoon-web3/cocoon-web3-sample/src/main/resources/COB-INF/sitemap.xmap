@@ -16,8 +16,13 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
     <!-- =========================== Components ================================ -->
+
     <map:components>
+
+    <!-- =========================== Transformers ================================ -->
+
         <map:transformers default="xslt">
             <!-- include the transformer like this: 
             -->
@@ -36,7 +41,7 @@
 
         <map:view from-label="content" name="pretty-content">
             <!-- Make use of servlet services -->
-            <map:serialize type="servletService" mime-type="text/html">
+            <map:serialize type="servletService">
                 <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
             </map:serialize>
         </map:view>
@@ -56,6 +61,7 @@
     </map:views>
 
     <!-- =========================== Pipelines ================================= -->
+    
     <map:pipelines>
         <map:pipeline>
             <map:match pattern="">
@@ -65,7 +71,7 @@
             <map:match pattern="samples">
                 <map:generate src="samples.xml" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                 </map:serialize>
             </map:match>

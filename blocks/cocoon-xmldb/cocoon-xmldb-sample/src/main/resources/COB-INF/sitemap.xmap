@@ -31,7 +31,7 @@
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:serialize type="servletService" mime-type="text/html">
+            <map:serialize type="servletService">
                 <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
             </map:serialize>
         </map:view>
@@ -52,7 +52,7 @@
             <map:match pattern="welcome">
                 <map:generate src="samples.xml" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                 </map:serialize>
             </map:match>
@@ -60,7 +60,7 @@
             <map:match pattern="xwelcome">
                 <map:generate src="xmldb:xindice-embed:///db/cocoon/xsamples.xml" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                 </map:serialize>
             </map:match>
@@ -82,7 +82,7 @@
                     <map:transform src="xmldb2samples.xsl" />
                     <map:transform type="servletLinkRewriter" />
                     <!-- Make use of servlet services -->
-                    <map:serialize type="servletService" mime-type="text/html">
+                    <map:serialize type="servletService">
                         <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                     </map:serialize>
                 </map:match>
@@ -91,7 +91,7 @@
                 <map:transform src="xmldb2samples.xsl" />
                 <map:transform type="servletLinkRewriter" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                 </map:serialize>
             </map:match>
