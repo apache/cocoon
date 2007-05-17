@@ -21,91 +21,92 @@
     +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <!-- ========================== Components =============================== -->
-  <map:components>
-    <map:generators default="file">
-      <!--+
-          | JSPGenerator is used to get output of a JSP page 
-          | and parse as XML SAX events.
-          +-->
-      <map:generator name="jsp"
-                     label="content"
-                     logger="sitemap.generator.jsp"
-                     src="org.apache.cocoon.generation.JSPGenerator"/>
-    </map:generators>
+    <!-- ========================== Components =============================== -->
 
-    <map:readers default="resource">
-      <!--+
-          | JSPReader is used to send output of a JSP page
-          | directly into the response stream. Note, that JSP
-          | can produce non XML, or even binary, result.
-          +-->
-      <map:reader name="jsp" 
-                  logger="sitemap.reader.jsp"
-                  src="org.apache.cocoon.reading.JSPReader">
-        <!--+
-            | The configuration for the JSPReader with its default values:
-        <buffer-size>8192</buffer-size>
-        <output-encoding>UTF-8</output-encoding>
-            +-->
-      </map:reader>
-    </map:readers>
-  </map:components>
+    <map:components>
 
-  <!-- =========================== Views =================================== -->
+        <!-- ========================== Generators =============================== -->
 
-  <map:views>
-    <map:view from-label="content" name="content">
-      <map:serialize type="xml"/>
-    </map:view>
+        <map:generators default="file">
+            <!--+
+                | JSPGenerator is used to get output of a JSP page 
+                | and parse as XML SAX events.
+                +-->
+            <map:generator name="jsp" label="content" logger="sitemap.generator.jsp" src="org.apache.cocoon.generation.JSPGenerator" />
+        </map:generators>
 
-    <map:view from-label="content" name="pretty-content">
-      <map:transform src="servlet:style-default:/stylesheets/system/xml2html.xslt"/>
-      <map:transform type="servletLinkRewriter" />
-      <map:serialize type="html"/>
-    </map:view>
+        <!-- ========================== Readers =============================== -->
 
-    <map:view from-position="last" name="links">
-      <map:serialize type="links"/>
-    </map:view>
-  </map:views>
+        <map:readers default="resource">
+            <!--+
+                | JSPReader is used to send output of a JSP page
+                | directly into the response stream. Note, that JSP
+                | can produce non XML, or even binary, result.
+                +-->
+            <map:reader name="jsp" logger="sitemap.reader.jsp" src="org.apache.cocoon.reading.JSPReader">
+                <!--+
+                    | The configuration for the JSPReader with its default values:
+                    <buffer-size>8192</buffer-size>
+                    <output-encoding>UTF-8</output-encoding>
+                    +-->
+            </map:reader>
+        </map:readers>
+    </map:components>
 
-  <!-- ========================== Pipelines ================================ -->
-  <map:pipelines>
-    <map:pipeline>
-      <map:match pattern="">
-        <map:redirect-to uri="welcome"/>
-      </map:match>
-   
-      <map:match pattern="welcome">
-        <map:generate src="samples.xml"/>
-        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-samples2html.xsl" />
-        <map:transform type="servletLinkRewriter" />
-        <map:serialize/>
-      </map:match>
+    <!-- =========================== Views =================================== -->
 
-      <map:match pattern="*.htm">
-        <map:read type="jsp" src="{1}.jsp" mime-type="text/html"/>
-      </map:match>
+    <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-      <!-- Use this to debug your JSPs -->
-      <map:match pattern="*.xml">
-        <map:generate type="jsp" src="{1}.jsp"/>
-        <map:serialize type="xml" mime-type="text/xml"/>
-      </map:match>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
 
-      <map:match pattern="*.jsp">
-        <map:generate type="jsp" src="{1}.jsp"/>
-     	<map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl">
-     	   <map:parameter name="servletPath" value="{request:servletPath}"/>
-     	   <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-     	   <map:parameter name="file" value="{1}.jsp"/>
-     	</map:transform>
-        <map:transform type="servletLinkRewriter" />
-        <map:serialize type="html"/>
-      </map:match>
+        <map:view from-position="last" name="links">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-    </map:pipeline>
-  </map:pipelines>
+    <!-- ========================== Pipelines ================================ -->
+
+    <map:pipelines>
+        <map:pipeline>
+            <map:match pattern="">
+                <map:redirect-to uri="welcome" />
+            </map:match>
+
+            <map:match pattern="welcome">
+                <map:generate src="samples.xml" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
+            </map:match>
+
+            <map:match pattern="*.htm">
+                <map:read type="jsp" src="{1}.jsp" mime-type="text/html" />
+            </map:match>
+
+            <!-- Use this to debug your JSPs -->
+            <map:match pattern="*.xml">
+                <map:generate type="jsp" src="{1}.jsp" />
+                <map:serialize type="xml" mime-type="text/xml" />
+            </map:match>
+
+            <map:match pattern="*.jsp">
+                <map:generate type="jsp" src="{1}.jsp" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+                </map:serialize>
+            </map:match>
+
+        </map:pipeline>
+    </map:pipelines>
 
 </map:sitemap>
