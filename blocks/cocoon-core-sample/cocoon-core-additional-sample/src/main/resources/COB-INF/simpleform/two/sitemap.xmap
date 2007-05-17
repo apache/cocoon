@@ -17,126 +17,117 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <map:components>
+    <!-- ======================= Components ================================= -->
 
-  <!--+ the SimpleFormTransformer acts upon HTML4 form element tags and replaces their
-      | value attribute or their content in case of the textarea element with data obtained
-      | from an input module attribute with the same name. In addition, it checks the result 
-      | of the FormValidatorAction when it encounters <error/> tags and includes / excludes
-      | them depending on the result. 
-      |
-      +-->
-  <map:transformers default="xslt">
-   <map:transformer name="simpleform" 
-                    logger="sitemap.transformer.simpleform" 
-                    src="org.apache.cocoon.transformation.SimpleFormTransformer">
-      <input-module name="request-param"/>
-   </map:transformer>
-   
-  </map:transformers>
-  
- </map:components>
+    <map:components>
 
-<!--+
-    | This is a standard resource for rendering a XSP page.
-    +-->
- <map:resources>
-  <map:resource name="static-page">
-      <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-         <map:parameter name="servletPath" value="{request:servletPath}"/>
-         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-         <map:parameter name="contextPath" value="{request:contextPath}"/>
-         <map:parameter name="remove" value="{/0}"/>
-         <map:parameter name="file" value="{file}.xml"/>
-      </map:transform>
-      <map:serialize/>
-  </map:resource>
- </map:resources>
+        <!-- ======================= Transformers ================================= -->
 
-<!--+
-    | These views provide different 'standard' views to the samples.
-    |
-    +-->
+        <!--+ the SimpleFormTransformer acts upon HTML4 form element tags and replaces their
+            | value attribute or their content in case of the textarea element with data obtained
+            | from an input module attribute with the same name. In addition, it checks the result 
+            | of the FormValidatorAction when it encounters <error/> tags and includes / excludes
+            | them depending on the result. 
+            |
+            +-->
+        <map:transformers default="xslt">
+            <map:transformer name="simpleform" logger="sitemap.transformer.simpleform" src="org.apache.cocoon.transformation.SimpleFormTransformer">
+                <input-module name="request-param" />
+            </map:transformer>
 
- <map:views>
-  <map:view name="content" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
+        </map:transformers>
 
-  <map:view from-label="content" name="pretty-content">
-    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-    <map:serialize type="html"/>
-  </map:view>
-  
-  <map:view name="links" from-position="last">
-   <map:serialize type="links"/>
-  </map:view>
+    </map:components>
 
- </map:views>
+    <!-- =========================== Resources =================================== -->
 
+    <map:resources>
+        <map:resource name="static-page">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/common/html/simple-page2html" />
+            </map:serialize>
+        </map:resource>
+    </map:resources>
 
-<!--+
-    | Pipelines
-    |
-    +-->
+    <!-- =========================== Views =================================== -->
 
- <map:pipelines>
+    <map:views>
+        <map:view name="content" from-label="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-  <map:pipeline>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
 
-   <!-- some redirections -->
-   <map:match pattern="">
-     <map:redirect-to uri="index"/>
-   </map:match>
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-   <map:match pattern="index">
-    <!--+
-        | Only validate when data was submitted
-        +-->
-     <map:select type="simple">
-       <map:parameter name="value" value="{request:method}"/>
-       <map:when test="POST">
-           <!--+
-               | Check the request parameters using the FormValidatorAction 
-               +-->
-           <map:act type="form-validator">
-             <map:parameter name="descriptor" value="descriptor.xml"/>
-             <map:parameter name="constraint-set" value="car-reservation"/>
-             <!--+
-                 | this is the success case
-                 |
-                 +-->
-             <map:generate src="success.xml"/>
-             <map:transform type="simpleform"/>
-             <map:call resource="static-page">
-              <map:parameter name="file" value="success"/>
-             </map:call>
-             <!-- because of the resource above the "success" pipeline ends here. -->
-           </map:act>
-        </map:when>
-     </map:select>
-     <!--+
-         | this branch contains the failed validation.
-         | Since the "success" pipeline ends with a resource, the following is only 
-         | applied if validation has not been successful.
-         |
-         +-->
-    <map:generate type="file" src="form.xml"/>    
-    <!--+
-        | fill in the request parameters, and error tags 
-        +-->
-    <map:transform type="simpleform"/>
-    <map:call resource="static-page">
-      <map:parameter name="file" value="form"/>
-    </map:call>
-   </map:match>
+    <!-- ======================= Pipelines ================================= -->
 
-   <!-- some redirections -->
-   <map:match pattern="*">
-     <map:redirect-to uri="index"/>
-   </map:match>
-        
-  </map:pipeline>
- </map:pipelines>
+    <map:pipelines>
+
+        <map:pipeline>
+
+            <!-- some redirections -->
+            <map:match pattern="">
+                <map:redirect-to uri="index" />
+            </map:match>
+
+            <map:match pattern="index">
+                <!--+
+                    | Only validate when data was submitted
+                    +-->
+                <map:select type="simple">
+                    <map:parameter name="value" value="{request:method}" />
+                    <map:when test="POST">
+                        <!--+
+                            | Check the request parameters using the FormValidatorAction 
+                            +-->
+                        <map:act type="form-validator">
+                            <map:parameter name="descriptor" value="descriptor.xml" />
+                            <map:parameter name="constraint-set" value="car-reservation" />
+                            <!--+
+                                | this is the success case
+                                |
+                                +-->
+                            <map:generate src="success.xml" />
+                            <map:transform type="simpleform" />
+                            <map:call resource="static-page">
+                                <map:parameter name="file" value="success" />
+                            </map:call>
+                            <!-- because of the resource above the "success" pipeline ends here. -->
+                        </map:act>
+                    </map:when>
+                </map:select>
+                <!--+
+                    | this branch contains the failed validation.
+                    | Since the "success" pipeline ends with a resource, the following is only 
+                    | applied if validation has not been successful.
+                    |
+                    +-->
+                <map:generate type="file" src="form.xml" />
+                <!--+
+                    | fill in the request parameters, and error tags 
+                    +-->
+                <map:transform type="simpleform" />
+                <map:call resource="static-page">
+                    <map:parameter name="file" value="form" />
+                </map:call>
+            </map:match>
+
+            <!-- some redirections -->
+            <map:match pattern="*">
+                <map:redirect-to uri="index" />
+            </map:match>
+
+        </map:pipeline>
+    </map:pipelines>
 
 </map:sitemap>

@@ -18,91 +18,95 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
- <map:views>
-  <map:view name="content" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
-  <map:view from-label="content" name="pretty-content">
-    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-    <map:serialize type="html"/>
-  </map:view>
-  <map:view name="links" from-position="last">
-   <map:serialize type="links"/>
-  </map:view>
- </map:views>
- 
- <map:pipelines>
-  <map:pipeline>
-   
-   <!-- Generate XSL source dynamically using XSP page. -->
-   <map:match pattern="xsl-dynamic-source">
-    <map:generate type="serverpages" src="style/simple-page2html.xsp"/>
-    <map:serialize type="xml"/>
-   </map:match>
+    <!-- =========================== Views =================================== -->
 
-   <!-- All Dynamic. Beware: Very slow! -->
-   <map:match pattern="all-dynamic">
-    <map:generate type="serverpages" src="cocoon:/dynamic-source"/>
-    <map:transform src="cocoon:/xsl-dynamic-source">
-     <map:parameter name="servletPath" value="{request:servletPath}"/>
-     <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-     <map:parameter name="remove" value="{0}"/>
-     <map:parameter name="file" value="content/simple.xsp"/>
-    </map:transform>
-    <map:serialize/>
-   </map:match>
-   
-   <map:match pattern="**">
-    <!-- XSP obtained from the local file, and executed -->
-    <map:match pattern="file">
-     <map:generate type="serverpages" src="content/simple.xsp"/>
-    </map:match>
+    <map:views>
+        <map:view name="content" from-label="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-    <!-- Generate XSP source from local file -->
-    <map:match pattern="source">
-     <map:generate src="content/simple.xsp"/>
-     <map:serialize type="xml"/>
-    </map:match>
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
 
-    <!-- XSP obtained from the matcher 'xsp-source', right above, and executed -->
-    <map:match pattern="cocoon">
-     <map:generate type="serverpages" src="cocoon:/source"/>
-    </map:match>
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-    <!-- XSP obtained from the matcher 'xsp-source', absolute reference, and executed -->
-    <map:match pattern="cocoon-root">
-     <map:generate type="serverpages" src="cocoon://samples/sources/xsp/source"/>
-    </map:match>
+    <!-- ========================== Pipelines ================================ -->
 
-    <!-- XSP obtained from the external HTTP server, and executed -->
-    <map:match pattern="http">
-     <map:generate type="serverpages" src="http://{request:serverName}:{request:serverPort}/{request:contextPath}/samples/sources/xsp/source"/>
-    </map:match>
+    <map:pipelines>
+        <map:pipeline>
 
-    <!-- Generate XSP source dynamically. -->
-    <map:match pattern="dynamic-source">
-     <map:generate type="serverpages" src="content/dynamic.xsp"/>
-     <map:transform src="style/dynamic-xsp2xsp.xsl"/>
-     <map:serialize type="xml"/>
-    </map:match>
+            <!-- Generate XSL source dynamically using XSP page. -->
+            <map:match pattern="xsl-dynamic-source">
+                <map:generate type="serverpages" src="style/simple-page2html.xsp" />
+                <map:serialize type="xml" />
+            </map:match>
 
-    <!-- XSP obtained from the matcher 'xsp-dynamic-source'. Beware: Very slow! -->
-    <map:match pattern="dynamic">
-     <map:generate type="serverpages" src="cocoon:/dynamic-source"/>
-    </map:match>
+            <!-- All Dynamic. Beware: Very slow! -->
+            <map:match pattern="all-dynamic">
+                <map:generate type="serverpages" src="cocoon:/dynamic-source" />
+                <map:transform src="cocoon:/xsl-dynamic-source">
+                    <map:parameter name="servletPath" value="{request:servletPath}" />
+                    <map:parameter name="sitemapURI" value="{request:sitemapURI}" />
+                    <map:parameter name="contextPath" value="{request:contextPath}" />
+                    <map:parameter name="remove" value="{0}" />
+                    <map:parameter name="file" value="content/simple.xsp" />
+                </map:transform>
+                <map:serialize />
+            </map:match>
 
-    <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-     <map:parameter name="servletPath" value="{request:servletPath}"/>
-     <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-     <map:parameter name="remove" value="{0}"/>
-     <map:parameter name="file" value="content/simple.xsp"/>
-    </map:transform>
-    <map:serialize/>
-    
-   </map:match>
-   
-  </map:pipeline>
- </map:pipelines>
+            <map:match pattern="**">
+                <!-- XSP obtained from the local file, and executed -->
+                <map:match pattern="file">
+                    <map:generate type="serverpages" src="content/simple.xsp" />
+                </map:match>
+
+                <!-- Generate XSP source from local file -->
+                <map:match pattern="source">
+                    <map:generate src="content/simple.xsp" />
+                    <map:serialize type="xml" />
+                </map:match>
+
+                <!-- XSP obtained from the matcher 'xsp-source', right above, and executed -->
+                <map:match pattern="cocoon">
+                    <map:generate type="serverpages" src="cocoon:/source" />
+                </map:match>
+
+                <!-- XSP obtained from the matcher 'xsp-source', absolute reference, and executed -->
+                <map:match pattern="cocoon-root">
+                    <map:generate type="serverpages" src="cocoon://servlet:/sources/xsp/source" />
+                </map:match>
+
+                <!-- XSP obtained from the external HTTP server, and executed -->
+                <map:match pattern="http">
+                    <map:generate type="serverpages" src="http://{request:serverName}:{request:serverPort}/{request:contextPath}/{servlet:/}sources/xsp/source" />
+                </map:match>
+
+                <!-- Generate XSP source dynamically. -->
+                <map:match pattern="dynamic-source">
+                    <map:generate type="serverpages" src="content/dynamic.xsp" />
+                    <map:transform src="style/dynamic-xsp2xsp.xsl" />
+                    <map:serialize type="xml" />
+                </map:match>
+
+                <!-- XSP obtained from the matcher 'xsp-dynamic-source'. Beware: Very slow! -->
+                <map:match pattern="dynamic">
+                    <map:generate type="serverpages" src="cocoon:/dynamic-source" />
+                </map:match>
+
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+                </map:serialize>
+
+            </map:match>
+
+        </map:pipeline>
+    </map:pipelines>
 </map:sitemap>

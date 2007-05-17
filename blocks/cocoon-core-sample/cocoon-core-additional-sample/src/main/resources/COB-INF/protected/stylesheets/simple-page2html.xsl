@@ -20,7 +20,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:include href="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
+  <xsl:include href="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl"/>
  
   <xsl:template match="linkbar">
     <div>
