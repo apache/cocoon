@@ -23,103 +23,103 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <map:pipelines>
-    <map:pipeline type="caching">
+    <map:pipelines>
+        <map:pipeline type="caching">
 
-      <map:match pattern="">
-        <map:redirect-to uri="welcome"/>
-      </map:match>
+            <map:match pattern="">
+                <map:redirect-to uri="welcome" />
+            </map:match>
 
-      <!-- list of samples -->
-      <map:match pattern="welcome">
-        <map:generate src="welcome.xml"/>
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService" mime-type="text/html">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
-        </map:serialize>
-      </map:match>
+            <!-- list of samples -->
+            <map:match pattern="welcome">
+                <map:generate src="welcome.xml" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService" mime-type="text/html">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
+            </map:match>
 
-      <!-- relax ng samples -->
-      <map:match pattern="validate-rng-valid">
-        <map:generate src="source-ok.xml"/>
-        <map:transform type="validate" src="schema-ok.rng"/>
-        <map:transform src="validation.xslt"/>
-        <map:serialize/>
-      </map:match>
-      
-      <map:match pattern="validate-rng-invalid">
-        <map:generate src="source-no.xml"/>
-        <map:transform type="validate" src="schema-ok.rng"/>
-        <map:transform src="validation.xslt"/>
-        <map:serialize/>
-      </map:match>
-      
-      <map:match pattern="validate-rng-badschema">
-        <map:generate src="source-ok.xml"/>
-        <map:transform type="validate" src="schema-no.rng"/>
-        <map:transform src="validation.xslt"/>
-        <map:serialize/>
-      </map:match>
-      
-      <!-- xml schema samples -->
-      <map:match pattern="validate-xsd-valid">
-        <map:generate src="source-ok.xml"/>
-        <map:transform type="validate" src="schema-ok.xsd"/>
-        <map:transform src="validation.xslt"/>
-        <map:serialize/>
-      </map:match>
-      
-      <map:match pattern="validate-xsd-invalid">
-        <map:generate src="source-no.xml"/>
-        <map:transform type="validate" src="schema-ok.xsd"/>
-        <map:transform src="validation.xslt"/>
-        <map:serialize/>
-      </map:match>
-      
-      <map:match pattern="validate-xsd-badschema">
-        <map:generate src="source-ok.xml"/>
-        <map:transform type="validate" src="schema-no.xsd"/>
-        <map:transform src="validation.xslt"/>
-        <map:serialize/>
-      </map:match>
+            <!-- relax ng samples -->
+            <map:match pattern="validate-rng-valid">
+                <map:generate src="source-ok.xml" />
+                <map:transform type="validate" src="schema-ok.rng" />
+                <map:transform src="validation.xslt" />
+                <map:serialize />
+            </map:match>
 
-      <!-- reporting samples -->
-      <map:match pattern="report-rng-invalid">
-        <map:generate src="source-no.xml"/>
-        <map:transform type="validation-report" src="schema-ok.rng"/>
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService" mime-type="text/html">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-        </map:serialize>
-      </map:match>
-      
-      <map:match pattern="report-xsd-invalid">
-        <map:generate src="source-no.xml"/>
-        <map:transform type="validation-report" src="schema-ok.xsd"/>
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService" mime-type="text/html">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-        </map:serialize>
-      </map:match>
+            <map:match pattern="validate-rng-invalid">
+                <map:generate src="source-no.xml" />
+                <map:transform type="validate" src="schema-ok.rng" />
+                <map:transform src="validation.xslt" />
+                <map:serialize />
+            </map:match>
 
-      <map:match pattern="report-rng-valid">
-        <map:generate src="source-ok.xml"/>
-        <map:transform type="validation-report" src="schema-ok.rng"/>
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService" mime-type="text/html">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-        </map:serialize>
-      </map:match>
-      
-      <map:match pattern="report-xsd-valid">
-        <map:generate src="source-ok.xml"/>
-        <map:transform type="validation-report" src="schema-ok.xsd"/>
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService" mime-type="text/html">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-        </map:serialize>
-      </map:match>
-      
-    </map:pipeline>
-  </map:pipelines>
+            <map:match pattern="validate-rng-badschema">
+                <map:generate src="source-ok.xml" />
+                <map:transform type="validate" src="schema-no.rng" />
+                <map:transform src="validation.xslt" />
+                <map:serialize />
+            </map:match>
+
+            <!-- xml schema samples -->
+            <map:match pattern="validate-xsd-valid">
+                <map:generate src="source-ok.xml" />
+                <map:transform type="validate" src="schema-ok.xsd" />
+                <map:transform src="validation.xslt" />
+                <map:serialize />
+            </map:match>
+
+            <map:match pattern="validate-xsd-invalid">
+                <map:generate src="source-no.xml" />
+                <map:transform type="validate" src="schema-ok.xsd" />
+                <map:transform src="validation.xslt" />
+                <map:serialize />
+            </map:match>
+
+            <map:match pattern="validate-xsd-badschema">
+                <map:generate src="source-ok.xml" />
+                <map:transform type="validate" src="schema-no.xsd" />
+                <map:transform src="validation.xslt" />
+                <map:serialize />
+            </map:match>
+
+            <!-- reporting samples -->
+            <map:match pattern="report-rng-invalid">
+                <map:generate src="source-no.xml" />
+                <map:transform type="validation-report" src="schema-ok.rng" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService" mime-type="text/html">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
+            </map:match>
+
+            <map:match pattern="report-xsd-invalid">
+                <map:generate src="source-no.xml" />
+                <map:transform type="validation-report" src="schema-ok.xsd" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService" mime-type="text/html">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
+            </map:match>
+
+            <map:match pattern="report-rng-valid">
+                <map:generate src="source-ok.xml" />
+                <map:transform type="validation-report" src="schema-ok.rng" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService" mime-type="text/html">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
+            </map:match>
+
+            <map:match pattern="report-xsd-valid">
+                <map:generate src="source-ok.xml" />
+                <map:transform type="validation-report" src="schema-ok.xsd" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService" mime-type="text/html">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
+            </map:match>
+
+        </map:pipeline>
+    </map:pipelines>
 </map:sitemap>
