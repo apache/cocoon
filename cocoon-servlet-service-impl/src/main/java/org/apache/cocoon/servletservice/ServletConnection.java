@@ -152,6 +152,10 @@ public final class ServletConnection {
     	return getHeaderFieldDate("Last-Modified", 0);
     }
     
+    public String getContentType() {
+    	return getHeaderField("Content-Type");
+    }
+
     public long getHeaderFieldDate(String name, long Default) {
     	try {
     	    return response.getDateHeader(name);
