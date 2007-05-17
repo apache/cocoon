@@ -23,6 +23,27 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+    <!-- =========================== Views =================================== -->
+
+    <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
+
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view from-position="last" name="links">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
+
+    <!-- =========================== Views =================================== -->
+
     <map:pipelines>
         <map:pipeline type="caching">
 
@@ -34,7 +55,7 @@
             <map:match pattern="welcome">
                 <map:generate src="welcome.xml" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
                 </map:serialize>
             </map:match>
@@ -88,7 +109,7 @@
                 <map:generate src="source-no.xml" />
                 <map:transform type="validation-report" src="schema-ok.rng" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
                 </map:serialize>
             </map:match>
@@ -97,7 +118,7 @@
                 <map:generate src="source-no.xml" />
                 <map:transform type="validation-report" src="schema-ok.xsd" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
                 </map:serialize>
             </map:match>
@@ -106,7 +127,7 @@
                 <map:generate src="source-ok.xml" />
                 <map:transform type="validation-report" src="schema-ok.rng" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
                 </map:serialize>
             </map:match>
@@ -115,7 +136,7 @@
                 <map:generate src="source-ok.xml" />
                 <map:transform type="validation-report" src="schema-ok.xsd" />
                 <!-- Make use of servlet services -->
-                <map:serialize type="servletService" mime-type="text/html">
+                <map:serialize type="servletService" ">
                     <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
                 </map:serialize>
             </map:match>
