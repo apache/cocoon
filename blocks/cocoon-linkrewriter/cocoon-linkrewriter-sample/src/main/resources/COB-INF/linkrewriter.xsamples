@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Link Rewriter']">
 
   <group name="Link Rewriter">
-    <sample name="LinkRewriter Block" href="linkrewriter/">
+    <sample name="LinkRewriter Block" href="/cocoon-linkrewriter-sample/">
       A demo of the LinkRewriterTransformer, which rewrites XML links (by
       default, href attributes) with values looked up from any Input Module.
     </sample>
