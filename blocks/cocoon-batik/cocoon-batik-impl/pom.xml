@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-batik-impl</artifactId>
-  <version>1.0.0-RC1</version>
+  <version>1.0.0-RC2-SNAPSHOT</version>
   <name>Cocoon Batik Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.batik.relPath}</url>  
 
@@ -192,12 +192,5 @@
         </plugins>
       </build>      
     </profile>
-  </profiles>  
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-batik-impl/cocoon-batik-impl-1.0.0-RC1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-batik-impl/cocoon-batik-impl-1.0.0-RC1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-batik-impl/cocoon-batik-impl-1.0.0-RC1</url>
-  </scm>
+  </profiles>
 </project>
