@@ -23,7 +23,7 @@
       Examples showing how to use SLOP
       (the Simple Line Oriented Parser) to parse text files
     </sample>
-    <sample name="SLOP Block: YAPT Presentation Tool" href="slop/yapt/">
+    <sample name="SLOP Block: YAPT Presentation Tool" href="/cocoon-slop-sample/yapt/">
       Yet Another Presentation Tool!
       Uses simple structured ASCII files to quickly create
       XML-based presentations
