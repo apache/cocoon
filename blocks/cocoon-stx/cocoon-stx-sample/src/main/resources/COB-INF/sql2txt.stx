@@ -15,9 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<stx:transform xmlns:stx="http://stx.sourceforge.net/2002/ns"
-	       xmlns:sql="http://apache.org/cocoon/SQL/2.0"
-	       version="1.0">
+<stx:transform xmlns:stx="http://stx.sourceforge.net/2002/ns" xmlns:sql="http://apache.org/cocoon/SQL/2.0" version="1.0">
 
   <stx:template match="sql:rowset">
     <stx:process-children group="list"/>

@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='STX']">
 
   <group name="STX">
-    <sample name="STX Block" href="stx/">
+    <sample name="STX Block" href="/cocoon-stx-sample/">
       Examples of using Streaming Transformations for XML (STX)
     </sample>
   </group>
