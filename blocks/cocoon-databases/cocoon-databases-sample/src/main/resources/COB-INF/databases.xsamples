@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='Databases']">
 
   <group name="Databases">
-    <sample name="Databases Block" href="databases/samples">
+    <sample name="Databases Block" href="/cocoon-databases-sample/">
       Continue to databases block samples.
     </sample>
   </group>

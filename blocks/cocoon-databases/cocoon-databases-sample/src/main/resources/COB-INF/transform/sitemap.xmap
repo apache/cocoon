@@ -17,7 +17,7 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- ============================ Views ==================================== -->
+    <!-- =========================== Views =================================== -->
 
     <map:views>
         <map:view name="content" from-label="content">
@@ -25,8 +25,10 @@
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
 
         <map:view name="links" from-position="last">
@@ -50,12 +52,8 @@
                 <map:transform type="sql">
                     <map:parameter name="use-connection" value="personnel" />
                 </map:transform>
-                <map:transform src="../stylesheets/sql2html.xsl">
-                    <map:parameter name="servletPath" value="{request:servletPath}" />
-                    <map:parameter name="sitemapURI" value="{request:sitemapURI}" />
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                    <map:parameter name="file" value=".xml" />
-                </map:transform>
+                <map:transform src="../stylesheets/sql2html.xsl" />
+                <map:transform type="servletLinkRewriter" />
                 <map:serialize type="html" />
             </map:match>
 
