@@ -26,7 +26,7 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4</version>
+    <version>4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-servlet-service-components</artifactId>
@@ -52,17 +52,14 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
-      <version>1.0.0-RC1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-impl</artifactId>
-      <version>1.0.0-M2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-linkrewriter-impl</artifactId>
-      <version>1.0.0-RC1</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
