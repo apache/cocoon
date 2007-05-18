@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='QueryBean']">
 
   <group name="QueryBean">
-    <sample name="Query Bean" href="querybean/welcome">
+    <sample name="Query Bean" href="/cocoon-querybean-sample/">
       Examples showing the use of Apache Lucene with CForms to search.
     </sample>
   </group>
