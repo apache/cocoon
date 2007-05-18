@@ -21,24 +21,29 @@
     <!-- =========================== Views =================================== -->
 
     <map:views>
-        <map:view from-label="content" name="content">
+        <map:view name="content" from-label="content">
             <map:serialize type="xml" />
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
 
-        <map:view from-position="last" name="links">
+        <map:view name="links" from-position="last">
             <map:serialize type="links" />
         </map:view>
     </map:views>
 
-    <!-- indicates what flowscript to attach to this sitemap -->
+    <!-- =========================== Flowscripts ================================= -->
+
     <map:flow language="intercepted-javascript">
         <map:script src="basescript.js" />
     </map:flow>
+
+    <!-- =========================== Pipelines ================================= -->
 
     <map:pipelines>
         <map:pipeline>
@@ -52,13 +57,10 @@
                 +-->
             <map:match pattern="page/*">
                 <map:generate src="screens/{1}.xml" />
-                <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-                    <map:parameter name="servletPath" value="{request:servletPath}" />
-                    <map:parameter name="sitemapURI" value="{request:sitemapURI}" />
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                    <map:parameter name="remove" value="{0}" />
-                </map:transform>
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
             </map:match>
         </map:pipeline>
 
