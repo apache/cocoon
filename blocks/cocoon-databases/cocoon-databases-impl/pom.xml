@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-databases-impl</artifactId>
-  <version>1.0.0-RC1</version>
+  <version>1.0.0-RC2-SNAPSHOT</version>
   <name>Cocoon Database Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.databases.relPath}</url>  
 
@@ -83,12 +83,5 @@
         </plugins>
       </build>      
     </profile>
-  </profiles>  
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-impl/cocoon-databases-impl-1.0.0-RC1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-impl/cocoon-databases-impl-1.0.0-RC1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-impl/cocoon-databases-impl-1.0.0-RC1</url>
-  </scm>
+  </profiles>
 </project>
