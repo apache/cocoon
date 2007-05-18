@@ -19,7 +19,7 @@
 <xsamples xpath="/samples" unless="group[@name='QDox']">
 
   <group name="QDox">
-    <sample name="QDox Block" href="qdox/">
+    <sample name="QDox Block" href="/cocoon-qdox-samples/">
       Javadoc-like parsing of Java code using QDox.
     </sample>
   </group>
