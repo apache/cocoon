@@ -15,8 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<stx:transform xmlns:stx="http://stx.sourceforge.net/2002/ns"
-	       version="1.0">
+<stx:transform xmlns:stx="http://stx.sourceforge.net/2002/ns" version="1.0">
 
   <stx:variable name="titleVal"/>
 
@@ -32,7 +31,7 @@
       <title>
 	<stx:value-of select="$titleVal"/>
       </title>
-      <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
+      <link href="servlet:style-default:/styles/main.css" type="text/css" rel="stylesheet"/>
     </head>
   </stx:template>
 

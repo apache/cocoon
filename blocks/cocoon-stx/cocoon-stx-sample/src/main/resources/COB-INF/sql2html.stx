@@ -15,15 +15,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<stx:transform xmlns:stx="http://stx.sourceforge.net/2002/ns"
-	       xmlns:sql="http://apache.org/cocoon/SQL/2.0"
-	       version="1.0">
+<stx:transform xmlns:stx="http://stx.sourceforge.net/2002/ns" xmlns:sql="http://apache.org/cocoon/SQL/2.0" version="1.0">
 
   <stx:template match="sql:rowset">
     <html>
       <head>
 	<title>Table</title>
-	<link href="/styles/main.css" type="text/css" rel="stylesheet"/>
+	<link href="servlet:style-default:/styles/main.css" type="text/css" rel="stylesheet"/>
       </head>
       <body>
 	<table>
