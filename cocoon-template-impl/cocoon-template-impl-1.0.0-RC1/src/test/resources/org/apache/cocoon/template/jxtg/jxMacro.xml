@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<jx:macro name="d">
+		<jx:parameter name="p"/>
+		<macroTest a="${p}">
+			<jx:evalBody/>
+		</macroTest>
+	</jx:macro>
+	<m>
+		<d p="foo">
+			<content b="${1+2}"/>
+		</d>
+	</m>
+	<n>
+		<jx:set var="macroName" value="d"/>
+		<jx:call macro="${macroName}">
+			<jx:withParam name="p" value="bar"/>
+			<content b="${2+3}"/>
+		</jx:call>
+		<jx:call macro="d">
+			<jx:withParam name="p" value="bar1"/>
+			<content b="${2+3+1}"/>
+		</jx:call>
+	</n>
+	<o>
+		<jx:macro name="stringContainer">
+			<jx:parameter name="c"/>
+			<containerValue>${c.value}</containerValue>
+		</jx:macro>
+
+		<stringContainer c="${container}"/>
+		<jx:call macro="stringContainer">
+			<jx:withParam name="c" value="${container}"/>
+		</jx:call>
+	</o>
+</root>
