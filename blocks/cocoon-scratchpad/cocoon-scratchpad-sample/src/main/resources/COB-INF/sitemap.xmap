@@ -23,45 +23,45 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-<!-- =========================== Views =================================== -->
+    <!-- =========================== Views =================================== -->
 
-  <map:views>
-    <map:view from-label="content" name="content">
-      <map:serialize type="xml"/>
-    </map:view>
+    <map:views>
+        <map:view from-label="content" name="content">
+            <map:serialize type="xml" />
+        </map:view>
 
-    <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-      <map:serialize type="html"/>
-    </map:view>
+        <map:view from-label="content" name="pretty-content">
+            <map:transform src="context://stylesheets/system/xml2html.xslt" />
+            <map:serialize type="html" />
+        </map:view>
 
-    <map:view from-position="last" name="links">
-      <map:serialize type="links"/>
-    </map:view>
-  </map:views>
+        <map:view from-position="last" name="links">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
 
-<!-- =========================== Pipelines ================================= -->
+    <!-- =========================== Pipelines ================================= -->
 
-  <map:pipelines>
-    <map:pipeline type="caching">
-      <map:match pattern="">
-        <map:redirect-to uri="welcome"/>
-      </map:match>
+    <map:pipelines>
+        <map:pipeline type="caching">
+            <map:match pattern="">
+                <map:redirect-to uri="welcome" />
+            </map:match>
 
-      <!-- list of samples -->
-      <map:match pattern="welcome">
-        <map:generate src="scratchpad-samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
-        <map:serialize/>
-      </map:match>
+            <!-- list of samples -->
+            <map:match pattern="welcome">
+                <map:generate src="scratchpad-samples.xml" />
+                <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+                    <map:parameter name="contextPath" value="{request:contextPath}" />
+                </map:transform>
+                <map:serialize />
+            </map:match>
 
-   <!-- ======================== Automount =============================== -->
+            <!-- ======================== Automount =============================== -->
 
-   <map:match pattern="*/**">
-     <map:mount src="{1}/" uri-prefix="{1}"/>
-   </map:match>
-    </map:pipeline>
-  </map:pipelines>
+            <map:match pattern="*/**">
+                <map:mount src="{1}/" uri-prefix="{1}" />
+            </map:match>
+        </map:pipeline>
+    </map:pipelines>
 </map:sitemap>
