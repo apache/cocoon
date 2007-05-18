@@ -20,13 +20,36 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+    <!-- =========================== Views =================================== -->
+
+    <map:views>
+        <map:view name="content" from-label="content">
+            <map:serialize type="xml" />
+        </map:view>
+
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
+
+    <!-- =========================== Pipelines ================================= -->
+
     <map:pipelines>
         <map:pipeline>
 
             <map:match pattern="test1">
                 <map:generate type="text" src="module:request:requestURI" />
-                <map:transform src="context://stylesheets/system/xml2html.xslt" />
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
             </map:match>
 
             <map:match pattern="test2">
@@ -36,8 +59,10 @@
 
             <map:match pattern="test2-post">
                 <map:generate type="text" src="module:request-param:text" />
-                <map:transform src="context://stylesheets/system/xml2html.xslt" />
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
             </map:match>
 
             <!-- post an xml file to test3 with e.g.
@@ -54,8 +79,10 @@
 
             <map:match pattern="test4-post">
                 <map:generate src="module:raw-request-param:text" />
-                <map:transform src="context://stylesheets/system/xml2html.xslt" />
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
             </map:match>
 
         </map:pipeline>

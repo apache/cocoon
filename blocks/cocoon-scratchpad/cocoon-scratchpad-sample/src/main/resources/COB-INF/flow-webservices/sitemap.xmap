@@ -16,23 +16,34 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
     <!-- =========================== Views =================================== -->
+
     <map:views>
         <map:view from-label="content" name="content">
             <map:serialize type="xml" />
         </map:view>
+
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
+
         <map:view from-position="last" name="links">
             <map:serialize type="links" />
         </map:view>
     </map:views>
-    <!-- indicates what flowscript to attach to this sitemap -->
+
+    <!-- =========================== Flowscripts ================================= -->
+
     <map:flow language="javascript">
         <map:script src="flowWebServices.js" />
     </map:flow>
+
+    <!-- =========================== Pipelines ================================= -->
+
     <map:pipelines>
         <map:pipeline>
             <!--+
@@ -40,15 +51,14 @@
                 +-->
             <map:match pattern="page/*">
                 <map:generate type="jx" src="{1}.jx" />
-                <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-                    <map:parameter name="servletPath" value="{request:servletPath}" />
-                    <map:parameter name="sitemapURI" value="{request:sitemapURI}" />
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                    <map:parameter name="remove" value="{0}" />
-                </map:transform>
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+                </map:serialize>
                 <map:serialize />
             </map:match>
         </map:pipeline>
+       
         <map:pipeline>
             <map:match pattern="*">
                 <map:call function="{1}" />
