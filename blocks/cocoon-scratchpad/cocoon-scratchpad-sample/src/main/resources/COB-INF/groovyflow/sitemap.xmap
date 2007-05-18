@@ -84,7 +84,10 @@
                 <map:transform type="i18n">
                     <map:parameter name="locale" value="en-US" />
                 </map:transform>
-                <map:transform src="resources/forms-samples-styling.xsl" />
+                <map:transform src="resources/forms-samples-styling.xsl">
+                    <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+                    <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+                </map:transform>
                 <!-- Make use of servlet services -->
                 <map:serialize type="servletService">
                     <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
