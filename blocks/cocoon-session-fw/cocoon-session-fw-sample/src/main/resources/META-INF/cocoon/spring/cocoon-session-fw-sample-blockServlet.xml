@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -16,12 +16,14 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Session Framework']">
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-  <group name="Session Framework">
-    <sample name="Session Framework Block" href="/cocoon-session-fw-sample/">
-      This is a demo of the session framework integrated into Cocoon.
-    </sample>
-  </group>
-  
-</xsamples>
+    <bean id="org.apache.cocoon.session.fw.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+        <servlet:context mount-path="/cocoon-session-fw-sample" context-path="blockcontext:/cocoon-session-fw-sample/" />
+    </bean>
+</beans>

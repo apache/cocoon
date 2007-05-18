@@ -36,7 +36,6 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-session-fw-impl</artifactId>
-      
     </dependency>
   </dependencies>
   <pluginRepositories>
