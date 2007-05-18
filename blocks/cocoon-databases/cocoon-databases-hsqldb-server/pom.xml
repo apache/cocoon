@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-databases-hsqldb-server</artifactId>
-  <version>1.0.0-RC1</version>
+  <version>1.0.0-RC2-SNAPSHOT</version>
   <name>Cocoon Hsqldb Server Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.hsqldb-server.relPath}</url>  
   <description>
@@ -108,12 +108,5 @@
         </plugins>
       </build>      
     </profile>
-  </profiles>    
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-server/cocoon-databases-hsqldb-server-1.0.0-RC1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-server/cocoon-databases-hsqldb-server-1.0.0-RC1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-server/cocoon-databases-hsqldb-server-1.0.0-RC1</url>
-  </scm>
+  </profiles>
 </project>
