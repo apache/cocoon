@@ -21,6 +21,9 @@
     <!-- ========================= Components ================================ -->
 
     <map:components>
+
+        <!-- ========================= Actions ================================ -->
+
         <map:actions>
             <!--
                 - Original database actions
@@ -29,6 +32,7 @@
             <map:action logger="sitemap.action.del-employee" name="del-employee" src="org.apache.cocoon.acting.DatabaseDeleteAction" />
             <map:action logger="sitemap.action.upd-employee" name="upd-employee" src="org.apache.cocoon.acting.DatabaseUpdateAction" />
         </map:actions>
+
     </map:components>
 
     <!-- ========================== Action sets ================================ -->
@@ -46,7 +50,7 @@
         </map:action-set>
     </map:action-sets>
 
-    <!-- ============================ Views ==================================== -->
+    <!-- =========================== Views =================================== -->
 
     <map:views>
         <map:view name="content" from-label="content">
@@ -54,8 +58,10 @@
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
 
         <map:view name="links" from-position="last">
@@ -86,25 +92,19 @@
                         - successfully.
                     -->
                     <map:generate src="employee.xsp" type="serverpages" />
-                    <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
-                        <map:parameter name="servletPath" value="{request:servletPath}" />
-                        <map:parameter name="sitemapURI" value="{request:sitemapURI}" />
-                        <map:parameter name="contextPath" value="{request:contextPath}" />
-                        <map:parameter name="file" value=".xsp" />
-                    </map:transform>
-                    <map:serialize />
+                    <!-- Make use of servlet services -->
+                    <map:serialize type="servletService">
+                        <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+                    </map:serialize>
                 </map:act>
             </map:match>
 
             <map:match pattern="*">
                 <map:generate src="{1}.xsp" type="serverpages" />
-                <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
-                    <map:parameter name="servletPath" value="{request:servletPath}" />
-                    <map:parameter name="sitemapURI" value="{request:sitemapURI}" />
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                    <map:parameter name="file" value=".xsp" />
-                </map:transform>
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+                </map:serialize>
             </map:match>
 
             <map:match pattern="">

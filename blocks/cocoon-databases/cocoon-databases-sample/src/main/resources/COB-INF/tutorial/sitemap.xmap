@@ -22,6 +22,8 @@
 
     <map:components>
 
+        <!-- =========================== Actions ================================ -->
+
         <map:actions>
             <map:action name="dbAdd" logger="sitemap.tutorial.action.dbAdd" src="org.apache.cocoon.acting.DatabaseAddAction" />
 
@@ -68,7 +70,7 @@
 
             <map:match pattern="*-dept.html">
                 <map:act set="process">
-                    <map:parameter name="descriptor" value="context://samples/databases/tutorial/docs/department-form.xml" />
+                    <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/department-form.xml" />
                     <map:generate type="serverpages" src="docs/confirm-dept.xsp" />
                     <map:transform src="apache.xsl" />
                     <map:serialize />
@@ -81,7 +83,7 @@
 
             <map:match pattern="*-empl.html">
                 <map:act set="process">
-                    <map:parameter name="descriptor" value="context://samples/databases/tutorial/docs/employee-form.xml" />
+                    <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/employee-form.xml" />
                     <map:generate type="serverpages" src="docs/confirm-empl.xsp" />
                     <map:transform src="apache.xsl" />
                     <map:serialize />

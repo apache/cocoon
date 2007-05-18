@@ -62,7 +62,7 @@
     </map:components>
 
 
-    <!-- ======================= Views ================================= -->
+    <!-- =========================== Views =================================== -->
 
     <map:views>
         <map:view name="content" from-label="content">
@@ -70,8 +70,10 @@
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
 
         <map:view name="links" from-position="last">
@@ -79,7 +81,7 @@
         </map:view>
     </map:views>
 
-    <!-- ======================= Pipelines ================================= -->
+    <!-- =========================== Pipelines ================================= -->
 
     <map:pipelines>
         <map:pipeline>
@@ -220,12 +222,7 @@
                 <!-- ______________________________ content  ______________________________ -->
 
                 <map:generate type="serverpages" src="{1}.xsp" />
-                <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
-                    <map:parameter name="servletPath" value="{request:servletPath}" />
-                    <map:parameter name="sitemapURI" value="{request:sitemapURI}" />
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                    <map:parameter name="file" value=".xsp" />
-                </map:transform>
+                <map:transform src="servlet:style-default:/blocks/dynamic-page2html.xsl" />
                 <map:transform src="stupid.xsl" />
                 <map:serialize />
 
