@@ -18,7 +18,12 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+    <!-- =========================== Components =================================== -->
+
     <map:components>
+
+        <!-- =========================== Transformers =================================== -->
+
         <map:transformers default="xslt">
             <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
                 <catalogues default="other">
@@ -28,14 +33,37 @@
                 <cache-at-startup>true</cache-at-startup>
             </map:transformer>
         </map:transformers>
+
     </map:components>
 
-    <!-- indicates what flow classes to attach to this sitemap -->
+    <!-- =========================== Flowscripts =================================== -->
+
     <map:flow language="groovy">
         <map:script src="flow/CalculatorFlow.gy" />
         <map:script src="flow/FormFlow.gy" />
         <map:script src="flow/PersistenceFlow.gy" />
     </map:flow>
+
+    <!-- =========================== Views =================================== -->
+
+    <map:views>
+        <map:view name="content" from-label="content">
+            <map:serialize type="xml" />
+        </map:view>
+
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
+
+    <!-- =========================== Pipelines ================================= -->
 
     <map:pipelines>
         <map:pipeline>
@@ -44,10 +72,10 @@
                 +-->
             <map:match pattern="page/*">
                 <map:generate type="jx" src="../screens/{1}.xml" />
-                <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                </map:transform>
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+                </map:serialize>
             </map:match>
 
             <map:match pattern="form/*">
@@ -56,11 +84,11 @@
                 <map:transform type="i18n">
                     <map:parameter name="locale" value="en-US" />
                 </map:transform>
-                <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                </map:transform>
-                <map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl" />
-                <map:serialize />
+                <map:transform src="resources/forms-samples-styling.xsl" />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+                </map:serialize>
             </map:match>
 
         </map:pipeline>
@@ -68,10 +96,10 @@
         <map:pipeline>
             <map:match pattern="">
                 <map:generate src="samples.xml" />
-                <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                </map:transform>
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+                </map:serialize>
             </map:match>
 
             <!--+
@@ -97,7 +125,7 @@
             </map:match>
 
             <map:match pattern="resources/**">
-                <map:redirect-to uri="/samples/blocks/forms/resources/{1}" />
+                <map:redirect-to uri="{servlet:forms:/}/resources/{1}" />
             </map:match>
 
         </map:pipeline>

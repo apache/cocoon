@@ -20,9 +20,32 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+    <!-- =========================== Views =================================== -->
+
+    <map:views>
+        <map:view name="content" from-label="content">
+            <map:serialize type="xml" />
+        </map:view>
+
+        <map:view from-label="content" name="pretty-content">
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
+        </map:view>
+    </map:views>
+
+    <!-- =========================== Flowscripts =================================== -->
+
     <map:flow language="javascript">
         <map:script src="xmodule.js" />
     </map:flow>
+
+    <!-- =========================== Pipelines ================================= -->
 
     <map:pipelines>
         <map:pipeline>
@@ -42,8 +65,10 @@
 
             <map:match pattern="test-view">
                 <map:generate src="{request-param:url}#{request-param:xPathIn}" />
-                <map:transform src="context://stylesheets/system/xml2html.xslt" />
-                <map:serialize />
+                <!-- Make use of servlet services -->
+                <map:serialize type="servletService">
+                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+                </map:serialize>
             </map:match>
 
         </map:pipeline>
