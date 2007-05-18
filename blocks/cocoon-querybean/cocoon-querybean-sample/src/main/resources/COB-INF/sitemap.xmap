@@ -26,7 +26,7 @@
             <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
                 <catalogues default="forms">
                     <catalogue id="local" name="messages" location="i18n" />
-                    <catalogue id="forms" name="FormsMessages" location="context://samples/blocks/forms/messages" />
+                    <catalogue id="forms" name="FormsMessages" location="servlet:forms:/resource/internal/i18n" />
                 </catalogues>
                 <cache-at-startup>true</cache-at-startup>
             </map:transformer>
@@ -50,14 +50,15 @@
         </map:view>
 
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
         </map:view>
 
         <map:view name="links" from-position="last">
             <map:serialize type="links" />
         </map:view>
-
     </map:views>
 
     <!-- =========================== Pipelines ================================= -->
@@ -76,11 +77,14 @@
                     <map:transform type="i18n">
                         <map:parameter name="locale" value="{../locale}" />
                     </map:transform>
-                    <map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl" />
-                    <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-                        <map:parameter name="contextPath" value="{request:contextPath}" />
+                    <map:transform src="stylesheets/forms-samples-styling.xsl">
+                        <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+                        <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
                     </map:transform>
-                    <map:serialize />
+                    <!-- Make use of servlet services -->
+                    <map:serialize type="servletService">
+                        <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+                    </map:serialize>
                 </map:match>
 
                 <!-- prepare the document for indexing -->
@@ -96,10 +100,10 @@
                     <map:transform type="cinclude" />
                     <map:transform type="lucene-indexer" />
                     <map:transform src="stylesheets/lucene2simple-page.xsl" />
-                    <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-                        <map:parameter name="contextPath" value="{request:contextPath}" />
-                    </map:transform>
-                    <map:serialize />
+                    <!-- Make use of servlet services -->
+                    <map:serialize type="servletService">
+                        <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+                    </map:serialize>
                 </map:match>
 
                 <!-- displays the rest of the screens -->
@@ -108,10 +112,10 @@
                     <map:transform type="i18n">
                         <map:parameter name="locale" value="{../locale}" />
                     </map:transform>
-                    <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-                        <map:parameter name="contextPath" value="{request:contextPath}" />
-                    </map:transform>
-                    <map:serialize />
+                    <!-- Make use of servlet services -->
+                    <map:serialize type="servletService">
+                        <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+                    </map:serialize>
                 </map:match>
 
             </map:act>
