@@ -18,6 +18,8 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+    <!-- =========================== Componenets ================================= -->
+
     <map:components>
         <map:include-properties dir="properties" />
     </map:components>
@@ -34,9 +36,16 @@
         <map:view name="content" from-label="content">
             <map:serialize type="xml" />
         </map:view>
+
         <map:view from-label="content" name="pretty-content">
-            <map:transform src="context://stylesheets/system/xml2html.xslt" />
-            <map:serialize type="html" />
+            <!-- Make use of servlet services -->
+            <map:serialize type="servletService">
+                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+            </map:serialize>
+        </map:view>
+
+        <map:view name="links" from-position="last">
+            <map:serialize type="links" />
         </map:view>
     </map:views>
 
@@ -49,9 +58,7 @@
 
             <map:match pattern="screens/*.html">
                 <map:generate type="jx" src="screens/{1}.jx" />
-                <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-                    <map:parameter name="contextPath" value="{request:contextPath}" />
-                </map:transform>
+                <map:transform src="servlet:style-default:/common/style/xsl/html/complex-page2html.xsl" />
                 <map:transform type="xinclude" />
                 <map:serialize />
             </map:match>
