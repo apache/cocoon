@@ -26,12 +26,12 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>4</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-servlet-service-components</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0-RC1-SNAPSHOT</version>
+  <version>1.0.0-M2</version>
   <name>Cocoon Servlet Service Components</name>
   <description>Components for the servlet service framework that depends on pipeline and sitemap APIs.</description>
   <url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url>    
@@ -52,14 +52,17 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
+      <version>1.0.0-RC1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-impl</artifactId>
+      <version>1.0.0-M2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-linkrewriter-impl</artifactId>
+      <version>1.0.0-RC1</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -90,9 +93,9 @@
   </build>
   
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</developerConnection>
-    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</url>    
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0-M2</url>    
   </scm>     
   
   <profiles>
