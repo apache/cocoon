@@ -248,10 +248,10 @@
 		       border="0" title="Back to Apache Cocoon homepage" /></a></p>
 		       <h1 class="projectTitle"><a href="$project.getProperties().get("docs.urlRelativizer")">#nameAndVersion()</a></h1>
 		       <ul class="projectList">
-			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Cocoon Core</a></li>
-			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Cocoon Blocks</a></li>
 			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></li>
-			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins</a></li>
+			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Cocoon Core [2.2]</a></li>
+			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Cocoon Blocks [2.2]</a></li>
+			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins [2.]</a></li>
 	        	</ul>
 	       </div>
       	 <div class="projectBarClear"><!-- --></div>
