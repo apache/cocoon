@@ -33,7 +33,7 @@
   </parent>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-databases-hsqldb-client</artifactId>
-  <version>1.0.0-RC1</version>
+  <version>1.0.0-RC2-SNAPSHOT</version>
   <name>Cocoon Hsqldb Client Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.hsqldb-client.relPath}</url>  
   <description>
@@ -99,12 +99,5 @@
         </plugins>
       </build>      
     </profile>
-  </profiles>      
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-client/cocoon-databases-hsqldb-client-1.0.0-RC1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-client/cocoon-databases-hsqldb-client-1.0.0-RC1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-client/cocoon-databases-hsqldb-client-1.0.0-RC1</url>
-  </scm>
+  </profiles>
 </project>
