@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-html-impl</artifactId>
-  <version>1.0.0-RC1</version>
+  <version>1.0.0-RC2-SNAPSHOT</version>
   <name>Cocoon HTML Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.html.relPath}</url>  
 
@@ -85,12 +85,5 @@
         </plugins>
       </build>      
     </profile>
-  </profiles>  
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-html-impl/cocoon-html-impl-1.0.0-RC1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-html-impl/cocoon-html-impl-1.0.0-RC1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-html-impl/cocoon-html-impl-1.0.0-RC1</url>
-  </scm>
+  </profiles>
 </project>
