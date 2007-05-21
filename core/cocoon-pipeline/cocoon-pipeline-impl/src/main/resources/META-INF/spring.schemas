@@ -13,4 +13,4 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-http\://cocoon.apache.org/schema/pipeline/cocoon-pipeline-1.0.xsd=org/apache/cocoon/core/container/spring/pipeline/pipeline.xsd
+http\://cocoon.apache.org/schema/pipeline/cocoon-pipeline-1.0.xsd=org/apache/cocoon/core/container/spring/pipeline/cocoon-pipeline-1.0.xsd
