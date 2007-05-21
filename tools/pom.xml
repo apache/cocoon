@@ -38,6 +38,7 @@
     <module>archetypes/cocoon-22-archetype-block</module>
     <module>archetypes/cocoon-22-archetype-webapp</module>    
     <module>cocoon-maven-reports</module>
+    <module>cocoon-maven-plugin</module>
     <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
     <module>cocoon-rcl/cocoon-rcl-spring-reloader</module>        
   </modules>
