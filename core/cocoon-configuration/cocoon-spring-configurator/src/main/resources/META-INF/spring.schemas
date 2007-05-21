@@ -15,4 +15,3 @@
 #
 http\://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.xsd=org/apache/cocoon/spring/configurator/schema/cocoon-configurator-1.0.xsd
 http\://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd=org/apache/cocoon/spring/configurator/schema/cocoon-configurator-1.0.1.xsd
-http\://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.2.xsd=org/apache/cocoon/spring/configurator/schema/cocoon-configurator-1.0.2.xsd
