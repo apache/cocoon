@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon Reloading ClassLoader - Webapp Wrapper</name>
 
   <dependencies>
@@ -114,13 +114,5 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>  
-  </repositories>  
-  
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</url>
-  </scm>
+  </repositories>
 </project>
