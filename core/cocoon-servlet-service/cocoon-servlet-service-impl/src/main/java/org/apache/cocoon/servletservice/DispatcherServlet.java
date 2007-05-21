@@ -19,8 +19,6 @@ package org.apache.cocoon.servletservice;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -33,8 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -52,37 +48,27 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class DispatcherServlet
     extends HttpServlet {
 
-    private static final String MOUNT_PATH = "mountPath";
-
-    /** All registered mountable servlets. */
-    private Map mountableServlets;
-    
-    /** The startup date of the Spring application context used to setup the  mountable servlets. */
-    private long applicationContextStartDate;
-    
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
+    
+    /** The servlet collector bean */
+    private Map blockServletCollector;
 
     public void init() throws ServletException {
-        createMountableServletsMap();
         this.log("Block dispatcher was initialized successfully.");        
     }
 
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        ApplicationContext appContext =
-            WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-        if (appContext.getStartupDate() != this.applicationContextStartDate) {
-            createMountableServletsMap(); 
-        }
-        
+        final Map mountableServlets = getBlockServletMap();
         String path = req.getPathInfo();
         path = path == null ? "" : path;
+
         // find the servlet which mount path is the longest prefix of the path info
         int index = path.length();
         Servlet servlet = null;
         while (servlet == null && index != -1) {
             path = path.substring(0, index);
-            servlet = (Servlet)this.mountableServlets.get(path);
+            servlet = (Servlet)mountableServlets.get(path);
             index = path.lastIndexOf('/');
         }
         if (servlet == null) {
@@ -104,36 +90,6 @@ public class DispatcherServlet
         }
         
         servlet.service(request, res);
-    }
-    
-    private void createMountableServletsMap() {
-        Map mServlets = new HashMap();
-        // get the beanFactory from the web application context
-        ApplicationContext appContext =
-            WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-
-        // the returned map contains the bean names as key and the beans as values
-        final Map servlets = 
-            BeanFactoryUtils.beansOfTypeIncludingAncestors(appContext, Servlet.class);
-        
-        // register and initialize the servlets that have a mount path property
-        final Iterator i = servlets.values().iterator();
-        while ( i.hasNext() ) {
-            final Servlet servlet = (Servlet) i.next();
-            BeanWrapperImpl wrapper = new BeanWrapperImpl(servlet);
-            if (wrapper.isReadableProperty(MOUNT_PATH)) {
-                String mountPath = (String) wrapper.getPropertyValue(MOUNT_PATH);
-                this.logger.debug("DispatcherServlet: initializing servlet " + servlet + " at " 
-                        + mountPath);
-                mServlets.put(mountPath, servlet);
-            }
-        }
-        this.mountableServlets = mServlets;
-        
-        // set the application context start date
-        this.applicationContextStartDate =  appContext.getStartupDate();
-        
-        this.logger.info("DispatcherServlet is (re)set the table of mountable servlets based on " + appContext);        
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {
@@ -158,4 +114,14 @@ public class DispatcherServlet
 		getInterfaces(interfaces, clazz);
 		return (Class[]) interfaces.toArray(new Class[interfaces.size()]);
 	}
+
+    public Map getBlockServletMap()
+    {
+        if(this.blockServletCollector == null) {
+            final ApplicationContext applicationContext =
+                WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+            this.blockServletCollector = (Map)applicationContext.getBean( "org.apache.cocoon.servletservice.spring.BlockServletMap" );
+        }
+        return blockServletCollector;
+    }
 }
