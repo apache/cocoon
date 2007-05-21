@@ -70,13 +70,19 @@
       <xsd:complexType>
         <xsd:attribute name="name" type="xsd:string" use="optional"/>
         <xsd:attribute name="id" type="xsd:ID" use="optional"/>
-    	<xsd:attribute name="type" type="xsd:string" use="required"/>
-    	<xsd:attribute name="check-parent" type="xsd:boolean" use="optional" default="true"/>
-    	<xsd:attribute name="strip-prefix" type="xsd:boolean" use="optional" default="true"/>
-        <!-- beans should have all these properties (comma separated list) -->
-    	<xsd:attribute name="has-properties" type="xsd:string" use="optional" default=""/>
-        <!-- use value of this bean property to key the map instead of bean id -->
-        <xsd:attribute name="key-property" type="xsd:string" use="optional" default=""/>
+    	  <xsd:attribute name="type" type="xsd:string" use="required"/>
+    	  <xsd:attribute name="check-parent" type="xsd:boolean" use="optional" default="true"/>
+    	  <xsd:attribute name="strip-prefix" type="xsd:boolean" use="optional" default="true"/>
+        <xsd:attribute name="has-properties" type="xsd:string" use="optional" default="">
+          <xsd:annotation>
+            <xsd:documentation>beans should have all these properties (comma separated list)</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="key-property" type="xsd:string" use="optional" default="">
+          <xsd:annotation>
+            <xsd:documentation>use value of this bean property to key the map instead of bean id</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
       </xsd:complexType>
     </xsd:element>
 </xsd:schema>
