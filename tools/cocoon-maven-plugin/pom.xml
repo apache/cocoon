@@ -136,15 +136,15 @@
       <id>daisy</id>
       <build>
         <plugins>
-		      <plugin>
-		        <groupId>org.daisycms</groupId>
-		        <artifactId>daisy-maven-plugin</artifactId>
-		        <configuration>        
-		          <navDocId>1296</navDocId>
-		          <collection>cdocs-maven-plugin</collection>          
-		          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-		        </configuration>
-		      </plugin> 
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>        
+              <navDocId>1296</navDocId>
+              <collection>cdocs-maven-plugin</collection>          
+	      <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+	    </configuration>
+	  </plugin> 
         </plugins>
       </build>      
     </profile>

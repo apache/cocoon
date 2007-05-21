@@ -71,9 +71,9 @@ import org.apache.maven.project.artifact.MavenMetadataSource;
  */
 public class ReloadingWebappMojo extends AbstractMojo {
 
-    private static final String LIB_VERSION_WRAPPER = "1.0.0-M1-SNAPSHOT";
+    private static final String LIB_VERSION_WRAPPER = "1.0.0-M1";
     
-    private static final String LIB_VERSION_SPRING_RELOADER = "1.0.0-M1-SNAPSHOT";    
+    private static final String LIB_VERSION_SPRING_RELOADER = "1.0.0-M1";    
     
     private static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
 
