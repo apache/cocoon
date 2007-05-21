@@ -47,6 +47,8 @@ public class BeanMapElementParser extends AbstractElementParser {
         beanDef.getPropertyValues().addPropertyValue("type", typeClass);
         beanDef.getPropertyValues().addPropertyValue("checkParent", this.getAttributeValue(element, "check-parent", "true"));
         beanDef.getPropertyValues().addPropertyValue("stripPrefix", this.getAttributeValue(element, "strip-prefix", "true"));
+        beanDef.getPropertyValues().addPropertyValue("hasProperties", this.getAttributeValue(element, "has-properties", ""));
+        beanDef.getPropertyValues().addPropertyValue("keyProperty", this.getAttributeValue(element, "key-property", ""));
 
         // register bean if it's a global definition
         if ( !parserContext.isNested() ) {
