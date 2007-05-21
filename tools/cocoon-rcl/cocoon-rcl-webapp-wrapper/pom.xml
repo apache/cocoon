@@ -28,23 +28,21 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>4</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
-  <version>1.0.0-M1-SNAPSHOT</version>
+  <version>1.0.0-M1</version>
   <name>Cocoon Reloading ClassLoader - Webapp Wrapper</name>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId> 
       <artifactId>commons-jci-core</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      
       <exclusions>
         <exclusion>
           <artifactId>logkit</artifactId>
@@ -59,55 +57,46 @@
     <dependency>
       <groupId>log4j</groupId> 
       <artifactId>log4j</artifactId> 
-       
     </dependency>      
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      
       <scope>provided</scope>
     </dependency>   
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      
       <scope>provided</scope>
     </dependency>    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      
       <scope>provided</scope>
     </dependency>   
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      
       <scope>provided</scope>
     </dependency>      
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      
       <scope>provided</scope>
     </dependency>             
     <!--  test dependencies  -->
     <dependency>
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
-      
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -128,4 +117,10 @@
   </repositories>  
   
   
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</url>
+  </scm>
 </project>
