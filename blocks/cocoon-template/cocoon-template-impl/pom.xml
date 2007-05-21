@@ -77,7 +77,6 @@
       <artifactId>cocoon-pipeline-impl</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
-      <version>1.0.0-RC1</version>
     </dependency>
     <dependency>
       <groupId>xmlunit</groupId>
