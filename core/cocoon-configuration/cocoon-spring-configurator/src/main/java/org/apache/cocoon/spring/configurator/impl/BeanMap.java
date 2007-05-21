@@ -16,13 +16,17 @@
  */
 package org.apache.cocoon.spring.configurator.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
@@ -66,6 +70,12 @@ public class BeanMap
     /** Do we check the parent factories? */
     protected boolean checkParent = true;
 
+    /** Do we check for properties? */
+    protected List hasProperties = new ArrayList();
+
+    /** Which property should we use to key the map? */
+    protected String keyProperty;
+
     /**
      * Get all the bean's from the bean factory and put them into
      * a map using their id.
@@ -81,7 +91,31 @@ public class BeanMap
             if ( this.stripPrefix && (beanName.startsWith(prefix1) || beanName.startsWith(prefix2)) ) {
                 key = key.substring(prefix1.length());
             }
-            this.beanMap.put(key, this.beanFactory.getBean(beanName));
+            if(this.hasProperties.size() > 0) {
+                final Object bean = this.beanFactory.getBean(beanName);
+                final BeanWrapperImpl wrapper = new BeanWrapperImpl(bean);
+                boolean isOk = true;
+                final Iterator iter = this.hasProperties.iterator();
+                while(iter.hasNext()) {
+                    final String propName = (String)iter.next();
+                    if(!wrapper.isReadableProperty(propName)) {
+                        isOk = false;
+                    }
+                }
+                if(isOk) {
+                    if( this.keyProperty != null && this.keyProperty.length() > 0 && wrapper.isReadableProperty(this.keyProperty)) {
+                        key = (String)wrapper.getPropertyValue(this.keyProperty);
+                    }
+                    this.beanMap.put(key, bean);
+                }
+            } else {
+                final Object bean = this.beanFactory.getBean(beanName);
+                final BeanWrapperImpl wrapper = new BeanWrapperImpl(bean);
+                if( this.keyProperty != null && this.keyProperty.length() > 0 && wrapper.isReadableProperty(this.keyProperty)) {
+                    key = (String)wrapper.getPropertyValue(this.keyProperty);
+                }
+                this.beanMap.put(key, bean);
+            }
         }
     }
 
@@ -143,6 +177,19 @@ public class BeanMap
 
     public void setCheckParent(boolean checkParent) {
         this.checkParent = checkParent;
+    }
+
+    public void setHasProperties(String pHasProperties) {
+        final StringTokenizer tokenizer = new StringTokenizer(pHasProperties, " \t\n\r\f,");
+        final List propNames = new ArrayList();
+        while(tokenizer.hasMoreTokens()) {
+            propNames.add( tokenizer.nextToken() );
+        }
+        this.hasProperties = propNames;
+    }
+
+    public void setKeyProperty(String pKeyProperty) {
+        this.keyProperty = pKeyProperty;
     }
 
     public void setType(Class typeClass) {
