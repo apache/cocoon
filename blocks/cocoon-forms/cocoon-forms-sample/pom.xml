@@ -28,7 +28,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>5-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-forms-sample</artifactId>
