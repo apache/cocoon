@@ -31,7 +31,7 @@
     <version>4-SNAPSHOT</version>
   </parent>
   <artifactId>cocoon-tools-modules</artifactId>
-  <version>4-SNAPSHOT</version>
+  <version>5-SNAPSHOT</version>
   <name>Cocoon Tools [modules]</name>
 
   <modules>
