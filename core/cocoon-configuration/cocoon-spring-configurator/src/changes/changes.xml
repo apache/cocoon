@@ -25,6 +25,11 @@
 <document>
   <body>
     <release version="1.0.1" date="2007-00-00" description="unreleased">
+      <action dev="giacomo" type="add">
+        Added ability to the bean-map handler to specify what properties a bean must have 
+        to be considered as a candidate for the constructed Map as well as keying the Map
+        with a property value from the bean itself instead of its bean-id.
+      </action>  
       <action dev="cziegeler" type="fix">
         SettingsBeanFactoryPostProcessor can be used outside a servlet context.
       </action>
