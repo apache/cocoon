@@ -25,7 +25,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>4-SNAPSHOT</version>
+    <version>5-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -69,7 +69,7 @@
             <configuration>
               <tasks>
                 <ant antfile="${basedir}/build.xml" inheritRefs="true">
-                  <target name="unzip-dojo" />
+                  <target name="unzip-dojo"/>
                 </ant>
               </tasks>
             </configuration>
