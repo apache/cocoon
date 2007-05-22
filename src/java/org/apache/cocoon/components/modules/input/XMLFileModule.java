@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.components.modules.input;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -292,7 +293,7 @@ public class XMLFileModule extends AbstractJXPathModule
     public void dispose() {
         super.dispose();
         if (this.manager != null) {
-            this.manager.release(this.resolver);
+            this.manager.release((Component)this.resolver);
             this.resolver = null;
             this.manager = null;
         }
@@ -313,8 +314,8 @@ public class XMLFileModule extends AbstractJXPathModule
         if (modeConf != null && modeConf.getChildren().length > 0) {
             fileConf = modeConf.getChild("file", false);
             if (fileConf == null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Missing 'file' child element at " + modeConf.getLocation());
+                if (this.getLogger().isDebugEnabled()) {
+                    this.getLogger().debug("Missing 'file' child element at " + modeConf.getLocation());
                 }
             } else {
                 hasDynamicConf = true;
@@ -331,7 +332,7 @@ public class XMLFileModule extends AbstractJXPathModule
                 "No source specified"
                     + (modeConf != null ? ", either dynamically in " + modeConf.getLocation() + ", or " : "")
                     + " statically in "
-                    + staticConfLocation);
+                    + this.staticConfLocation);
         }
         if (!this.documents.containsKey(src)) {
             boolean reload = this.reloadAll;
@@ -367,32 +368,32 @@ public class XMLFileModule extends AbstractJXPathModule
      */
     protected Object getContextObject(Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        DocumentHelper helper = getDocumentHelper(modeConf);
+        DocumentHelper helper = this.getDocumentHelper(modeConf);
 
         try {
-            return helper.getDocument(this.manager, this.resolver, getLogger());
+            return helper.getDocument(this.manager, this.resolver, this.getLogger());
         } catch (Exception e) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Error using source " + src + "\n" + e.getMessage(), e);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Error using source " + this.src + "\n" + e.getMessage(), e);
             }
-            throw new ConfigurationException("Error using source " + src, e);
+            throw new ConfigurationException("Error using source " + this.src, e);
         }
     }
 
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        return getAttribute(name, modeConf, objectModel, false);
+        return this.getAttribute(name, modeConf, objectModel, false);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        Object result = getAttribute(name, modeConf, objectModel, true);
+        Object result = this.getAttribute(name, modeConf, objectModel, true);
         return (result != null ? (Object[]) result : null);
     }
 
     private Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues)
     throws ConfigurationException {
-        Object contextObj = getContextObject(modeConf, objectModel);
+        Object contextObj = this.getContextObject(modeConf, objectModel);
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name);
         }
@@ -401,7 +402,7 @@ public class XMLFileModule extends AbstractJXPathModule
         Map cache = null;
         boolean hasBeenCached = false;
         if (this.cacheExpressions) {
-            cache = getExpressionCache(getValues? this.expressionValuesCache: this.expressionCache, contextObj);
+            cache = this.getExpressionCache(getValues? this.expressionValuesCache: this.expressionCache, contextObj);
             hasBeenCached = cache.containsKey(name);
             if (hasBeenCached) {
                 result = cache.get(name);

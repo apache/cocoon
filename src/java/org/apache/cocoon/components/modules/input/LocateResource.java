@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.components.modules.input;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -34,26 +35,26 @@ import java.util.Vector;
 
 /**
  * Locate a resource in a resource tree. Any attribute name is interpreted as a
- * URI with the last part being the resource name unless it ends with a slash. 
+ * URI with the last part being the resource name unless it ends with a slash.
  * The URI is checked if the resource exists and the URI is returned. If the
  * resource does not exist, the URI is shortened until the resource name is found
  * and the new URI is returned. If no resource with the given name exists, null
- * is returned. 
- * 
+ * is returned.
+ *
  * <p>A use case is to locate the closest menu file or when moving a site from
  * a filesystem path == URL system from a httpd to Cocoon and provide similar
  * functions to .htaccess files.</p>
- * 
+ *
  * <p>Example: for context:/some/path/to/a/file.xml the following URIs
  * are tested: context:/some/path/to/a/file.xml, context:/some/path/to/file.xml,
  * context:/some/path/file.xml, context:/some/file.xml, and context:/file.xml.
  * For the attribute name context:/some/path/foo/ tests context:/some/path/foo/,
- * context:/some/path/, context:/some/, and context:/ are tested.</p> 
- * 
- * <p>The getAttribute() method will return the URI for the first match while 
- * getAttributeValues() will return an array of all existing paths. 
+ * context:/some/path/, context:/some/, and context:/ are tested.</p>
+ *
+ * <p>The getAttribute() method will return the URI for the first match while
+ * getAttributeValues() will return an array of all existing paths.
  * getAttributeNames() will return an Iterator to an empty collection.</p>
- * 
+ *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
@@ -80,7 +81,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
     /**
      * Remove one path element from the URL unless minimum length has
      * been reached.
-     * 
+     *
      * @param urlstring
      * @param minLen
      * @return shortened URI
@@ -94,7 +95,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         return urlstring;
     }
 
-    /** 
+    /**
      * if the url does not end with a "/", keep the last part in
      * order to add it later again after traversing up
      */
@@ -113,7 +114,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
      * Locate a resource with the given URL consisting of urlstring + filename.
      * The filename is appended each time the path is shortened. Returns the first
      * existing occurance.
-     * 
+     *
      * @param urlstring
      * @param filename
      * @param minLen
@@ -141,7 +142,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
                     resolver.release(src);
                 }
                 if (!found) {
-                    urlstring = shortenURI(urlstring, minLen);
+                    urlstring = this.shortenURI(urlstring, minLen);
                 }
             }
         } catch (ComponentException e1) {
@@ -149,7 +150,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
                 this.getLogger().error("Exception obtaining source resolver ", e1);
         } finally {
             if (resolver != null) {
-                this.manager.release(resolver);
+                this.manager.release((Component)resolver);
             }
         }
         return (found ? urlstring : null);
@@ -170,13 +171,13 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         throws ConfigurationException {
 
         String urlstring = name;
-        String filename = extractFilename(urlstring);
-        int minLen = calculateMinLen(name);
+        String filename = this.extractFilename(urlstring);
+        int minLen = this.calculateMinLen(name);
         if (filename.length() > 0) {
-            urlstring = shortenURI(urlstring, minLen);
+            urlstring = this.shortenURI(urlstring, minLen);
         }
 
-        String result = locateResource(urlstring, filename, minLen);
+        String result = this.locateResource(urlstring, filename, minLen);
         if (result != null) {
             result += filename;
         }
@@ -203,10 +204,10 @@ public class LocateResource extends AbstractInputModule implements Composable, T
 
         Vector uris = null;
         String urlstring = name;
-        String filename = extractFilename(urlstring);
-        int minLen = calculateMinLen(name);
+        String filename = this.extractFilename(urlstring);
+        int minLen = this.calculateMinLen(name);
         if (filename.length() > 0) {
-            urlstring = shortenURI(urlstring, minLen);
+            urlstring = this.shortenURI(urlstring, minLen);
         }
 
         while (urlstring != null && urlstring.length() > minLen) {
@@ -217,7 +218,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
                 if (this.getLogger().isDebugEnabled())
                     this.getLogger().debug("-> located " + name + " @ " + urlstring + filename);
                 uris.add(urlstring + filename);
-                urlstring = shortenURI(urlstring, minLen);
+                urlstring = this.shortenURI(urlstring, minLen);
             }
         }
         return (uris == null ? null : uris.toArray());

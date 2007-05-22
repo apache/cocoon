@@ -56,7 +56,7 @@ import org.apache.excalibur.source.SourceResolver;
  * @version CVS $Id$
  */
 public final class CocoonComponentManager extends ExcaliburComponentManager
-                                          implements SourceResolver {
+                                          implements SourceResolver, Component {
 
     /** The key used to store the current process environment */
     private static final String PROCESS_KEY = CocoonComponentManager.class.getName();
@@ -324,10 +324,10 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
 
         if (role.equals(SourceResolver.ROLE)) {
             if (null == this.sourceResolver) {
-                if(wasDisposed) {
+                if(this.wasDisposed) {
                     // (BD) working on bug 27249: I think we could throw an Exception here, as
                     // the following call fails anyway, but I'm not sure enough ;-)
-                    getLogger().warn("Trying to lookup SourceResolver on disposed CocoonComponentManager");
+                    this.getLogger().warn("Trying to lookup SourceResolver on disposed CocoonComponentManager");
                 }
                 this.sourceResolver = (SourceResolver) super.lookup( role );
             }
@@ -511,12 +511,12 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      * Dispose
      */
     public void dispose() {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CocoonComponentManager.dispose() called");
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("CocoonComponentManager.dispose() called");
         }
 
         if (null != this.sourceResolver) {
-            super.release(this.sourceResolver);
+            super.release((Component)this.sourceResolver);
             // We cannot null out sourceResolver here yet as some other not
             // disposed yet components might still have unreleased sources,
             // and they will call {@link #release(Source)} during their
@@ -575,21 +575,21 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
         // Note that at this point, we're not initialized and cannot do
         // lookups, so defer parental introductions to initialize().
         if (ParentAware.class.isAssignableFrom(clazz)) {
-            parentAwareComponents.add(role);
+            this.parentAwareComponents.add(role);
         }
     }
 
     public void initialize() throws Exception {
         super.initialize();
-        if (parentAwareComponents == null) {
+        if (this.parentAwareComponents == null) {
             throw new ComponentException(null, "CocoonComponentManager already initialized");
         }
         // Set parents for parentAware components
-        Iterator iter = parentAwareComponents.iterator();
+        Iterator iter = this.parentAwareComponents.iterator();
         while (iter.hasNext()) {
             String role = (String)iter.next();
-            getLogger().debug(".. "+role);
-            if ( parentManager != null && parentManager.hasComponent( role ) ) {
+            this.getLogger().debug(".. "+role);
+            if ( this.parentManager != null && this.parentManager.hasComponent( role ) ) {
                 // lookup new component
                 Component component = null;
                 try {
@@ -602,7 +602,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                 }
             }
         }
-        parentAwareComponents = null;  // null to save memory, and catch logic bugs.
+        this.parentAwareComponents = null;  // null to save memory, and catch logic bugs.
     }
 
     /**
@@ -632,7 +632,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
             Object oldStack = environmentStack.get();
             CocoonComponentManager.environmentStack.set(this.parentStack);
             try {
-                doRun();
+                this.doRun();
             } finally {
                 // Restore the previous stack
                 CocoonComponentManager.environmentStack.set(oldStack);
@@ -662,10 +662,10 @@ final class EnvironmentDescription {
     }
 
     Map getGlobalRequestLifcecycleComponents() {
-        Map m = (Map)environment.getAttribute(GlobalRequestLifecycleComponent.class.getName());
+        Map m = (Map)this.environment.getAttribute(GlobalRequestLifecycleComponent.class.getName());
         if ( m == null ) {
             m = new HashMap();
-            environment.setAttribute(GlobalRequestLifecycleComponent.class.getName(), m);
+            this.environment.setAttribute(GlobalRequestLifecycleComponent.class.getName(), m);
         }
         return m;
     }
@@ -686,8 +686,8 @@ final class EnvironmentDescription {
             this.requestLifecycleComponents.clear();
         }
 
-        for (int i = 0; i < autoreleaseComponents.size(); i++) {
-            final Object[] o = (Object[])autoreleaseComponents.get(i);
+        for (int i = 0; i < this.autoreleaseComponents.size(); i++) {
+            final Object[] o = (Object[])this.autoreleaseComponents.get(i);
             final Component component = (Component)o[0];
             if (o[1] instanceof ComponentManager) {
                 ((ComponentManager)o[1]).release( component );

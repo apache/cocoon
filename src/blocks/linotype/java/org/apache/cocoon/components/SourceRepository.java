@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.environment.Request;
@@ -42,17 +43,17 @@ import org.apache.excalibur.source.TraversableSource;
  * @version CVS $Id$
  */
 public class SourceRepository {
-    
+
     public static final String FILE_NAME = "document";
-    
+
     private static SourceRepository instance;
-    
+
     private static ComponentManager manager;
-    
+
     private SourceRepository() {
     	manager = CocoonComponentManager.getSitemapComponentManager();
     }
-    
+
     public static SourceRepository getInstance() {
         if (instance == null) {
             instance = new SourceRepository();
@@ -60,7 +61,7 @@ public class SourceRepository {
         return instance;
     }
 
-    private static Source resolve(String uri) 
+    private static Source resolve(String uri)
     throws MalformedURLException, IOException {
         SourceResolver resolver = null;
         TraversableSource source;
@@ -70,7 +71,7 @@ public class SourceRepository {
         } catch (ComponentException ce) {
             throw new IOException("ComponentException");
         } finally {
-            manager.release(resolver);
+            manager.release((Component)resolver);
         }
         return source;
     }
@@ -91,7 +92,7 @@ public class SourceRepository {
     public static void save(Request request, String dirName) throws Exception {
         TraversableSource collection = getCollection(dirName);
         ModifiableTraversableSource result;
-        
+
         Enumeration params = request.getParameterNames();
         while (params.hasMoreElements()) {
             String name = (String) params.nextElement();
@@ -102,13 +103,13 @@ public class SourceRepository {
                 String code = name.substring(5);
                 if (!(collection instanceof ModifiableSource)) {
                 	throw new RuntimeException("Cannot modify the given source");
-                }	
+                }
                 result = (ModifiableTraversableSource)resolve(collection.getURI() + "/" + code);
-                
+
                 save(part, result);
             } else if (name.startsWith("delete:")) {
                 String value = request.getParameter(name);
-                if (value.length() > 0) {               
+                if (value.length() > 0) {
                     String code = name.substring(7);
 					result = (ModifiableTraversableSource)resolve(collection + "/" + code);
                     remove(result);
@@ -116,12 +117,12 @@ public class SourceRepository {
             }
         }
     }
-    
+
     public static void save(Request request, String param, String dest) throws Exception {
         Part part = (Part) request.get(param);
         save(part, (ModifiableTraversableSource)resolve(dest));
     }
-    
+
     public static void save(Part part, ModifiableTraversableSource destination) throws Exception {
         InputStream in = null;
         OutputStream out = null;
@@ -138,7 +139,7 @@ public class SourceRepository {
             }
         }
     }
-    
+
     public static OutputStream getOutputStream(String collection) throws IOException {
         String mainResource = collection + "/" + FILE_NAME + ".xml";
         String versionedResource = collection + "/" + FILE_NAME + "." + getVersionID(collection) + ".xml";
@@ -151,9 +152,9 @@ public class SourceRepository {
         String versionedResource = collection + "/" + FILE_NAME + "." + version + ".xml";
         copy(versionedResource,mainResource);
     }
-    
+
     /**
-     * Returns the highest version id of the files included in the given 
+     * Returns the highest version id of the files included in the given
      * directory.
      */
     public static int getVersionID(String colName) {
@@ -172,10 +173,10 @@ public class SourceRepository {
 					int localid = getVersion(content.getName());
 					if (localid > id) id = localid;
 				} catch (Exception e) {}
-            	            	
-            }            
+
+            }
         }
-        
+
         return ++id;
     }
 
@@ -188,7 +189,7 @@ public class SourceRepository {
 			contents = collection.getChildren();
 		} catch (SourceException se) {
 			throw new RuntimeException("Unable to list contents for collection " + colName);
-		}	
+		}
 
         for (Iterator iter = contents.iterator(); iter.hasNext();) {
             TraversableSource content = (TraversableSource) iter.next();
@@ -200,17 +201,17 @@ public class SourceRepository {
 					 }
 				 } catch (Exception e) {}
 			 }
-            
+
         }
 
         return versions.toArray();
     }
-        
+
     /**
      * Return the version encoded into the name as a numeric subextension of
      * an .xml extension.
-     * 
-     * Example: 
+     *
+     * Example:
      *  anything.123.xml -> 123
      *  document.3.xml -> 3
      *  document.0.xml -> 0
@@ -229,7 +230,7 @@ public class SourceRepository {
         }
         return -1;
     }
-    
+
     public static int getID(String colName) {
         TraversableSource collection = getCollection(colName);
 
@@ -240,7 +241,7 @@ public class SourceRepository {
 		} catch (SourceException se) {
 			throw new RuntimeException("Unable to list contents for collection " + colName);
 		}
-		
+
 		for (Iterator iter = contents.iterator(); iter.hasNext();) {
             TraversableSource content = (TraversableSource) iter.next();
 			if (content.isCollection())  {
@@ -249,11 +250,11 @@ public class SourceRepository {
 					int localid = Integer.parseInt(name);
 					if (localid > id) id = localid;
 				} catch (Exception e) {}
-			}           
-        }	
+			}
+        }
         return ++id;
     }
-    
+
     public static boolean remove(String resourceName) {
         try {
             return remove((ModifiableTraversableSource)resolve(resourceName));
@@ -261,13 +262,13 @@ public class SourceRepository {
             return false;
         } catch (IOException e) {
 			return false;
-        } 
-        
+        }
+
     }
-    
+
     public static boolean remove(ModifiableTraversableSource resource) {
         boolean success = true;
-        
+
         if (resource.isCollection()) {
 			Collection contents;
 			try {
@@ -279,7 +280,7 @@ public class SourceRepository {
                 ModifiableTraversableSource element = (ModifiableTraversableSource) iter.next();
                 success = remove(element);
             }
-        	            
+
         }
         try {
             resource.delete();
@@ -287,19 +288,19 @@ public class SourceRepository {
         } catch (SourceException e) {
         	return false;
         }
-        
+
     }
-    
+
     public static void copy(String from, String to) throws IOException {
         copy((ModifiableTraversableSource)resolve(from), (ModifiableTraversableSource)resolve(to));
-    }    
+    }
 
     public static void copy(ModifiableTraversableSource from, ModifiableTraversableSource to) throws IOException {
-        
+
         if (!from.exists()) {
             throw new IOException("Cannot find source file/folder");
         }
-        
+
         if (from.isCollection()) {
             to.makeCollection();
 			Collection contents;
@@ -310,7 +311,7 @@ public class SourceRepository {
 			}
 			for (Iterator iter = contents.iterator(); iter.hasNext();) {
 				ModifiableTraversableSource src = (ModifiableTraversableSource) iter.next();
-				SourceUtil.copy(src, resolve(to.getURI() + "/" + src.getName()));				
+				SourceUtil.copy(src, resolve(to.getURI() + "/" + src.getName()));
 
 			}
         } else {
@@ -326,8 +327,8 @@ public class SourceRepository {
                 if (in != null) in.close();
             }
         }
-    }    
-    
+    }
+
     public static void copy(InputStream from, OutputStream to) throws IOException {
         byte[] buffer = new byte[64 * 1024];
         int count = 0;
@@ -335,6 +336,6 @@ public class SourceRepository {
             to.write(buffer, 0, count);
             count = from.read(buffer, 0, buffer.length);
         } while (count != -1);
-    }   
-       
+    }
+
 }
