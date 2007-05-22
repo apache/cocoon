@@ -202,7 +202,7 @@ public class Cocoon
      */
     public Cocoon() throws ConfigurationException {
         // Set the system properties needed by Xalan2.
-        setSystemProperties();
+        this.setSystemProperties();
 
         // HACK: Provide a way to share an instance of Cocoon object between
         //       several servlets/portlets.
@@ -234,7 +234,7 @@ public class Cocoon
     public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
             this.context = new ComponentContext(context);
-            SettingsHelper.createSettings((DefaultContext)this.context, getLogger());
+            SettingsHelper.createSettings((DefaultContext)this.context, this.getLogger());
             ((DefaultContext) this.context).makeReadOnly();
 
             this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
@@ -281,8 +281,8 @@ public class Cocoon
      * @exception Exception if an error occurs
      */
     public void initialize() throws Exception {
-        if (parentComponentManager != null) {
-            this.componentManager = new CocoonComponentManager(parentComponentManager,
+        if (this.parentComponentManager != null) {
+            this.componentManager = new CocoonComponentManager(this.parentComponentManager,
                                                                (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
         } else {
             this.componentManager = new CocoonComponentManager((ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
@@ -290,33 +290,33 @@ public class Cocoon
         ContainerUtil.enableLogging(this.componentManager, this.rootLogger.getChildLogger("manager"));
         ContainerUtil.contextualize(this.componentManager, this.context);
         this.componentManager.setInstrumentManager(this.instrumentManager);
-        getLogger().debug("New Cocoon object.");
+        this.getLogger().debug("New Cocoon object.");
 
         // Log the System Properties.
-        dumpSystemProperties();
+        this.dumpSystemProperties();
 
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
         // first check for deprecated property to be compatible:
         String parser = getSystemProperty(Constants.DEPRECATED_PARSER_PROPERTY, Constants.DEFAULT_PARSER);
         if (!Constants.DEFAULT_PARSER.equals(parser)) {
-            getLogger().warn("Deprecated property " +
+            this.getLogger().warn("Deprecated property " +
                              Constants.DEPRECATED_PARSER_PROPERTY + " is used. Please use " +
                              Constants.PARSER_PROPERTY + " instead.");
             if ("org.apache.cocoon.components.parser.XercesParser".equals(parser)) {
                 parser = XercesParser.class.getName();
             } else {
-                getLogger().warn("Unknown value for deprecated property: " +
+                this.getLogger().warn("Unknown value for deprecated property: " +
                                  Constants.DEPRECATED_PARSER_PROPERTY + ", value: " + parser +
                                  ". If you experience problems during startup, check the parser configuration section of the documentation.");
             }
         } else {
             parser = getSystemProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
         }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Parser: " + parser);
-            getLogger().debug("Classpath: " + classpath);
-            getLogger().debug("Work directory: " + workDir.getCanonicalPath());
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Parser: " + parser);
+            this.getLogger().debug("Classpath: " + this.classpath);
+            this.getLogger().debug("Work directory: " + this.workDir.getCanonicalPath());
         }
 
         ExcaliburComponentManager startupManager = new ExcaliburComponentManager((ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
@@ -333,28 +333,28 @@ public class Cocoon
         }
 
         ContainerUtil.initialize(startupManager);
-        configure(startupManager);
+        this.configure(startupManager);
         ContainerUtil.dispose(startupManager);
         startupManager = null;
 
         // add the logger manager to the component locator
         final ComponentProxyGenerator proxyGenerator = new ComponentProxyGenerator();
-        final Component loggerManagerProxy = proxyGenerator.getProxy(LoggerManager.class.getName(),loggerManager);
-        componentManager.addComponentInstance(LoggerManager.ROLE,loggerManagerProxy);
+        final Component loggerManagerProxy = proxyGenerator.getProxy(LoggerManager.class.getName(),this.loggerManager);
+        this.componentManager.addComponentInstance(LoggerManager.ROLE,loggerManagerProxy);
 
         ContainerUtil.initialize(this.componentManager);
 
         // Get the Processor and keep it if it's ThreadSafe
         Processor processor = (Processor)this.componentManager.lookup(Processor.ROLE);
         if (processor instanceof ThreadSafe) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Processor of class " + processor.getClass().getName() +
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Processor of class " + processor.getClass().getName() +
                                   " is ThreadSafe");
             }
             this.threadSafeProcessor = processor;
         } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Processor of class " + processor.getClass().getName() +
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Processor of class " + processor.getClass().getName() +
                                   " is NOT ThreadSafe -- will be looked up at each request");
             }
             this.componentManager.release(processor);
@@ -369,15 +369,15 @@ public class Cocoon
 
     /** Dump System Properties */
     private void dumpSystemProperties() {
-        if (getLogger().isDebugEnabled()) {
+        if (this.getLogger().isDebugEnabled()) {
             try {
                 Enumeration e = System.getProperties().propertyNames();
-                getLogger().debug("===== System Properties Start =====");
+                this.getLogger().debug("===== System Properties Start =====");
                 for (; e.hasMoreElements();) {
                     String key = (String) e.nextElement();
-                    getLogger().debug(key + "=" + System.getProperty(key));
+                    this.getLogger().debug(key + "=" + System.getProperty(key));
                 }
-                getLogger().debug("===== System Properties End =====");
+                this.getLogger().debug("===== System Properties End =====");
             } catch (SecurityException se) {
                 // Ignore Exceptions.
             }
@@ -398,7 +398,7 @@ public class Cocoon
         Configuration roles = null;
         try {
             p = (SAXParser) startupManager.lookup(SAXParser.ROLE);
-            SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
+            SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, this.getLogger());
             URL url = ClassUtils.getResource("org/apache/cocoon/cocoon.roles");
             InputSource is = new InputSource(url.openStream());
             is.setSystemId(url.toString());
@@ -418,7 +418,7 @@ public class Cocoon
         try {
             this.configurationFile.refresh();
             p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
-            SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
+            SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, this.getLogger());
             InputSource is = SourceUtil.getInputSource(this.configurationFile);
             p.parse(is, b);
             this.configuration = b.getConfiguration();
@@ -429,14 +429,14 @@ public class Cocoon
         }
 
         Configuration conf = this.configuration;
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Root configuration: " + conf.getName());
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Root configuration: " + conf.getName());
         }
         if (!"cocoon".equals(conf.getName())) {
             throw new ConfigurationException("Invalid configuration file\n" + conf.toString());
         }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Configuration version: " + conf.getAttribute("version"));
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Configuration version: " + conf.getAttribute("version"));
         }
         if (!Constants.CONF_VERSION.equals(conf.getAttribute("version"))) {
             throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
@@ -446,7 +446,7 @@ public class Cocoon
         if (!"".equals(userRoles)) {
             try {
                 p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
-                SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
+                SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, this.getLogger());
                 org.apache.cocoon.environment.Context context =
                     (org.apache.cocoon.environment.Context) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
                 URL url = context.getResource(userRoles);
@@ -473,7 +473,7 @@ public class Cocoon
         this.componentManager.setRoleManager(drm);
         this.componentManager.setLoggerManager(this.loggerManager);
 
-        getLogger().debug("Setting up components...");
+        this.getLogger().debug("Setting up components...");
         ContainerUtil.configure(this.componentManager, conf);
     }
 
@@ -540,7 +540,7 @@ public class Cocoon
             this.componentManager.release(this.threadSafeProcessor);
             this.threadSafeProcessor = null;
 
-            this.componentManager.release(this.sourceResolver);
+            this.componentManager.release((Component)this.sourceResolver);
             this.sourceResolver = null;
 
             ContainerUtil.dispose(this.componentManager);
@@ -587,7 +587,7 @@ public class Cocoon
         msg.append("PROTOCOL: ").append(request.getProtocol()).append(lineSeparator);
         msg.append("SCHEME: ").append(request.getScheme()).append(lineSeparator);
         msg.append("AUTH TYPE: ").append(request.getAuthType()).append(lineSeparator).append(lineSeparator);
-        msg.append("CURRENT ACTIVE REQUESTS: ").append(activeRequestCount).append(lineSeparator);
+        msg.append("CURRENT ACTIVE REQUESTS: ").append(this.activeRequestCount).append(lineSeparator);
 
         // log all of the request parameters
         Enumeration e = request.getParameterNames();
@@ -658,7 +658,7 @@ public class Cocoon
             msg.append(buffer.toString());
         }
 
-        getLogger().debug(msg.toString());
+        this.getLogger().debug(msg.toString());
     }
 
     /**
@@ -681,17 +681,17 @@ public class Cocoon
                                                 this);
         try {
             boolean result;
-            if (getLogger().isDebugEnabled()) {
-                ++activeRequestCount;
-                debug(environment, false);
+            if (this.getLogger().isDebugEnabled()) {
+                ++this.activeRequestCount;
+                this.debug(environment, false);
             }
 
 
             if (this.requestListener != null) {
                 try {
-                    requestListener.onRequestStart(environment);
+                    this.requestListener.onRequestStart(environment);
                 } catch (Exception e) {
-                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                    this.getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                 }
             }
 
@@ -699,9 +699,9 @@ public class Cocoon
                 result = this.threadSafeProcessor.process(environment);
                 if (this.requestListener != null) {
                     try {
-                        requestListener.onRequestEnd(environment);
+                        this.requestListener.onRequestEnd(environment);
                     } catch (Exception e) {
-                        getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                        this.getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                     }
                 }
             } else {
@@ -710,9 +710,9 @@ public class Cocoon
                     result = processor.process(environment);
                     if (this.requestListener != null) {
                         try {
-                            requestListener.onRequestEnd(environment);
+                            this.requestListener.onRequestEnd(environment);
                         } catch (Exception e) {
-                            getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                            this.getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                         }
                     }
                 } finally {
@@ -726,9 +726,9 @@ public class Cocoon
         } catch (Exception any) {
             if (this.requestListener != null) {
                 try {
-                    requestListener.onRequestException(environment, any);
+                    this.requestListener.onRequestException(environment, any);
                 } catch (Exception e) {
-                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                    this.getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                 }
             }
             // reset response on error
@@ -737,12 +737,12 @@ public class Cocoon
         } finally {
             CocoonComponentManager.leaveEnvironment();
             CocoonComponentManager.endProcessing(environment, key);
-            if (getLogger().isDebugEnabled()) {
-                --activeRequestCount;
+            if (this.getLogger().isDebugEnabled()) {
+                --this.activeRequestCount;
             }
 
             // TODO (CZ): This is only for testing - remove it later on
-            CocoonComponentManager.checkEnvironment(environmentDepth, getLogger());
+            CocoonComponentManager.checkEnvironment(environmentDepth, this.getLogger());
         }
     }
 
@@ -753,14 +753,14 @@ public class Cocoon
      */
     public ProcessingPipeline buildPipeline(Environment environment)
     throws Exception {
-        if (disposed) {
+        if (this.disposed) {
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
         try {
-            if (getLogger().isDebugEnabled()) {
-                ++activeRequestCount;
-                debug(environment, true);
+            if (this.getLogger().isDebugEnabled()) {
+                ++this.activeRequestCount;
+                this.debug(environment, true);
             }
 
             if (this.threadSafeProcessor != null) {
@@ -775,8 +775,8 @@ public class Cocoon
             }
 
         } finally {
-            if (getLogger().isDebugEnabled()) {
-                --activeRequestCount;
+            if (this.getLogger().isDebugEnabled()) {
+                --this.activeRequestCount;
             }
         }
     }
@@ -801,7 +801,7 @@ public class Cocoon
      * Accessor for active request count
      */
     public int getActiveRequestCount() {
-        return activeRequestCount;
+        return this.activeRequestCount;
     }
 
     public ExcaliburComponentManager getComponentManager() {

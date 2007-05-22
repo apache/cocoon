@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -215,8 +216,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * Set the prefix of the URI in progress
      */
     protected void setURIPrefix(String prefix) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Set the URI Prefix (OLD=" + getURIPrefix() + ", NEW=" +  prefix + ")");
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Set the URI Prefix (OLD=" + this.getURIPrefix() + ", NEW=" +  prefix + ")");
         }
         this.prefix = new StringBuffer(prefix);
     }
@@ -236,8 +237,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         this.setContext(context);
         this.setURIPrefix(prefix == null ? "" : prefix);
         this.uris = uri;
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Reset context to " + this.context);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Reset context to " + this.context);
         }
     }
 
@@ -250,11 +251,11 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             this.initComponents();
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Changing Cocoon context");
-            getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");
-            getLogger().debug("  to context(" + newContext + ") and prefix(" + newPrefix + ")");
-            getLogger().debug("  at URI " + this.uris);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Changing Cocoon context");
+            this.getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");
+            this.getLogger().debug("  to context(" + newContext + ") and prefix(" + newPrefix + ")");
+            this.getLogger().debug("  at URI " + this.uris);
         }
 
         int l = newPrefix.length();
@@ -262,7 +263,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             if (!this.uris.startsWith(newPrefix)) {
                 String message = "The current URI (" + this.uris +
                                  ") doesn't start with given prefix (" + newPrefix + ")";
-                getLogger().error(message);
+                this.getLogger().error(message);
                 throw new RuntimeException(message);
             }
             this.prefix.append(newPrefix);
@@ -278,8 +279,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         if (this.context.startsWith("zip:")) {
             // if the resource is zipped into a war file (e.g. Weblogic temp deployment)
             // FIXME (VG): Is this still required? Better to unify both cases.
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Base context is zip: " + this.context);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Base context is zip: " + this.context);
             }
 
             org.apache.excalibur.source.Source source = null;
@@ -318,13 +319,13 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             }
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("New context is " + this.context);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("New context is " + this.context);
         }
     }
 
     public void globalRedirect(boolean sessionmode, String newURL) throws IOException {
-        redirect(sessionmode, newURL);
+        this.redirect(sessionmode, newURL);
     }
 
     // Request methods
@@ -369,11 +370,11 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         Deprecation.logger.warn("The method SourceResolver.resolve(String) is "
                               + "deprecated. Use resolveURI(String) instead.");
         if (!this.initializedComponents) {
-            initComponents();
+            this.initComponents();
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Resolving '" + systemId + "' in context '" + this.context + "'");
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Resolving '" + systemId + "' in context '" + this.context + "'");
         }
 
         if (systemId == null) {
@@ -392,7 +393,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
 
         if (null == avalonToCocoonSourceWrapper) {
-            synchronized (getClass()) {
+            synchronized (this.getClass()) {
                 try {
                     avalonToCocoonSourceWrapper = clazz.getDeclaredMethod("createProxy",
                            new Class[] {ClassUtils.loadClass("org.apache.excalibur.source.Source"),
@@ -408,7 +409,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
 
         try {
-            org.apache.excalibur.source.Source source = resolveURI(systemId);
+            org.apache.excalibur.source.Source source = this.resolveURI(systemId);
             Source wrappedSource = (Source)avalonToCocoonSourceWrapper.invoke(
                     clazz,
                     new Object[] {source, this.sourceResolver, this, this.manager});
@@ -467,7 +468,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         Deprecation.logger.warn("The method Environment.getOutputStream() " +
                               "is deprecated. Use getOutputStream(-1) instead.");
         // by default we use the complete buffering output stream
-        return getOutputStream(-1);
+        return this.getOutputStream(-1);
     }
 
     /**
@@ -605,7 +606,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public void finishingProcessing() {
         if (null != this.manager) {
-            this.manager.release(this.sourceResolver);
+            this.manager.release((Component)this.sourceResolver);
             this.manager = null;
             this.sourceResolver = null;
         }

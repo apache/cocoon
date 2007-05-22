@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
@@ -249,7 +250,7 @@ public final class SitemapSource
         }
         // VG: Why exception is not thrown in constructor?
         if (this.exception != null) {
-            throw new SourceException("Cannot get input stream for " + getURI(), this.exception);
+            throw new SourceException("Cannot get input stream for " + this.getURI(), this.exception);
         }
 
         if (this.redirectSource != null) {
@@ -372,10 +373,10 @@ public final class SitemapSource
                 this.mimeType = this.redirectSource.getMimeType();
             }
         } catch (SAXException e) {
-            reset();
+            this.reset();
             this.exception = e;
         } catch (Exception e) {
-            reset();
+            this.reset();
             this.exception = new SAXException("Could not get sitemap source " + this.systemId, e);
         }
         this.needsRefresh = false;
@@ -460,7 +461,7 @@ public final class SitemapSource
         this.validity = new SitemapSourceValidity();
         this.reset();
         if (this.sourceResolver != null) {
-            this.manager.release(this.sourceResolver);
+            this.manager.release((Component)this.sourceResolver);
             this.sourceResolver = null;
         }
     }

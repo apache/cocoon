@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.bean;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.bean.helpers.Crawler;
@@ -84,7 +85,7 @@ public class CocoonBean extends CocoonWrapper {
     private boolean verbose;
     SourceResolver sourceResolver;
 
-    private Crawler crawler;    
+    private Crawler crawler;
     private String checksumsURI = null;
     private Map checksums;
 
@@ -101,15 +102,15 @@ public class CocoonBean extends CocoonWrapper {
             super.initialize();
 
             this.sourceResolver =
-                (SourceResolver) getComponentManager().lookup(
+                (SourceResolver) this.getComponentManager().lookup(
                     SourceResolver.ROLE);
 
-            initialized = true;
+            this.initialized = true;
         }
     }
 
     protected void finalize() throws Throwable {
-        dispose();
+        this.dispose();
         super.finalize();
     }
 
@@ -118,7 +119,7 @@ public class CocoonBean extends CocoonWrapper {
     //
 
     public void setFollowLinks(boolean follow) {
-        followLinks = follow;
+        this.followLinks = follow;
     }
 
     public void setConfirmExtensions(boolean confirmExtension) {
@@ -130,15 +131,15 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public boolean isPrecompileOnly() {
-        return precompileOnly;
+        return this.precompileOnly;
     }
-    
+
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
 
     public void setDefaultFilename(String filename) {
-        defaultFilename = filename;
+        this.defaultFilename = filename;
     }
 
     public void setBrokenLinkGenerate(boolean brokenLinkGenerate) {
@@ -152,13 +153,13 @@ public class CocoonBean extends CocoonWrapper {
     public void setChecksumURI(String uri) {
         this.checksumsURI = uri;
     }
-    
+
     public boolean followLinks() {
-        return followLinks;
+        return this.followLinks;
     }
 
     public boolean confirmExtensions() {
-        return confirmExtension;
+        return this.confirmExtension;
     }
     /**
      * Adds a target for processing
@@ -180,7 +181,7 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(this.followLinks);
         target.setConfirmExtension(this.confirmExtension);
         target.setLogger(this.logger);
-        crawler.addTarget(target);
+        this.crawler.addTarget(target);
     }
 
     public void addTarget(String type, String sourceURI, String destURI)
@@ -190,7 +191,7 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(this.followLinks);
         target.setConfirmExtension(this.confirmExtension);
         target.setLogger(this.logger);
-        crawler.addTarget(target);
+        this.crawler.addTarget(target);
     }
 
     public void addTarget(String sourceURI, String destURI)
@@ -200,7 +201,7 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(this.followLinks);
         target.setConfirmExtension(this.confirmExtension);
         target.setLogger(this.logger);
-        crawler.addTarget(target);
+        this.crawler.addTarget(target);
     }
 
     public void addTargets(List uris, String destURI)
@@ -212,7 +213,7 @@ public class CocoonBean extends CocoonWrapper {
             target.setFollowLinks(this.followLinks);
             target.setConfirmExtension(this.confirmExtension);
             target.setLogger(this.logger);
-            crawler.addTarget(target);
+            this.crawler.addTarget(target);
         }
     }
 
@@ -238,26 +239,26 @@ public class CocoonBean extends CocoonWrapper {
         target.setFollowLinks(followLinks);
         target.setConfirmExtension(confirmExtension);
         target.setLogger(logger);
-        crawler.addTarget(target);
+        this.crawler.addTarget(target);
     }
 
     public int getTargetCount() {
-        return crawler.getRemainingCount();
+        return this.crawler.getRemainingCount();
     }
-    
+
     public void addExcludePattern(String pattern) {
-        excludePatterns.add(pattern);
+        this.excludePatterns.add(pattern);
     }
 
     public void addIncludePattern(String pattern) {
-        includePatterns.add(pattern);
+        this.includePatterns.add(pattern);
     }
 
     public void addIncludeLinkExtension(String extension) {
-        if (includeLinkExtensions == null) {
-            includeLinkExtensions = new ArrayList();
+        if (this.includeLinkExtensions == null) {
+            this.includeLinkExtensions = new ArrayList();
         }
-        includeLinkExtensions.add(extension);
+        this.includeLinkExtensions.add(extension);
     }
 
     public void addListener(BeanListener listener) {
@@ -272,7 +273,7 @@ public class CocoonBean extends CocoonWrapper {
                               int pagesRemaining,
                               int pagesComplete,
                               long timeTaken) {
-        Iterator i = listeners.iterator();
+        Iterator i = this.listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
             l.pageGenerated(sourceURI,
@@ -287,7 +288,7 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public void sendMessage(String msg) {
-        Iterator i = listeners.iterator();
+        Iterator i = this.listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
             l.messageGenerated(msg);
@@ -295,7 +296,7 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public void sendWarning(String uri, String warning) {
-        Iterator i = listeners.iterator();
+        Iterator i = this.listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
             l.warningGenerated(uri, warning);
@@ -303,7 +304,7 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public void sendBrokenLinkWarning(String uri, String warning) {
-        Iterator i = listeners.iterator();
+        Iterator i = this.listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
             l.brokenLinkFound(uri, "", warning, null);
@@ -311,7 +312,7 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public void pageSkipped(String uri, String message) {
-        Iterator i = listeners.iterator();
+        Iterator i = this.listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
             l.pageSkipped(uri, message);
@@ -321,7 +322,7 @@ public class CocoonBean extends CocoonWrapper {
     public void dispose() {
         if (this.initialized) {
             if (this.sourceResolver != null) {
-                getComponentManager().release(this.sourceResolver);
+                this.getComponentManager().release((Component)this.sourceResolver);
                 this.sourceResolver = null;
             }
             super.dispose();
@@ -338,41 +339,41 @@ public class CocoonBean extends CocoonWrapper {
             this.initialize();
         }
 
-        if (crawler.getRemainingCount() == 0 && !precompileOnly) {
-            log.info("No targets for to be processed.");
+        if (this.crawler.getRemainingCount() == 0 && !this.precompileOnly) {
+            this.log.info("No targets for to be processed.");
             return;
         }
 
         if (this.checksumsURI != null) {
-            readChecksumFile();
+            this.readChecksumFile();
         }
-        
-        if (crawler.getRemainingCount()>=0) {
-            Iterator iterator = crawler.iterator();
+
+        if (this.crawler.getRemainingCount()>=0) {
+            Iterator iterator = this.crawler.iterator();
             while (iterator.hasNext()) {
                 Target target = (Target) iterator.next();
-                if (!precompileOnly) {
-                    processTarget(crawler, target);
+                if (!this.precompileOnly) {
+                    this.processTarget(this.crawler, target);
 								}
             }
         }
-        
+
         if (this.checksumsURI != null) {
-            writeChecksumFile();
+            this.writeChecksumFile();
         }
-        
-        if (log.isInfoEnabled()) {
-              log.info(
+
+        if (this.log.isInfoEnabled()) {
+              this.log.info(
                   "  Memory used: "
                       + (Runtime.getRuntime().totalMemory()
                           - Runtime.getRuntime().freeMemory()));
-              log.info(
+              this.log.info(
                   "  Processed, Translated & Left: "
-                      + crawler.getProcessedCount()
+                      + this.crawler.getProcessedCount()
                       + ", "
-                      + crawler.getTranslatedCount()
+                      + this.crawler.getTranslatedCount()
                       + ", "
-                      + crawler.getRemainingCount());
+                      + this.crawler.getRemainingCount());
           }
     }
 
@@ -419,7 +420,7 @@ public class CocoonBean extends CocoonWrapper {
 
         if (target.confirmExtensions()) {
             if (!crawler.hasTranslatedLink(target)) {
-                final String mimeType = getType(target.getDeparameterizedSourceURI(), target.getParameters());
+                final String mimeType = this.getType(target.getDeparameterizedSourceURI(), target.getParameters());
                 target.setMimeType(mimeType);
                 crawler.addTranslatedLink(target);
             }
@@ -432,7 +433,7 @@ public class CocoonBean extends CocoonWrapper {
 
         // Process links
         final HashMap translatedLinks = new HashMap();
-        if (target.followLinks() && target.confirmExtensions() && isCrawlablePage(target)) {
+        if (target.followLinks() && target.confirmExtensions() && this.isCrawlablePage(target)) {
             final Iterator i =
                 this.getLinks(target.getDeparameterizedSourceURI(), target.getParameters()).iterator();
 
@@ -441,22 +442,22 @@ public class CocoonBean extends CocoonWrapper {
                 Target linkTarget = target.getDerivedTarget(linkURI);
 
                 if (linkTarget == null) {
-                    pageSkipped(linkURI, "link does not share same root as parent");
+                    this.pageSkipped(linkURI, "link does not share same root as parent");
                     continue;
                 }
 
-                if (!isIncluded(linkTarget.getSourceURI())) {
-                    pageSkipped(linkTarget.getSourceURI(), "matched include/exclude rules");
+                if (!this.isIncluded(linkTarget.getSourceURI())) {
+                    this.pageSkipped(linkTarget.getSourceURI(), "matched include/exclude rules");
                     continue;
                 }
 
                 if (!crawler.hasTranslatedLink(linkTarget)) {
                     try {
                         final String mimeType =
-                                getType(linkTarget.getDeparameterizedSourceURI(), linkTarget.getParameters());
+                                this.getType(linkTarget.getDeparameterizedSourceURI(), linkTarget.getParameters());
                         linkTarget.setMimeType(mimeType);
                         crawler.addTranslatedLink(linkTarget);
-                        log.info("  Link translated: " + linkTarget.getSourceURI());
+                        this.log.info("  Link translated: " + linkTarget.getSourceURI());
                         if (crawler.addTarget(linkTarget)) {
                             newLinkCount++;
                         }
@@ -485,20 +486,20 @@ public class CocoonBean extends CocoonWrapper {
             DelayedOutputStream output = new DelayedOutputStream();
             try {
                 List gatheredLinks;
-                if (!target.confirmExtensions() && target.followLinks() && isCrawlablePage(target)) {
+                if (!target.confirmExtensions() && target.followLinks() && this.isCrawlablePage(target)) {
                     gatheredLinks = new ArrayList();
                 } else {
                     gatheredLinks = null;
                 }
 
                 final TreeMap headers = new TreeMap();
-                headers.put("user-agent", userAgent);
-                headers.put("accept", accept);
+                headers.put("user-agent", this.userAgent);
+                headers.put("accept", this.accept);
 
                 status =
-                    getPage(
+                    this.getPage(
                         target.getDeparameterizedSourceURI(),
-                        getLastModified(target),
+                        this.getLastModified(target),
                         target.getParameters(),
                         headers,
                         target.confirmExtensions() ? translatedLinks : null,
@@ -516,12 +517,12 @@ public class CocoonBean extends CocoonWrapper {
                         Target linkTarget = target.getDerivedTarget(linkURI);
 
                         if (linkTarget == null) {
-                            pageSkipped(linkURI, "link does not share same root as parent");
+                            this.pageSkipped(linkURI, "link does not share same root as parent");
                             continue;
                         }
 
-                        if (!isIncluded(linkTarget.getSourceURI())) {
-                            pageSkipped(linkTarget.getSourceURI(), "matched include/exclude rules");
+                        if (!this.isIncluded(linkTarget.getSourceURI())) {
+                            this.pageSkipped(linkTarget.getSourceURI(), "matched include/exclude rules");
                             continue;
                         }
                         if (crawler.addTarget(linkTarget)) {
@@ -540,17 +541,17 @@ public class CocoonBean extends CocoonWrapper {
             } finally {
                 if (output != null && status != -1) {
 
-                    ModifiableSource source = getSource(target);
+                    ModifiableSource source = this.getSource(target);
                     try {
                         pageSize = output.size();
-                        
-                        if (this.checksumsURI == null || !isSameContent(output, target)) {
+
+                        if (this.checksumsURI == null || !this.isSameContent(output, target)) {
                             OutputStream stream = source.getOutputStream();
                             output.setFileOutputStream(stream);
                             output.flush();
                             output.close();
-                            pageGenerated(target.getSourceURI(), 
-                                          target.getAuthlessDestURI(), 
+                            this.pageGenerated(target.getSourceURI(),
+                                          target.getAuthlessDestURI(),
                                           pageSize,
                                           linkCount,
                                           newLinkCount,
@@ -559,17 +560,17 @@ public class CocoonBean extends CocoonWrapper {
                                           System.currentTimeMillis()- startTimeMillis);
                         } else {
                             output.close();
-                            pageSkipped(target.getSourceURI(), "Page not changed");
+                            this.pageSkipped(target.getSourceURI(), "Page not changed");
                         }
                     } catch (IOException ioex) {
-                        log.warn(ioex.toString());
+                        this.log.warn(ioex.toString());
                     } finally {
-                        releaseSource(source);
+                        this.releaseSource(source);
                     }
                 }
             }
         } catch (Exception rnfe) {
-            log.warn("Could not process URI: " + target.getSourceURI());
+            this.log.warn("Could not process URI: " + target.getSourceURI());
             rnfe.printStackTrace();
             this.sendBrokenLinkWarning(target.getSourceURI(), "URI not found: "+rnfe.getMessage());
         }
@@ -583,12 +584,12 @@ public class CocoonBean extends CocoonWrapper {
      */
     private void resourceUnavailable(Target target)
         throws IOException, ProcessingException {
-        if (brokenLinkGenerate) {
+        if (this.brokenLinkGenerate) {
             //Why decode this URI now?
             //String brokenFile = NetUtils.decodePath(destinationURI);
 
-            if (brokenLinkExtension != null) {
-                target.setExtraExtension(brokenLinkExtension);
+            if (this.brokenLinkExtension != null) {
+                target.setExtraExtension(this.brokenLinkExtension);
             }
             SimpleNotifyingBean n = new SimpleNotifyingBean(this);
             n.setType("resource-not-found");
@@ -599,7 +600,7 @@ public class CocoonBean extends CocoonWrapper {
             n.addExtraDescription(Notifying.EXTRA_REQUESTURI, target.getSourceURI());
             n.addExtraDescription("missing-file", target.getSourceURI());
 
-            ModifiableSource source = getSource(target);
+            ModifiableSource source = this.getSource(target);
             OutputStream stream = null;
             PrintStream out = null;
             try {
@@ -609,7 +610,7 @@ public class CocoonBean extends CocoonWrapper {
             } finally {
                 if (out != null) out.close();
                 if (stream != null) stream.close();
-                releaseSource(source);
+                this.releaseSource(source);
             }
         }
     }
@@ -617,9 +618,9 @@ public class CocoonBean extends CocoonWrapper {
     public ModifiableSource getSource(Target target)
         throws IOException, ProcessingException {
         final String finalDestinationURI = target.getDestinationURI();
-        Source src = sourceResolver.resolveURI(finalDestinationURI);
+        Source src = this.sourceResolver.resolveURI(finalDestinationURI);
         if (!(src instanceof ModifiableSource)) {
-            sourceResolver.release(src);
+            this.sourceResolver.release(src);
             throw new ProcessingException(
                 "Source is not Modifiable: " + finalDestinationURI);
         }
@@ -627,25 +628,25 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public long getLastModified(Target target) throws IOException, ProcessingException {
-        Source src = getSource(target);
+        Source src = this.getSource(target);
         long lastModified = src.getLastModified();
         this.releaseSource(src);
         return lastModified;
     }
 
     public void releaseSource(Source source) {
-        sourceResolver.release(source);
+        this.sourceResolver.release(source);
     }
     private boolean isIncluded(String uri) {
         boolean included;
         Iterator i;
         HashMap map = new HashMap();
 
-        if (includePatterns.size() == 0) {
+        if (this.includePatterns.size() == 0) {
             included = true;
         } else {
             included = false;
-            i = includePatterns.iterator();
+            i = this.includePatterns.iterator();
             while (i.hasNext()){
                 final String pattern = (String)i.next();
                 if (WildcardMatcherHelper.match(pattern, uri) != null ) {
@@ -654,8 +655,8 @@ public class CocoonBean extends CocoonWrapper {
                 }
             }
         }
-        if (excludePatterns.size() != 0) {
-            i = excludePatterns.iterator();
+        if (this.excludePatterns.size() != 0) {
+            i = this.excludePatterns.iterator();
             while (i.hasNext()) {
                 final String pattern = (String)i.next();
                 if (WildcardMatcherHelper.match(pattern, uri) != null ) {
@@ -667,23 +668,23 @@ public class CocoonBean extends CocoonWrapper {
         return included;
     }
     private boolean isCrawlablePage(Target target) {
-        if (includeLinkExtensions == null) {
+        if (this.includeLinkExtensions == null) {
             return true;
         } else {
-            return includeLinkExtensions.contains(target.getExtension());
+            return this.includeLinkExtensions.contains(target.getExtension());
         }
     }
 
     /* NB. This is a temporary solution - it may well be replaced by storing the checksum info
-     *     in the XML 'report' file, along with details of what pages were created, etc. 
-     */ 
+     *     in the XML 'report' file, along with details of what pages were created, etc.
+     */
     private void readChecksumFile() throws Exception {
-        checksums = new HashMap();
+        this.checksums = new HashMap();
         InputStream is = null;
         InputStreamReader isr = null;
         BufferedReader reader = null;
         try {
-            Source checksumSource = sourceResolver.resolveURI(checksumsURI);
+            Source checksumSource = this.sourceResolver.resolveURI(this.checksumsURI);
             is = checksumSource.getInputStream();
             isr = new InputStreamReader(is);
             reader = new BufferedReader(isr);
@@ -694,12 +695,12 @@ public class CocoonBean extends CocoonWrapper {
                 if (line.trim().startsWith("#") || line.trim().length() == 0) {
                     continue;
                 }
-                if (line.indexOf("\t") == -1) { 
-                    throw new ProcessingException("Missing tab at line " + lineNo + " of " + checksumsURI);
+                if (line.indexOf("\t") == -1) {
+                    throw new ProcessingException("Missing tab at line " + lineNo + " of " + this.checksumsURI);
                 }
                 String filename = line.substring(0, line.indexOf("\t"));
                 String checksum = line.substring(line.indexOf("\t") + 1);
-                checksums.put(filename, checksum);
+                this.checksums.put(filename, checksum);
             }
             reader.close();
         } catch (SourceNotFoundException e) {
@@ -712,16 +713,16 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     private void writeChecksumFile() throws Exception {
-        Source checksumSource = sourceResolver.resolveURI(checksumsURI);
+        Source checksumSource = this.sourceResolver.resolveURI(this.checksumsURI);
         if (!(checksumSource instanceof ModifiableSource)) {
             throw new ProcessingException("Checksum file is not Modifiable:" + checksumSource);
         }
         ModifiableSource source = (ModifiableSource) checksumSource;
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(source.getOutputStream()));
-        Iterator i = checksums.keySet().iterator();
+        Iterator i = this.checksums.keySet().iterator();
         while (i.hasNext()){
             String key = (String) i.next();
-            String checksum = (String) checksums.get(key);
+            String checksum = (String) this.checksums.get(key);
             writer.println(key + "\t" + checksum);
         }
         writer.close();
@@ -732,12 +733,12 @@ public class CocoonBean extends CocoonWrapper {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(stream.getContent());
             String streamDigest = SourceUtil.encodeBASE64(new String(md5.digest()));
-            String targetDigest = (String)checksums.get(target.getSourceURI());
-            
+            String targetDigest = (String)this.checksums.get(target.getSourceURI());
+
             if (streamDigest.equals(targetDigest)) {
                 return true;
             } else {
-                checksums.put(target.getSourceURI(), streamDigest);
+                this.checksums.put(target.getSourceURI(), streamDigest);
                 return false;
             }
         } catch (NoSuchAlgorithmException e) {

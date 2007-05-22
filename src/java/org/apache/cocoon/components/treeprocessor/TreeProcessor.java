@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -149,8 +150,8 @@ public class TreeProcessor
         TreeProcessor child = new TreeProcessor(this, manager);
         child.checkReload = checkReload;
         child.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
-        child.source = new DelayedRefreshSourceWrapper(child.resolver.resolveURI(actualSource), lastModifiedDelay);
-        
+        child.source = new DelayedRefreshSourceWrapper(child.resolver.resolveURI(actualSource), this.lastModifiedDelay);
+
         return child;
     }
 
@@ -196,9 +197,9 @@ public class TreeProcessor
         this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", 1000L);
 
         String fileName = config.getAttribute("file", "sitemap.xmap");
-        
+
         try {
-            this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(fileName), lastModifiedDelay);
+            this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(fileName), this.lastModifiedDelay);
         } catch (Exception e) {
             throw new ConfigurationException("Cannot resolve " + fileName, e);
         }
@@ -209,7 +210,7 @@ public class TreeProcessor
             Source source = this.resolver.resolveURI(xconfURL);
             try {
                 Settings settings = SettingsHelper.getSettings(this.context);
-                SAXConfigurationHandler handler = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
+                SAXConfigurationHandler handler = new PropertyAwareSAXConfigurationHandler(settings, this.getLogger());
                 SourceUtil.toSAX( this.manager, source, null, handler);
                 builtin = handler.getConfiguration();
             } finally {
@@ -224,7 +225,7 @@ public class TreeProcessor
         this.builderSelector = new ExtendedComponentSelector(Thread.currentThread().getContextClassLoader());
         try {
             LifecycleHelper.setupComponent(this.builderSelector,
-                                           getLogger(),
+                                           this.getLogger(),
                                            this.context,
                                            this.manager,
                                            this.roleManager,
@@ -261,7 +262,7 @@ public class TreeProcessor
     public ProcessingPipeline buildPipeline(Environment environment)
     throws Exception {
 
-    		setupConcreteProcessor(environment);
+    		this.setupConcreteProcessor(environment);
 
     		return this.concreteProcessor.buildPipeline(environment);
     }
@@ -293,7 +294,7 @@ public class TreeProcessor
     }
 
     private void setupConcreteProcessor(Environment env) throws Exception {
-        
+
         if (this.parent == null) {
             // Ensure root sitemap uses the correct context, even if not located in the webapp context
             env.changeContext("", this.source.getURI());
@@ -302,7 +303,7 @@ public class TreeProcessor
         // check for sitemap changes
         if (this.concreteProcessor == null ||
             (this.checkReload && this.source.getLastModified() != this.lastModified)) {
-            buildConcreteProcessor(env);
+            this.buildConcreteProcessor(env);
         }
     }
 
@@ -310,7 +311,7 @@ public class TreeProcessor
 
         // Now that we entered the synchronized area, recheck what's already
         // been checked in process().
-        if (this.concreteProcessor != null && source.getLastModified() == this.lastModified) {
+        if (this.concreteProcessor != null && this.source.getLastModified() == this.lastModified) {
             // Nothing changed
             return;
         }
@@ -334,7 +335,7 @@ public class TreeProcessor
                 ((Recomposable)builder).recompose(this.manager);
             }
             builder.setProcessor(newProcessor);
-            
+
             newLastModified = this.source.getLastModified();
 
             ProcessingNode root = builder.build(this.source);
@@ -345,9 +346,9 @@ public class TreeProcessor
             this.builderSelector.release(builder);
         }
 
-        if (getLogger().isDebugEnabled()) {
+        if (this.getLogger().isDebugEnabled()) {
             double time = (this.lastModified - startTime) / 1000.0;
-            getLogger().debug("TreeProcessor built in " + time + " secs from " + source.getURI());
+            this.getLogger().debug("TreeProcessor built in " + time + " secs from " + this.source.getURI());
         }
 
         // Switch to the new processor (ensure it's never temporarily null)
@@ -377,14 +378,14 @@ public class TreeProcessor
             }
 
             // Release resolver looked up in compose()
-            this.manager.release(this.resolver);
+            this.manager.release((Component)this.resolver);
             this.resolver = null;
 
             this.manager = null;
 	    }
 	}
-    
+
     public String toString() {
-        return "TreeProcessor - " + (source == null ? "[unknown location]" : source.getURI());
+        return "TreeProcessor - " + (this.source == null ? "[unknown location]" : this.source.getURI());
     }
 }

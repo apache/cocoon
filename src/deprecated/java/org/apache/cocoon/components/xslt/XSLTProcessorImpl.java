@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -132,7 +133,7 @@ public class XSLTProcessorImpl
         if (this.manager != null) {
             this.manager.release(this.store);
             this.store = null;
-            this.manager.release(this.resolver);
+            this.manager.release((Component)this.resolver);
             this.resolver = null;
         }
         this.errorHandler = null;
@@ -146,7 +147,7 @@ public class XSLTProcessorImpl
     throws ParameterException {
         this.useStore = params.getParameterAsBoolean("use-store", true);
         this.incrementalProcessing = params.getParameterAsBoolean("incremental-processing", false);
-        this.factory = getTransformerFactory(params.getParameter("transformer-factory", DEFAULT_FACTORY));
+        this.factory = this.getTransformerFactory(params.getParameter("transformer-factory", DEFAULT_FACTORY));
     }
 
     /**
@@ -163,12 +164,12 @@ public class XSLTProcessorImpl
      * Set the transformer factory used by this component
      */
     public void setTransformerFactory(String classname) {
-        this.factory = getTransformerFactory(classname);
+        this.factory = this.getTransformerFactory(classname);
     }
 
     public TransformerHandler getTransformerHandler(org.apache.cocoon.environment.Source stylesheet)
     throws ProcessingException {
-        return getTransformerHandler(stylesheet, null);
+        return this.getTransformerHandler(stylesheet, null);
     }
 
     public TransformerHandler getTransformerHandler(org.apache.cocoon.environment.Source stylesheet,
@@ -176,10 +177,10 @@ public class XSLTProcessorImpl
     throws ProcessingException {
         try {
             final String id = stylesheet.getSystemId();
-            Templates templates = getTemplates(stylesheet, id);
+            Templates templates = this.getTemplates(stylesheet, id);
             if (templates == null) {
                 if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug("Creating new Templates for " + id);
+                    this.getLogger().debug("Creating new Templates for " + id);
                 }
 
                 // Create a Templates ContentHandler to handle parsing of the
@@ -196,7 +197,7 @@ public class XSLTProcessorImpl
                 }
 
                 if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug("Source = " + stylesheet
+                    this.getLogger().debug("Source = " + stylesheet
                     + ", templatesHandler = " + templatesHandler);
                 }
 
@@ -207,10 +208,10 @@ public class XSLTProcessorImpl
                 // Get the Templates object (generated during the parsing of
                 // the stylesheet) from the TemplatesHandler.
                 templates = templatesHandler.getTemplates();
-                putTemplates (templates, stylesheet, id);
+                this.putTemplates (templates, stylesheet, id);
             } else {
                 if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug("Reusing Templates for " + id);
+                    this.getLogger().debug("Reusing Templates for " + id);
                 }
             }
 
@@ -224,8 +225,8 @@ public class XSLTProcessorImpl
             if (e.getException() == null) {
                 throw new ProcessingException("Exception in creating Transform Handler", e);
             } else {
-                if (getLogger().isDebugEnabled())
-                    getLogger().debug("Got SAXException. Rethrowing cause exception.", e);
+                if (this.getLogger().isDebugEnabled())
+                    this.getLogger().debug("Got SAXException. Rethrowing cause exception.", e);
                 throw new ProcessingException("Exception in creating Transform Handler", e.getException());
             }
         } catch (Exception e) {
@@ -240,12 +241,12 @@ public class XSLTProcessorImpl
     throws ProcessingException {
         try {
             if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("XSLTProcessorImpl: transform source = " + source
+                this.getLogger().debug("XSLTProcessorImpl: transform source = " + source
                     + ", stylesheet = " + stylesheet
                     + ", parameters = " + params
                     + ", result = " + result);
             }
-            TransformerHandler handler = getTransformerHandler(stylesheet);
+            TransformerHandler handler = this.getTransformerHandler(stylesheet);
 
             Transformer transformer = handler.getTransformer();
             if (params != null) {
@@ -256,13 +257,13 @@ public class XSLTProcessorImpl
                 }
             }
 
-            if (getLogger().isDebugEnabled())
+            if (this.getLogger().isDebugEnabled())
                 this.getLogger().debug("XSLTProcessorImpl: starting transform");
             // Is it possible to use Source's toSAX method?
             handler.setResult(result);
             source.toSAX(handler);
 
-            if (getLogger().isDebugEnabled())
+            if (this.getLogger().isDebugEnabled())
                 this.getLogger().debug("XSLTProcessorImpl: transform done");
         } catch (Exception e) {
             throw new ProcessingException("Error in running Transformation", e);
@@ -283,20 +284,20 @@ public class XSLTProcessorImpl
             try {
                 _factory = (SAXTransformerFactory) ClassUtils.loadClass(factoryName).newInstance();
             } catch (ClassNotFoundException cnfe) {
-                if (getLogger().isErrorEnabled())
-                    getLogger().error("Cannot find the requested TrAX factory '" + factoryName
+                if (this.getLogger().isErrorEnabled())
+                    this.getLogger().error("Cannot find the requested TrAX factory '" + factoryName
                                       + "'. Using default TrAX Transformer Factory instead.");
                 if (this.factory != null) return this.factory;
                 _factory = (SAXTransformerFactory) TransformerFactory.newInstance();
             } catch (ClassCastException cce) {
-                if (getLogger().isErrorEnabled())
-                    getLogger().error("The indicated class '" + factoryName
+                if (this.getLogger().isErrorEnabled())
+                    this.getLogger().error("The indicated class '" + factoryName
                                       + "' is not a TrAX Transformer Factory. Using default TrAX Transformer Factory instead.");
                 if (this.factory != null) return this.factory;
                 _factory = (SAXTransformerFactory) TransformerFactory.newInstance();
             } catch (Exception e) {
-                if (getLogger().isErrorEnabled())
-                    getLogger().error("Error found loading the requested TrAX Transformer Factory '"
+                if (this.getLogger().isErrorEnabled())
+                    this.getLogger().error("Error found loading the requested TrAX Transformer Factory '"
                                       + factoryName + "'. Using default TrAX Transformer Factory instead.");
                 if (this.factory != null) return this.factory;
                 _factory = (SAXTransformerFactory) TransformerFactory.newInstance();
@@ -310,7 +311,7 @@ public class XSLTProcessorImpl
         // made more extensible.
         if (_factory.getClass().getName().equals("org.apache.xalan.processor.TransformerFactoryImpl")) {
             _factory.setAttribute("http://xml.apache.org/xalan/features/incremental",
-                    new Boolean (incrementalProcessing));
+                    new Boolean (this.incrementalProcessing));
         }
 
         return _factory;
@@ -319,35 +320,35 @@ public class XSLTProcessorImpl
     private Templates getTemplates(org.apache.cocoon.environment.Source stylesheet,
                                    String id)
     throws IOException, ProcessingException {
-        if (!useStore) {
+        if (!this.useStore) {
             return null;
         }
 
         // we must augment the template ID with the factory classname since one
         // transformer implementation cannot handle the instances of a
         // template created by another one.
-        id += factory.getClass().getName();
+        id += this.factory.getClass().getName();
 
         Templates templates = null;
         // only stylesheets with a last modification date are stored
         if (stylesheet.getLastModified() != 0) {
             // Stored is an array of the template and the caching time
-            if (store.containsKey(id)) {
-                Object[] templateAndTime = (Object[])store.get(id);
+            if (this.store.containsKey(id)) {
+                Object[] templateAndTime = (Object[])this.store.get(id);
 
                 if(templateAndTime != null && templateAndTime[1] != null) {
                     long storedTime = ((Long)templateAndTime[1]).longValue();
 
                     if (storedTime < stylesheet.getLastModified()) {
-                        store.remove(id);
+                        this.store.remove(id);
                     } else {
                         templates = (Templates)templateAndTime[0];
                     }
                 }
             }
-        } else if (store.containsKey(id)) {
+        } else if (this.store.containsKey(id)) {
             // remove an old template if it exists
-            store.remove(id);
+            this.store.remove(id);
         }
         return templates;
     }
@@ -355,14 +356,14 @@ public class XSLTProcessorImpl
     private void putTemplates (Templates templates, org.apache.cocoon.environment.Source stylesheet,
                                String id)
     throws IOException, ProcessingException {
-        if (!useStore) {
+        if (!this.useStore) {
             return;
         }
 
         // we must augment the template ID with the factory classname since one
         // transformer implementation cannot handle the instances of a
         // template created by another one.
-        id += factory.getClass().getName();
+        id += this.factory.getClass().getName();
 
         // only stylesheets with a last modification date are stored
         if (stylesheet.getLastModified() != 0) {
@@ -371,7 +372,7 @@ public class XSLTProcessorImpl
             Object[] templateAndTime = new Object[2];
             templateAndTime[0] = templates;
             templateAndTime[1] = new Long(stylesheet.getLastModified());
-            store.store(id, templateAndTime);
+            this.store.store(id, templateAndTime);
         }
     }
 
@@ -393,13 +394,13 @@ public class XSLTProcessorImpl
     throws TransformerException {
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("resolve(href = " + href +
-                                   ", base = " + base + "); resolver = " + resolver);
+                                   ", base = " + base + "); resolver = " + this.resolver);
         }
 
         Source xslSource = null;
         try {
             if (href.indexOf(":") > 1) {
-                xslSource = resolver.resolveURI(href);
+                xslSource = this.resolver.resolveURI(href);
             } else {
                 // patch for a null pointer passed as base
                 if (base == null)
@@ -413,18 +414,18 @@ public class XSLTProcessorImpl
                         // always be protocol:/....
                         return null; // we can't resolve this
                     } else {
-                        xslSource = resolver.resolveURI(new StringBuffer(base.substring(0, lastPathElementPos))
+                        xslSource = this.resolver.resolveURI(new StringBuffer(base.substring(0, lastPathElementPos))
                         .append("/").append(href).toString());
                     }
                 } else {
                     File parent = new File(base.substring(5));
                     File parent2 = new File(parent.getParentFile(), href);
-                    xslSource = resolver.resolveURI(parent2.toURL().toExternalForm());
+                    xslSource = this.resolver.resolveURI(parent2.toURL().toExternalForm());
                 }
             }
 
             if (this.getLogger().isDebugEnabled()) {
-                getLogger().debug("xslSource = " + xslSource
+                this.getLogger().debug("xslSource = " + xslSource
                 + ", system id = " + xslSource.getURI());
             }
 

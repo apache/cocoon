@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -88,7 +88,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
- * 
+ *
  * @version CVS $Id$
  */
 public class SoapServerImpl extends AbstractLogEnabled
@@ -186,15 +186,15 @@ public class SoapServerImpl extends AbstractLogEnabled
     public void configure(final Configuration config)
     throws ConfigurationException {
         try {
-            setServerConfig(config);
-            setAttachmentDir(config);
-            setJWSDir(config);
-            setSecurityProvider(config);
-            setTransportName(config);
-            setManagedServices(config);
+            this.setServerConfig(config);
+            this.setAttachmentDir(config);
+            this.setJWSDir(config);
+            this.setSecurityProvider(config);
+            this.setTransportName(config);
+            this.setManagedServices(config);
 
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("SoapServerImpl.configure() complete");
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("SoapServerImpl.configure() complete");
             }
         } catch (final Exception e) {
             throw new ConfigurationException("Error during configuration", e);
@@ -214,12 +214,12 @@ public class SoapServerImpl extends AbstractLogEnabled
 
         try {
             resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            m_serverWSDD =
+            this.m_serverWSDD =
                 resolver.resolveURI(
                     wsdd.getAttribute("src", DEFAULT_SERVER_CONFIG)
                 );
         } finally {
-            this.manager.release(resolver);
+            this.manager.release((Component)resolver);
         }
     }
 
@@ -234,18 +234,18 @@ public class SoapServerImpl extends AbstractLogEnabled
     private void setAttachmentDir(final Configuration config)
     throws ConfigurationException, ContextException {
         final Configuration dir = config.getChild("attachment-dir");
-        m_attachmentDir = dir.getAttribute("src", null);
+        this.m_attachmentDir = dir.getAttribute("src", null);
 
-        if (m_attachmentDir == null) {
+        if (this.m_attachmentDir == null) {
             File workDir =
                 (File) this.context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
             File attachmentDir =
                 IOUtils.createFile(workDir, "attachments" + File.separator);
-            m_attachmentDir = IOUtils.getFullFilename(attachmentDir);
+            this.m_attachmentDir = IOUtils.getFullFilename(attachmentDir);
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("attachment directory = " + m_attachmentDir);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("attachment directory = " + this.m_attachmentDir);
         }
     }
 
@@ -260,18 +260,18 @@ public class SoapServerImpl extends AbstractLogEnabled
     private void setJWSDir(final Configuration config)
     throws ConfigurationException, ContextException {
         final Configuration dir = config.getChild("jws-dir");
-        m_jwsClassDir = dir.getAttribute("src", null);
+        this.m_jwsClassDir = dir.getAttribute("src", null);
 
-        if (m_jwsClassDir == null) {
+        if (this.m_jwsClassDir == null) {
             File workDir =
                 (File) this.context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
             File jwsClassDir =
                 IOUtils.createFile(workDir, "axis-jws" + File.separator);
-            m_jwsClassDir = IOUtils.getFullFilename(jwsClassDir);
+            this.m_jwsClassDir = IOUtils.getFullFilename(jwsClassDir);
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("jws class directory = " + m_jwsClassDir);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("jws class directory = " + this.m_jwsClassDir);
         }
     }
 
@@ -291,12 +291,12 @@ public class SoapServerImpl extends AbstractLogEnabled
             final boolean providerIsEnabled = BooleanUtils.toBoolean(attr);
 
             if (providerIsEnabled) {
-                m_securityProvider = new ServletSecurityProvider();
+                this.m_securityProvider = new ServletSecurityProvider();
             }
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("security provider = " + m_securityProvider);
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("security provider = " + this.m_securityProvider);
         }
     }
 
@@ -309,13 +309,13 @@ public class SoapServerImpl extends AbstractLogEnabled
     private void setTransportName(final Configuration config)
     throws ConfigurationException {
         final Configuration name = config.getChild("transport");
-        m_transportName =
+        this.m_transportName =
             name.getAttribute("name", HTTPTransport.DEFAULT_TRANSPORT_NAME);
     }
 
     /**
      * Helper method to obtain a list of managed services from the given
-     * configuration (ie. locations of deployement descriptors to be 
+     * configuration (ie. locations of deployement descriptors to be
      * deployed).
      *
      * @param config a <code>Configuration</code> value
@@ -349,13 +349,13 @@ public class SoapServerImpl extends AbstractLogEnabled
                     descriptors.add(new WSDDDocument(d));
                 }
             } finally {
-                this.manager.release(resolver);
+                this.manager.release((Component)resolver);
                 this.manager.release((Component)parser);
             }
         }
 
         // convert the list of descriptors to an array, for easier iteration
-        m_descriptors =
+        this.m_descriptors =
             (WSDDDocument[]) descriptors.toArray(new WSDDDocument[]{});
     }
 
@@ -364,10 +364,10 @@ public class SoapServerImpl extends AbstractLogEnabled
      */
     public void initialize()
     throws Exception {
-        m_axisServer = createEngine();
+        this.m_axisServer = this.createEngine();
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("SoapServerImpl.initialize() complete");
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("SoapServerImpl.initialize() complete");
         }
     }
 
@@ -380,20 +380,20 @@ public class SoapServerImpl extends AbstractLogEnabled
     public void start()
     throws Exception {
         // deploy all configured services
-        for (int i = 0; i < m_descriptors.length; ++i) {
-            WSDDDeployment deployment = m_engineConfig.getDeployment();
-            m_descriptors[i].deploy(deployment);
+        for (int i = 0; i < this.m_descriptors.length; ++i) {
+            WSDDDeployment deployment = this.m_engineConfig.getDeployment();
+            this.m_descriptors[i].deploy(deployment);
 
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug(
                     "Deployed Descriptor:\n" +
-                    XMLUtils.DocumentToString(m_descriptors[i].getDOMDocument())
+                    XMLUtils.DocumentToString(this.m_descriptors[i].getDOMDocument())
                 );
             }
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("SoapServerImpl.start() complete");
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("SoapServerImpl.start() complete");
         }
     }
 
@@ -406,20 +406,20 @@ public class SoapServerImpl extends AbstractLogEnabled
      */
     public void stop()
     throws Exception {
-        WSDDDeployment deployment = m_engineConfig.getDeployment();
+        WSDDDeployment deployment = this.m_engineConfig.getDeployment();
         WSDDService[] services = deployment.getServices();
 
         // undeploy all deployed services
         for (int i = 0; i < services.length; ++i) {
             deployment.undeployService(services[i].getQName());
 
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Undeployed: " + services[i].toString());
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("Undeployed: " + services[i].toString());
             }
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("SoapServerImpl.stop() complete");
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("SoapServerImpl.stop() complete");
         }
     }
 
@@ -428,7 +428,7 @@ public class SoapServerImpl extends AbstractLogEnabled
      */
     public void invoke(MessageContext message)
     throws Exception {
-        m_axisServer.invoke(message);
+        this.m_axisServer.invoke(message);
     }
 
     /**
@@ -443,19 +443,19 @@ public class SoapServerImpl extends AbstractLogEnabled
         HttpServletResponse res,
         ServletContext con) {
 
-        MessageContext msgContext = new MessageContext(m_axisServer);
+        MessageContext msgContext = new MessageContext(this.m_axisServer);
         String webInfPath = con.getRealPath("/WEB-INF");
         String homeDir = con.getRealPath("/");
 
         // Set the Transport
-        msgContext.setTransportName(m_transportName);
+        msgContext.setTransportName(this.m_transportName);
 
         // Add Avalon specifics to MessageContext
-        msgContext.setProperty(LOGGER, getLogger());
+        msgContext.setProperty(LOGGER, this.getLogger());
         msgContext.setProperty(AvalonProvider.COMPONENT_MANAGER, this.manager);
 
         // Save some HTTP specific info in the bag in case someone needs it
-        msgContext.setProperty(Constants.MC_JWS_CLASSDIR, m_jwsClassDir);
+        msgContext.setProperty(Constants.MC_JWS_CLASSDIR, this.m_jwsClassDir);
         msgContext.setProperty(Constants.MC_HOME_DIR, homeDir);
         msgContext.setProperty(Constants.MC_RELATIVE_PATH, req.getServletPath());
         msgContext.setProperty(HTTPConstants.MC_HTTP_SERVLET, this );
@@ -482,27 +482,27 @@ public class SoapServerImpl extends AbstractLogEnabled
 
         msgContext.setProperty(Constants.MC_CONFIGPATH, webInfPath);
 
-        if (m_securityProvider != null) {
-            msgContext.setProperty("securityProvider", m_securityProvider);
+        if (this.m_securityProvider != null) {
+            msgContext.setProperty("securityProvider", this.m_securityProvider);
         }
 
         // write out the contents of the message context for debugging purposes
-        if (getLogger().isDebugEnabled()) {
-            debugMessageContext(msgContext);
+        if (this.getLogger().isDebugEnabled()) {
+            this.debugMessageContext(msgContext);
         }
 
         return msgContext;
     }
 
     /**
-     * Helper method to log the contents of a given message context 
+     * Helper method to log the contents of a given message context
      *
      * @param context a <code>MessageContext</code> instance
      */
     private void debugMessageContext(final MessageContext context) {
         for (final Iterator i = context.getPropertyNames(); i.hasNext(); ) {
             final String key = (String) i.next();
-            getLogger().debug(
+            this.getLogger().debug(
                 "MessageContext: Key:" + key + ": Value: " + context.getProperty(key)
             );
         }
@@ -515,10 +515,10 @@ public class SoapServerImpl extends AbstractLogEnabled
      */
     public AxisServer createEngine()
     throws Exception {
-        AxisServer engine = AxisServer.getServer(getEngineEnvironment());
+        AxisServer engine = AxisServer.getServer(this.getEngineEnvironment());
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Axis engine created");
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Axis engine created");
         }
 
         return engine;
@@ -530,10 +530,10 @@ public class SoapServerImpl extends AbstractLogEnabled
 
         // use FileProvider directly with a Avalon Source object instead of going
         // through the EngineConfigurationFactoryServlet class
-        m_engineConfig = new FileProvider(m_serverWSDD.getInputStream());
+        this.m_engineConfig = new FileProvider(this.m_serverWSDD.getInputStream());
 
-        env.put(EngineConfiguration.PROPERTY_NAME, m_engineConfig);
-        env.put(AxisEngine.ENV_ATTACHMENT_DIR, m_attachmentDir);
+        env.put(EngineConfiguration.PROPERTY_NAME, this.m_engineConfig);
+        env.put(AxisEngine.ENV_ATTACHMENT_DIR, this.m_attachmentDir);
         // REVISIT(MC): JNDI Factory support ?
         //env.put(AxisEngine.ENV_SERVLET_CONTEXT, context);
 
