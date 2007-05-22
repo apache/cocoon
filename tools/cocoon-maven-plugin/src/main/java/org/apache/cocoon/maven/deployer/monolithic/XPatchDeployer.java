@@ -77,7 +77,7 @@ public class XPatchDeployer extends SingleFileDeployer {
     public void applyPatches(InputStream source, final String fileName) {
         try {
             if (patches.size() == 0) {
-                getLogger().info("No patches to aplly");
+                getLogger().info("No patches to apply");
             } else {
                 getLogger().info("Applying patches to: " + fileName);
             }
