@@ -314,7 +314,7 @@ Form.prototype.loadXML = function(uri) {
     try {
         resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
         source = resolver.resolveURI(uri);
-        // Disambiguate toSAX method: Pick the one with Sosurce argument.
+        // Disambiguate toSAX method: Pick the one with Source argument.
         Packages.org.apache.cocoon.components.source.SourceUtil["toSAX(org.apache.excalibur.source.Source,org.xml.sax.ContentHandler)"](source, this.getXML())
     } finally {
         if (source != null) {
