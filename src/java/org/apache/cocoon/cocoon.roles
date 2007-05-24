@@ -51,7 +51,7 @@
 
        Starting with Cocoon 2.1 we have a bunch of different parser:
        - a SAX parser (producing SAX events)
-       - a DOM parser (producint a document)
+       - a DOM parser (producing a document)
        - an HTML parser (producing SAX events from an HTML document)
        ...
   -->
