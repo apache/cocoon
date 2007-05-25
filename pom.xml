@@ -74,6 +74,94 @@
   </organization>
 
   <developers>
+     <developer>
+        <id>zvia</id>
+        <name>Zvi Avraham</name>
+        <email>zvia@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>balld</id>
+        <name>Donald Ball</name>
+        <email>balld@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>nicolaken</id>
+        <name>Nicola Ken Barozzi</name>
+        <email>nicolaken@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>brian</id>
+        <name>Brian Behlendorf</name>
+        <email>brian@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>rossb</id>
+        <name>Ross Burton</name>
+        <email>rossb@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>butlermh</id>
+        <name>Mark Butler</name>
+        <email>butlermh@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>arje</id>
+        <name>Arje Cahn</name>
+        <email>arje@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
+        <id>gcasper</id>
+        <name>Guido Casper</name>
+        <email>gcasper@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
     <developer>
       <id>ugo</id>
       <name>Ugo Cei</name>
@@ -86,6 +174,39 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+     <developer>
+        <id>gears</id>
+        <name>Steven Coffman</name>
+        <email>gears@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>tony</id>
+        <name>Tony Collen</name>
+        <email>tony@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>crafterm</id>
+        <name>Marcus Crafter</name>
+        <email>crafterm@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
     <developer>
       <id>crossley</id>
       <name>David Crossley</name>
@@ -122,6 +243,28 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+     <developer>
+        <id>donaldp</id>
+        <name>Peter Donald</name>
+        <email>donaldp@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>bruno</id>
+        <name>Bruno Dumon</name>
+        <email>bruno@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
     <developer>
       <id>danielf</id>
       <name>Daniel Fagerstrom</name>
@@ -134,6 +277,28 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+     <developer>
+        <id>froehlich</id>
+        <name>Gerhard Froehlich</name>
+        <email>froehlich@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>pier</id>
+        <name>Pier Fumagalli</name>
+        <email>pier@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
     <developer>
       <id>antonio</id>
       <name>Antonio Gallardo</name>
@@ -146,7 +311,18 @@
       </roles>
       <timezone>-6</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>rgardler</id>
+        <name>Ross Gardler</name>
+        <email>rgardler@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>lgawron</id>
       <name>Leszek Gawron</name>
       <email>lgawron@apache.org</email>
@@ -158,7 +334,29 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>rgoers</id>
+        <name>Ralph Goers</name>
+        <email>rgoers@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>greenrd</id>
+        <name>Robin Green</name>
+        <email>greenrd@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>vgritsenko</id>
       <name>Vadim Gritsenko</name>
       <email>vgritsenko@apache.org</email>
@@ -170,6 +368,17 @@
       </roles>
       <timezone>-5</timezone>
     </developer>
+     <developer>
+        <id>haul</id>
+        <name>Christian Haul</name>
+        <email>haul@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
     <developer>
       <id>joerg</id>
       <name>Joerg Heinicke</name>
@@ -206,7 +415,51 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>unico</id>
+        <name>Unico Hommes</name>
+        <email>unico@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>ghoward</id>
+        <name>Geoff Howard</name>
+        <email>ghoward@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>huber</id>
+        <name>Bernhard Huber</name>
+        <email>huber@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>ivelin</id>
+        <name>Ivelin Ivanov</name>
+        <email>ivelin@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>jjohnston</id>
       <name>Jason Johnston</name>
       <email>jjohnston@apache.org</email>
@@ -254,6 +507,116 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+     <developer>
+        <id>mlangham</id>
+        <name>Matthew Langham</name>
+        <email>mlangham@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>tim</id>
+        <name>Tim Larson</name>
+        <email>tim@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>ben</id>
+        <name>Ben Laurie</name>
+        <email>ben@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>bloritsch</id>
+        <name>Berin Loritsch</name>
+        <email>bloritsch@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>mman</id>
+        <name>Martin Man</name>
+        <email>mman@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>stefano</id>
+        <name>Stefano Mazzocchi</name>
+        <email>stefano@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>bmclaugh</id>
+        <name>Brett McLaughlin</name>
+        <email>bmclaugh@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>michaelm</id>
+        <name>Michael Melhem</name>
+        <email>michaelm@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>stephan</id>
+        <name>Stephan Michels</name>
+        <email>stephan@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>morrijr</id>
+        <name>John Morrison</name>
+        <email>morrijr@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
     <developer>
       <id>anathaniel</id>
       <name>Alfred Nathaniel</name>
@@ -266,6 +629,28 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+     <developer>
+        <id>stevenn</id>
+        <name>Steven Noels</name>
+        <email>stevenn@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
+        <id>coliver</id>
+        <name>Christopher Oliver</name>
+        <email>coliver@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
     <developer>
       <id>giacomo</id>
       <name>Giacomo Pati</name>
@@ -278,7 +663,18 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>kpiroumian</id>
+        <name>Konstantin Piroumian</name>
+        <email>kpiroumian@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>reinhard</id>
       <name>Reinhard Poetz</name>
       <email>reinhard@apache.org</email>
@@ -291,7 +687,29 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>mpo</id>
+        <name>Marc Portier</name>
+        <email>mpo@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone>+1</timezone>
+     </developer>
+     <developer>
+        <id>ovidiu</id>
+        <name>Ovidiu Predescu</name>
+        <email>ovidiu@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>jbq</id>
       <name>Jean-Baptiste Quenot</name>
       <email>jbq@apache.org</email>
@@ -303,7 +721,18 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>jeremy</id>
+        <name>Jeremy Quinn</name>
+        <email>jeremy@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>gianugo</id>
       <name>Gianugo Rabellino</name>
       <email>gianugo@apache.org</email>
@@ -315,7 +744,62 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>ricardo</id>
+        <name>Ricardo Rocha</name>
+        <email>ricardo@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>proyal</id>
+        <name>Peter Royal</name>
+        <email>proyal@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>rubys</id>
+        <name>Sam Ruby</name>
+        <email>rubys@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>prussell</id>
+        <name>Paul Russell</name>
+        <email>prussell@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>ssahuc</id>
+        <name>Sebastien Sahuc</name>
+        <email>ugo@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>asavory</id>
       <name>Andrew Savory</name>
       <email>asavory@apache.org</email>
@@ -327,7 +811,29 @@
       </roles>
       <timezone>+0</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>shannon</id>
+        <name>Diana Shannon</name>
+        <email>shannon@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>dims</id>
+        <name>Davanum Srinivas</name>
+        <email>ugo@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>ltrieloff</id>
       <name>Lars Trieloff</name>
       <email>lars@trieloff.net</email>
@@ -339,7 +845,29 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+     <developer>
+        <id>jefft</id>
+        <name>Jeff Turner</name>
+        <email>jefft@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
+        <id>upayavira</id>
+        <name>Upayavira</name>
+        <email>upayavira@apache.org</email>
+        <organization>ASF</organization>
+        <organizationUrl>http://www.apache.org</organizationUrl>
+        <roles>
+           <role>Committer</role>
+        </roles>
+        <timezone/>
+     </developer>
+     <developer>
       <id>sylvain</id>
       <name>Sylvain Wallez</name>
       <email>sylvain@apache.org</email>
