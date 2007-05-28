@@ -20,71 +20,71 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Views =================================== -->
+  <!-- =========================== Views =================================== -->
 
-    <map:views>
-        <map:view name="content" from-label="content">
-            <map:serialize type="xml" />
-        </map:view>
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view from-label="content" name="pretty-content">
-            <!-- Make use of servlet services -->
-            <map:serialize type="servletService">
-                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-            </map:serialize>
-        </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
 
-        <map:view name="links" from-position="last">
-            <map:serialize type="links" />
-        </map:view>
-    </map:views>
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
 
-    <!-- =========================== Pipelines ================================= -->
+  <!-- =========================== Pipelines ================================= -->
 
-    <map:pipelines>
-        <map:pipeline>
+  <map:pipelines>
+    <map:pipeline>
 
-            <map:match pattern="test1">
-                <map:generate type="text" src="module:request:requestURI" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="test1">
+        <map:generate type="text" src="module:request:requestURI" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+        </map:serialize>
+      </map:match>
 
-            <map:match pattern="test2">
-                <map:generate src="form2.html" />
-                <map:serialize />
-            </map:match>
+      <map:match pattern="test2">
+        <map:generate src="form2.html" />
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="test2-post">
-                <map:generate type="text" src="module:request-param:text" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="test2-post">
+        <map:generate type="text" src="module:request-param:text" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+        </map:serialize>
+      </map:match>
 
-            <!-- post an xml file to test3 with e.g.
-                curl -T "test.xml" http://localhost:8888/samples/scratchpad/module-source/test3 -->
-            <map:match pattern="test3">
-                <map:generate src="module:request:inputStream" />
-                <map:serialize type="xml" />
-            </map:match>
+      <!-- post an xml file to test3 with e.g.
+        curl -T "test.xml" http://localhost:8888/samples/scratchpad/module-source/test3 -->
+      <map:match pattern="test3">
+        <map:generate src="module:request:inputStream" />
+        <map:serialize type="xml" />
+      </map:match>
 
-            <map:match pattern="test4">
-                <map:generate src="form4.html" />
-                <map:serialize />
-            </map:match>
+      <map:match pattern="test4">
+        <map:generate src="form4.html" />
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="test4-post">
-                <map:generate src="module:raw-request-param:text" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="test4-post">
+        <map:generate src="module:raw-request-param:text" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+        </map:serialize>
+      </map:match>
 
-        </map:pipeline>
-    </map:pipelines>
+    </map:pipeline>
+  </map:pipelines>
 </map:sitemap>

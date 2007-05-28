@@ -17,107 +17,107 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Views =================================== -->
+  <!-- =========================== Views =================================== -->
 
-    <map:views>
-        <map:view from-label="content" name="content">
-            <map:serialize type="xml" />
-        </map:view>
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view from-label="content" name="pretty-content">
-            <!-- Make use of servlet services -->
-            <map:serialize type="servletService">
-                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-            </map:serialize>
-        </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
 
-        <map:view from-position="last" name="links">
-            <map:serialize type="links" />
-        </map:view>
+    <map:view from-position="last" name="links">
+      <map:serialize type="links" />
+    </map:view>
 
-        <!--
-            The debug view can be used to output an intermediate
-            snapshot of the pipeline.
-            Pass cocoon-view=debug as a URL parameter to see
-            the pipeline output produced by the transofrmer
-            labeled "debug". You can move the label to different
-            transformers to understand each processing
-            stage better.
-        -->
-        <map:view name="debug" from-label="debug">
-            <map:serialize type="xml" />
-        </map:view>
+    <!--
+      The debug view can be used to output an intermediate
+      snapshot of the pipeline.
+      Pass cocoon-view=debug as a URL parameter to see
+      the pipeline output produced by the transofrmer
+      labeled "debug". You can move the label to different
+      transformers to understand each processing
+      stage better.
+    -->
+    <map:view name="debug" from-label="debug">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view name="debug1" from-label="debug1">
-            <map:serialize type="xml" />
-        </map:view>
+    <map:view name="debug1" from-label="debug1">
+      <map:serialize type="xml" />
+    </map:view>
 
-    </map:views>
+  </map:views>
 
-    <!-- ======================== Resources ============================ -->
+  <!-- ======================== Resources ============================ -->
 
-    <map:resources>
-        <map:resource name="html">
-            <map:transform src="stylesheets/site2html.xsl" />
-            <map:serialize type="html" />
-        </map:resource>
-    </map:resources>
+  <map:resources>
+    <map:resource name="html">
+      <map:transform src="stylesheets/site2html.xsl" />
+      <map:serialize type="html" />
+    </map:resource>
+  </map:resources>
 
-    <!-- ======================== Flow ================================= -->
+  <!-- ======================== Flow ================================= -->
 
-    <map:flow language="javascript">
-        <map:script src="flow/PetStoreImpl.js" />
-        <map:script src="flow/petstore.js" />
-    </map:flow>
+  <map:flow language="javascript">
+    <map:script src="flow/PetStoreImpl.js" />
+    <map:script src="flow/petstore.js" />
+  </map:flow>
 
-    <!-- ======================== Pipelines ============================ -->
+  <!-- ======================== Pipelines ============================ -->
 
-    <map:pipelines>
-        <map:pipeline>
-            <map:match pattern="*.kont">
-                <!-- This handles sendPage*() continuations.-->
-                <map:call continuation="{1}" />
-            </map:match>
-            <map:match pattern="*.do">
-                <map:call function="main">
-                    <map:parameter name="page" value="{1}" />
-                </map:call>
-            </map:match>
-            <map:match pattern="">
-                <map:call function="index" />
-            </map:match>
-        </map:pipeline>
-        <map:pipeline>
-            <map:match pattern="view/*.xsp">
-                <map:generate src="view/xsp/{1}.xsp" type="serverpages" label="debug" />
-                <map:call resource="html" />
-            </map:match>
-            <map:match pattern="view/*.jxpath">
-                <map:generate src="view/jxpath/{1}.xml" type="file" />
-                <map:transform type="jx" label="debug" />
-                <map:call resource="html" />
-            </map:match>
-            <map:match pattern="view/*.jexl">
-                <map:generate src="view/jexl/{1}.xml" type="jx" label="debug" />
-                <map:call resource="html" />
-            </map:match>
-            <map:match pattern="view/*.vm">
-                <map:generate src="view/velocity/{1}.vm" type="velocity" label="debug" />
-                <map:serialize type="html" />
-            </map:match>
-            <map:match pattern="view/*.cforms">
-                <map:generate src="view/forms/{1}_t.xml" label="debug" />
-                <map:transform type="forms" label="debug1" />
-                <map:call resource="html" />
-            </map:match>
-        </map:pipeline>
-        <map:pipeline>
-            <map:match pattern="images/*.gif">
-                <map:read mime-type="image/gif" src="images/{1}.gif" />
-            </map:match>
-            <map:match pattern="images/*.jpg">
-                <map:read mime-type="image/jpeg" src="images/{1}.jpg" />
-            </map:match>
-        </map:pipeline>
-    </map:pipelines>
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="*.kont">
+        <!-- This handles sendPage*() continuations.-->
+        <map:call continuation="{1}" />
+      </map:match>
+      <map:match pattern="*.do">
+        <map:call function="main">
+          <map:parameter name="page" value="{1}" />
+        </map:call>
+      </map:match>
+      <map:match pattern="">
+        <map:call function="index" />
+      </map:match>
+    </map:pipeline>
+    <map:pipeline>
+      <map:match pattern="view/*.xsp">
+        <map:generate src="view/xsp/{1}.xsp" type="serverpages" label="debug" />
+        <map:call resource="html" />
+      </map:match>
+      <map:match pattern="view/*.jxpath">
+        <map:generate src="view/jxpath/{1}.xml" type="file" />
+        <map:transform type="jx" label="debug" />
+        <map:call resource="html" />
+      </map:match>
+      <map:match pattern="view/*.jexl">
+        <map:generate src="view/jexl/{1}.xml" type="jx" label="debug" />
+        <map:call resource="html" />
+      </map:match>
+      <map:match pattern="view/*.vm">
+        <map:generate src="view/velocity/{1}.vm" type="velocity" label="debug" />
+        <map:serialize type="html" />
+      </map:match>
+      <map:match pattern="view/*.cforms">
+        <map:generate src="view/forms/{1}_t.xml" label="debug" />
+        <map:transform type="forms" label="debug1" />
+        <map:call resource="html" />
+      </map:match>
+    </map:pipeline>
+    <map:pipeline>
+      <map:match pattern="images/*.gif">
+        <map:read mime-type="image/gif" src="images/{1}.gif" />
+      </map:match>
+      <map:match pattern="images/*.jpg">
+        <map:read mime-type="image/jpeg" src="images/{1}.jpg" />
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
 </map:sitemap>

@@ -21,25 +21,25 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <map:views>
-        <map:view id="view" name="xsl-fo" from-label="xsl-fo">
-            <map:serialize type="xml"/>
-        </map:view>
-    </map:views>
+  <map:views>
+    <map:view id="view" name="xsl-fo" from-label="xsl-fo">
+      <map:serialize type="xml" />
+    </map:view>
+  </map:views>
 
-    <map:pipelines>
+  <map:pipelines>
 
-        <map:pipeline>
+    <map:pipeline>
 
-            <!-- generate PDF document with variable content -->
-            <map:match id="pdf" pattern="*/*.pdf">
-                <map:generate type="request"/>
-                <map:transform label="xsl-fo" src="{1}/{2}.xsl"/>
-                <map:serialize type="fo2pdf"/>
-            </map:match>
+      <!-- generate PDF document with variable content -->
+      <map:match id="pdf" pattern="*/*.pdf">
+        <map:generate type="request" />
+        <map:transform label="xsl-fo" src="{1}/{2}.xsl" />
+        <map:serialize type="fo2pdf" />
+      </map:match>
 
-        </map:pipeline>
+    </map:pipeline>
 
-    </map:pipelines>
+  </map:pipelines>
 
 </map:sitemap>

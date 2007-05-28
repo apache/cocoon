@@ -27,7 +27,7 @@
   <map:pipelines>
     <map:pipeline>
       <map:match pattern="">
-        <map:redirect-to uri="login"/>
+        <map:redirect-to uri="login" />
       </map:match>
 
       <!-- ================= -->
@@ -36,14 +36,14 @@
       <map:match pattern="login">
         <!-- if we are already logged in, redirect to the protected document -->
         <map:act type="cauth-is-logged-in">
-          <map:parameter name="application" value="sample"/> 
+          <map:parameter name="application" value="sample" />
 
-          <map:redirect-to uri="protected"/>
-        </map:act> 
-        <map:generate src="docs/login.xml"/>
-        <map:transform src="stylesheets/simple-page2html.xsl"/>
-        <map:transform type="encodeURL"/>
-        <map:serialize/>
+          <map:redirect-to uri="protected" />
+        </map:act>
+        <map:generate src="docs/login.xml" />
+        <map:transform src="stylesheets/simple-page2html.xsl" />
+        <map:transform type="encodeURL" />
+        <map:serialize />
       </map:match>
 
       <!-- ========================================= -->
@@ -52,13 +52,13 @@
       <map:match pattern="do-login">
         <!-- try to login -->
         <map:act type="cauth-login">
-          <map:parameter name="application" value="sample"/>
-          <map:parameter name="name" value="{request-param:username}"/>
-          <map:parameter name="password" value="{request-param:password}"/>
-          <map:redirect-to uri="protected"/>
+          <map:parameter name="application" value="sample" />
+          <map:parameter name="name" value="{request-param:username}" />
+          <map:parameter name="password" value="{request-param:password}" />
+          <map:redirect-to uri="protected" />
         </map:act>
         <!-- something was wrong, try it again -->
-        <map:redirect-to uri="login"/>
+        <map:redirect-to uri="login" />
       </map:match>
 
       <!-- ================ -->
@@ -66,15 +66,15 @@
       <!-- ================ -->
       <map:match pattern="protected">
         <map:act type="cauth-is-logged-in">
-          <map:parameter name="application" value="sample"/> 
+          <map:parameter name="application" value="sample" />
 
-          <map:generate src="docs/protected.xml" type="jx"/>
-          <map:transform src="stylesheets/simple-page2html.xsl"/>
-          <map:transform type="encodeURL"/>
-          <map:serialize/>
+          <map:generate src="docs/protected.xml" type="jx" />
+          <map:transform src="stylesheets/simple-page2html.xsl" />
+          <map:transform type="encodeURL" />
+          <map:serialize />
         </map:act>
         <!-- something was wrong, redirect to login page -->
-        <map:redirect-to uri="login"/>
+        <map:redirect-to uri="login" />
       </map:match>
 
       <!-- ========================================= -->
@@ -82,10 +82,10 @@
       <!-- ========================================= -->
       <map:match pattern="do-logout">
         <map:act type="cauth-logout">
-          <map:parameter name="application" value="sample"/> 
+          <map:parameter name="application" value="sample" />
 
         </map:act>
-        <map:redirect-to uri="login"/>
+        <map:redirect-to uri="login" />
       </map:match>
     </map:pipeline>
 

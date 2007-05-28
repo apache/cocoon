@@ -17,6 +17,6 @@
 -->
 
 <xconf xpath="cocoon/programming-languages" unless="python-language">
-    <!-- Python language -->
-    <python-language name="python" logger="core.language.python"/>
+  <!-- Python language -->
+  <python-language name="python" logger="core.language.python" />
 </xconf>

@@ -28,66 +28,65 @@
   -->
 <xindice>
 
+  <!--
+    - Defines the database instance. Xindice server in servlet mode currently
+    - supports only one database instance. Attributes:
+    -   dbroot:
+    -       Identifies location of the database. Relative paths will be
+    -       resolved depending on mode of operation.
+    -   name:
+    -       Name of the database instance.
+    -   use-metadata:
+    -       When set to 'on', enables external metadata facilities
+    -       for this database instance.
+  -->
+  <root-collection dbroot="./db/" name="db" use-metadata="on">
+
     <!--
-      - Defines the database instance. Xindice server in servlet mode currently
-      - supports only one database instance. Attributes:
-      -   dbroot:
-      -       Identifies location of the database. Relative paths will be
-      -       resolved depending on mode of operation.
-      -   name:
-      -       Name of the database instance.
-      -   use-metadata:
-      -       When set to 'on', enables external metadata facilities
-      -       for this database instance.
+      - Query Engine Configuration.
+    -->
+    <queryengine>
+      <!--
+        - XPath query engine. Has single configuration parameter.
+        -   autoindex:
+        -       If true, for every XPath query, XPath query engine will create
+        -       all the indexes it can use to evaluate the query.
       -->
-    <root-collection dbroot="./db/" name="db" use-metadata="on">
+      <resolver class="org.apache.xindice.core.query.XPathQueryResolver" autoindex="false" />
 
-        <!--
-          - Query Engine Configuration.
-          -->
-        <queryengine>
-            <!--
-              - XPath query engine. Has single configuration parameter.
-              -   autoindex:
-              -       If true, for every XPath query, XPath query engine will create
-              -       all the indexes it can use to evaluate the query.
-              -->
-            <resolver class="org.apache.xindice.core.query.XPathQueryResolver"
-                      autoindex="false"/>
+      <!--
+        - XUpdate engine. Has no configuration parameters.
+      -->
+      <resolver class="org.apache.xindice.core.xupdate.XUpdateQueryResolver" />
+    </queryengine>
+  </root-collection>
 
-            <!--
-              - XUpdate engine. Has no configuration parameters.
-              -->
-            <resolver class="org.apache.xindice.core.xupdate.XUpdateQueryResolver"/>
-        </queryengine>
-    </root-collection>
-
-    <!--
-      - Xindice supports multiple DB instances. Uncomment entry below to have
-      - second database instance, named 'db2'.
-      -
+  <!--
+    - Xindice supports multiple DB instances. Uncomment entry below to have
+    - second database instance, named 'db2'.
+    -
     <root-collection dbroot="./db2/" name="db2" use-metadata="off">
-        <queryengine>
-            <resolver class="org.apache.xindice.core.query.XPathQueryResolver"
-                      autoindex="false"/>
-            <resolver class="org.apache.xindice.core.xupdate.XUpdateQueryResolver"/>
-        </queryengine>
+    <queryengine>
+    <resolver class="org.apache.xindice.core.query.XPathQueryResolver"
+    autoindex="false"/>
+    <resolver class="org.apache.xindice.core.xupdate.XUpdateQueryResolver"/>
+    </queryengine>
     </root-collection>
-      -->
+  -->
 
-    <!--
-      - XML-RPC configuration for the Xindice server. Specifies name of the parser
-      - to be used by XML-RPC. Apache XML-RPC knows following parsers:
-      -    xerces   org.apache.xerces.parsers.SAXParser
-      -    xp       com.jclark.xml.sax.Driver
-      -    ibm1     com.ibm.xml.parser.SAXDriver
-      -    ibm2     com.ibm.xml.parsers.SAXParser
-      -    aelfred  com.microstar.xml.SAXDriver
-      -    oracle1  oracle.xml.parser.XMLParser
-      -    oracle2  oracle.xml.parser.v2.SAXParser
-      -    openxml  org.openxml.parser.XMLSAXParser
-      -->
-    <xml-rpc>
-        <driver name="xerces"/>
-    </xml-rpc>
+  <!--
+    - XML-RPC configuration for the Xindice server. Specifies name of the parser
+    - to be used by XML-RPC. Apache XML-RPC knows following parsers:
+    -    xerces   org.apache.xerces.parsers.SAXParser
+    -    xp       com.jclark.xml.sax.Driver
+    -    ibm1     com.ibm.xml.parser.SAXDriver
+    -    ibm2     com.ibm.xml.parsers.SAXParser
+    -    aelfred  com.microstar.xml.SAXDriver
+    -    oracle1  oracle.xml.parser.XMLParser
+    -    oracle2  oracle.xml.parser.v2.SAXParser
+    -    openxml  org.openxml.parser.XMLSAXParser
+  -->
+  <xml-rpc>
+    <driver name="xerces" />
+  </xml-rpc>
 </xindice>

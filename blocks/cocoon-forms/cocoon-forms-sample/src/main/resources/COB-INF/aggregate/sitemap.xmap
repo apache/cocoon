@@ -24,54 +24,54 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Views =================================== -->
+  <!-- =========================== Views =================================== -->
 
-    <map:views>
-        <map:view from-label="content" name="content">
-            <map:serialize type="xml" />
-        </map:view>
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view from-label="content" name="pretty-content">
-            <!-- Make use of servlet services -->
-            <map:serialize type="servletService">
-                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-            </map:serialize>
-        </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
 
-        <map:view from-position="last" name="links">
-            <map:serialize type="links" />
-        </map:view>
-    </map:views>
+    <map:view from-position="last" name="links">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
 
-    <!-- =========================== Flowscripts =================================== -->
+  <!-- =========================== Flowscripts =================================== -->
 
-    <map:flow language="javascript">
-        <map:script src="example.js" />
-    </map:flow>
+  <map:flow language="javascript">
+    <map:script src="example.js" />
+  </map:flow>
 
-    <!-- =========================== Pipelines =================================== -->
+  <!-- =========================== Pipelines =================================== -->
 
-    <map:pipelines>
-        <map:pipeline>
-            <map:match pattern="example">
-                <map:call function="example" />
-            </map:match>
-            <map:match pattern="*.continue">
-                <map:call continuation="{1}" />
-            </map:match>
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="example">
+        <map:call function="example" />
+      </map:match>
+      <map:match pattern="*.continue">
+        <map:call continuation="{1}" />
+      </map:match>
 
-            <map:match pattern="*-display-pipeline">
-                <!-- pipeline to show the form -->
-                <map:generate type="jx" src="template-{1}.xml" />
-                <map:transform type="forms" />
-                <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
-                <map:transform src="../resources/forms-samples-styling.xsl">
-                    <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
-                    <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
-                </map:transform>
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize />
-            </map:match>
-        </map:pipeline>
-    </map:pipelines>
+      <map:match pattern="*-display-pipeline">
+        <!-- pipeline to show the form -->
+        <map:generate type="jx" src="template-{1}.xml" />
+        <map:transform type="forms" />
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform src="../resources/forms-samples-styling.xsl">
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+        </map:transform>
+        <map:transform type="servletLinkRewriter" />
+        <map:serialize />
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
 </map:sitemap>

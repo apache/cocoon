@@ -23,7 +23,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-    <bean id="org.apache.cocoon.session.fw.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
-        <servlet:context mount-path="/cocoon-session-fw-sample" context-path="blockcontext:/cocoon-session-fw-sample/" />
-    </bean>
+  <bean id="org.apache.cocoon.session.fw.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+    <servlet:context mount-path="/cocoon-session-fw-sample" context-path="blockcontext:/cocoon-session-fw-sample/" />
+  </bean>
 </beans>

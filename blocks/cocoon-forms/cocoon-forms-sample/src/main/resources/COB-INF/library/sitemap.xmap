@@ -18,136 +18,136 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Components =================================== -->
+  <!-- =========================== Components =================================== -->
 
-    <map:components>
+  <map:components>
 
-        <!-- =========================== Transformers =================================== -->
+    <!-- =========================== Transformers =================================== -->
 
-        <map:transformers default="xslt">
-            <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-                <catalogues default="other">
-                    <catalogue id="other" name="OtherMessages" location="messages" />
-                    <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n" />
-                </catalogues>
-            </map:transformer>
-        </map:transformers>
+    <map:transformers default="xslt">
+      <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="other">
+          <catalogue id="other" name="OtherMessages" location="messages" />
+          <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n" />
+        </catalogues>
+      </map:transformer>
+    </map:transformers>
 
-        <!-- =========================== Actions =================================== -->
+    <!-- =========================== Actions =================================== -->
 
-        <map:actions>
-            <map:action name="make-form" src="org.apache.cocoon.forms.acting.MakeFormAction" logger="forms" />
-            <map:action name="init-form" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms" />
-            <map:action name="handle-form-submit" src="org.apache.cocoon.forms.acting.HandleFormSubmitAction" logger="forms" />
-        </map:actions>
+    <map:actions>
+      <map:action name="make-form" src="org.apache.cocoon.forms.acting.MakeFormAction" logger="forms" />
+      <map:action name="init-form" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms" />
+      <map:action name="handle-form-submit" src="org.apache.cocoon.forms.acting.HandleFormSubmitAction" logger="forms" />
+    </map:actions>
 
-        <!-- =========================== Pipes =================================== -->
+    <!-- =========================== Pipes =================================== -->
 
-        <map:pipes default="caching">
-            <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline" />
-            <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline" />
-        </map:pipes>
+    <map:pipes default="caching">
+      <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline" />
+      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline" />
+    </map:pipes>
 
-    </map:components>
+  </map:components>
 
-    <!-- =========================== Views =================================== -->
+  <!-- =========================== Views =================================== -->
 
-    <map:views>
-        <map:view from-label="content" name="content">
-            <map:serialize type="xml" />
-        </map:view>
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view from-label="content" name="pretty-content">
-            <!-- Make use of servlet services -->
-            <map:serialize type="servletService">
-                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-            </map:serialize>
-        </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
 
-        <map:view name="form" from-label="form">
-            <map:serialize type="xml" />
-        </map:view>
+    <map:view name="form" from-label="form">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view name="links" from-position="last">
-            <map:serialize type="links" />
-        </map:view>
-    </map:views>
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
 
-    <!-- =========================== Flowscripts =================================== -->
+  <!-- =========================== Flowscripts =================================== -->
 
-    <map:flow language="javascript">
-        <map:script src="flow/library.js" />
-    </map:flow>
+  <map:flow language="javascript">
+    <map:script src="flow/library.js" />
+  </map:flow>
 
-    <!-- =========================== Pipelines =================================== -->
+  <!-- =========================== Pipelines =================================== -->
 
-    <map:pipelines>
-        <map:pipeline type="caching">
-            <map:match pattern="library/**">
-                <map:read src="libraries/{1}" />
-            </map:match>
-        </map:pipeline>
+  <map:pipelines>
+    <map:pipeline type="caching">
+      <map:match pattern="library/**">
+        <map:read src="libraries/{1}" />
+      </map:match>
+    </map:pipeline>
 
-        <map:pipeline type="noncaching">
-            <map:match pattern="">
-                <map:generate src="index.xml" />
-                <map:serialize />
-            </map:match>
+    <map:pipeline type="noncaching">
+      <map:match pattern="">
+        <map:generate src="index.xml" />
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="*.continue">
-                <map:call continuation="{1}" />
-            </map:match>
+      <map:match pattern="*.continue">
+        <map:call continuation="{1}" />
+      </map:match>
 
-            <map:match pattern="*-display-pipeline">
-                <!-- pipeline to show the form -->
-                <map:generate type="jx" src="forms/{1}_template.xml" />
-                <map:transform type="forms" />
-                <map:transform type="i18n" label="form">
-                    <map:parameter name="locale" value="en-US" />
-                </map:transform>
-                <map:transform src="servlet:style:default:/common/style/xsl/html/simple-page2html.xsl" />
-                <map:transform src="../resources/forms-samples-styling.xsl">
-                    <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
-                    <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
-                </map:transform>
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize />
-            </map:match>
+      <map:match pattern="*-display-pipeline">
+        <!-- pipeline to show the form -->
+        <map:generate type="jx" src="forms/{1}_template.xml" />
+        <map:transform type="forms" />
+        <map:transform type="i18n" label="form">
+          <map:parameter name="locale" value="en-US" />
+        </map:transform>
+        <map:transform src="servlet:style:default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform src="../resources/forms-samples-styling.xsl">
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+        </map:transform>
+        <map:transform type="servletLinkRewriter" />
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="*-error-pipeline">
-                <map:generate src="error.xml" />
-                <map:serialize />
-            </map:match>
+      <map:match pattern="*-error-pipeline">
+        <map:generate src="error.xml" />
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="*-success-pipeline.jx">
-                <map:generate type="jx" src="resources/result_jx.xml" />
-                <map:transform src="servlet:style:default:/common/style/xsl/html/simple-page2html.xsl" />
-                <map:serialize type="xml" />
-            </map:match>
+      <map:match pattern="*-success-pipeline.jx">
+        <map:generate type="jx" src="resources/result_jx.xml" />
+        <map:transform src="servlet:style:default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:serialize type="xml" />
+      </map:match>
 
-            <!--
-                | Sample building a forms-form-gui editor in forms
-                | Doubles as a showcase for class, new, struct, union widgets
-            -->
+      <!--
+        | Sample building a forms-form-gui editor in forms
+        | Doubles as a showcase for class, new, struct, union widgets
+      -->
 
-            <!-- TODO: Fix edit-any-file security hole! -->
-            <map:match pattern="*.flow">
-                <map:call function="handleForm">
-                    <map:parameter name="function" value="show_{1}" />
-                    <map:parameter name="form-definition" value="forms/{1}_model.xml" />
-                    <map:parameter name="bindingURI" value="forms/{1}_binding.xml" />
-                </map:call>
-            </map:match>
+      <!-- TODO: Fix edit-any-file security hole! -->
+      <map:match pattern="*.flow">
+        <map:call function="handleForm">
+          <map:parameter name="function" value="show_{1}" />
+          <map:parameter name="form-definition" value="forms/{1}_model.xml" />
+          <map:parameter name="bindingURI" value="forms/{1}_binding.xml" />
+        </map:call>
+      </map:match>
 
-            <map:match pattern="*">
-                <map:redirect-to uri="{1}/" />
-            </map:match>
+      <map:match pattern="*">
+        <map:redirect-to uri="{1}/" />
+      </map:match>
 
-            <map:match pattern="*/**">
-                <map:mount src="{1}/" uri-prefix="{1}" />
-            </map:match>
+      <map:match pattern="*/**">
+        <map:mount src="{1}/" uri-prefix="{1}" />
+      </map:match>
 
-        </map:pipeline>
-    </map:pipelines>
+    </map:pipeline>
+  </map:pipelines>
 
 </map:sitemap>
