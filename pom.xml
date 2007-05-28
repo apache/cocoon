@@ -104,7 +104,8 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
+        <role>Emeritus PMC member</role>
         <role>ASF member</role>
       </roles>
       <timezone/>
@@ -162,7 +163,8 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
+        <role>Emeritus PMC member</role>
       </roles>
       <timezone/>
     </developer>
@@ -404,7 +406,7 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>ASF member</role>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
     </developer>
     <developer>
@@ -487,6 +489,7 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>Committer</role>
+        <role>PMC member</role>
       </roles>
       <timezone/>
     </developer>
@@ -521,7 +524,8 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
+        <role>Emeritus PMC member</role>
       </roles>
       <timezone/>
     </developer>
@@ -628,7 +632,7 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
       <timezone/>
     </developer>
@@ -675,7 +679,7 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
       <timezone/>
     </developer>
@@ -686,7 +690,7 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
       <timezone/>
     </developer>
@@ -716,13 +720,13 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <id>acoliver</id>
+      <id>coliver</id>
       <name>Christopher Oliver</name>
-      <email>acoliver@apache.org</email>
+      <email>coliver@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
       <timezone/>
     </developer>
@@ -746,7 +750,7 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
       <timezone/>
     </developer>
@@ -795,7 +799,7 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
       <timezone/>
     </developer>
@@ -985,7 +989,7 @@
       <roles>
         <role>ASF member</role>
         <role>PMC member</role>
-        <role>Committer</role>
+        <role>Emeritus Committer</role>
       </roles>
       <timezone/>
     </developer>
