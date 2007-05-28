@@ -23,12 +23,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-    <bean id="org.apache.cocoon.tour.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
-        <servlet:context mount-path="/cocoon-tour-sample" context-path="blockcontext:/cocoon-tour-sample/">
-            <servlet:connections>
-                <entry key="forms" value-ref="org.apache.cocoon.forms.impl.servlet"/>
-                <entry key="ajax" value-ref="org.apache.cocoon.ajax.impl.servlet"/>
-            </servlet:connections>
-        </servlet:context>
-    </bean>
+  <bean id="org.apache.cocoon.tour.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+    <servlet:context mount-path="/cocoon-tour-sample" context-path="blockcontext:/cocoon-tour-sample/">
+      <servlet:connections>
+        <entry key="forms" value-ref="org.apache.cocoon.forms.impl.servlet" />
+        <entry key="ajax" value-ref="org.apache.cocoon.ajax.impl.servlet" />
+      </servlet:connections>
+    </servlet:context>
+  </bean>
 </beans>

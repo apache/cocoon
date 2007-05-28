@@ -21,11 +21,11 @@
     +-->
 <map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:transformers>
-      <map:transformer logger="sitemap.transformer.xmldb" name="xmldb" src="org.apache.cocoon.transformation.XMLDBTransformer">
+    <map:transformer logger="sitemap.transformer.xmldb" name="xmldb" src="org.apache.cocoon.transformation.XMLDBTransformer">
       <!-- Driver class (optional). Uncomment if you want XMLDBTransformer
-           to create and register XML:DB database. Keep commented out if
-           database created somewhere else (for example, by XML:DB source factory)
-      <driver>org.apache.xindice.client.xmldb.embed.DatabaseImpl</driver>
+        to create and register XML:DB database. Keep commented out if
+        database created somewhere else (for example, by XML:DB source factory)
+        <driver>org.apache.xindice.client.xmldb.embed.DatabaseImpl</driver>
       -->
       <base>xmldb:xindice-embed:///db</base>
     </map:transformer>

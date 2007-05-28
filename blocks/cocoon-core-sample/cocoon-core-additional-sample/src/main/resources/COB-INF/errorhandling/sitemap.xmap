@@ -21,72 +21,72 @@
     +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <map:components>
-        <map:generators default="file">
-            <map:generator name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionGenerator" />
-        </map:generators>
-        <map:selectors default="browser">
-            <map:selector name="exception" src="org.apache.cocoon.selection.XPathExceptionSelector">
-                <exception name="application" class="org.apache.cocoon.samples.errorhandling.ApplicationException">
-                    <xpath name="application1" test="errorCode=1" />
-                    <xpath name="application2" test="errorCode=2" />
-                </exception>
-                <exception name="validation" class="org.apache.cocoon.samples.errorhandling.ValidationException" />
-                <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException" />
-                <exception class="java.lang.Throwable" unroll="true" />
-            </map:selector>
-        </map:selectors>
-        <map:actions>
-            <map:action name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionAction" />
-        </map:actions>
-    </map:components>
+  <map:components>
+    <map:generators default="file">
+      <map:generator name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionGenerator" />
+    </map:generators>
+    <map:selectors default="browser">
+      <map:selector name="exception" src="org.apache.cocoon.selection.XPathExceptionSelector">
+        <exception name="application" class="org.apache.cocoon.samples.errorhandling.ApplicationException">
+          <xpath name="application1" test="errorCode=1" />
+          <xpath name="application2" test="errorCode=2" />
+        </exception>
+        <exception name="validation" class="org.apache.cocoon.samples.errorhandling.ValidationException" />
+        <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException" />
+        <exception class="java.lang.Throwable" unroll="true" />
+      </map:selector>
+    </map:selectors>
+    <map:actions>
+      <map:action name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionAction" />
+    </map:actions>
+  </map:components>
 
-    <map:pipelines>
-        <map:pipeline>
-            <map:match pattern="">
-                <map:redirect-to uri="welcome" />
-            </map:match>
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome" />
+      </map:match>
 
-            <map:match pattern="welcome">
-                <map:generate src="samples.xml" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
+      </map:match>
 
-            <map:match pattern="not-exists">
-                <map:generate src="{0}.xml" />
-                <map:serialize />
-            </map:match>
+      <map:match pattern="not-exists">
+        <map:generate src="{0}.xml" />
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="*">
-                <map:generate type="exception" src="{1}" />
-                <map:serialize />
-            </map:match>
+      <map:match pattern="*">
+        <map:generate type="exception" src="{1}" />
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="internal/**">
-                <map:mount uri-prefix="internal" src="internal/" />
-            </map:match>
-        </map:pipeline>
+      <map:match pattern="internal/**">
+        <map:mount uri-prefix="internal" src="internal/" />
+      </map:match>
+    </map:pipeline>
 
-        <map:pipeline>
-            <map:mount uri-prefix="exception" src="exception/" />
+    <map:pipeline>
+      <map:mount uri-prefix="exception" src="exception/" />
 
-            <map:handle-errors>
-                <map:select type="exception">
-                    <map:when test="not-found">
-                        <map:generate src="notFound.html" />
-                        <map:serialize />
-                    </map:when>
-                </map:select>
-            </map:handle-errors>
-        </map:pipeline>
+      <map:handle-errors>
+        <map:select type="exception">
+          <map:when test="not-found">
+            <map:generate src="notFound.html" />
+            <map:serialize />
+          </map:when>
+        </map:select>
+      </map:handle-errors>
+    </map:pipeline>
 
-        <map:handle-errors>
-            <map:generate type="notifying" />
-            <map:transform src="servlet:style-default:/stylesheets/system/error2html.xslt" />
-        </map:handle-errors>
-    </map:pipelines>
+    <map:handle-errors>
+      <map:generate type="notifying" />
+      <map:transform src="servlet:style-default:/stylesheets/system/error2html.xslt" />
+    </map:handle-errors>
+  </map:pipelines>
 
 </map:sitemap>

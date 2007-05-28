@@ -18,95 +18,95 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Components ================================ -->
+  <!-- =========================== Components ================================ -->
 
-    <map:components>
+  <map:components>
 
-        <!-- =========================== Actions ================================ -->
+    <!-- =========================== Actions ================================ -->
 
-        <map:actions>
-            <map:action name="dbAdd" logger="sitemap.tutorial.action.dbAdd" src="org.apache.cocoon.acting.DatabaseAddAction" />
+    <map:actions>
+      <map:action name="dbAdd" logger="sitemap.tutorial.action.dbAdd" src="org.apache.cocoon.acting.DatabaseAddAction" />
 
-            <map:action name="dbDel" logger="sitemap.tutorial.action.dbDel" src="org.apache.cocoon.acting.DatabaseDeleteAction" />
+      <map:action name="dbDel" logger="sitemap.tutorial.action.dbDel" src="org.apache.cocoon.acting.DatabaseDeleteAction" />
 
-            <map:action name="dbUpd" logger="sitemap.tutorial.action.dbUpd" src="org.apache.cocoon.acting.DatabaseUpdateAction" />
-        </map:actions>
+      <map:action name="dbUpd" logger="sitemap.tutorial.action.dbUpd" src="org.apache.cocoon.acting.DatabaseUpdateAction" />
+    </map:actions>
 
-    </map:components>
+  </map:components>
 
-    <!-- ========================== Action sets ================================ -->
+  <!-- ========================== Action sets ================================ -->
 
-    <map:action-sets>
-        <map:action-set name="process">
-            <map:act type="form-validator" action="Create Department">
-                <map:parameter name="constraint-set" value="add" />
-                <map:act type="dbAdd" />
-            </map:act>
-            <map:act type="form-validator" action="Update Department">
-                <map:parameter name="constraint-set" value="update" />
-                <map:act type="dbUpd" />
-            </map:act>
-            <map:act type="dbDel" action="Delete Department" />
-            <map:act type="form-validator" action="Create Employee">
-                <map:parameter name="constraint-set" value="add" />
-                <map:act type="dbAdd" />
-            </map:act>
-            <map:act type="form-validator" action="Update Employee">
-                <map:parameter name="constraint-set" value="update" />
-                <map:act type="dbUpd" />
-            </map:act>
-            <map:act type="dbDel" action="Delete Employee" />
-        </map:action-set>
-    </map:action-sets>
+  <map:action-sets>
+    <map:action-set name="process">
+      <map:act type="form-validator" action="Create Department">
+        <map:parameter name="constraint-set" value="add" />
+        <map:act type="dbAdd" />
+      </map:act>
+      <map:act type="form-validator" action="Update Department">
+        <map:parameter name="constraint-set" value="update" />
+        <map:act type="dbUpd" />
+      </map:act>
+      <map:act type="dbDel" action="Delete Department" />
+      <map:act type="form-validator" action="Create Employee">
+        <map:parameter name="constraint-set" value="add" />
+        <map:act type="dbAdd" />
+      </map:act>
+      <map:act type="form-validator" action="Update Employee">
+        <map:parameter name="constraint-set" value="update" />
+        <map:act type="dbUpd" />
+      </map:act>
+      <map:act type="dbDel" action="Delete Employee" />
+    </map:action-set>
+  </map:action-sets>
 
-    <!-- =========================== Pipelines ================================= -->
+  <!-- =========================== Pipelines ================================= -->
 
-    <map:pipelines>
-        <map:pipeline>
+  <map:pipelines>
+    <map:pipeline>
 
-            <map:match pattern="">
-                <map:redirect-to uri="home.html" />
-            </map:match>
+      <map:match pattern="">
+        <map:redirect-to uri="home.html" />
+      </map:match>
 
-            <map:match pattern="*-dept.html">
-                <map:act set="process">
-                    <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/department-form.xml" />
-                    <map:generate type="serverpages" src="docs/confirm-dept.xsp" />
-                    <map:transform src="apache.xsl" />
-                    <map:serialize />
-                </map:act>
-                <map:generate type="serverpages" src="docs/{1}-dept.xsp" />
-                <map:transform src="apache.xsl" />
-                <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
-                <map:serialize />
-            </map:match>
+      <map:match pattern="*-dept.html">
+        <map:act set="process">
+          <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/department-form.xml" />
+          <map:generate type="serverpages" src="docs/confirm-dept.xsp" />
+          <map:transform src="apache.xsl" />
+          <map:serialize />
+        </map:act>
+        <map:generate type="serverpages" src="docs/{1}-dept.xsp" />
+        <map:transform src="apache.xsl" />
+        <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="*-empl.html">
-                <map:act set="process">
-                    <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/employee-form.xml" />
-                    <map:generate type="serverpages" src="docs/confirm-empl.xsp" />
-                    <map:transform src="apache.xsl" />
-                    <map:serialize />
-                </map:act>
-                <map:generate type="serverpages" src="docs/{1}-empl.xsp" />
-                <map:transform src="apache.xsl" />
-                <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
-                <map:serialize />
-            </map:match>
+      <map:match pattern="*-empl.html">
+        <map:act set="process">
+          <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/employee-form.xml" />
+          <map:generate type="serverpages" src="docs/confirm-empl.xsp" />
+          <map:transform src="apache.xsl" />
+          <map:serialize />
+        </map:act>
+        <map:generate type="serverpages" src="docs/{1}-empl.xsp" />
+        <map:transform src="apache.xsl" />
+        <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="**.html">
-                <map:generate src="docs/{1}.xml" />
-                <map:transform src="apache.xsl" />
-                <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
-                <map:serialize />
-            </map:match>
+      <map:match pattern="**.html">
+        <map:generate src="docs/{1}.xml" />
+        <map:transform src="apache.xsl" />
+        <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
+        <map:serialize />
+      </map:match>
 
-            <map:match pattern="images/**">
-                <map:read src="context://docs/{0}" />
-            </map:match>
+      <map:match pattern="images/**">
+        <map:read src="context://docs/{0}" />
+      </map:match>
 
-        </map:pipeline>
+    </map:pipeline>
 
-    </map:pipelines>
+  </map:pipelines>
 
 </map:sitemap>

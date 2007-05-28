@@ -20,51 +20,51 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Views =================================== -->
+  <!-- =========================== Views =================================== -->
 
-    <map:views>
-        <map:view name="content" from-label="content">
-            <map:serialize type="xml" />
-        </map:view>
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view from-label="content" name="pretty-content">
-            <!-- Make use of servlet services -->
-            <map:serialize type="servletService">
-                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-            </map:serialize>
-        </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
 
-        <map:view name="links" from-position="last">
-            <map:serialize type="links" />
-        </map:view>
-    </map:views>
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
 
-    <!-- ========================== Pipelines ================================ -->
+  <!-- ========================== Pipelines ================================ -->
 
-    <map:pipelines>
+  <map:pipelines>
 
-        <map:pipeline>
+    <map:pipeline>
 
-            <map:match pattern="upload*">
-                <map:generate src="{0}.xml" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="upload*">
+        <map:generate src="{0}.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+        </map:serialize>
+      </map:match>
 
-            <map:match pattern="process-order">
-                <map:generate type="stream">
-                    <map:parameter name="form-name" value="Foo" />
-                </map:generate>
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="process-order">
+        <map:generate type="stream">
+          <map:parameter name="form-name" value="Foo" />
+        </map:generate>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+        </map:serialize>
+      </map:match>
 
-        </map:pipeline>
+    </map:pipeline>
 
-    </map:pipelines>
+  </map:pipelines>
 
 </map:sitemap>

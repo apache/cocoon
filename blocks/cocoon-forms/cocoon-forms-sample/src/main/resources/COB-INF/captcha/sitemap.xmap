@@ -18,94 +18,94 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Views =================================== -->
+  <!-- =========================== Views =================================== -->
 
-    <map:views>
-        <map:view name="content" from-label="content">
-            <map:serialize type="xml" />
-        </map:view>
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view name="content1" from-label="content1">
-            <map:serialize type="xml" />
-        </map:view>
+    <map:view name="content1" from-label="content1">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view from-label="content" name="pretty-content">
-            <!-- Make use of servlet services -->
-            <map:serialize type="servletService">
-                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-            </map:serialize>
-        </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
 
-        <map:view name="links" from-position="last">
-            <map:serialize type="links" />
-        </map:view>
-    </map:views>
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
 
-    <!-- =========================== Flowscripts =================================== -->
+  <!-- =========================== Flowscripts =================================== -->
 
-    <map:flow language="javascript">
-        <map:script src="flow/captcha.js" />
-    </map:flow>
+  <map:flow language="javascript">
+    <map:script src="flow/captcha.js" />
+  </map:flow>
 
-    <!-- =========================== Pipelines =================================== -->
+  <!-- =========================== Pipelines =================================== -->
 
-    <map:pipelines>
-        <map:pipeline>
+  <map:pipelines>
+    <map:pipeline>
 
-            <map:match pattern="">
-                <map:call function="captcha" />
-            </map:match>
+      <map:match pattern="">
+        <map:call function="captcha" />
+      </map:match>
 
-            <map:match pattern="*.cont">
-                <map:call continuation="{1}" />
-            </map:match>
+      <map:match pattern="*.cont">
+        <map:call continuation="{1}" />
+      </map:match>
 
-            <map:match pattern="success">
-                <map:generate type="jx" src="success.xml" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/common/simple-page2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="success">
+        <map:generate type="jx" src="success.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/common/simple-page2html" />
+        </map:serialize>
+      </map:match>
 
-            <!--
-                | Show a form, using the forms transformer
-            -->
-            <map:match pattern="*-display-pipeline">
-                <map:generate type="file" src="forms/{1}.tpl.xml" />
-                <map:transform type="forms" label="content1" />
-                <map:transform type="i18n">
-                    <!--map:parameter name="locale" value="en-US"/-->
-                </map:transform>
-                <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
-                <map:transform src="../resources/forms-samples-styling.xsl">
-                    <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
-                    <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
-                </map:transform>
-                <map:transform type="i18n"></map:transform>
-                <map:transform type="servletLinkRewriter" />
-                <map:serialize />
-            </map:match>
+      <!--
+        | Show a form, using the forms transformer
+      -->
+      <map:match pattern="*-display-pipeline">
+        <map:generate type="file" src="forms/{1}.tpl.xml" />
+        <map:transform type="forms" label="content1" />
+        <map:transform type="i18n">
+          <!--map:parameter name="locale" value="en-US"/-->
+        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform src="../resources/forms-samples-styling.xsl">
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+        </map:transform>
+        <map:transform type="i18n"></map:transform>
+        <map:transform type="servletLinkRewriter" />
+        <map:serialize />
+      </map:match>
 
-            <!--
-                | Generate the CAPTCHA image. Any type of generator can be used here,
-                | as long as it reads the string to display from the session
-                | attribute named "captcha-{1}".
-                | Using an SVG file as input requires that the Batik block be
-                | included in the build.
-            -->
-            <map:match pattern="captcha-*.jpg">
-                <map:generate type="jx" src="captcha-image.xml">
-                    <map:parameter name="value" value="{session-attr:captcha-{1}}" />
-                </map:generate>
-                <map:serialize type="svg2jpeg" />
-            </map:match>
+      <!--
+        | Generate the CAPTCHA image. Any type of generator can be used here,
+        | as long as it reads the string to display from the session
+        | attribute named "captcha-{1}".
+        | Using an SVG file as input requires that the Batik block be
+        | included in the build.
+      -->
+      <map:match pattern="captcha-*.jpg">
+        <map:generate type="jx" src="captcha-image.xml">
+          <map:parameter name="value" value="{session-attr:captcha-{1}}" />
+        </map:generate>
+        <map:serialize type="svg2jpeg" />
+      </map:match>
 
-            <map:match pattern="*">
-                <map:redirect-to uri="{1}/" />
-            </map:match>
+      <map:match pattern="*">
+        <map:redirect-to uri="{1}/" />
+      </map:match>
 
-        </map:pipeline>
-    </map:pipelines>
+    </map:pipeline>
+  </map:pipelines>
 
 </map:sitemap>

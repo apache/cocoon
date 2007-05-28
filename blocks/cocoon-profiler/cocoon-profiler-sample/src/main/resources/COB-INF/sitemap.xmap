@@ -18,112 +18,112 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <!-- =========================== Views =================================== -->
+  <!-- =========================== Views =================================== -->
 
-    <map:views>
-        <map:view name="content" from-label="content">
-            <map:serialize type="xml" />
-        </map:view>
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml" />
+    </map:view>
 
-        <map:view from-label="content" name="pretty-content">
-            <!-- Make use of servlet services -->
-            <map:serialize type="servletService">
-                <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
-            </map:serialize>
-        </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
 
-        <map:view name="links" from-position="last">
-            <map:serialize type="links" />
-        </map:view>
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
 
-    </map:views>
+  </map:views>
 
-    <!-- =========================== Pipelines ================================= -->
+  <!-- =========================== Pipelines ================================= -->
 
-    <map:pipelines>
+  <map:pipelines>
 
-        <!-- =========================== Cacheable ================================= -->
+    <!-- =========================== Cacheable ================================= -->
 
-        <map:pipeline type="profile-caching">
+    <map:pipeline type="profile-caching">
 
-            <map:match pattern="caching-testsite.html">
-                <map:generate src="test.xml" />
-                <map:transform src="test2page.xsl" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="caching-testsite.html">
+        <map:generate src="test.xml" />
+        <map:transform src="test2page.xsl" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+        </map:serialize>
+      </map:match>
 
-        </map:pipeline>
+    </map:pipeline>
 
-        <!-- =========================== Noncacheable ================================= -->
+    <!-- =========================== Noncacheable ================================= -->
 
-        <map:pipeline type="profile-noncaching">
+    <map:pipeline type="profile-noncaching">
 
-            <map:match pattern="noncaching-testsite.html">
-                <map:generate src="test.xml" />
-                <map:transform src="test2page.xsl" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="noncaching-testsite.html">
+        <map:generate src="test.xml" />
+        <map:transform src="test2page.xsl" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+        </map:serialize>
+      </map:match>
 
-        </map:pipeline>
+    </map:pipeline>
 
-        <!-- =========================== Profiler ================================= -->
+    <!-- =========================== Profiler ================================= -->
 
-        <map:pipeline type="caching">
+    <map:pipeline type="caching">
 
-            <map:match pattern="">
-                <map:redirect-to uri="welcome" />
-            </map:match>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome" />
+      </map:match>
 
-            <map:match pattern="welcome">
-                <map:generate src="samples.xml" />
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
+      </map:match>
 
-            <map:match pattern="profile.html">
-                <map:generate type="profiler" />
-                <!-- The type for this transform is set to xalan, because it causes an
-                    ArrayIndexOutOfBoundsException with xsltc (filed as bug 19770) -->
-                <map:transform type="xalan" src="profile2page.xsl">
-                    <map:parameter name="use-request-parameters" value="true" />
-                </map:transform>
-                <!-- Make use of servlet services -->
-                <map:serialize type="servletService">
-                    <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
-                </map:serialize>
-            </map:match>
+      <map:match pattern="profile.html">
+        <map:generate type="profiler" />
+        <!-- The type for this transform is set to xalan, because it causes an
+          ArrayIndexOutOfBoundsException with xsltc (filed as bug 19770) -->
+        <map:transform type="xalan" src="profile2page.xsl">
+          <map:parameter name="use-request-parameters" value="true" />
+        </map:transform>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+        </map:serialize>
+      </map:match>
 
-            <map:match pattern="profile2.html">
-                <map:generate type="profiler" />
-                <map:transform src="profile2html.xsl">
-                    <map:parameter name="use-request-parameters" value="true" />
-                </map:transform>
-                <map:serialize type="html" />
-            </map:match>
+      <map:match pattern="profile2.html">
+        <map:generate type="profiler" />
+        <map:transform src="profile2html.xsl">
+          <map:parameter name="use-request-parameters" value="true" />
+        </map:transform>
+        <map:serialize type="html" />
+      </map:match>
 
-            <map:match pattern="profile.xml">
-                <map:generate type="profiler" />
-                <map:serialize type="xml" />
-            </map:match>
+      <map:match pattern="profile.xml">
+        <map:generate type="profiler" />
+        <map:serialize type="xml" />
+      </map:match>
 
-            <map:match pattern="*.css">
-                <map:read src="{1}.css" mime-type="text/css" />
-            </map:match>
+      <map:match pattern="*.css">
+        <map:read src="{1}.css" mime-type="text/css" />
+      </map:match>
 
-            <map:match pattern="*.js">
-                <map:read src="{1}.js" mime-type="text/javascript" />
-            </map:match>
+      <map:match pattern="*.js">
+        <map:read src="{1}.js" mime-type="text/javascript" />
+      </map:match>
 
-        </map:pipeline>
+    </map:pipeline>
 
-    </map:pipelines>
+  </map:pipelines>
 
 </map:sitemap>

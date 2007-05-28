@@ -18,23 +18,23 @@
 
 <components>
   <!-- Include roles -->
-  <include src="resource://org/apache/cocoon/reading/imageop/imageop.roles"/>
+  <include src="resource://org/apache/cocoon/reading/imageop/imageop.roles" />
 
-   <!-- =============== Image Operations ==================== -->
-    <image-operations>
-      <component-instance name="scale" class="org.apache.cocoon.reading.imageop.ScaleOperation" logger="imageop" />
-      <component-instance name="resize" class="org.apache.cocoon.reading.imageop.ResizeOperation" logger="imageop" />
-      <component-instance name="rotate" class="org.apache.cocoon.reading.imageop.RotateOperation" logger="imageop" />
-      <component-instance name="offset" class="org.apache.cocoon.reading.imageop.OffsetOperation" logger="imageop" />
-      <component-instance name="mirror" class="org.apache.cocoon.reading.imageop.MirrorOperation" logger="imageop" />
-      <component-instance name="affine" class="org.apache.cocoon.reading.imageop.AffineTransformOperation" logger="imageop" />
-      <component-instance name="grayscale" class="org.apache.cocoon.reading.imageop.GrayScaleOperation" logger="imageop" />
-      <component-instance name="convolve" class="org.apache.cocoon.reading.imageop.ConvolveOperation" logger="imageop" />
-      <component-instance name="color" class="org.apache.cocoon.reading.imageop.ColorOperation" logger="imageop" />
-      <component-instance name="shear" class="org.apache.cocoon.reading.imageop.ShearOperation" logger="imageop" />
-      <component-instance name="crop" class="org.apache.cocoon.reading.imageop.CropOperation" logger="imageop" />
-      <component-instance name="overlay" class="org.apache.cocoon.reading.imageop.OverlayOperation" logger="imageop" />
-    </image-operations>
-    
+  <!-- =============== Image Operations ==================== -->
+  <image-operations>
+    <component-instance name="scale" class="org.apache.cocoon.reading.imageop.ScaleOperation" logger="imageop" />
+    <component-instance name="resize" class="org.apache.cocoon.reading.imageop.ResizeOperation" logger="imageop" />
+    <component-instance name="rotate" class="org.apache.cocoon.reading.imageop.RotateOperation" logger="imageop" />
+    <component-instance name="offset" class="org.apache.cocoon.reading.imageop.OffsetOperation" logger="imageop" />
+    <component-instance name="mirror" class="org.apache.cocoon.reading.imageop.MirrorOperation" logger="imageop" />
+    <component-instance name="affine" class="org.apache.cocoon.reading.imageop.AffineTransformOperation" logger="imageop" />
+    <component-instance name="grayscale" class="org.apache.cocoon.reading.imageop.GrayScaleOperation" logger="imageop" />
+    <component-instance name="convolve" class="org.apache.cocoon.reading.imageop.ConvolveOperation" logger="imageop" />
+    <component-instance name="color" class="org.apache.cocoon.reading.imageop.ColorOperation" logger="imageop" />
+    <component-instance name="shear" class="org.apache.cocoon.reading.imageop.ShearOperation" logger="imageop" />
+    <component-instance name="crop" class="org.apache.cocoon.reading.imageop.CropOperation" logger="imageop" />
+    <component-instance name="overlay" class="org.apache.cocoon.reading.imageop.OverlayOperation" logger="imageop" />
+  </image-operations>
+
 </components>
- 
+
