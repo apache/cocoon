@@ -20,8 +20,7 @@
 <!--+
     | @version $Id$
     +-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
@@ -29,12 +28,12 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>4</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-forms-impl</artifactId>
   <name>Cocoon Forms Block Implementation</name>
-  <version>1.0.0-RC1-SNAPSHOT</version>
+  <version>1.0.0-M3</version>
   <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>
 
   <build>
@@ -63,14 +62,17 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0-RC1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ajax-impl</artifactId>
+      <version>1.0.0-M3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-flowscript-impl</artifactId>
+      <version>1.0.0-RC1</version>
     </dependency>
     <!-- other dependencies -->
     <dependency>
@@ -92,16 +94,19 @@
     <dependency>
       <groupId>org.outerj.xreporter</groupId>
       <artifactId>xreporter-expression</artifactId>
+      <version>1.2.1.1</version>
     </dependency>
     <dependency>
       <groupId>org.outerj.xreporter</groupId>
       <artifactId>xreporter-grouping</artifactId>
       <scope>runtime</scope>
+      <version>1.2.1.1</version>
     </dependency>
     <!-- test dependencies -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0-RC1</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -147,4 +152,10 @@
       </build>
     </profile>
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0-M3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0-M3</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0-M3</url>
+  </scm>
 </project>
