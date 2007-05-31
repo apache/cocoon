@@ -66,6 +66,10 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix" fixes-bug="COCOON-2070" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+      Fix bug in recycling of poolable components where recycle() was not called in
+      all cases.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-2055" due-to="Martin Heiden" due-to-email="martin.heiden@netcologne.de">
       Fix MultipartFilter cleaning up the request and so disposing the uploaded
       files before the request has been processed actually.

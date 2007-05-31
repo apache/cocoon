@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,6 +47,17 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
     throws Throwable {
         if ( method.getName().equals("putBackIntoAvalonPool") ) {
             this.run();
+            // attributes might already been destroyed, because this handler might be run
+            // for a component that is released by another component insided recycle()
+            // which got called by PoolableFactoryBean.enteringPool() <- putIntoPool() <- run() (below),
+            // which is registered as destruction callback on the request attributes -
+            // such a destruction callback is called *after* the request attributes
+            // are set back to null
+            final RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+            if (attributes != null) {
+                // removing the attribute removes the call back handler!
+                attributes.removeAttribute(this.attributeName, RequestAttributes.SCOPE_REQUEST);
+            }
             RequestContextHolder.currentRequestAttributes().removeAttribute(this.attributeName, RequestAttributes.SCOPE_REQUEST);
             return null;
         }
@@ -68,13 +79,9 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
      * @see java.lang.Runnable#run()
      */
     public void run() {
-        try {
-            final Object o = this.componentHolder.get();
-            if ( o != null ) {
-                this.handler.putIntoPool(o);
-            }
-        } catch (Exception ignore) {
-            // we ignore this
+        final Object o = this.componentHolder.get();
+        if ( o != null ) {
+            this.handler.putIntoPool(o);
         }
         this.componentHolder.set(null);
     }
