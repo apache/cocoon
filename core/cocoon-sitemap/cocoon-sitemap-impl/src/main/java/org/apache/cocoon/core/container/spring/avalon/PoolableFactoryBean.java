@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -28,6 +28,8 @@ import java.util.Set;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -41,6 +43,9 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class PoolableFactoryBean
     implements FactoryBean, BeanFactoryAware {
+
+    /** Logger (we use the same logging mechanism as Spring!) */
+    protected final Log log = LogFactory.getLog(getClass());
 
     /** The default max size of the pool. */
     public static final String DEFAULT_MAX_POOL_SIZE = "64";
@@ -83,7 +88,7 @@ public class PoolableFactoryBean
     private int size;
 
     /**
-     * Total number of Poolable instances created 
+     * Total number of Poolable instances created
      */
     private int highWaterMark;
 
@@ -193,7 +198,7 @@ public class PoolableFactoryBean
      * @throws Exception An exception may be thrown as described above or if there is an exception
      *  thrown by the ObjectFactory's newInstance() method.
      */
-    protected Object getFromPool() throws Exception {
+    public Object getFromPool() throws Exception {
         Object poolable;
         synchronized( this.semaphore ) {
             // Look for a Poolable at the end of the m_ready list
@@ -216,16 +221,12 @@ public class PoolableFactoryBean
     }
 
     /**
-     * Returns a poolable to the pool 
+     * Returns a poolable to the pool
      *
      * @param poolable Poolable to return to the pool.
      */
-    protected void putIntoPool( final Object poolable ) {
-        try {
-            this.enteringPool(poolable);
-        } catch (Exception ignore) {
-            // ignore this
-        }
+    public void putIntoPool( final Object poolable ) {
+        this.enteringPool(poolable);
 
         synchronized( this.semaphore ) {
             if( this.size <= this.max ) {
@@ -241,32 +242,39 @@ public class PoolableFactoryBean
     /**
      * Handle service specific methods for getting it out of the pool
      */
-    public void exitingPool( final Object component )
+    protected void exitingPool( final Object component )
     throws Exception {
         if ( this.poolOutMethod != null ) {
             this.poolOutMethod.invoke(component, null);
-        }         
+        }
     }
 
     /**
      * Handle service specific methods for putting it into the pool
      */
-    public void enteringPool( final Object component )
-    throws Exception {
-        // Handle Recyclable objects
-        if( component instanceof Recyclable ) {
-            ( (Recyclable)component ).recycle();
+    protected void enteringPool( final Object component ) {
+        try {
+            // Handle Recyclable objects
+            if( component instanceof Recyclable ) {
+                ( (Recyclable)component ).recycle();
+            }
+            if ( this.poolInMethod != null ) {
+                this.poolInMethod.invoke(component, null);
+            }
+        } catch (Exception ignore) {
+            // we ignore exceptions during putting the component back
+            // into the pool, as this should not bring the system
+            // down - this is for compatibility with the original
+            // Avalon implementation
+            this.log.error("Exception while putting component '" + component + "' back into the pool.", ignore);
         }
-        if ( this.poolInMethod != null ) {
-            this.poolInMethod.invoke(component, null);
-        }         
     }
 
     /**
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory; 
+        this.beanFactory = beanFactory;
     }
 
     /**
@@ -274,7 +282,7 @@ public class PoolableFactoryBean
      */
     public Object getObject() throws Exception {
         return Proxy.newProxyInstance(this.getClass().getClassLoader(),
-                                      this.interfaces, 
+                                      this.interfaces,
                                       new PoolableProxyHandler(this));
     }
 
