@@ -78,14 +78,8 @@ public class JSIntrospector extends UberspectImpl {
                     }
                 }
                 result = ScriptRuntime.call(cx, result, thisObj, newArgs, scope);
-                if (result == Undefined.instance || result == Scriptable.NOT_FOUND) {
-                    result = null;
-                } else if (!(result instanceof NativeJavaClass)) {
-                    while (result instanceof Wrapper) {
-                        result = ((Wrapper)result).unwrap();
-                    }
-                }
-                return result;
+
+                return unwrap(result);
             } catch (JavaScriptException e) {
                 throw new java.lang.reflect.InvocationTargetException(e);
             } finally {
@@ -135,12 +129,8 @@ public class JSIntrospector extends UberspectImpl {
                         }
                     }
                 }
-                if (result == Scriptable.NOT_FOUND || result == Undefined.instance) {
-                    result = null;
-                } else if (result instanceof Wrapper && !(result instanceof NativeJavaClass)) {
-                    result = ((Wrapper)result).unwrap();
-                }
-                return result;
+
+                return unwrap(result);
             } finally {
                 Context.exit();
             }
@@ -216,17 +206,8 @@ public class JSIntrospector extends UberspectImpl {
             Context.enter();
             try {
                 Object result = arr.get(index++, arr);
-                if (result == Undefined.instance ||
-                    result == Scriptable.NOT_FOUND) {
-                    result = null;
-                } else {
-                    if (!(result instanceof NativeJavaClass)) {
-                        while (result instanceof Wrapper) {
-                            result = ((Wrapper)result).unwrap();
-                        }
-                    }
-                }
-                return result;
+
+                return unwrap(result);
             } finally {
                 Context.exit();
             }
@@ -257,14 +238,8 @@ public class JSIntrospector extends UberspectImpl {
             Context.enter();
             try {
                 Object result = ScriptableObject.getProperty(scope, ids[index++].toString());
-                if (result == Undefined.instance || result == Scriptable.NOT_FOUND) {
-                    result = null;
-                } else if (!(result instanceof NativeJavaClass)) {
-                    while (result instanceof Wrapper) {
-                        result = ((Wrapper)result).unwrap();
-                    }
-                }
-                return result;
+
+                return unwrap(result);
             } finally {
                 Context.exit();
             }
@@ -333,5 +308,25 @@ public class JSIntrospector extends UberspectImpl {
     public VelPropertySet getPropertySet(Object obj, String identifier, Object arg, Info i) throws Exception {
         return !(obj instanceof Scriptable) ?
                 super.getPropertySet(obj, identifier, arg, i) : new JSPropertySet((Scriptable)obj, identifier);
+    }
+
+    private static Object unwrap(Object result) {
+        if (result == Undefined.instance || result == Scriptable.NOT_FOUND) {
+            return null;
+        }
+
+        if (!(result instanceof NativeJavaClass)) {
+            Object value;
+            while (result instanceof Wrapper) {
+                value = ((Wrapper) result).unwrap();
+                if (value == result) {
+                    break;
+                }
+
+                result = value;
+            }
+        }
+
+        return result;
     }
 }
