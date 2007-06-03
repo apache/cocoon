@@ -66,6 +66,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="SG" type="add">
+      Added JCR query transformer to perform queries on JCR repositories.
+    </action>
   </release>
  </changes>
 
