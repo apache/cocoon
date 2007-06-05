@@ -54,6 +54,9 @@ public class DispatcherServlet
     /** The servlet collector bean */
     private Map blockServletCollector;
 
+    /** Holds the mount prefix of the current request accessible by {@link DispatcherServlet.getDispatcherMountPrefix} */
+    private static ThreadLocal prefix = new ThreadLocal();
+    
     public void init() throws ServletException {
         this.log("Block dispatcher was initialized successfully.");        
     }
@@ -75,7 +78,7 @@ public class DispatcherServlet
             throw new ServletException("No block for " + req.getPathInfo());
         }
         // Create a dynamic proxy class that overwrites the getServletPath and
-        // getPathInfo methods to privide reasonable values in the called servlet
+        // getPathInfo methods to provide reasonable values in the called servlet
         // the dynamic proxy implements all interfaces of the original request
         HttpServletRequest request = (HttpServletRequest) Proxy.newProxyInstance(
         		req.getClass().getClassLoader(), 
@@ -89,7 +92,13 @@ public class DispatcherServlet
 	                " pathInfo=" + request.getPathInfo());
         }
         
-        servlet.service(request, res);
+        prefix.set(req.getServletPath());
+        try {
+            servlet.service(request, res);
+        }
+        finally {
+            prefix.remove();
+        }
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {
@@ -115,13 +124,16 @@ public class DispatcherServlet
 		return (Class[]) interfaces.toArray(new Class[interfaces.size()]);
 	}
 
-    public Map getBlockServletMap()
-    {
+    public Map getBlockServletMap() {
         if(this.blockServletCollector == null) {
             final ApplicationContext applicationContext =
                 WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
             this.blockServletCollector = (Map)applicationContext.getBean( "org.apache.cocoon.servletservice.spring.BlockServletMap" );
         }
         return blockServletCollector;
+    }
+    
+    public static String getDispatcherMountPrefix() {
+        return prefix.get().toString();
     }
 }
