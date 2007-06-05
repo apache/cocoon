@@ -51,7 +51,7 @@ import org.apache.fop.apps.FopFactory;
 public class FOPNGSerializer extends AbstractSerializer implements
   Configurable, CacheableProcessingComponent, Serviceable, URIResolver, Disposable {
 
-	protected SourceResolver resolver;
+    protected SourceResolver resolver;
 
     /**
      * Factory to create fop objects
@@ -81,7 +81,7 @@ public class FOPNGSerializer extends AbstractSerializer implements
      * Manager to get URLFactory from.
      */
     protected ServiceManager manager;
-	private Map rendererOptions;
+    private Map rendererOptions;
 
     /**
      * Set the component manager for this serializer.
@@ -99,7 +99,7 @@ public class FOPNGSerializer extends AbstractSerializer implements
      * Set the configurations for this serializer.
      */
     public void configure(Configuration conf) throws ConfigurationException {
-    	//should the content length be set
+        //should the content length be set
         this.setContentLength = conf.getChild("set-content-length").getValueAsBoolean(true);
 
         String configUrl = conf.getChild("user-config").getValue(null);
@@ -138,15 +138,15 @@ public class FOPNGSerializer extends AbstractSerializer implements
             Configuration[] parameters = confRenderer.getChildren("parameter");
             if (parameters.length > 0) {
                 rendererOptions = new HashMap();
-				for (int i = 0; i < parameters.length; i++) {
+                for (int i = 0; i < parameters.length; i++) {
                     String name = parameters[i].getAttribute("name");
                     String value = parameters[i].getAttribute("value");
 
                     if (getLogger().isDebugEnabled()) {
-                    	getLogger().debug("renderer " + String.valueOf(name) + " = " + String.valueOf(value));
+                        getLogger().debug("renderer " + String.valueOf(name) + " = " + String.valueOf(value));
                     }
                 }
-			}
+            }
         }
     }
 
@@ -167,17 +167,17 @@ public class FOPNGSerializer extends AbstractSerializer implements
         // Give the source resolver to Batik which is used by FOP
         //SourceProtocolHandler.setup(this.resolver);
 
-    	FOUserAgent userAgent = fopfactory.newFOUserAgent();
-    	if (this.rendererOptions != null) {
-    		userAgent.getRendererOptions().putAll(this.rendererOptions);
-    	}
-    	try {
-			this.fop = fopfactory.newFop(getMimeType(), userAgent, out);
-			setContentHandler(this.fop.getDefaultHandler());
-		} catch (FOPException e) {
-			getLogger().error("FOP setup failed", e);
-			throw new IOException("Unable to setup fop: " + e.getLocalizedMessage());
-		}
+        FOUserAgent userAgent = fopfactory.newFOUserAgent();
+        if (this.rendererOptions != null) {
+            userAgent.getRendererOptions().putAll(this.rendererOptions);
+        }
+        try {
+            this.fop = fopfactory.newFop(getMimeType(), userAgent, out);
+            setContentHandler(this.fop.getDefaultHandler());
+        } catch (FOPException e) {
+            getLogger().error("FOP setup failed", e);
+            throw new IOException("Unable to setup fop: " + e.getLocalizedMessage());
+        }
     }
 
     /**
@@ -220,8 +220,8 @@ public class FOPNGSerializer extends AbstractSerializer implements
     }
 
     //From URIResolver, copied from TraxProcessor
-	public javax.xml.transform.Source resolve(String href, String base) throws TransformerException {
-		if (getLogger().isDebugEnabled()) {
+    public javax.xml.transform.Source resolve(String href, String base) throws TransformerException {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("resolve(href = " + href + ", base = " + base + "); resolver = " + resolver);
         }
 
@@ -284,16 +284,15 @@ public class FOPNGSerializer extends AbstractSerializer implements
                 resolver.release(source);
         }
         return streamSource;
-	}
+    }
 
-	public void dispose() {
-		if (null!=manager) {
-			this.manager.release(this.resolver);
-			this.manager = null;
-		}
-		this.resolver = null;
-
-	}
+    public void dispose() {
+        if (null != manager) {
+            this.manager.release(this.resolver);
+            this.manager = null;
+        }
+        this.resolver = null;
+    }
 
     /**
      * An InputStream which releases the Cocoon/Avalon source from which the InputStream
