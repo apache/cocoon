@@ -312,7 +312,6 @@ public class FOPNGSerializer extends AbstractSerializer implements
         public void close() throws IOException {
             delegate.close();
             sourceResolver.release(source);
-            super.close();
         }
 
         public int read() throws IOException {
