@@ -24,6 +24,11 @@
     +-->
     <document>
       <body>
+        <release version="1.0.0-M4" date="2007-??-??" description="unreleased">
+          <action dev="gkossakowski" type="update" issue="COCOON-2073" due-to="Alexander Klimetschek">
+            Dojo toolkit upgraded to 0.4.3 version. It contains fix for security bug. See http://dojotoolkit.org/releaseNotes/0.4.3.
+          </action>
+        </release>
         <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
           <action dev="reinhard" type="add">
             Initial creation.
