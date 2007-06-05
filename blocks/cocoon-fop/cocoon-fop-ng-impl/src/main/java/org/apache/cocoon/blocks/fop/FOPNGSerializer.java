@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,7 @@
  */
 package org.apache.cocoon.blocks.fop;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +44,6 @@ import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
-import org.xml.sax.InputSource;
 
 /**
  * @version $Id$
@@ -108,7 +104,7 @@ public class FOPNGSerializer extends AbstractSerializer implements
 
         String configUrl = conf.getChild("user-config").getValue(null);
 
-        
+
         if (configUrl != null) {
             Source configSource = null;
             SourceResolver resolver = null;
@@ -131,7 +127,7 @@ public class FOPNGSerializer extends AbstractSerializer implements
                 }
             }
         }
-        
+
         fopfactory.setURIResolver(this);
 
         // Get the mime type.
@@ -145,7 +141,7 @@ public class FOPNGSerializer extends AbstractSerializer implements
 				for (int i = 0; i < parameters.length; i++) {
                     String name = parameters[i].getAttribute("name");
                     String value = parameters[i].getAttribute("value");
-                
+
                     if (getLogger().isDebugEnabled()) {
                     	getLogger().debug("renderer " + String.valueOf(name) + " = " + String.valueOf(value));
                     }
@@ -164,10 +160,10 @@ public class FOPNGSerializer extends AbstractSerializer implements
     /**
      * Create the FOP driver
      * Set the <code>OutputStream</code> where the XML should be serialized.
-     * @throws IOException 
+     * @throws IOException
      */
     public void setOutputStream(OutputStream out) throws IOException {
-        
+
         // Give the source resolver to Batik which is used by FOP
         //SourceProtocolHandler.setup(this.resolver);
 
@@ -222,13 +218,14 @@ public class FOPNGSerializer extends AbstractSerializer implements
     public boolean shouldSetContentLength() {
         return this.setContentLength;
     }
-    
+
     //From URIResolver, copied from TraxProcessor
 	public javax.xml.transform.Source resolve(String href, String base) throws TransformerException {
 		if (getLogger().isDebugEnabled()) {
             getLogger().debug("resolve(href = " + href + ", base = " + base + "); resolver = " + resolver);
         }
 
+        StreamSource streamSource = null;
         Source source = null;
         try {
             if (base == null || href.indexOf(":") > 1) {
@@ -255,13 +252,11 @@ public class FOPNGSerializer extends AbstractSerializer implements
                 }
             }
 
-            InputSource is = getInputSource(source);
-
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("source = " + source + ", system id = " + source.getURI());
             }
 
-            return new StreamSource(is.getByteStream(), is.getSystemId());
+            streamSource = new StreamSource(new ReleaseSourceInputStream(source.getInputStream(), source, resolver), source.getURI());
         } catch (SourceException e) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Failed to resolve " + href + "(base = " + base + "), return null", e);
@@ -283,31 +278,75 @@ public class FOPNGSerializer extends AbstractSerializer implements
 
             return null;
         } finally {
-            resolver.release(source);
+            // If streamSource is not null, the source should only be released when the input stream
+            // is not needed anymore.
+            if (streamSource == null)
+                resolver.release(source);
         }
+        return streamSource;
 	}
-	
-    /**
-     * Return a new <code>InputSource</code> object that uses the
-     * <code>InputStream</code> and the system ID of the <code>Source</code>
-     * object.
-     * 
-     * @throws IOException
-     *             if I/O error occured.
-     */
-    private static InputSource getInputSource(final Source source) throws IOException, SourceException {
-        final InputSource newObject = new InputSource(source.getInputStream());
-        newObject.setSystemId(source.getURI());
-        return newObject;
-    }
-	
+
 	public void dispose() {
 		if (null!=manager) {
 			this.manager.release(this.resolver);
 			this.manager = null;
 		}
 		this.resolver = null;
-		
+
 	}
+
+    /**
+     * An InputStream which releases the Cocoon/Avalon source from which the InputStream
+     * has been retrieved when the stream is closed.
+     */
+    public static class ReleaseSourceInputStream extends InputStream {
+        private InputStream delegate;
+        private Source source;
+        private SourceResolver sourceResolver;
+
+        private ReleaseSourceInputStream(InputStream delegate, Source source, SourceResolver sourceResolver) {
+            this.delegate = delegate;
+            this.source = source;
+            this.sourceResolver = sourceResolver;
+        }
+
+        public void close() throws IOException {
+            delegate.close();
+            sourceResolver.release(source);
+            super.close();
+        }
+
+        public int read() throws IOException {
+            return delegate.read();
+        }
+
+        public int read(byte b[]) throws IOException {
+            return delegate.read(b);
+        }
+
+        public int read(byte b[], int off, int len) throws IOException {
+            return delegate.read(b, off, len);
+        }
+
+        public long skip(long n) throws IOException {
+            return delegate.skip(n);
+        }
+
+        public int available() throws IOException {
+            return delegate.available();
+        }
+
+        public synchronized void mark(int readlimit) {
+            delegate.mark(readlimit);
+        }
+
+        public synchronized void reset() throws IOException {
+            delegate.reset();
+        }
+
+        public boolean markSupported() {
+            return delegate.markSupported();
+        }
+    }
 
 }
