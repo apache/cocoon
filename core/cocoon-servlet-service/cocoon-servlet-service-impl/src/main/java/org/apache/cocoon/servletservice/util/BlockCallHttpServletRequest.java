@@ -55,6 +55,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     private String method;
     private Map headers = new HashMap();
     
+    /**
+     * The <code>callingRequest</code> holds reference to the request object that makes a servlet call.
+     */
+    private HttpServletRequest callingRequest;
+    
     private ServletInputStream requestBody;
     
 	/**
@@ -62,9 +67,14 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
 	 */
 	final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
-    public BlockCallHttpServletRequest(URI uri) {
+    /**
+     * @param uri points to the called servlet
+     * @param callingRequest reference to the request object that makes a servlet call
+     */
+    public BlockCallHttpServletRequest(URI uri, HttpServletRequest callingRequest) {
         this.uri = uri;
         this.parameters = new RequestParameters(this.uri.getQuery());
+        this.callingRequest = callingRequest;
     }
 
     /* (non-Javadoc)
@@ -115,7 +125,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.http.HttpServletRequestWrapper#getContextPath()
      */
     public String getContextPath() {
-        return "";
+        return callingRequest.getContextPath();
     }
 
     /* (non-Javadoc)
