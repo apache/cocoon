@@ -17,24 +17,36 @@
 -->
 
 <!--+
-    | Main samples page
+    | Convert the output of the directory generator into a samples file.
     |
-    | CVS $Id$
+    | $Id$
     +-->
 
-<samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+<xsl:stylesheet version="1.0" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  xmlns:dir="http://apache.org/cocoon/directory/2.0">
 
-  <group name="Block Samples">
-    <sample name="Blocks with samples" href="blocks/">
-      TODO: all samples are now in blocks, this page should include links to the
-      blocks that we want to show here: core-samples-main, forms. tour, others?
+  <xsl:template match="/">
+    <samples name="Cocoon Blocks">
+      <xsl:apply-templates/>
+    </samples>    
+  </xsl:template>
+  
+  <xsl:template match="group">
+    <xsl:copy>
+      <xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
+      <xsl:apply-templates/>
+    </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="sample">
+    <sample href="../blocks-test/{../../../../@name}/" name="{@name}">
+      <xsl:copy-of select="*|text()"/>
     </sample>
-  </group>
-
-  <group name="Test pages">
-    <sample name="Automated tests" href="test/">
-      These pages are used by the HtmlUnit automated tests.
-    </sample>
-  </group>
-
-</samples>
+  </xsl:template>
+  
+  <xsl:template match="*|@*|node()" priority="-2">
+     <xsl:apply-templates select="@*|node()"/>
+  </xsl:template>
+  
+</xsl:stylesheet>
