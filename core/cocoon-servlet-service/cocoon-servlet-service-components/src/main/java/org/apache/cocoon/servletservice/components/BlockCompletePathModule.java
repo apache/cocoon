@@ -24,7 +24,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.servletservice.DispatcherServlet;
 
 /**
  * This module provides almost exactly the same functionality as {@link BlockPathModule}. The only difference is that
@@ -48,12 +47,7 @@ public class BlockCompletePathModule implements InputModule {
 	 * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
 	 */
 	public Object getAttribute(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
-	    final String prefix = DispatcherServlet.getDispatcherMountPrefix();
-	    if( prefix == null || prefix.length() == 0 )
-	    {
-	        return ObjectModelHelper.getRequest(objectModel).getContextPath() + blockPathModule.getAttribute(name, modeConf, objectModel);
-	    }
-        return DispatcherServlet.getDispatcherMountPrefix() + blockPathModule.getAttribute(name, modeConf, objectModel);
+		return ObjectModelHelper.getRequest(objectModel).getContextPath() + blockPathModule.getAttribute(name, modeConf, objectModel);
 	}
 
 	/* (non-Javadoc)
