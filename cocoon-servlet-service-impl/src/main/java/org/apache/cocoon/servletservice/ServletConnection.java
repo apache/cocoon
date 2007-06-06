@@ -30,6 +30,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.cocoon.callstack.environment.CallFrameHelper;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -92,7 +93,7 @@ public final class ServletConnection {
         if (this.context == null)
             throw new MalformedURLException("Must be used in a block context " + url);
 
-        this.request = new BlockCallHttpServletRequest(blockURI);
+        this.request = new BlockCallHttpServletRequest(blockURI, CallFrameHelper.getRequest());
         this.response = new BlockCallHttpServletResponse();
         
         this.connected = false;

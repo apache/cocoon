@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.servletservice.util.ServletContextWrapper;
 import org.apache.excalibur.source.Source;
@@ -526,13 +527,13 @@ public class ServletServiceContext extends ServletContextWrapper {
                     // It is important to set the current context each time
                     // a new context is entered, this is used for the servlet
                     // protocol
-                    CallStackHelper.enterServlet(ServletServiceContext.this);
+                    CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)response);
                 } else {
                     // A super servlet service should be called in the context of
                     // the called servlet service to get polymorphic calls resolved
                     // in the right way. We still need to register the
                     // current context for resolving super calls relative it.
-                    CallStackHelper.enterSuperServlet(ServletServiceContext.this);
+                    CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)response);
                 }                        
                 ServletServiceContext.this.servlet.service(request, response);
             } finally {

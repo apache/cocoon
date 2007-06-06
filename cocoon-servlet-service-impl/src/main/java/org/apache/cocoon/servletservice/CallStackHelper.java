@@ -18,6 +18,8 @@ package org.apache.cocoon.servletservice;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.callstack.CallFrame;
 import org.apache.cocoon.callstack.CallStack;
@@ -40,11 +42,11 @@ public class CallStackHelper {
      * <p>This method should never raise an exception, except when the
      * parameters are not set!</p>
      *
-     * @throws ServletException if block is null
+     * @throws ServletException if at least one of the parameters is null
      */
-    public static void enterServlet(ServletContext context)
+    public static void enterServlet(ServletContext context, HttpServletRequest request, HttpServletResponse response)
     throws ServletException {
-        enterServlet(context, false);
+        enterServlet(context, request, response, false);
     }
 
     /**
@@ -53,22 +55,25 @@ public class CallStackHelper {
      * <p>This method should never raise an exception, except when the
      * parameters are not set!</p>
      *
-     * @throws ServletException if the context is null
+     * @throws ServletException if at least one of the parameters is null
      */
-    public static void enterSuperServlet(ServletContext context)
+    public static void enterSuperServlet(ServletContext context, HttpServletRequest request, HttpServletResponse response)
     throws ServletException {
-        enterServlet(context, true);
+        enterServlet(context, request, response, true);
     }
 
-    private static void enterServlet(ServletContext context, boolean superCall)
+    private static void enterServlet(ServletContext context, HttpServletRequest request, HttpServletResponse response, boolean superCall)
     throws ServletException {
-        if (null == context) {
-            throw new ServletException("The context is not set.");
-        }
+        if (null == context) throw new ServletException("The context is not set.");
+        if (null == request) throw new ServletException("The request is not set.");
+        if (null == response) throw new ServletException("The response is not set.");
+        
 
         CallStack.enter();
         CallStack.getCurrentFrame().setAttribute(SUPER_CALL, new Boolean(superCall));
         CallFrameHelper.setContext(context);
+        CallFrameHelper.setRequest(request);
+        CallFrameHelper.setResponse(response);
     }
 
     /**
