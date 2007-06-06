@@ -26,6 +26,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.AbstractSource;
 
+/**
+ * The <code>ServletServiceConsumerSource</code> makes available the data that has been passed to a sitemap service.
+ * In a sitemap the source should be referenced with <code>service-consumer:</code> syntax.<br>
+ * FIXME: Provide a link to the documents discussing servlet (and sitemap) services.
+ */
 public class ServletServiceConsumerSource extends AbstractSource {
 	
 	private Log logger = LogFactory.getLog(getClass());
@@ -36,7 +41,7 @@ public class ServletServiceConsumerSource extends AbstractSource {
 		try {
 			requestBody = request.getInputStream();
 		} catch (Exception e) {
-			logger.error("Error during obtaning request's body (POST data)", e);
+			logger.error("Error during obtaining request's body (POST data)", e);
 		}
 	}
 

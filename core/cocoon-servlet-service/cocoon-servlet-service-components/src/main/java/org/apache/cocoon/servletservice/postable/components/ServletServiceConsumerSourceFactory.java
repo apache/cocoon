@@ -26,6 +26,10 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 
+/**
+ * A factory for <code>service-consumer:</code> source.
+ * @see ServletServiceConsumerSource
+ */
 public class ServletServiceConsumerSourceFactory implements SourceFactory {
 	
 	private ProcessInfoProvider processInfoProvider;
