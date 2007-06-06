@@ -60,7 +60,7 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="stylesheets/system/xml2html.xslt"/>
+      <map:transform src="stylesheets/xml2html.xslt"/>
       <map:serialize type="html"/>
     </map:view>
 
@@ -306,7 +306,7 @@
 
         <map:when test="not-found">
           <map:generate type="exception"/>
-          <map:transform src="stylesheets/system/exception2html.xslt">
+          <map:transform src="stylesheets/exception2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="realPath" value="{realpath:}"/>
             <map:parameter name="pageTitle" value="Resource not found"/>
@@ -316,7 +316,7 @@
 
         <map:when test="invalid-continuation">
           <map:generate type="exception"/>
-          <map:transform src="stylesheets/system/exception2html.xslt">
+          <map:transform src="stylesheets/exception2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="realPath" value="{realpath:}"/>
             <map:parameter name="pageTitle" value="Invalid Continuation"/>
@@ -326,7 +326,7 @@
 
         <map:otherwise>
           <map:generate type="exception"/>
-          <map:transform src="stylesheets/system/exception2html.xslt">
+          <map:transform src="stylesheets/exception2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="realPath" value="{realpath:}"/>
           </map:transform>

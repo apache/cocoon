@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -15,12 +15,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:pipelines>
     <map:pipeline>
-      <!-- this sitemap is mounted with pass-through, but contains
-         no matcher so that we go back to the parent sitemap -->
+      <map:match pattern="*/**">
+        <map:mount uri-prefix="{1}" src="blockcontext:/{1}/"/>
+      </map:match>
+    </map:pipeline>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:generate type="xpathtraversable" src="blockcontext:/"> 
+          <map:parameter name="xpath" value="/xsamples/group"/> 
+          <map:parameter name="depth" value="2"/>
+          <map:parameter name="xmlFiles" value="\.xsamples$"/> 
+        </map:generate> 
+        <map:transform src="group2samples.xsl"/>
+        <map:transform src="context://stylesheets/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize type="html"/>        
+      </map:match>
     </map:pipeline>
   </map:pipelines>
 </map:sitemap>
