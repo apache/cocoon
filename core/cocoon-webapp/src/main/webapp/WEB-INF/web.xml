@@ -170,7 +170,7 @@
   -->
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
-    <url-pattern>/blocks-test/*</url-pattern>
+    <url-pattern>/blocks/*</url-pattern>
   </servlet-mapping>
 
   <!-- various MIME type mappings ====================================== -->
