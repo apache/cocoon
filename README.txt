@@ -15,7 +15,7 @@ Maven 2 must be installed (at least 2.0.6).
 
 MAVEN REPOSITORY MIRRORS
 ------------------------
-Using a Maven repository isn't necessary anymore.
+Using a Maven mirror isn't necessary anymore.
 
 
 HOW TO BUILD THE COCOON WEBAPP
