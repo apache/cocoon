@@ -33,7 +33,7 @@
   </parent>
   <artifactId>cocoon-fop-ng-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon FOP 0.92 Block Implementation</name>
+  <name>Cocoon FOP 0.9x Block Implementation</name>
   
   <dependencies>
     <dependency>

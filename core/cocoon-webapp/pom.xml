@@ -163,7 +163,8 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-fop-sample</artifactId>
         </dependency>
-        <!-- Does not build yet
+        <!-- Disabled because classloading conflicts prevent it from running
+             at the same time as the "legacy" FOP block.
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-fop-ng-sample</artifactId>

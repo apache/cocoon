@@ -33,7 +33,7 @@
   </parent>
   <artifactId>cocoon-fop-ng-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>  
-  <name>Cocoon FOP 0.92 Block Samples</name>
+  <name>Cocoon FOP 0.9x Block Samples</name>
 
   <dependencies>
     <dependency>

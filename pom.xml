@@ -2453,7 +2453,7 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <!-- TODO: Next two have same artifactId but different groupId as well as version ?? -->
+      <!-- FOP 0.20.5 dependency for legacy cocoon-fop-impl block -->
       <dependency>
         <groupId>fop</groupId>
         <artifactId>fop</artifactId>
@@ -2477,6 +2477,7 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <!-- FOP 0.9x dependency for cocoon-fop-ng-impl block -->
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
