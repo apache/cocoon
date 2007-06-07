@@ -54,6 +54,8 @@ public class DispatcherServlet
     /** The servlet collector bean */
     private Map blockServletCollector;
 
+    private static ThreadLocal prefix = new ThreadLocal();
+    
     public void init() throws ServletException {
         this.log("Block dispatcher was initialized successfully.");        
     }
@@ -89,7 +91,13 @@ public class DispatcherServlet
 	                " pathInfo=" + request.getPathInfo());
         }
         
-        servlet.service(request, res);
+        prefix.set(req.getServletPath());
+        try {
+            servlet.service(request, res);
+        }
+        finally {
+            prefix.set(null);
+        }
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {
