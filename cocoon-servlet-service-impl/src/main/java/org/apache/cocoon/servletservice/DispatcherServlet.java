@@ -51,6 +51,10 @@ public class DispatcherServlet
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
     
+    /** The startup date of the Spring application context used to setup the  {@link #blockServletCollector}. 
+     *  TODO: Use a better way to reload {@link #blockServletCollector} when RCL is used, see COCOON-2076 **/
+    private long applicationContextStartDate;
+    
     /** The servlet collector bean */
     private Map blockServletCollector;
     
@@ -115,12 +119,11 @@ public class DispatcherServlet
 		return (Class[]) interfaces.toArray(new Class[interfaces.size()]);
 	}
 
-    public Map getBlockServletMap()
-    {
-        if(this.blockServletCollector == null) {
-            final ApplicationContext applicationContext =
-                WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-            this.blockServletCollector = (Map)applicationContext.getBean( "org.apache.cocoon.servletservice.spring.BlockServletMap" );
+    public Map getBlockServletMap() {
+    	final ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());    
+        if(this.blockServletCollector == null || applicationContext.getStartupDate() != this.applicationContextStartDate) {
+        	this.applicationContextStartDate = applicationContext.getStartupDate();
+        	this.blockServletCollector = (Map)applicationContext.getBean( "org.apache.cocoon.servletservice.spring.BlockServletMap" );
         }
         return blockServletCollector;
     }
