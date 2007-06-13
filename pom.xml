@@ -3076,6 +3076,7 @@
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.urlRelativizer>../../../../</docs.urlRelativizer>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
+    <docs.mode>online</docs.mode>
     <!-- Path and version properties: sites -->
     <docs.m.site-main.relPath/>
     <docs.m.site-22.relPath>2.2/</docs.m.site-22.relPath>
@@ -3153,9 +3154,9 @@
     <!--docs.m.javaflow.version>1.0</docs.m.javaflow.version>
     <docs.m.javaflow.relPath>2.2/blocks/${docs.m.javaflow.version}/</docs.m.javaflow.relPath>
     <docs.m.lucene.version>1.0</docs.m.lucene.version>
-    <docs.m.lucene.relPath>2.2/blocks/${docs.m.lucene.version}/</docs.m.lucene.relPath>    
+    <docs.m.lucene.relPath>2.2/blocks/${docs.m.lucene.version}/</docs.m.lucene.relPath>
     <docs.m.profiler.version>1.0</docs.m.profiler.version>
-    <docs.m.profiler.relPath>2.2/blocks/profiler/${docs.m.profiler.version}/</docs.m.profiler.relPath>        
+    <docs.m.profiler.relPath>2.2/blocks/profiler/${docs.m.profiler.version}/</docs.m.profiler.relPath>
     <docs.m.profiler.version>1.0</docs.m.profiler.version>
     <docs.m.profiler.relPath>2.2/blocks/${docs.m.profiler.version}/</docs.m.profiler.relPath>
     <docs.m.portal.version>1.0</docs.m.portal.version>
