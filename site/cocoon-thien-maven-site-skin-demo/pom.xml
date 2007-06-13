@@ -23,18 +23,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-thien-maven-site-skin-demo</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  
+
   <name>Cocoon Skin Demo</name>
-  
+
   <properties>
-    <docs.name>Cocoon 2.2</docs.name>    
-    <docs.urlRelativizer>../../../</docs.urlRelativizer>    
-  </properties>    
-  
+    <docs.name>Cocoon 2.2</docs.name>
+    <docs.urlRelativizer>../../../</docs.urlRelativizer>
+    <docs.mode>offline</docs.mode>
+  </properties>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -45,8 +46,8 @@
         </plugin>
       </plugins>
     </pluginManagement>
-  </build>    
-  
+  </build>
+
   <reporting>
     <plugins>
       <plugin>
@@ -65,6 +66,6 @@
       </plugin>
     </plugins>
   </reporting>
-      
+
 
 </project>
