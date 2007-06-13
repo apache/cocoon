@@ -17,11 +17,11 @@
   specific language governing permissions and limitations
   under the License.
 -->
-#macro ( links $links ) 
+#macro ( links $links )
   #set ( $counter = 0 )
-  #if ( $links.size() > 0 ) 
+  #if ( $links.size() > 0 )
    |
-  #end  
+  #end
   #foreach( $item in $links )
     #set ( $counter = $counter + 1 )
     #set ( $currentItemHref = $PathTool.calculateLink( $item.href, $relativePath ) )
@@ -54,7 +54,7 @@
   #set ( $currentItemHref = $currentItemHref.replaceAll( "\\", "/" ) )
 
   #if ( $item && $item.items && $item.items.size() > 0 )
- 
+
 ##    #if ( $item.collapse == false )
 ##      #set ( $collapse = "expanded" )
 ##    #else
@@ -62,9 +62,9 @@
 ##      #set ( $collapse = "collapsed" )
 ##    #end
 
-## start Cocoon specific modification    
+## start Cocoon specific modification
     #set ( $collapse = "class='menuCollapse'" )
-## end Cocoon specific modification    
+## end Cocoon specific modification
 
     #set ( $display = false )
     #displayTree( $display $item )
@@ -117,13 +117,13 @@
   #if ( $project.getProperties().get("docs.urlRelativizer") == "" || $project.getProperties().get("docs.urlRelativizer") == "./"  )
     <li class="menuVersions">Versions
       <ul>
-				<li><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></li>      
-			  <li><a href="$project.getProperties().get("docs.urlRelativizer")2.1/">Cocoon 2.1</a></li>
-			  <li><a href="$project.getProperties().get("docs.urlRelativizer")2.0/">Cocoon 2.0</a></li>
-			  <li><a href="$project.getProperties().get("docs.urlRelativizer")1.x/">Cocoon 1.x</a></li>			  
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")2.1/">Cocoon 2.1</a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")2.0/">Cocoon 2.0</a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")1.x/">Cocoon 1.x</a></li>
       </ul>
     </li>
-  #end    
+  #end
   </ul>
 #end
 
@@ -141,6 +141,11 @@
       ${project.organization.name}
     #end
   #end
+  <br/>
+  #set ( $format = "dd/MM/yyyy HH:mm" )
+  $dateFormat.applyPattern( $format )
+  #set ( $dateToday = $dateFormat.format( $currentDate ) )
+  $i18n.getString( "site-renderer", $locale, "template.lastpublished" ): $dateToday
 #end
 
 #macro ( poweredByLogo $poweredBy )
@@ -185,23 +190,23 @@
 #end
 
 #macro ( title )
-  #if ( $decoration.name ) 
+  #if ( $decoration.name )
     $decoration.name
   #else
-    #if ( $project.getProperties().get("docs.name") ) 
+    #if ( $project.getProperties().get("docs.name") )
       $project.getProperties().get("docs.name")
-    #else 
+    #else
       #if ( $project.name )
-	      $project.name
-	  #end
+        $project.name
+    #end
     #end
   #end
 #end
 
-#macro ( nameAndVersion ) 
+#macro ( nameAndVersion )
   #title()
   #if ( $project.getProperties().get("docs.version") )
-  	$project.getProperties().get("docs.version")
+    $project.getProperties().get("docs.version")
   #end
 #end
 
@@ -222,39 +227,43 @@
   </head>
   <body>
     <div id="breadtrail">
-     	<p><a href="http://www.apache.org">Apache</a> &raquo; <a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon</a> &raquo;</p>
+       <p><a href="http://www.apache.org">Apache</a> &raquo; <a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon</a> &raquo;</p>
     </div>
     <div id="top">
       <div id="header">
-      		<div class="projectlogo">
-		  	     <a href="$project.getProperties().get("docs.urlRelativizer")"><img class="logoImage" 
-			         src="$PathTool.calculateLink( "images/cocoon_logo.jpg", $relativePath )"
-			          alt="Apache Cocoon" border="0" /></a>
-		      </div>
-		      <div class="grouplogo">
-			       <p class="grouptitle"><a href="$project.getProperties().get("docs.urlRelativizer")">The Apache Cocoon Project</a><img 
-			         src="$PathTool.calculateLink( "images/apache-logo.jpg", $relativePath )" alt="Cocoon Project Logo" /></p>
-  			     <form class="searchbox" action="http://www.google.com/search" method="get">
-        				<input value="cocoon.apache.org" name="sitesearch" type="hidden" />
-				        <input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google" />&nbsp; 
-				        <input class="searchboxsubmit" name="Search" value="Search" type="submit" />
-			       </form>
-	       </div>
-		     </div>		     
-		     <div id="projectBar">
-		       <p class="cocoonHome"><a href="$project.getProperties().get("docs.urlRelativizer")"><img 
-		       src="$PathTool.calculateLink( "images/pmc-home.gif", $relativePath )" 
-		       alt="Back to Apache Cocoon homepage" 
-		       border="0" title="Back to Apache Cocoon homepage" /></a></p>
-		       <h1 class="projectTitle"><a href="$project.getProperties().get("docs.urlRelativizer")">#nameAndVersion()</a></h1>
-		       <ul class="projectList">
-			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></li>
-			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Cocoon Core [2.2]</a></li>
-			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Cocoon Blocks [2.2]</a></li>
-			        <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins [2.]</a></li>
-	        	</ul>
-	       </div>
-      	 <div class="projectBarClear"><!-- --></div>
+          <div class="projectlogo">
+             <a href="$project.getProperties().get("docs.urlRelativizer")"><img class="logoImage"
+               src="$PathTool.calculateLink( "images/cocoon_logo.jpg", $relativePath )"
+                alt="Apache Cocoon" border="0" /></a>
+          </div>
+          <div class="grouplogo">
+             <p class="grouptitle"><a href="$project.getProperties().get("docs.urlRelativizer")">The Apache Cocoon Project</a><img
+               src="$PathTool.calculateLink( "images/apache-logo.jpg", $relativePath )" alt="Cocoon Project Logo" /></p>
+             #if( $project.getProperties().get("docs.mode") == "online")
+               <form class="searchbox" action="http://www.google.com/search" method="get">
+                 <input value="cocoon.apache.org" name="sitesearch" type="hidden" />
+                 <input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google" />&nbsp;
+                 <input class="searchboxsubmit" name="Search" value="Search" type="submit" />
+               </form>
+             #end
+         </div>
+         </div>
+         <div id="projectBar">
+           <p class="cocoonHome"><a href="$project.getProperties().get("docs.urlRelativizer")"><img
+           src="$PathTool.calculateLink( "images/pmc-home.gif", $relativePath )"
+           alt="Back to Apache Cocoon homepage"
+           border="0" title="Back to Apache Cocoon homepage" /></a></p>
+           <h1 class="projectTitle"><a href="$project.getProperties().get("docs.urlRelativizer")">#nameAndVersion()</a></h1>
+           #if( $project.getProperties().get("docs.mode") == "online")
+              <ul class="projectList">
+                <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></li>
+                <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Core <span class="pl-version-small">2.2</span></a></li>
+                <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Blocks <span class="pl-version-small">2.2</span></a></li>
+                <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins <span class="pl-version-small">2.2</span></a></li>
+              </ul>
+            #end
+         </div>
+         <div class="projectBarClear"><!-- --></div>
       </div>
 <!-- end of top -->
 
@@ -263,13 +272,13 @@
 <!--
        #poweredByLogo( $decoration.poweredBy )
        <div id="lastPublished">
-	        #set ( $format = "dd/MM/yyyy HH:mm" )
-	        $dateFormat.applyPattern( $format )
-	        #set ( $dateToday = $dateFormat.format( $currentDate ) )  
+          #set ( $format = "dd/MM/yyyy HH:mm" )
+          $dateFormat.applyPattern( $format )
+          #set ( $dateToday = $dateFormat.format( $currentDate ) )
          $i18n.getString( "site-renderer", $locale, "template.lastpublished" ): $dateToday
        </div>
 -->
-				 $bodyContent
+         $bodyContent
     </div>
     <!-- end of content -->
     <div id="footer">
@@ -280,6 +289,6 @@
     <script type="text/javascript">
       _uacct = "UA-1740622-3";
       urchinTracker();
-    </script>    
+    </script>
   </body>
 </html>
