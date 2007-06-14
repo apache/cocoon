@@ -76,7 +76,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @version $Id$
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
-        implements Initializable {
+                                       implements Initializable {
 
     /**
      * A long value is stored under this key in each top level JavaScript
@@ -139,10 +139,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             size.height *= 0.75;
             db.setSize(size);
             db.setExitAction(new Runnable() {
-                    public void run() {
-                        db.setVisible(false);
-                    }
-                });
+                public void run() {
+                    db.setVisible(false);
+                }
+            });
             db.setOptimizationLevel(OPTIMIZATION_LEVEL);
             db.setVisible(true);
             debugger = db;
@@ -202,7 +202,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         final String scopeID = USER_GLOBAL_SCOPE + getInterpreterID();
         final Request request = ObjectModelHelper.getRequest(this.processInfoProvider.getObjectModel());
 
-        ThreadScope scope = null;
+        ThreadScope scope;
 
         // Get/create the scope attached to the current context
         Session session = request.getSession(false);
@@ -476,7 +476,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             synchronized (compiledScripts) {
                 ScriptSourceEntry entry =
                     (ScriptSourceEntry)compiledScripts.get(src.getURI());
-                Script compiledScript = null;
+                Script compiledScript;
                 if (entry == null) {
                     compiledScripts.put(src.getURI(),
                             entry = new ScriptSourceEntry(src));
@@ -500,19 +500,19 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             Reader reader = encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
             reader = new BufferedReader(reader);
             Script compiledScript = cx.compileReader(reader,
-                    src.getURI(), 1, null);
+                                                     src.getURI(), 1, null);
             return compiledScript;
         } finally {
             is.close();
         }
     }
-    
+
     // A charset name can be up to 40 characters taken from the printable characters of US-ASCII
     // (see http://www.iana.org/assignments/character-sets). So reading 100 bytes should be more than enough.
     private final static int ENCODING_BUF_SIZE = 100;
     // Match 'encoding = xxxx' on the first line
     REProgram encodingRE = new RECompiler().compile("^.*encoding\\s*=\\s*([^\\s]*)");
-    
+
     /**
      * Find the encoding of the stream, or null if not specified
      */
@@ -522,7 +522,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         int len = is.read(buffer, 0, buffer.length);
         // and push them back
         is.unread(buffer, 0, len);
-        
+
         // Interpret them as an ASCII string
         String str = new String(buffer, 0, len, "ASCII");
         RE re = new RE(encodingRE);
@@ -550,7 +550,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(new JSErrorReporter(getLogger()));
-        
+
         LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
         if (!enableDebugger) {
             //FIXME: add a "tee" debugger that allows both to be used simultaneously
@@ -589,7 +589,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     cocoon.setParameters(parameters);
 
                     // Resolve function name
-                    // 
+                    //
                     Object fun;
                     try {
                         fun = context.compileString(funName, null, 1, null).exec (context, thrScope);
@@ -712,7 +712,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * eventually matched pipeline to the specified outputstream.
      *
      * @param uri The URI for which the request should be generated.
-     * @param biz Extra data associated with the subrequest.
+     * @param bizData Extra data associated with the subrequest.
      * @param out An OutputStream where the output should be written to.
      * @exception Exception If an error occurs.
      */
