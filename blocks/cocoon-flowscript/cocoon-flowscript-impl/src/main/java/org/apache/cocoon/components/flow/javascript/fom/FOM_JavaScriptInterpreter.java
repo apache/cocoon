@@ -600,12 +600,12 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
                     thrScope.setLock(true);
                     ScriptRuntime.call(context, fun, thrScope, new Object[0], thrScope);
-                } catch (JavaScriptException ex) {
-                    throw locationTracker.getException("Error calling flowscript function " + funName, ex);
-                } catch (EcmaError ee) {
-                    throw locationTracker.getException("Error calling function " + funName, ee);
-                } catch (WrappedException ee) {
-                    throw locationTracker.getException("Error calling function " + funName, ee);
+                } catch (JavaScriptException e) {
+                    throw locationTracker.getException("Error calling flowscript function " + funName, e);
+                } catch (EcmaError e) {
+                    throw locationTracker.getException("Error calling function " + funName, e);
+                } catch (WrappedException e) {
+                    throw locationTracker.getException("Error calling function " + funName, e);
                 }
             } finally {
                 thrScope.setLock(false);
@@ -680,10 +680,12 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 try {
                     ScriptableObject.callMethod(cocoon,
                                                 "handleContinuation", args);
-                } catch (JavaScriptException ex) {
-                    throw locationTracker.getException("Error calling continuation", ex);
-                } catch (EcmaError ee) {
-                    throw locationTracker.getException("Error calling continuation", ee);
+                } catch (JavaScriptException e) {
+                    throw locationTracker.getException("Error calling continuation", e);
+                } catch (EcmaError e) {
+                    throw locationTracker.getException("Error calling continuation", e);
+                } catch (WrappedException e) {
+                    throw locationTracker.getException("Error calling continuation", e);
                 }
             } finally {
                 kScope.setLock(false);
