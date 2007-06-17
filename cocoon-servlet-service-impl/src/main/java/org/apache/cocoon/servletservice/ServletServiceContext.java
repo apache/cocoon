@@ -51,7 +51,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 /**
  * @version $Id$
  */
-public class ServletServiceContext extends ServletContextWrapper {
+public class ServletServiceContext extends ServletContextWrapper implements Absolutizable {
     
     public static final String SUPER = "super";
 
