@@ -22,7 +22,7 @@
 
 	<bean name="org.apache.cocoon.components.modules.input.InputModule/block-property"
 	      class="org.apache.cocoon.servletservice.components.BlockPropertyModule">
-	    <!--property name="servletContext" ref="javax.servlet.ServletContext/baseframe"/-->
+	    <property name="servletContext" ref="javax.servlet.ServletContext/baseframe"/>
     </bean>
 
 </beans>
