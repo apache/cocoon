@@ -27,8 +27,7 @@ import javax.servlet.ServletContext;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.servletservice.CallStackHelper;
-import org.apache.cocoon.servletservice.ServletServiceContext;
+import org.apache.cocoon.servletservice.Absolutizable;
 
 /**
  * BlockPathModule returns the absolute path of a block protocol path.
@@ -45,10 +44,6 @@ public class BlockPathModule implements InputModule {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        // FIXME Will be removed when the scoped proxy work
-        ServletContext servletContext = this.servletContext;
-        if (servletContext == null)
-            servletContext = CallStackHelper.getBaseServletContext();
         String absoluteURI = null;
         /* No relative block paths yet
         Environment env = EnvironmentHelper.getCurrentEnvironment();
@@ -59,7 +54,7 @@ public class BlockPathModule implements InputModule {
         try {
             // URI uri = ServletSource.resolveURI(new URI(name), new URI(null, null, baseURI, null));
             URI uri = new URI(name);
-            absoluteURI = ((ServletServiceContext)servletContext).absolutizeURI(uri).toString();
+            absoluteURI = ((Absolutizable)this.servletContext).absolutizeURI(uri).toString();
         } catch (URISyntaxException e) {
             throw new ConfigurationException("Couldn't absolutize " + name +
                     ". Make sure that the configuration of your servlet-service " +

@@ -16,9 +16,8 @@
  */
 package org.apache.cocoon.servletservice.spring;
 
-import javax.servlet.ServletContext;
-
 import org.apache.cocoon.servletservice.CallStackHelper;
+import org.apache.cocoon.servletservice.ServletServiceContext;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
@@ -39,7 +38,9 @@ public final class BaseServletContextFactoryBean implements FactoryBean {
      * @see org.springframework.beans.factory.FactoryBean#getObjectType()
      */
     public Class getObjectType() {
-        return ServletContext.class;
+        // A ServletServiceContext rather than a ServletContext is needed to make the
+        // Absolutizable interface available through the ScopedProxyFactoryBean
+        return ServletServiceContext.class;
     }
 
     /* (non-Javadoc)

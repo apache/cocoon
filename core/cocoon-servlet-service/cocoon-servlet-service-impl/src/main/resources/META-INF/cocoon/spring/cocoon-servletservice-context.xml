@@ -26,7 +26,7 @@
     <bean name="javax.servlet.ServletContext/baseframe"
           class="org.apache.cocoon.servletservice.spring.BaseServletContextFactoryBean"
           scope="call">
-        <!--aop:scoped-proxy proxy-target-class="false"/-->
+        <aop:scoped-proxy proxy-target-class="false"/>
     </bean>
 
 </beans>
