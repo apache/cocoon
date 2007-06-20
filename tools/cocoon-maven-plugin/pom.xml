@@ -26,13 +26,13 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>    
+    <version>5-SNAPSHOT</version>
   </parent>
   <artifactId>cocoon-maven-plugin</artifactId>
   <version>1.0.0-M2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>Cocoon Maven 2 Plugin</name>
-  
+
   <dependencies>
     <!-- utility libs -->
     <dependency>
@@ -46,11 +46,11 @@
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
-    </dependency>  
+    </dependency>
     <!-- Maven specific -->
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -89,7 +89,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>compile</scope>
-    </dependency>    
+    </dependency>
     <!-- test libs -->
     <dependency>
       <groupId>junit</groupId>
@@ -97,7 +97,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -105,31 +105,31 @@
         <configuration>
           <goalPrefix>cocoon</goalPrefix>
         </configuration>
-      </plugin>       
+      </plugin>
     </plugins>
   </build>
-  
+
   <reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-      </plugin>       
+      </plugin>
     </plugins>
-  </reporting>  
-  
+  </reporting>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.maven-plugin.version}</docs.version>
-  </properties>    
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.maven-plugin.relPath}</url>
     </site>
-  </distributionManagement> 
-  
+  </distributionManagement>
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -138,14 +138,14 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <navDocId>1296</navDocId>
-              <collection>cdocs-maven-plugin</collection>          
-	      <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-	    </configuration>
-	  </plugin> 
+              <collection>cdocs-maven-plugin</collection>
+      	      <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+      	    </configuration>
+      	  </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
   </profiles>
 </project>
