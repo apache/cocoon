@@ -16,6 +16,9 @@
  */
 package org.apache.cocoon.maven.deployer.utils;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,6 +49,23 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class XMLUtils {
+
+    public static Document parseXml(File file) throws IOException, SAXException {
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(new FileInputStream(file));
+            return parseXml(is);
+        } finally {
+            if ( is != null ) {
+                try {
+                    is.close();
+                } catch (IOException ignore) {
+                    // ignore
+                }
+            }
+        }
+
+    }
 
     public static Document parseXml(InputStream source) throws IOException, SAXException {
         try {

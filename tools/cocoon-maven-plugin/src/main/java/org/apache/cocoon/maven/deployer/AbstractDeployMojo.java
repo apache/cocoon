@@ -46,7 +46,7 @@ import org.apache.maven.project.artifact.MavenMetadataSource;
 
 /**
  * Create a Cocoon web application based on a block deployment descriptor.
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstractDeployMojo extends AbstractWarMojo {
@@ -54,7 +54,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
     /**
      * Artifact factory, needed to download source jars for inclusion in
      * classpath.
-     * 
+     *
      * @component role="org.apache.maven.artifact.factory.ArtifactFactory"
      * @required
      * @readonly
@@ -64,7 +64,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
     /**
      * Artifact resolver, needed to download source jars for inclusion in
      * classpath.
-     * 
+     *
      * @component role="org.apache.maven.artifact.resolver.ArtifactResolver"
      * @required
      * @readonly
@@ -74,7 +74,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
     /**
      * Artifact resolver, needed to download source jars for inclusion in
      * classpath.
-     * 
+     *
      * @component role="org.apache.maven.artifact.metadata.ArtifactMetadataSource"
      * @required
      * @readonly
@@ -83,7 +83,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     /**
      * Local maven repository.
-     * 
+     *
      * @parameter expression="${localRepository}"
      * @required
      * @readonly
@@ -92,7 +92,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     /**
      * Remote repositories which will be searched for blocks.
-     * 
+     *
      * @parameter expression="${project.remoteArtifactRepositories}"
      * @required
      * @readonly
@@ -105,7 +105,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     /**
      * The project whose project files to create.
-     * 
+     *
      * @parameter expression="${project}"
      * @required
      */
@@ -113,7 +113,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     /**
      * The directory containing generated classes.
-     * 
+     *
      * @parameter expression="${project.build.outputDirectory}"
      * @required
      * @readonly
@@ -122,7 +122,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     /**
      * The directory where the webapp is built.
-     * 
+     *
      * @parameter expression="${project.build.directory}/${project.build.finalName}"
      * @required
      */
@@ -130,7 +130,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     /**
      * Single directory for extra files to include in the WAR.
-     * 
+     *
      * @parameter expression="${basedir}/src/main/webapp"
      * @required
      */
@@ -138,21 +138,21 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     /**
      * The path to the web.xml file to use.
-     * 
+     *
      * @parameter expression="${maven.war.webxml}"
      */
     private String webXml;
 
     /**
      * Use shielded classloading
-     * 
+     *
      * @parameter expression="${maven.war.shieldingclassloader}"
      */
     private boolean useShieldingClassLoader = false;
 
     /**
      * Move jars for shielded classloading
-     * 
+     *
      * @parameter expression="${maven.war.shieldingrepository}"
      */
     private boolean useShieldingRepository = false;
@@ -163,7 +163,7 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
      * features that the blocks-fw offers.
      */
     protected void deployWebapp() throws MojoExecutionException, MojoFailureException {
-        
+
         this.buildExplodedWebapp(getWebappDirectory());
 
         try {
@@ -172,8 +172,8 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
             throw new MojoExecutionException("A problem occurred while copying webapp resources.", e);
         }
 
-        xpatch(getBlockArtifactsAsMap(this.getProject(), this.getLog()), new File[0], getWebappDirectory(), this.getLog());        
-        
+        xpatch(getBlockArtifactsAsMap(this.getProject(), this.getLog()), new File[0], getWebappDirectory(), this.getLog());
+
         // take care of shielded classloading
         if (this.useShieldingClassLoader) {
             WebApplicationRewriter.shieldWebapp(new File(getWebappDirectory(), "WEB-INF"), getLog(), this.useShieldingRepository);
@@ -201,20 +201,19 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
                 throw new DeploymentException("Can't deploy '" + lib.getAbsolutePath() + "'.", e);
             }
         }
-        
+
         for (int i = 0; i < xpatchFiles.length; i++ ) {
             File patch = xpatchFiles[i];
             try {
                 xwebPatcher.addPatch(patch);
                 log.info("Adding xpatch: " + patch);
             } catch (IOException e) {
-                throw new DeploymentException("Can't use patches '" + patch + "'.", e);                
+                throw new DeploymentException("Can't use patches '" + patch + "'.", e);
             }
         }
 
         InputStream sourceWebXmlFile = null;
         File webXml = new File(basedir, "WEB-INF/web.xml");
-        System.out.println("webXml.getAbsolutePath=" + webXml.getAbsolutePath());
         try {
             sourceWebXmlFile = new FileInputStream(webXml);
             xwebPatcher.applyPatches(sourceWebXmlFile, "WEB-INF/web.xml");
@@ -224,8 +223,8 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
             IOUtils.closeQuietly(sourceWebXmlFile);
         }
 
-    }    
-    
+    }
+
     /**
      * Create a <code>Map</code> of <code>java.io.File</code> objects
      * pointing to artifacts.
