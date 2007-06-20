@@ -1331,7 +1331,7 @@
         <artifactId>chaperon</artifactId>
         <version>20040205</version>
       </dependency>
-      <dependency>
+      <!--dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
         <version>1.0.0-RC1-SNAPSHOT</version>
@@ -2108,6 +2108,11 @@
         <version>1.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>javaflow</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency-->
+      <dependency>
         <groupId>commons-betwixt</groupId>
         <artifactId>commons-betwixt</artifactId>
         <version>0.6</version>
@@ -2518,11 +2523,6 @@
         <version>3.4.4</version>
       </dependency>
       <dependency>
-        <groupId>com.indoqa.site</groupId>
-        <artifactId>indoqa-site-app</artifactId>
-        <version>1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
         <groupId>com.lowagie</groupId>
         <artifactId>itext</artifactId>
         <version>1.1.4</version>
@@ -2542,11 +2542,6 @@
         <groupId>jakarta-regexp</groupId>
         <artifactId>jakarta-regexp</artifactId>
         <version>1.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>javaflow</artifactId>
-        <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>javax.jcr</groupId>
