@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--+
+    | @version $Id$
+    +-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+
+  <parent>
+    <artifactId>cocoon-blocks-modules</artifactId>
+    <groupId>org.apache.cocoon</groupId>
+    <version>5-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <artifactId>cocoon-forms-impl</artifactId>
+  <name>Cocoon Forms Block Implementation</name>
+  <version>1.0.0-RC1-SNAPSHOT</version>
+  <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*TestCase.class</include>
+            <include>**/*Test.class</include>
+          </includes>
+          <excludes>
+            <exclude>**/DynamicSelectionListTestCase*</exclude>
+            <exclude>**/EnumSelectionListTestCase*</exclude>
+            <exclude>**/FlowJXPathSelectionListTestCase*</exclude>
+            <exclude>**/FieldTestCase*</exclude>
+            <exclude>**/GroupTestCase*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <!-- Cocoon dependencies -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-ajax-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-flowscript-impl</artifactId>
+    </dependency>
+    <!-- other dependencies -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.outerj.daisy</groupId>
+      <artifactId>daisy-htmlcleaner</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>oro</groupId>
+      <artifactId>oro</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.outerj.xreporter</groupId>
+      <artifactId>xreporter-expression</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.outerj.xreporter</groupId>
+      <artifactId>xreporter-grouping</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.forms.relPath}</url>
+    </site>
+  </distributionManagement>
+
+  <properties>
+    <docs.name>Cocoon Forms</docs.name>
+    <docs.version>${docs.m.forms.version}</docs.version>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1255</navDocId>
+              <collection>cdocs-forms</collection>
+              <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

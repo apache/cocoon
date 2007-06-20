@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS: $Id$ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Mail Block Samples">
+
+  <group name="Back">
+     <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="Mail">
+    <note>
+      For samples to  work you have to have access to the SMTP server and
+      you have to download and put mail.jar and activation.jar into the lib/local
+      (or your WEB-INF/lib) directory.
+    </note>
+    <sample name="Send Mail" href="sendmail/new.html" xlink:role="dynamic">
+      Send an email using either Sendmail action or Sendmail logicsheet.
+    </sample>
+  </group>
+
+  <group name="Web Mail">
+    <sample name="Web Mail" href="mail/index.html" xlink:role="dynamic">
+       Start the web mail sample application.
+    </sample>
+  </group>
+
+  <group name="Documentation">
+    <sample name="Action documentation" href="/docs/userdocs/actions/sendmail-action.html">
+      Documentation for the Sendmail action component.
+    </sample>
+    <sample name="Logicsheet documentation" href="/docs/userdocs/xsp/sendmail.html">
+      Documentation for the Sendmail logicsheet component.
+    </sample>
+  </group>
+</samples>

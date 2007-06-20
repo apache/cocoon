@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    |
+    | SVN $Id$
+    +-->
+<components>
+  <!-- Include roles -->
+  <include src="resource://org/apache/cocoon/components/slide/slide.roles"/>
+
+  <!--+ 
+      | Jakarta Slide repository
+      |
+      | The Slide repository handles serveral sources sorted in namspaces.
+      +-->
+  <slide-repository 
+    logger="slide.repository"
+    file="context://WEB-INF/cocoon/slide.xconf"
+  />
+
+  <source-factories>
+    <!-- pseudo protocol for Jakarta Slide repositories -->
+    <component-instance 
+      name="slide" 
+      logger="slide.source"
+      class="org.apache.cocoon.components.source.impl.SlideSourceFactory"
+    />
+  </source-factories>
+  
+  <input-modules>
+    <component-instance 
+      name="slide" 
+      class="org.apache.cocoon.components.modules.input.XMLFileModule"
+      logger="core.modules.slide">
+      <reloadable>false</reloadable>
+      <cacheable>false</cacheable>
+      <file src="context://WEB-INF/cocoon/slide.xconf"/>
+    </component-instance>
+
+    <component-instance 
+      name="slide-config"
+      class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule"
+      logger="core.modules.slide-config">
+      <prefix>/slide/namespace[@name='cocoon']/configuration</prefix>
+      <input-module name="slide" />
+    </component-instance>
+  </input-modules>
+</components>

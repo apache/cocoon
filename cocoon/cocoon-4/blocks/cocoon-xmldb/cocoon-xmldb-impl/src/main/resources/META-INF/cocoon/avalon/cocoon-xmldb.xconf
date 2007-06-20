@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    |
+    | SVN $Id$
+    +-->
+<components>
+  <source-factories>
+    <!-- xmldb pseudo protocol -->
+    <component-instance class="org.apache.cocoon.components.source.impl.XMLDBSourceFactory" name="xmldb">
+      <!--+
+          | Xindice 1.1 XML-RPC driver. See Xindice javadoc for configuration options.
+          +-->
+      <driver class="org.apache.xindice.client.xmldb.DatabaseImpl" type="xindice">
+        <!-- Specifies xindice web application context path.
+             Default is "/xindice/".
+        <service-location>/xindice/</service-location>
+        -->
+
+        <!-- Specifies name of the XML-RPC 'driver' (XML parser) to use.
+             Default is "xerces".
+        <xmlrpc-driver>xerces</xmlrpc-driver>
+        -->
+      </driver>
+
+      <!--+
+          | Xindice 1.1 Embedded driver. See Xindice javadoc for configuration options.
+          +-->
+      <driver class="org.apache.xindice.client.xmldb.DatabaseImpl" type="xindice-embed">
+        <!-- Specifies path to the Xindice configuration file.
+             If missing, buit-in configuration defaults will be used.
+        <configuration>/opt/xindice/config/system.xml</configuration>
+        -->
+
+        <!-- Specifies path to the Xindice DB home directory.
+             Default is `pwd` (current working directory).
+        <db-home>/var/xindice/db</db-home>
+        -->
+
+        <managed>true</managed>
+      </driver>
+
+      <!-- Add here other XML:DB compliant databases' drivers -->
+    </component-instance>
+  </source-factories>
+</components>
