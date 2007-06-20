@@ -1,5 +1,0 @@
-$Id$
-
-  Cocoon Samples Webapp
-  =====================
-
