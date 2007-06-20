@@ -27,6 +27,8 @@ import javax.servlet.ServletContextAttributeListener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionActivationListener;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -46,7 +48,8 @@ public class ShieldingListener
                HttpSessionActivationListener,
                HttpSessionAttributeListener,
                HttpSessionBindingListener,
-               ServletContextAttributeListener {
+               ServletContextAttributeListener,
+               ServletRequestListener {
 
     private static final String SERVLET_CONTEXT_CREATED = "CLC";
 
@@ -76,6 +79,10 @@ public class ShieldingListener
 
     private static final String CONTEXT_ATTR_ADDED = "CAAD";
 
+    private static final String REQUEST_DESTROYED = "RD";
+
+    private static final String REQUEST_INITIALIZED = "RI";
+
     protected ClassLoader classloader;
 
     protected List httpSessionListeners = new ArrayList();
@@ -89,6 +96,8 @@ public class ShieldingListener
     protected List servletContextAttributeListeners = new ArrayList();
 
     protected List httpSessionAttributeListeners = new ArrayList();
+
+    protected List servletRequestListeners = new ArrayList();
 
     protected void init(ServletContext context) {
         // Get the classloader
@@ -129,6 +138,9 @@ public class ShieldingListener
                         if ( listener instanceof ServletContextAttributeListener ) {
                             this.servletContextAttributeListeners.add(listener);
                         }
+                        if ( listener instanceof ServletRequestListener ) {
+                            this.servletRequestListeners.add(listener);
+                        }
                     } catch (Exception e) {
                         throw new RuntimeException("Cannot load listener " + className, e);
                     }
@@ -151,31 +163,35 @@ public class ShieldingListener
                         if ( ShieldingListener.SERVLET_CONTEXT_CREATED.equals(identifier) ) {
                             ((ServletContextListener)listener).contextInitialized((ServletContextEvent)event);
                         } else if ( ShieldingListener.SERVLET_CONTEXT_DESTROYED.equals(identifier) ) {
-                            ((ServletContextListener)listener).contextDestroyed((ServletContextEvent)event);                            
+                            ((ServletContextListener)listener).contextDestroyed((ServletContextEvent)event);
                         } else if ( ShieldingListener.SESSION_CREATED.equals(identifier) ) {
-                            ((HttpSessionListener)listener).sessionCreated((HttpSessionEvent)event);                            
+                            ((HttpSessionListener)listener).sessionCreated((HttpSessionEvent)event);
                         } else if ( ShieldingListener.SESSION_DESTROYED.equals(identifier) ) {
-                            ((HttpSessionListener)listener).sessionDestroyed((HttpSessionEvent)event);                            
+                            ((HttpSessionListener)listener).sessionDestroyed((HttpSessionEvent)event);
                         } else if ( ShieldingListener.VALUE_BOUND.equals(identifier) ) {
-                            ((HttpSessionBindingListener)listener).valueBound((HttpSessionBindingEvent)event);                            
+                            ((HttpSessionBindingListener)listener).valueBound((HttpSessionBindingEvent)event);
                         } else if ( ShieldingListener.VALUE_UNBOUND.equals(identifier) ) {
-                            ((HttpSessionBindingListener)listener).valueUnbound((HttpSessionBindingEvent)event);                            
+                            ((HttpSessionBindingListener)listener).valueUnbound((HttpSessionBindingEvent)event);
                         } else if ( ShieldingListener.ATTR_ADDED.equals(identifier) ) {
-                            ((HttpSessionAttributeListener)listener).attributeAdded((HttpSessionBindingEvent)event);                            
+                            ((HttpSessionAttributeListener)listener).attributeAdded((HttpSessionBindingEvent)event);
                         } else if ( ShieldingListener.ATTR_REMOVED.equals(identifier) ) {
-                            ((HttpSessionAttributeListener)listener).attributeRemoved((HttpSessionBindingEvent)event);                            
+                            ((HttpSessionAttributeListener)listener).attributeRemoved((HttpSessionBindingEvent)event);
                         } else if ( ShieldingListener.ATTR_REPLACED.equals(identifier) ) {
-                            ((HttpSessionAttributeListener)listener).attributeReplaced((HttpSessionBindingEvent)event);                            
+                            ((HttpSessionAttributeListener)listener).attributeReplaced((HttpSessionBindingEvent)event);
                         } else if ( ShieldingListener.CONTEXT_ATTR_ADDED.equals(identifier) ) {
-                            ((ServletContextAttributeListener)listener).attributeAdded((ServletContextAttributeEvent)event);                            
+                            ((ServletContextAttributeListener)listener).attributeAdded((ServletContextAttributeEvent)event);
                         } else if ( ShieldingListener.CONTEXT_ATTR_REMOVED.equals(identifier) ) {
-                            ((ServletContextAttributeListener)listener).attributeRemoved((ServletContextAttributeEvent)event);                            
+                            ((ServletContextAttributeListener)listener).attributeRemoved((ServletContextAttributeEvent)event);
                         } else if ( ShieldingListener.CONTEXT_ATTR_REPLACED.equals(identifier) ) {
-                            ((ServletContextAttributeListener)listener).attributeReplaced((ServletContextAttributeEvent)event);                            
+                            ((ServletContextAttributeListener)listener).attributeReplaced((ServletContextAttributeEvent)event);
                         } else if ( ShieldingListener.SESSION_ACTIVATED.equals(identifier) ) {
-                            ((HttpSessionActivationListener)listener).sessionDidActivate((HttpSessionEvent)event);                            
+                            ((HttpSessionActivationListener)listener).sessionDidActivate((HttpSessionEvent)event);
                         } else if ( ShieldingListener.SESSION_PASSIVATE.equals(identifier) ) {
-                            ((HttpSessionActivationListener)listener).sessionWillPassivate((HttpSessionEvent)event);                            
+                            ((HttpSessionActivationListener)listener).sessionWillPassivate((HttpSessionEvent)event);
+                        } else if ( ShieldingListener.REQUEST_DESTROYED.equals(identifier) ) {
+                            ((ServletRequestListener)listener).requestDestroyed((ServletRequestEvent)event);
+                        } else if ( ShieldingListener.REQUEST_INITIALIZED.equals(identifier) ) {
+                            ((ServletRequestListener)listener).requestInitialized((ServletRequestEvent)event);
                         }
                     } catch (Exception e) {
                         throw new RuntimeException("Cannot invoke listener " + listener, e);
@@ -203,7 +219,7 @@ public class ShieldingListener
 
         this.invoke(this.servletContextListeners, ShieldingListener.SERVLET_CONTEXT_CREATED, contextEvent);
     }
-    
+
     /**
      * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
      */
@@ -286,5 +302,19 @@ public class ShieldingListener
      */
     public void attributeReplaced(ServletContextAttributeEvent event) {
         this.invoke(this.servletContextAttributeListeners, ShieldingListener.CONTEXT_ATTR_REPLACED, event);
+    }
+
+    /**
+     * @see javax.servlet.ServletRequestListener#requestDestroyed(javax.servlet.ServletRequestEvent)
+     */
+    public void requestDestroyed(ServletRequestEvent event) {
+        this.invoke(this.servletRequestListeners, ShieldingListener.REQUEST_DESTROYED, event);
+    }
+
+    /**
+     * @see javax.servlet.ServletRequestListener#requestInitialized(javax.servlet.ServletRequestEvent)
+     */
+    public void requestInitialized(ServletRequestEvent event) {
+        this.invoke(this.servletRequestListeners, ShieldingListener.REQUEST_INITIALIZED, event);
     }
 }
