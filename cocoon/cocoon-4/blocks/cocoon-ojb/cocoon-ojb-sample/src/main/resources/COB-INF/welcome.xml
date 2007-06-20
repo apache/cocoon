@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - OJB Samples
+  - $Id$
+  -->
+<samples name="OJB Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="Using Persistence Broker">
+    <note>
+      Low-level API that can be used directly by applications that don't need
+      full fledged object level transactions.
+    </note>
+    <sample name="XSP" href="pb/xspdemo">Sample using JDO in a XSP page.</sample>
+    <sample name="Forms" href="">Sample using Cocoon Forms. To be done!</sample>
+  </group>
+
+  <group name="Using JDO 1.01">
+    <note>
+      WARNING: To use JDO demo you have to download jdo.jar from Sun's website!
+    </note>
+    <note>
+      The Java Data Objects (JDO) API is a standard interface-based Java model
+      abstraction of persistence, developed as Java Specification Request 12.
+      Application programmers use JDO to directly store their Java domain model
+      instances into the persistent store (database). Uses Java Data Object Query Language (JDOQL).
+    </note>
+    <sample name="XSP" href="jdo/xspdemo">Sample using JDO in a XSP page.</sample>
+    <sample name="Forms" href="jdo/forms/employee">Sample using JDO with Cocoon Forms.</sample>
+  </group>
+
+  <group name="Using ODMG 3.0 (To be done)">
+    <note>
+      Object Data Management Group (ODMG) 3 standard for binding databases.
+      Uses Object Query Language (OQL). ODMG has been superceded by JDO.
+    </note>
+    <sample name="XSP" href="odmg/xspdemo">Sample using JDO in a XSP page.</sample>
+    <sample name="Forms" href="">Sample using Cocoon Forms. To be done!</sample>
+  </group>
+
+  <group name="OJB Documentation">
+    <note>
+      OJB block allows the use of the Apache OJB project into Cocoon.
+      OJB block is still alpha software and under active development.
+      Your feedback is very much welcome on the Cocoon mailing lists.
+    </note>
+    <sample name="Apache OJB website" href="http://db.apache.org/ojb/">Apache OJB project</sample>
+    <sample name="Using JDO Tutorial" href="http://db.apache.org/ojb/docu/tutorials/jdo-tutorial.html">How to use OJB with JDO</sample>
+    <sample name="Using ODMG Tutorial" href="http://db.apache.org/ojb/docu/tutorials/odmg-tutorial.html">How to use ODMG with OJB</sample>
+    <sample name="Using Persistence Broker Tutorial" href="http://db.apache.org/ojb/docu/tutorials/pb-tutorial.html">How to use the OJB's Persitence Broker</sample>
+  </group>
+
+  <group name="Other Links">
+    <note>Additional link to database access technologies</note>
+    <sample name="JDO Website" href="http://java.sun.com/products/jdo/">JDO website</sample>
+    <sample name="JDO Central" href="http://www.jdocentral.com/">JDO community website</sample>
+    <sample name="ODMG Website" href="http://www.odmg.org/">ODMG website</sample>
+    <sample name="JDO Cocoon Wiki Documentation" href="http://wiki.apache.org/cocoon/OJBWithJDO">
+      Notes of a first experiment using OJB with Cocoon.
+    </sample>
+  </group>
+</samples>

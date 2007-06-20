@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+  <h4 class="samplesGroup">HTMLArea widget</h4>
+  <title>HTMLArea</title>
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+      <div style="width:500px">
+        <ft:widget-label id="data1"/><br/>
+        <ft:widget id="data1">
+          <fi:styling type="htmlarea" rows="8" style="width:100%">
+            <!-- at this place, the configuration property of the HTMLArea is under 'conf'
+                 available. Find more info about the available properties at
+                 http://www.htmlarea.com/htmlarea_2/documentation.html -->
+            <conf>
+              conf.statusBar = false;
+              conf.sizeIncludesToolbar = false;
+              conf.fullPage = false;
+              conf.toolbar = [
+                [ "bold", "italic", "separator",
+                  "subscript", "superscript", "separator",
+                  "insertorderedlist", "insertunorderedlist",
+                  "outdent", "indent", "separator",
+                  "inserthorizontalrule", "separator",
+                  "copy", "cut", "paste", "space", "undo", "redo",
+                  "separator", "showhelp"]
+                ];               
+            </conf>
+          </fi:styling>
+        </ft:widget>
+      </div>
+      <p/>
+      <table border="1">
+        <tr>
+          <td><ft:widget-label id="data2"/></td>
+        </tr>
+        <tr>
+          <td>
+            <ft:widget id="data2">
+              <fi:styling type="htmlarea" rows="8" cols="70">
+                <!-- if you add initFunction, make sure that it is available at the browser -->
+                <!--initFunction>myInit</initFunction-->
+              </fi:styling>
+            </ft:widget>
+          </td>
+        </tr>
+      </table>
+      <p/>
+      <input type="submit"/>      
+    </ft:form-template>
+    <p>
+      <a href="./">Back to Forms samples</a>
+    </p>
+  </content>
+</page>

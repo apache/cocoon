@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    |
+    | @version $Id$
+    +-->
+<components>
+  <!--+
+      |                       THIS IS A SAMPLE PORTAL
+      |
+      | It demonstrates several features of the portal engine,
+      | so it's neither configured for *your* environment nor
+      | optimized for production. If you use the portal for your
+      | own projects make sure that you remove all unused stuff
+      | from the configuration and that you configure the remaining
+      | components properly. However, the best way is to start your
+      | portal project from scratch!
+      +-->
+  <!-- Include portal roles -->
+  <include src="resource://org/apache/cocoon/portal/portal.roles"/>
+
+  <!-- If you don't need JSR 168 support, you can remove the following include. 
+  <include src="resource://org/apache/cocoon/portal/pluto/portal-pluto.roles"/>
+  -->
+
+  <!-- We use Castor for persisting/mapping the profiles to XML: -->
+  <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
+
+  <portal-service>
+    <portal name="portal">
+      <!-- Configuration: -->
+      <configuration>
+        <!-- The directory where all possible skins are stored. -->
+        <skins-path>skins</skins-path>
+        <!-- Whether the portal should use ajax or not -->
+        <use-ajax>false</use-ajax>
+      </configuration>
+    </portal>
+  </portal-service>
+
+  <!--+
+      | Deployment Manager.
+      +-->
+  <portal-deployment-manager>
+    <!-- Scan the provided directories every minute: -->
+    <scanning-delay>60000</scanning-delay>
+    <!-- Scan the following locations (comma-separated): -->
+    <deployment-sources>config/deploy</deployment-sources>
+    <!-- Turn on/off hot deployment: -->
+    <hot-deployment>true</hot-deployment>
+  </portal-deployment-manager>
+ 
+  <!-- Layout factory configuration -->
+  <portal-layout-factory>
+    <layouts>
+      <layout type="column" 
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+        <renderers default="column">
+          <renderer name="column"/>
+        </renderers>
+      </layout>
+      <layout type="row" 
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+        <renderers default="row">
+          <renderer name="row"/>
+        </renderers>
+      </layout>
+      <layout type="tab" 
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout"
+              item-class="org.apache.cocoon.portal.layout.NamedItem"
+              default-is-static="true">
+        <renderers default="tab">
+          <renderer name="tab"/>
+        </renderers>
+      </layout>
+      <layout type="rawtab" 
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout"
+              item-class="org.apache.cocoon.portal.layout.NamedItem">
+        <renderers default="rawtab">
+          <renderer name="rawtab"/>
+        </renderers>
+      </layout>
+      <layout type="linktab"
+              class="org.apache.cocoon.portal.layout.impl.CompositeLayout"
+              item-class="org.apache.cocoon.portal.layout.NamedItem"
+              default-is-static="true">
+        <renderers default="linktab">
+          <renderer name="linktab"/>
+        </renderers>
+      </layout>
+      <layout type="frame" 
+              class="org.apache.cocoon.portal.layout.impl.FrameLayout"
+              create-id="true">
+        <renderers default="frame">
+          <renderer name="frame"/>
+        </renderers>
+      </layout>
+      <layout type="coplet" 
+              class="org.apache.cocoon.portal.layout.impl.CopletLayout">
+        <renderers default="window">
+          <renderer name="window"/>
+          <renderer name="nowindow"/>
+          <renderer name="borderless-window"/>
+        </renderers>
+      </layout>
+      <layout type="link"
+              class="org.apache.cocoon.portal.layout.impl.LinkLayout"
+              create-id="true">
+        <renderers default="link">
+          <renderer name="link"/>
+        </renderers>
+      </layout>
+    </layouts>
+  </portal-layout-factory>
+
+</components>
