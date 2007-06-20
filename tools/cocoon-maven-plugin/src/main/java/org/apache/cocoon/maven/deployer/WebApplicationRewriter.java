@@ -16,17 +16,12 @@
  */
 package org.apache.cocoon.maven.deployer;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -41,18 +36,11 @@ import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * @version $Id$
  */
 public class WebApplicationRewriter {
-
-    protected static final String SERVLET_CLASS = ShieldingServlet.class.getName();
-
-    protected static final String LISTENER_CLASS = ShieldingListener.class.getName();
-
-    protected static final String FILTER_CLASS = ShieldingServletFilter.class.getName();
 
     protected static final String CLASSLOADER_JAR = "cocoon-deployer-plugin-classloading.jar";
 
@@ -81,26 +69,17 @@ public class WebApplicationRewriter {
         }
 
         // load web.xml
-        InputStream is = null;
         final Document webAppDoc;
         try {
-            is = new BufferedInputStream(new FileInputStream(new File(webInfSlashWebXml)));
-            webAppDoc = XMLUtils.parseXml(is);
+            webAppDoc = XMLUtils.parseXml(new File(webInfSlashWebXml));
         } catch (Exception e) {
             throw new MojoExecutionException("Unable to read web.xml from " + webInfSlashWebXml, e);
-        } finally {
-            if ( is != null ) {
-                try {
-                    is.close();
-                } catch (IOException ignore) {
-                    // ignore
-                }
-            }
         }
 
         // rewrite
-        if ( WebApplicationRewriter.rewrite(webAppDoc, useShieldingRepository) ) {
-
+        WebXmlRewriter webXmlRewriter = new WebXmlRewriter(ShieldingServlet.class.getName(), ShieldingListener.class
+                        .getName(), ShieldingServletFilter.class.getName(), useShieldingRepository);
+        if ( webXmlRewriter.rewrite(webAppDoc) ) {
             // save web.xml
             try {
                 if ( log.isDebugEnabled() ) {
@@ -165,7 +144,7 @@ public class WebApplicationRewriter {
                 throw new MojoExecutionException("Unable to find jar file for shielded class loading classes.");
             }
         } catch (IOException ioe) {
-            throw new MojoExecutionException("unable to find classes for shielded class loading.", ioe);            
+            throw new MojoExecutionException("unable to find classes for shielded class loading.", ioe);
         }
     }
 
@@ -200,149 +179,5 @@ public class WebApplicationRewriter {
                 }
             }
         }
-    }
-
-    public static boolean rewrite(Document webAppDoc, boolean useShieldingRepository) {
-        boolean rewritten = false;
-        final Element rootElement = webAppDoc.getDocumentElement();
-        // first rewrite servlets
-        final List servlets = XMLUtils.getChildNodes(rootElement, "servlet");
-        Iterator i = servlets.iterator();
-        while ( i.hasNext() ) {
-            final Element servletElement = (Element)i.next();
-            final Element servletClassElement = XMLUtils.getChildNode(servletElement, "servlet-class");
-            if ( servletClassElement != null ) {
-                final String className = XMLUtils.getValue(servletClassElement);
-                XMLUtils.setValue(servletClassElement, SERVLET_CLASS);
-                // create init-param with real servlet class
-                final Element initParamElem = webAppDoc.createElementNS(null, "init-param");
-                final Element initParamNameElem = webAppDoc.createElementNS(null, "param-name");
-                final Element initParamValueElem = webAppDoc.createElementNS(null, "param-value");
-                initParamElem.appendChild(initParamNameElem);
-                initParamElem.appendChild(initParamValueElem);
-                XMLUtils.setValue(initParamNameElem, "servlet-class");
-                XMLUtils.setValue(initParamValueElem, className);
-                Element beforeElement = XMLUtils.getChildNode(servletElement, "load-on-startup");
-                if ( beforeElement == null ) {
-                    beforeElement = XMLUtils.getChildNode(servletElement, "run-as");                    
-                    if ( beforeElement == null ) {
-                        beforeElement = XMLUtils.getChildNode(servletElement, "security-role-ref");                    
-                    }
-                }
-                if ( beforeElement == null ) {
-                    servletElement.appendChild(initParamElem);
-                } else {
-                    servletElement.insertBefore(initParamElem, beforeElement);
-                }
-                rewritten = true;
-            }
-        }
-
-        // now rewrite listeners
-        final List listeners = XMLUtils.getChildNodes(rootElement, "listener");
-        i = listeners.iterator();
-        boolean hasListener = false;
-        final StringBuffer rewrittenListeners = new StringBuffer();
-        while ( i.hasNext() ) {
-            final Element listenerElement = (Element)i.next();
-            final Element listenerClassElement = XMLUtils.getChildNode(listenerElement, "listener-class");
-            if ( listenerClassElement != null ) {
-                final String className = XMLUtils.getValue(listenerClassElement);
-                if ( rewrittenListeners.length() > 0 ) {
-                    rewrittenListeners.append(',');
-                }
-                rewrittenListeners.append(className);
-                if ( hasListener ) {
-                    rootElement.removeChild(listenerElement);                        
-                } else {
-                    XMLUtils.setValue(listenerClassElement, LISTENER_CLASS);
-                    hasListener = true;
-                }
-                rewritten = true;
-            }
-        }
-        // remove old parameter
-        i = XMLUtils.getChildNodes(rootElement, "context-param").iterator();
-        while ( i.hasNext() ) {
-            final Element child = (Element)i.next();
-            if ( LISTENER_CLASS.equals(XMLUtils.getValue(XMLUtils.getChildNode(child, "param-name")))) {
-                rootElement.removeChild(child);
-            }
-        }
-        if ( hasListener ) {
-            addContextParameter(rootElement, LISTENER_CLASS, rewrittenListeners.toString());
-        }
-
-        // and now filters
-        i = XMLUtils.getChildNodes(rootElement, "filter").iterator();
-        while ( i.hasNext() ) {
-            final Element filterElement = (Element)i.next();
-            final Element filterClassElement = XMLUtils.getChildNode(filterElement, "filter-class");
-            if ( filterClassElement != null ) {
-                final String className = XMLUtils.getValue(filterClassElement);
-                XMLUtils.setValue(filterClassElement, FILTER_CLASS);
-                // create init-param with real servlet class
-                final Element initParamElem = webAppDoc.createElementNS(null, "init-param");
-                final Element initParamNameElem = webAppDoc.createElementNS(null, "param-name");
-                final Element initParamValueElem = webAppDoc.createElementNS(null, "param-value");
-                initParamElem.appendChild(initParamNameElem);
-                initParamElem.appendChild(initParamValueElem);
-                XMLUtils.setValue(initParamNameElem, "filter-class");
-                XMLUtils.setValue(initParamValueElem, className);
-                filterElement.appendChild(initParamElem);
-                rewritten = true;
-            }
-        }
-
-        if ( !useShieldingRepository ) {
-            addContextParameter(rootElement,
-                                ShieldedClassLoaderManager.SHIELDED_CLASSLOADER_USE_REPOSITORY,
-                                "false");
-            rewritten = true;
-        } else {
-            if ( removeContextParameter(rootElement, ShieldedClassLoaderManager.SHIELDED_CLASSLOADER_USE_REPOSITORY) ) {
-                rewritten = true;
-            }
-        }
-
-        return rewritten;
-    }
-
-    protected static boolean removeContextParameter(Element root, String name) {
-        boolean removed = false;
-        final Iterator i = XMLUtils.getChildNodes(root, "context-param").iterator();
-        while ( !removed && i.hasNext() ) {
-            final Element parameterElement = (Element)i.next();
-            final String paramName = XMLUtils.getValue(XMLUtils.getChildNode(parameterElement, "param-name"));
-            if ( name.equals(paramName) ) {
-                parameterElement.getParentNode().removeChild(parameterElement);
-                removed = true;
-            }
-        }
-        return removed;
-    }
-
-    protected static void addContextParameter(Element root, String name, String value) {
-        removeContextParameter(root, name);
-        // search the element where we have to put the new context parameter before!
-        // we know that we have listeners so this is the last element to search for
-        Element searchElement = XMLUtils.getChildNode(root, "context-param");
-        if ( searchElement == null ) {
-            searchElement = XMLUtils.getChildNode(root, "filter");
-            if ( searchElement == null ) {
-                searchElement = XMLUtils.getChildNode(root, "filter-mapping");
-                if ( searchElement == null ) {
-                    searchElement = XMLUtils.getChildNode(root, "listener");
-                }
-            }
-        }
-        final Element contextParamElement = root.getOwnerDocument().createElementNS(null, "context-param");
-        final Element contextParamNameElement = root.getOwnerDocument().createElementNS(null, "param-name");
-        final Element contextParamValueElement = root.getOwnerDocument().createElementNS(null, "param-value");
-        contextParamElement.appendChild(contextParamNameElement);
-        contextParamElement.appendChild(contextParamValueElement);
-        XMLUtils.setValue(contextParamNameElement, name);
-        XMLUtils.setValue(contextParamValueElement, value);
-        root.insertBefore(contextParamElement, searchElement);
     }
 }

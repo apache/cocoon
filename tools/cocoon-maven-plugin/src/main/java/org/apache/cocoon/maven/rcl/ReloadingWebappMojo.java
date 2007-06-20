@@ -41,6 +41,8 @@ import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.apache.cocoon.maven.deployer.AbstractDeployMojo;
+import org.apache.cocoon.maven.deployer.WebXmlRewriter;
+import org.apache.cocoon.maven.deployer.utils.XMLUtils;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -59,83 +61,85 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.project.artifact.MavenMetadataSource;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * The ReloadingWebappMojo creates a web application environment for a Cocoon block.
- * 
+ *
  * @goal rcl
  * @requiresProject true
  * @requiresDependencyResolution runtime
  * @execute phase="process-classes"
- * @version $Id$ 
+ * @version $Id$
  */
 public class ReloadingWebappMojo extends AbstractMojo {
 
     private static final String LIB_VERSION_WRAPPER = "1.0.0-M2-SNAPSHOT";
-    
-    private static final String LIB_VERSION_SPRING_RELOADER = "1.0.0-M2-SNAPSHOT";    
-    
+
+    private static final String LIB_VERSION_SPRING_RELOADER = "1.0.0-M2-SNAPSHOT";
+
     private static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
 
     private static final String WEB_INF_APP_CONTEXT = "WEB-INF/applicationContext.xml";
 
     private static final String WEB_INF_LOG4J = "WEB-INF/log4j.xml";
-    
+
     private static final String WEB_INF_LIB = "WEB-INF/lib";
-    
+
     private static final String WEB_INF_COCOON_SPRING_PROPS = "WEB-INF/cocoon/spring/rcl.properties";
 
-    private static final String WEB_INF_COCOON_PROPS = "WEB-INF/cocoon/properties/rcl.properties";   
+    private static final String WEB_INF_COCOON_PROPS = "WEB-INF/cocoon/properties/rcl.properties";
 
     private static final String WEB_INF_RCL_URLCL_CONF = "WEB-INF/cocoon/rclwrapper.urlcl.conf";
-    
+
     private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "WEB-INF/cocoon/rclwrapper.rcl.conf";
-    
-    private static final String WEB_INF_RCLWRAPPER_PROPERTIES = "/WEB-INF/cocoon/rclwrapper.properties";     
+
+    private static final String WEB_INF_RCLWRAPPER_PROPERTIES = "/WEB-INF/cocoon/rclwrapper.properties";
 
 
     /**
      * The directory that contains the Cocoon web application.
-     * 
+     *
      * @parameter expression="./target/rcl"
      */
     private File target;
-    
+
     /**
      * The central property file that contains all information about where to find blocks.
-     * 
+     *
      * @parameter expression="./rcl.properties"
      */
-    private File rclPropertiesFile;    
+    private File rclPropertiesFile;
 
     /**
      * Logging: Use socket appender?
-     * 
+     *
      * @parameter expression="${cocoon.rcl.log4j.useSocketAppender}"
      */
     private boolean useSocketAppender = false;
 
     /**
      * Logging: Use console appender?
-     * 
+     *
      * @parameter expression="${cocoon.rcl.log4j.useConsoleAppender}"
      */
     private boolean useConsoleAppender = false;
-    
+
     /**
      * Enable reloading or just use this goal to produce a web application environment.
-     * 
+     *
      * @parameter
      */
-    private boolean reloadingSpringEnabled = true;
+    private boolean reloadingSpringEnabled = false;
 
     /**
      * Logging: Use a custom log4j xml configuration file=
-     * 
+     *
      * @parameter expression="${cocoon.rcl.log4j.conf}"
      */
     private String customLog4jXconf;
-    
+
     /**
      * Artifact factory, needed to download source jars for inclusion in classpath.
      *
@@ -143,8 +147,8 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private ArtifactFactory artifactFactory;     
-    
+    private ArtifactFactory artifactFactory;
+
     /**
      * Artifact resolver, needed to download source jars for inclusion in classpath.
      *
@@ -152,8 +156,8 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private ArtifactResolver artifactResolver;     
-    
+    private ArtifactResolver artifactResolver;
+
     /**
      * Remote repositories which will be searched for blocks.
      *
@@ -161,8 +165,8 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private List remoteArtifactRepositories;  
-    
+    private List remoteArtifactRepositories;
+
     /**
      * Local maven repository.
      *
@@ -170,8 +174,8 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private ArtifactRepository localRepository;   
-    
+    private ArtifactRepository localRepository;
+
     /**
      * Artifact resolver, needed to download source jars for inclusion in classpath.
      *
@@ -179,61 +183,63 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private MavenMetadataSource metadataSource;    
-    
+    private MavenMetadataSource metadataSource;
+
     /**
      * The project whose project files to create.
-     * 
+     *
      * @parameter expression="${project}"
      * @required
      */
-    private MavenProject project;    
+    private MavenProject project;
 
     public void execute() throws MojoExecutionException {
         // check if this plugin is useful at all
-        if(!project.getPackaging().equals("jar") || 
+        if(!project.getPackaging().equals("jar") ||
                 !(new File(project.getBasedir(), "src/main/resources/COB-INF").exists()) ||
                 !rclPropertiesFile.exists()) {
-            getLog().info("Don't execute the Cocoon RCL plugin becaues either its packaging " + 
-                    "type is not 'jar' or it doesn't have a directory 'src/main/resources/COB-INF' or " + 
+            getLog().info("Don't execute the Cocoon RCL plugin becaues either its packaging " +
+                    "type is not 'jar' or it doesn't have a directory 'src/main/resources/COB-INF' or " +
                     "there is no rcl.properties file in the block's base directory.");
             return;
         }
-        
+
         getLog().info("Creating a reloading Cocoon web application.");
-        
+
         // create web application containing all necessary files (web.xml, applicationContext.xml, log4j.xconf)
         File webAppBaseDir = new File(target, "webapp");
-        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_WEB_XML), 
+        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_WEB_XML),
                 createPath(new File(webAppBaseDir, WEB_INF_WEB_XML)));
-        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_APP_CONTEXT), 
+        writeInputStreamToFile(readResourceFromClassloader(WEB_INF_APP_CONTEXT),
                 createPath(new File(webAppBaseDir, WEB_INF_APP_CONTEXT)));
-        writeLog4jXml(webAppBaseDir);        
+        writeLog4jXml(webAppBaseDir);
 
         // copy rcl webapp wrapper and all its dependencies to WEB-INF/lib
         copyRclWrapperLibs(webAppBaseDir);
-        
+
         // read the properties
         RwmProperties props = readProperties();
-        
+
         // create a file that contains the URLs of all libraries (config for the UrlClassLoader)
-        createUrlClassLoaderConf(webAppBaseDir, props);   
-        
+        createUrlClassLoaderConf(webAppBaseDir, props);
+
         // create a file that contains the URLs of all classes directories (config for the ReloadingClassLoader)
         createReloadingClassLoaderConf(webAppBaseDir, props);
-        
+
         // based on the RCL configuration file, create a Spring properties file
         createSpringProperties(webAppBaseDir, props);
-        
+
         // based on the RCL configuration file, create a Cocoon properties file
         createCocoonProperties(webAppBaseDir, props);
-        
+
         // create RCL properties
         createProperties(webAppBaseDir);
-        
+
         // apply xpatch files
         applyXpatchFiles(webAppBaseDir, props);
 
+        // rewrite WebXml
+        rewriteWebXml(webAppBaseDir);
     }
 
     protected RwmProperties readProperties() throws MojoExecutionException {
@@ -252,7 +258,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
             FileWriter fw = new FileWriter(urlClConfFile);
             for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
-                fw.write(dir + "\n");            
+                fw.write(dir + "\n");
                 this.getLog().debug("Adding classes-dir to RCLClassLoader configuration: " + dir);
             }
             fw.close();
@@ -266,22 +272,22 @@ public class ReloadingWebappMojo extends AbstractMojo {
         try {
             FileWriter fw = new FileWriter(urlClConfFile);
             Set excludeLibProps = props.getExcludedLibProps();
-            
+
             for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
                 fw.write(dir + "\n");
                 this.getLog().debug("Adding classes-dir (URLClassLoader configuration): " + dir);
             }
-            
+
             // add all project artifacts
             Set artifacts = project.getArtifacts();
             ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
-            
+
             // add the Spring reloader lib
-            Set springReloaderArtifacts = getDependencies("org.apache.cocoon", "cocoon-rcl-spring-reloader", 
+            Set springReloaderArtifacts = getDependencies("org.apache.cocoon", "cocoon-rcl-spring-reloader",
                             LIB_VERSION_SPRING_RELOADER, "jar");
             artifacts.addAll(springReloaderArtifacts);
-            
+
             for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
                 Artifact artifact = (Artifact) iter.next();
                 if (!artifact.isOptional() && filter.include(artifact) &&
@@ -308,7 +314,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
             throw new MojoExecutionException("Can't write to  " + springPropFile.getAbsolutePath(), e);
         }
     }
-    
+
     protected void createCocoonProperties(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
         File springPropFile = createPath(new File(webAppBaseDir, WEB_INF_COCOON_PROPS));
         try {
@@ -321,7 +327,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
     }
 
     protected void copyRclWrapperLibs(File webAppBaseDir) throws MojoExecutionException {
-        Set rclWebappDependencies = getDependencies("org.apache.cocoon",  "cocoon-rcl-webapp-wrapper", LIB_VERSION_WRAPPER, "jar");        
+        Set rclWebappDependencies = getDependencies("org.apache.cocoon",  "cocoon-rcl-webapp-wrapper", LIB_VERSION_WRAPPER, "jar");
         for (Iterator rclIt = rclWebappDependencies.iterator(); rclIt.hasNext();) {
             Artifact artifact = (Artifact) rclIt.next();
             try {
@@ -333,17 +339,17 @@ public class ReloadingWebappMojo extends AbstractMojo {
                     + artifact.getVersion() + ":" + artifact.getType());
         }
     }
-    
+
     protected void createProperties(File webAppBaseDir) throws MojoExecutionException {
-        File rclProps = createPath(new File(webAppBaseDir, WEB_INF_RCLWRAPPER_PROPERTIES));       
+        File rclProps = createPath(new File(webAppBaseDir, WEB_INF_RCLWRAPPER_PROPERTIES));
         try {
             Properties props = new Properties();
             props.setProperty("reloading.spring.enabled", Boolean.toString(this.reloadingSpringEnabled));
             props.save(new FileOutputStream(rclProps), "Reloading Classloader Properties");
         } catch (IOException e) {
             throw new MojoExecutionException("Can't write to  " + rclProps.getAbsolutePath(), e);
-        } 
-    }    
+        }
+    }
 
     protected void writeLog4jXml(File webAppBaseDir) throws MojoExecutionException {
         Map log4jTemplateMap = new HashMap();
@@ -351,7 +357,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
         log4jTemplateMap.put("useSocketAppender", new Boolean(this.useSocketAppender));
         writeStringTemplateToFile(webAppBaseDir, WEB_INF_LOG4J, customLog4jXconf, log4jTemplateMap);
     }
-    
+
 
     private void applyXpatchFiles(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
         // find all xpatch files in all configured blocks
@@ -365,7 +371,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
                     public boolean accept(File d, String name) {
                         return name.toLowerCase().endsWith(".xweb");
                     }
-                }); 
+                });
                 if(xmlFiles != null) {
                     File[] mergedArray = new File[allXPatchFiles.length + xmlFiles.length];
                     System.arraycopy(allXPatchFiles, 0, mergedArray, 0, allXPatchFiles.length);
@@ -375,11 +381,40 @@ public class ReloadingWebappMojo extends AbstractMojo {
             } catch (URISyntaxException e) {
             }
         }
-        
+
         Map libs = AbstractDeployMojo.getBlockArtifactsAsMap(this.project, this.getLog());
         AbstractDeployMojo.xpatch(libs, allXPatchFiles, webAppBaseDir, this.getLog());
     }
-    
+
+    protected void rewriteWebXml(File webAppBaseDir) throws MojoExecutionException {
+        File webXml = new File(webAppBaseDir, WEB_INF_WEB_XML);
+        Document webXmlDocument;
+        try {
+            webXmlDocument = XMLUtils.parseXml(webXml);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Problem while reading from " + webXml);
+        } catch (SAXException e) {
+            throw new MojoExecutionException("Problem while parsing " + webXml);
+        }
+        WebXmlRewriter webXmlRewriter = new WebXmlRewriter(
+                        "org.apache.cocoon.tools.rcl.wrapper.servlet.ReloadingServlet",
+                        "org.apache.cocoon.tools.rcl.wrapper.servlet.ReloadingListener",
+                        "org.apache.cocoon.tools.rcl.wrapper.servlet.ReloadingServletFilter",
+                        false);
+        if ( webXmlRewriter.rewrite(webXmlDocument) ) {
+            // save web.xml
+            try {
+                if ( this.getLog().isDebugEnabled() ) {
+                    this.getLog().debug("Rewriting web.xml: " + webXml);
+                }
+                XMLUtils.write(webXmlDocument, new FileOutputStream(webXml));
+            } catch (Exception e) {
+                throw new MojoExecutionException("Unable to write web.xml to " + webXml, e);
+            }
+        }
+    }
+
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ utility methods ~~~~~~~~~~
 
     protected Set getDependencies(final String groupId, final String artifactId, final String version,
@@ -388,12 +423,12 @@ public class ReloadingWebappMojo extends AbstractMojo {
         try {
             Set artifacts = null;
             ArtifactResolutionResult result = null;
-            
+
             Dependency dependency = new Dependency();
             dependency.setGroupId(groupId);
             dependency.setArtifactId(artifactId);
             dependency.setVersion(version);
-            
+
             List dependencies = new ArrayList();
             dependencies.add(dependency);
             Artifact pomArtifact = artifactFactory.createBuildArtifact("unspecified", "unspecified", "0.0", "jar");
@@ -401,7 +436,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
             artifacts = MavenMetadataSource.createArtifacts(artifactFactory, dependencies, "compile", null, null);
             result = artifactResolver.resolveTransitively(artifacts, pomArtifact, managedDependencies, localRepository,
                     remoteArtifactRepositories, metadataSource);
-            
+
             for (Iterator i = artifacts.iterator(); i.hasNext();) {
                 Artifact artifact = (Artifact) i.next();
                 returnSet.add(artifact);
@@ -420,7 +455,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
         }
         return returnSet;
     }
-    
+
     protected void writeStringTemplateToFile(final File basedir, final String fileName, final String customFile,
             final Map templateObjects) throws MojoExecutionException {
         OutputStream fos = null;
@@ -470,17 +505,17 @@ public class ReloadingWebappMojo extends AbstractMojo {
         }
         return file;
     }
-    
+
     protected void writeInputStreamToFile(final InputStream is, final File f) throws MojoExecutionException {
         Validate.notNull(is);
-        Validate.notNull(f);        
+        Validate.notNull(f);
         try {
             FileWriter fw = new FileWriter(f);
             IOUtils.copy(is, fw);
             fw.close();
         } catch (IOException e) {
             throw new MojoExecutionException("Can't write to file " + f);
-        }    
+        }
     }
-    
+
 }
