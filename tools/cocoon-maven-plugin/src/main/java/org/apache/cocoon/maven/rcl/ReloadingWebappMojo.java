@@ -127,7 +127,10 @@ public class ReloadingWebappMojo extends AbstractMojo {
     private boolean useConsoleAppender = false;
 
     /**
-     * Enable reloading or just use this goal to produce a web application environment.
+     * Enable reloading of the Spring application context. Note: The reload of the
+     * application context doesn't work properly if it contains beans which are based
+     * on proxies with interfaces which are loaded by the reloading classloader. As a
+     * workaround you can put all those interfaces into a seperate module.
      *
      * @parameter
      */
