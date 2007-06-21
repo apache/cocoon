@@ -32,7 +32,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class SpringReloader {
 
     public synchronized void reload(ServletContext servletContext) {
-        LockableApplicationContext ac = (LockableApplicationContext)
+        SynchronizedConfigureableWebApplicationContext ac = (SynchronizedConfigureableWebApplicationContext)
                 WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         ac.reload();
     }
