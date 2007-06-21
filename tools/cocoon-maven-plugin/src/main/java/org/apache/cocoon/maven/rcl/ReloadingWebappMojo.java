@@ -131,7 +131,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
      *
      * @parameter
      */
-    private boolean reloadingSpringEnabled = false;
+    private boolean reloadingSpringEnabled = true;
 
     /**
      * Logging: Use a custom log4j xml configuration file=
