@@ -49,11 +49,11 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  *
  * @version $Id$
  */
-public class LockableApplicationContext implements ConfigurableWebApplicationContext {
+public class SynchronizedConfigureableWebApplicationContext implements ConfigurableWebApplicationContext {
 
     private ConfigurableWebApplicationContext appContext;
 
-    public LockableApplicationContext() throws BeansException {
+    public SynchronizedConfigureableWebApplicationContext() throws BeansException {
         try {
             appContext = (ConfigurableWebApplicationContext)
                     BeanUtils.instantiateClass(XmlWebApplicationContext.class);
