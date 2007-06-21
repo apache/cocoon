@@ -35,21 +35,21 @@ public class ReloadingClassloaderManager {
     private static final String FILE_PROTOCOL = "file:";
 
     private static final String WEB_INF_RCL_URLCL_CONF = "/WEB-INF/cocoon/rclwrapper.urlcl.conf";
-    
-    private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "/WEB-INF/cocoon/rclwrapper.rcl.conf";        
-    
+
+    private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "/WEB-INF/cocoon/rclwrapper.rcl.conf";
+
     private static ReloadingClassLoader reloadingClassloader = null;
 
     private ReloadingClassloaderManager() {
         // only allow static usage
     }
-    
+
     public static synchronized ClassLoader getClassLoader(ServletContext context) {
       if (ReloadingClassloaderManager.reloadingClassloader == null) {
             final ClassLoader urlClassloader = createURLClassLoader(context);
             final ReloadingClassLoader classloader = new ReloadingClassLoader(urlClassloader);
-            final FilesystemAlterationMonitor fam = new FilesystemAlterationMonitor();    
-                    
+            final FilesystemAlterationMonitor fam = new FilesystemAlterationMonitor();
+
             List lines = null;
             try {
                 lines = IOUtils.readLines(context.getResourceAsStream(WEB_INF_RCLWRAPPER_RCL_CONF));
@@ -76,8 +76,8 @@ public class ReloadingClassloaderManager {
             ReloadingClassloaderManager.reloadingClassloader = classloader;
         }
         return ReloadingClassloaderManager.reloadingClassloader;
-    }    
-    
+    }
+
     protected static ClassLoader createURLClassLoader(ServletContext context) {
         try {
             List urlsList = new ArrayList();
@@ -93,5 +93,5 @@ public class ReloadingClassloaderManager {
                     + WEB_INF_RCL_URLCL_CONF, e);
         }
     }
-    
+
 }

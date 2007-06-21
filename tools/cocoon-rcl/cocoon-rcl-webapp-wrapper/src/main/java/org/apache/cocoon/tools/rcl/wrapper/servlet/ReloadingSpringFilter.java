@@ -33,42 +33,40 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * This servlet filter reloads the Spring application context whenever a relevant change in the
- * classpath occurs. 
- * 
+ * classpath occurs. It uses the Spring reloader, which has to be loaded by the same classloader
+ * as the Spring application context. In order to get access to it without having to pull all
+ * dependencies into the this module, the Java reflection API is used.
+ *
  * @version $Id$
  */
 public class ReloadingSpringFilter implements Filter {
-    
-    private final Log log = LogFactory.getLog(ReloadingSpringFilter.class);    
-    
-    private static final String WEB_INF_RCLWRAPPER_PROPERTIES = "/WEB-INF/cocoon/rclwrapper.properties";         
+
+    private final Log log = LogFactory.getLog(ReloadingSpringFilter.class);
+
+    private static final String WEB_INF_RCLWRAPPER_PROPERTIES = "/WEB-INF/cocoon/rclwrapper.properties";
 
     private FilterConfig config;
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
             ServletException {
-        
+
         if(isReloadingEnabled() && CocoonReloadingListener.isReload()) {
-            synchronized (this) {        
+            synchronized (this) {
                 log.info("Performing a reload of the Spring application context.");
                 // load the spring context loader from the reloading classloader
                 ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
                 Object reloader = null;
                 try {
                     reloader = cl.loadClass("org.apache.cocoon.tools.rcl.springreloader.SpringReloader").newInstance();
-                } catch (Exception e) {
-                    throw new ServletException("Can't create SpringReloader.", e);
-                }
-                try {
-                    Method reloadMethod = reloader.getClass().getMethod("reload", new Class[]{ServletContext.class} ); 
+                    Method reloadMethod = reloader.getClass().getMethod("reload", new Class[]{ServletContext.class} );
                     reloadMethod.invoke(reloader, new Object[]{config.getServletContext()});
-                } catch(Exception e) {
-                    new ServletException("Problems occurred, while invoking the SpringReloader reload method.", e);
+                } catch (Exception e) {
+                    throw new ServletException("Can't use SpringReloader.", e);
                 }
             }
         }
         // continue processing the request
-        filterChain.doFilter(req, res);            
+        filterChain.doFilter(req, res);
     }
 
     public void destroy() {
@@ -77,12 +75,12 @@ public class ReloadingSpringFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         this.config = filterConfig;
     }
-    
+
     private boolean isReloadingEnabled() throws IOException {
         Properties rclProps = new Properties();
         rclProps.load(this.config.getServletContext().getResourceAsStream(WEB_INF_RCLWRAPPER_PROPERTIES));
         String reloadingEnabled = rclProps.getProperty("reloading.spring.enabled", "true");
         return reloadingEnabled.trim().toLowerCase().equals("true");
     }
- 
+
 }
