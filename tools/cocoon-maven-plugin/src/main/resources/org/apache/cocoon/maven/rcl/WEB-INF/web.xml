@@ -18,6 +18,11 @@
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
 
+  <context-param>
+    <param-name>contextClass</param-name>
+    <param-value>org.apache.cocoon.tools.rcl.springreloader.LockableApplicationContext</param-value>
+  </context-param>
+
   <filter>
     <filter-name>ReloadingSpringFilter</filter-name>
     <display-name>ReloadingSpringFilter</display-name>
