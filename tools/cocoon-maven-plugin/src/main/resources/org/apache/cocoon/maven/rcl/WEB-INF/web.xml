@@ -20,7 +20,7 @@
 
   <context-param>
     <param-name>contextClass</param-name>
-    <param-value>org.apache.cocoon.tools.rcl.springreloader.LockableApplicationContext</param-value>
+    <param-value>org.apache.cocoon.tools.rcl.springreloader.SynchronizedConfigureableWebApplicationContext</param-value>
   </context-param>
 
   <filter>
