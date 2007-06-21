@@ -29,15 +29,15 @@
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>5-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-rcl-spring-reloader</artifactId>
   <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon Reloading ClassLoader - Spring reloader</name>
   <description>
-   This module provides a single class "SpringReloader" that is used by the 
-   ReloadingSpringFilter to reload a Spring web application context. 
-   In order not to run into NoClassDefFoundErrors, is is important that this 
+   This module provides a single class "SpringReloader" that is used by the
+   ReloadingSpringFilter to reload a Spring web application context.
+   In order not to run into NoClassDefFoundErrors, is is important that this
    class is loaded through the reloading classloader.
   </description>
 
@@ -60,38 +60,44 @@
           <groupId>avalon-framework</groupId>
         </exclusion>
       </exclusions>
-      <scope>provided</scope>      
-    </dependency>     
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
+      <version>1.0.0-M2-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <scope>provided</scope>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <scope>provided</scope>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
       <scope>provided</scope>
-    </dependency>      
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
       <scope>provided</scope>
-    </dependency>             
+    </dependency>
     <!--  test dependencies  -->
     <dependency>
       <groupId>junit</groupId>
