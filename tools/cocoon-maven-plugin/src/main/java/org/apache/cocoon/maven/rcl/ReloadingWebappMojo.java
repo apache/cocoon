@@ -129,8 +129,9 @@ public class ReloadingWebappMojo extends AbstractMojo {
     /**
      * Enable reloading of the Spring application context. Note: The reload of the
      * application context doesn't work properly if it contains beans which are based
-     * on proxies with interfaces which are loaded by the reloading classloader. As a
-     * workaround you can put all those interfaces into a seperate module.
+     * on proxies with interfaces which are loaded by the reloading class loader. As a
+     * workaround you can put all those interfaces into a seperate module which is NOT
+     * loaded by the reloading class loader.
      *
      * @parameter
      */
