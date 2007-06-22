@@ -63,12 +63,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
-      <version>1.0.0-M2-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
