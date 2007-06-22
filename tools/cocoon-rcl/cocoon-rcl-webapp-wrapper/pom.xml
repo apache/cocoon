@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>4</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
-  <version>1.0.0-M2-SNAPSHOT</version>
+  <version>1.0.0-M1</version>
   <name>Cocoon Reloading ClassLoader - Webapp Wrapper</name>
 
   <dependencies>
@@ -101,18 +101,10 @@
     </dependency>
   </dependencies>
   
-  <repositories>
-    <!-- Repository for the commons-jci -->
-    <repository>
-      <id>apache-m2-snapshot</id>
-      <name>Apache Maven 2 Repository</name>
-      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>  
-  </repositories>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-webapp-wrapper/cocoon-rcl-webapp-wrapper-1.0.0-M1</url>
+  </scm>
 </project>
