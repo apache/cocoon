@@ -42,7 +42,8 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.serialization.XMLSerializer;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.commons.lang.StringUtils;
@@ -132,6 +133,9 @@ public final class QDoxSource extends AbstractSource
      * Javadoc comments.
      */
     protected RE reLink;
+
+    // TODO: make this actually configurable
+    private String configuredSerializerName;
 
     /**
      * Contains a regular expression to match the <code>{</code><code>@link &hellip;}</code> occurrances.
@@ -345,20 +349,32 @@ public final class QDoxSource extends AbstractSource
      * @see org.apache.excalibur.source.Source#getInputStream()
      */
     public InputStream getInputStream() throws IOException, SourceException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Getting InputStream for class " + javadocClass.getFullyQualifiedName());
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Getting InputStream for class " + this.javadocClass.getFullyQualifiedName());
         }
-        XMLSerializer serializer = new XMLSerializer();
+
+        // Serialize the SAX events to the XMLSerializer
         ByteArrayInputStream inputStream = null;
 
+        ServiceSelector selector = null;
+        Serializer serializer = null;
         try {
+            selector = (ServiceSelector)this.manager.lookup(Serializer.ROLE + "Selector");
+            serializer = (Serializer)selector.select(this.configuredSerializerName);
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(2048);
             serializer.setOutputStream(outputStream);
             toSAX(serializer);
             inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-        } catch (SAXException se) {
-            logger.error("SAX exception!", se);
-            throw new SourceException("Serializing SAX to a ByteArray failed!", se);
+        } catch (SAXException e) {
+            throw new SourceException("Serializing SAX to a ByteArray failed!", e);
+        } catch (ServiceException e) {
+            throw new SourceException("Retrieving serializer failed.", e);
+        } finally {
+            if (selector != null) {
+                selector.release(serializer);
+                this.manager.release(selector);
+            }
         }
         return inputStream;
     }
@@ -868,7 +884,7 @@ public final class QDoxSource extends AbstractSource
             outputSuperClassInheritance(handler, jClass, INTERFACE_INHERITANCE);
 
             for (int i=0; i<interfaces.length; i++) {
-                String name = interfaces[i].getValue().toString();
+                String name = interfaces[i].getValue();
                 String pckg = name.substring(0, name.lastIndexOf('.'));
                 name = name.substring(pckg.length() + 1);
 
