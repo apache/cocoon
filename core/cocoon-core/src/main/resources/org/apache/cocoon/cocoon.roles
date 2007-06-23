@@ -23,8 +23,9 @@
 <!ATTLIST role-list cocoon-version CDATA #IMPLIED
 >
 <!ATTLIST role name CDATA #REQUIRED
-               shorthand CDATA #REQUIRED
+               shorthand CDATA #IMPLIED
                default-class CDATA #IMPLIED
+               model CDATA #IMPLIED
 >
 <!ATTLIST hint shorthand CDATA #REQUIRED
                class CDATA #REQUIRED
