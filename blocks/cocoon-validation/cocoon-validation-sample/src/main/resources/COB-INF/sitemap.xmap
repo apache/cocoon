@@ -136,7 +136,7 @@
         <map:generate src="source-ok.xml" />
         <map:transform type="validation-report" src="schema-ok.xsd" />
         <!-- Make use of servlet services -->
-        <map:serialize type="servletService" ">
+        <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
         </map:serialize>
       </map:match>
