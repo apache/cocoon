@@ -36,15 +36,15 @@ import org.apache.cocoon.core.xml.SAXParser;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
- * The <code>ServletServiceGenerator</code> POSTs its input data to a called service and passes the XML data returned
- * by the service down the pipeline.
- * @cocoon.sitemap.component.name servletService
- * 
  * <p>The generator takes only <code>service</code> parameter that should contain the URL of the called service.<br>
  * Use <code>servlet:</code> source for that purpose.</p>
  * 
- * FIXME: Provide a link to the documents discussing servlet (and sitemap) services. 
+ * <p>FIXME: Provide a link to the documents discussing servlet (and sitemap) services.</p>
+ * 
+ * @cocoon.sitemap.component.documentation
+ * The <code>ServletServiceGenerator</code> POSTs its input data to a called service and passes the XML data returned
+ * by the service down the pipeline.
+ * @cocoon.sitemap.component.name servletService 
  */
 public class ServletServiceGenerator extends AbstractGenerator {
 	
