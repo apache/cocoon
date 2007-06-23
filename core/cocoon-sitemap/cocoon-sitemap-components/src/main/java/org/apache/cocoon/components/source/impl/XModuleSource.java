@@ -39,7 +39,7 @@ import org.apache.excalibur.xml.sax.XMLizable;
 
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.modules.output.OutputModule;
-import org.apache.cocoon.serialization.XMLSerializer;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -80,6 +80,8 @@ public class XModuleSource
     protected ServiceManager manager;
     private Map objectModel;
     private Logger logger;
+    // TODO: make this actually configurable
+    private String configuredSerializerName = "xml";
     
     /**
      * Create a xmodule source from a 'xmodule:' uri and a the object model.
@@ -178,27 +180,34 @@ public class XModuleSource
      *
      * @throws IOException if I/O error occured.
      */
-    // Stolen from QDoxSource
     public InputStream getInputStream() throws IOException, SourceException {
         if ( this.logger.isDebugEnabled() ) {
             this.logger.debug( "Getting InputStream for " + getURI() );
         }
 
-        // Serialize the SAX events to the XMLSerializer:
-
-        XMLSerializer serializer = new XMLSerializer();
+        // Serialize the SAX events to the XMLSerializer
         ByteArrayInputStream inputStream = null;
 
+        ServiceSelector selector = null;
+        Serializer serializer = null;
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream( 2048 );
-            serializer.setOutputStream( outputStream );
-            toSAX( serializer );
-            inputStream = new ByteArrayInputStream( outputStream.toByteArray() );
-        } catch ( SAXException se ) {
-            logger.error( "SAX exception!", se );
-            throw new SourceException( "Serializing SAX to a ByteArray failed!", se );
-        }
+            selector = (ServiceSelector)this.manager.lookup(Serializer.ROLE + "Selector");
+            serializer = (Serializer)selector.select(this.configuredSerializerName);
 
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(2048);
+            serializer.setOutputStream(outputStream);
+            toSAX(serializer);
+            inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+        } catch (SAXException e) {
+            throw new SourceException("Serializing SAX to a ByteArray failed!", e);
+        } catch (ServiceException e) {
+            throw new SourceException("Retrieving serializer failed.", e);
+        } finally {
+            if (selector != null) {
+                selector.release(serializer);
+                this.manager.release(selector);
+            }
+        }
         return inputStream;
     }
 
@@ -368,8 +377,10 @@ public class XModuleSource
             throw new SAXException( "Could not find an attribute: " + attributeName +
                                     " from the InputModule " + inputModuleName, e );
         } finally {
-            if ( inputModule != null ) selector.release( inputModule );
-            this.manager.release( selector );
+            if ( selector != null ) {
+                selector.release( inputModule );
+                this.manager.release( selector );
+            }
         }
 
         return obj;
@@ -390,8 +401,10 @@ public class XModuleSource
             throw new SAXException( "Could not find an OutputModule of the type " + 
                                     outputModuleName , e );
         } finally {
-            if ( outputModule != null ) selector.release( outputModule );
-            this.manager.release( selector );
+            if ( selector != null ) {
+                selector.release( outputModule );
+                this.manager.release( selector );
+            }
         }
     }
 }
