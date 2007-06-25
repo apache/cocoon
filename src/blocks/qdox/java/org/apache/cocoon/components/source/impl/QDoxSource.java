@@ -136,7 +136,7 @@ public final class QDoxSource extends AbstractSource
     protected RE reLink;
 
     // TODO: make this actually configurable
-    private String configuredSerializerName;
+    private String configuredSerializerName = "xml";
 
     /**
      * Contains a regular expression to match the <code>{</code><code>@link &hellip;}</code> occurrances.
