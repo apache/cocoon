@@ -111,6 +111,13 @@ public interface MailSender {
      */
     void setSubject(String subject);
 
+    /**
+     * Sets the subject line of the message.
+     * @param subject the subject line of the message
+     * @param charset the character set to be used for encoding the subject
+     */
+    void setSubject(String subject, String charset);
+
     //
     // Set the Body
     //
