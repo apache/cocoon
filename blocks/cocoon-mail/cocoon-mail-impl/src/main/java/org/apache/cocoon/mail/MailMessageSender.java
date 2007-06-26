@@ -91,6 +91,7 @@ public class MailMessageSender extends AbstractLogEnabled
     private String cc;
     private String bcc;
     private String subject;
+    private String subjectCharset;
 
     private Attachment body;
     private String bodyType;
@@ -445,7 +446,11 @@ public class MailMessageSender extends AbstractLogEnabled
         }
 
         if (this.subject != null) {
-            message.setSubject(this.subject);
+            if (this.subjectCharset == null) {
+                message.setSubject(this.subject);
+            } else {
+                message.setSubject(this.subject, this.subjectCharset);
+            }
         }
 
         message.setSentDate(new Date());
@@ -616,6 +621,19 @@ public class MailMessageSender extends AbstractLogEnabled
     public void setSubject(String subject) {
         if (!isNullOrEmpty(subject)) {
             this.subject = subject;
+        }
+    }
+
+    /**
+     * Sets the subject line of the message.
+     *
+     * @param subject the subject line of the message
+     * @param charset the character set to be used for encoding the subject
+     */
+    public void setSubject(String subject, String charset) {
+        setSubject(subject);
+        if (!isNullOrEmpty(charset)) {
+            this.subjectCharset = charset;
         }
     }
 
