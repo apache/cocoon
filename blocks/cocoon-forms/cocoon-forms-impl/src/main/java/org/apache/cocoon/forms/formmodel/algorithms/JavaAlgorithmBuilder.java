@@ -33,7 +33,7 @@ public class JavaAlgorithmBuilder extends AbstractBaseAlgorithmBuilder {
 
     public CalculatedFieldAlgorithm build(Element algorithmElement) throws Exception {
         String clazzname = DomHelper.getAttribute(algorithmElement, "class");
-        Class clazz = Class.forName(clazzname);
+        Class clazz = Thread.currentThread().getContextClassLoader().loadClass(clazzname);
         if (AbstractBaseAlgorithm.class.isAssignableFrom(clazz)) {
             AbstractBaseAlgorithm algorithm = (AbstractBaseAlgorithm) clazz.newInstance();
             super.setup(algorithmElement, algorithm);

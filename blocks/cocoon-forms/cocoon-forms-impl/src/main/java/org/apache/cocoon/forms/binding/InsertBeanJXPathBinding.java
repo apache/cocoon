@@ -77,12 +77,14 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
 
             // instantiate the new object
             if(this.className != null) {
-	            argTypes[0] = Class.forName(this.className);
+	            argTypes[0] = Thread.currentThread().getContextClassLoader().loadClass(this.className);
 	            args[0] = argTypes[0].newInstance();
             } else {
             	argTypes = null;
             	args = null;
             }
+
+            System.out.println("className=" + this.className);
 
             // lookup the named method on the parent
             Method addMethod =
@@ -106,7 +108,7 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
         //             Class[] argTypes = new Class[1];
         //
         //             // instantiate the new object
-        //             argTypes[0] = Class.forName(InsertBeanJXPathBinding.this.className);
+        //             argTypes[0] = Thread.currentThread().getContextClassLoader().loadClass(InsertBeanJXPathBinding.this.className);
         //             args[0] = argTypes[0].newInstance();
         //             // lookup the named method on the parent
         //

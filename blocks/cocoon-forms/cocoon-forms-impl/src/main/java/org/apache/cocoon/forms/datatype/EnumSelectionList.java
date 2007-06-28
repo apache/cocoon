@@ -74,14 +74,14 @@ public class EnumSelectionList implements SelectionList {
     public EnumSelectionList(String className, Datatype datatype, boolean nullable) throws ClassNotFoundException {
         this.datatype = datatype;
         this.nullable = nullable;
-        this.clazz = Class.forName(className);
+        this.clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
     }
 
     public EnumSelectionList(String className, Datatype datatype, boolean nullable, String nullText) throws ClassNotFoundException {
         this(className, datatype, nullable);
         this.nullText = nullText;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.forms.datatype.SelectionList#getDatatype()
      */
