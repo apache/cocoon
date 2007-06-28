@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,7 @@ import org.outerj.expression.ParseException;
  * <pre>
  *   &lt;function name="MyFunction" class="net.foo.MyFunction"/&gt;
  * </pre>
- * 
+ *
  * @version $Id$
  */
 public class DefaultExpressionManager
@@ -45,22 +45,22 @@ public class DefaultExpressionManager
 // FIXME: Component is there to allow this block to also run in the 2.1 branch
 
     private DefaultFunctionFactory factory;
-    
+
     public void configure(Configuration config) throws ConfigurationException {
         factory = new DefaultFunctionFactory();
-        
+
         Configuration[] functions = config.getChildren("function");
         for (int i = 0; i < functions.length; i++) {
             String name = functions[i].getAttribute("name");
             String clazz = functions[i].getAttribute("class");
             try {
-                factory.registerFunction(name, Class.forName(clazz));
+                factory.registerFunction(name, Thread.currentThread().getContextClassLoader().loadClass(clazz));
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("Can not find class " + clazz + " for function " + name + ": " + e);
             }
         }
     }
-    
+
     public Expression parse(String expressionString) throws ParseException, ExpressionException {
         FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString), factory);
         parser.parse();
@@ -70,11 +70,11 @@ public class DefaultExpressionManager
 
         return expression;
     }
-    
+
     public List parseVariables(String expressionString) throws ParseException, ExpressionException {
         FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString), factory);
         parser.parse();
         return parser.getVariables();
     }
-    
+
 }

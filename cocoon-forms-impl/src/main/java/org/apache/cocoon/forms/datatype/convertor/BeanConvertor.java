@@ -28,11 +28,11 @@ import java.util.Map;
 
 /**
  * Converts String representation of beans to bean instances and vice versa.
- * 
+ *
  * <p>
  * Sometimes the toString() method doesn't give a good representation of a
- * Java Bean suited for selection list IDs. For this an optional  
- * &lt;fd:id-path&gt;jx-path&lt;/fd:id-path&gt; attribute can be specified to 
+ * Java Bean suited for selection list IDs. For this an optional
+ * &lt;fd:id-path&gt;jx-path&lt;/fd:id-path&gt; attribute can be specified to
  * have this convertor to use a different string representation.
  * </p>
  *
@@ -60,23 +60,18 @@ public class BeanConvertor
      *
      * @throws CascadingRuntimeException If the class cannot be found
      */
-    public BeanConvertor( final String className,
-                          final String idPath )
-    {
-        try
-        {
-            m_class = Class.forName( className );
-        }
-        catch( ClassNotFoundException e )
-        {
-            throw new CascadingRuntimeException( "Class " + className +
-                                                 " not found", e );
+    public BeanConvertor(final String className, final String idPath) {
+        try {
+            m_class = Thread.currentThread().getContextClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new CascadingRuntimeException("Class " + className + " not found", e);
         }
 
         m_idPath = idPath;
     }
 
-    //~ Methods ----------------------------------------------------------------
+    // ~ Methods
+    // ----------------------------------------------------------------
 
     /**
      * @see org.apache.cocoon.forms.datatype.convertor.Convertor#getTypeClass()
