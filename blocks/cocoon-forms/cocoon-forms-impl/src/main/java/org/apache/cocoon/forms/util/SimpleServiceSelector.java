@@ -75,7 +75,7 @@ public class SimpleServiceSelector extends AbstractLogEnabled
 
             Class clazz;
             try {
-                clazz = Class.forName(src);
+                clazz = Thread.currentThread().getContextClassLoader().loadClass(src);
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("Class not found: " + src + ", declared at " + componentConfs[i].getLocation(), e);
             }

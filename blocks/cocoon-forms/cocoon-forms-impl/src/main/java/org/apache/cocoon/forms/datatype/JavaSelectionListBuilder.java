@@ -65,7 +65,7 @@ public class JavaSelectionListBuilder extends AbstractLogEnabled
 		boolean nullable = DomHelper.getAttributeAsBoolean(selectionListElement, "nullable", true);
 
 		try {
-			Class clasz = Class.forName(className);
+			Class clasz = Thread.currentThread().getContextClassLoader().loadClass(className);
 			if (JavaSelectionList.class.isAssignableFrom(clasz)) {
 				JavaSelectionList list = (JavaSelectionList) clasz.newInstance();
 				LifecycleHelper.setupComponent(list, getLogger(), this.context, this.manager, null, true);

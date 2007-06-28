@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,14 +30,14 @@ import org.xml.sax.SAXException;
  * implementation for types implementing Joshua Bloch's
  * <a href="http://developer.java.sun.com/developer/Books/shiftintojava/page1.html#replaceenums">
  * typesafe enum</a> pattern.
- * 
+ *
  * @see org.apache.cocoon.forms.datatype.typeimpl.EnumType
  * @version $Id$
  */
 public class EnumConvertor implements Convertor {
 
     private Class clazz;
-    
+
     /**
      * Construct a new EnumConvertor for a class
      * @param className The package-qualified name of the class implementing
@@ -45,13 +45,13 @@ public class EnumConvertor implements Convertor {
      */
     public EnumConvertor(String className) {
         try {
-            clazz = Class.forName(className);
+            clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
         }
         catch (ClassNotFoundException e) {
             throw new CascadingRuntimeException("Class " + className + " not found", e);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.forms.datatype.convertor.Convertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.forms.datatype.convertor.Convertor.FormatCache)
      */

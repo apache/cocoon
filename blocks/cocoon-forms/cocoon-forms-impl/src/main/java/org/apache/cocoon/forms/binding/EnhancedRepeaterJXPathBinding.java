@@ -58,7 +58,7 @@ public class EnhancedRepeaterJXPathBinding extends RepeaterJXPathBinding {
         RepeaterAdapter adapter;
 		if (this.adapterClass != null) {
 			try {
-				adapter = (RepeaterAdapter) Class.forName(this.adapterClass).newInstance();
+				adapter = (RepeaterAdapter) Thread.currentThread().getContextClassLoader().loadClass(this.adapterClass).newInstance();
 			} catch (Exception e) {
 				throw new CascadingRuntimeException("Cannot instantiate adapter class for advanced repeater binding", e);
 			}

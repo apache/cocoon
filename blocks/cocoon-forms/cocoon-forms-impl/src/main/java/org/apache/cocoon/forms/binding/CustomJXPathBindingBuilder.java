@@ -83,7 +83,7 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
             String className = DomHelper.getAttribute(bindingElm, "class", null);
             if(className != null) {
-                Class clazz = Class.forName(className);
+                Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
                 bindingInstance = clazz.newInstance();
 
             } else {
