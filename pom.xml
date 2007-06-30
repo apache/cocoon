@@ -3112,6 +3112,10 @@
     <docs.m.xml-impl.relPath>2.2/core-modules/xml-impl/${docs.m.xml-impl.version}/</docs.m.xml-impl.relPath>
     <docs.m.xml-resolver.version>1.0</docs.m.xml-resolver.version>
     <docs.m.xml-resolver.relPath>2.2/core-modules/xml-resolver/${docs.m.xml-resolver.version}/</docs.m.xml-resolver.relPath>
+    <docs.m.expression-language-api.version>1.0</docs.m.expression-language-api.version>
+    <docs.m.expression-language-api.relPath>2.2/core-modules/expression-language-api/${docs.m.expression-language-api.version}/</docs.m.expression-language-api.relPath>
+    <docs.m.expression-language-impl.version>1.0</docs.m.expression-language-impl.version>
+    <docs.m.expression-language-impl.relPath>2.2/core-modules/expression-language-impl/${docs.m.expression-language-impl.version}/</docs.m.expression-language-impl.relPath>
     <!-- Path and version properties: subprojects -->
     <docs.m.servlet-service-impl.version>1.0</docs.m.servlet-service-impl.version>
     <docs.m.servlet-service-impl.relPath>subprojects/servlet-service/servlet-service-impl/${docs.m.servlet-service-impl.version}/</docs.m.servlet-service-impl.relPath>

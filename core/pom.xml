@@ -48,7 +48,9 @@
     <module>cocoon-webapp</module>
     <module>cocoon-xml/cocoon-xml-api</module>
     <module>cocoon-xml/cocoon-xml-impl</module>
-    <module>cocoon-xml/cocoon-xml-resolver</module>    
+    <module>cocoon-xml/cocoon-xml-resolver</module>
+    <module>cocoon-expression-language/cocoon-expression-language-api</module>
+    <module>cocoon-expression-language/cocoon-expression-language-impl</module>
   </modules>
   
   <reporting>
