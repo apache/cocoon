@@ -52,5 +52,9 @@
   </distributionManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-pipeline-impl</artifactId>
+     </dependency>
   </dependencies>
 </project>
