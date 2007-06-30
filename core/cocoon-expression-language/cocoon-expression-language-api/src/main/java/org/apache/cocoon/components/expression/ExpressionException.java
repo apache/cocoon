@@ -28,10 +28,21 @@ public class ExpressionException extends IOException {
      */
     private static final long serialVersionUID = 1L;
     
+    /**
+     * Construct a new <code>ExpressionException</code> instance.
+     *
+     * @param message the detail message for this exception.
+     */
     public ExpressionException(String message) {
         super(message);
     }
     
+    /**
+     * Construct a new <code>ExpressionException</code> instance.
+     *
+     * @param message the detail message for this exception.
+     * @param cause the root cause of the exception.
+     */
     public ExpressionException(String message, Throwable cause) {
         super(message, cause);
     }
