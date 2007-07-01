@@ -16,61 +16,22 @@
  */
 package org.apache.cocoon.components.expression;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import java.util.Map;
 
 /**
  * @version $Id$
  */
-public class DefaultExpressionFactory
-    extends AbstractLogEnabled
-    implements Disposable, Serviceable, ThreadSafe, ExpressionFactory {
+public class DefaultExpressionFactory implements ExpressionFactory {
 
     public static final String DEFAULT_EXPRESSION_LANGUAGE = "default";
-
-    /** The component manager */
-    protected ServiceManager manager;
-
-    /** The Expression compiler selector */
-    protected ServiceSelector compilerSelector;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(final ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.compilerSelector = (ServiceSelector) this.manager.lookup(ExpressionCompiler.ROLE + "Selector");
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (null != this.manager) {
-            this.manager.release(this.compilerSelector);
-            this.compilerSelector = null;
-            this.manager = null;
-        }
-    }
+    
+    protected Map expressionCompilers;
 
     public Expression getExpression(String language, String expression) throws ExpressionException {
-
-        Expression expressionImpl = null;
-        ExpressionCompiler compiler = null;
-        try {
-            compiler = (ExpressionCompiler) this.compilerSelector.select(language);
-            expressionImpl = compiler.compile(language, expression);
-        } catch (final ServiceException ce) {
+        if (!this.expressionCompilers.containsKey(language))
             throw new ExpressionException("Can't find a compiler for " + language);
-        } finally {
-            this.compilerSelector.release(compiler);
-        }
-        return expressionImpl;
+        ExpressionCompiler compiler = (ExpressionCompiler) this.expressionCompilers.get(language);
+        return compiler.compile(language, expression);
     }
 
     public Expression getExpression(String expression) throws ExpressionException {
@@ -81,5 +42,13 @@ public class DefaultExpressionFactory
             expression = expression.substring(end + 1);
         }
         return getExpression(language, expression);
+    }
+
+    public Map getExpressionCompilers() {
+        return expressionCompilers;
+    }
+
+    public void setExpressionCompilers(Map expressionCompilers) {
+        this.expressionCompilers = expressionCompilers;
     }
 }
