@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.expression.jxpath;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionCompiler;
 import org.apache.cocoon.components.expression.ExpressionException;
@@ -24,7 +23,7 @@ import org.apache.cocoon.components.expression.ExpressionException;
 /**
  * @version SVN $Id$
  */
-public class JXPathCompiler implements ExpressionCompiler, ThreadSafe {
+public class JXPathCompiler implements ExpressionCompiler {
     public Expression compile(String language, String expression)
         throws ExpressionException{
         return new JXPathExpression(language, expression);

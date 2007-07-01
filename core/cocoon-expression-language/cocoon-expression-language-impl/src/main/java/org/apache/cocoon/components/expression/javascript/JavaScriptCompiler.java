@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.expression.javascript;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionCompiler;
 import org.apache.cocoon.components.expression.ExpressionException;
@@ -24,7 +23,7 @@ import org.apache.cocoon.components.expression.ExpressionException;
 /**
  * @version $Id$
  */
-public class JavaScriptCompiler implements ExpressionCompiler, ThreadSafe {
+public class JavaScriptCompiler implements ExpressionCompiler {
 
     /**
      * @see org.apache.cocoon.components.expression.ExpressionCompiler#compile(java.lang.String, java.lang.String)
