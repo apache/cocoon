@@ -15,16 +15,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id $ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:p="http://www.springframework.org/schema/p"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-
-  <bean name="org.apache.cocoon.components.expression.ExpressionCompiler/jxpath" class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler"/>
   
-  <!-- JXPath is our default language so second bean is defined
-       FIXME: I think that it would be better to use alias for bean defined above, see:
-       http://thread.gmane.org/gmane.text.xml.cocoon.devel/73907 -->
-  <bean name="org.apache.cocoon.components.expression.ExpressionCompiler/default" class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler"/>
-
+  <import resource="classpath:META-INF/cocoon/spring/DefaultExpressionFactory.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/JavaScriptCompiler.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/JexlCompiler.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/JXPathCompiler.xml"/>
+  
 </beans>
