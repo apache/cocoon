@@ -40,7 +40,7 @@
     files and tests that we not have decided where to move yet.
   </description>
   <url>http://cocoon.apache.org/${docs.m.core.relPath}</url>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -91,7 +91,7 @@
       </resource>
     </resources>
   </build>
-  
+
   <repositories>
     <repository>
       <id>apache.snapshot</id>
@@ -105,25 +105,25 @@
       </snapshots>
     </repository>
   </repositories>
-  
+
   <properties>
-    <docs.name>Cocoon Core</docs.name>    
+    <docs.name>Cocoon Core</docs.name>
     <docs.version>${docs.m.core.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.core.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-core/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-core/</developerConnection>
     <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-core/</url>
-  </scm>  
-  
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -170,7 +170,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
@@ -185,8 +185,8 @@
         </exclusion>
         <exclusion>
           <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>        
-        </exclusion>        
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -263,7 +263,7 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -272,15 +272,16 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <navDocId>1206</navDocId>
-              <collection>cdocs-core</collection>          
+              <collection>cdocs-core</collection>
+              <createSiteXmlOnly>false</createSiteXmlOnly>
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
             </configuration>
-          </plugin>   
+          </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
-  </profiles>     
-  
+  </profiles>
+
 </project>
