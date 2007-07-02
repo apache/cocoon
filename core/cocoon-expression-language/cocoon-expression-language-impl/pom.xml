@@ -62,7 +62,19 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-flowscript-impl</artifactId>
+      <artifactId>cocoon-core</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>      
   </dependencies>
 </project>
