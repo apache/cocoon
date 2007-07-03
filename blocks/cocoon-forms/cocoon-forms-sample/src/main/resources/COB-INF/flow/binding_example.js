@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,7 +84,7 @@ function form2bean(form) {
     bean.addContact(contact);
     bean.addDrink("Maes");
     bean.addDrink("Leffe");
-    
+
     form.load(bean);
     form.showForm("form2-display-pipeline");
     form.save(bean);
@@ -140,7 +140,7 @@ function saveDocument(document, uri) {
             outputStream = source.getOutputStream();
             var transformerHandler = tf.newTransformerHandler();
             var transformer = transformerHandler.getTransformer();
-            transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.INDENT, "true");
+            transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.METHOD, "xml");
             transformerHandler.setResult(new Packages.javax.xml.transform.stream.StreamResult(outputStream));
 
