@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.io.StringReader;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.expression.AbstractExpression;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.ExpressionException;
@@ -53,7 +52,7 @@ public class JavaScriptExpression extends AbstractExpression {
             if (e instanceof RuntimeException) {
                 throw (RuntimeException)e;
             } else{
-                throw new CascadingRuntimeException("Runtime exception.", e);
+                throw new RuntimeException("Runtime exception.", e);
             }
         } finally {
             Context.exit();
@@ -81,7 +80,7 @@ public class JavaScriptExpression extends AbstractExpression {
             if (e instanceof RuntimeException) {
                 throw (RuntimeException)e;
             } else {
-                throw new CascadingRuntimeException("Runtime exception", e);
+                throw new RuntimeException("Runtime exception", e);
             }
         } finally {
             Context.exit();

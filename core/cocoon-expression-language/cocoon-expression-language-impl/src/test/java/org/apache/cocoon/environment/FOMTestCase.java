@@ -17,7 +17,6 @@
 package org.apache.cocoon.environment;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionContext;
@@ -27,8 +26,8 @@ import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 
 public class FOMTestCase extends SitemapComponentTestCase {
 
-    public void testFOMJexl() throws ExpressionException, ServiceException {
-        ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
+    public void testFOMJexl() throws ExpressionException {
+        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
         ExpressionContext fomContext =
@@ -39,11 +38,10 @@ public class FOMTestCase extends SitemapComponentTestCase {
 
         expression = factory.getExpression("jexl", "cocoon.request.protocol");
         assertEquals("HTTP/1.1", expression.evaluate(fomContext));
-        this.release(factory);
     }
 
-    public void testFOMJXPath() throws ExpressionException, ServiceException {
-        ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
+    public void testFOMJXPath() throws ExpressionException {
+        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
         ExpressionContext fomContext =
@@ -54,7 +52,6 @@ public class FOMTestCase extends SitemapComponentTestCase {
 
         expression = factory.getExpression("jxpath", "$cocoon/request/protocol");
         assertEquals("HTTP/1.1", expression.evaluate(fomContext));
-        this.release(factory);
     }
 }
 
