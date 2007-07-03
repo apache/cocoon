@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 // FIXME: This class should be merged with the o.a.c.sitemap.SitemapServlet
 // that is used in block mode.
-public class SitemapServlet extends HttpServlet {
+public class SitemapServletttttt extends HttpServlet {
 
     /** The Cocoon request processor. */
     protected RequestProcessor processor;
