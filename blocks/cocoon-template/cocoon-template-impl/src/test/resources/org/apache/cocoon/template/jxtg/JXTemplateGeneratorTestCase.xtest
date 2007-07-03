@@ -19,12 +19,9 @@
     <roles>
         <role name="org.apache.cocoon.generation.GeneratorSelector" shorthand="generators" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
         <role name="org.apache.excalibur.store.Store/TransientStore" shorthand="store" default-class="org.apache.excalibur.store.impl.MemoryStore"/>
-        <role name="org.apache.cocoon.components.expression.ExpressionCompilerSelector" shorthand="expression-compilers" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
         <role name="org.apache.cocoon.template.expression.StringTemplateParserSelector" shorthand="string-template-parsers" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
     </roles>
     <components>
-        <component role="org.apache.cocoon.components.expression.ExpressionFactory" 
-                   class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
         <generators logger="test">
             <component-instance class="org.apache.cocoon.template.JXTemplateGenerator" name="jx"/>
         </generators>
@@ -34,10 +31,5 @@
         	<component-instance class="org.apache.cocoon.template.expression.JXTGStringTemplateParser" name="jxtg"/>
         	<component-instance class="org.apache.cocoon.template.expression.DefaultStringTemplateParser" name="default"/>
         </string-template-parsers>
-        <expression-compilers>
-            <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="default"/>
-            <component-instance class="org.apache.cocoon.components.expression.jexl.JexlCompiler" name="jexl"/>
-            <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="jxpath"/>
-        </expression-compilers>
     </components>
 </testcase>
