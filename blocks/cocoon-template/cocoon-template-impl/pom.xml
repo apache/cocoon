@@ -63,10 +63,6 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-flowscript-impl</artifactId>
-    </dependency>
     <!--  
           Test dependencies
           TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
