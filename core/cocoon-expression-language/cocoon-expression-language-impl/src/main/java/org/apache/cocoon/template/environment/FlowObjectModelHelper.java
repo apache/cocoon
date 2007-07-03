@@ -18,7 +18,6 @@ package org.apache.cocoon.template.environment;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.flow.FlowHelper;
@@ -55,7 +54,7 @@ public class FlowObjectModelHelper {
                 scope.setParentScope(null);
                 return scope;
             } catch (Exception e) {
-                throw new CascadingRuntimeException("Exception", e);
+                throw new RuntimeException("Exception", e);
             }
         } finally {
             Context.exit();

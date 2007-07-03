@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.expression;
 
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.CocoonTestCase;
 
 public class ExpressionTestCase extends CocoonTestCase {
@@ -46,30 +45,28 @@ public class ExpressionTestCase extends CocoonTestCase {
         assertEquals("bar", context.getContextBean());
     }
 
-    public void testFactoryJexl() throws ExpressionException, ServiceException {
-        ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
+    public void testFactoryJexl() throws ExpressionException {
+        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
         assertNotNull("Test lookup of expression factory", factory);
 
         Expression expression = factory.getExpression("jexl", "1+2");
         assertNotNull("Test expression compilation", expression);
 
         assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
-        this.release(factory);
     }
 
-    public void testFactoryJXPath() throws ExpressionException, ServiceException {
-        ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
+    public void testFactoryJXPath() throws ExpressionException {
+        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
         assertNotNull("Test lookup of expression factory", factory);
 
         Expression expression = factory.getExpression("jxpath", "1+2");
         assertNotNull("Test expression compilation", expression);
 
         assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
-        this.release(factory);
     }
 
-    public void testFactoryPluggable() throws ExpressionException, ServiceException {
-        ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
+    public void testFactoryPluggable() throws ExpressionException {
+        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
         assertNotNull("Test lookup of expression factory", factory);
 
         Expression expression = factory.getExpression("1+2");
@@ -83,8 +80,6 @@ public class ExpressionTestCase extends CocoonTestCase {
         expression = factory.getExpression("jxpath:1+2");
         assertNotNull("Test expression compilation", expression);
         assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
-
-        this.release(factory);
     }
 }
 
