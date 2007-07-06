@@ -24,8 +24,10 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
-      
+    <release version="1.0.0-RC2" date="2007-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add" fixes-bug="COCOON-2083">
+      	Implemented bridge to allow database connections defined as Spring beans to be used in Avalon components.
+      </action>
     </release>
     <release version="1.0.0-M1" date="2007-03-02" description="released">  
       <action dev="cziegeler" type="add">

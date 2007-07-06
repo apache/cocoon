@@ -18,7 +18,7 @@
 <!-- $Id$ -->
 <role-list>
 
-  <role name="org.apache.avalon.excalibur.datasource.DataSourceComponentSelector"
+  <role name="org.apache.avalon.excalibur.datasource.DataSourceComponentLegacySelector"
         shorthand="datasources"
         default-class="org.apache.cocoon.core.container.DefaultServiceSelector">
 	<hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.ResourceLimitingJdbcDataSource"/>
