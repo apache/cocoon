@@ -48,6 +48,8 @@
          will effectively be truncated at this point. The default value, 10k, may not be sufficient for
          large documents. -->
     <property name="maxFieldLength" value="10000" />
+    <!-- Determines how often the lucene index will be optimized. -->
+    <property name="optimizeFrequency" value="1" />
   </bean>
   
   <bean name="org.apache.cocoon.components.search.LuceneCocoonIndexer"

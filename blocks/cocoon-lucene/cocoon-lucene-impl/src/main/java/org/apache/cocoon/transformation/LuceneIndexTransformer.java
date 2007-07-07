@@ -75,7 +75,18 @@ import org.xml.sax.helpers.AttributesImpl;
   * <dd><p>Class name of the Lucene text analyzer to use. Typically depends on the language of the text being indexed.
   * See the Lucene documentation for more information.</p></dd>
   * <dt style="font-weight: bold;">merge-factor</dt>
-  * <dd>Determines how often segment indices are merged. See the Lucene documentation for more information.</dd>
+  * <dd><p>Determines how often segment indices are merged. See the Lucene documentation for more information.</p></dd>
+  * <dt style="font-weight: bold;">optimize-frequency</dt>
+  * <dd><p>Determines how often the lucene index will be optimized. When you have 1000's of documents, optimizing the index
+  * can become quite slow (eg. 7 seconds for 9000 small docs, P4).</p>
+  *
+  * <ul>
+  * <li>1: always optimize (default)</li>
+  * <li>0: never optimize</li>
+  * <li>x: update every x times. You can use any number, it is a random generator which will determine to optimize or not. </li>   
+  * </ul>
+  * 
+  * </dd>
   * </dl>
   * <dl>
   * <dt style="font-weight: bold;">A simple example of the input:</dt>
@@ -98,11 +109,11 @@ import org.xml.sax.helpers.AttributesImpl;
   *     &lt;/lucene:document&gt;
   * &lt;/lucene:index&gt;
   * </pre>
- * </dd>
- * </dl>
- *
- * @version $Id$
- */
+  * </dd>
+  * </dl>
+  *
+  * @version $Id$
+  */
 public class LuceneIndexTransformer extends AbstractTransformer implements CacheableProcessingComponent,
         InitializingBean {
 
@@ -115,6 +126,11 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
     public static final String MERGE_FACTOR_CONFIG = "merge-factor";
     public static final String MERGE_FACTOR_PARAMETER = "merge-factor";
     public static final int MERGE_FACTOR_DEFAULT = 20;
+    public static final String OPTIMIZE_FREQUENCY_CONFIG = "optimize-frequency";
+    public static final String OPTIMIZE_FREQUENCY_PARAMETER = "optimize-frequency";
+    // by default, optimizing will take place on every update (previous
+    // behaviour)
+    public static final int OPTIMIZE_FREQUENCY_DEFAULT = 1;
     public static final String MAX_FIELD_LENGTH_CONFIG = "max-field-length";
     public static final String MAX_FIELD_LENGTH_PARAMETER = "max-field-length";
     public static final int MAX_FIELD_LENGTH_DEFAULT = IndexWriter.DEFAULT_MAX_FIELD_LENGTH;
@@ -126,6 +142,7 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
     public static final String LUCENE_QUERY_CREATE_ATTRIBUTE = "create";
     public static final String LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE = "merge-factor";
     public static final String LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE = "max-field-length";
+    public static final String LUCENE_QUERY_OPTIMIZE_FREQUENCY_CONFIG_ATTRIBUTE = "optimize-frequency";
     public static final String LUCENE_DOCUMENT_ELEMENT = "document";
     public static final String LUCENE_DOCUMENT_URL_ATTRIBUTE = "url";
     public static final String LUCENE_ELEMENT_ATTR_TO_TEXT_ATTRIBUTE = "text-attr";
@@ -191,6 +208,9 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
      */
     private int maxFieldLength = MAX_FIELD_LENGTH_DEFAULT;
 
+    /** Determines how often the lucene index will be optimized. */
+    private int optimizeFrequency = OPTIMIZE_FREQUENCY_DEFAULT;
+
     private static String uid(String url) {
         return url.replace('/', '\u0000'); // + "\u0000" +
         // DateField.timeToString(urlConnection.getLastModified());
@@ -204,7 +224,7 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
      */
     public void afterPropertiesSet() throws IllegalArgumentException {
         this.configureConfiguration = new IndexerConfiguration(getAnalyzer(), getDirectory(), getMergeFactor(),
-                getMaxFieldLength());
+                getMaxFieldLength(), getOptimizeFrequency());
     }
 
     /**
@@ -222,7 +242,8 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
                 configureConfiguration.analyzerClassname), parameters.getParameter(DIRECTORY_PARAMETER,
                 configureConfiguration.indexDirectory), parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER,
                 configureConfiguration.indexerMergeFactor), parameters.getParameterAsInteger(
-                MAX_FIELD_LENGTH_PARAMETER, configureConfiguration.indexerMaxFieldLength));
+                MAX_FIELD_LENGTH_PARAMETER, configureConfiguration.indexerMaxFieldLength), parameters
+                .getParameterAsInteger(OPTIMIZE_FREQUENCY_PARAMETER, configureConfiguration.indexerOptimizeFrequency));
     }
 
     /**
@@ -309,12 +330,15 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
                 String indexDirectory = atts.getValue(LUCENE_QUERY_DIRECTORY_ATTRIBUTE);
                 String mergeFactorStr = atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
                 String maxFieldLengthStr = atts.getValue(LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE);
+                String optimizeFrequencyStr = atts.getValue(LUCENE_QUERY_OPTIMIZE_FREQUENCY_CONFIG_ATTRIBUTE);
 
                 queryConfiguration = new IndexerConfiguration(analyzerClassname != null ? analyzerClassname
                         : setupConfiguration.analyzerClassname, indexDirectory != null ? indexDirectory
                         : setupConfiguration.indexDirectory, mergeFactorStr != null ? Integer.parseInt(mergeFactorStr)
                         : setupConfiguration.indexerMergeFactor, maxFieldLengthStr != null ? Integer
-                        .parseInt(maxFieldLengthStr) : setupConfiguration.indexerMaxFieldLength);
+                        .parseInt(maxFieldLengthStr) : setupConfiguration.indexerMaxFieldLength,
+                        optimizeFrequencyStr != null ? Integer.parseInt(optimizeFrequencyStr)
+                                : setupConfiguration.indexerOptimizeFrequency);
 
                 if (!createIndex) {
                     // Not asked to create the index - but check if this is
@@ -363,16 +387,18 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
 
         if (processing == STATE_QUERY) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)) {
-                // End query processing
-                try {
-                    if (this.writer == null) {
-                        openWriter();
+                if (needToOptimize()) {
+                    // End query processing
+                    try {
+                        if (this.writer == null) {
+                            openWriter();
+                        }
+                        this.writer.optimize();
+                        this.writer.close();
+                        this.writer = null;
+                    } catch (IOException e) {
+                        throw new SAXException(e);
                     }
-                    this.writer.optimize();
-                    this.writer.close();
-                    this.writer = null;
-                } catch (IOException e) {
-                    throw new SAXException(e);
                 }
                 // propagate the query element to the next stage in the pipeline
                 super.endElement(namespaceURI, localName, qName);
@@ -553,13 +579,52 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
         String indexDirectory;
         int indexerMergeFactor;
         int indexerMaxFieldLength;
+        int indexerOptimizeFrequency;
 
         public IndexerConfiguration(String analyzerClassname, String indexDirectory, int indexerMergeFactor,
-                int indexerMaxFieldLength) {
+                int indexerMaxFieldLength, int indexerOptimizeFrequency) {
             this.analyzerClassname = analyzerClassname;
             this.indexDirectory = indexDirectory;
             this.indexerMergeFactor = indexerMergeFactor;
             this.indexerMaxFieldLength = indexerMaxFieldLength;
+            this.indexerOptimizeFrequency = indexerOptimizeFrequency;
+        }
+    }
+
+    /**
+     * Will check if, based on the configuration (optimize-frequency option),
+     * the lucene index should be optimized. It uses a random number generator
+     * to determine if it should optimize or not.
+     * 
+     * This check was added because of large indexes, optimizing becomes quite
+     * slow.
+     * 
+     * From the lucene documentation: The IndexWriter class supports an
+     * optimize() method that compacts the index database and speedup queries.
+     * You may want to use this method after performing a complete indexing of
+     * your document set or after incremental updates of the index. If your
+     * incremental update adds documents frequently, you want to perform the
+     * optimization only once in a while to avoid the extra overhead of the
+     * optimization.
+     * 
+     * @return true: yes, we should optimize the index false: no, do not
+     *         optimize
+     */
+    private boolean needToOptimize() {
+        int optimizeFrequency = this.queryConfiguration.indexerOptimizeFrequency;
+        if (optimizeFrequency == 0) {
+            return false;
+        }
+        if (optimizeFrequency == 1) {
+            return true;
+        }
+
+        // use a random int to determine if we may execute
+        int randomInt = 1 + (int) (Math.random() * optimizeFrequency);
+        if (randomInt == 1) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -621,5 +686,20 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
      */
     public void setMaxFieldLength(int maxFieldLength) {
         this.maxFieldLength = maxFieldLength;
+    }
+
+    /**
+     * @return the optimizeFrequency
+     */
+    public int getOptimizeFrequency() {
+        return optimizeFrequency;
+    }
+
+    /**
+     * @param optimizeFrequency
+     *            the optimizeFrequency to set
+     */
+    public void setOptimizeFrequency(int optimizeFrequency) {
+        this.optimizeFrequency = optimizeFrequency;
     }
 }
