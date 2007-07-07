@@ -68,8 +68,8 @@ dojo.lang.mixin(cocoon.ajax, {
     /**
      */
     periodicalUpdate: function(delay, href, target, insertion) {
-        dojo.require("dojo.animation.Timer");
-        var timer = new dojo.animation.Timer(delay);
+        dojo.require("dojo.lang.timing.Timer");
+        var timer = new dojo.lang.timing.Timer(delay);
         timer.onTick = function() {
             cocoon.ajax.update(href, target, insertion);
         };
