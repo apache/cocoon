@@ -16,23 +16,6 @@
  */
 package org.apache.cocoon.components.search;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.ProcessingException;
-import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.apache.lucene.document.DateField;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -42,76 +25,76 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.core.xml.SAXParser;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.lucene.document.DateField;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.springframework.beans.factory.InitializingBean;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * A simple class building lucene documents from xml content.
- *
- * <p>It has two parameters that effect the way it works:</p>
+ * 
  * <p>
- *   <tt>&lt;store-fields/&gt;</tt> 
- *   Sets which tags in your content are stored in Lucene as fields, 
- *   during the indexing process. Allows them to be output with search hits.
- * </p><p>
- *   <tt>&lt;content-view-query/&gt;</tt>
- *   Sets the view the indexer will request for indexing content.
- * </p><p>
- *   Example configuration (goes in cocoon.xconf)
- *   <pre><tt>
- *     &lt;lucene-xml-indexer logger="core.search.lucene"&gt;
- *       &lt;store-fields&gt;title, summary&lt;/store-fields&gt;
- *       &lt;content-view-query&gt;cocoon-view=search&lt;/content-view-query&gt;
- *     &lt;/lucene-xml-indexer&gt;
- *   </tt></pre></p>
- *
- * @version $Id$
+ * It has two parameters that effect the way it works:
+ * </p>
+ * <p>
+ * <tt>&lt;storeFields/&gt;</tt> Sets which tags in your content are stored
+ * in Lucene as fields, during the indexing process. Allows them to be output
+ * with search hits.
+ * </p>
+ * <p>
+ * <tt>&lt;contentViewQuery/&gt;</tt> Sets the view the indexer will request
+ * for indexing content.
+ * </p>
+ * <p>
+ * Example configuration (goes in cocoon-lucene.xml)
+ * 
+ * <pre><tt>
+ * &lt;bean name=&quot;org.apache.cocoon.components.search.LuceneXMLIndexer&quot; class=&quot;org.apache.cocoon.components.search.SimpleLuceneXMLIndexerImpl&quot;&gt;
+ *   &lt;property name=&quot;parser&quot; ref=&quot;org.apache.cocoon.core.xml.SAXParser&quot; /&gt;
+ *   &lt;!-- Config element name specifying query-string appendend for requesting links of an URL. --&gt;
+ *   &lt;property name="contentViewQuery&quot; value=&quot;cocoon-view=content&quot; /&gt;
+ *   &lt;!-- Optional config element name specifying the tags to be added as Stored, Untokenised, Unindexed Fields. --&gt;
+ *   &lt;property name=&quot;storeFields&quot;&gt;
+ *      &lt;storeFields&gt;
+ *        &lt;set&gt;
+ *          &lt;value&gt;title&lt;/value&gt;
+ *          &lt;value&gt;summary&lt;/value&gt;
+ *        &lt;/set&gt;
+ *       &lt;/storeFields&gt;
+ *   &lt;/property&gt;
+ * &lt;/bean&gt;
+ * 
+ * </tt></pre>
+ * 
+ * </p>
+ * 
+ * @version $Id: SimpleLuceneXMLIndexerImpl.java 449162 2006-09-23 05:14:05Z
+ *          crossley $
  */
-public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
-         implements LuceneXMLIndexer, Configurable, Serviceable, ThreadSafe {
+public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled implements LuceneXMLIndexer, InitializingBean {
 
     /**
-     * The service manager instance
-     *
+     * append this string to the url in order to get the content view of the url
+     * 
      * @since
      */
-    protected ServiceManager manager = null;
-
-    /**
-     * Config element name specifying query-string appendend for requesting links
-     * of an URL.
-     * <p>
-     *  Its value is <code>link-view-query</code>.
-     * </p>
-     *
-     * @since
-     */
-    public final static String CONTENT_VIEW_QUERY_CONFIG = "content-view-query";
-
-    /**
-     * append this string to the url in order to get the
-     * content view of the url
-     *
-     * @since
-     */
-    
     final String CONTENT_VIEW_QUERY_DEFAULT = "cocoon-view=content";
 
     /**
-     * Config element name specifying the tags to be added as Stored, Untokenised, Unindexed Fields.
-     * <p>
-     *  Its value is <code>field-tags</code>.
-     * </p>
-     *
-     * @since
-     */
-    public final static String FIELDTAGS_CONFIG = "store-fields";
-
-    /**
      * set of allowed content types
-     *
+     * 
      * @since
      */
     final HashSet allowedContentType;
 
+    private String contentViewQuery = CONTENT_VIEW_QUERY_DEFAULT;
+    private HashSet storeFields;
+    private SAXParser parser;
 
     /**
      * @since
@@ -120,83 +103,48 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
         allowedContentType = new HashSet();
         allowedContentType.add("text/xml");
         allowedContentType.add("text/xhtml");
-        fieldTags = new HashSet();
+        storeFields = new HashSet();
     }
-    
-    
-    private String contentViewQuery = CONTENT_VIEW_QUERY_DEFAULT;
-    private HashSet fieldTags;
-
 
     /**
-     * configure
-     *
-     * @param  configuration
-     * @exception  ConfigurationException
-     * @since
+     * afterPropertiesSet
+     * 
+     * @exception IllegalArgumentException
      */
-    public void configure(Configuration configuration) throws ConfigurationException { 
-    
-        Configuration[] children;
-        children = configuration.getChildren(FIELDTAGS_CONFIG);
-        if (children != null && children.length > 0) {
-            fieldTags = new HashSet();
-            for (int i = 0; i < children.length; i++) {
-                String pattern = children[i].getValue();
-                String params[] = StringUtils.split(pattern, ", ");
-                for (int index = 0; index < params.length; index++) {
-                    String tokenized_pattern = params[index];
-					if (!tokenized_pattern.equals("")) {
-						this.fieldTags.add(tokenized_pattern);
-						if (getLogger().isDebugEnabled()) {
-								getLogger().debug("add field: " + tokenized_pattern);
-						}
-					}
-    			}
-            }
-        } else {
-            if (getLogger().isDebugEnabled()) {
+    public void afterPropertiesSet() throws IllegalArgumentException {
+        if (getLogger().isDebugEnabled()) {
+            if (getStoreFields() != null) {
+                final Iterator iter = getStoreFields().iterator();
+                while (iter.hasNext()) {
+                    getLogger().debug("add field: " + (String) iter.next());
+                }
+            } else {
                 getLogger().debug("Do not add any fields");
             }
+            getLogger().debug("content view: " + this.getContentViewQuery());
         }
-        this.contentViewQuery = configuration.getChild(CONTENT_VIEW_QUERY_CONFIG, true).getValue(CONTENT_VIEW_QUERY_DEFAULT);
-				if (getLogger().isDebugEnabled()) {
-						getLogger().debug("content view: " + this.contentViewQuery);
-				}
+        if (parser == null) {
+            throw new IllegalArgumentException("Cannot lookup xml parser!");
+        }
     }
-
-
-    /**
-     * Set the current <code>ServiceManager</code> instance used by this
-     * <code>Serviceable</code>.
-     *
-     * @param  manager                 Description of Parameter
-     * @exception  ServiceException  Description of Exception
-     * @since
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
 
     /**
      * Build lucenen documents from a URL
-     *
-     * @param  url                      the content of this url gets indexed.
-     * @exception  ProcessingException  Description of Exception
+     * 
+     * @param url
+     *            the content of this url gets indexed.
+     * @exception ProcessingException
+     *                Description of Exception
      * @since
      */
-    public List build(URL url)
-             throws ProcessingException {
+    public List build(URL url) throws ProcessingException {
 
         try {
-            URL contentURL = new URL(url, url.getFile()
-                + ((url.getFile().indexOf("?") == -1) ? "?" : "&")
-                + contentViewQuery);
+            URL contentURL = new URL(url, url.getFile() + ((url.getFile().indexOf("?") == -1) ? "?" : "&")
+                    + contentViewQuery);
             URLConnection contentURLConnection = contentURL.openConnection();
             if (contentURLConnection == null) {
-                throw new ProcessingException("Can not open connection to URL "
-                        + contentURL + " (null connection)");
+                throw new ProcessingException("Can not open connection to URL " + contentURL + " (null connection)");
             }
 
             String contentType = contentURLConnection.getContentType();
@@ -219,7 +167,7 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
                 }
 
                 LuceneIndexContentHandler luceneIndexContentHandler = new LuceneIndexContentHandler();
-                luceneIndexContentHandler.setFieldTags(fieldTags);
+                luceneIndexContentHandler.setFieldTags(storeFields);
                 indexDocument(contentURLConnection, luceneIndexContentHandler);
                 //
                 // document is parsed
@@ -245,31 +193,29 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
         }
     }
 
-
     /**
      * index input stream producing lucene Documents
-     *
-     * @param  contentURLConnection       the xml content which should get indexed.
-     * @param  luceneIndexContentHandler  ContentHandler for generating
-     *   a lucene Document from XML content.
-     * @exception  ProcessingException    Description of Exception
+     * 
+     * @param contentURLConnection
+     *            the xml content which should get indexed.
+     * @param luceneIndexContentHandler
+     *            ContentHandler for generating a lucene Document from XML
+     *            content.
+     * @exception ProcessingException
+     *                Description of Exception
      * @since
      */
-    private void indexDocument(URLConnection contentURLConnection,
-            LuceneIndexContentHandler luceneIndexContentHandler)
-             throws ProcessingException {
+    private void indexDocument(URLConnection contentURLConnection, LuceneIndexContentHandler luceneIndexContentHandler)
+            throws ProcessingException {
 
         InputStream is = null;
         InputSource in = null;
-        SAXParser parser = null;
 
         try {
             is = contentURLConnection.getInputStream();
             in = new InputSource(is);
 
-            // get an XML parser
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
-            //reader.setErrorHandler(new CocoonErrorHandler());
+            // reader.setErrorHandler(new CocoonErrorHandler());
             parser.parse(in, luceneIndexContentHandler);
             //
             // document is parsed
@@ -278,31 +224,68 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
             throw new ProcessingException("Cannot read!", ioe);
         } catch (SAXException saxe) {
             throw new ProcessingException("Cannot parse!", saxe);
-        } catch (ServiceException se) {
-            throw new ProcessingException("Cannot lookup xml parser!", se);
-        } finally {
-            if (parser != null) {
-                this.manager.release(parser);
-            }
         }
     }
 
-
     /**
      * return a unique uid of a url connection
-     *
-     * @param  urlConnection  Description of Parameter
-     * @return                String unique uid of a urlConnection
+     * 
+     * @param urlConnection
+     *            Description of Parameter
+     * @return String unique uid of a urlConnection
      * @since
      */
     private String uid(URLConnection urlConnection) {
         // Append path and date into a string in such a way that lexicographic
-        // sorting gives the same results as a walk of the file hierarchy.  Thus
+        // sorting gives the same results as a walk of the file hierarchy. Thus
         // null (\u0000) is used both to separate directory components and to
         // separate the path from the date.
-        return urlConnection.toString().replace('/', '\u0000') +
-                "\u0000" +
-                DateField.timeToString(urlConnection.getLastModified());
+        return urlConnection.toString().replace('/', '\u0000') + "\u0000"
+                + DateField.timeToString(urlConnection.getLastModified());
+    }
+
+    /**
+     * @return the contentViewQuery
+     */
+    public String getContentViewQuery() {
+        return contentViewQuery;
+    }
+
+    /**
+     * @param contentViewQuery
+     *            the contentViewQuery to set
+     */
+    public void setContentViewQuery(String contentViewQuery) {
+        this.contentViewQuery = contentViewQuery;
+    }
+
+    /**
+     * @return the storeFields
+     */
+    public HashSet getStoreFields() {
+        return storeFields;
+    }
+
+    /**
+     * @param storeFields
+     *            the dtoreFields to set
+     */
+    public void setStoreFields(HashSet storeFields) {
+        this.storeFields = storeFields;
+    }
+
+    /**
+     * @return the parser
+     */
+    public SAXParser getParser() {
+        return parser;
+    }
+
+    /**
+     * @param parser
+     *            the parser to set
+     */
+    public void setParser(SAXParser parser) {
+        this.parser = parser;
     }
 }
-
