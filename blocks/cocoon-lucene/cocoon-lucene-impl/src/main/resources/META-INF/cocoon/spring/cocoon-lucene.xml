@@ -33,6 +33,23 @@
     <property name="luceneCocoonSearcher" ref="org.apache.cocoon.components.search.LuceneCocoonSearcher" />
   </bean>
 
+  <bean name="org.apache.cocoon.transformation.Transformer/luceneIndexer"
+      class="org.apache.cocoon.transformation.LuceneIndexTransformer"
+      scope="prototype">
+    <!-- Class name of the Lucene text analyzer to use. Typically depends on the language of the 
+         text being indexed. See the Lucene documentation for more information. -->
+    <property name="analyzer" value="org.apache.lucene.analysis.standard.StandardAnalyzer" />
+    <!-- Location of directory where index files are stored. This path is relative to the Cocoon 
+         work directory -->
+    <property name="directory" value="index" />
+    <!-- Determines how often segment indices are merged. See the Lucene documentation for more information. -->
+    <property name="mergeFactor" value="20" />
+    <!-- Maximum number of terms to index in a field (as far as the index is concerned, the document
+         will effectively be truncated at this point. The default value, 10k, may not be sufficient for
+         large documents. -->
+    <property name="maxFieldLength" value="10000" />
+  </bean>
+  
   <bean name="org.apache.cocoon.components.search.LuceneCocoonIndexer"
         class="org.apache.cocoon.components.search.SimpleLuceneCocoonIndexerImpl">
     <!-- XML Indexer implementation. -->
