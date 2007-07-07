@@ -28,14 +28,37 @@ function create() {
       
     var baseURL = cocoon.request.getParameter("baseURL");
     if (baseURL != null && baseURL.length() > 0) {
-        var util = cocoon.createObject("org.apache.cocoon.samples.LuceneUtil");
+        var util = cocoon.getComponent("org.apache.cocoon.samples.LuceneUtil");
         util.createIndex(baseURL, create );
     }
     if (baseURL == null || baseURL.length() < 1) {
         baseURL = "http://" + cocoon.request.getServerName()
                             + ":" + cocoon.request.getServerPort()
                             + cocoon.request.getContextPath()
-                            + "/docs/index.html";
+                            + "/cocoon-lucene-sample/welcome";
     }
     cocoon.sendPage("create-index.jx", {"url" : baseURL, "create" : create});
+}
+
+function create2() {
+    var create;
+    var createParam = cocoon.request.getParameter("create");
+    if (createParam == null) {
+        create = false;
+    } else {
+        create = true;
+    }
+      
+    var baseURL = cocoon.request.getParameter("baseURL");
+    if (baseURL != null && baseURL.length() > 0) {
+        var util = cocoon.getComponent("org.apache.cocoon.samples.LuceneUtil");
+        util.createIndex2(baseURL, create );
+    }
+    if (baseURL == null || baseURL.length() < 1) {
+        baseURL = "http://" + cocoon.request.getServerName()
+                            + ":" + cocoon.request.getServerPort()
+                            + cocoon.request.getContextPath()
+                            + "/cocoon-core-main-sample/";
+    }
+    cocoon.sendPage("create-index2.jx", {"url" : baseURL, "create" : create});
 }

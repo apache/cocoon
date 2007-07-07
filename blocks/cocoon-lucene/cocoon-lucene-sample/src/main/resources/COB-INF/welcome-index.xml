@@ -19,7 +19,7 @@
 <page>
     <title>Welcome to Cocoon XML Search using Lucene</title>
     <content>
-      <a href="http://jakarta.apache.org/lucene/"><img border="0" alt="Lucene Logo" src="images/lucene_green_300.gif"/></a>
+      <a href="http://lucene.apache.org/"><img border="0" alt="Lucene Logo" src="images/lucene_green_300.gif"/></a>
       
       <h1>XML Search</h1>
       
@@ -48,15 +48,30 @@
         Create an index by specifying a base url from which to start
         crawling (the indexer will follow the links to build its content).
         The base url should be 
-        <a href="../../../docs/userdocs/concepts/views.html">cocoon-view</a>
+        <a href="http://cocoon.apache.org/2.1/userdocs/concepts/views.html">cocoon-view</a>
         aware of content-labels
         <strong>links</strong>, and <strong>content</strong>.
         For example you might use the base URL 
-        <code>http://localhost:8888/docs/index.html</code>
+        <code>http://localhost:8888/blocks/cocoon-lucene-sample/welcome</code>
       </p>
       <p>
         This following page allows you to <a href="create">create</a> an
         index, named index.
+      </p>
+      <br />
+      <p>
+        Create an index by specifying a base url from which to start
+        crawling (the indexer will follow the links to build its content).
+        The base url should be 
+        <a href="http://cocoon.apache.org/2.1/userdocs/concepts/views.html">cocoon-view</a>
+        aware of content-labels
+        <strong>links</strong>, and <strong>content</strong>.
+        For example you might use the base URL 
+        <code>http://localhost:8888/blocks/cocoon-core-main-sample/</code>
+      </p>
+      <p>
+        This following page allows you to <a href="create2">create2</a> an
+        index, named index2.
       </p>
 
       <h2>Searching</h2>
@@ -87,10 +102,10 @@
       <h2>Internals</h2>
       <p>
         Cocoon XML search uses the
-        <a href="http://jakarta.apache.org/lucene/">Jakarta Lucene</a>
+        <a href="http://lucene.apache.org/">Apache Lucene</a>
         indexing and search engine.
         The Cocoon documentation
-        <a href="../../../docs/userdocs/concepts/xmlsearching.html">explains</a> how it is implemented within Cocoon. Look behind the scenes of this
+        <a href="http://cocoon.apache.org/2.1/userdocs/concepts/xmlsearching.html">explains</a> how it is implemented within Cocoon. Look behind the scenes of this
         example to find out more.
       </p>
 
