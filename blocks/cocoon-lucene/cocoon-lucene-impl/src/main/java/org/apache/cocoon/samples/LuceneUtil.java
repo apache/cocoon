@@ -21,60 +21,74 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.search.LuceneCocoonHelper;
 import org.apache.cocoon.components.search.LuceneCocoonIndexer;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.Directory;
 
 /**
- * This is a sample helper class that can be used from flow to 
- * create an index.
+ * This is a sample helper class that can be used from flow to create an index.
+ * 
  * @version $Id$
  */
-public class LuceneUtil 
-    implements Serviceable {
+public class LuceneUtil {
 
-    private File workDir;
-    private ServiceManager manager;
+    private LuceneCocoonIndexer luceneCocoonIndexer;
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
-        this.workDir = new File(settings.getWorkDirectory());
-        this.manager.release(settings);
-    }
+    public void createIndex(String baseURL, boolean create) throws ProcessingException {
+        Analyzer analyzer = LuceneCocoonHelper.getAnalyzer("org.apache.lucene.analysis.standard.StandardAnalyzer");
 
-    public void createIndex(String baseURL, boolean create)
-    throws ProcessingException {
-        LuceneCocoonIndexer lcii = null;
-        Analyzer analyzer = LuceneCocoonHelper.getAnalyzer( "org.apache.lucene.analysis.standard.StandardAnalyzer" );
-        
         try {
-        
-            lcii = (LuceneCocoonIndexer)this.manager.lookup( LuceneCocoonIndexer.ROLE );
-            Directory directory = LuceneCocoonHelper.getDirectory( new File( workDir, "index" ), create );
-            lcii.setAnalyzer( analyzer );
-            URL base_url = new URL( baseURL );
-            lcii.index( directory, create, base_url );
+            final Settings settings = (Settings) WebAppContextUtils.getCurrentWebApplicationContext().getBean(
+                    "org.apache.cocoon.configuration.Settings");
+            Directory directory = LuceneCocoonHelper.getDirectory(new File(new File(settings.getWorkDirectory()),
+                    "index"), create);
+            getLuceneCocoonIndexer().setAnalyzer(analyzer);
+            URL base_url = new URL(baseURL);
+            getLuceneCocoonIndexer().index(directory, create, base_url);
         } catch (MalformedURLException mue) {
-            throw new ProcessingException( "MalformedURLException in createIndex()!", mue );
+            throw new ProcessingException("MalformedURLException in createIndex()!", mue);
         } catch (IOException ioe) {
             // ignore ??
-            throw new ProcessingException( "IOException in createIndex()!", ioe );
-        } catch (ServiceException ce) {
-            // ignore ??
-            throw new ProcessingException( "ServiceException in createIndex()!", ce );
-        } finally {
-            this.manager.release( lcii );
+            throw new ProcessingException("IOException in createIndex()!", ioe);
         }
     }
-    
+
+    public void createIndex2(String baseURL, boolean create) throws ProcessingException {
+        Analyzer analyzer = LuceneCocoonHelper.getAnalyzer("org.apache.lucene.analysis.standard.StandardAnalyzer");
+
+        try {
+            final Settings settings = (Settings) WebAppContextUtils.getCurrentWebApplicationContext().getBean(
+                    "org.apache.cocoon.configuration.Settings");
+            Directory directory = LuceneCocoonHelper.getDirectory(new File(new File(settings.getWorkDirectory()),
+                    "index2"), create);
+            getLuceneCocoonIndexer().setAnalyzer(analyzer);
+            URL base_url = new URL(baseURL);
+            getLuceneCocoonIndexer().index(directory, create, base_url);
+        } catch (MalformedURLException mue) {
+            throw new ProcessingException("MalformedURLException in createIndex2()!", mue);
+        } catch (IOException ioe) {
+            // ignore ??
+            throw new ProcessingException("IOException in createIndex2()!", ioe);
+        }
+    }
+
+    /**
+     * @return the luceneCocoonIndexer
+     */
+    public LuceneCocoonIndexer getLuceneCocoonIndexer() {
+        return luceneCocoonIndexer;
+    }
+
+    /**
+     * @param luceneCocoonIndexer
+     *            the luceneCocoonIndexer to set
+     */
+    public void setLuceneCocoonIndexer(LuceneCocoonIndexer luceneCocoonIndexer) {
+        this.luceneCocoonIndexer = luceneCocoonIndexer;
+    }
+
 }
