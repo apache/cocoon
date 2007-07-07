@@ -25,19 +25,19 @@
   <xsl:template match="search:results">
     <html>
       <head>
-        <title>Index2 Search</title>
+        <title>Index Search</title>
         <link title="Default Style" href="servlet:style-default:/styles/main.css" rel="stylesheet"/>
       </head>
       <body bgcolor="white" alink="red" link="blue" vlink="blue">
-        <a href="http://jakarta.apache.org/lucene/">
+        <a href="http://lucene.apache.org/">
           <img border="0" alt="Lucene Logo" src="images/lucene_green_300.gif"/>
         </a>
-        <h1>Index2Search</h1>
+        <h1>IndexSearch</h1>
         
         <p>
           <small>
             <a href="welcome">Welcome</a> |
-            <a href="statistic?indexName=index2">Index2 Statistic</a>
+            <a href="statistic">Index Statistic</a>
           </small>
         </p>
         
@@ -146,13 +146,10 @@
         <xsl:value-of select="@rank"/>
       </td>
       <td>
-        <xsl:variable name="pure-name" select="substring-before(@uri,'.xml')"/>
-        <a target="_blank">
-          <xsl:attribute name="href">/docs/<xsl:value-of select="$pure-name"/>.html</xsl:attribute>
+        <a target="_blank" href="{@uri}">
           <xsl:value-of select="@uri"/>
         </a>
       </td>
-      <td><xsl:value-of select="search:field[@name='title']"/></td>
     </tr>
   </xsl:template>
 

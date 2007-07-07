@@ -29,7 +29,7 @@
         <link title="Default Style" href="servlet:style-default:/styles/main.css" rel="stylesheet"/>
       </head>
       <body bgcolor="white" alink="red" link="blue" vlink="blue">
-        <a href="http://jakarta.apache.org/lucene/">
+        <a href="http://lucene.apache.org/">
           <img border="0" alt="Lucene Logo" src="images/lucene_green_300.gif"/>
         </a>
         <h1>IndexSearch</h1>
