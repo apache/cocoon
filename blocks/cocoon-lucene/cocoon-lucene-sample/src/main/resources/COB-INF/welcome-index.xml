@@ -74,6 +74,16 @@
         index, named index2.
       </p>
 
+      <h3>Creating Index By Transformer</h3>
+      <p>
+        This transformer reads a document with elements in the namespace http://apache.org/cocoon/lucene/1.0, 
+        and creates a new Lucene Index, or updates an existing one.
+      </p>
+      <p>
+        This following page allows you to <a href="create-transformer">create</a> an
+        index, named index-transformer.
+      </p>
+
       <h2>Searching</h2>
       <p>
         If you have created a Lucene index, you can search the created index.
@@ -99,6 +109,12 @@
         	</form>
       </p>-->
       
+      <h3>Searching Index-Transformer</h3>
+      <p>
+        Enter a query and search the Lucene index-transformer that you have created
+        - using <a href="findItTransformer?queryString=scelerisque">Cocoon Generators</a>.
+      </p>
+
       <h2>Internals</h2>
       <p>
         Cocoon XML search uses the
