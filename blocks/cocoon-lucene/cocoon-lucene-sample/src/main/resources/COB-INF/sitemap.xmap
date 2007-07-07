@@ -22,12 +22,6 @@
 
   <map:components>
 
-    <!-- =========================== Generators ================================ -->
-
-    <map:transformers default="xslt">
-      <map:transformer name="index" logger="sitemap.transformer.luceneindextransformer" src="org.apache.cocoon.transformation.LuceneIndexTransformer" />
-    </map:transformers>
-
     <!-- =========================== Actions ================================ -->
 
     <map:actions>
@@ -107,6 +101,16 @@
         <map:serialize />
       </map:match>
 
+      <map:match pattern="findItTransformer">
+        <map:generate type="lucene-search">
+          <map:parameter name="index" value="index-transformer" />
+        </map:generate>
+        <map:transform type="log" />
+        <map:transform src="stylesheets/search-index-transformer2html.xsl" />
+        <map:transform type="servletLinkRewriter" />
+        <map:serialize />
+      </map:match>
+
       <map:match pattern="welcome">
         <map:generate src="welcome-index.xml" />
         <!-- Make use of servlet services -->
@@ -137,6 +141,12 @@
         <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
         </map:serialize>
+      </map:match>
+
+      <map:match pattern="create-transformer">
+        <map:generate src="resources/transformer-index-src.xml" />
+        <map:transform type="luceneIndexer" />
+        <map:serialize type="xml" />
       </map:match>
 
     </map:pipeline>
