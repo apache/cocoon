@@ -16,14 +16,14 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.sitemap.DisposableSitemapComponent;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.xml.XMLConsumer;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -44,7 +44,7 @@ import java.util.Map;
  * This generator generates - using Apache POI - a Gnumeric compliant XML
  * Document from a Microsoft Excel Workbook.
  *
- * <h3>Sitemap Definition</h3>
+ * <h3>Bean Definition</h3>
  * &lt;map:generator type="xls" src="org.apache.cocoon.generation.HSSFGenerator"&gt;
  *   &lt;uri&gt;http://www.gnome.org/gnumeric/v7&lt;/uri&gt;
  *   &lt;prefix&gt;gmr&lt;/prefix&gt;
@@ -60,8 +60,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class HSSFGenerator extends AbstractGenerator
-                           implements Configurable {
+public class HSSFGenerator extends AbstractLogEnabled implements Generator, DisposableSitemapComponent {
 
     public static final String NAMESPACE_PREFIX = "gmr";
     public static final String NAMESPACE_URI = "http://www.gnome.org/gnumeric/v7";
@@ -71,53 +70,47 @@ public class HSSFGenerator extends AbstractGenerator
     private static final String CONF_NAMESPACE_PREFIX = "prefix";
     private static final String CONF_FORMATTING = "formatting";
 
-    private String defaultUri;
-    private String defaultPrefix;
-    private boolean defaultFormatting;
-
-    private String uri;
-    private String prefix;
-    private boolean formatting;
+    private String uri = NAMESPACE_URI;
+    private String prefix = NAMESPACE_PREFIX;
+    private boolean formatting = FORMATTING;
     private final AttributesImpl attr;
 
     protected Source inputSource;
 
+    /** The consumer. */
+    protected XMLConsumer consumer;
+
+    /** The source resolver. */
+    protected SourceResolver resolver;
 
     public HSSFGenerator() {
         this.attr = new AttributesImpl();
     }
 
-    public void configure(Configuration configuration) throws ConfigurationException {
-        this.defaultUri = configuration.getChild(CONF_NAMESPACE_URI).getValue(NAMESPACE_URI);
-        this.defaultPrefix = configuration.getChild(CONF_NAMESPACE_PREFIX).getValue(NAMESPACE_PREFIX);
-        this.defaultFormatting = configuration.getChild(CONF_FORMATTING).getValueAsBoolean(FORMATTING);
-    }
-
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel, src, par);
-        this.uri = par.getParameter(CONF_NAMESPACE_URI, this.defaultUri);
-        this.prefix = par.getParameter(CONF_NAMESPACE_PREFIX, this.defaultPrefix);
-        this.formatting = par.getParameterAsBoolean(CONF_FORMATTING, this.defaultFormatting);
-
+        this.uri = par.getParameter(CONF_NAMESPACE_URI, this.uri);
+        this.prefix = par.getParameter(CONF_NAMESPACE_PREFIX, this.prefix);
+        this.formatting = par.getParameterAsBoolean(CONF_FORMATTING, this.formatting);
+        this.resolver = resolver;
+        
         try {
-            this.inputSource = super.resolver.resolveURI(src);
+            this.inputSource = this.resolver.resolveURI(src);
         } catch (SourceException se) {
             throw SourceUtil.handle("Error resolving '" + src + "'.", se);
         }
     }
 
     /**
-     * Recycle this component. All instance variables are set to
-     * <code>null</code>.
+     * @see org.apache.cocoon.sitemap.DisposableSitemapComponent#dispose()
      */
-    public void recycle() {
+    public void dispose() {
         if (this.inputSource != null) {
-            super.resolver.release(this.inputSource);
+            this.resolver.release(this.inputSource);
             this.inputSource = null;
         }
-        this.attr.clear();
-        super.recycle();
+        this.resolver = null;
+        this.consumer = null;
     }
 
     /**
@@ -134,7 +127,7 @@ public class HSSFGenerator extends AbstractGenerator
      * Writes out the workbook data as XML, without formatting information
      */
     private void writeXML(HSSFWorkbook workbook) throws SAXException {
-        this.contentHandler.startDocument();
+        this.consumer.startDocument();
         start("Workbook");
         start("SheetNameIndex");
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
@@ -181,7 +174,7 @@ public class HSSFGenerator extends AbstractGenerator
         }
         end("Sheets");
         end("Workbook");
-        this.contentHandler.endDocument();
+        this.consumer.endDocument();
     }
 
     /**
@@ -313,7 +306,7 @@ public class HSSFGenerator extends AbstractGenerator
      * @throws SAXException
      */
     private void start(String name) throws SAXException {
-        super.contentHandler.startElement(uri, name, prefix + ":" + name, attr);
+        consumer.startElement(uri, name, prefix + ":" + name, attr);
         attr.clear();
     }
 
@@ -323,7 +316,7 @@ public class HSSFGenerator extends AbstractGenerator
      * @throws SAXException
      */
     private void end(String name) throws SAXException {
-        super.contentHandler.endElement(uri, name, prefix + ":" + name);
+        consumer.endElement(uri, name, prefix + ":" + name);
     }
 
     /**
@@ -332,6 +325,65 @@ public class HSSFGenerator extends AbstractGenerator
      * @throws SAXException
      */
     private void data(String data) throws SAXException {
-        super.contentHandler.characters(data.toCharArray(), 0, data.length());
+        consumer.characters(data.toCharArray(), 0, data.length());
+    }
+
+    /**
+     * @see org.apache.cocoon.xml.XMLProducer#setConsumer(org.apache.cocoon.xml.XMLConsumer)
+     */
+    public void setConsumer(XMLConsumer consumer) {
+        this.consumer = consumer;
+    }
+
+    /**
+     * Set the value
+     * 
+     * @param resolver
+     *            the resolver to set
+     */
+    public void setResolver(SourceResolver resolver) {
+        this.resolver = resolver;
+    }
+
+    /**
+     * @return the uri
+     */
+    public String getUri() {
+        return uri;
+    }
+
+    /**
+     * @param uri the uri to set
+     */
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    /**
+     * @return the prefix
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
+    /**
+     * @param prefix the prefix to set
+     */
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    /**
+     * @return the formatting
+     */
+    public boolean isFormatting() {
+        return formatting;
+    }
+
+    /**
+     * @param formatting the formatting to set
+     */
+    public void setFormatting(boolean formatting) {
+        this.formatting = formatting;
     }
 }
