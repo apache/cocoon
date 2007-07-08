@@ -28,6 +28,10 @@
           <action dev="reinhard" type="add">
             Initial creation.
           </action>      
+          <action dev="felixk" type="update">
+            Cocoon-Poi-Block becomes a normal Spring application which means that it is 
+            initialized by Spring and not the other way around.
+          </action>
         </release>
       </body>
     </document>
