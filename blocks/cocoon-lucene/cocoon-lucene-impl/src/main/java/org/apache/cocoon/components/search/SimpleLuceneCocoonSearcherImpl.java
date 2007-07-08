@@ -160,7 +160,8 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled implement
         try {
             setDirectory(FSDirectory.getDirectory(new File(getDefaultDirectory()), false));
         } catch (IOException ioe) {
-            throw new IllegalArgumentException("Cannot set index directory " + getDefaultDirectory(), ioe);
+            throw new IllegalArgumentException("Cannot set index directory "
+                    + getDefaultDirectory() + ": " + ioe.getMessage());
         }
     }
 
