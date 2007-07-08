@@ -17,18 +17,6 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <!-- =========================== Components =================================== -->
-
-  <map:components>
-
-    <!-- =========================== Serializers =================================== -->
-
-    <map:serializers default="html">
-      <map:serializer name="xls" src="org.apache.cocoon.serialization.HSSFSerializer" />
-    </map:serializers>
-
-  </map:components>
-
   <!-- =========================== Views =================================== -->
 
   <map:views>
