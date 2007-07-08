@@ -22,11 +22,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.impl.poi.POIFSElementProcessor;
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 /**

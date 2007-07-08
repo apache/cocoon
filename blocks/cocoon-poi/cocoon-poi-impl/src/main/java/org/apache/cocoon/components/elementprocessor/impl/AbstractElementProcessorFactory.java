@@ -21,11 +21,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
 import org.apache.cocoon.components.elementprocessor.CannotCreateElementProcessorException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Create instances of specific ElementProcessor implementations to
@@ -176,7 +175,7 @@ public abstract class AbstractElementProcessorFactory
         try {
             rval = (ElementProcessor)progenitor.newInstance();
             if (rval instanceof AbstractLogEnabled) {
-               ((AbstractLogEnabled)rval).enableLogging(getLogger());
+               ((AbstractLogEnabled)rval).setLogger(getLogger());
             }
         } catch (ExceptionInInitializerError e) {
             throw new CannotCreateElementProcessorException(
@@ -227,7 +226,7 @@ public abstract class AbstractElementProcessorFactory
         try {
             rval = (ElementProcessor) progenitor.newInstance(new Object[0]);
             if (rval instanceof AbstractLogEnabled) {
-               ((AbstractLogEnabled)rval).enableLogging(getLogger());
+               ((AbstractLogEnabled)rval).setLogger(getLogger());
             }
         } catch (ExceptionInInitializerError e) {
             throw new CannotCreateElementProcessorException(

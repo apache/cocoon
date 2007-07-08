@@ -20,15 +20,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Stack;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-
 import org.apache.cocoon.components.elementprocessor.CannotCreateElementProcessorException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -49,12 +44,10 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public abstract class ElementProcessorSerializer
-    extends AbstractLogEnabled implements Serializer, Serviceable {
+    extends AbstractSerializer {
 
     private final Stack openElements;
     
-    protected ServiceManager manager;
-
     private OutputStream outputStream;
     private Locator locator;
     
@@ -65,10 +58,6 @@ public abstract class ElementProcessorSerializer
         this.openElements = new Stack();
     }
 
-    public void service(ServiceManager manager) {
-        this.manager = manager;
-    }
-    
     /**
      * get the appropriate ElementProcessorFactory
      *

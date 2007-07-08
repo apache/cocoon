@@ -16,59 +16,52 @@
  */
 package org.apache.cocoon.serialization;
 
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import java.io.IOException;
+import java.util.Map;
 
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
 import org.apache.cocoon.components.elementprocessor.impl.poi.hssf.HSSFElementProcessorFactory;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
+import org.xml.sax.SAXException;
 
 /**
  * Serializer to produce an HSSF stream.
- *
+ * 
  * @version $Id$
  */
-public class HSSFSerializer extends POIFSSerializer
-                            implements Initializable, Configurable {
+public class HSSFSerializer extends POIFSSerializer implements SitemapModelComponent {
 
     private ElementProcessorFactory _element_processor_factory;
-    private final static String _mime_type = "application/vnd.ms-excel";
-    String locale;
+    private String locale;
 
     /**
-     * Initialialize the component. Initialization includes allocating any
-     * resources required throughout the components lifecycle.
-     *
-     * @exception Exception if an error occurs
+     * Setup the component. Setup includes allocating any resources required
+     * throughout the components lifecycle. Sitemap parameters will overwrite
+     * configuration parameters.
+     * 
+     * @exception ProcessingException
+     *                if an error occurs
      */
-    public void initialize() throws Exception {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException,
+            SAXException, IOException {
+        try {
+            if (par.isParameter("locale")) {
+                setLocale(par.getParameter("locale"));
+            }
+        } catch (ParameterException e) {
+            throw new ProcessingException(e);
+        }
         _element_processor_factory = new HSSFElementProcessorFactory(locale);
         setupLogger(_element_processor_factory);
     }
 
-    public void configure(Configuration conf) throws ConfigurationException {
-        Configuration[] parameters = conf.getChildren("parameter");
-        for (int i = 0; i < parameters.length; i++) {
-            String name = parameters[i].getAttribute("name");
-            if (name.trim().equals("locale")) {
-                locale = parameters[i].getAttribute("value");
-            }
-        }
-    }
-
-    /**
-     * get the mime type
-     *
-     * @return application/vnd.ms-excel
-     */
-    public String getMimeType() {
-        return _mime_type;
-    }
-
     /**
      * get the ElementProcessorFactory
-     *
+     * 
      * @return the ElementProcessorFactory
      */
     protected ElementProcessorFactory getElementProcessorFactory() {
@@ -85,5 +78,20 @@ public class HSSFSerializer extends POIFSSerializer
      * pre-processing for endDocument
      */
     protected void doLocalPreEndDocument() {
+    }
+
+    /**
+     * @return the locale
+     */
+    public String getLocale() {
+        return locale;
+    }
+
+    /**
+     * @param locale
+     *            the locale to set
+     */
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }
