@@ -43,6 +43,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.servletservice.util.ServletContextWrapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
@@ -55,6 +57,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     
     public static final String SUPER = "super";
 
+    protected Log logger = LogFactory.getLog( ServletServiceContext.class );
     private Map attributes = new Hashtable();
     private Servlet servlet;
     private String mountPath;
@@ -383,7 +386,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         if (mountPath.endsWith("/"))
             mountPath = mountPath.substring(0, mountPath.length() - 1);
         String absoluteURI = mountPath + uri.getSchemeSpecificPart();
-        log("Resolving " + uri.toString() + " to " + absoluteURI);
+        if (logger.isInfoEnabled()) {
+            logger.info("Resolving " + uri.toString() + " to " + absoluteURI);
+        }
         return new URI(absoluteURI);
     }
     
@@ -474,7 +479,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                 throws ServletException, IOException {
             // Call to named servlet service
 
-            ServletServiceContext.this.log("Enter processing in servlet service " + this.servletServiceName);
+            if (logger.isInfoEnabled()) {
+                logger.info("Enter processing in servlet service " + this.servletServiceName);
+            }
             RequestDispatcher dispatcher =
                 this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
             if (dispatcher != null && dispatcher instanceof PathDispatcher) {
@@ -483,7 +490,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                 // Cannot happen
                 throw new IllegalStateException();
             }
-            ServletServiceContext.this.log("Leaving processing in servlet service " + this.servletServiceName);
+            if (logger.isInfoEnabled()) {
+                logger.info("Leaving processing in servlet service " + this.servletServiceName);
+            }
         }
 
         /*
