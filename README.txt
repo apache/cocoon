@@ -8,7 +8,8 @@ There are also some Daisy documentation pages about this, for more "stable" info
 
 PREREQUISITES
 -------------
-You need a JDK, 1.4.x, 1.5.x. or 1.6.x
+You need a JDK, 1.4.x, 1.5.x, 1.6.x, or 1.7.x.
+When experimenting with trunk, 1.5.x is probably the best bet.
 
 Maven 2 must be installed (at least 2.0.6).
 
@@ -33,8 +34,17 @@ the message:
 
   BUILD SUCCESSFUL
 
+If you have consistent build failures due to a missing cocoon-rcl
+artefact, then run first
 
-See also MAVEN REPOSITORY MIRRORS above.
+  $ cd tools
+  $ mvn clean install
+
+If you have build failures due to out-of-memory conditions, increase
+the JVM maximum memory limit:
+ 
+  $ MAVEN_OPTS="-Xmx200m"
+  $ export MAVEN_OPTS
 
 
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
