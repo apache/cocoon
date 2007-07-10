@@ -77,6 +77,9 @@
    <sample name="Zipping" href="java/zipping.zip" xlink:role="dynamic">
     On-the-fly zipping of filtered files.
    </sample>
+   <sample name="Java5" href="java/java5" xlink:role="dynamic">
+    Java5 syntax allowed, if running under a 1.5+ JVM.
+   </sample>
   </group>
 
   <group name="eXtensible Server Pages in Javascript">
