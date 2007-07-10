@@ -28,6 +28,9 @@
       	  <action dev="gkossakowski" type="update" issue="COCOON-2059" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
       	  	Ajax block made use of deprecated dojo.animation.Timer.
       	  </action>
+          <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+          	Added missing dojo.require("dojo.ns") statement.
+          </action>
       	</release>
         <release version="1.0.0-M4" date="2007-??-??" description="unreleased">
           <action dev="gkossakowski" type="update" issue="COCOON-2073" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">

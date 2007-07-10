@@ -30,6 +30,7 @@
   */
   
 dojo.provide("cocoon.forms.manifest");
+dojo.require("dojo.ns");
 
 (function(){
     var map = {

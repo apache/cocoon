@@ -29,6 +29,7 @@
   */
   
 dojo.provide("cocoon.ajax.manifest");
+dojo.require("dojo.ns");
 
 (function(){
 	var map = {
