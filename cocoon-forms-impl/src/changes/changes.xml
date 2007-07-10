@@ -32,6 +32,11 @@
             Fixed AJAX form uploads with MSIE. Patch Contributed by Jan Oberst.
           </action>
         </release>
+        <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">    
+          <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+          	Added missing dojo.require("dojo.ns") statement.
+          </action>
+        </release>
       </body>
     </document>
     
