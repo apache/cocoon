@@ -34,12 +34,12 @@
       <!--+
           | Specifies which Java compiler to use. Possible variants are:
           |
-          |  - EclipseJavaCompiler: the Eclipse JTD java compiler
+          |  - EclipseJavaCompiler: the Eclipse JDT java compiler
           |  - Javac: the java compiler that comes with JDK
           |  - Jikes: the Jikes java compiler
           |  - Pizza: the Pizza java compiler (deprecated. Support will be removed in 2.2)
           |
-          | NOTE: the Eclipse JTD is the only java compiler that is capable
+          | NOTE: the Eclipse JDT is the only java compiler that is capable
           |       of imports classes thru the context classloader. All other
           |       compilers import classes from the JVM classpath and might
           |       normally result in ClassNotFound problems at compilation
@@ -61,8 +61,7 @@
           | auto = The version of the JVM where cocoon is running. (Default value).
           |
           | NOTE: The parameter is optional to keep backward compatibility.
-          |       The parameter currently works only with Sun Javac compiler.
-          |       The eclipse compiler version 3.0.1 currently does not support java 1.5.
+          |       The parameter works with Sun Javac compiler and the Eclipse compiler.
           |       The pizza compiler does not support java 1.5.
           +-->
       <!-- <parameter name="compiler-compliance-level" value="auto"/> -->

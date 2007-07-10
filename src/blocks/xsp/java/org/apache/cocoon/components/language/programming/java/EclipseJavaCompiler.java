@@ -57,7 +57,7 @@ import java.util.StringTokenizer;
 /**
  * Eclipse Java Compiler
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
@@ -251,7 +251,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                             ICompilationUnit compilationUnit = 
                                 new CompilationUnit(sourceFile, className);
                             return 
-                                new NameEnvironmentAnswer(compilationUnit);
+                                new NameEnvironmentAnswer(compilationUnit, null);
                         }
                         String resourceName = 
                             className.replace('.', '/') + ".class";
@@ -273,7 +273,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                                 new ClassFileReader(classBytes, fileName, 
                                                     true);
                             return 
-                                new NameEnvironmentAnswer(classFileReader);
+                                new NameEnvironmentAnswer(classFileReader, null);
                         }
                     } catch (IOException exc) {
                         handleError(className, -1, -1, 
