@@ -2677,6 +2677,16 @@
         <version>1.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.cocoon</groupId> 
+        <artifactId>cocoon-rcl-spring-reloader</artifactId>
+        <version>1.0.0-RC1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
+        <version>1.0.0-RC1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-repository-impl</artifactId>
         <version>1.0.0-SNAPSHOT</version>

@@ -34,6 +34,10 @@
   <name>Cocoon Maven 2 Plugin</name>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
+    </dependency>
     <!-- utility libs -->
     <dependency>
       <groupId>antlr</groupId>
