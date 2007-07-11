@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,14 +41,14 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @cocoon.sitemap.component.documentation
  * The encodeURL transformer emits encoded URLs.
- * 
+ *
  * @cocoon.sitemap.component.name   encodeurl
  * @cocoon.sitemap.component.logger sitemap.transformer.encodeURL
  * @cocoon.sitemap.component.documentation.caching
  *               TBD
- * 
+ *
  * @cocoon.sitemap.component.pooling.max  32
- * 
+ *
  * The encodeURL transformer emits encoded URLs.
  * <p>
  *   This transformer applies encodeURL method to URLs.
@@ -125,7 +125,7 @@ public class EncodeURLTransformer
 
     /**
      * check if encoding of URLs is neccessary.
-     * 
+     *
      * This is true if session object exists, and session-id   
      * was provided from URL, or session is new.
      * The result is stored in some instance variables
@@ -133,9 +133,9 @@ public class EncodeURLTransformer
     protected void checkForEncoding(Request request) {
         this.session = request.getSession(false);
         this.isEncodeURLNeeded = false;
-        
+
         if ( null != this.session ) {
-            // do encoding if session id is from URL, or the session is new, 
+            // do encoding if session id is from URL, or the session is new,
             // fixes BUG #13855, due to paint007@mc.duke.edu
             if ( request.isRequestedSessionIdFromURL() || this.session.isNew()) {
                 this.isEncodeURLNeeded = true;
@@ -158,12 +158,12 @@ public class EncodeURLTransformer
     throws ProcessingException, SAXException, IOException {
 
         this.checkForEncoding(ObjectModelHelper.getRequest(objectModel));
-        
+
         if (this.isEncodeURLNeeded) {
             this.response = ObjectModelHelper.getResponse(objectModel);
 
             // don't check if URL encoding is needed now, as
-            // a generator might create a new session 
+            // a generator might create a new session
             final String includeName = parameters.getParameter(INCLUDE_NAME,
                                                                this.includeNameConfigure);
             final String excludeName = parameters.getParameter(EXCLUDE_NAME,
@@ -256,7 +256,6 @@ public class EncodeURLTransformer
     public void startElement(String uri, String name, String raw, Attributes attributes)
     throws SAXException {
         if (this.isEncodeURLNeeded && this.elementAttributeMatching != null) {
-            String lname = name;
             if (attributes != null && attributes.getLength() > 0) {
                 AttributesImpl new_attributes = new AttributesImpl(attributes);
                 for (int i = 0; i < new_attributes.getLength(); i++) {
@@ -264,7 +263,7 @@ public class EncodeURLTransformer
 
                     String value = new_attributes.getValue(i);
 
-                    if (elementAttributeMatching.matchesElementAttribute(lname, attr_lname, value)) {
+                    if (elementAttributeMatching.matchesElementAttribute(name, attr_lname, value)) {
                         // don't use simply this.response.encodeURL(value)
                         // but be more smart about the url encoding
                         final String new_value = this.encodeURL(value);
@@ -294,7 +293,7 @@ public class EncodeURLTransformer
      * @param  url       the URL probably without sessionid.
      * @return           String the original url inclusive the sessionid
      */
-    private String encodeURL(String url) {
+    protected String encodeURL(String url) {
         String encoded_url;
         if (this.response != null) {
             // As some servlet-engine does not check if url has been already rewritten
@@ -310,7 +309,7 @@ public class EncodeURLTransformer
         }
         return encoded_url;
     }
-    
+
     /**
      * A helper class for matching element names, and attribute names.
      *
