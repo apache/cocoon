@@ -32,6 +32,9 @@
         Cocoon-Lucene-Block becomes a normal Spring application which means that it is 
         initialized by Spring and not the other way around.
       </action>
+      <action dev="felixk" type="fix" issue="COCOON-2065" due-to="Dominique De Munck" due-to-email="dominique.demunck@gmail.com">
+        Huge performance increase of LuceneIndexTransformer on large Lucene indexes.
+      </action>
     </release>
   </body>
 </document>
