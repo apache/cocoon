@@ -204,7 +204,7 @@ public class ServletFactoryBean
      * @see org.springframework.beans.factory.FactoryBean#getObjectType()
      */
     public Class getObjectType() {
-        return this.embeddedServlet.getClass();
+        return this.embeddedServlet != null ? this.embeddedServlet.getClass() : null;
     }
 
     /* (non-Javadoc)
