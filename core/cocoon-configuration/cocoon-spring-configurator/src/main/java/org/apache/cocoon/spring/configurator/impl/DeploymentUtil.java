@@ -19,6 +19,8 @@ package org.apache.cocoon.spring.configurator.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -65,7 +67,11 @@ public abstract class DeploymentUtil {
                 final File out = new File(fileName);
                 // create directory
                 out.getParentFile().mkdirs();
-                IOUtils.copy(jarFile.getInputStream(entry), new FileOutputStream(out));
+                final InputStream inStream = jarFile.getInputStream(entry);
+                final OutputStream outStream = new FileOutputStream(out);
+                IOUtils.copy(inStream, outStream);
+                inStream.close();
+                outStream.close();
             }
         }
     }
