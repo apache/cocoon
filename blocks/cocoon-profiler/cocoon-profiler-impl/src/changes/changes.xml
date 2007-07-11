@@ -27,7 +27,11 @@
         <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
           <action dev="reinhard" type="add">
             Initial creation.
-          </action>      
+          </action>
+          <action dev="gkossakowski" type="fix" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+            Profiling pipelines can't implement Configurable interface as they already implement Parameterizable.
+            Fix changes configuration of pipelines.
+          </action>
         </release>
       </body>
     </document>

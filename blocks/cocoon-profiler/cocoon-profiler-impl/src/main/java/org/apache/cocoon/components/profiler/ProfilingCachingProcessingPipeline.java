@@ -18,9 +18,7 @@ package org.apache.cocoon.components.profiler;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -37,7 +35,7 @@ import org.apache.cocoon.xml.XMLProducer;
  * @version $Id$
  */
 public class ProfilingCachingProcessingPipeline
-	extends CachingProcessingPipeline implements Configurable {
+	extends CachingProcessingPipeline {
 
     private Profiler profiler;
 
@@ -55,11 +53,11 @@ public class ProfilingCachingProcessingPipeline
         this.profiler = (Profiler) manager.lookup(Profiler.ROLE);
     }
     
-	public void configure(Configuration conf) throws ConfigurationException {
-		this.saxstream  = conf.getAttributeAsBoolean("sax-stream", false);
-	}    
+    public void parameterize(Parameters params) throws ParameterException {
+    	super.parameterize(params);
+		this.saxstream  = params.getParameterAsBoolean("sax-stream", false);
+    }
     
-
     /**
      * @see org.apache.cocoon.components.pipeline.impl.BaseCachingProcessingPipeline#dispose()
      */
