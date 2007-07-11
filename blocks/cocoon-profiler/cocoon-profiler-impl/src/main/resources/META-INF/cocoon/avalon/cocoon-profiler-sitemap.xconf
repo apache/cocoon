@@ -33,8 +33,12 @@
     <map:pipe name="profile-noncaching"
               src="org.apache.cocoon.components.profiler.ProfilingNonCachingProcessingPipeline"/>
     <map:pipe name="profile-caching-sax"
-              src="org.apache.cocoon.components.profiler.ProfilingCachingProcessingPipeline" sax-stream="true"/>
+              src="org.apache.cocoon.components.profiler.ProfilingCachingProcessingPipeline">
+      <map:parameter name="sax-stream" value="true"/>
+    </map:pipe>
     <map:pipe name="profile-noncaching-sax"
-              src="org.apache.cocoon.components.profiler.ProfilingNonCachingProcessingPipeline" sax-stream="true"/>
+              src="org.apache.cocoon.components.profiler.ProfilingNonCachingProcessingPipeline">
+      <map:parameter name="sax-stream" value="true"/>
+    </map:pipe>
   </map:pipes>
 </map:components>
