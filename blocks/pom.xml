@@ -104,6 +104,8 @@
     <module>cocoon-template/cocoon-template-impl</module>
     <module>cocoon-template/cocoon-template-sample</module>    
     <module>cocoon-samples-style/cocoon-samples-style-default</module>
+    <module>cocoon-batik/cocoon-batik-impl</module>
+    <module>cocoon-batik/cocoon-batik-sample</module>
   </modules>
   
   <profiles>
@@ -122,8 +124,6 @@
         <module>cocoon-auth/cocoon-auth-sample</module>        
         <module>cocoon-authentication-fw</module>
         <module>cocoon-axis</module>
-        <module>cocoon-batik/cocoon-batik-impl</module>
-        <module>cocoon-batik/cocoon-batik-sample</module>        
         <module>cocoon-bsf</module>
         <module>cocoon-captcha/cocoon-captcha-impl</module>
         <module>cocoon-captcha/cocoon-captcha-sample</module>        
