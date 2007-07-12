@@ -76,7 +76,7 @@
     <!-- property name="defaultQueryDefault" value="" / -->
     <!-- Configuration element name of lucene's default filesystem default directory. Its 
          default value is 'null'. -->
-    <property name="defaultDirectory" value="target" />
+    <property name="defaultDirectory" value="." />
     <!-- Configuration element name of query parser class name. Configuration element default 
          value of queryparser-classname.
          Its value is 'org.apache.lucene.queryParser.QueryParser'. -->
