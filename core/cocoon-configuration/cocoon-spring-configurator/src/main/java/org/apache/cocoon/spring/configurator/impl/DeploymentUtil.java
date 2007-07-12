@@ -74,8 +74,6 @@ public abstract class DeploymentUtil {
                     inStream = jarFile.getInputStream(entry);
                     outStream = new FileOutputStream(out);
                     IOUtils.copy(inStream, outStream);
-                    inStream.close();
-                    outStream.close();
                 } finally {
                     if (outStream != null) {
                         outStream.close();
