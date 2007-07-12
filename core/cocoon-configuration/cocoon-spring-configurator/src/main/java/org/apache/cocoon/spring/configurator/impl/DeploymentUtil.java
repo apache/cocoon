@@ -67,11 +67,23 @@ public abstract class DeploymentUtil {
                 final File out = new File(fileName);
                 // create directory
                 out.getParentFile().mkdirs();
-                final InputStream inStream = jarFile.getInputStream(entry);
-                final OutputStream outStream = new FileOutputStream(out);
-                IOUtils.copy(inStream, outStream);
-                inStream.close();
-                outStream.close();
+                
+                InputStream inStream = null;
+                OutputStream outStream = null;
+                try {
+                    inStream = jarFile.getInputStream(entry);
+                    outStream = new FileOutputStream(out);
+                    IOUtils.copy(inStream, outStream);
+                    inStream.close();
+                    outStream.close();
+                } finally {
+                    if (outStream != null) {
+                        outStream.close();
+                    }
+                    if (inStream != null) {
+                        inStream.close();
+                    }
+                }
             }
         }
     }
