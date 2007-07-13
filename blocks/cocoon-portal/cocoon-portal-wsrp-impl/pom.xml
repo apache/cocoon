@@ -95,7 +95,7 @@
       <artifactId>pluto</artifactId>
     </dependency>
     <dependency>
-      <groupId>portlet-api</groupId>
+      <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
