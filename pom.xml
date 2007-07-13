@@ -1916,12 +1916,6 @@
         <artifactId>portals-bridges-common</artifactId>
         <version>1.0</version>
       </dependency>
-      <!-- TODO: Next two have same artifactId but different groupId ?? -->
-      <dependency>
-        <groupId>portlet-api</groupId>
-        <artifactId>portlet-api</artifactId>
-        <version>1.0</version>
-      </dependency>
       <dependency>
         <groupId>javax.portlet</groupId>
         <artifactId>portlet-api</artifactId>
