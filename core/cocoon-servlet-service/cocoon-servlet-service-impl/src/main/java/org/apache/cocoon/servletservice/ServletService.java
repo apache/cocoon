@@ -83,7 +83,7 @@ public class ServletService extends HttpServlet
             new ServletConfigurationWrapper(servletConfig, this.servletServiceContext) {
 
                 // FIXME: The context should get the init parameters from the
-                // config rather than the oposite way around.
+                // config rather than the opposite way around.
                 public String getInitParameter(String name) {
                     return super.getServletContext().getInitParameter(name);
                 }
@@ -93,7 +93,7 @@ public class ServletService extends HttpServlet
                 }
             };
 
-        // create and initialize the embeded servlet
+        // create and initialize the embedded servlet
         this.embeddedServlet = createEmbeddedServlet(this.embeddedServletClass, blockServletConfig);
         this.embeddedServlet.init(blockServletConfig);
         this.servletServiceContext.setServlet(this.embeddedServlet);
@@ -131,7 +131,7 @@ public class ServletService extends HttpServlet
     /**
      * @return the servletServiceContext
      */
-    public ServletContext getServletServiceContext() {
+    public ServletServiceContext getServletServiceContext() {
         return this.servletServiceContext;
     }
     
@@ -160,8 +160,8 @@ public class ServletService extends HttpServlet
      * must start with an '/'.
      * @param blockContextURL
      */
-    // FIXME: would like to throw an exeption if the form of the url is faulty,
-    // what is the prefered way of handling faulty properties in Spring?
+    // FIXME: would like to throw an exception if the form of the url is faulty,
+    // what is the preferred way of handling faulty properties in Spring?
     public void setBlockContextURL(String blockContextURL) {
         this.servletServiceContext.setContextPath(blockContextURL);
     }
