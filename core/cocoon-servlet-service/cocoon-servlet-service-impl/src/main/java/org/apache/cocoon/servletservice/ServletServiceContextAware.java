@@ -16,12 +16,11 @@
  */
 package org.apache.cocoon.servletservice;
 
-import javax.servlet.ServletContext;
 
 /**
- * Inteface for making the servlet service context of a servlet service
+ * Interface for making the servlet service context of a servlet service
  * available. It is needed for inter servlet communication in the servlet
- * service framework. It is normaly introduced by an AOP mixin.
+ * service framework. It is normally introduced by an AOP mixin.
  * 
  * @version $Id$
  */
@@ -30,5 +29,5 @@ public interface ServletServiceContextAware {
      * The servlet context used for inter servlet service communication
      * @return
      */
-    public ServletContext getServletServiceContext();
+    public ServletServiceContext getServletServiceContext();
 }

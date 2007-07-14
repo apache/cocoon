@@ -251,7 +251,7 @@ public class ServletFactoryBean
     private class ServletServiceContextMixin extends DelegatingIntroductionInterceptor
     implements ServletServiceContextAware {
 
-        public ServletContext getServletServiceContext() {
+        public ServletServiceContext getServletServiceContext() {
             return ServletFactoryBean.this.servletServiceContext;
         }
     }
