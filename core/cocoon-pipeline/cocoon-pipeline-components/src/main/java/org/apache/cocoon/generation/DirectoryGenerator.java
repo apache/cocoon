@@ -22,6 +22,9 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -62,6 +65,9 @@ public class DirectoryGenerator
     extends ServiceableGenerator 
     implements CacheableProcessingComponent {
 
+    /** The default logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+ 
     /** Constant for the file protocol. */
     private static final String FILE = "file:";
 
@@ -127,6 +133,15 @@ public class DirectoryGenerator
 
     /** The source object for the directory. */
     protected Source directorySource;
+
+    /**
+     * Initialize logger
+     *
+     * @throws Exception 
+     */
+    public void init() throws Exception {
+        this.enableLogging(new CLLoggerWrapper(this.logger));
+    }
 
     /**
      * Set the request parameters. Must be called before the generate method.

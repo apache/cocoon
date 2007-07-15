@@ -23,6 +23,9 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.source.impl.MultiSourceValidity;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -101,6 +104,9 @@ import java.util.TimeZone;
 public class TraversableGenerator extends ServiceableGenerator
                                   implements CacheableProcessingComponent {
 
+    /** The default logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+ 
     /** The URI of the namespace of this generator. */
     protected static final String URI = "http://apache.org/cocoon/collection/1.0";
 
@@ -174,6 +180,15 @@ public class TraversableGenerator extends ServiceableGenerator
      * <code>src</code> attribute on the generator's configuration.
      */
     protected boolean isRequestedSource;
+
+    /**
+     * Initialize logger
+     *
+     * @throws Exception 
+     */
+    public void init() throws Exception {
+        this.enableLogging(new CLLoggerWrapper(this.logger));
+    }
 
     /**
      * Set the request parameters. Must be called before the generate method.

@@ -16,19 +16,24 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -47,10 +52,29 @@ import java.util.Map;
 public class FileGenerator extends ServiceableGenerator
                            implements CacheableProcessingComponent {
 
+    /** The default logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+ 
     /** The input source */
     protected Source inputSource;
 
+    /** The SAX Parser. */
+    protected SAXParser parser;
+
+	public void setParser(SAXParser parser) {
+        this.parser = parser;
+    }
+
     /**
+     * Initialize logger
+     *
+     * @throws Exception 
+     */
+    public void init() throws Exception {
+        this.enableLogging(new CLLoggerWrapper(this.logger));
+    }
+
+	/**
      * Recycle this component.
      * All instance variables are set to <code>null</code>.
      */
@@ -58,6 +82,10 @@ public class FileGenerator extends ServiceableGenerator
         if (null != this.inputSource) {
             super.resolver.release(this.inputSource);
             this.inputSource = null;
+        }
+        if (null != this.parser) {
+        	this.manager.release(this.parser);
+        	this.parser = null;
         }
         super.recycle();
     }
@@ -70,12 +98,19 @@ public class FileGenerator extends ServiceableGenerator
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         try {
+        	// Lookup parser in Avalon contexts
+        	if (null == this.parser)
+				this.parser = (SAXParser) this.manager.lookup(SAXParser.class.getName());
+        } catch (ServiceException e) {
+            throw new ProcessingException("Exception when getting parser.", e);
+        }
+        try {
             this.inputSource = super.resolver.resolveURI(src);
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Source " + super.source +
+            getLogger().error("Source " + super.source +
                               " resolved to " + this.inputSource.getURI());
         }
     }
@@ -106,7 +141,7 @@ public class FileGenerator extends ServiceableGenerator
     public void generate()
     throws IOException, SAXException, ProcessingException {
         try {
-            SourceUtil.parse(this.manager, this.inputSource, super.xmlConsumer);
+        	SourceUtil.parse(this.parser, this.inputSource, super.xmlConsumer);
         } catch (SAXException e) {
             SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
