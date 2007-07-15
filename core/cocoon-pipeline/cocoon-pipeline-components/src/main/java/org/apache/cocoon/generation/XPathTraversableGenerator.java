@@ -26,6 +26,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.core.xml.DOMParser;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
@@ -106,6 +107,10 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     /** The regular expression for the XML files pattern. */
     protected RE xmlRE;
 
+
+    /** The parser for the XML snippets to be included. */
+    protected DOMParser parser;
+
     /** The document that should be parsed and (partly) included. */
     protected Document doc;
 
@@ -121,6 +126,13 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     /** The cocoon context used for mime-type mappings */
     protected Context context;
 
+    public void setParser(DOMParser parser) {
+		this.parser = parser;
+	}
+
+	public void setXPathProcessor(XPathProcessor processor) {
+		this.processor = processor;
+	}
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
@@ -178,7 +190,8 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
+        this.processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
+        this.parser = (DOMParser)manager.lookup(DOMParser.class.getName());
     }
 
     public void dispose() {
@@ -217,7 +230,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     protected void performXPathQuery(TraversableSource in) throws SAXException {
         doc = null;
         try {
-            doc = SourceUtil.toDOM(this.manager, "text/xml", in);
+            doc = this.parser.parseDocument(SourceUtil.getInputSource(in));
         } catch (SAXException se) {
             getLogger().error("Warning:" + in.getName() + " is not a valid XML document. Ignoring");
         } catch (Exception e) {

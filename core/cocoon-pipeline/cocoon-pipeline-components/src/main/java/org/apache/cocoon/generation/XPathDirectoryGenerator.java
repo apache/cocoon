@@ -28,28 +28,19 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-
 import org.apache.cocoon.components.source.util.SourceUtil;
-
+import org.apache.cocoon.core.xml.DOMParser;
 import org.apache.cocoon.environment.SourceResolver;
-
 import org.apache.cocoon.xml.dom.DOMStreamer;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
-
-import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.excalibur.xml.xpath.PrefixResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
-
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-
 import org.xml.sax.SAXException;
-
 import org.xml.sax.helpers.AttributesImpl;
 
 
@@ -152,7 +143,15 @@ extends DirectoryGenerator {
     /** The XPath processor. */
     protected XPathProcessor processor;
 
-    /**
+    public void setParser(DOMParser parser) {
+		this.parser = parser;
+	}
+
+	public void setXPathProcessor(XPathProcessor processor) {
+		this.processor = processor;
+	}
+
+	/**
      * Disposable
      */
     public void dispose() {
@@ -185,7 +184,7 @@ extends DirectoryGenerator {
     throws ServiceException {
         super.service(manager);
         this.processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
-        this.parser = (DOMParser)manager.lookup(DOMParser.ROLE);
+        this.parser = (DOMParser)manager.lookup(DOMParser.class.getName());
     }
 
     /**

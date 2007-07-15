@@ -19,11 +19,38 @@
 -->
 
 <!-- @version $Id$ -->
-<beans>
+<beans default-init-method="init">
   <bean name="org.apache.cocoon.generation.Generator/filebean"
         class="org.apache.cocoon.generation.FileGeneratorBean"
         scope="prototype">
     <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
   </bean>
 
+  <bean name="org.apache.cocoon.generation.Generator/file"
+        class="org.apache.cocoon.generation.FileGenerator"
+        scope="prototype">
+    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.generation.Generator/directory"
+        class="org.apache.cocoon.generation.DirectoryGenerator"
+        scope="prototype"/>
+
+  <bean name="org.apache.cocoon.generation.Generator/xpathdirectory"
+        class="org.apache.cocoon.generation.XPathDirectoryGenerator"
+        scope="prototype">
+    <property name="parser" ref="org.apache.cocoon.core.xml.DOMParser"/>
+    <property name="XPathProcessor" ref="org.apache.excalibur.xml.xpath.XPathProcessor"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.generation.Generator/traversable"
+        class="org.apache.cocoon.generation.TraversableGenerator"
+        scope="prototype"/>
+
+  <bean name="org.apache.cocoon.generation.Generator/xpathtraversable"
+        class="org.apache.cocoon.generation.XPathTraversableGenerator"
+        scope="prototype">
+    <property name="parser" ref="org.apache.cocoon.core.xml.DOMParser"/>
+    <property name="XPathProcessor" ref="org.apache.excalibur.xml.xpath.XPathProcessor"/>
+  </bean>
 </beans>
