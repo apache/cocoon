@@ -23,6 +23,7 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 
+import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.validity.DelayedValidity;
@@ -294,6 +295,13 @@ public class XMLResourceBundle extends AbstractLogEnabled
             newValues = Collections.EMPTY_MAP;
 
         } catch (SourceNotFoundException e) {
+            // Nominal case where a bundle doesn't exist
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+            }
+            newValues = Collections.EMPTY_MAP;
+
+        } catch (CascadingIOException e) {
             // Nominal case where a bundle doesn't exist
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Bundle <" + sourceURI + "> not loaded: Source URI not found");
