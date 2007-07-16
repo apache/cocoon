@@ -1,0 +1,547 @@
+Index: core/cocoon-sitemap/cocoon-sitemap-impl/src/main/java/org/apache/cocoon/components/treeprocessor/sitemap/MountNode.java
+===================================================================
+--- core/cocoon-sitemap/cocoon-sitemap-impl/src/main/java/org/apache/cocoon/components/treeprocessor/sitemap/MountNode.java	(revision 529448)
++++ core/cocoon-sitemap/cocoon-sitemap-impl/src/main/java/org/apache/cocoon/components/treeprocessor/sitemap/MountNode.java	(working copy)
+@@ -136,12 +136,12 @@
+     private synchronized TreeProcessor getProcessor(String source, String prefix)
+     throws Exception {
+ 
+-        TreeProcessor processor = (TreeProcessor) processors.get(source);
++        TreeProcessor processor = (TreeProcessor) processors.get(source + "||" + prefix);
+         if (processor == null) {
+             processor = this.parentProcessor.createChildProcessor(source, this.checkReload, prefix);
+ 
+             // Associate to the original source
+-            processors.put(source, processor);
++            processors.put(source + "||" + prefix, processor);
+         }
+ 
+         return processor;
+Index: core/cocoon-sitemap/cocoon-sitemap-impl/src/main/java/org/apache/cocoon/components/treeprocessor/ConcreteTreeProcessor.java
+===================================================================
+--- core/cocoon-sitemap/cocoon-sitemap-impl/src/main/java/org/apache/cocoon/components/treeprocessor/ConcreteTreeProcessor.java	(revision 529448)
++++ core/cocoon-sitemap/cocoon-sitemap-impl/src/main/java/org/apache/cocoon/components/treeprocessor/ConcreteTreeProcessor.java	(working copy)
+@@ -302,7 +302,7 @@
+ 
+         // Get the processor that should process this request
+         ConcreteTreeProcessor processor;
+-        if (newEnv.getURIPrefix().equals("")) {
++        if (info.processFromRoot) {
+             processor = ((TreeProcessor)getRootProcessor()).concreteProcessor;
+         } else {
+             processor = this;
+Index: blocks/cocoon-forms/cocoon-forms-impl/src/main/resources/META-INF/cocoon/avalon/cocoon-forms.xconf
+===================================================================
+--- blocks/cocoon-forms/cocoon-forms-impl/src/main/resources/META-INF/cocoon/avalon/cocoon-forms.xconf	(revision 529448)
++++ blocks/cocoon-forms/cocoon-forms-impl/src/main/resources/META-INF/cocoon/avalon/cocoon-forms.xconf	(working copy)
+@@ -191,6 +191,7 @@
+     <selection-list name="flow-jxpath" class="org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder"/>
+     <selection-list name="enum" class="org.apache.cocoon.forms.datatype.EnumSelectionListBuilder"/>
+     <selection-list name="java" class="org.apache.cocoon.forms.datatype.JavaSelectionListBuilder"/>
++    <selection-list name="javascript" class="org.apache.cocoon.forms.datatype.JavaScriptSelectionListBuilder"/>
+   </forms-selection-lists>
+ 
+   <!--+
+Index: blocks/cocoon-forms/cocoon-forms-impl/pom.xml
+===================================================================
+--- blocks/cocoon-forms/cocoon-forms-impl/pom.xml	(revision 529448)
++++ blocks/cocoon-forms/cocoon-forms-impl/pom.xml	(working copy)
+@@ -89,6 +89,7 @@
+       <artifactId>cocoon-core</artifactId>
+       <version>2.2.0-RC1-SNAPSHOT</version>
+     </dependency>
++    
+     <dependency>
+       <groupId>org.apache.cocoon</groupId>
+       <artifactId>cocoon-core</artifactId>
+@@ -148,11 +149,13 @@
+       <version>0.8</version>
+       <scope>test</scope>
+     </dependency>
++    <!--
+     <dependency>
+       <groupId>org.apache.excalibur.components</groupId>
+       <artifactId>excalibur-sourceresolve</artifactId>
+       <version>2.2.1</version>
+     </dependency>
++    -->
+   </dependencies>
+   
+   <distributionManagement>
+Index: blocks/cocoon-jcr/cocoon-jcr-impl/status.xml
+===================================================================
+--- blocks/cocoon-jcr/cocoon-jcr-impl/status.xml	(revision 529448)
++++ blocks/cocoon-jcr/cocoon-jcr-impl/status.xml	(working copy)
+@@ -66,6 +66,9 @@
+  <!-- The following list contains the changes since the latest 2.1.x version. -->
+  <changes>
+   <release version="@version@" date="@date@">
++    <action dev="SG" type="add">
++      Added JCR query transformer to perform queries on JCR repositories.
++    </action>
+   </release>
+  </changes>
+ 
+Index: blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/transforming/JCRSelection.java
+===================================================================
+--- blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/transforming/JCRSelection.java	(revision 0)
++++ blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/transforming/JCRSelection.java	(revision 543970)
+@@ -0,0 +1,180 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one or more
++ * contributor license agreements.  See the NOTICE file distributed with
++ * this work for additional information regarding copyright ownership.
++ * The ASF licenses this file to You under the Apache License, Version 2.0
++ * (the "License"); you may not use this file except in compliance with
++ * the License.  You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++package org.apache.cocoon.jcr.transforming;
++
++import java.util.HashSet;
++import java.util.Iterator;
++import java.util.Set;
++
++import javax.jcr.Item;
++import javax.jcr.Node;
++import javax.jcr.NodeIterator;
++import javax.jcr.Property;
++import javax.jcr.PropertyIterator;
++import javax.jcr.RepositoryException;
++import javax.xml.namespace.QName;
++
++/**
++ * Represents a selection of a property or of a subnode and its properties.
++ * 
++ * @version $Id$ 
++ */
++public class JCRSelection {
++
++	/**
++	 * Name of the property or subnode.
++	 */
++	private QName name;
++	/**
++	 * In case it is a subnode, other subnodes or properties can be added.
++	 */
++	private Set subnodes;
++	/**
++	 * 
++	 */
++	private boolean all = false;
++	
++	public JCRSelection() {}
++	
++	/**
++	 * @param namespaceURI Namespace URI of the property or subnode name
++	 * @param localname Local name (excluding prefix) of the property or subnode.
++	 */
++	public JCRSelection(String namespaceURI, String localname) {
++		this.setName(namespaceURI, localname);
++	}
++	
++	public JCRSelection(Item item) throws RepositoryException {
++		String acname = item.getName();
++		String namespaceURI = null;
++		int pos = -1;
++		if ((pos = acname.indexOf(':')) != -1) {
++			String prefix = acname.substring(0, pos);
++			acname = acname.substring(pos + 1);
++			namespaceURI = item.getSession().getNamespaceURI(prefix);
++		}
++		this.setName(namespaceURI, acname);
++	}
++	
++	/**
++	 * @return The name of the property of subnode.
++	 */
++	public QName getName() {
++		return name;
++	}
++	public void setName(QName name) {
++		this.name = name;
++	}
++	
++	public void setName(String namespaceURI, String localname) {
++		this.name = new QName(namespaceURI, localname);
++	}
++	
++	/**
++	 * @param node The current node, used only if this is an all selection.
++	 * @return The set of properties and/or subnodes.
++	 * @throws RepositoryException 
++	 */
++	public Set getSubnodes(Node node) throws RepositoryException {
++		if (!this.all) {
++			return subnodes;
++		} else {
++			JCRSelection allsel = null;
++			for (Iterator iter = this.subnodes.iterator(); iter.hasNext();) {
++				JCRSelection acsel = (JCRSelection) iter.next();
++				if (acsel.getName().getLocalPart().equals("allProps")) {
++					allsel = acsel;
++					break;
++				}
++			}
++			Set ret = new HashSet();
++			NodeIterator nodes = node.getNodes();
++			while (nodes.hasNext()) {
++				Node acnode = nodes.nextNode();
++				JCRSelection selection = new JCRSelection(acnode);
++				selection.setSubnodes(allsel.subnodes);
++				ret.add(selection);
++			}			
++			PropertyIterator properties = node.getProperties();
++			while (properties.hasNext()) {
++				Property acnode = properties.nextProperty();
++				JCRSelection selection = new JCRSelection(acnode);
++				selection.setSubnodes(allsel.subnodes);
++				ret.add(selection);
++			}			
++			return ret;
++		}
++	}
++	public void setSubnodes(Set subnodes) {
++		this.all = false;
++		this.subnodes = subnodes;
++		for (Iterator iter = subnodes.iterator(); iter.hasNext();) {
++			JCRSelection subnode = (JCRSelection) iter.next();
++			if (subnode.getName().getLocalPart().equals("allProps")) {
++				this.all = true;
++			}
++		}
++	}
++	
++	/**
++	 * Adds a subnode or property.
++	 * @param subnode The subnode or poerty to add
++	 */
++	public void addSubnode(JCRSelection subnode) {
++		if (this.subnodes == null) this.subnodes = new HashSet();
++		this.subnodes.add(subnode);
++		if (subnode.getName().getLocalPart().equals("allProps")) {
++			this.all = true;
++		}
++	}
++	public boolean hasSubnodes() {
++		return this.subnodes != null && this.subnodes.size() > 0;
++	}
++	
++	/**
++	 * @return A set of all namespaces URIs used in this node and its subnodes.
++	 */
++	public Set getNamespaces() {
++		Set ret = new HashSet();
++		fillNamespaces(ret);
++		return ret;
++	}
++
++	private void fillNamespaces(Set ret) {
++		if (this.name != null) ret.add(this.name.getNamespaceURI());
++		if (this.subnodes != null) {
++			for (Iterator iter = this.subnodes.iterator(); iter.hasNext();) {
++				JCRSelection subnode = (JCRSelection) iter.next();
++				subnode.fillNamespaces(ret);
++			}
++		}
++	}
++	
++	public boolean equals(Object other) {
++		if (!(other instanceof JCRSelection)) return false;
++		JCRSelection oth = (JCRSelection) other;
++		return oth.name == null ? this.name == null : this.name == null ? false : this.name.equals(oth.name);
++	}
++	
++	public int hashCode() {
++		if (this.name == null) return 0;
++		return this.name.hashCode();
++	}
++	
++	
++
++}
+Index: blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/transforming/JCRQueryTransformer.java
+===================================================================
+--- blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/transforming/JCRQueryTransformer.java	(revision 0)
++++ blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/transforming/JCRQueryTransformer.java	(revision 543970)
+@@ -0,0 +1,217 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one or more
++ * contributor license agreements.  See the NOTICE file distributed with
++ * this work for additional information regarding copyright ownership.
++ * The ASF licenses this file to You under the Apache License, Version 2.0
++ * (the "License"); you may not use this file except in compliance with
++ * the License.  You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++package org.apache.cocoon.jcr.transforming;
++
++import java.util.Stack;
++
++import javax.jcr.LoginException;
++import javax.jcr.Node;
++import javax.jcr.NodeIterator;
++import javax.jcr.Repository;
++import javax.jcr.RepositoryException;
++import javax.jcr.Session;
++import javax.jcr.query.InvalidQueryException;
++import javax.jcr.query.Query;
++import javax.jcr.query.QueryManager;
++import javax.jcr.query.QueryResult;
++
++import org.apache.avalon.framework.CascadingRuntimeException;
++import org.apache.cocoon.jcr.utils.NodeStreaming;
++import org.apache.cocoon.transformation.AbstractSAXTransformer;
++import org.xml.sax.Attributes;
++import org.xml.sax.SAXException;
++import org.xml.sax.helpers.AttributesImpl;
++
++/**
++ * This transformer performs a query on a JCR server.
++ * <p>
++ * It expects a "query" element without namespace containing the 
++ * query to execute, either in XPath or SQL, and eventually the properties to
++ * fetch (since JSR-170 does not define a standard for specifying them in xpath
++ * queries).
++ * </p>
++ * <p> 
++ * It will then replace it with a "result" element containing the query results
++ * in elements named "node".
++ * </p>
++ * <h2>Sample invocation:</h2>
++ * <pre>
++ * &lt;query language="xpath" 
++ *       xmlns:jcr="http://www.jcp.org/jcr/1.0"
++ *       xmlns:cms="http://www.mycms.org"&gt;
++ *   &lt;jcr:encoding/&gt;
++ *   &lt;jcr:isCheckedOut/&gt;
++ *   &lt;cms:data&gt;
++ *     &lt;cms:author/&gt;
++ *     &lt;cms:workflow&gt;
++ *       &lt;cms:lastStep/&gt;
++ *     &lt;/cms:workflow&gt;
++ *   &lt;/cms:data&gt;
++ *   jcr:root/site/articles/*
++ * &lt;/query&gt;
++ * </pre>
++ * <h2>Sample output:</h2>
++ * <pre>
++ * &lt;result xmlns:cms="http://www.mycms.org" 
++ *         xmlns:jcr="http://www.jcp.org/jcr/1.0"&gt;
++ *   &lt;node href="/site/articles/home.xml" name="home.xml" type="nt:folder" uuid="2359e49d-e84b-47aa-b27c-fb46b86abb19"&gt;
++ *     &lt;jcr:encoding type="String"&gt;UTF-8&lt;/jcr:encoding&gt;
++ *     &lt;jcr:isCheckedOut type="Boolean"&gt;false&lt;/jcr:isCheckedOut&gt;
++ *     &lt;cms:data href="/site/articles/home.xml/cms:data" name="cms:data" type="cms:dataRecord" uuid="72e36378-f26f-4548-993f-21b5c97306f0"&gt;
++ *       &lt;cms:author type="String"&gt;Simone&lt;/cms:author&gt;
++ *       &lt;cms:workflow href="/site/articles/home.xml/cms:data/cms:workflow" name="cms:workflow" type="cms:workflowRecord" uuid="72e36378-f26f-4548-993f-31a6d9931e4"&gt;
++ *       	&lt;cms:lastStep type="Integer"&gt;1&lt;/cms:lastStep&gt;
++ *       &lt;/cms:workflow&gt;
++ *     &lt;/cms:data&gt;
++ *     &lt;jcr:primaryType type="Name"&gt;cms:article&lt;/jcr:primaryType&gt;
++ *   &lt;/node&gt;
++ * &lt;/result&gt;
++ * </pre>
++ *
++ * TODO: render bynary properties 
++ * 
++ * @version $Id$
++ */
++public class JCRQueryTransformer extends AbstractSAXTransformer {
++
++	/**
++	 * Wether we are inside the query element or not
++	 */
++	protected boolean recording = false;
++	
++	/**
++	 * Language of the query, as taken from query/@language 
++	 */
++	protected String language;
++	
++	/**
++	 * Query statement
++	 */
++	protected String query = "";
++	
++	/**
++	 * Basic selection, this will hold all properties and subnodes fetching hierarchy.
++	 */
++	protected JCRSelection selection;
++	
++	/**
++	 * Latest JCRSelection created, so that children can be properly assigned.
++	 */
++	protected Stack currentSelection;
++	
++	protected Repository repo;
++	
++    public void startElement(String uri, String name, String raw,
++			Attributes attr) throws SAXException {
++    	if (name.equals("query")) {
++    		recording = true;
++    		language = attr.getValue("language");
++    	} else if (recording) {
++    		JCRSelection eleselection = new JCRSelection(uri, name);
++    		if (currentSelection.empty()) {
++    			selection.addSubnode(eleselection);
++    		} else {
++    			JCRSelection parent = (JCRSelection) currentSelection.peek();
++    			parent.addSubnode(eleselection);
++    		}
++    		currentSelection.push(eleselection);
++    	} else {
++    		super.startElement(uri, name, raw, attr);
++    	}
++	}
++    
++    public void endElement(String uri, String name, String raw) throws SAXException {
++    	if (name.equals("query")) {
++    		recording = false;
++    		lazyInit();
++    		
++            Session session;
++            try {
++                // TODO: accept a different workspace?
++                session = repo.login();
++            } catch (LoginException e) {
++                throw new SAXException("Login to repository failed", e);
++            } catch (RepositoryException e) {
++                throw new SAXException("Cannot access repository", e);
++            }
++    		
++    		try {
++    			AttributesImpl emptyAttrs = new AttributesImpl();
++    			this.contentHandler.startElement("", "result", "result", emptyAttrs);
++    			
++				QueryManager queryManager = session.getWorkspace().getQueryManager();
++				Query query2 = queryManager.createQuery(this.query, this.language);
++				QueryResult result = query2.execute();
++				String[] columnNames = result.getColumnNames();
++				for (int i = 0; i < columnNames.length; i++) {
++					int pos = -1;
++					if ((pos = columnNames[i].indexOf(':')) != -1) {
++						String prefix = columnNames[i].substring(0, pos);
++						String local = columnNames[i].substring(pos + 1);
++						String namespaceURI = session.getNamespaceURI(prefix);						
++						selection.addSubnode(new JCRSelection(namespaceURI, local));
++					}
++				}
++
++				NodeIterator nodes = result.getNodes();
++				
++				while (nodes.hasNext()) {
++					Node node = nodes.nextNode();
++					NodeStreaming.sendItem(this.contentHandler, node, this.selection, this.manager);
++				}
++				
++				this.contentHandler.endElement("", "result", "result");
++			} catch (InvalidQueryException e) {
++				throw new SAXException("Invalid query " + this.query + " (" + this.language + ")", e);
++			} catch (Exception e) {
++				throw new SAXException(e);
++			}
++    	} else if (!recording) {
++    		super.endElement(uri, name, raw);
++    	} else {
++    		currentSelection.pop();
++    	}
++    }
++
++	public void characters(char[] buff, int offset, int len) throws SAXException {
++		if (!recording) {
++			super.characters(buff, offset, len);
++		} else {
++			this.query += new String(buff, offset, len).trim();
++		}
++	}
++    
++    protected void lazyInit() {
++        if (this.repo == null) {
++            try {
++                this.repo = (Repository)manager.lookup(Repository.class.getName());
++            } catch (Exception e) {
++                throw new CascadingRuntimeException("Cannot lookup repository", e);
++            }
++        }
++    }
++
++	public void recycle() {
++		selection = new JCRSelection();
++		currentSelection = new Stack();
++		query = "";
++		language = null;
++		recording = false;
++	}
++
++    
++}
+Index: blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/source/JCRSourceFactory.java
+===================================================================
+--- blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/source/JCRSourceFactory.java	(revision 529448)
++++ blocks/cocoon-jcr/cocoon-jcr-impl/src/main/java/org/apache/cocoon/jcr/source/JCRSourceFactory.java	(working copy)
+@@ -242,7 +242,12 @@
+ 
+         // Compute the path
+         String path = SourceUtil.getSpecificPart(uri);
+-        if (!path.startsWith("//")) {
++        boolean sendprops = false;
++        if (path.startsWith("properties://")) {
++        	sendprops = true;
++        	// strip properties:
++        	path = path.substring(11);
++        } else if (!path.startsWith("//")) {
+             throw new MalformedURLException("Expecting " + this.scheme + "://path and got " + uri);
+         }
+         // Remove first '/'
+@@ -255,7 +260,11 @@
+             }
+         }
+ 
+-        return createSource(session, path);
++        if (sendprops) {
++        	return createPropertiesSource(session, path);
++        } else {
++        	return createSource(session, path);
++        }
+     }
+ 
+     /*
+@@ -358,6 +367,11 @@
+         return new JCRNodeSource(this, session, path);
+     }
+ 
++    
++    public JCRNodeSource createPropertiesSource(Session session, String path) throws SourceException {
++        return new JCRNodePropertiesSource(this, session, path);
++    }
++    
+     /**
+      * Create a child file node in a folder node.
+      *
+Index: blocks/cocoon-jcr/cocoon-jcr-impl/pom.xml
+===================================================================
+--- blocks/cocoon-jcr/cocoon-jcr-impl/pom.xml	(revision 529448)
++++ blocks/cocoon-jcr/cocoon-jcr-impl/pom.xml	(working copy)
+@@ -48,7 +48,7 @@
+     <dependency>
+       <groupId>javax.jcr</groupId>
+       <artifactId>jcr</artifactId>
+-      <version>1.0.1</version>
++      <version>1.0</version>
+     </dependency>
+     <dependency>
+       <groupId>slide</groupId>
