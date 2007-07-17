@@ -60,6 +60,27 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>javaflow</artifactId>
     </dependency>
+    <!-- Specify transitive dependencies to avoid MNG-2782 with JDK1.4.2. -->
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm-analysis</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm-attrs</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm-tree</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm-util</artifactId>
+      <version>2.2.1</version>
+    </dependency>
   </dependencies>
   
   <repositories>
