@@ -110,7 +110,7 @@ public class FileGenerator extends ServiceableGenerator
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().error("Source " + super.source +
+            getLogger().debug("Source " + super.source +
                               " resolved to " + this.inputSource.getURI());
         }
     }
