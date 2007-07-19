@@ -36,7 +36,7 @@
        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
        <map:parameter name="file" value="{file}"/>
        <map:parameter name="remove" value="{../0}"/>
-     </map:transform> 
+     </map:transform>
    </map:resource>
  </map:resources>
 
@@ -53,7 +53,6 @@
      <map:match pattern="*.html">
        <map:generate type="jx" src="{1}.xml"/>
        <map:call resource="simple-page2html"/>
-       <map:transform type="servletLinkRewriter"/>
        <map:serialize type="html"/>
      </map:match>
 
