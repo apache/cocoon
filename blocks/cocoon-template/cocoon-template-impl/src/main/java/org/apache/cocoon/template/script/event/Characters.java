@@ -18,7 +18,7 @@ package org.apache.cocoon.template.script.event;
 
 import java.util.Iterator;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -27,6 +27,7 @@ import org.apache.cocoon.template.expression.Literal;
 import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.instruction.MacroContext;
 import org.apache.cocoon.template.script.Invoker;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -42,9 +43,9 @@ public class Characters extends TextEvent {
     }
 
     public Event execute(XMLConsumer consumer,
-            ExpressionContext expressionContext,
+            ObjectModel objectModel,
             ExecutionContext executionContext, MacroContext macroContext,
-            Event startEvent, Event endEvent) throws SAXException {
+            NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         Iterator iter = getSubstitutions().iterator();
         while (iter.hasNext()) {
             Subst subst = (Subst) iter.next();
@@ -55,7 +56,7 @@ public class Characters extends TextEvent {
             } else {
                 JXTExpression expr = (JXTExpression) subst;
                 try {
-                    Object val = expr.getNode(expressionContext);
+                    Object val = expr.getNode(objectModel);
                     Invoker.executeNode(consumer, val);
                 } catch (Exception e) {
                     throw new SAXParseException(e.getMessage(), getLocation(), e);

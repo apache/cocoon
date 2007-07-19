@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -33,6 +33,7 @@ import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.IgnorableWhitespace;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.template.script.event.TextEvent;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
@@ -97,26 +98,25 @@ public class Call extends Instruction {
     }
 
     public Event execute(XMLConsumer consumer,
-            ExpressionContext expressionContext,
+            ObjectModel objectModel,
             ExecutionContext executionContext, MacroContext macroContext,
-            Event startEvent, Event endEvent) throws SAXException {
+            NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         Map attributeMap = new HashMap();
         Iterator i = parameters.keySet().iterator();
         while (i.hasNext()) {
             String parameterName = (String) i.next();
             ParameterInstance parameter = (ParameterInstance) parameters
                     .get(parameterName);
-            Object parameterValue = parameter.getValue(expressionContext);
+            Object parameterValue = parameter.getValue(objectModel);
             attributeMap.put(parameterName, parameterValue);
         }
-        ExpressionContext localExpressionContext = new ExpressionContext(
-                expressionContext);
+        objectModel.markLocalContext();
         HashMap macro = new HashMap();
         macro.put("body", this.body);
         macro.put("arguments", attributeMap);
-        localExpressionContext.put("macro", macro);
+        objectModel.put("macro", macro);
 
-        Define definition = resolveMacroDefinition(expressionContext,
+        Define definition = resolveMacroDefinition(objectModel,
                 executionContext);
         Iterator iter = definition.getParameters().entrySet().iterator();
         while (iter.hasNext()) {
@@ -128,7 +128,7 @@ public class Call extends Instruction {
             if (val == null) {
                 val = default_;
             }
-            localExpressionContext.put(key, val);
+            objectModel.put(key, val);
         }
 
         Event macroBodyStart = getNext();
@@ -142,13 +142,13 @@ public class Call extends Instruction {
         MacroContext newMacroContext = new MacroContext(definition.getQname(),
                 macroBodyStart, macroBodyEnd);
         try {
-            Invoker.execute(consumer, localExpressionContext, executionContext,
-                    newMacroContext, definition.getBody(), definition
-                            .getEndInstruction());
+            Invoker.execute(consumer, objectModel, executionContext,
+                    newMacroContext, namespaces,definition.getBody(), definition.getEndInstruction());
         } catch (SAXParseException exc) {
             throw new SAXParseException(newMacroContext.getMacroQName() + ": "
                     + exc.getMessage(), location, exc);
         }
+        objectModel.cleanupLocalContext();
 
         if (getEndInstruction() != null)
             return getEndInstruction().getNext();
@@ -161,7 +161,7 @@ public class Call extends Instruction {
      * @throws SAXParseException
      */
     private Define resolveMacroDefinition(
-            ExpressionContext expressionContext,
+            ObjectModel objectModel,
             ExecutionContext executionContext) throws SAXParseException {
         if (this.macro instanceof Define)
             return (Define) macro;
@@ -170,8 +170,8 @@ public class Call extends Instruction {
         Object namespace;
         JXTExpression macroNameExpression = (JXTExpression) macro;
         try {
-            macroName = macroNameExpression.getValue(expressionContext);
-            namespace = targetNamespace.getValue(expressionContext);
+            macroName = macroNameExpression.getValue(objectModel);
+            namespace = targetNamespace.getValue(objectModel);
             if (namespace == null)
                 namespace = "";
         } catch (Exception e) {

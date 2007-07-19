@@ -18,12 +18,13 @@ package org.apache.cocoon.template.instruction;
 
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -42,14 +43,14 @@ public class Choose extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         When startWhen = this.firstChoice;
         while (startWhen != null) {
             Object val;
             try {
-                val = startWhen.getTest().getValue(expressionContext);
+                val = startWhen.getTest().getValue(objectModel);
             } catch (Exception e) {
                 throw new SAXParseException(e.getMessage(), getLocation(), e);
             }
@@ -60,16 +61,15 @@ public class Choose extends Instruction {
                 result = (val != null);
             }
             if (result) {
-                Invoker.execute(consumer, expressionContext, executionContext,
-                                macroContext, startWhen.getNext(),
-                                startWhen.getEndInstruction());
+                Invoker.execute(consumer, objectModel, executionContext,
+                                macroContext, namespaces, startWhen.getNext(), startWhen.getEndInstruction());
                 break;
             }
             startWhen = startWhen.getNextChoice();
         }
         if (startWhen == null && this.otherwise != null) {
-            Invoker.execute(consumer, expressionContext, executionContext,
-                            macroContext, this.otherwise.getNext(),
+            Invoker.execute(consumer, objectModel, executionContext,
+                            macroContext, namespaces, this.otherwise.getNext(),
                             this.otherwise.getEndInstruction());
         }
         return getEndInstruction().getNext();

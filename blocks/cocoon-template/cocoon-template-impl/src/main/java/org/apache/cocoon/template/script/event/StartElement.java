@@ -20,11 +20,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.Substitutions;
 import org.apache.cocoon.template.instruction.MacroContext;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -100,9 +101,9 @@ public class StartElement extends Event {
     }
 
     public Event execute(XMLConsumer consumer,
-            ExpressionContext expressionContext,
+            ObjectModel objectModel,
             ExecutionContext executionContext, MacroContext macroContext,
-            Event startEvent, Event endEvent) throws SAXException {
+            NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         Iterator i = getAttributeEvents().iterator();
         AttributesImpl attrs = new AttributesImpl();
         while (i.hasNext()) {
@@ -114,7 +115,7 @@ public class StartElement extends Event {
             } else if (attrEvent instanceof SubstituteAttribute) {
                 SubstituteAttribute substEvent = (SubstituteAttribute) attrEvent;
                 String attributeValue = substEvent.getSubstitutions().toString(
-                        getLocation(), expressionContext);
+                        getLocation(), objectModel);
                 attrs.addAttribute(attrEvent.getNamespaceURI(), attrEvent
                         .getLocalName(), attrEvent.getRaw(), attrEvent
                         .getType(), attributeValue);
@@ -122,7 +123,7 @@ public class StartElement extends Event {
         }
         
         // Send any pending startPrefixMapping events
-        expressionContext.getNamespaces().enterScope(consumer);
+        namespaces.enterScope(consumer);
         consumer.startElement(getNamespaceURI(), getLocalName(), getRaw(),
                 attrs);
         return getNext();

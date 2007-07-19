@@ -19,7 +19,7 @@ package org.apache.cocoon.template.instruction;
 import java.util.Iterator;
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -28,6 +28,7 @@ import org.apache.cocoon.template.expression.StringTemplateParser;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -78,31 +79,31 @@ public class ForEach extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         Iterator iter = null;
         int begin, end, step;
         String var = null, varStatus = null;
         try {
             iter = (this.items != null ) 
-                    ? this.items.getIterator(expressionContext)
+                    ? this.items.getIterator(objectModel)
                     : JXTExpression.NULL_ITER;
             begin = this.begin == null
                 ? 0
-                : this.begin.getIntValue(expressionContext);
+                : this.begin.getIntValue(objectModel);
             end = this.end == null
                 ? Integer.MAX_VALUE
-                : this.end.getIntValue(expressionContext);
+                : this.end.getIntValue(objectModel);
             step = this.step == null
                 ? 1
-                : this.step.getIntValue(expressionContext);
+                : this.step.getIntValue(objectModel);
 
             if ( this.var != null )
-                var = this.var.getStringValue(expressionContext);
+                var = this.var.getStringValue(objectModel);
             
             if ( this.varStatus != null )
-                varStatus = this.varStatus.getStringValue(expressionContext);
+                varStatus = this.varStatus.getStringValue(objectModel);
         } catch (Exception exc) {
             throw new SAXParseException(exc.getMessage(),
                                         getLocation(), exc);
@@ -110,8 +111,7 @@ public class ForEach extends Instruction {
             throw new SAXParseException(err.getMessage(),
                                         getLocation(), new ErrorHolder(err));
         }
-        ExpressionContext localExpressionContext =
-            new ExpressionContext(expressionContext);
+        objectModel.markLocalContext();
         int i = 0;
         // Move to the begin row
         while (i < begin && iter.hasNext()) {
@@ -125,14 +125,15 @@ public class ForEach extends Instruction {
             status.setEnd(end);
             status.setStep(step);
             status.setFirst(true);
-            localExpressionContext.put(varStatus, status);
+            objectModel.put(varStatus, status);
         }
         int skipCounter, count = 1;
         while (i <= end && iter.hasNext()) {
+            objectModel.markLocalContext();
             Object value = iter.next();
-            localExpressionContext.setContextBean(value);
+            objectModel.put(ObjectModel.CONTEXTBEAN, value);
             if (var != null) {
-                localExpressionContext.put(var, value);
+                objectModel.put(var, value);
             }
             if (status != null) {
                 status.setIndex(i);
@@ -141,8 +142,8 @@ public class ForEach extends Instruction {
                 status.setCurrent(value);
                 status.setLast((i == end || !iter.hasNext()));
             }
-            Invoker.execute(consumer, localExpressionContext, executionContext,
-                            macroContext, getNext(), getEndInstruction());
+            Invoker.execute(consumer, objectModel, executionContext,
+                            macroContext, namespaces, getNext(), getEndInstruction());
             // Skip rows
             skipCounter = step;
             while (--skipCounter > 0 && iter.hasNext()) {
@@ -151,7 +152,11 @@ public class ForEach extends Instruction {
             // Increase index
             i += step;
             count++;
+            
+            objectModel.cleanupLocalContext();
         }
+        objectModel.cleanupLocalContext();
+            
         return getEndInstruction().getNext();
     }
 }

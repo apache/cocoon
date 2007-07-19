@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.environment.TemplateObjectModelHelper;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -35,6 +35,7 @@ import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartDocument;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.template.script.event.SubstituteAttribute;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -81,8 +82,8 @@ public class Import extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         String uri;
         AttributeEvent e = this.uri;
@@ -102,7 +103,7 @@ public class Import extends Instruction {
                     JXTExpression expr = (JXTExpression) subst;
                     Object val;
                     try {
-                        val = expr.getValue(expressionContext);
+                        val = expr.getValue(objectModel);
                     } catch (Exception exc) {
                         throw new SAXParseException(exc.getMessage(), getLocation(), exc);
                     } catch (Error err) {
@@ -120,13 +121,12 @@ public class Import extends Instruction {
         } catch (ProcessingException exc) {
             throw new SAXParseException(exc.getMessage(), getLocation(), exc);
         }
-        ExpressionContext selectExpressionContext = expressionContext;
+        objectModel.markLocalContext();
         if (this.select != null) {
             try {
-                Object obj = this.select.getValue(expressionContext);
-                selectExpressionContext = new ExpressionContext(expressionContext);
-                selectExpressionContext.setContextBean(obj);
-                TemplateObjectModelHelper.fillContext(obj, selectExpressionContext);
+                Object obj = this.select.getValue(objectModel);
+                objectModel.put(ObjectModel.CONTEXTBEAN, obj);
+                TemplateObjectModelHelper.fillContext(obj, objectModel);
             } catch (Exception exc) {
                 throw new SAXParseException(exc.getMessage(), getLocation(), exc);
             } catch (Error err) {
@@ -135,13 +135,16 @@ public class Import extends Instruction {
             }
         }
         try {
-            Invoker.execute(consumer, expressionContext, executionContext,
-                            macroContext, doc.getNext(), doc.getEndDocument());
+            Invoker.execute(consumer, objectModel, executionContext,
+                            macroContext, namespaces, doc.getNext(), doc.getEndDocument());
         } catch (Exception exc) {
             throw new SAXParseException(
                                         "Exception occurred in imported template " + uri
                                         + ": " + exc.getMessage(), getLocation(), exc);
         }
+        
+        objectModel.cleanupLocalContext();
+        
         return getEndInstruction().getNext();
     }
 }

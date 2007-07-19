@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.Stack;
 import java.util.TimeZone;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -30,6 +30,7 @@ import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.StringTemplateParser;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -68,11 +69,11 @@ public class FormatDate extends LocaleAwareInstruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         try {
-            String result = format(expressionContext);
+            String result = format(objectModel);
             if (result != null) {
                 char[] chars = result.toCharArray();
                 consumer.characters(chars, 0, chars.length);
@@ -85,21 +86,21 @@ public class FormatDate extends LocaleAwareInstruction {
         return getNext();
     }
 
-    private String format(ExpressionContext expressionContext) throws Exception {
-        String var = this.var == null ? null : this.var.getStringValue(expressionContext);
-        Object value = this.value == null ? null : this.value.getValue(expressionContext);
+    private String format(ObjectModel objectModel) throws Exception {
+        String var = this.var == null ? null : this.var.getStringValue(objectModel);
+        Object value = this.value == null ? null : this.value.getValue(objectModel);
 
-        String pattern = this.pattern == null ? null : this.pattern.getStringValue(expressionContext);
-        Object timeZone = this.timeZone == null ? null : this.timeZone.getValue(expressionContext);
+        String pattern = this.pattern == null ? null : this.pattern.getStringValue(objectModel);
+        Object timeZone = this.timeZone == null ? null : this.timeZone.getValue(objectModel);
 
-        String type = this.type == null ? null : this.type.getStringValue(expressionContext);
-        String timeStyle = this.timeStyle == null ? null : this.timeStyle.getStringValue(expressionContext);
-        String dateStyle = this.dateStyle == null ? null : this.dateStyle.getStringValue(expressionContext);
+        String type = this.type == null ? null : this.type.getStringValue(objectModel);
+        String timeStyle = this.timeStyle == null ? null : this.timeStyle.getStringValue(objectModel);
+        String dateStyle = this.dateStyle == null ? null : this.dateStyle.getStringValue(objectModel);
 
         String formatted = null;
 
         // Create formatter
-        Locale locale = getLocale( expressionContext );
+        Locale locale = getLocale( objectModel );
         DateFormat formatter = createFormatter(locale, type, dateStyle,
                 timeStyle);
         // Apply pattern, if present
@@ -130,7 +131,7 @@ public class FormatDate extends LocaleAwareInstruction {
         }
         formatted = formatter.format(value);
         if (var != null) {
-            expressionContext.put(var, formatted);
+            objectModel.put(var, formatted);
             return null;
         }
         return formatted;

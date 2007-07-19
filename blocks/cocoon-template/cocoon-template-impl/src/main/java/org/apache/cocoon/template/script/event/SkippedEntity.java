@@ -16,9 +16,10 @@
  */
 package org.apache.cocoon.template.script.event;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.instruction.MacroContext;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -39,9 +40,9 @@ public class SkippedEntity extends Event {
     }
 
     public Event execute(XMLConsumer consumer,
-            ExpressionContext expressionContext,
+            ObjectModel objectModel,
             ExecutionContext executionContext, MacroContext macroContext,
-            Event startEvent, Event endEvent) throws SAXException {
+            NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         consumer.skippedEntity(getName());
         return getNext();
     }
