@@ -18,13 +18,14 @@ package org.apache.cocoon.template.instruction;
 
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -62,27 +63,25 @@ public class Set extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
 
         Object value = null;
         String var = null;
         try {
             if (this.var != null) {
-                var = this.var.getStringValue(expressionContext);
+                var = this.var.getStringValue(objectModel);
             }
             if (this.value != null) {
-                value = this.value.getNode(expressionContext);
+                value = this.value.getNode(objectModel);
             }
         } catch (Exception exc) {
             throw new SAXParseException(exc.getMessage(), getLocation(), exc);
         }
         if (this.value == null) {
             NodeList nodeList =
-                Invoker.toDOMNodeList("set", this,
-                                      expressionContext, executionContext,
-                                      macroContext);
+                Invoker.toDOMNodeList("set", this, objectModel, executionContext, macroContext, namespaces);
             // JXPath doesn't handle NodeList, so convert it to an array
             int len = nodeList.getLength();
             Node[] nodeArr = new Node[len];
@@ -92,7 +91,7 @@ public class Set extends Instruction {
             value = nodeArr;
         }
         if (var != null) {
-            expressionContext.put(var, value);
+            objectModel.put(var, value);
         }
         return getEndInstruction().getNext();
     }

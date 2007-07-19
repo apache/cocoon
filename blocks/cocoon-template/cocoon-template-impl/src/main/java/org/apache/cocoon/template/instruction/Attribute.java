@@ -19,7 +19,7 @@ package org.apache.cocoon.template.instruction;
 import java.io.StringWriter;
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.JXTemplateGenerator;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -29,6 +29,7 @@ import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.template.xml.AttributeAwareXMLConsumer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.xml.serialize.TextSerializer;
 import org.xml.sax.Attributes;
@@ -61,17 +62,17 @@ public class Attribute extends Instruction {
         this.value = parsingContext.getStringTemplateParser().compileExpr(value, "parameter: \"value\": ", locator);
     }
 
-    public Event execute(final XMLConsumer consumer, ExpressionContext expressionContext,
-            ExecutionContext executionContext, MacroContext macroContext, Event startEvent, Event endEvent)
+    public Event execute(final XMLConsumer consumer, ObjectModel objectModel,
+            ExecutionContext executionContext, MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent)
             throws SAXException {
 
         String nameStr = null;
         String valueStr = "";
         try {
-            nameStr = this.name.getStringValue(expressionContext);
+            nameStr = this.name.getStringValue(objectModel);
 
             if (this.value != null)
-                valueStr = this.value.getStringValue(expressionContext);
+                valueStr = this.value.getStringValue(objectModel);
             else {
                 final Attributes EMPTY_ATTRS = new AttributesImpl();
                 String elementName = "attribute";
@@ -85,7 +86,7 @@ public class Attribute extends Instruction {
 
                 // TODO is root element necessary for TextSerializer?
                 contentHandler.startElement(JXTemplateGenerator.NS, elementName, elementName, EMPTY_ATTRS);
-                Invoker.execute(contentHandler, expressionContext, executionContext, macroContext, this.getNext(), this
+                Invoker.execute(contentHandler, objectModel, executionContext, macroContext, namespaces, this.getNext(), this
                         .getEndInstruction());
                 contentHandler.endElement(JXTemplateGenerator.NS, elementName, elementName);
                 contentHandler.endDocument();

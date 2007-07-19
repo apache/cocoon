@@ -22,7 +22,7 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.xml.sax.Locator;
@@ -67,7 +67,7 @@ public class Substitutions {
         return this.substitutions.get(pos);
     }
 
-    public String toString(Locator location, ExpressionContext expressionContext) throws SAXException {
+    public String toString(Locator location, ObjectModel objectModel) throws SAXException {
         StringBuffer buf = new StringBuffer();
         Iterator iterSubst = iterator();
         while (iterSubst.hasNext()) {
@@ -79,7 +79,7 @@ public class Substitutions {
                 JXTExpression expr = (JXTExpression) subst;
                 Object val;
                 try {
-                    val = expr.getValue(expressionContext);
+                    val = expr.getValue(objectModel);
                 } catch (Exception e) {
                     throw new SAXParseException(e.getMessage(), location, e);
                 } catch (Error err) {

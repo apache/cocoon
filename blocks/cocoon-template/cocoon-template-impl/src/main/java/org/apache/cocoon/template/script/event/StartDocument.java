@@ -19,9 +19,10 @@ package org.apache.cocoon.template.script.event;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.instruction.MacroContext;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.Locator;
@@ -84,9 +85,9 @@ public class StartDocument extends Event {
     }
 
     public Event execute(XMLConsumer consumer,
-            ExpressionContext expressionContext,
+            ObjectModel objectModel,
             ExecutionContext executionContext, MacroContext macroContext,
-            Event startEvent, Event endEvent) throws SAXException {
+            NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         if (getEndDocument() != null)
             consumer.startDocument();
         return getNext();

@@ -18,7 +18,7 @@ package org.apache.cocoon.template.instruction;
 
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.JXTExpression;
@@ -68,9 +68,9 @@ public class ParameterInstance extends Instruction {
         return name;
     }
 
-    public Object getValue(ExpressionContext expressionContext) throws SAXException {
+    public Object getValue(ObjectModel objectModel) throws SAXException {
         if (this.value instanceof JXTExpression)
-            return getExpressionValue((JXTExpression) this.value, expressionContext);
+            return getExpressionValue((JXTExpression) this.value, objectModel);
         else if (this.value instanceof CopyAttribute) {
             CopyAttribute copy = (CopyAttribute) this.value;
             return copy.getValue();
@@ -78,19 +78,19 @@ public class ParameterInstance extends Instruction {
             SubstituteAttribute substEvent = (SubstituteAttribute) this.value;
             if (substEvent.getSubstitutions().size() == 1
                     && substEvent.getSubstitutions().get(0) instanceof JXTExpression)
-                return getExpressionValue((JXTExpression) substEvent.getSubstitutions().get(0), expressionContext);
+                return getExpressionValue((JXTExpression) substEvent.getSubstitutions().get(0), objectModel);
             else
-                return substEvent.getSubstitutions().toString(getLocation(), expressionContext);
+                return substEvent.getSubstitutions().toString(getLocation(), objectModel);
 
         } else {
             throw new Error("this shouldn't have happened");
         }
     }
 
-    private Object getExpressionValue(JXTExpression expr, ExpressionContext expressionContext) throws SAXException {
+    private Object getExpressionValue(JXTExpression expr, ObjectModel objectModel) throws SAXException {
         Object val;
         try {
-            val = expr.getNode(expressionContext);
+            val = expr.getNode(objectModel);
         } catch (Exception e) {
             throw new SAXParseException(e.getMessage(), getLocation(), e);
         } catch (Error err) {

@@ -19,7 +19,7 @@ package org.apache.cocoon.template.instruction;
 import java.util.Locale;
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.environment.ValueHelper;
 import org.apache.cocoon.template.expression.JXTExpression;
@@ -38,12 +38,12 @@ public class LocaleAwareInstruction extends Instruction {
         this.locale = parsingContext.getStringTemplateParser().compileExpr(attrs.getValue("locale"), null, getLocation());
     }
 
-    protected Locale getLocale(ExpressionContext expressionContext) throws Exception {
+    protected Locale getLocale(ObjectModel objectModel) throws Exception {
         Object locVal = null;
         if (this.locale != null) {
-            locVal = this.locale.getValue(expressionContext);
+            locVal = this.locale.getValue(objectModel);
             if (locVal == null)
-                locVal = this.locale.getStringValue(expressionContext);
+                locVal = this.locale.getStringValue(objectModel);
         }
 
         if (locVal != null)

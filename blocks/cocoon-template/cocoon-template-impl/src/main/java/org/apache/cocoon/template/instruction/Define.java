@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.script.event.Characters;
@@ -28,6 +28,7 @@ import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.IgnorableWhitespace;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.template.script.event.TextEvent;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
@@ -66,8 +67,8 @@ public class Define extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         executionContext.getDefinitions().put(this.qname, this);
         return getEndInstruction().getNext();

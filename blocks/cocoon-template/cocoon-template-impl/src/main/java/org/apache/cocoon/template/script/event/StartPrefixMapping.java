@@ -16,9 +16,10 @@
  */
 package org.apache.cocoon.template.script.event;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.instruction.MacroContext;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -45,12 +46,13 @@ public class StartPrefixMapping extends Event {
     private final String uri;
 
     public Event execute(XMLConsumer consumer,
-            ExpressionContext expressionContext,
+            ObjectModel objectModel,
             ExecutionContext executionContext, MacroContext macroContext,
-            Event startEvent, Event endEvent) throws SAXException {
-        
-        expressionContext.getNamespaces().addDeclaration(getPrefix(), getUri());
+            NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         // the startPrefixMapping event will be sent in StartElement
+        namespaces.addDeclaration(getPrefix(), getUri());
+        objectModel.markLocalContext();
+        objectModel.put(ObjectModel.NAMESPACE, namespaces);
         return getNext();
     }
 }

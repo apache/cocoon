@@ -26,9 +26,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 import org.apache.cocoon.template.environment.JXCacheKey;
@@ -39,6 +39,7 @@ import org.apache.cocoon.template.script.ScriptManager;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartDocument;
 import org.apache.cocoon.template.xml.AttributeAwareXMLConsumerImpl;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.RedundantNamespacesFilter;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.SourceValidity;
@@ -69,7 +70,8 @@ public class JXTemplateGenerator
     public final static String CACHE_KEY = "cache-key";
     public final static String VALIDITY = "cache-validity";
 
-    private ExpressionContext expressionContext;
+    private ObjectModel objectModel;
+    private NamespacesTable namespaces;
     private ScriptManager scriptManager;
 
     private StartDocument startDocument;
@@ -103,7 +105,8 @@ public class JXTemplateGenerator
      */
     public void recycle() {
         this.startDocument = null;
-        this.expressionContext = null;
+        this.objectModel = null;
+        this.namespaces = null;
         this.definitions = null;
         super.recycle();
     }
@@ -120,7 +123,8 @@ public class JXTemplateGenerator
             this.startDocument = scriptManager.resolveTemplate(src);
         }
 
-        this.expressionContext = FlowObjectModelHelper.getFOMExpressionContext(objectModel, parameters);
+        this.objectModel = FlowObjectModelHelper.getNewObjectModelWithFOM(objectModel, parameters);
+        this.namespaces = new NamespacesTable();
         this.definitions = new HashMap();
     }
 
@@ -135,10 +139,12 @@ public class JXTemplateGenerator
     }
 
     public void performGeneration(Event startEvent, Event endEvent) throws SAXException {
+        objectModel.markLocalContext();
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
-        ((Map) expressionContext.get("cocoon")).put("consumer", consumer);
-        Invoker.execute(consumer, this.expressionContext, new ExecutionContext(this.definitions, this.scriptManager,
-                this.manager), null, startEvent, null);
+        ((Map) objectModel.get("cocoon")).put("consumer", consumer);
+        Invoker.execute(consumer, this.objectModel, new ExecutionContext(this.definitions, this.scriptManager,
+                this.manager), null, namespaces, startEvent, null);
+        objectModel.cleanupLocalContext();
     }
 
     /**
@@ -151,7 +157,7 @@ public class JXTemplateGenerator
             return null;
         }
         try {
-            final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.expressionContext);
+            final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.objectModel);
             if (templateKey != null) {
                 return new JXCacheKey(this.startDocument.getUri(), templateKey);
             }
@@ -172,7 +178,7 @@ public class JXTemplateGenerator
         }
         try {
             final SourceValidity sourceValidity = this.startDocument.getSourceValidity();
-            final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.expressionContext);
+            final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.objectModel);
             if (sourceValidity != null && templateValidity != null) {
                 return new JXSourceValidity(sourceValidity, templateValidity);
             }

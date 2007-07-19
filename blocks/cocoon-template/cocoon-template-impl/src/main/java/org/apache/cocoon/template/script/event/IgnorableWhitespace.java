@@ -16,10 +16,11 @@
  */
 package org.apache.cocoon.template.script.event;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.instruction.MacroContext;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -33,10 +34,10 @@ public class IgnorableWhitespace extends TextEvent {
         super(parsingContext, location, chars, start, length);
     }
 
-    public Event execute(final XMLConsumer consumer, ExpressionContext expressionContext,
-            ExecutionContext executionContext, MacroContext macroContext, Event startEvent, Event endEvent)
+    public Event execute(final XMLConsumer consumer, ObjectModel objectModel,
+            ExecutionContext executionContext, MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent)
             throws SAXException {
-        characters(expressionContext, executionContext, this, new CharHandler() {
+        characters(objectModel, executionContext, this, new CharHandler() {
             public void characters(char[] ch, int offset, int len) throws SAXException {
                 consumer.ignorableWhitespace(ch, offset, len);
             }

@@ -18,7 +18,7 @@ package org.apache.cocoon.template.script.event;
 
 import java.util.Iterator;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -58,9 +58,8 @@ public class TextEvent extends Event {
                 throws SAXException;
     }
 
-    protected static void characters(ExpressionContext expressionContext,
-                                   ExecutionContext executionContext,
-                                   TextEvent event, CharHandler handler)
+    protected static void characters(ObjectModel objectModel, ExecutionContext executionContext,
+                                     TextEvent event, CharHandler handler)
         throws SAXException {
         Iterator iter = event.getSubstitutions().iterator();
         while (iter.hasNext()) {
@@ -71,7 +70,7 @@ public class TextEvent extends Event {
             } else {
                 JXTExpression expr = (JXTExpression) subst;
                 try {
-                    Object val = expr.getValue(expressionContext);
+                    Object val = expr.getValue(objectModel);
                     chars = val != null ? val.toString().toCharArray()
                             : ArrayUtils.EMPTY_CHAR_ARRAY;
                 } catch (Exception e) {
