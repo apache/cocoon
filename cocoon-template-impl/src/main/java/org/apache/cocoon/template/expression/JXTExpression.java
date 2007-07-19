@@ -19,8 +19,8 @@ package org.apache.cocoon.template.expression;
 import java.util.Iterator;
 
 import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.jxpath.JXPathExpression;
+import org.apache.cocoon.objectmodel.ObjectModel;
 
 /**
  * @version $Id$
@@ -50,21 +50,21 @@ public class JXTExpression extends Subst {
     // Geting the value of the expression in various forms
 
     // Hack: try to prevent JXPath from converting result to a String
-    public Object getNode(ExpressionContext expressionContext)
+    public Object getNode(ObjectModel objectModel)
         throws Exception {
         Object compiled = this.getCompiledExpression();
         if (compiled instanceof Expression)
-            return ((Expression)compiled).getNode(expressionContext);
+            return ((Expression)compiled).getNode(objectModel);
         return this.getRaw();
     }
 
-    public Iterator getIterator(ExpressionContext expressionContext)
+    public Iterator getIterator(ObjectModel objectModel)
         throws Exception {
         Iterator iter = null;
         if (this.getCompiledExpression() != null || this.getRaw() != null) {
             if (this.getCompiledExpression() instanceof Expression) {
                 iter =
-                    ((Expression)this.getCompiledExpression()).iterate(expressionContext);
+                    ((Expression)this.getCompiledExpression()).iterate(objectModel);
             } else {
                 // literal value
                 iter = new Iterator() {
@@ -91,15 +91,15 @@ public class JXTExpression extends Subst {
         return iter;
     }
 
-    public Boolean getBooleanValue(ExpressionContext expressionContext)
+    public Boolean getBooleanValue(ObjectModel objectModel)
         throws Exception {
-        Object res = getValue(expressionContext);
+        Object res = getValue(objectModel);
         return res instanceof Boolean ? (Boolean)res : null;
     }
 
-    public String getStringValue(ExpressionContext expressionContext)
+    public String getStringValue(ObjectModel objectModel)
         throws Exception {
-        Object res = getValue(expressionContext);
+        Object res = getValue(objectModel);
         if (res != null) {
             return res.toString();
         }
@@ -109,9 +109,9 @@ public class JXTExpression extends Subst {
         return null;
     }
 
-    public Number getNumberValue(ExpressionContext expressionContext)
+    public Number getNumberValue(ObjectModel objectModel)
         throws Exception {
-        Object res = getValue(expressionContext);
+        Object res = getValue(objectModel);
         if (res instanceof Number) {
             return (Number)res;
         }
@@ -121,18 +121,18 @@ public class JXTExpression extends Subst {
         return null;
     }
 
-    public int getIntValue(ExpressionContext expressionContext)
+    public int getIntValue(ObjectModel objectModel)
         throws Exception {
-        Object res = getValue(expressionContext);
+        Object res = getValue(objectModel);
         return res instanceof Number ? ((Number)res).intValue() : 0;
     }
 
-    public Object getValue(ExpressionContext expressionContext)
+    public Object getValue(ObjectModel objectModel)
         throws Exception {
         if (this.getCompiledExpression() != null) {
             Object compiled = this.getCompiledExpression();
             if (compiled instanceof Expression)
-                return ((Expression)compiled).evaluate(expressionContext);
+                return ((Expression)compiled).evaluate(objectModel);
             else
                 return compiled;
         } else

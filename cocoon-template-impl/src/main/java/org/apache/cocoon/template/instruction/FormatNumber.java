@@ -23,7 +23,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -31,6 +31,7 @@ import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.StringTemplateParser;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
@@ -97,11 +98,11 @@ public class FormatNumber extends LocaleAwareInstruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         try {
-            String result = format(expressionContext);
+            String result = format(objectModel);
             if (result != null) {
                 char[] chars = result.toCharArray();
                 consumer.characters(chars, 0, chars.length);
@@ -115,21 +116,21 @@ public class FormatNumber extends LocaleAwareInstruction {
         return getNext();
     }
 
-    private String format(ExpressionContext expressionContext) throws Exception {
+    private String format(ObjectModel objectModel) throws Exception {
         // Determine formatting locale
-        String var = this.var == null ? null : this.var.getStringValue(expressionContext);
-        Number input = this.value.getNumberValue(expressionContext);
-        String type = this.type == null ? null : this.type.getStringValue(expressionContext);
-        String pattern = this.pattern == null ? null : this.pattern.getStringValue(expressionContext);
-        String currencyCode = this.currencyCode == null ? null : this.currencyCode.getStringValue(expressionContext);
-        String currencySymbol = this.currencySymbol == null ? null : this.currencySymbol.getStringValue(expressionContext);
-        Boolean isGroupingUsed = this.isGroupingUsed == null ? null : this.isGroupingUsed.getBooleanValue(expressionContext);
-        Number maxIntegerDigits = this.maxIntegerDigits == null ? null : this.maxIntegerDigits.getNumberValue(expressionContext);
-        Number minIntegerDigits = this.minIntegerDigits == null ? null : this.minIntegerDigits.getNumberValue(expressionContext);
-        Number maxFractionDigits = this.maxFractionDigits == null ? null : this.maxFractionDigits.getNumberValue(expressionContext);
-        Number minFractionDigits = this.minFractionDigits == null ? null : this.minFractionDigits.getNumberValue(expressionContext);
+        String var = this.var == null ? null : this.var.getStringValue(objectModel);
+        Number input = this.value.getNumberValue(objectModel);
+        String type = this.type == null ? null : this.type.getStringValue(objectModel);
+        String pattern = this.pattern == null ? null : this.pattern.getStringValue(objectModel);
+        String currencyCode = this.currencyCode == null ? null : this.currencyCode.getStringValue(objectModel);
+        String currencySymbol = this.currencySymbol == null ? null : this.currencySymbol.getStringValue(objectModel);
+        Boolean isGroupingUsed = this.isGroupingUsed == null ? null : this.isGroupingUsed.getBooleanValue(objectModel);
+        Number maxIntegerDigits = this.maxIntegerDigits == null ? null : this.maxIntegerDigits.getNumberValue(objectModel);
+        Number minIntegerDigits = this.minIntegerDigits == null ? null : this.minIntegerDigits.getNumberValue(objectModel);
+        Number maxFractionDigits = this.maxFractionDigits == null ? null : this.maxFractionDigits.getNumberValue(objectModel);
+        Number minFractionDigits = this.minFractionDigits == null ? null : this.minFractionDigits.getNumberValue(objectModel);
         
-        Locale loc = getLocale(expressionContext);
+        Locale loc = getLocale(objectModel);
         String formatted;
         if (loc != null) {
             // Create formatter
@@ -153,7 +154,7 @@ public class FormatNumber extends LocaleAwareInstruction {
             formatted = input.toString();
         }
         if (var != null) {
-            expressionContext.put(var, formatted);
+            objectModel.put(var, formatted);
             return null;
         }
         return formatted;

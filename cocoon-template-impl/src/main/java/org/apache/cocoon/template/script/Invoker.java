@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.template.script;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.JXTemplateGenerator;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.LocatorFacade;
@@ -27,6 +27,7 @@ import org.apache.cocoon.template.instruction.MacroContext;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -45,8 +46,8 @@ public class Invoker {
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
     public static void execute(final XMLConsumer consumer,
-            ExpressionContext expressionContext,
-            ExecutionContext executionContext, MacroContext macroContext,
+            ObjectModel objectModel,
+            ExecutionContext executionContext, MacroContext macroContext, NamespacesTable namespaces,
             Event startEvent, Event endEvent) throws SAXException {
 
         Event ev = startEvent;
@@ -61,17 +62,17 @@ public class Invoker {
                 Define def = (Define) executionContext
                         .getDefinitions().get(startElement.getQname());
                 if (def == null) {
-                    ev = ev.execute(consumer, expressionContext,
-                            executionContext, macroContext, startEvent, endEvent);
+                    ev = ev.execute(consumer, objectModel,
+                            executionContext, macroContext, namespaces, startEvent, endEvent);
                     continue;
                 }
 
                 Call call = new Call( def, startElement );
-                ev = call.execute(consumer, expressionContext,
-                        executionContext, macroContext, startEvent, endEvent);
+                ev = call.execute(consumer, objectModel,
+                        executionContext, macroContext, null, startEvent, endEvent);
             } else
-                ev = ev.execute(consumer, expressionContext, executionContext,
-                        macroContext, startEvent, endEvent);
+                ev = ev.execute(consumer, objectModel, executionContext,
+                        macroContext, namespaces, startEvent, endEvent);
         }
     }
 
@@ -126,15 +127,14 @@ public class Invoker {
     }
 
     public static NodeList toDOMNodeList(String elementName,
-            Instruction si, ExpressionContext expressionContext,
-            ExecutionContext executionContext, MacroContext macroContext)
+            Instruction si, ObjectModel objectModel,
+            ExecutionContext executionContext, MacroContext macroContext, NamespacesTable namespaces)
             throws SAXException {
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
         builder.startElement(JXTemplateGenerator.NS, elementName, elementName,
                 EMPTY_ATTRS);
-        execute(builder, expressionContext, executionContext, macroContext, si
-                .getNext(), si.getEndInstruction());
+        execute(builder, objectModel, executionContext, macroContext, namespaces, si.getNext(), si.getEndInstruction());
         builder.endElement(JXTemplateGenerator.NS, elementName, elementName);
         builder.endDocument();
         Node node = builder.getDocument().getDocumentElement();

@@ -20,7 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Stack;
 
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.JXTExpression;
@@ -28,6 +28,7 @@ import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -72,12 +73,12 @@ public class Out extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         Object val;
         try {
-            val = this.compiledExpression.getNode(expressionContext);
+            val = this.compiledExpression.getNode(objectModel);
             
             boolean stripRoot = BooleanUtils.toBoolean(this.stripRoot);
             //TODO: LG, I do not see a good way to do this.

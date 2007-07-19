@@ -20,12 +20,13 @@ import java.util.Properties;
 import java.util.Stack;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.w3c.dom.NodeList;
@@ -43,14 +44,14 @@ public class Comment extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         // Parse the body of the comment
         NodeList nodeList =
             Invoker.toDOMNodeList("comment", this,
-                                  expressionContext, executionContext,
-                                  macroContext);
+                                  objectModel, executionContext,
+                                  macroContext, namespaces);
         // JXPath doesn't handle NodeList, so convert it to an array
         int len = nodeList.getLength();
         final StringBuffer buf = new StringBuffer();

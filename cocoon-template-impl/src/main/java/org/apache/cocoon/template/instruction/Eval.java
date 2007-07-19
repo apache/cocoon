@@ -18,7 +18,7 @@ package org.apache.cocoon.template.instruction;
 
 import java.util.Stack;
 
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
@@ -26,6 +26,7 @@ import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -47,11 +48,11 @@ public class Eval extends Instruction {
     }
 
     public Event execute(final XMLConsumer consumer,
-                         ExpressionContext expressionContext, ExecutionContext executionContext,
-                         MacroContext macroContext, Event startEvent, Event endEvent) 
+                         ObjectModel objectModel, ExecutionContext executionContext,
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
         throws SAXException {
         try {
-            Object val = this.value.getNode(expressionContext);
+            Object val = this.value.getNode(objectModel);
             if (!(val instanceof StartElement)) {
                 throw new Exception("macro invocation required instead of: " + val);
             }
@@ -59,8 +60,8 @@ public class Eval extends Instruction {
             
             //FIXME: eval does not allow to call macro providing macro body
             MacroContext newMacroContext = new MacroContext( call.getQname(), null, null );
-            Invoker.execute(consumer, expressionContext, executionContext,
-                            newMacroContext, call.getNext(), call.getEndElement());
+            Invoker.execute(consumer, objectModel, executionContext,
+                            newMacroContext, namespaces, call.getNext(), call.getEndElement());
         } catch (Exception exc) {
             throw new SAXParseException(exc.getMessage(), getLocation(), exc);
         } catch (Error err) {
