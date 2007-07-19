@@ -21,7 +21,7 @@ import java.util.Map;
 import java.io.StringReader;
 
 import org.apache.cocoon.components.expression.AbstractExpression;
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
@@ -59,12 +59,12 @@ public class JavaScriptExpression extends AbstractExpression {
         }
     }
 
-    public Object evaluate(ExpressionContext context) throws ExpressionException {
+    public Object evaluate(ObjectModel objectModel) throws ExpressionException {
         Context ctx = Context.enter();
         try {
             Scriptable scope = ctx.newObject(FlowObjectModelHelper.getScope());
             // Populate the scope
-            Iterator iter = context.entrySet().iterator();
+            Iterator iter = objectModel.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 String key = (String) entry.getKey();
@@ -87,8 +87,8 @@ public class JavaScriptExpression extends AbstractExpression {
         }
     }
 
-    public Iterator iterate(ExpressionContext context) throws ExpressionException {
-        Object result = evaluate(context);
+    public Iterator iterate(ObjectModel objectModel) throws ExpressionException {
+        Object result = evaluate(objectModel);
         if (result == null)
             return EMPTY_ITER;
 
@@ -107,11 +107,11 @@ public class JavaScriptExpression extends AbstractExpression {
         return iter;
     }
 
-    public void assign(ExpressionContext context, Object value) throws ExpressionException {
+    public void assign(ObjectModel objectModel, Object value) throws ExpressionException {
         throw new UnsupportedOperationException("assignment not implemented for javascript expressions");
     }
 
-    public Object getNode(ExpressionContext context) throws ExpressionException {
-        return evaluate(context);
+    public Object getNode(ObjectModel objectModel) throws ExpressionException {
+        return evaluate(objectModel);
     }
 }

@@ -21,10 +21,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
+import org.apache.cocoon.xml.NamespacesTable;
+import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
@@ -50,14 +52,14 @@ public class JXPathExpression implements Expression {
         this.compiledExpression = JXPathContext.compile(expression);
     }
 
-    public Object evaluate(ExpressionContext context)
+    public Object evaluate(ObjectModel objectModel)
         throws ExpressionException{
-        return this.compiledExpression.getValue(getContext(context));
+        return this.compiledExpression.getValue(getContext(objectModel));
     }
 
-    public Iterator iterate(ExpressionContext context)
+    public Iterator iterate(ObjectModel objectModel)
         throws ExpressionException {
-        final JXPathContext jxpathContext = getContext(context);
+        final JXPathContext jxpathContext = getContext(objectModel);
         Object val =
             this.compiledExpression.getPointer(jxpathContext, this.expression).getNode();
         // FIXME: workaround for JXPath bug
@@ -82,9 +84,9 @@ public class JXPathExpression implements Expression {
                 };
     }
 
-    public void assign(ExpressionContext context, Object value)
+    public void assign(ObjectModel objectModel, Object value)
         throws ExpressionException {
-        this.compiledExpression.setValue(getContext(context), value);
+        this.compiledExpression.setValue(getContext(objectModel), value);
     }
 
     public String getExpression() {
@@ -101,9 +103,9 @@ public class JXPathExpression implements Expression {
     }
 
     // Hack: try to prevent JXPath from converting result to a String
-    public Object getNode(ExpressionContext context) throws ExpressionException {
+    public Object getNode(ObjectModel objectModel) throws ExpressionException {
         Iterator iter =
-            this.compiledExpression.iteratePointers(getContext(context));
+            this.compiledExpression.iteratePointers(getContext(objectModel));
         if (iter.hasNext()) {
             Pointer first = (Pointer)iter.next();
             if (iter.hasNext()) {
@@ -129,33 +131,40 @@ public class JXPathExpression implements Expression {
         return null;
     }
 
-    private JXPathContext getContext(ExpressionContext context) {
+    private JXPathContext getContext(ObjectModel objectModel) {
         // This could be made more efficient by caching the
         // JXPathContext within the Context object.
-        JXPathContext jxcontext = JXPathContext.newContext(context.getContextBean());
-        jxcontext.setVariables(new VariableAdapter(context));
-        jxcontext.setLenient(this.lenient);
-        jxcontext.setNamespaceContextPointer(new NamespacesTablePointer(context.getNamespaces()));
-        return jxcontext;
+        
+        Object contextBean = objectModel.get(ObjectModel.CONTEXTBEAN);
+        if (contextBean instanceof ArrayStack)
+            contextBean = ((ArrayStack) contextBean).peek();
+        JXPathContext jxobjectModel = JXPathContext.newContext(contextBean);
+        jxobjectModel.setVariables(new VariableAdapter(objectModel));
+        jxobjectModel.setLenient(this.lenient);
+        Object namespaces = objectModel.get(ObjectModel.NAMESPACE);
+        if (namespaces instanceof ArrayStack)
+            namespaces = ((ArrayStack)namespaces).peek();
+        jxobjectModel.setNamespaceContextPointer(new NamespacesTablePointer((NamespacesTable)namespaces));
+        return jxobjectModel;
     }
 
     private static class VariableAdapter implements Variables {
-        private ExpressionContext context;
+        private ObjectModel objectModel;
 
-        public VariableAdapter(ExpressionContext context) {
-            this.context = context;
+        public VariableAdapter(ObjectModel objectModel) {
+            this.objectModel = objectModel;
         }
 
         public void declareVariable(String name, Object value) {
-            this.context.put(name, value);
+            this.objectModel.put(name, value);
         }
 
         public Object getVariable(String name) {
-            return this.context.get(name);
+            return this.objectModel.get(name);
         }
 
         public boolean isDeclaredVariable(String name) {
-            return this.context.containsKey(name);
+            return this.objectModel.containsKey(name);
         }
 
         public void undeclareVariable(String name) {

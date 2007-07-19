@@ -17,41 +17,42 @@
 package org.apache.cocoon.environment;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.ExpressionFactory;
+import org.apache.cocoon.core.container.ContainerTestCase;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 
-public class FOMTestCase extends SitemapComponentTestCase {
+public class FOMTestCase extends ContainerTestCase {
 
     public void testFOMJexl() throws ExpressionException {
         ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        ExpressionContext fomContext =
-            FlowObjectModelHelper.getFOMExpressionContext(getObjectModel(), parameters);
+        ObjectModel objectModel =
+            FlowObjectModelHelper.getNewObjectModelWithFOM(getObjectModel(), parameters);
 
         Expression expression = factory.getExpression("jexl", "cocoon.parameters.test");
-        assertEquals("foo", expression.evaluate(fomContext));
+        assertEquals("foo", expression.evaluate(objectModel));
 
         expression = factory.getExpression("jexl", "cocoon.request.protocol");
-        assertEquals("HTTP/1.1", expression.evaluate(fomContext));
+        assertEquals("HTTP/1.1", expression.evaluate(objectModel));
     }
 
     public void testFOMJXPath() throws ExpressionException {
         ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        ExpressionContext fomContext =
-            FlowObjectModelHelper.getFOMExpressionContext(getObjectModel(), parameters);
+        ObjectModel objectModel =
+            FlowObjectModelHelper.getNewObjectModelWithFOM(getObjectModel(), parameters);
 
         Expression expression = factory.getExpression("jxpath", "$cocoon/parameters/test");
-        assertEquals("foo", expression.evaluate(fomContext));
+        assertEquals("foo", expression.evaluate(objectModel));
 
         expression = factory.getExpression("jxpath", "$cocoon/request/protocol");
-        assertEquals("HTTP/1.1", expression.evaluate(fomContext));
+        assertEquals("HTTP/1.1", expression.evaluate(objectModel));
     }
+    
 }
 

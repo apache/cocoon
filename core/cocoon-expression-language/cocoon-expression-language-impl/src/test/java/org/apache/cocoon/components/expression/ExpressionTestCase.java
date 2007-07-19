@@ -17,33 +17,34 @@
 package org.apache.cocoon.components.expression;
 
 import org.apache.cocoon.CocoonTestCase;
+import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
 public class ExpressionTestCase extends CocoonTestCase {
 
-    public void testContext() {
-        ExpressionContext parentContext = new ExpressionContext();
+    /*public void testContext() {
+        ObjectModel parentContext = new ObjectModelImpl();
         parentContext.put("var1", "foo");
         parentContext.put("var2", "bar");
 
-        ExpressionContext context = new ExpressionContext(parentContext);
-        context.put("var1", "zonk");
+        ObjectModel objectModel = new ObjectModel(parentContext);
+        objectModel.put("var1", "zonk");
 
         assertEquals("foo", parentContext.get("var1"));
         assertEquals("bar", parentContext.get("var2"));
-        assertEquals("zonk", context.get("var1"));
-        assertEquals("bar", context.get("var2"));
+        assertEquals("zonk", objectModel.get("var1"));
+        assertEquals("bar", objectModel.get("var2"));
     }
 
     public void testContextBean() {
-        ExpressionContext parentContext = new ExpressionContext();
+        ObjectModel parentContext = new ObjectModel();
         parentContext.setContextBean("foo");
 
-        ExpressionContext context = new ExpressionContext(parentContext);
-        context.setContextBean("bar");
+        ObjectModel objectModel = new ObjectModel(parentContext);
+        objectModel.setContextBean("bar");
 
         assertEquals("foo", parentContext.getContextBean());
-        assertEquals("bar", context.getContextBean());
-    }
+        assertEquals("bar", objectModel.getContextBean());
+    }*/
 
     public void testFactoryJexl() throws ExpressionException {
         ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
@@ -52,7 +53,7 @@ public class ExpressionTestCase extends CocoonTestCase {
         Expression expression = factory.getExpression("jexl", "1+2");
         assertNotNull("Test expression compilation", expression);
 
-        assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
+        assertEquals(new Long(3), expression.evaluate(new ObjectModelImpl()));
     }
 
     public void testFactoryJXPath() throws ExpressionException {
@@ -62,7 +63,7 @@ public class ExpressionTestCase extends CocoonTestCase {
         Expression expression = factory.getExpression("jxpath", "1+2");
         assertNotNull("Test expression compilation", expression);
 
-        assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
+        assertEquals(new Double(3), expression.evaluate(new ObjectModelImpl()));
     }
 
     public void testFactoryPluggable() throws ExpressionException {
@@ -71,15 +72,15 @@ public class ExpressionTestCase extends CocoonTestCase {
 
         Expression expression = factory.getExpression("1+2");
         assertNotNull("Test expression compilation", expression);
-        assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
+        assertEquals(new Double(3), expression.evaluate(new ObjectModelImpl()));
 
         expression = factory.getExpression("jexl:1+2");
         assertNotNull("Test expression compilation", expression);
-        assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
+        assertEquals(new Long(3), expression.evaluate(new ObjectModelImpl()));
 
         expression = factory.getExpression("jxpath:1+2");
         assertNotNull("Test expression compilation", expression);
-        assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
+        assertEquals(new Double(3), expression.evaluate(new ObjectModelImpl()));
     }
 }
 

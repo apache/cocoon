@@ -19,10 +19,10 @@ package org.apache.cocoon.template.environment;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.environment.TemplateObjectModelHelper;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.Scriptable;
@@ -64,15 +64,17 @@ public class FlowObjectModelHelper {
     /**
      * Create an expression context that contains the object model
      */
-    public static ExpressionContext getFOMExpressionContext(final Map objectModel, 
+    public static ObjectModel getNewObjectModelWithFOM(final Map objectModel, 
                                                             final Parameters parameters) {
-        ExpressionContext context = new ExpressionContext();
         Map expressionContext = TemplateObjectModelHelper.getTemplateObjectModel(objectModel, parameters);
-        FlowObjectModelHelper.addJavaPackages( expressionContext );
-        context.setVars( expressionContext );
-        context.setContextBean(FlowHelper.getContextObject(objectModel));
+        FlowObjectModelHelper.addJavaPackages(expressionContext);
+        
+        //FIXME: It's a temporary code!
+        org.apache.cocoon.objectmodel.ObjectModel newObjectModel = new org.apache.cocoon.objectmodel.ObjectModelImpl();
+        newObjectModel.putAll(expressionContext);
+        newObjectModel.put(org.apache.cocoon.objectmodel.ObjectModel.CONTEXTBEAN, FlowHelper.getContextObject(objectModel));
 
-        return context;
+        return newObjectModel;
     }
 
     /**

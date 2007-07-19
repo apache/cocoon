@@ -19,6 +19,7 @@ package org.apache.cocoon.components.expression;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.xml.NamespacesTable;
 
 /**
@@ -29,6 +30,11 @@ public class ExpressionContext extends HashMap {
     private ExpressionContext closure;
     private Object contextBean;
     private NamespacesTable namespaces;
+    /**
+     * This variable will hold instance of a new {@link ObjectModel} implementation.
+     * <b>It's totally a temporary solution!</b>
+     */
+    private ObjectModel objectModel;
 
     public ExpressionContext() {
         this(null);
@@ -89,5 +95,13 @@ public class ExpressionContext extends HashMap {
             result = closure.get(key);
         }
         return result;
+    }
+
+    public ObjectModel getObjectModel() {
+        return objectModel;
+    }
+
+    public void setObjectModel(ObjectModel objectModel) {
+        this.objectModel = objectModel;
     }
 }
