@@ -26,7 +26,7 @@
 
  <group name="Samples">
   <sample name="Partial updates" href="linked-updater.html">Partial update sample</sample>
-  <sample name="Cocoon Forms samples" href="../cocoon-forms-sample/">Ajax is mostly demonstrated in
+  <sample name="Cocoon Forms samples" href="../forms/">Ajax is mostly demonstrated in
 	the Forms block. Check out lots of samples there (look for the "(Ajax)" label).
   </sample>
  </group>
