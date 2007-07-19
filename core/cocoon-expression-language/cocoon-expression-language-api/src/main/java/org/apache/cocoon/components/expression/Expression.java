@@ -18,18 +18,20 @@ package org.apache.cocoon.components.expression;
 
 import java.util.Iterator;
 
+import org.apache.cocoon.objectmodel.ObjectModel;
+
 /**
  * @version $Id$
  */
 public interface Expression {
 
-    Object evaluate(ExpressionContext context)
+    Object evaluate(ObjectModel objectModel)
             throws ExpressionException;
 
-    Iterator iterate(ExpressionContext context)
+    Iterator iterate(ObjectModel objectModel)
             throws ExpressionException;
 
-    void assign(ExpressionContext context, Object value)
+    void assign(ObjectModel objectModel, Object value)
             throws ExpressionException;
 
     String getExpression();
@@ -43,7 +45,7 @@ public interface Expression {
      * get rid of the getNode method, but have not yet figured out how to get
      * work in JXTG
      */
-    Object getNode(ExpressionContext context) throws ExpressionException;
+    Object getNode(ObjectModel objectModel) throws ExpressionException;
 
     void setProperty(String property, Object value);
 }

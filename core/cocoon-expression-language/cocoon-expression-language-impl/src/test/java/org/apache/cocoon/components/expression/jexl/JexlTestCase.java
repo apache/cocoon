@@ -19,35 +19,37 @@ package org.apache.cocoon.components.expression.jexl;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
+
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionCompiler;
-import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.ExpressionException;
+import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
 public class JexlTestCase extends TestCase {
 
     public void testExpression() throws ExpressionException {
         ExpressionCompiler compiler = new JexlCompiler();
         Expression expression = compiler.compile("jexl", "1+2");
-        assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
+        assertEquals(new Long(3), expression.evaluate(new ObjectModelImpl()));
     }
 
     public void testContextExpression() throws ExpressionException {
         ExpressionCompiler compiler = new JexlCompiler();
-        ExpressionContext context = new ExpressionContext();
-        context.put("a", new Long(1));
-        context.put("b", new Long(2));
+        ObjectModel objectModel = new ObjectModelImpl();
+        objectModel.put("a", new Long(1));
+        objectModel.put("b", new Long(2));
         Expression expression = compiler.compile("jexl", "a+b");
-        assertEquals(new Long(3), expression.evaluate(context));
+        assertEquals(new Long(3), expression.evaluate(objectModel));
     }
 
     public void testIterator() throws ExpressionException {
         ExpressionCompiler compiler = new JexlCompiler();
-        ExpressionContext context = new ExpressionContext();
+        ObjectModel objectModel = new ObjectModelImpl();
         String[] arr = {"foo"};
-        context.put("arr", arr);
+        objectModel.put("arr", arr);
         Expression expression = compiler.compile("jexl", "arr");
-        Iterator iter = expression.iterate(context);
+        Iterator iter = expression.iterate(objectModel);
         assertTrue("hasNext", iter.hasNext());
         assertEquals("foo", iter.next());
         assertFalse("hasNext", iter.hasNext());

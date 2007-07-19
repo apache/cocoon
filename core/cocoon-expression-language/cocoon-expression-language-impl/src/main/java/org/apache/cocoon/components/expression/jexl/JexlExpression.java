@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.components.expression.AbstractExpression;
-import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.util.Introspector;
@@ -43,17 +43,17 @@ public class JexlExpression extends AbstractExpression {
         }
     }
 
-    public Object evaluate(ExpressionContext context) throws ExpressionException {
+    public Object evaluate(ObjectModel objectModel) throws ExpressionException {
         try {
-            return this.compiledExpression.evaluate(new ContextAdapter(context));
+            return this.compiledExpression.evaluate(new ContextAdapter(objectModel));
         } catch (Exception e) {
             throw new ExpressionException("Couldn't evaluate expression " + getExpression(), e);
         }
     }
 
-    public Iterator iterate(ExpressionContext context) throws ExpressionException {
+    public Iterator iterate(ObjectModel objectModel) throws ExpressionException {
         Iterator iter = null;
-        Object result = evaluate(context);
+        Object result = evaluate(objectModel);
         if (result != null) {
             /*
              * The Info object is supposed to contain the script location where
@@ -74,27 +74,27 @@ public class JexlExpression extends AbstractExpression {
         return iter;
     }
 
-    public void assign(ExpressionContext context, Object value) throws ExpressionException {
+    public void assign(ObjectModel objectModel, Object value) throws ExpressionException {
         throw new UnsupportedOperationException("Assign is not yet implemented for Jexl");
     }
 
-    public Object getNode(ExpressionContext context) throws ExpressionException {
-        return evaluate(context);
+    public Object getNode(ObjectModel objectModel) throws ExpressionException {
+        return evaluate(objectModel);
     }
 
     private static class ContextAdapter implements JexlContext {
-        private final ExpressionContext context;
+        private Map objectModel;
 
-        public ContextAdapter(ExpressionContext context) {
-            this.context = context;
+        public ContextAdapter(Map objectModel) {
+            this.objectModel = objectModel;
         }
 
         public Map getVars() {
-            return this.context.getVars();
+            return this.objectModel;
         }
 
         public void setVars(Map map) {
-            this.context.setVars(map);
+            this.objectModel = map;
         }
     }
 
