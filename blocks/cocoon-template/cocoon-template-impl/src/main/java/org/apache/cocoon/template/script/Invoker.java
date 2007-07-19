@@ -69,7 +69,7 @@ public class Invoker {
 
                 Call call = new Call( def, startElement );
                 ev = call.execute(consumer, objectModel,
-                        executionContext, macroContext, null, startEvent, endEvent);
+                        executionContext, macroContext, namespaces, startEvent, endEvent);
             } else
                 ev = ev.execute(consumer, objectModel, executionContext,
                         macroContext, namespaces, startEvent, endEvent);
