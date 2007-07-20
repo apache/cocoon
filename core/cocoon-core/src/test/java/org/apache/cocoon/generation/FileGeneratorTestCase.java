@@ -26,6 +26,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.MockLogger;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.core.xml.impl.JaxpSAXParser;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -85,15 +86,12 @@ public class FileGeneratorTestCase extends MockObjectTestCase {
         String result = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
         FileGenerator generator = new FileGenerator();
         generator.enableLogging(new MockLogger(generator.getClass()));
-        manager.expects(atLeastOnce()).method("lookup").with(same(SAXParser.ROLE)).
-                will(returnValue(parser));
-        manager.expects(once()).method("release").with(same(parser));
         Mock resolver = new Mock(SourceResolver.class);
         Source source = new ResourceSource(src);
         resolver.expects(once()).method("resolveURI").with(same(src)).
                 will(returnValue(source));
         resolver.expects(once()).method("release").with(same(source));
-        generator.service((ServiceManager) manager.proxy());
+        generator.setParser(new JaxpSAXParser());
         generator.setup((SourceResolver) resolver.proxy(), objectModel, src, parameters);
         DOMBuilder builder = new DOMBuilder();
         generator.setConsumer(new WhitespaceFilter(builder));
