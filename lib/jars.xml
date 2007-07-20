@@ -197,7 +197,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-sourceresolve-2.1.jar</lib>
+    <lib>core/excalibur-sourceresolve-2.2.3.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
