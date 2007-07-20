@@ -84,7 +84,8 @@ public class ServletServiceTransformer extends AbstractSAXTransformer implements
 		super.endDocument();
 		try {
 			String xml = endSerializedXMLRecording();
-			IOUtils.copy(new StringReader(xml), servletSource.getOutputStream());
+			//FIXME: Not sure if UTF-8 should always be used, do we have defined this encoding somewhere in Cocoon?
+			IOUtils.copy(new StringReader(xml), servletSource.getOutputStream(), "UTF-8");
 			SourceUtil.parse(saxParser, servletSource, contentHandler);
 		}
 		catch (Exception e) {
