@@ -26,7 +26,6 @@ import org.apache.cocoon.components.expression.jexl.JSIntrospector;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.xml.NamespacesTable;
-import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
@@ -135,16 +134,10 @@ public class JXPathExpression implements Expression {
         // This could be made more efficient by caching the
         // JXPathContext within the Context object.
         
-        Object contextBean = objectModel.get(ObjectModel.CONTEXTBEAN);
-        if (contextBean instanceof ArrayStack)
-            contextBean = ((ArrayStack) contextBean).peek();
-        JXPathContext jxobjectModel = JXPathContext.newContext(contextBean);
+        JXPathContext jxobjectModel = JXPathContext.newContext(objectModel.get(ObjectModel.CONTEXTBEAN));
         jxobjectModel.setVariables(new VariableAdapter(objectModel));
         jxobjectModel.setLenient(this.lenient);
-        Object namespaces = objectModel.get(ObjectModel.NAMESPACE);
-        if (namespaces instanceof ArrayStack)
-            namespaces = ((ArrayStack)namespaces).peek();
-        jxobjectModel.setNamespaceContextPointer(new NamespacesTablePointer((NamespacesTable)namespaces));
+        jxobjectModel.setNamespaceContextPointer(new NamespacesTablePointer((NamespacesTable)objectModel.get(ObjectModel.NAMESPACE)));
         return jxobjectModel;
     }
 
