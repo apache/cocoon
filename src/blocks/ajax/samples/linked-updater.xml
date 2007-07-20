@@ -19,29 +19,30 @@
   <title>Linked Updating</title>
   <!-- include ajax scripts -->
   <script type="text/javascript">
-	// djConfig = { isDebug: true };
+    // djConfig = { isDebug: true };
   </script>
-	<script type="text/javascript" src="servlet:ajax:/resources/dojo/dojo.js"/>
-  <!--<script type="text/javascript" src="${cocoon.request.contextPath}/_cocoon/resources/ajax/cocoon.js"/>-->
+  <script type="text/javascript" src="resources/dojo/dojo.js"/>
+  <!--<script type="text/javascript" src="_cocoon/resources/ajax/cocoon.js"/>-->
   <script type="text/javascript">
     dojo.require("dojo.widget.*");
     dojo.registerModulePath("cocoon.ajax", "../ajax/js");
-	dojo.require("cocoon.ajax.common");
-	
+    dojo.require("cocoon.ajax.common");
+
 	function initTimer() {
 	    cocoon.ajax.periodicalUpdate(2000, "display-freememory", "freemem");
 	}
 	dojo.addOnLoad(initTimer);
-	
+
 	function initClock() {
   	cocoon.ajax.periodicalUpdate(1000, "display-clock", "clock");
 	}
 	dojo.addOnLoad(initClock);
-	
+
 	function initClock1() {
   	cocoon.ajax.periodicalUpdate(5000, "display-clock", "clock1");
 	}
  	dojo.addOnLoad(initClock1);
+  dojo.debug("The current version of dojo is: ", dojo.version.toString());
   </script>
 
 	<style>
@@ -52,7 +53,7 @@
 	</style>
 	<content>
 		<p>This sample shows dynamic page updating in action, using Ajax.</p>
-		
+
 		<table width="100%">
 			<tr valign="top">
 				<td width="30%">
