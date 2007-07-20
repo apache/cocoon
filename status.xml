@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-2059" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+      AJAX: ajax/common.js makes use of deprecated dojo.animation.Timer
+    </action>
     <action dev="AN" type="update">
       XSP block: Upgrade Eclipse compiler to version 3.1.0 to allow the use of Java5 syntax in XSPs.
       (Latest released Eclipse version is 3.2.2 but use 3.1.0 to be consistent with the version

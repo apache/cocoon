@@ -36,7 +36,7 @@ dojo.lang.mixin(cocoon.ajax, {
      *        precedence. If no insertion is speficied, it default to "inside".
      */
     update: function(href, target, insertion) {
-        
+
         // If target is a string, parse it. Otherwise, assume it's an element
         if (dojo.lang.isString(target)) {
             var split = target.split("#");
@@ -47,13 +47,13 @@ dojo.lang.mixin(cocoon.ajax, {
                 target = dojo.byId(target);
             }
         }
-        
+
         if (dojo.lang.isString(insertion)) {
             insertion = cocoon.ajax.insertion[insertion];
         }
 
         insertion = insertion || cocoon.ajax.insertion.inside;
-        
+
         dojo.io.bind({
 		    url: href,
 		    load: function(type, data, evt){
@@ -62,23 +62,23 @@ dojo.lang.mixin(cocoon.ajax, {
 		    mimetype: "text/plain"
 		    // TODO: add an error-handling function
 		});
-        
+
     },
 
     /**
      */
     periodicalUpdate: function(delay, href, target, insertion) {
-        dojo.require("dojo.animation.Timer");
-        var timer = new dojo.animation.Timer(delay);
+        dojo.require("dojo.lang.timing.Timer");
+        var timer = new dojo.lang.timing.Timer(delay);
         timer.onTick = function() {
             cocoon.ajax.update(href, target, insertion);
         };
-        
+
         timer.onStart = timer.onTick;
         timer.start();
         return timer;
     },
-    
+
     // Update effects. These function can be used to set cocoon.ajax.BUHandler.highlight
     effects: {
         // highlight effects - transition the background colour
