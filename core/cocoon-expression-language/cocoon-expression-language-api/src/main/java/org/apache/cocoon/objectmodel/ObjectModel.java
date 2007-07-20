@@ -18,26 +18,31 @@ package org.apache.cocoon.objectmodel;
 
 import java.util.Map;
 
-import org.apache.commons.collections.MultiMap;
-
 /**
- * ObjectModel is a special {@link Map} that can have multiple values associated to the same key. If there is only one
- * value associated with key then ObjectModel will behave exactly as {@link Map}. If there is more than one value associated with
- * key then ObjectModel's methods will operate on {@link java.util.Collection Collections} associated with key. 
- * 
- * Another constrain is that {@link java.util.Collection} for each key is compliant with LIFO list constracts. 
+ * ObjectModel is a special {@link Map} that cannot be modified using standard {@link Map} methods, except {@link #put(Object, Object)} method.   
  */
-public interface ObjectModel extends MultiMap {
+public interface ObjectModel extends Map {
     
     public static final String CONTEXTBEAN = "contextBean";
     public static final String NAMESPACE = "namespace";
-
+    
+    /**
+     * @return a {@link org.apache.commons.collections.MultiMap} that contains all stored values in all context in LIFO-compliant order.
+     * Returned {@link org.apache.commons.collections.MultiMap} is {@link org.apache.commons.collections.Unmodifiable}.
+     */
+    public Map getAll();
+    
+    /**
+     * Works exactly the same way as {@link Map#put(Object, Object)} but previous value associated to <code>key</code> is not lost in
+     * a case {@link #markLocalContext()} was called before. The previous value is stored and can be recovered by calling 
+     * {@link #markLocalContext()}.
+     */
+    public Object put(Object key, Object value);
     
     /** 
-     * This method behaves almost exactly as {@link MultiMap#get(Object)} method. The only difference is that value itself is returned
-     * instead of {@link java.util.Collection} containing that value.
+     * @see #put(Object, Object)
      */
-    public Object get(Object key);
+    public void putAll(Map mapToCopy);
     
     /**
      * Marks new local context. Such mark is useful to do a clean up of entries. 

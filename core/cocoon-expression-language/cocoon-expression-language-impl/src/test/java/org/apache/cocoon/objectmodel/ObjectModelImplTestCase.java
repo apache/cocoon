@@ -28,24 +28,25 @@ public class ObjectModelImplTestCase extends TestCase {
         objectModel.put("foo1", "bar1");
         assertEquals("bar2", objectModel.put("foo2", "bar2")); 
         assertEquals(true, objectModel.containsKey("foo1"));
-        assertEquals("bar2", objectModel.get("foo2"));
-        
-        objectModel.remove("foo1");
-        assertEquals(null, objectModel.get("foo1"));
     }
     
     public void testMultiValue() {
         ObjectModel objectModel = new ObjectModelImpl();
         
+        objectModel.markLocalContext();
         objectModel.put("foo", "bar1");
-        objectModel.put("foo", "bar2");
-        assertEquals(2, ((Collection)objectModel.get("foo")).size());
         
-        objectModel.remove("foo", "bar2");
+        objectModel.markLocalContext();
+        objectModel.put("foo", "bar2");
+        assertEquals(2, ((Collection)objectModel.getAll().get("foo")).size());
+        
+        objectModel.cleanupLocalContext();
+        assertEquals(1, ((Collection)objectModel.getAll().get("foo")).size());
         assertEquals("bar1", objectModel.get("foo"));
         
-        objectModel.remove("foo", "bar1");
+        objectModel.cleanupLocalContext();
         assertEquals(null, objectModel.get("foo"));
+        assertEquals(null, objectModel.getAll().get("foo"));
     }
     
     public void testValues() {
@@ -55,14 +56,15 @@ public class ObjectModelImplTestCase extends TestCase {
         Collection values = objectModel.values();
         assertEquals(true, values.contains("bar1"));
         
+        objectModel.markLocalContext();
         objectModel.put("foo", "bar2");
         values = objectModel.values();
-        assertEquals(true, values.contains("bar1"));
+        assertEquals(false, values.contains("bar1"));
         assertEquals(true, values.contains("bar2"));
         
-        objectModel.remove("foo", "bar1");
+        objectModel.cleanupLocalContext();
         values = objectModel.values();
-        assertEquals(false, values.contains("bar1"));
+        assertEquals(false, values.contains("bar2"));
     }
     
     public void testLocalContext() {
@@ -73,14 +75,14 @@ public class ObjectModelImplTestCase extends TestCase {
         objectModel.put("foo", "bar2");
         objectModel.put("abc", "xyz");
         
-        assertEquals(true, objectModel.values().contains("bar2"));
-        assertEquals(true, objectModel.values().contains("bar1"));
+        assertEquals(true, objectModel.getAll().values().contains("bar2"));
+        assertEquals(true, objectModel.getAll().values().contains("bar1"));
         assertEquals(true, objectModel.containsKey("abc"));
         
         objectModel.cleanupLocalContext();
         
-        assertEquals(false, objectModel.values().contains("bar2"));
-        assertEquals(true, objectModel.values().contains("bar1"));
+        assertEquals(false, objectModel.getAll().values().contains("bar2"));
+        assertEquals(true, objectModel.getAll().values().contains("bar1"));
         assertEquals(false, objectModel.containsKey("abc"));
     }
     
