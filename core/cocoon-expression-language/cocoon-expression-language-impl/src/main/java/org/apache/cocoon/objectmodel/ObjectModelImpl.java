@@ -16,10 +16,8 @@
  */
 package org.apache.cocoon.objectmodel;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 
@@ -67,7 +65,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     
     public Object put(Object key, Object value) {
         if (!localContexts.empty())
-            ((Collection) localContexts.peek()).add(new DefaultKeyValue(key, value));
+            ((ArrayStack) localContexts.peek()).push(new DefaultKeyValue(key, value));
         
         singleValueMap.put(key, value);
         multiValueMap.put(key, value);
@@ -77,10 +75,10 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     
     public void putAll(Map mapToCopy) {
         if (!localContexts.empty()) {
-            Collection entries = (Collection)localContexts.peek();
+            ArrayStack entries = (ArrayStack)localContexts.peek();
             for (Iterator keysIterator = mapToCopy.keySet().iterator(); keysIterator.hasNext();) {
                 Object key = keysIterator.next();
-                entries.add(new DefaultKeyValue(key, mapToCopy.get(key)));
+                entries.push(new DefaultKeyValue(key, mapToCopy.get(key)));
             }
         }
         
@@ -91,25 +89,22 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     public void cleanupLocalContext() {
         if (localContexts.empty())
             throw new IllegalStateException("Local contexts stack is empty");
-        Collection removeEntries = (Collection)localContexts.pop();
-        for (Iterator entriesIterator = removeEntries.iterator(); entriesIterator.hasNext();) {
-            KeyValue entry = (KeyValue)entriesIterator.next();
+        ArrayStack removeEntries = (ArrayStack)localContexts.pop();
+        while (!removeEntries.isEmpty()) {
+            KeyValue entry = (KeyValue)removeEntries.pop();
             Object key = entry.getKey();
             Object value = entry.getValue();
-            if (!singleValueMap.containsKey(key))
-                continue;
             
             multiValueMap.remove(key, value);
-            if (!multiValueMap.containsKey(key)) {
-                singleValueMap.remove(key);
-            }
-            else if (singleValueMap.get(key).equals(value))
+            if (multiValueMap.containsKey(key))
                 singleValueMap.put(key, ((StackReversedIteration)multiValueMap.get(key)).peek());
+            else
+                singleValueMap.remove(key);
         }
     }
 
     public void markLocalContext() {
-        localContexts.push(new LinkedList());
+        localContexts.push(new ArrayStack());
     }
     
 }

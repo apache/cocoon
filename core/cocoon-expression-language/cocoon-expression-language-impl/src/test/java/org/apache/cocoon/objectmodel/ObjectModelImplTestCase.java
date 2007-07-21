@@ -86,4 +86,23 @@ public class ObjectModelImplTestCase extends TestCase {
         assertEquals(false, objectModel.containsKey("abc"));
     }
     
+    public void testNull() {
+        ObjectModel objectModel = new ObjectModelImpl();
+        
+        objectModel.markLocalContext();
+        objectModel.put("foo", "bar");
+        
+        objectModel.markLocalContext();
+        objectModel.put("foo", null);
+        objectModel.put("foo", null);
+        assertEquals(null, objectModel.get("foo"));
+        objectModel.cleanupLocalContext();
+        
+        assertEquals("bar", objectModel.get("foo"));
+        objectModel.cleanupLocalContext();
+        
+        assertTrue(objectModel.isEmpty());
+        assertTrue(objectModel.getAll().isEmpty());
+    }
+    
 }
