@@ -59,6 +59,13 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         }
     }
     
+    public Object get(Object key) {
+        //FIXME: This should be done more elegantly
+        if ("this".equals(key))
+            return this;
+        return super.get(key);
+    }
+    
     public Map getAll() {
         return UnmodifiableMap.decorate(multiValueMap);
     }
