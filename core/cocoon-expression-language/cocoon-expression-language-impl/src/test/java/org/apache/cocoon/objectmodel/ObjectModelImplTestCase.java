@@ -105,4 +105,9 @@ public class ObjectModelImplTestCase extends TestCase {
         assertTrue(objectModel.getAll().isEmpty());
     }
     
+    public void testThis() {
+        ObjectModel objectModel = new ObjectModelImpl();
+        assertEquals(objectModel, objectModel.get("this"));
+    }
+    
 }
