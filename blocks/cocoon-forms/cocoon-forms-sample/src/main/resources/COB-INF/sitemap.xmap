@@ -100,6 +100,7 @@
     <map:script src="flow/bindings.js" />
     <map:script src="flow/form_model_gui.js" />
     <map:script src="flow/htmlarea.js" />
+    <map:script src="flow/xinha.js" />
   </map:flow>
 
   <!-- =========================== Pipelines =================================== -->
@@ -113,6 +114,10 @@
         <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
         </map:serialize>
+      </map:match>
+      
+      <map:match pattern="sitemap.xmap">
+        <map:read src="sitemap.xmap"/>
       </map:match>
 
       <!--
@@ -501,6 +506,34 @@
 
       <map:match pattern="htmlarea-success-pipeline">
         <map:generate type="jx" src="forms/htmlarea_success.jx" />
+        <map:serialize type="xml" />
+      </map:match>
+
+      <!--
+        | XINHA example
+      -->
+
+      <map:match pattern="xinha">
+        <map:call function="xinha" />
+      </map:match>
+
+      <map:match pattern="xinha-display-pipeline">
+        <map:generate src="forms/xinha_template.xml" />
+        <map:transform type="forms" />
+        <map:transform type="i18n">
+          <!--map:parameter name="locale" value="en-US"/-->
+        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform src="resources/forms-samples-styling.xsl">
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+        </map:transform>
+        <map:transform type="servletLinkRewriter" />
+        <map:serialize />
+      </map:match>
+
+      <map:match pattern="xinha-success-pipeline">
+        <map:generate type="jx" src="forms/xinha_success.jx" />
         <map:serialize type="xml" />
       </map:match>
 
