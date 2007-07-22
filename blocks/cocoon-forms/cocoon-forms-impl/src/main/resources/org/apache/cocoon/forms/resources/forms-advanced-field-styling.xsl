@@ -29,6 +29,7 @@
   <xsl:import href="resource://org/apache/cocoon/forms/resources/forms-field-styling.xsl"/>
   <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-calendar-styling.xsl"/>
   <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-htmlarea-styling.xsl"/>
+  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-xinha-styling.xsl"/>
   
   <xsl:param name="forms-resources"/>
 
@@ -39,11 +40,13 @@
     <script src="{$forms-resources}/mattkruse-lib/OptionTransfer.js" type="text/javascript"/>
     <script src="{$forms-resources}/mattkruse-lib/selectbox.js" type="text/javascript"/>
     <xsl:apply-templates select="." mode="forms-htmlarea"/>
+    <xsl:apply-templates select="." mode="forms-xinha"/>
   </xsl:template>
 
   <xsl:template match="body" mode="forms-field">
     <xsl:apply-imports/>
     <xsl:apply-templates select="." mode="forms-htmlarea"/>
+    <xsl:apply-templates select="." mode="forms-xinha"/>
   </xsl:template>
 
   <!--+ This template should not be necessary as this stylesheet "inherits"
