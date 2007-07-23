@@ -70,7 +70,7 @@ public class JXTemplateGenerator
     public final static String CACHE_KEY = "cache-key";
     public final static String VALIDITY = "cache-validity";
 
-    private ObjectModel objectModel;
+    private ObjectModel newObjectModel;
     private NamespacesTable namespaces;
     private ScriptManager scriptManager;
 
@@ -105,7 +105,7 @@ public class JXTemplateGenerator
      */
     public void recycle() {
         this.startDocument = null;
-        this.objectModel = null;
+        this.newObjectModel = null;
         this.namespaces = null;
         this.definitions = null;
         super.recycle();
@@ -123,7 +123,7 @@ public class JXTemplateGenerator
             this.startDocument = scriptManager.resolveTemplate(src);
         }
 
-        this.objectModel = FlowObjectModelHelper.getNewObjectModelWithFOM(objectModel, parameters);
+        this.newObjectModel = FlowObjectModelHelper.getNewObjectModelWithFOM(objectModel, parameters);
         this.namespaces = new NamespacesTable();
         this.definitions = new HashMap();
     }
@@ -139,12 +139,12 @@ public class JXTemplateGenerator
     }
 
     public void performGeneration(Event startEvent, Event endEvent) throws SAXException {
-        objectModel.markLocalContext();
+        newObjectModel.markLocalContext();
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
-        ((Map) objectModel.get("cocoon")).put("consumer", consumer);
-        Invoker.execute(consumer, this.objectModel, new ExecutionContext(this.definitions, this.scriptManager,
+        ((Map) newObjectModel.get("cocoon")).put("consumer", consumer);
+        Invoker.execute(consumer, this.newObjectModel, new ExecutionContext(this.definitions, this.scriptManager,
                 this.manager), null, namespaces, startEvent, null);
-        objectModel.cleanupLocalContext();
+        newObjectModel.cleanupLocalContext();
     }
 
     /**
@@ -157,7 +157,7 @@ public class JXTemplateGenerator
             return null;
         }
         try {
-            final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.objectModel);
+            final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.newObjectModel);
             if (templateKey != null) {
                 return new JXCacheKey(this.startDocument.getUri(), templateKey);
             }
@@ -178,7 +178,7 @@ public class JXTemplateGenerator
         }
         try {
             final SourceValidity sourceValidity = this.startDocument.getSourceValidity();
-            final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.objectModel);
+            final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.newObjectModel);
             if (sourceValidity != null && templateValidity != null) {
                 return new JXSourceValidity(sourceValidity, templateValidity);
             }
