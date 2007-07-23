@@ -27,7 +27,7 @@
                            http://cocoon.apache.org/schema/pipeline http://cocoon.apache.org/schema/pipeline/cocoon-pipeline-1.0.xsd">
 
   <bean name="org.apache.cocoon.generation.Generator/xsl" 
-        class="org.apache.cocoon.generation.HSSFGeneration"
+        class="org.apache.cocoon.generation.HSSFGenerator"
         scope="prototype">
     <property name="resolver" ref="org.apache.excalibur.source.SourceResolver"/>
     <!-- uri for namespace. -->
