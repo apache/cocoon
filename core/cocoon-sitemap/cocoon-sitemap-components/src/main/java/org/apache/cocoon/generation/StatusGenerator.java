@@ -135,6 +135,11 @@ public class StatusGenerator extends ServiceableGenerator
     protected StoreJanitor storeJanitor;
 
     /**
+     * The default store
+     */
+    private Store store;
+
+    /**
      * The persistent store
      */
     protected Store storePersistent;
@@ -158,7 +163,6 @@ public class StatusGenerator extends ServiceableGenerator
      * WEB-INF/lib directory
      */
     private Source libDirectory;
-
 
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
@@ -190,6 +194,12 @@ public class StatusGenerator extends ServiceableGenerator
             getLogger().info("StoreJanitor is not available. Sorry, no cache statistics");
         }
 
+        if (this.manager.hasService(Store.ROLE)) {
+            this.store = (Store) this.manager.lookup(Store.ROLE);
+        } else {
+            getLogger().info("Store is not available. Sorry no cache statistics about it.");
+        }
+        
         if (this.manager.hasService(Store.PERSISTENT_STORE)) {
             this.storePersistent = (Store) this.manager.lookup(Store.PERSISTENT_STORE);
         } else {
@@ -227,6 +237,7 @@ public class StatusGenerator extends ServiceableGenerator
             this.manager.release(this.continuationsManager);
             this.settings = null;
             this.storePersistent = null;
+            this.store = null;
             this.storeJanitor = null;
             this.continuationsManager = null;
         }
@@ -469,44 +480,53 @@ public class StatusGenerator extends ServiceableGenerator
             }
             endGroup();
         }
+        
+        if (this.store != null) {
+            genStore(this.store);
+        }
 
         if (this.storePersistent != null) {
-            startGroup(storePersistent.getClass().getName() + " (hash = 0x" + Integer.toHexString(storePersistent.hashCode()) + ")");
-            int size = 0;
-            int empty = 0;
-            atts.clear();
-            atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
-            super.contentHandler.startElement(NAMESPACE, "value", "value", atts);
-
-            atts.clear();
-            Enumeration e = this.storePersistent.keys();
-            while (e.hasMoreElements()) {
-                size++;
-                Object key = e.nextElement();
-                Object val = storePersistent.get(key);
-                String line;
-                if (val == null) {
-                    empty++;
-                } else {
-                    line = key + " (class: " + val.getClass().getName() + ")";
-                    super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
-                    super.contentHandler.characters(line.toCharArray(), 0, line.length());
-                    super.contentHandler.endElement(NAMESPACE, "line", "line");
-                }
-            }
-            if (size == 0) {
-                super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
-                String value = "[empty]";
-                super.contentHandler.characters(value.toCharArray(), 0, value.length());
-                super.contentHandler.endElement(NAMESPACE, "line", "line");
-            }
-            super.contentHandler.endElement(NAMESPACE, "value", "value");
-
-            addValue("size", size + " items in cache (" + empty + " are empty)");
-            endGroup();
+            genStore(this.storePersistent);
         }
         // END Cache
 
+        endGroup();
+    }
+
+    private void genStore(Store store) throws SAXException {
+        AttributesImpl atts = new AttributesImpl();
+        startGroup(store.getClass().getName() + " (hash = 0x" + Integer.toHexString(store.hashCode()) + ")");
+        int size = 0;
+        int empty = 0;
+        atts.clear();
+        atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
+        super.contentHandler.startElement(NAMESPACE, "value", "value", atts);
+
+        atts.clear();
+        Enumeration e = store.keys();
+        while (e.hasMoreElements()) {
+            size++;
+            Object key = e.nextElement();
+            Object val = store.get(key);
+            String line;
+            if (val == null) {
+                empty++;
+            } else {
+                line = key + " (class: " + val.getClass().getName() + ")";
+                super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
+                super.contentHandler.characters(line.toCharArray(), 0, line.length());
+                super.contentHandler.endElement(NAMESPACE, "line", "line");
+            }
+        }
+        if (size == 0) {
+            super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
+            String value = "[empty]";
+            super.contentHandler.characters(value.toCharArray(), 0, value.length());
+            super.contentHandler.endElement(NAMESPACE, "line", "line");
+        }
+        super.contentHandler.endElement(NAMESPACE, "value", "value");
+
+        addValue("size", size + " items in cache (" + empty + " are empty)");
         endGroup();
     }
 
