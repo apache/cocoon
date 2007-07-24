@@ -3014,7 +3014,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin> 
     </plugins>
   </build>
 
@@ -3095,7 +3095,8 @@
     <docs.m.site-maven-plugins.relPath>2.2/maven-plugins/</docs.m.site-maven-plugins.relPath>
     <docs.m.site-subprojects.relPath>subprojects/</docs.m.site-subprojects.relPath>
     <docs.m.site-configuration.relPath>subprojects/configuration/1.0/</docs.m.site-configuration.relPath>
-    <docs.m.site-servlet-service.relPath>subprojects/servlet-service/1.0/</docs.m.site-servlet-service.relPath>
+    <docs.m.site-servlet-service.version>1.0</docs.m.site-servlet-service.version>
+    <docs.m.site-servlet-service.relPath>subprojects/servlet-service/${docs.m.site-servlet-service.version}/</docs.m.site-servlet-service.relPath>
     <!-- Path and version properties: core -->
     <docs.m.core.version>2.2</docs.m.core.version>
     <docs.m.core.relPath>2.2/core-modules/core/${docs.m.core.version}/</docs.m.core.relPath>
@@ -3268,7 +3269,7 @@
                   </collection>
                   <collection>
                     <name>cdocs-site-subprojects</name>
-                    <path>${docs.m.subprojects.relPath}</path>
+                    <path>${docs.m.site-subprojects.relPath}</path>
                   </collection>
                   <collection>
                     <name>cdocs-site-maven-plugins</name>
