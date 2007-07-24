@@ -152,6 +152,7 @@ public abstract class AbstractTestCase extends TestCase {
             this.beanFactory = new DefaultListableBeanFactory();
         }
         this.addSettings();
+        this.addProcessingInfoProvider();
     }
 
     protected void initBeanFactory() {
@@ -176,8 +177,8 @@ public abstract class AbstractTestCase extends TestCase {
         def.setSingleton(true);
         def.setLazyInit(false);
         def.getPropertyValues().addPropertyValue("objectModel", getObjectModel());
-        def.getPropertyValues().addPropertyValue("request", getRequest());
-        def.getPropertyValues().addPropertyValue("response", getResponse());
+        def.getPropertyValues().addPropertyValue("request", new MockProcessInfoProvider.StubRequest(getRequest()));
+        def.getPropertyValues().addPropertyValue("response", new MockProcessInfoProvider.StubResponse(getResponse()));
         def.getPropertyValues().addPropertyValue("servletContext", getContext());
         BeanDefinitionHolder holder = new BeanDefinitionHolder(def, ProcessInfoProvider.ROLE);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
