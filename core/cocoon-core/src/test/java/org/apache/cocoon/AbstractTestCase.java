@@ -28,6 +28,8 @@ import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockRequestAttributes;
 import org.apache.cocoon.environment.mock.MockResponse;
+import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.processing.impl.MockProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -165,6 +167,19 @@ public abstract class AbstractTestCase extends TestCase {
         def.getPropertyValues().addPropertyValue("workDirectory", System.getProperty("java.io.tmpdir"));
         def.getPropertyValues().addPropertyValue("cacheDirectory", System.getProperty("java.io.tmpdir"));
         BeanDefinitionHolder holder = new BeanDefinitionHolder(def, Settings.ROLE);
+        BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
+    }
+    
+    protected void addProcessingInfoProvider() {
+        RootBeanDefinition def = new RootBeanDefinition();
+        def.setBeanClass(MockProcessInfoProvider.class);
+        def.setSingleton(true);
+        def.setLazyInit(false);
+        def.getPropertyValues().addPropertyValue("objectModel", getObjectModel());
+        def.getPropertyValues().addPropertyValue("request", getRequest());
+        def.getPropertyValues().addPropertyValue("response", getResponse());
+        def.getPropertyValues().addPropertyValue("servletContext", getContext());
+        BeanDefinitionHolder holder = new BeanDefinitionHolder(def, ProcessInfoProvider.ROLE);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
     }
 
