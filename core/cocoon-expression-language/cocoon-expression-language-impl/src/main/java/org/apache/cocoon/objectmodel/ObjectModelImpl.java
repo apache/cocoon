@@ -40,6 +40,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     private ArrayStack localContexts;
     private Map singleValueMap;
     private MultiMap multiValueMap;
+    private Map initialEntries = null;
     
     public ObjectModelImpl() {
         singleValueMap = new HashMap();
@@ -112,6 +113,17 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
 
     public void markLocalContext() {
         localContexts.push(new ArrayStack());
+    }
+
+    public Map getInitialEntries() {
+        return initialEntries;
+    }
+
+    public void setInitialEntries(Map initialEntries) {
+        if (initialEntries != null)
+            throw new IllegalStateException("Object Model has initial entries set already.");
+        this.initialEntries = initialEntries;
+        putAll(initialEntries);
     }
     
 }
