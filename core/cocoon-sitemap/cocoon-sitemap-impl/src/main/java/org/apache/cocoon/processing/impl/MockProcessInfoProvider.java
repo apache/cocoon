@@ -32,10 +32,12 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
@@ -254,13 +256,11 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
         }
 
         public HttpSession getSession() {
-            //FIXME: Implement this method if needed
-            throw new UnsupportedOperationException();
+            return getSession(true);
         }
 
         public HttpSession getSession(boolean create) {
-            //FIXME: Implement this method if needed
-            throw new UnsupportedOperationException();
+            return new StubSession(request.getSession(create));
         }
 
         public String getSitemapPath() {
@@ -549,6 +549,93 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
             throw new UnsupportedOperationException();
         }
 
+    }
+    
+    static public class StubSession implements HttpSession {
+        private Session session;
+        
+        public StubSession(Session session) {
+            this.session = session;
+        }
+
+        public Object getAttribute(String name) {
+            return session.getAttribute(name);
+        }
+
+        public Enumeration getAttributeNames() {
+            return session.getAttributeNames();
+        }
+
+        public Map getAttributes() {
+            return session.getAttributes();
+        }
+
+        public long getCreationTime() {
+            return session.getCreationTime();
+        }
+
+        public String getId() {
+            return session.getId();
+        }
+
+        public long getLastAccessedTime() {
+            return session.getLastAccessedTime();
+        }
+
+        public int getMaxInactiveInterval() {
+            return session.getMaxInactiveInterval();
+        }
+
+        public void invalidate() {
+            session.invalidate();
+        }
+
+        public boolean isNew() {
+            return session.isNew();
+        }
+
+        public void removeAttribute(String name) {
+            session.removeAttribute(name);
+        }
+
+        public void setAttribute(String name, Object value) {
+            session.setAttribute(name, value);
+        }
+
+        public void setMaxInactiveInterval(int interval) {
+            session.setMaxInactiveInterval(interval);
+        }
+
+        public ServletContext getServletContext() {
+            //FIXME: Implement this method if needed
+            throw new UnsupportedOperationException();
+        }
+
+        public HttpSessionContext getSessionContext() {
+            //FIXME: Implement this method if needed
+            throw new UnsupportedOperationException();
+        }
+
+        public Object getValue(String name) {
+            //FIXME: Implement this method if needed
+            throw new UnsupportedOperationException();
+        }
+
+        public String[] getValueNames() {
+            //FIXME: Implement this method if needed
+            throw new UnsupportedOperationException();
+        }
+
+        public void putValue(String name, Object value) {
+            //FIXME: Implement this method if needed
+            throw new UnsupportedOperationException();
+        }
+
+        public void removeValue(String name) {
+            //FIXME: Implement this method if needed
+            throw new UnsupportedOperationException();
+        }
+        
     }
 
 }

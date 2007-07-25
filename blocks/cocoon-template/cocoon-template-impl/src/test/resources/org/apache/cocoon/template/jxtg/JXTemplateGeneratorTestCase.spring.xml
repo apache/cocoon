@@ -24,5 +24,15 @@
   <import resource="classpath:META-INF/cocoon/spring/JavaScriptCompiler.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/JexlCompiler.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/JXPathCompiler.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/ObjectModelProviders.xml"/>
+  
+  <!-- Redefining this bean instead of importing because originally it is in "call" scope -->
+  <bean name="org.apache.cocoon.objectmodel.ObjectModel" class="org.apache.cocoon.objectmodel.ObjectModelImpl">
+    <property name="initialEntries">
+      <map>
+        <entry key="cocoon" value-ref="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider"/>
+      </map>
+    </property>        
+  </bean>
   
 </beans>

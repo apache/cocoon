@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.cocoon.objectmodel.provider.ObjectModelProvider;
 import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.MultiMap;
@@ -120,10 +121,13 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     }
 
     public void setInitialEntries(Map initialEntries) {
-        if (initialEntries != null)
+        if (this.initialEntries != null)
             throw new IllegalStateException("Object Model has initial entries set already.");
         this.initialEntries = initialEntries;
-        putAll(initialEntries);
+        for (Iterator keysIterator = initialEntries.keySet().iterator(); keysIterator.hasNext(); ) {
+            Object key = keysIterator.next();
+            put(key, ((ObjectModelProvider)initialEntries.get(key)).getMap());
+        }
     }
     
 }
