@@ -98,6 +98,10 @@ public class JXTemplateGenerator
             this.manager.release(this.scriptManager);
             this.scriptManager = null;
         }
+        if (this.newObjectModel != null) {
+            this.manager.release(this.newObjectModel);
+            this.newObjectModel = null;
+        }
         super.dispose();
     }
 
@@ -106,7 +110,6 @@ public class JXTemplateGenerator
      */
     public void recycle() {
         this.startDocument = null;
-        this.newObjectModel = null;
         this.namespaces = null;
         this.definitions = null;
         super.recycle();
