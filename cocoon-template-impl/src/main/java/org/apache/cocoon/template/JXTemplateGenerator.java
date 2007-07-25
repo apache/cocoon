@@ -87,6 +87,7 @@ public class JXTemplateGenerator
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         this.scriptManager = (ScriptManager) this.manager.lookup(ScriptManager.ROLE);
+        this.newObjectModel = (ObjectModel) this.manager.lookup(ObjectModel.ROLE);
     }
 
     /**
@@ -123,7 +124,7 @@ public class JXTemplateGenerator
             this.startDocument = scriptManager.resolveTemplate(src);
         }
 
-        this.newObjectModel = FlowObjectModelHelper.getNewObjectModelWithFOM(objectModel, parameters);
+        FlowObjectModelHelper.fillNewObjectModelWithFOM(newObjectModel, objectModel, parameters);
         this.namespaces = new NamespacesTable();
         this.definitions = new HashMap();
     }
