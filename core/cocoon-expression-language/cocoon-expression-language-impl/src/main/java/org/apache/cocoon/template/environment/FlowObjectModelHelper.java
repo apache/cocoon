@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.template.environment;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -63,18 +64,22 @@ public class FlowObjectModelHelper {
 
     /**
      * Create an expression context that contains the object model
+     * @param newObjectModel TODO
      */
-    public static ObjectModel getNewObjectModelWithFOM(final Map objectModel, 
-                                                            final Parameters parameters) {
+    public static void fillNewObjectModelWithFOM(ObjectModel newObjectModel, 
+                                                            final Map objectModel, final Parameters parameters) {
         Map expressionContext = TemplateObjectModelHelper.getTemplateObjectModel(objectModel, parameters);
         FlowObjectModelHelper.addJavaPackages(expressionContext);
         
         //FIXME: It's a temporary code!
-        org.apache.cocoon.objectmodel.ObjectModel newObjectModel = new org.apache.cocoon.objectmodel.ObjectModelImpl();
-        newObjectModel.putAll(expressionContext);
+        ((Map)newObjectModel.get("cocoon")).putAll((Map)expressionContext.get("cocoon"));
+        for (Iterator keysIterator = expressionContext.keySet().iterator(); keysIterator.hasNext(); ) {
+            Object key = keysIterator.next();
+            if ("cocoon".equals(key))
+                continue;
+            newObjectModel.put(key, expressionContext.get(key));
+        }
         newObjectModel.put(org.apache.cocoon.objectmodel.ObjectModel.CONTEXTBEAN, FlowHelper.getContextObject(objectModel));
-
-        return newObjectModel;
     }
 
     /**

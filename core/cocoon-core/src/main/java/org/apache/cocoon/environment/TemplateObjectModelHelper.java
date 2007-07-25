@@ -103,21 +103,6 @@ public class TemplateObjectModelHelper {
         // first create the "cocoon object":
         final Map cocoon = new HashMap();
 
-        // cocoon.request
-        final Request request = ObjectModelHelper.getRequest( objectModel );
-        cocoon.put("request", request);
-
-        // cocoon.session
-        final Session session = request.getSession(false);
-        if (session != null) {
-            cocoon.put("session", session);
-        }
-
-        // cocoon.context
-        final org.apache.cocoon.environment.Context context =
-            ObjectModelHelper.getContext( objectModel );
-        cocoon.put("context", context);
-
         // cocoon.continuation
         final Object cont = FlowHelper.getWebContinuation(objectModel);
         if (cont != null) {
@@ -128,8 +113,6 @@ public class TemplateObjectModelHelper {
         if (parameters != null) {
             cocoon.put("parameters", new ParametersMap(parameters));
         }
-
-        cocoon.put("settings", (Settings)WebAppContextUtils.getCurrentWebApplicationContext().getBean(Settings.ROLE));
 
         final Map map = new HashMap();
         map.put("cocoon", cocoon);

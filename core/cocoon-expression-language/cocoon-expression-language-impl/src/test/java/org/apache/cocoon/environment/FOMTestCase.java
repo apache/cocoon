@@ -28,10 +28,10 @@ public class FOMTestCase extends ContainerTestCase {
 
     public void testFOMJexl() throws ExpressionException {
         ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
+        ObjectModel objectModel = (ObjectModel) this.getBeanFactory().getBean(ObjectModel.class.getName());
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        ObjectModel objectModel =
-            FlowObjectModelHelper.getNewObjectModelWithFOM(getObjectModel(), parameters);
+        FlowObjectModelHelper.fillNewObjectModelWithFOM(objectModel, getObjectModel(), parameters);
 
         Expression expression = factory.getExpression("jexl", "cocoon.parameters.test");
         assertEquals("foo", expression.evaluate(objectModel));
@@ -42,10 +42,10 @@ public class FOMTestCase extends ContainerTestCase {
 
     public void testFOMJXPath() throws ExpressionException {
         ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
+        ObjectModel objectModel = (ObjectModel) this.getBeanFactory().getBean(ObjectModel.class.getName());
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
-        ObjectModel objectModel =
-            FlowObjectModelHelper.getNewObjectModelWithFOM(getObjectModel(), parameters);
+        FlowObjectModelHelper.fillNewObjectModelWithFOM(objectModel, getObjectModel(), parameters);
 
         Expression expression = factory.getExpression("jxpath", "$cocoon/parameters/test");
         assertEquals("foo", expression.evaluate(objectModel));

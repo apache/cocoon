@@ -23,6 +23,8 @@ import java.util.Map;
  */
 public interface ObjectModel extends Map {
     
+    static public String ROLE = ObjectModel.class.getName();
+    
     public static final String CONTEXTBEAN = "contextBean";
     public static final String NAMESPACE = "namespace";
     
