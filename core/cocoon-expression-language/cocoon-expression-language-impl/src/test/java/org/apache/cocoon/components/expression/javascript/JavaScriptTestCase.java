@@ -21,8 +21,8 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionCompiler;
 import org.apache.cocoon.components.expression.ExpressionException;
+import org.apache.cocoon.components.expression.helpers.RhinoScopeFactory;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
@@ -32,14 +32,16 @@ import org.apache.cocoon.objectmodel.ObjectModelImpl;
 public class JavaScriptTestCase extends TestCase {
 
     public void testExpression() throws ExpressionException {
-        ExpressionCompiler compiler = new JavaScriptCompiler();
+        JavaScriptCompiler compiler = new JavaScriptCompiler();
+        compiler.setRootScope(RhinoScopeFactory.createRhinoScope());
         Expression expression = compiler.compile("js", "1+2");
         Object result = expression.evaluate(new ObjectModelImpl());
         assertEquals(new Integer(3), result);
     }
 
     public void testContextExpression() throws ExpressionException {
-        ExpressionCompiler compiler = new JavaScriptCompiler();
+        JavaScriptCompiler compiler = new JavaScriptCompiler();
+        compiler.setRootScope(RhinoScopeFactory.createRhinoScope());
         ObjectModel objectModel = new ObjectModelImpl();
         objectModel.put("a", new Long(1));
         objectModel.put("b", new Long(2));
@@ -49,7 +51,8 @@ public class JavaScriptTestCase extends TestCase {
     }
 
     public void testIterator() throws ExpressionException {
-        ExpressionCompiler compiler = new JavaScriptCompiler();
+        JavaScriptCompiler compiler = new JavaScriptCompiler();
+        compiler.setRootScope(RhinoScopeFactory.createRhinoScope());
         ObjectModel objectModel = new ObjectModelImpl();
         String[] arr = { "foo" };
         objectModel.put("arr", arr);

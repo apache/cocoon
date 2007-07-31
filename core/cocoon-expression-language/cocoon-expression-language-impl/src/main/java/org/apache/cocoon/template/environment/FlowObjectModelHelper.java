@@ -37,29 +37,22 @@ import org.mozilla.javascript.ScriptableObject;
  */
 public class FlowObjectModelHelper {
 
-    private static Scriptable rootScope;
-
     /** Avoid instantiation. */
     private FlowObjectModelHelper() {}
 
-    public static Scriptable getScope() {
+    public static Scriptable getScope(Scriptable rootScope) {
+        Scriptable scope;
         Context ctx = Context.enter();
         try {
-            // Create it if never used up to now
-            if (rootScope == null) {
-                rootScope = ctx.initStandardObjects(null);
-            }
-            try {
-                Scriptable scope = ctx.newObject(rootScope);
-                scope.setPrototype(rootScope);
-                scope.setParentScope(null);
-                return scope;
-            } catch (Exception e) {
-                throw new RuntimeException("Exception", e);
-            }
+            scope = ctx.newObject(rootScope);
+            scope.setPrototype(rootScope);
+            scope.setParentScope(null);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception", e);
         } finally {
             Context.exit();
         }
+        return scope;
     }
 
     /**
@@ -69,7 +62,7 @@ public class FlowObjectModelHelper {
     public static void fillNewObjectModelWithFOM(ObjectModel newObjectModel, 
                                                             final Map objectModel, final Parameters parameters) {
         Map expressionContext = TemplateObjectModelHelper.getTemplateObjectModel(objectModel, parameters);
-        FlowObjectModelHelper.addJavaPackages(expressionContext);
+        //FlowObjectModelHelper.addJavaPackages(expressionContext);
         
         //FIXME: It's a temporary code!
         ((Map)newObjectModel.get("cocoon")).putAll((Map)expressionContext.get("cocoon"));
@@ -80,36 +73,6 @@ public class FlowObjectModelHelper {
             newObjectModel.put(key, expressionContext.get(key));
         }
         newObjectModel.put(org.apache.cocoon.objectmodel.ObjectModel.CONTEXTBEAN, FlowHelper.getContextObject(objectModel));
-    }
-
-    /**
-     * Add java packages to object model. Allows to construct java objects.
-     * @param objectModel usually the result of invoking getTemplateObjectModel
-     */
-    public static void addJavaPackages( Map objectModel ) {
-        Object javaPkg = FOM_JavaScriptFlowHelper.getJavaPackage(objectModel);
-        Object pkgs = FOM_JavaScriptFlowHelper.getPackages(objectModel);
-        
-        // packages might have already been set up if flowscript is being used
-        if ( javaPkg != null && pkgs != null ) {
-            objectModel.put( "Packages", javaPkg );
-            objectModel.put( "java", pkgs );
-        } else { 
-            Context.enter();
-            try {
-                final String JAVA_PACKAGE = "JavaPackage";
-                ClassLoader cl = Thread.currentThread().getContextClassLoader();
-                // FIXME - NativeJavaPackage is an internal class which we should not use
-                Scriptable newPackages = new NativeJavaPackage( "", cl );
-                newPackages.setParentScope( getScope() );
-                newPackages.setPrototype( ScriptableObject.getClassPrototype(   getScope(),
-                                                                                JAVA_PACKAGE ) );
-                objectModel.put( "Packages", newPackages );
-                objectModel.put( "java", ScriptableObject.getProperty( getScope(), "java" ) );
-            } finally {
-                Context.exit();
-            }
-        }
     }
 
 }

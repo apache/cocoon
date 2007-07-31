@@ -20,11 +20,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-    <!-- ObjectModelEntry provider for cocoon -->
+    <!-- ObjectModelEntry provider for 'cocoon' -->
     <bean name="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider"
           class="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider">
         <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
         <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
+    </bean>
+    
+    <!-- ObjectModelEntry provider for 'Packages' -->
+    <bean name="org.apache.cocoon.objectmodel.provider.PackagesEntryObjectModelProvider"
+          class="org.apache.cocoon.objectmodel.provider.PackagesEntryObjectModelProvider">
+      <property name="rootScope" ref="org.mozilla.javascript.Scriptable/rootScope"/>
+    </bean>
+    
+    <!-- ObjectModelEntry provider for 'java' -->
+    <bean name="org.apache.cocoon.objectmodel.provider.JavaEntryObjectModelProvider"
+          class="org.apache.cocoon.objectmodel.provider.JavaEntryObjectModelProvider">
+      <property name="rootScope" ref="org.mozilla.javascript.Scriptable/rootScope"/>
     </bean>
 
 </beans>
