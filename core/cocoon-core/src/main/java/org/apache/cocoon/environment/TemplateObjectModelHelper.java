@@ -27,8 +27,6 @@ import java.util.Set;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
@@ -91,10 +89,7 @@ public class TemplateObjectModelHelper {
     /**
      * Create the object model.
      * Currently the object model is a map with one single entry:
-     *  cocoon + request         The Request Object
-     *         + session         The Session (if available)
-     *         + context         The Context
-     *         + continuation    The Continuation (if available)
+     *  cocoon + continuation    The Continuation (if available)
      *         + parameters      The parameters (if provided)
      */
     public static Map getTemplateObjectModel(final Map objectModel, 
