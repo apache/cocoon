@@ -32,6 +32,8 @@
     <property name="initialEntries">
       <map>
         <entry key="cocoon" value-ref="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider"/>
+        <entry key="Packages" value-ref="org.apache.cocoon.objectmodel.provider.PackagesEntryObjectModelProvider"/>
+        <entry key="java" value-ref="org.apache.cocoon.objectmodel.provider.JavaEntryObjectModelProvider"/>
       </map>
     </property>        
   </bean>
