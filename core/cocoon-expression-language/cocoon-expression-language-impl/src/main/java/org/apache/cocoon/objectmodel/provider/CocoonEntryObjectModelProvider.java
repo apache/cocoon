@@ -19,11 +19,10 @@ package org.apache.cocoon.objectmodel.provider;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
@@ -54,20 +53,22 @@ public class CocoonEntryObjectModelProvider implements ObjectModelProvider {
     }
 
     public Map getMap() {
+        Map objectModel = processInfoProvider.getObjectModel();
+        
         Map cocoonMap = new HashMap();
         
         //cocoon.request
-        HttpServletRequest request = processInfoProvider.getRequest();
+        Request request = ObjectModelHelper.getRequest(objectModel);
         cocoonMap.put("request", request);
         
         //cocoon.session
-        HttpSession session = request.getSession(false);
+        Session session = request.getSession(false);
         if (session != null) {
             cocoonMap.put("session", session);
         }
         
         // cocoon.context
-        org.apache.cocoon.environment.Context context = ObjectModelHelper.getContext(processInfoProvider.getObjectModel());
+        org.apache.cocoon.environment.Context context = ObjectModelHelper.getContext(objectModel);
         cocoonMap.put("context", context);
         
         
