@@ -20,8 +20,6 @@
   <p>This is a simple demo page</p>
   <p>Message from a Spring Bean:</p>
   <p>#{message}</p>
-  <p>Using the Cocoon core through Spring: This is the upload directory:</p>
-  <p>#{core}</p>
   <p>Testing the injection of the core into a bean. This is the working directory:</p>
   <p>#{coreinjection}</p>
   <p>Testing Cocoon settings properties resolution:</p>
