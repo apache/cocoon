@@ -24,5 +24,6 @@
   <import resource="classpath:META-INF/cocoon/spring/JavaScriptCompiler.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/JexlCompiler.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/JXPathCompiler.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/RhinoScope.xml"/>
   
 </beans>

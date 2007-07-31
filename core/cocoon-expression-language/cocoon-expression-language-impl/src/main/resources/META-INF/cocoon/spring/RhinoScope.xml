@@ -18,11 +18,12 @@
 <!-- SVN $Id: $ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-
-  <bean name="org.apache.cocoon.components.expression.ExpressionCompiler/js" 
-        class="org.apache.cocoon.components.expression.javascript.JavaScriptCompiler">
-    <property name="rootScope" ref="org.mozilla.javascript.Scriptable/rootScope"/>
+  xmlns:configurator="http://cocoon.apache.org/schema/configurator"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
+  
+  <bean name="org.mozilla.javascript.Scriptable/rootScope" 
+        class="org.apache.cocoon.components.expression.helpers.RhinoScopeFactory" factory-method="createRhinoScope">
   </bean>
-
+  
 </beans>

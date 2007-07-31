@@ -14,32 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.javascript;
+package org.apache.cocoon.components.expression.helpers;
 
-import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionCompiler;
-import org.apache.cocoon.components.expression.ExpressionException;
+import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
 /**
- * @version $Id$
+ * This is a simple factory class that produces Rhino scope.
+ * Scope returned by this factory will be used as Spring bean.
  */
-public class JavaScriptCompiler implements ExpressionCompiler {
-    
-    Scriptable rootScope;
+public final class RhinoScopeFactory {
 
-    /**
-     * @see org.apache.cocoon.components.expression.ExpressionCompiler#compile(java.lang.String, java.lang.String)
-     */
-    public Expression compile(String language, String expression) throws ExpressionException {
-        return new JavaScriptExpression(language, expression, rootScope);
-    }
+    public static Scriptable createRhinoScope() {
+        final Scriptable rootScope;
 
-    public Scriptable getRootScope() {
+        Context ctx = Context.enter();
+        try {
+            rootScope = ctx.initStandardObjects(null);
+        } finally {
+            Context.exit();
+        }
         return rootScope;
-    }
-
-    public void setRootScope(Scriptable rootScope) {
-        this.rootScope = rootScope;
     }
 }
