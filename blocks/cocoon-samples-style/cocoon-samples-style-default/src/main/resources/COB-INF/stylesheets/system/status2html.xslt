@@ -31,23 +31,23 @@
   <xsl:template match="status:statusinfo">
     <html>
       <head>
-        <title>Cocoon Status [<xsl:value-of select="@status:host"/>]</title>
+        <title>Cocoon Status [<xsl:value-of select="@host"/>]</title>
         <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
         <script src="servlet:/scripts/main.js" type="text/javascript"/>
       </head>
 
       <body>
-        <h1><xsl:value-of select="@status:host"/> - <xsl:value-of select="@status:date"/></h1>
-        <h2>Apache Cocoon <xsl:value-of select="@status:cocoon-version"/></h2>
+        <h1><xsl:value-of select="@host"/> - <xsl:value-of select="@date"/></h1>
+        <h2>Apache Cocoon <xsl:value-of select="@cocoon-version"/></h2>
         <li>
           <span class="description">Created:</span>
           <xsl:text> </xsl:text>
-          <xsl:value-of select="@status:creation-time"/>
+          <xsl:value-of select="@creation-time"/>
         </li>
         <li>
           <span class="description">Build:</span>
           <xsl:text> </xsl:text>
-          <xsl:value-of select="@status:build-info"/>
+          <xsl:value-of select="@build-info"/>
         </li>
         <xsl:apply-templates/>
 
@@ -84,7 +84,7 @@
   </xsl:template>
 
   <xsl:template match="status:group">
-    <h2><xsl:value-of select="@status:name"/></h2>
+    <h2><xsl:value-of select="@name"/></h2>
     <ul><xsl:apply-templates select="status:value"/></ul>
     <xsl:apply-templates select="status:group"/>
     <xsl:if test="status:cont">
@@ -110,9 +110,9 @@
 
   <xsl:template match="status:value">
     <li>
-      <span class="description"><xsl:value-of select="@status:name"/><xsl:text>: </xsl:text></span>
+      <span class="description"><xsl:value-of select="@name"/><xsl:text>: </xsl:text></span>
       <xsl:choose>
-        <xsl:when test="contains(@status:name,'free') or contains(@status:name,'total') or contains(@status:name,'used')">
+        <xsl:when test="contains(@name,'free') or contains(@name,'total') or contains(@name,'used')">
           <xsl:call-template name="suffix">
             <xsl:with-param name="bytes" select="number(.)"/>
           </xsl:call-template>
