@@ -126,7 +126,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         this.initialEntries = initialEntries;
         for (Iterator keysIterator = initialEntries.keySet().iterator(); keysIterator.hasNext(); ) {
             Object key = keysIterator.next();
-            put(key, ((ObjectModelProvider)initialEntries.get(key)).getMap());
+            put(key, ((ObjectModelProvider)initialEntries.get(key)).getObject());
         }
     }
     

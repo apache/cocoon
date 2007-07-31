@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.objectmodel.provider;
 
-import java.util.Map;
 
 /**
  * This simple interface should be implemented by Spring beans providing initial entries for 
@@ -27,6 +26,6 @@ import java.util.Map;
  */
 public interface ObjectModelProvider {
     
-    public Map getMap();
+    public Object getObject();
     
 }

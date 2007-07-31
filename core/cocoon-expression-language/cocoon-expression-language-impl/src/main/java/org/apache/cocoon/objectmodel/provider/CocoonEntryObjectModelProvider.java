@@ -52,7 +52,7 @@ public class CocoonEntryObjectModelProvider implements ObjectModelProvider {
         this.processInfoProvider = processInfoProvider;
     }
 
-    public Map getMap() {
+    public Object getObject() {
         Map objectModel = processInfoProvider.getObjectModel();
         
         Map cocoonMap = new HashMap();
