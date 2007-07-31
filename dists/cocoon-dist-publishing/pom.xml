@@ -33,22 +33,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.cocoon</groupId>
-        <artifactId>cocoon-deployer-plugin</artifactId>
-        <version>1.0.0-M2-SNAPSHOT</version>
-        <configuration>
-          <serverVersion>2.2</serverVersion>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.1</version>
         <configuration>
