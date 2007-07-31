@@ -21,13 +21,10 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.environment.TemplateObjectModelHelper;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 
 
 /**
@@ -62,7 +59,6 @@ public class FlowObjectModelHelper {
     public static void fillNewObjectModelWithFOM(ObjectModel newObjectModel, 
                                                             final Map objectModel, final Parameters parameters) {
         Map expressionContext = TemplateObjectModelHelper.getTemplateObjectModel(objectModel, parameters);
-        //FlowObjectModelHelper.addJavaPackages(expressionContext);
         
         //FIXME: It's a temporary code!
         ((Map)newObjectModel.get("cocoon")).putAll((Map)expressionContext.get("cocoon"));
