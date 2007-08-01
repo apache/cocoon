@@ -57,7 +57,7 @@
   </menu>
 
   <menu label="Documentation" i18n:attr="label">
-    <external label="i18n transformer docs" href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html" i18n:attr="label"/>   
+    <external label="i18n transformer docs" href="http://cocoon.apache.org/2.1/userdocs/i18nTransformer.html" i18n:attr="label"/>   
     <external label="i18n transformer Javadoc" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/transformation/I18nTransformer.html" i18n:attr="label"/>   
     <external label="LocaleAction Javadoc" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/acting/LocaleAction.html" i18n:attr="label"/>   
   </menu>
