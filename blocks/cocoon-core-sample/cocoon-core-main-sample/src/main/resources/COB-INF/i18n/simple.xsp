@@ -45,7 +45,7 @@
       <i18n:translate>
         <i18n:text key="doclink"/>
         <i18n:param>
-          <link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html">Cocoon 2 Web Site</link>
+          <link href="http://cocoon.apache.org/2.1/userdocs/i18nTransformer.html">Cocoon 2 Web Site</link>
         </i18n:param>
       </i18n:translate>
     </annotation>
