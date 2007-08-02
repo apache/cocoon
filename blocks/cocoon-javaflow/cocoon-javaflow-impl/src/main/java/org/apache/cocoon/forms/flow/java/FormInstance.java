@@ -196,7 +196,7 @@ public class FormInstance extends AbstractContinuable {
             // (the same is done by cocoon.sendPage())
             //FIXME: I'm not sure if ObjectModel shouldn't be part of CocoonContinuationContext
             ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
-            FlowHelper.setContextObject(this.getObjectModel(), bizData, newObjectModel);
+            FlowHelper.setContextObject(this.getObjectModel(), newObjectModel, bizData);
             releaseComponent(newObjectModel);
             finished = this.form.process(formContext);
         } while (!finished);

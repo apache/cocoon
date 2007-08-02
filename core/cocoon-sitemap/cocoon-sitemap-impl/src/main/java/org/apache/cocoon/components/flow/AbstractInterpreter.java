@@ -192,7 +192,7 @@ public abstract class AbstractInterpreter
             uri = "cocoon:/" + uri;
             final Map objectModel = this.processInfoProvider.getObjectModel();
             FlowHelper.setWebContinuation(objectModel, newObjectModel, continuation);
-            FlowHelper.setContextObject(objectModel, bizData, newObjectModel);
+            FlowHelper.setContextObject(objectModel, newObjectModel, bizData);
             if (redirector.hasRedirected()) {
                 throw new IllegalStateException("Pipeline has already been processed for this request");
             }
