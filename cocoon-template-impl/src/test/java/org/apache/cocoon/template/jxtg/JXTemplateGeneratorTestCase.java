@@ -56,7 +56,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
         // Make the FOM objects available to the view layer
         ObjectModel newObjectModel = (ObjectModel)getBeanFactory().getBean(ObjectModel.ROLE);
-        FlowHelper.setContextObject(getObjectModel(), flowContext, newObjectModel);
+        FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContext);
     }
 
     public Map getFlowContext() {
