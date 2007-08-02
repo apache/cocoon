@@ -17,6 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
+
 <!--+
     | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
     |
@@ -24,15 +25,21 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
+    <release version="1.0.0-RC2" date="2007-??-??" description="unreleased">
+      <action dev="vgritsenko" type="fix">
+        Regression in &lt;map:serialize/&gt; - do not override status code if
+        it was not set on serialize element.
+      </action>
+    </release>
+    <release version="1.0.0-RC1" date="2007-05-16" description="released">
       <action dev="reinhard" type="add" due-to="Jochen Seifarth" due-to-email="jochen.seifarth@web.de" issue="COCOON-1354">
         &lt;map:serialize status-code=&quot;{}&quot;/&gt; supports variable resolution.
-      </action>  
-    </release> 
-    <release version="1.0.0-M1" date="2007-03-02" description="released">  
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-03-02" description="released">
       <action dev="reinhard" type="add">
         Initial creation.
-      </action>    
+      </action>
     </release>
   </body>
 </document>
