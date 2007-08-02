@@ -55,7 +55,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
      */
     public SerializeNode(String name,
                          VariableResolver source,
-                         VariableResolver mimeType, 
+                         VariableResolver mimeType,
                          VariableResolver statusCode) {
         this.serializerName = name;
         this.source = source;
@@ -124,19 +124,20 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
                                desc.hintParameters,
                                desc.mimeType);
 
-        // Set status code if there is one
-        int statusCodeInt = 200;
-        try {
-            String statusCodeString = this.statusCode.resolve(context, env.getObjectModel());
-            if(null != statusCodeString) {
+        // Set status code *only* if there is one - do not override status
+        // code if it was set elsewhere.
+        String statusCodeString = this.statusCode.resolve(context, env.getObjectModel());
+        if (statusCodeString != null) {
+            int statusCodeInt = 200;
+            try {
                 Integer resolvedStatusCode = new Integer(this.statusCode.resolve(context, env.getObjectModel()));
                 statusCodeInt = resolvedStatusCode.intValue();
+            } catch (NumberFormatException e) {
+                getLogger().warn("Status code value '" + statusCodeString + "' is not an integer. " +
+                                 "Using " + statusCodeInt + " instead.", e);
             }
-        } catch (NumberFormatException nfe) {
-            this.getLogger().warn("It was tried to set a non-integer as status code. " +
-                    "This value was ignored and default status code remains.", nfe);
+            env.setStatus(statusCodeInt);
         }
-        env.setStatus(statusCodeInt);        
 
         if (!context.isBuildingPipelineOnly()) {
             // Process pipeline
