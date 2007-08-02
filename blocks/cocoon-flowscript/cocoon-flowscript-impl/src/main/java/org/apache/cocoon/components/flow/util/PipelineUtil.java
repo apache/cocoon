@@ -61,7 +61,7 @@ public class PipelineUtil {
 
         // Keep the previous view data, if any (is it really necessary?), and set the new one
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData), newObjectModel);
+        FlowHelper.setContextObject(objectModel, newObjectModel, JavaScriptFlowHelper.unwrap(viewData));
 
         Source src = null;
         InputStream input = null;
@@ -77,7 +77,7 @@ public class PipelineUtil {
             }
 
             // Restore the previous view data
-            FlowHelper.setContextObject(objectModel, oldViewData, newObjectModel);
+            FlowHelper.setContextObject(objectModel, newObjectModel, oldViewData);
             resolver.release(src);
         }
     }
@@ -96,14 +96,14 @@ public class PipelineUtil {
         final SourceResolver resolver = getSourceResolver();
 
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData), newObjectModel);
+        FlowHelper.setContextObject(objectModel, newObjectModel, JavaScriptFlowHelper.unwrap(viewData));
 
         Source src = null;
         try {
             src = resolver.resolveURI("cocoon:/" + uri);
             SourceUtil.toSAX(src, handler);
         } finally {
-            FlowHelper.setContextObject(objectModel, oldViewData, newObjectModel);
+            FlowHelper.setContextObject(objectModel, newObjectModel, oldViewData);
             resolver.release(src);
         }
     }
@@ -120,7 +120,7 @@ public class PipelineUtil {
         final ObjectModel newObjectModel = getNewObjectModel();
         final SourceResolver resolver = getSourceResolver();
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData), newObjectModel);
+        FlowHelper.setContextObject(objectModel, newObjectModel, JavaScriptFlowHelper.unwrap(viewData));
 
         Source src = null;
 
@@ -128,7 +128,7 @@ public class PipelineUtil {
             src = resolver.resolveURI("cocoon:/" + uri);
             return SourceUtil.toDOM(src);
         } finally {
-            FlowHelper.setContextObject(objectModel, oldViewData, newObjectModel);
+            FlowHelper.setContextObject(objectModel, newObjectModel, oldViewData);
             resolver.release(src);
         }
     }

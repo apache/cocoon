@@ -63,7 +63,7 @@ public abstract class AbstractContinuable {
             context.getLogger().debug("send page and wait '" + uri + "'");
         ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()),
-                bizdata, newObjectModel);
+                newObjectModel, bizdata);
         releaseComponent(newObjectModel);
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
@@ -99,7 +99,7 @@ public abstract class AbstractContinuable {
         ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
         FlowHelper.setContextObject(
                 ContextHelper.getObjectModel(context.getAvalonContext()),
-                bizdata, newObjectModel
+                newObjectModel, bizdata
                 );
         releaseComponent(newObjectModel);
 

@@ -57,7 +57,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Request request = new MockRequest();
         Map objectModel = new HashMap();
         ObjectModel newObjectModel = new ObjectModelImpl();
-        FlowHelper.setContextObject(objectModel, flowContextObject, newObjectModel);
+        FlowHelper.setContextObject(objectModel, newObjectModel, flowContextObject);
         objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
@@ -90,7 +90,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Request request = new MockRequest();
         Map objectModel = new HashMap();
         ObjectModel newObjectModel = new ObjectModelImpl();
-        FlowHelper.setContextObject(objectModel, flowContextObject, newObjectModel);
+        FlowHelper.setContextObject(objectModel, newObjectModel, flowContextObject);
         objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);

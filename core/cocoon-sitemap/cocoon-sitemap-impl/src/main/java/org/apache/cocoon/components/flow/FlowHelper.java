@@ -82,10 +82,10 @@ public class FlowHelper {
      * Set the flow context object associated with the current request
      *
      * @param objectModel The Cocoon Environment's object model
-     * @param obj The context object 
      * @param newObjectModel TODO
+     * @param obj The context object 
      */
-    public final static void setContextObject(Map objectModel, Object obj, ObjectModel newObjectModel) {
+    public final static void setContextObject(Map objectModel, ObjectModel newObjectModel, Object obj) {
         objectModel.put(CONTEXT_OBJECT, obj);
     }
 }
