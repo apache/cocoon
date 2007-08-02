@@ -62,6 +62,10 @@
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-expression-language-api</artifactId>
+    </dependency>
   </dependencies>
   
   <profiles>

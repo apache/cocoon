@@ -25,18 +25,17 @@ import java.util.Map;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
-
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.objectmodel.ObjectModelImpl;
 import org.apache.cocoon.xml.dom.DOMBuilder;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.ResourceSource;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -57,7 +56,8 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         flowContextObject.put("beans", beans);
         Request request = new MockRequest();
         Map objectModel = new HashMap();
-        FlowHelper.setContextObject(objectModel, flowContextObject);
+        ObjectModel newObjectModel = new ObjectModelImpl();
+        FlowHelper.setContextObject(objectModel, flowContextObject, newObjectModel);
         objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
@@ -89,7 +89,8 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         flowContextObject.put("beans", beans);
         Request request = new MockRequest();
         Map objectModel = new HashMap();
-        FlowHelper.setContextObject(objectModel, flowContextObject);
+        ObjectModel newObjectModel = new ObjectModelImpl();
+        FlowHelper.setContextObject(objectModel, flowContextObject, newObjectModel);
         objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);

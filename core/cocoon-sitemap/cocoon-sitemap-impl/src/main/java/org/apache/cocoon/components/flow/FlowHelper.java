@@ -18,6 +18,8 @@ package org.apache.cocoon.components.flow;
 
 import java.util.Map;
 
+import org.apache.cocoon.objectmodel.ObjectModel;
+
 /**
  * Provides the interface between the flow controller layer and the 
  * view layer. A view can obtain the context object sent by a flow
@@ -68,10 +70,11 @@ public class FlowHelper {
      * Set the web continuation associated with the current request
      *
      * @param objectModel The Cocoon Environment's object model
+     * @param newObjectModel TODO
      * @param kont The web continuation
      */
     public final static void setWebContinuation(Map objectModel,
-                                          WebContinuation kont) {
+                                          ObjectModel newObjectModel, WebContinuation kont) {
         objectModel.put(CONTINUATION_OBJECT, kont);
     }
 
@@ -80,8 +83,9 @@ public class FlowHelper {
      *
      * @param objectModel The Cocoon Environment's object model
      * @param obj The context object 
+     * @param newObjectModel TODO
      */
-    public final static void setContextObject(Map objectModel, Object obj) {
+    public final static void setContextObject(Map objectModel, Object obj, ObjectModel newObjectModel) {
         objectModel.put(CONTEXT_OBJECT, obj);
     }
 }

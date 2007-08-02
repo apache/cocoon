@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.objectmodel.ObjectModel;
 
 /**
  * @version SVN $Id: JXTemplateGeneratorTestCase.java 358974 2005-12-25
@@ -54,7 +55,8 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         super.setUp();
 
         // Make the FOM objects available to the view layer
-        FlowHelper.setContextObject(getObjectModel(), flowContext);
+        ObjectModel newObjectModel = (ObjectModel)getBeanFactory().getBean(ObjectModel.ROLE);
+        FlowHelper.setContextObject(getObjectModel(), flowContext, newObjectModel);
     }
 
     public Map getFlowContext() {
