@@ -147,7 +147,7 @@ public final class JavaInterpreter extends AbstractInterpreter {
                 handler, null, timeToLive, getInterpreterID(), null);
 
         FlowHelper.setWebContinuation(
-                ContextHelper.getObjectModel(avalonContext), wk);
+                ContextHelper.getObjectModel(avalonContext), newObjectModel, wk);
 
         final Continuation newContinuation = Continuation.startWith(new Invoker(method), context);
 
@@ -174,7 +174,7 @@ public final class JavaInterpreter extends AbstractInterpreter {
                 newHandler, oldWebContinuation, timeToLive, getInterpreterID(), null);
 
         FlowHelper.setWebContinuation(
-                ContextHelper.getObjectModel(avalonContext), newWebContinuation);
+                ContextHelper.getObjectModel(avalonContext), newObjectModel, newWebContinuation);
 
         final Continuation oldContinuation = oldHandler.getContinuation();
 

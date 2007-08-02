@@ -25,6 +25,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.commons.io.IOUtils;
@@ -55,11 +56,12 @@ public class PipelineUtil {
     public void processToStream(String uri, Object viewData, OutputStream output)
     throws IOException {
         final Map objectModel = getObjectModel();
+        final ObjectModel newObjectModel = getNewObjectModel();
         final SourceResolver resolver = getSourceResolver();
 
         // Keep the previous view data, if any (is it really necessary?), and set the new one
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData));
+        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData), newObjectModel);
 
         Source src = null;
         InputStream input = null;
@@ -75,7 +77,7 @@ public class PipelineUtil {
             }
 
             // Restore the previous view data
-            FlowHelper.setContextObject(objectModel, oldViewData);
+            FlowHelper.setContextObject(objectModel, oldViewData, newObjectModel);
             resolver.release(src);
         }
     }
@@ -90,17 +92,18 @@ public class PipelineUtil {
     public void processToSAX(String uri, Object viewData, ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         final Map objectModel = getObjectModel();
+        final ObjectModel newObjectModel = getNewObjectModel();
         final SourceResolver resolver = getSourceResolver();
 
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData));
+        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData), newObjectModel);
 
         Source src = null;
         try {
             src = resolver.resolveURI("cocoon:/" + uri);
             SourceUtil.toSAX(src, handler);
         } finally {
-            FlowHelper.setContextObject(objectModel, oldViewData);
+            FlowHelper.setContextObject(objectModel, oldViewData, newObjectModel);
             resolver.release(src);
         }
     }
@@ -114,9 +117,10 @@ public class PipelineUtil {
      */
     public Document processToDOM(String uri, Object viewData) throws ProcessingException, SAXException, IOException  {
         final Map objectModel = getObjectModel();
+        final ObjectModel newObjectModel = getNewObjectModel();
         final SourceResolver resolver = getSourceResolver();
         Object oldViewData = FlowHelper.getContextObject(objectModel);
-        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData));
+        FlowHelper.setContextObject(objectModel, JavaScriptFlowHelper.unwrap(viewData), newObjectModel);
 
         Source src = null;
 
@@ -124,7 +128,7 @@ public class PipelineUtil {
             src = resolver.resolveURI("cocoon:/" + uri);
             return SourceUtil.toDOM(src);
         } finally {
-            FlowHelper.setContextObject(objectModel, oldViewData);
+            FlowHelper.setContextObject(objectModel, oldViewData, newObjectModel);
             resolver.release(src);
         }
     }
@@ -145,5 +149,10 @@ public class PipelineUtil {
         final ProcessInfoProvider infoProvider =
             (ProcessInfoProvider)webAppContext.getBean(ProcessInfoProvider.ROLE);
         return infoProvider.getObjectModel();
+    }
+    
+    protected static ObjectModel getNewObjectModel() {
+        final WebApplicationContext webAppContext = WebAppContextUtils.getCurrentWebApplicationContext();
+        return (ObjectModel)webAppContext.getBean(ObjectModel.ROLE);
     }
 }

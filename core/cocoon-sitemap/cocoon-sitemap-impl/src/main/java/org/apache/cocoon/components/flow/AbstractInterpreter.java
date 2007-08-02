@@ -32,6 +32,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.SourceUtil;
 
@@ -68,6 +69,7 @@ public abstract class AbstractInterpreter
     protected ServiceManager manager;
     protected ContinuationsManager continuationsMgr;
     protected ProcessInfoProvider processInfoProvider;
+    protected ObjectModel newObjectModel;
 
     /** The settings of Cocoon. */
     protected Settings settings;
@@ -118,6 +120,7 @@ public abstract class AbstractInterpreter
         this.continuationsMgr = (ContinuationsManager)sm.lookup(ContinuationsManager.ROLE);
         this.settings = (Settings)this.manager.lookup(Settings.ROLE);
         this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
+        this.newObjectModel = (ObjectModel)this.manager.lookup(ObjectModel.ROLE);
     }
 
     /**
@@ -136,9 +139,11 @@ public abstract class AbstractInterpreter
             this.manager.release( this.continuationsMgr );
             this.manager.release( this.settings );
             this.manager.release( this.processInfoProvider );
+            this.manager.release(this.newObjectModel);
             this.continuationsMgr = null;
             this.settings = null;
             this.processInfoProvider = null;
+            this.newObjectModel = null;
             this.manager = null;
         }
     }
@@ -186,8 +191,8 @@ public abstract class AbstractInterpreter
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
             final Map objectModel = this.processInfoProvider.getObjectModel();
-            FlowHelper.setWebContinuation(objectModel, continuation);
-            FlowHelper.setContextObject(objectModel, bizData);
+            FlowHelper.setWebContinuation(objectModel, newObjectModel, continuation);
+            FlowHelper.setContextObject(objectModel, bizData, newObjectModel);
             if (redirector.hasRedirected()) {
                 throw new IllegalStateException("Pipeline has already been processed for this request");
             }

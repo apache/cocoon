@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.flow.java;
 
 import java.util.Locale;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.java.AbstractContinuable;
@@ -28,6 +29,7 @@ import org.apache.cocoon.forms.binding.BindingManager;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
@@ -192,7 +194,10 @@ public class FormInstance extends AbstractContinuable {
             FormContext formContext = new FormContext(getRequest(), locale);
             // Prematurely add the bizData as a request attribute so that event listeners can use it
             // (the same is done by cocoon.sendPage())
-            FlowHelper.setContextObject(this.getObjectModel(), bizData);
+            //FIXME: I'm not sure if ObjectModel shouldn't be part of CocoonContinuationContext
+            ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
+            FlowHelper.setContextObject(this.getObjectModel(), bizData, newObjectModel);
+            releaseComponent(newObjectModel);
             finished = this.form.process(formContext);
         } while (!finished);
     }

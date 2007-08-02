@@ -71,6 +71,15 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-flowscript-impl</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-expression-language-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-expression-language-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!-- other dependencies -->
     <dependency>
       <groupId>commons-collections</groupId>

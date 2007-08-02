@@ -130,7 +130,8 @@ Form.prototype.processForm = function(viewdata) {
     // (the same is done by cocoon.sendPage())
     // FIXME : hack needed because FOM doesn't provide access to the object model
     var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
-    org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata);
+    var newObjectModel = cocoon.getComponent(org.apache.cocoon.objectmodel.ObjectModel.ROLE);
+    org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata, newObjectModel);
 
     if (this.restoreHook) {
         this.restoreHook(this);
@@ -197,7 +198,8 @@ Form.prototype.sendFormAndWait = function(uri, viewdata, ttl) {
         // (the same is done by cocoon.sendPage())
         // FIXME : hack needed because FOM doesn't provide access to the object model
         var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext);
-        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata);
+        var newObjectModel = cocoon.getComponent(org.apache.cocoon.objectmodel.ObjectModel.ROLE);
+        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata, newObjectModel);
 
         finished = this.form.process(formContext);
 

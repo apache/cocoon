@@ -18,6 +18,7 @@ package org.apache.cocoon.components.flow.java;
 
 import java.io.OutputStream;
 import java.util.Map;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -25,6 +26,7 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.commons.javaflow.Continuation;
 import org.apache.excalibur.source.SourceUtil;
 
@@ -59,8 +61,10 @@ public abstract class AbstractContinuable {
         CocoonContinuationContext context = getContext();
         if (context.getLogger() != null)
             context.getLogger().debug("send page and wait '" + uri + "'");
+        ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()),
-                bizdata);
+                bizdata, newObjectModel);
+        releaseComponent(newObjectModel);
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
             if (getContext().getRedirector().hasRedirected()) {
@@ -92,10 +96,12 @@ public abstract class AbstractContinuable {
             context.getLogger().debug("send page '" + uri + "'");
         }
         
+        ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
         FlowHelper.setContextObject(
                 ContextHelper.getObjectModel(context.getAvalonContext()),
-                bizdata
+                bizdata, newObjectModel
                 );
+        releaseComponent(newObjectModel);
 
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;

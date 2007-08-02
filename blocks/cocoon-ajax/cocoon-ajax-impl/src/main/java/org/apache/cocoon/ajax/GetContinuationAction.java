@@ -31,6 +31,7 @@ import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.sitemap.SitemapParameters;
 
 /**
@@ -49,10 +50,12 @@ import org.apache.cocoon.sitemap.SitemapParameters;
  */
 public class GetContinuationAction extends ServiceableAction implements ThreadSafe, Disposable {
     ContinuationsManager contManager;
+    ObjectModel newObjectModel;
 
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         this.contManager = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
+        this.newObjectModel = (ObjectModel)manager.lookup(ObjectModel.ROLE);
     }
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
@@ -71,7 +74,7 @@ public class GetContinuationAction extends ServiceableAction implements ThreadSa
         } else {
             // Getting the continuation updates the last access time
             wk.getContinuation();
-            FlowHelper.setWebContinuation(objectModel, wk);
+            FlowHelper.setWebContinuation(objectModel, newObjectModel, wk);
             return Collections.EMPTY_MAP;
         }
     }
