@@ -97,12 +97,6 @@ public class TemplateObjectModelHelper {
 
         // first create the "cocoon object":
         final Map cocoon = new HashMap();
-
-        // cocoon.continuation
-        final Object cont = FlowHelper.getWebContinuation(objectModel);
-        if (cont != null) {
-            cocoon.put("continuation", cont);
-        }
             
         // cocoon.parameters
         if (parameters != null) {
