@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.TemplateObjectModelHelper;
 import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.objectmodel.helper.TemplateObjectModelHelper;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
