@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.objectmodel.helper.ParametersMap;
 import org.apache.cocoon.objectmodel.helper.TemplateObjectModelHelper;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -68,6 +69,7 @@ public class FlowObjectModelHelper {
                 continue;
             newObjectModel.put(key, expressionContext.get(key));
         }
+        ((Map)newObjectModel.get("cocoon")).put("parameters", new ParametersMap(parameters));
         newObjectModel.put(org.apache.cocoon.objectmodel.ObjectModel.CONTEXTBEAN, FlowHelper.getContextObject(objectModel));
     }
 

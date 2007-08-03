@@ -84,20 +84,12 @@ public class TemplateObjectModelHelper {
 
     /**
      * Create the object model.
-     * Currently the object model is a map with one single entry:
-     *  cocoon + continuation    The Continuation (if available)
-     *         + parameters      The parameters (if provided)
      */
     public static Map getTemplateObjectModel(final Map objectModel, 
                                              final Parameters parameters) {
 
         // first create the "cocoon object":
         final Map cocoon = new HashMap();
-            
-        // cocoon.parameters
-        if (parameters != null) {
-            cocoon.put("parameters", new ParametersMap(parameters));
-        }
 
         final Map map = new HashMap();
         map.put("cocoon", cocoon);
