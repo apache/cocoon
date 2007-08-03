@@ -127,7 +127,6 @@ public class JXTemplateGenerator
             this.startDocument = scriptManager.resolveTemplate(src);
         }
 
-        FlowObjectModelHelper.fillNewObjectModelWithFOM(newObjectModel, objectModel, parameters);
         this.namespaces = new NamespacesTable();
         this.definitions = new HashMap();
     }
@@ -144,6 +143,7 @@ public class JXTemplateGenerator
 
     public void performGeneration(Event startEvent, Event endEvent) throws SAXException {
         newObjectModel.markLocalContext();
+        FlowObjectModelHelper.fillNewObjectModelWithFOM(newObjectModel, objectModel, parameters);
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
         ((Map) newObjectModel.get("cocoon")).put("consumer", consumer);
         Invoker.execute(consumer, this.newObjectModel, new ExecutionContext(this.definitions, this.scriptManager,
