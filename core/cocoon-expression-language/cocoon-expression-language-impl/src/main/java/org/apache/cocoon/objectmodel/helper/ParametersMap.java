@@ -12,7 +12,11 @@ import java.util.Set;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 
-final class ParametersMap extends Parameters implements Map {
+/**
+ * <p>Wrapper class for {@link Parameters} class that exposes parameters through {@link Map} interface.</p>
+ * <p>Use this wrapper if you want to put {@link Parameters} in {@link ObjectModel}.</p>
+ */
+public final class ParametersMap extends Parameters implements Map {
 
     protected final Parameters wrappedParameters;
     protected Map map;
