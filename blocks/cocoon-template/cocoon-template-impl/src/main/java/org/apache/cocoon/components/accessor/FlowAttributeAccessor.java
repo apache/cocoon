@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.environment.TemplateObjectModelHelper;
+import org.apache.cocoon.objectmodel.helper.TemplateObjectModelHelper;
 
 /**
  * @version $Id$
