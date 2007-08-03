@@ -21,8 +21,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.environment.TemplateObjectModelHelper;
 import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.objectmodel.helper.TemplateObjectModelHelper;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
