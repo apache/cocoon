@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 
 /**
  * @version $Id$
@@ -37,7 +36,8 @@ public class FlowAttributeAccessor extends ObjectModelAccessor {
         if (contextObject instanceof Map) {
             map.putAll((Map)contextObject);
         } else if (contextObject != null) {
-            FlowObjectModelHelper.fillContext(contextObject, map);
+            //FIXME: I commented out this call to avoid compilation errors, do we need this class at all? (GK)
+            //ObjectModelImpl.fillContext(contextObject, map);
         }
 
         return map;
