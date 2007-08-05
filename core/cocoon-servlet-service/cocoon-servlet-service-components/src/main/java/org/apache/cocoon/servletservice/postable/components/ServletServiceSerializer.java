@@ -40,14 +40,17 @@ import org.apache.excalibur.source.SourceException;
 import org.xml.sax.SAXException;
 
 /**
- * <p>The serializer takes only <code>service</code> parameter that should contain the URL of the called service.<br>
- * Use <code>servlet:</code> source for that purpose.</p>
+ * <p>The serializer takes only <code>service</code> parameter that should
+ * contain the URL of the called service.</p>
+ *
+ * <p>Use <code>servlet:</code> source for that purpose.</p>
  * 
  * <p>FIXME: Provide a link to the documents discussing servlet (and sitemap) services.</p>
  * 
  * @cocoon.sitemap.component.documentation
- * The <code>ServletServiceSerializer</code> POSTs its input data to a called service. Result of the serialization is a data returned
- * by the called service.
+ * The <code>ServletServiceSerializer</code> POSTs its input data to a called
+ * service. Result of the serialization is a data returned by the called
+ * service.
  * @cocoon.sitemap.component.name servletService  
  */
 public class ServletServiceSerializer extends AbstractSerializer implements SitemapModelComponent {
@@ -63,7 +66,8 @@ public class ServletServiceSerializer extends AbstractSerializer implements Site
         this.enableLogging(new CLLoggerWrapper(this.logger));
     }
 
-	public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+	public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
 		String service;
 		try {
 			service = par.getParameter("service");

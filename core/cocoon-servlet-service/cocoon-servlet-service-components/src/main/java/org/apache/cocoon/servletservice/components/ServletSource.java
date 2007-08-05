@@ -77,10 +77,18 @@ public class ServletSource extends AbstractSource implements PostableSource {
 	public InputStream getInputStream() throws IOException, SourceException {
 		try {
 			connect();
-			//FIXME: This is not the most elegant solution
-			if (servletConnection.getResponseCode() != HttpServletResponse.SC_OK) {
+			// FIXME: This is not the most elegant solution
+            if (servletConnection.getResponseCode() != HttpServletResponse.SC_OK) {
 				//most probably, servlet returned 304 (not modified) and we need to perform second request to get data
-				servletConnection = new ServletConnection(location);
+
+                //
+                // FIXME This does not work: previous instance of servletConnection
+                //       most probably had non empty requestBody. Re-instantiating
+                //       it results in new servletConnection with null requestBody
+                //       and, as a result, GET request instead of POST.
+                //
+
+                servletConnection = new ServletConnection(location);
 				servletConnection.connect();
 			}
 			return this.servletConnection.getInputStream();
