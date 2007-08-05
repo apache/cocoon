@@ -33,7 +33,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * @version $Id: TestServlet2.java 388756 2006-03-25 13:43:42Z danielf $
+ * @version $Id$
  */
 public class DemoServlet extends HttpServlet {
 
