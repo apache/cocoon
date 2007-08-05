@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
  * Interface for making the absolute path available from a servlet service relative path.
  * The interface is mainly introduced to make the absoluteizeURI method available when
  * the ServletServiceContext is proxied.
- * 
+ *
  * @version $Id$
  */
 public interface Absolutizable {
@@ -32,9 +32,9 @@ public interface Absolutizable {
      * Takes the scheme specific part of a servlet service URI (the scheme is the
      * responsibilty of the ServletSource) and resolve it with respect to the
      * servlets mount point.
-     * 
-     * @param uri
-     * @return
+     *
+     * @param uri relative uri
+     * @return absolutized uri
      * @throws URISyntaxException
      */
     public URI absolutizeURI(URI uri) throws URISyntaxException;
