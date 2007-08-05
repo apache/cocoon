@@ -16,14 +16,16 @@
  */
 package org.apache.cocoon.template.environment;
 
-import java.util.Iterator;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.objectmodel.helper.ParametersMap;
-import org.apache.cocoon.objectmodel.helper.TemplateObjectModelHelper;
+import org.apache.commons.jxpath.DynamicPropertyHandler;
+import org.apache.commons.jxpath.JXPathBeanInfo;
+import org.apache.commons.jxpath.JXPathIntrospector;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
@@ -59,18 +61,57 @@ public class FlowObjectModelHelper {
      */
     public static void fillNewObjectModelWithFOM(ObjectModel newObjectModel, 
                                                             final Map objectModel, final Parameters parameters) {
-        Map expressionContext = TemplateObjectModelHelper.getTemplateObjectModel(objectModel, parameters);
         
-        //FIXME: It's a temporary code!
-        ((Map)newObjectModel.get("cocoon")).putAll((Map)expressionContext.get("cocoon"));
-        for (Iterator keysIterator = expressionContext.keySet().iterator(); keysIterator.hasNext(); ) {
-            Object key = keysIterator.next();
-            if ("cocoon".equals(key))
-                continue;
-            newObjectModel.put(key, expressionContext.get(key));
+        // Now add objects from flow context (if any)
+        final Object contextObject = newObjectModel.get(ObjectModel.CONTEXTBEAN);
+        if (contextObject instanceof Map) {
+            newObjectModel.putAll((Map)contextObject);
+        } else if ( contextObject != null ) {
+            FlowObjectModelHelper.fillContext(contextObject, newObjectModel);
         }
+        
         ((Map)newObjectModel.get("cocoon")).put("parameters", new ParametersMap(parameters));
-        newObjectModel.put(org.apache.cocoon.objectmodel.ObjectModel.CONTEXTBEAN, FlowHelper.getContextObject(objectModel));
+        
+        //newObjectModel.put(org.apache.cocoon.objectmodel.ObjectModel.CONTEXTBEAN, FlowHelper.getContextObject(objectModel));
+    }
+
+    public static void fillContext(Object contextObject, Map map) {
+        // Hack: I use jxpath to populate the context object's properties
+        // in the jexl context
+        final JXPathBeanInfo bi =
+            JXPathIntrospector.getBeanInfo(contextObject.getClass());
+        if (bi.isDynamic()) {
+            Class cl = bi.getDynamicPropertyHandlerClass();
+            try {
+                DynamicPropertyHandler h =
+                    (DynamicPropertyHandler) cl.newInstance();
+                String[] result = h.getPropertyNames(contextObject);
+                int len = result.length;
+                for (int i = 0; i < len; i++) {
+                    try {
+                        map.put(result[i], h.getProperty(contextObject, result[i]));
+                    } catch (Exception exc) {
+                        exc.printStackTrace();
+                    }
+                }
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
+        } else {
+            PropertyDescriptor[] props =  bi.getPropertyDescriptors();
+            int len = props.length;
+            for (int i = 0; i < len; i++) {
+                try {
+                    Method read = props[i].getReadMethod();
+                    if (read != null) {
+                        map.put(props[i].getName(),
+                                read.invoke(contextObject, null));
+                    }
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
+            }
+        }
     }
 
 }
