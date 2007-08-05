@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.flow;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.cocoon.objectmodel.ObjectModel;
@@ -91,5 +90,6 @@ public class FlowHelper {
     public final static void setContextObject(Map objectModel, ObjectModel newObjectModel, Object obj) {
         objectModel.put(CONTEXT_OBJECT, obj);
         newObjectModel.put(ObjectModel.CONTEXTBEAN, obj);
+        newObjectModel.fillContext();
     }
 }

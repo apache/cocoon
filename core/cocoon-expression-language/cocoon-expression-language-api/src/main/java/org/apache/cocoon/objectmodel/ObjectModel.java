@@ -55,4 +55,13 @@ public interface ObjectModel extends Map {
      * Cleans up entries put to ObjectModel since last {@link #markLocalContext()} call.
      */
     public void cleanupLocalContext();
+    
+    /**
+     * <p>Copies properties (both static and dynamic) of current context bean to the Object Model. The method is useful
+     * when you want, for example, to access properties of context bean in JEXL expression and omit <code>contextBean.</code>
+     * part.</p>
+     * 
+     * @see org.apache.commons.jxpath.JXPathBeanInfo.isDynamic() for description of static and dynamic properties
+     */
+    public void fillContext();
 }
