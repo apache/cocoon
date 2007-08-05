@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.objectmodel.helper.TemplateObjectModelHelper;
+import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 
 /**
  * @version $Id$
@@ -37,7 +37,7 @@ public class FlowAttributeAccessor extends ObjectModelAccessor {
         if (contextObject instanceof Map) {
             map.putAll((Map)contextObject);
         } else if (contextObject != null) {
-            TemplateObjectModelHelper.fillContext(contextObject, map);
+            FlowObjectModelHelper.fillContext(contextObject, map);
         }
 
         return map;
