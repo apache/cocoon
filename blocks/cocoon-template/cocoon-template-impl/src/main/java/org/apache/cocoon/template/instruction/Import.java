@@ -21,9 +21,9 @@ import java.util.Stack;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.objectmodel.ObjectModel;
-import org.apache.cocoon.objectmodel.helper.TemplateObjectModelHelper;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
+import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.Literal;
@@ -126,7 +126,7 @@ public class Import extends Instruction {
             try {
                 Object obj = this.select.getValue(objectModel);
                 objectModel.put(ObjectModel.CONTEXTBEAN, obj);
-                TemplateObjectModelHelper.fillContext(obj, objectModel);
+                FlowObjectModelHelper.fillContext(obj, objectModel);
             } catch (Exception exc) {
                 throw new SAXParseException(exc.getMessage(), getLocation(), exc);
             } catch (Error err) {
