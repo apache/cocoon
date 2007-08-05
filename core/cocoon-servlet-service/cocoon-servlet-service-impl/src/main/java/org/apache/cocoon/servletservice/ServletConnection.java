@@ -73,11 +73,11 @@ public final class ServletConnection {
      * Construct a new object
      */
     public ServletConnection(String url)
-        throws MalformedURLException {
+    throws MalformedURLException {
 
-        URI blockURI = null;
+        URI blockURI;
         try {
-            blockURI = parseBlockURI(new URI(url.toString()));
+            blockURI = parseBlockURI(new URI(url));
         } catch (URISyntaxException e) {
             throw new MalformedURLException("Malformed URI in block source " +
                                             e.getMessage());
@@ -101,7 +101,9 @@ public final class ServletConnection {
     
     public void connect() throws IOException, ServletException {
     	//if already connected, do nothing
-    	if (connected) return;
+    	if (connected) {
+            return;
+        }
     	
     	if (requestBody != null) {
     		request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
@@ -144,9 +146,11 @@ public final class ServletConnection {
     }
 
     public void setIfModifiedSince(long ifmodifiedsince) {
-    	if (connected)
+    	if (connected) {
     	    throw new IllegalStateException("Already connected");
-    	request.setDateHeader("If-Modified-Since", ifmodifiedsince);
+        }
+
+        request.setDateHeader("If-Modified-Since", ifmodifiedsince);
     }
     
     public long getLastModified() {
@@ -189,8 +193,13 @@ public final class ServletConnection {
      * @throws IllegalStateException - if already connected
      */
     public OutputStream getOutputStream() throws IllegalStateException {
-    	if (connected) throw new IllegalStateException("You cannot write to the connection already connected.");
-    	if (requestBody == null) requestBody = new ByteArrayOutputStream();
+    	if (connected) {
+            throw new IllegalStateException("You cannot write to the connection already connected.");
+        }
+
+        if (requestBody == null) {
+            requestBody = new ByteArrayOutputStream();
+        }
     	return requestBody;
     	
     }
@@ -205,7 +214,7 @@ public final class ServletConnection {
         String scheme = uri.getScheme();
 
         this.logger.debug("ServletSource: resolving " + uri.toString() + " with scheme " +
-                uri.getScheme() + " and ssp " + uri.getRawSchemeSpecificPart());
+                          uri.getScheme() + " and ssp " + uri.getRawSchemeSpecificPart());
         uri = new URI(uri.getRawSchemeSpecificPart());
         this.logger.debug("ServletSource: resolved to " + uri.toString());
         

@@ -52,8 +52,10 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
 	 */
 	final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
+
     public BlockCallHttpServletResponse() {
     	headers = new HashMap();
+        statusCode = HttpServletResponse.SC_OK;
     }
 
     /* (non-Javadoc)
@@ -360,6 +362,5 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
 
     public void setCharacterEncoding(String arg0) {
         // TODO Auto-generated method stub
-        
     }
 }
