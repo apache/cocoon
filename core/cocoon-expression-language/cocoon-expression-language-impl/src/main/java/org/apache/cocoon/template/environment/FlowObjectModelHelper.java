@@ -26,8 +26,6 @@ import org.apache.cocoon.objectmodel.helper.ParametersMap;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
 
 
 /**
@@ -39,21 +37,6 @@ public class FlowObjectModelHelper {
 
     /** Avoid instantiation. */
     private FlowObjectModelHelper() {}
-
-    public static Scriptable getScope(Scriptable rootScope) {
-        Scriptable scope;
-        Context ctx = Context.enter();
-        try {
-            scope = ctx.newObject(rootScope);
-            scope.setPrototype(rootScope);
-            scope.setParentScope(null);
-        } catch (Exception e) {
-            throw new RuntimeException("Exception", e);
-        } finally {
-            Context.exit();
-        }
-        return scope;
-    }
 
     /**
      * Create an expression context that contains the object model
