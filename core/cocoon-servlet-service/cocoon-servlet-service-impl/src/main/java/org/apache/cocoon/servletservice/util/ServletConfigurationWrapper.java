@@ -22,9 +22,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 /**
- * @version $Id: ServletConfigurationWrapper.java 368000 2006-01-11 10:45:20Z
- *          danielf $
- * 
+ *
+ * @version $Id$
  */
 public class ServletConfigurationWrapper implements ServletConfig {
 
@@ -44,7 +43,7 @@ public class ServletConfigurationWrapper implements ServletConfig {
      * @param servletContext
      */
     public ServletConfigurationWrapper(ServletConfig servletConfig,
-            ServletContext servletContext) {
+                                       ServletContext servletContext) {
         this.servletConfig = servletConfig;
         this.servletContext = servletContext;
     }
@@ -85,5 +84,4 @@ public class ServletConfigurationWrapper implements ServletConfig {
     public Enumeration getInitParameterNames() {
         return this.servletConfig.getInitParameterNames();
     }
-
 }

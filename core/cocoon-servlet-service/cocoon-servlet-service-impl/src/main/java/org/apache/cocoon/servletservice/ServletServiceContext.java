@@ -51,13 +51,15 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
+ *
  * @version $Id$
  */
 public class ServletServiceContext extends ServletContextWrapper implements Absolutizable {
-    
+
     public static final String SUPER = "super";
 
-    protected Log logger = LogFactory.getLog( ServletServiceContext.class );
+    private final Log logger = LogFactory.getLog(ServletServiceContext.class);
+
     private Map attributes = new Hashtable();
     private Servlet servlet;
     private String mountPath;
@@ -126,7 +128,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         // hack for getting a file protocol or other protocols that can be used as context
         // path in the getResource method in the servlet context
         if (!(contextPath.startsWith("file:") || contextPath.startsWith("/")
-                || contextPath.indexOf(':') == -1)) {
+              || contextPath.indexOf(':') == -1)) {
             SourceResolver resolver = null;
             Source source = null;
             try {
@@ -145,15 +147,16 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         // HACK: allow file:/ URLs for reloading of sitemaps during development
         if (this.contextPath.startsWith("file:")) {
             return new URL("file", null, this.contextPath.substring("file:".length()) + path);
-        } else {
-            if (this.contextPath.length() != 0 && this.contextPath.charAt(0) != '/')
-                throw new MalformedURLException("The contextPath must be empty or start with '/' "
-                        + this.contextPath);
-            
-            // prefix the path with the servlet context resolve and resolve in the embeding
-            // servlet context
-            return super.getResource(this.contextPath + path);
         }
+
+        if (this.contextPath.length() != 0 && this.contextPath.charAt(0) != '/') {
+            throw new MalformedURLException("The contextPath must be empty or start with '/' " +
+                                            this.contextPath);
+        }
+
+        // prefix the path with the servlet context resolve and resolve in the embeding
+        // servlet context
+        return super.getResource(this.contextPath + path);
     }
 
     /*
@@ -173,19 +176,25 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
      */
     // FIXME, this should be defined in the config instead
     public String getInitParameter(String name) {
-        if (this.properties == null)
+        if (this.properties == null) {
             return null;
+        }
+
         String value = (String) this.properties.get(name);
         // Ask the super servlet for the property
         if (value == null) {
             ServletContext superContext = this.getNamedContext(SUPER);
-            if (superContext != null)
+            if (superContext != null) {
                 value = superContext.getInitParameter(name);
+            }
         }
+
         // Ask the parent context
         if (value == null) {
+            // FIXME Huh?
             super.getInitParameter(name);
         }
+
         return value;
     }
 
@@ -196,13 +205,13 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
      */
     public Enumeration getInitParameterNames() {
         Vector names = new Vector();
-        
+
         // add all names of the parent servlet context
         Enumeration enumeration = super.getInitParameterNames();
         while (enumeration.hasMoreElements()) {
             names.add(enumeration.nextElement());
         }
-        
+
         // add names of the super servlet
         ServletContext superContext = this.getNamedContext(SUPER);
         if (superContext != null) {
@@ -261,7 +270,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     public int getMinorVersion() {
         return 3;
     }
-    
+
     private Collection getDirectoryList(File file, String pathPrefix) {
         ArrayList filenames = new ArrayList();
 
@@ -292,9 +301,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         } else {
             pathPrefix = this.contextPath;
         }
-        
+
         path = pathPrefix + path;
-        
+
         if (path == null) {
             return Collections.EMPTY_SET;
         }
@@ -352,7 +361,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     }
 
     // Servlet service specific methods
-    
+
     /**
      * Set the servlet of the context
      * @param servlet
@@ -375,23 +384,28 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         } else {
             // another servlet service
             servletServiceContext = (ServletServiceContext) this.getNamedContext(servletServiceName);
-            if (servletServiceContext == null)
+            if (servletServiceContext == null) {
                 throw new URISyntaxException(uri.toString(), "Unknown servlet service name");
+            }
         }
 
         String mountPath = servletServiceContext.getMountPath();
-        if (mountPath == null)
+        if (mountPath == null) {
             throw new URISyntaxException(uri.toString(),
-                    "No mount point for this URI");
-        if (mountPath.endsWith("/"))
+                                         "No mount point for this URI");
+        }
+        if (mountPath.endsWith("/")) {
             mountPath = mountPath.substring(0, mountPath.length() - 1);
+        }
+
         String absoluteURI = mountPath + uri.getSchemeSpecificPart();
         if (logger.isInfoEnabled()) {
             logger.info("Resolving " + uri.toString() + " to " + absoluteURI);
         }
+
         return new URI(absoluteURI);
     }
-    
+
     /**
      * Get the context of a servlet service with a given name.
      */
@@ -400,12 +414,11 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         if (this.connections == null) {
             return null;
         }
-        
-        Servlet servlet =
-            (Servlet) this.connections.get(name);
-        return servlet != null ? ((ServletServiceContextAware)servlet).getServletServiceContext() : null;
+
+        Servlet servlet = (Servlet) this.connections.get(name);
+        return servlet != null ? ((ServletServiceContextAware) servlet).getServletServiceContext() : null;
     }
-        
+
     /**
      * @param mountPath The mountPath to set.
      */
@@ -419,7 +432,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     public String getMountPath() {
         return this.mountPath;
     }
-    
+
     /**
      * @param contextPath
      */
@@ -444,8 +457,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     protected class NamedDispatcher implements RequestDispatcher {
 
         private String servletServiceName;
-        private boolean superCall = false;
+        private boolean superCall;
         private ServletContext context;
+
 
         public NamedDispatcher(String servletServiceName) {
             this.servletServiceName = servletServiceName;
@@ -457,7 +471,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                 // If there is a super servlet service, the connection might
                 // be defined there instead.
                 ServletServiceContext superContext =
-                    (ServletServiceContext) ServletServiceContext.this.getNamedContext(SUPER);
+                        (ServletServiceContext) ServletServiceContext.this.getNamedContext(SUPER);
                 if (superContext != null) {
                     this.context = superContext.getNamedContext(this.servletServiceName);
                     this.superCall = true;
@@ -476,14 +490,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
          *      javax.servlet.ServletResponse)
          */
         public void forward(ServletRequest request, ServletResponse response)
-                throws ServletException, IOException {
+        throws ServletException, IOException {
             // Call to named servlet service
 
             if (logger.isInfoEnabled()) {
                 logger.info("Enter processing in servlet service " + this.servletServiceName);
             }
             RequestDispatcher dispatcher =
-                this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
+                    this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
             if (dispatcher != null && dispatcher instanceof PathDispatcher) {
                 ((PathDispatcher)dispatcher).forward(request, response, this.superCall);
             } else {
@@ -502,16 +516,16 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
          *      javax.servlet.ServletResponse)
          */
         public void include(ServletRequest request, ServletResponse response)
-                throws ServletException, IOException {
+        throws ServletException, IOException {
             throw new UnsupportedOperationException();
         }
     }
-    
+
     /**
      *  Limited functionality, assumes that there is at most one servlet in the context
      */
     private class PathDispatcher implements RequestDispatcher {
-        
+
         // Ignores path, as the assumed only servlet within the context is
         // implicitly mounted on '/*'
         private PathDispatcher(String path) {
@@ -543,7 +557,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                     // in the right way. We still need to register the
                     // current context for resolving super calls relative it.
                     CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)response);
-                }                        
+                }
                 ServletServiceContext.this.servlet.service(request, response);
             } finally {
                 CallStackHelper.leaveServlet();

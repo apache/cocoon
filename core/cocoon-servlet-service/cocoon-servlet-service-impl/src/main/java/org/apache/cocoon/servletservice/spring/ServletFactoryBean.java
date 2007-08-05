@@ -45,35 +45,36 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
+ *
  * @version $Id$
  */
-public class ServletFactoryBean
-    implements FactoryBean, ApplicationContextAware, ServletContextAware, BeanNameAware {
-    
+public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
+                                           ServletContextAware, BeanNameAware {
+
     private ApplicationContext parentContainer;
     private ServletContext servletContext;
     private String beanName;
 
     private Servlet embeddedServlet;
-    
+
     private String mountPath;
     private String contextPath;
 
     private Map initParams;
     private Map contextParams;
     private Map connections;
-    
+
     private ServletServiceContext servletServiceContext;
-    
+
+
     public ServletFactoryBean() {
     }
-    
+
     public void init() throws Exception {
-    
         this.servletServiceContext = new ServletServiceContext();
         this.servletServiceContext.setServletContext(this.servletContext);
-    
-        this.servletServiceContext.setMountPath(this.mountPath);        
+
+        this.servletServiceContext.setMountPath(this.mountPath);
         this.servletServiceContext.setContextPath(this.contextPath);
 
         this.servletServiceContext.setInitParams(this.initParams);
@@ -83,9 +84,11 @@ public class ServletFactoryBean
         // create a sub container that resolves paths relative to the block
         // context rather than the parent context and make it available in
         // a context attribute
-        if (this.parentContainer == null)
+        if (this.parentContainer == null) {
             this.parentContainer =
-                WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
+                    WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
+        }
+
         GenericWebApplicationContext container = new GenericWebApplicationContext();
         container.setParent(this.parentContainer);
         container.setServletContext(this.servletServiceContext);
@@ -94,32 +97,32 @@ public class ServletFactoryBean
 
         // create a servlet config based on the block servlet context
         ServletConfig blockServletConfig =
-            new ServletConfig() {
-    
-                public String getInitParameter(String name) {
-                    return ServletFactoryBean.this.servletServiceContext.getInitParameter(name);
-                }
-    
-                public Enumeration getInitParameterNames() {
-                    return ServletFactoryBean.this.servletServiceContext.getInitParameterNames();
-                }
+                new ServletConfig() {
 
-                public ServletContext getServletContext() {
-                    return ServletFactoryBean.this.servletServiceContext;
-                }
-        
-                public String getServletName() {
-                    return ServletFactoryBean.this.beanName;
-                }
-        };
-    
+                    public String getInitParameter(String name) {
+                        return ServletFactoryBean.this.servletServiceContext.getInitParameter(name);
+                    }
+
+                    public Enumeration getInitParameterNames() {
+                        return ServletFactoryBean.this.servletServiceContext.getInitParameterNames();
+                    }
+
+                    public ServletContext getServletContext() {
+                        return ServletFactoryBean.this.servletServiceContext;
+                    }
+
+                    public String getServletName() {
+                        return ServletFactoryBean.this.beanName;
+                    }
+                };
+
         // create and initialize the embeded servlet
         this.embeddedServlet.init(blockServletConfig);
         this.servletServiceContext.setServlet(this.embeddedServlet);
     }
 
     public void destroy() {
-        this.embeddedServlet.destroy();        
+        this.embeddedServlet.destroy();
     }
 
     /* (non-Javadoc)
@@ -156,7 +159,7 @@ public class ServletFactoryBean
     public void setMountPath(String mountPath) {
         this.mountPath = mountPath;
     }
-    
+
     /**
      * The path to the blocks resources relative to the servlet context URL,
      * must start with an '/'.
@@ -213,7 +216,7 @@ public class ServletFactoryBean
     public boolean isSingleton() {
         return true;
     }
-    
+
     private class ServiceInterceptor implements MethodInterceptor {
 
         /* (non-Javadoc)
@@ -225,42 +228,42 @@ public class ServletFactoryBean
                 HttpServletRequest request = (HttpServletRequest) arguments[0];
                 HttpServletResponse response = (HttpServletResponse) arguments[1];
                 RequestDispatcher dispatcher =
-                    ServletFactoryBean.this.servletServiceContext.getRequestDispatcher(request.getPathInfo());
+                        ServletFactoryBean.this.servletServiceContext.getRequestDispatcher(request.getPathInfo());
                 dispatcher.forward(request, response);
                 return null;
-            } else
-                return invocation.proceed();
+            }
+
+            return invocation.proceed();
         }
-        
     }
-    
-    private class MountableMixin extends DelegatingIntroductionInterceptor implements Mountable {
+
+    private class MountableMixin extends DelegatingIntroductionInterceptor
+                                 implements Mountable {
 
         public String getMountPath() {
             return ServletFactoryBean.this.mountPath;
         }
     }
-    
+
     private class MountableMixinAdvisor extends DefaultIntroductionAdvisor {
 
         public MountableMixinAdvisor() {
             super(new MountableMixin(), Mountable.class);
         }
     }
-    
+
     private class ServletServiceContextMixin extends DelegatingIntroductionInterceptor
-    implements ServletServiceContextAware {
+                                             implements ServletServiceContextAware {
 
         public ServletServiceContext getServletServiceContext() {
             return ServletFactoryBean.this.servletServiceContext;
         }
     }
-    
+
     private class ServletServiceContextMixinAdvisor extends DefaultIntroductionAdvisor {
 
         public ServletServiceContextMixinAdvisor() {
             super(new ServletServiceContextMixin(), ServletServiceContextAware.class);
         }
-        
     }
 }

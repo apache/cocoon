@@ -23,6 +23,7 @@ import org.springframework.beans.factory.FactoryBean;
 /**
  * Factorybean that exposes the HttpServletRequest in the current call frame.
  * It will typically be used together with the call scope.
+ *
  * @version $Id$
  */
 public final class HttpServletRequestFactoryBean implements FactoryBean {
@@ -47,5 +48,4 @@ public final class HttpServletRequestFactoryBean implements FactoryBean {
     public boolean isSingleton() {
         return true;
     }
-
 }
