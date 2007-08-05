@@ -28,28 +28,31 @@ import org.apache.excalibur.source.SourceFactory;
 
 /**
  * A factory for <code>service-consumer:</code> source.
+ *
  * @see ServletServiceConsumerSource
+ * @version $Id$
  */
 public class ServletServiceConsumerSourceFactory implements SourceFactory {
 	
-	private ProcessInfoProvider processInfoProvider;
+    private ProcessInfoProvider processInfoProvider;
 
-	public Source getSource(String location, Map parameters) throws IOException, MalformedURLException {
-		HttpServletRequest request = processInfoProvider.getRequest();
-		if (!"POST".equals(request.getMethod()))
-			throw new MalformedURLException("Cannot create consumer source for request that is not POST.");
-		return new ServletServiceConsumerSource(request);
-	}
+    public Source getSource(String location, Map parameters) throws IOException, MalformedURLException {
+        HttpServletRequest request = processInfoProvider.getRequest();
+        if (!"POST".equals(request.getMethod())) {
+            throw new MalformedURLException("Cannot create consumer source for request that is not POST.");
+        }
 
-	public void release(Source source) {
-	}
+        return new ServletServiceConsumerSource(request);
+    }
 
-	public ProcessInfoProvider getProcessInfoProvider() {
-		return processInfoProvider;
-	}
+    public void release(Source source) {
+    }
 
-	public void setProcessInfoProvider(ProcessInfoProvider processInfoProvider) {
-		this.processInfoProvider = processInfoProvider;
-	}
+    public ProcessInfoProvider getProcessInfoProvider() {
+        return processInfoProvider;
+    }
 
+    public void setProcessInfoProvider(ProcessInfoProvider processInfoProvider) {
+        this.processInfoProvider = processInfoProvider;
+    }
 }
