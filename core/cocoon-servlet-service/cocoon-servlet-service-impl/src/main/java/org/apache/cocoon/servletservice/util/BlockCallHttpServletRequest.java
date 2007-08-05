@@ -62,10 +62,10 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     
     private ServletInputStream requestBody;
     
-	/**
-	 * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3 
-	 */
-	final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
+    /**
+     * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3
+     */
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
     /**
      * @param uri points to the called servlet
@@ -139,13 +139,13 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
      */
     public long getDateHeader(String name) {
-    	String header = getHeader(name);
-    	if (header == null) return -1;
-    	try {
-			return dateFormat.parse(header).getTime();
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+        String header = getHeader(name);
+        if (header == null) return -1;
+        try {
+            return dateFormat.parse(header).getTime();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     /* (non-Javadoc)
@@ -163,7 +163,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     }
     
     public void setHeader(String name, String value) {
-    	headers.put(name, value);
+        headers.put(name, value);
     }
 
     /* (non-Javadoc)
@@ -184,14 +184,14 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.ServletRequest#getInputStream()
      */
     public ServletInputStream getInputStream() throws IOException {
-    	return requestBody;
+        return requestBody;
     }
     
     public void setInputStream(final InputStream inputStream) {
-    	requestBody = new ServletInputStream() {
-        	public int read() throws IOException {
-        		return inputStream.read();
-        	}
+        requestBody = new ServletInputStream() {
+            public int read() throws IOException {
+                return inputStream.read();
+            }
         };
     }
 
@@ -199,9 +199,12 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
      */
     public int getIntHeader(String name) {
-    	String header = getHeader(name);
-    	if (header == null) return -1;
-    	return Integer.parseInt(header);
+        String header = getHeader(name);
+        if (header == null) {
+            return -1;
+        }
+
+        return Integer.parseInt(header);
     }
 
     /* (non-Javadoc)
@@ -235,7 +238,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     }
     
     public void setMethod(String method) {
-    	this.method = method;
+        this.method = method;
     }
 
     /* (non-Javadoc)
@@ -492,7 +495,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
                     // TODO Auto-generated method stub
                     
                 }
-           };     
+            };
         }
         return null;
     }
@@ -596,5 +599,4 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
         // TODO Auto-generated method stub
         return 0;
     }
-
 }

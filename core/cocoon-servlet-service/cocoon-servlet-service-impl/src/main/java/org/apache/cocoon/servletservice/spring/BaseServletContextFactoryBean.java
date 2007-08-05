@@ -23,6 +23,7 @@ import org.springframework.beans.factory.FactoryBean;
 /**
  * Factorybean that exposes the ServletContext in the current base call frame.
  * It will typically be used together with the call scope for servlet services.
+ *
  * @version $Id$
  */
 public final class BaseServletContextFactoryBean implements FactoryBean {
@@ -49,5 +50,4 @@ public final class BaseServletContextFactoryBean implements FactoryBean {
     public boolean isSingleton() {
         return true;
     }
-
 }

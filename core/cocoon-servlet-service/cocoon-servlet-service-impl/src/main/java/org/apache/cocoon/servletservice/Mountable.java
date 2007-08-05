@@ -22,12 +22,15 @@ package org.apache.cocoon.servletservice;
  * as it mounts all servlet beans that has a property named mountPath.
  * The main use for the interface is to b e able to create an AOP mixin
  * with an ordinary Java proxy.
+ *
  * @version $Id$
  */
 public interface Mountable {
+
     /**
-     * The mount path of the servlet
-     * @return
+     * The mount path of the servlet.
+     *
+     * @return servlet mount path
      */
     public String getMountPath();
 }

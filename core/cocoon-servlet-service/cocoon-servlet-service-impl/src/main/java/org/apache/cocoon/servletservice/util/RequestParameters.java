@@ -16,6 +16,8 @@
  */
 package org.apache.cocoon.servletservice.util;
 
+import org.apache.commons.collections.iterators.IteratorEnumeration;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -31,8 +33,7 @@ import java.util.StringTokenizer;
  *
  * @version $Id$
  */
-public final class RequestParameters
-implements Serializable {
+public final class RequestParameters implements Serializable {
 
     /** The parameter names are the keys and the value is a List object */
     private Map names;
@@ -74,6 +75,7 @@ implements Serializable {
                     break;
             }
         }
+
         return sb.toString();
     }
 
@@ -160,8 +162,10 @@ implements Serializable {
                 }
                 values[values.length-1] = (String)iter.next();
             }
+
             return values;
         }
+
         return null;
     }
 
@@ -170,19 +174,6 @@ implements Serializable {
      * @return  Enumeration for the (String) parameter names.
      */
     public Enumeration getParameterNames() {
-        return new EnumerationFromIterator(names.keySet().iterator());
+        return new IteratorEnumeration(names.keySet().iterator());
     }
-
-    final class EnumerationFromIterator implements Enumeration {
-        private Iterator iter;
-        EnumerationFromIterator(Iterator iter) {
-            this.iter = iter;
-        }
-
-        public boolean hasMoreElements() {
-            return iter.hasNext();
-        }
-        public Object nextElement() { return iter.next(); }
-    }
-
 }

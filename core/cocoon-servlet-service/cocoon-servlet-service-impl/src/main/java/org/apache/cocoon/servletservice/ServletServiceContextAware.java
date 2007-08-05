@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.servletservice;
 
-
 /**
  * Interface for making the servlet service context of a servlet service
  * available. It is needed for inter servlet communication in the servlet
@@ -25,6 +24,7 @@ package org.apache.cocoon.servletservice;
  * @version $Id$
  */
 public interface ServletServiceContextAware {
+
     /**
      * The servlet context used for inter servlet service communication
      * @return

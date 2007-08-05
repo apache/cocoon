@@ -25,11 +25,11 @@ import org.apache.cocoon.callstack.CallStack;
 
 /**
  * A set of constants and methods to access the content of the call frame.
+ *
  * <p>
  * The call frame is used to pass information about the Request, Response and
  * Context of the calling environment to components used while the call frame
- * is active.
- * <p>
+ * is active.</p>
  *
  * @version $Id$
  */

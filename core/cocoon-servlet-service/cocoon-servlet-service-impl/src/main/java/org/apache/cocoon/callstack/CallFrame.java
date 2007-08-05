@@ -32,7 +32,7 @@ public class CallFrame {
     private Map destructionCallbacks;
     
     public boolean hasAttribute(String name) {
-        return this.attributes != null ? this.attributes.containsKey(name) : false;
+        return this.attributes != null && this.attributes.containsKey(name);
     }
 
     public Object getAttribute(String name) {
@@ -40,8 +40,10 @@ public class CallFrame {
     }
     
     public void setAttribute(String name, Object value) {
-        if (this.attributes == null)
+        if (this.attributes == null) {
             this.attributes = new HashMap();
+        }
+
         this.attributes.put(name, value);
     }
     
@@ -50,16 +52,21 @@ public class CallFrame {
     }
     
     public void registerDestructionCallback(String name, Runnable callback) {
-        if (this.destructionCallbacks == null)
+        if (this.destructionCallbacks == null) {
             this.destructionCallbacks = new HashMap();
+        }
+
         this.destructionCallbacks.put(name, callback);
     }
     
     void executeDestructionCallbacks() {
-        if (this.destructionCallbacks == null)
+        if (this.destructionCallbacks == null) {
             return;
-        Iterator it = this.destructionCallbacks.values().iterator();
-        while (it.hasNext())
-            ((Runnable)it.next()).run();
+        }
+
+        Iterator i = this.destructionCallbacks.values().iterator();
+        while (i.hasNext()) {
+            ((Runnable) i.next()).run();
+        }
     }
 }

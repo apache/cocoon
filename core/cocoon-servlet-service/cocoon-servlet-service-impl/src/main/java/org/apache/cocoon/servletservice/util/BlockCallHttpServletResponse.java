@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Creates a HttpServletResponse object that is usable for internal block calls.
- * 
+ *
  * @version $Id$
  */
 public class BlockCallHttpServletResponse implements HttpServletResponse {
@@ -46,15 +46,15 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     private int statusCode;
 
     private Map headers;
-    
-	/**
-	 * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3 
-	 */
-	final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
+
+    /**
+     * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3
+     */
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
 
     public BlockCallHttpServletResponse() {
-    	headers = new HashMap();
+        headers = new HashMap();
         statusCode = HttpServletResponse.SC_OK;
     }
 
@@ -69,7 +69,7 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
      */
     public void addDateHeader(String name, long date) {
-    	//this class does not support multivalue headers
+        //this class does not support multivalue headers
         setDateHeader(name, date);
     }
 
@@ -77,16 +77,16 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String, java.lang.String)
      */
     public void addHeader(String name, String value) {
-    	//this class does not support multivalue headers
-    	setHeader(name, value);
+        //this class does not support multivalue headers
+        setHeader(name, value);
     }
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String, int)
      */
     public void addIntHeader(String name, int value) {
-    	//this class does not support multivalue headers
-    	setIntHeader(name, value);
+        //this class does not support multivalue headers
+        setIntHeader(name, value);
     }
 
     /* (non-Javadoc)
@@ -146,10 +146,10 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
         // TODO Let it depend on the actual response body
         return "ISO-8859-1";
     }
-    
+
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponse#getLocale()
-     */
+    * @see javax.servlet.ServletResponse#getLocale()
+    */
     public Locale getLocale() {
         return this.locale;
     }
@@ -158,8 +158,9 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#getOutputStream()
      */
     public ServletOutputStream getOutputStream() throws IOException {
-        if (this.writer != null)
+        if (this.writer != null) {
             throw new IllegalStateException( "Tried to create output stream; writer already exists" );
+        }
 
         if (this.servletStream == null) {
             this.servletStream = new ServletOutputStream() {
@@ -187,11 +188,11 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
                 public void close() throws IOException {
                     BlockCallHttpServletResponse.this.outputStream.close();
                 }
-                
-                
+
+
             };
         }
- 
+
         return this.servletStream;
     }
 
@@ -199,12 +200,13 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#getWriter()
      */
     public PrintWriter getWriter() throws IOException {
-        if (this.servletStream != null)
+        if (this.servletStream != null) {
             throw new IllegalStateException( "Tried to create writer; output stream already exists" );
+        }
 
         if (this.writer == null) {
             this.writer =
-                new PrintWriter(new OutputStreamWriter(this.outputStream, this.getCharacterEncoding()));
+                    new PrintWriter(new OutputStreamWriter(this.outputStream, this.getCharacterEncoding()));
         }
 
         return this.writer;
@@ -228,8 +230,10 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.ServletResponse#resetBuffer()
      */
     public void resetBuffer() {
-        if (this.committed)
-            throw new IllegalStateException( "May not resetBuffer after response is committed" );
+        if (this.committed) {
+            throw new IllegalStateException("May not resetBuffer after response is committed");
+        }
+
         this.outputStream = null;
         this.servletStream = null;
         this.writer = null;
@@ -240,7 +244,6 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      */
     public void sendError(int sc) throws IOException {
         // TODO Auto-generated method stub
-        
     }
 
     /* (non-Javadoc)
@@ -248,7 +251,6 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      */
     public void sendError(int sc, String msg) throws IOException {
         // TODO Auto-generated method stub
-        
     }
 
     /* (non-Javadoc)
@@ -256,7 +258,6 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      */
     public void sendRedirect(String location) throws IOException {
         // TODO Auto-generated method stub
-        
     }
 
     /* (non-Javadoc)
@@ -289,15 +290,18 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
 
     /* (non-Javadoc)
      * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
-     */    
+     */
     public long getDateHeader(String name) {
-    	String header = getHeader(name);
-    	if (header == null) return -1;
-    	try {
-			return dateFormat.parse(header).getTime();
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+        String header = getHeader(name);
+        if (header == null) {
+            return -1;
+        }
+
+        try {
+            return dateFormat.parse(header).getTime();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /* (non-Javadoc)
@@ -308,7 +312,7 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     public String getHeader(String name) {
-    	return (String)headers.get(name);
+        return (String) headers.get(name);
     }
 
     /* (non-Javadoc)
@@ -322,9 +326,12 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
      * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
      */
     public int getIntHeader(String name) {
-    	String header = getHeader(name);
-    	if (header == null) return -1;
-    	return Integer.parseInt(header);
+        String header = getHeader(name);
+        if (header == null) {
+            return -1;
+        }
+
+        return Integer.parseInt(header);
     }
 
     /* (non-Javadoc)
@@ -346,7 +353,7 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     public int getStatus() {
-    	return this.statusCode;
+        return this.statusCode;
     }
 
     /* (non-Javadoc)
@@ -357,7 +364,7 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     public String getContentType() {
-    	return getHeader("Content-Type");
+        return getHeader("Content-Type");
     }
 
     public void setCharacterEncoding(String arg0) {

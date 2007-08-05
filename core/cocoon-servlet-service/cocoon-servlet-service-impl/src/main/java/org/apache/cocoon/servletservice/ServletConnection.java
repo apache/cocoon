@@ -46,6 +46,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class ServletConnection {
 
+    /** By default we use the logger for this class. */
+    private final Log logger = LogFactory.getLog(getClass());
+
     /** Wrapped request */
     private BlockCallHttpServletRequest request;
     
@@ -60,11 +63,8 @@ public final class ServletConnection {
     
     private String systemId;
     
-    /** By default we use the logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
-    
     /** If already connected */
-    private boolean connected; 
+    private boolean connected;
     
     private InputStream responseBody;
     private ByteArrayOutputStream requestBody;
@@ -85,35 +85,36 @@ public final class ServletConnection {
 
         // Super calls are resolved relative the current context and ordinary
         // calls relative the last non super call in the call chain
-        if (ServletServiceContext.SUPER.equals(this.blockName))
+        if (ServletServiceContext.SUPER.equals(this.blockName)) {
             this.context = CallStackHelper.getCurrentServletContext();
-        else
+        } else {
             this.context = CallStackHelper.getBaseServletContext();
+        }
         
-        if (this.context == null)
+        if (this.context == null) {
             throw new MalformedURLException("Must be used in a block context " + url);
+        }
 
         this.request = new BlockCallHttpServletRequest(blockURI, CallFrameHelper.getRequest());
         this.response = new BlockCallHttpServletResponse();
-        
         this.connected = false;
     }
     
     public void connect() throws IOException, ServletException {
-    	//if already connected, do nothing
-    	if (connected) {
+        //if already connected, do nothing
+        if (connected) {
             return;
         }
     	
-    	if (requestBody != null) {
-    		request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
-    		request.setMethod("POST");
-    	}
+        if (requestBody != null) {
+            request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
+            request.setMethod("POST");
+        }
     	
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.response.setOutputStream(os);
-        RequestDispatcher dispatcher = null;
-        
+
+        RequestDispatcher dispatcher;
         try {
             if (this.blockName == null) {
                 // FIXME Should be called with path + queryString,
@@ -122,85 +123,92 @@ public final class ServletConnection {
             } else {
                 dispatcher = this.context.getNamedDispatcher(this.blockName);
             }
-            if (dispatcher == null)
+
+            if (dispatcher == null) {
                 throw new ServletException("No dispatcher for " + this.systemId);
+            }
             dispatcher.forward(this.request, this.response);
             this.response.flushBuffer();
             
-            byte[] out = os.toByteArray();
-            
-            responseBody = new ByteArrayInputStream(out);
+            responseBody = new ByteArrayInputStream(os.toByteArray());
         } finally {
             os.close();
         }
+
         connected = true;
     }
 
     /**
      * Return an <code>InputStream</code> object to read from the source.
-     * @throws Exception 
+     * @throws IOException
+     * @throws ServletException
      */
     public InputStream getInputStream() throws IOException, ServletException {
-    	connect();
-    	return responseBody;
+        connect();
+        return responseBody;
     }
 
     public void setIfModifiedSince(long ifmodifiedsince) {
-    	if (connected) {
-    	    throw new IllegalStateException("Already connected");
+        if (connected) {
+            throw new IllegalStateException("Already connected");
         }
 
         request.setDateHeader("If-Modified-Since", ifmodifiedsince);
     }
     
     public long getLastModified() {
-    	return getHeaderFieldDate("Last-Modified", 0);
+        return getHeaderFieldDate("Last-Modified", 0);
     }
     
     public String getContentType() {
-    	return getHeaderField("Content-Type");
+        return getHeaderField("Content-Type");
     }
 
     public long getHeaderFieldDate(String name, long Default) {
-    	try {
-    	    return response.getDateHeader(name);
-    	} catch (Exception e) { }
-    	return Default;
+        try {
+            return response.getDateHeader(name);
+        } catch (Exception e) { }
+
+        return Default;
     }
     
     public String getHeaderField(String name) {
-    	try {
-			connect();
-		} catch (Exception e) {
-			return null;
-		}
-    	return response.getHeader(name);
+        try {
+            connect();
+        } catch (Exception e) {
+            return null;
+        }
+
+        return response.getHeader(name);
     }
     
     public int getResponseCode() throws IOException {
-    	if (!connected)
-			try {
-				connect();
-			} catch (ServletException e) {
-				throw new IOException("Could not get response status code");
-			}
-    	return response.getStatus();
+        if (!connected) {
+            try {
+                connect();
+            } catch (ServletException e) {
+                throw new IOException("Could not get response status code");
+            }
+        }
+
+        return response.getStatus();
     }
     
     /**
      * Returns an output stream that writes as POST to this connection.
+     *
      * @return an output stream that writes as POST to this connection.
      * @throws IllegalStateException - if already connected
      */
     public OutputStream getOutputStream() throws IllegalStateException {
-    	if (connected) {
+        if (connected) {
             throw new IllegalStateException("You cannot write to the connection already connected.");
         }
 
         if (requestBody == null) {
             requestBody = new ByteArrayOutputStream();
         }
-    	return requestBody;
+        return requestBody;
     	
     }
     
@@ -213,10 +221,10 @@ public final class ServletConnection {
         }
         String scheme = uri.getScheme();
 
-        this.logger.debug("ServletSource: resolving " + uri.toString() + " with scheme " +
+        this.logger.debug("ServletSource: resolving " + uri + " with scheme " +
                           uri.getScheme() + " and ssp " + uri.getRawSchemeSpecificPart());
         uri = new URI(uri.getRawSchemeSpecificPart());
-        this.logger.debug("ServletSource: resolved to " + uri.toString());
+        this.logger.debug("ServletSource: resolved to " + uri);
         
         this.blockName = uri.getScheme();
         String path = uri.getPath();
@@ -224,8 +232,8 @@ public final class ServletConnection {
         String queryString = uri.getQuery();
         
         // FIXME: This will not be a system global id, as the blockName is block local.
-        String ssp = (new URI(this.blockName, null, path, queryString, null)).toString();
-        this.systemId = (new URI(scheme, ssp, null)).toString();
+        String ssp = new URI(this.blockName, null, path, queryString, null).toString();
+        this.systemId = new URI(scheme, ssp, null).toString();
         
         return new URI(scheme, null, path, queryString, null);
     }

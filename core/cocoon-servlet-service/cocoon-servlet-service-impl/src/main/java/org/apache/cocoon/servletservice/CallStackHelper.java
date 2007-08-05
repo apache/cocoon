@@ -70,7 +70,7 @@ public class CallStackHelper {
         
 
         CallStack.enter();
-        CallStack.getCurrentFrame().setAttribute(SUPER_CALL, new Boolean(superCall));
+        CallStack.getCurrentFrame().setAttribute(SUPER_CALL, Boolean.valueOf(superCall));
         CallFrameHelper.setContext(context);
         CallFrameHelper.setRequest(request);
         CallFrameHelper.setResponse(response);
@@ -79,8 +79,7 @@ public class CallStackHelper {
     /**
      * This hook must be called each time a servlet service is left.
      *
-     * <p>It's the counterpart to the {@link #enterServlet(ServletContext)}
-     * method.</p>
+     * <p>It's the counterpart to the {@link #enterServlet} method.</p>
      */
     public static void leaveServlet() {
         CallStack.leave();
@@ -88,21 +87,23 @@ public class CallStackHelper {
 
     /**
      * Use this method for getting the context that should be used for
-     * resolving a polymorphic servlet protocol call 
+     * resolving a polymorphic servlet protocol call
      * @return a servlet context
      */
     public static ServletContext getBaseServletContext() {
-        for(int i = CallStack.size() - 1; i >= 0; i--) {
+        for (int i = CallStack.size() - 1; i >= 0; i--) {
             CallFrame frame = CallStack.frameAt(i);
-            if (frame.hasAttribute(SUPER_CALL) && !((Boolean)frame.getAttribute(SUPER_CALL)).booleanValue())
+            if (frame.hasAttribute(SUPER_CALL) && !((Boolean) frame.getAttribute(SUPER_CALL)).booleanValue()) {
                 return (ServletContext) frame.getAttribute(CallFrameHelper.CONTEXT_OBJECT);
+            }
         }
+
         return null;
     }
 
     /**
      * Use this method for getting the context that should be used for
-     * resolving a servlet protocol call to a super servlet service 
+     * resolving a servlet protocol call to a super servlet service
      * @return a servlet context
      */
     public static ServletContext getCurrentServletContext() {
