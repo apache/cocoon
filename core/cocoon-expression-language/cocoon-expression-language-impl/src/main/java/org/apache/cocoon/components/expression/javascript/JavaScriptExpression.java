@@ -25,7 +25,6 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
-import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 import org.apache.commons.jexl.util.introspection.Info;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
@@ -47,7 +46,7 @@ public class JavaScriptExpression extends AbstractExpression {
         Context ctx = Context.enter();
         try {
             // Note: used compileReader instead of compileString to work with the older Rhino in C2.1
-            this.script = ctx.compileReader(FlowObjectModelHelper.getScope(rootScope), new StringReader(getExpression()), "", 1, null);
+            this.script = ctx.compileReader(getScope(rootScope), new StringReader(getExpression()), "", 1, null);
         } catch (Exception e) {
             // Note: this catch block is only needed for the Rhino in C2.1 where the older
             //       Rhino does not throw RuntimeExceptions
@@ -64,7 +63,7 @@ public class JavaScriptExpression extends AbstractExpression {
     public Object evaluate(ObjectModel objectModel) throws ExpressionException {
         Context ctx = Context.enter();
         try {
-            Scriptable scope = ctx.newObject(FlowObjectModelHelper.getScope(rootScope));
+            Scriptable scope = ctx.newObject(getScope(rootScope));
             // Populate the scope
             Iterator iter = objectModel.entrySet().iterator();
             while (iter.hasNext()) {
@@ -115,5 +114,20 @@ public class JavaScriptExpression extends AbstractExpression {
 
     public Object getNode(ObjectModel objectModel) throws ExpressionException {
         return evaluate(objectModel);
+    }
+
+    private Scriptable getScope(Scriptable rootScope) {
+        Scriptable scope;
+        Context ctx = Context.enter();
+        try {
+            scope = ctx.newObject(rootScope);
+            scope.setPrototype(rootScope);
+            scope.setParentScope(null);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception", e);
+        } finally {
+            Context.exit();
+        }
+        return scope;
     }
 }
