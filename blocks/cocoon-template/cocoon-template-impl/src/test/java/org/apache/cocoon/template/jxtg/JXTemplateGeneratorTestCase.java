@@ -34,6 +34,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     String docBase = "resource://org/apache/cocoon/template/jxtg/";
     String JX = "jx";
     Map flowContext = new HashMap();
+    ObjectModel newObjectModel;
 
     public class StringContainer {
         private String value;
@@ -54,13 +55,19 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        // Make the FOM objects available to the view layer
-        ObjectModel newObjectModel = (ObjectModel)getBeanFactory().getBean(ObjectModel.ROLE);
-        FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContext);
+        newObjectModel = (ObjectModel)getBeanFactory().getBean(ObjectModel.ROLE);
     }
 
     public Map getFlowContext() {
         return this.flowContext;
+    }
+    
+    public void addFlowContextToObjectModel(ObjectModel newObjectModel) {
+        FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContext);
+    }
+    
+    public ObjectModel getNewObjectModel() {
+        return this.newObjectModel;
     }
 
     public void testGenerate() throws Exception {
@@ -80,10 +87,15 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jexlEnvExpression.xml";
         String outputURI = docBase + "jexlEnvExpression-output.xml";
 
+        getNewObjectModel().markLocalContext();
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
         getFlowContext().put("test", "bar");
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEqual(load(outputURI), generate(JX, inputURI, parameters));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 
     public void testJXPathExpression() throws Exception {
@@ -97,11 +109,16 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jxpathEnvExpression.xml";
         String outputURI = docBase + "jxpathEnvExpression-output.xml";
 
+        getNewObjectModel().markLocalContext();
         Parameters parameters = new Parameters();
         parameters.setParameter("test", "foo");
         getFlowContext().put("test", "bar");
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEquals("HTTP/1.1", getRequest().getProtocol());
         assertEqual(load(outputURI), generate(JX, inputURI, parameters));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 
     public void testJXChoose() throws Exception {
@@ -115,17 +132,27 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jxForEach.xml";
         String outputURI = docBase + "jxForEach-output.xml";
 
+        getNewObjectModel().markLocalContext();
         String[] array = { "one", "two", "three" };
         getFlowContext().put("test", array);
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 
     public void testJXMacro() throws Exception {
         String inputURI = docBase + "jxMacro.xml";
         String outputURI = docBase + "jxMacro-output.xml";
 
+        getNewObjectModel().markLocalContext();
         getFlowContext().put("container", new StringContainer("foobar"));
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 
     public void testJXDynamicMacro() throws Exception {
@@ -146,26 +173,41 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jxAttribute.xml";
         String outputURI = docBase + "jxAttribute-output.xml";
 
+        getNewObjectModel().markLocalContext();
         Calendar cal = new GregorianCalendar(1979, 0, 1, 10, 21, 33);
         getFlowContext().put("date", cal.getTime());
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 
     public void testFormatDate() throws Exception {
         String inputURI = docBase + "formatDate.xml";
         String outputURI = docBase + "formatDate-output.xml";
 
+        getNewObjectModel().markLocalContext();
         Calendar cal = new GregorianCalendar(1979, 0, 1, 10, 21, 33);
         getFlowContext().put("date", cal.getTime());
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 
     public void testFormatNumber() throws Exception {
         String inputURI = docBase + "formatNumber.xml";
         String outputURI = docBase + "formatNumber-output.xml";
 
+        getNewObjectModel().markLocalContext();
         getFlowContext().put("value", new Double(979.0101));
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 
     public void testOut() throws Exception {
@@ -173,9 +215,14 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String outputURI = docBase + "jxOut-output.xml";
         String includeURI = docBase + "jxOutInclude.xml";
 
+        getNewObjectModel().markLocalContext();
         getFlowContext().put("value", "simple");
         getFlowContext().put("xml", "<root><node>value</node></root>");
         getFlowContext().put("document", load(includeURI));
+        addFlowContextToObjectModel(getNewObjectModel());
+        
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        
+        getNewObjectModel().cleanupLocalContext();
     }
 }

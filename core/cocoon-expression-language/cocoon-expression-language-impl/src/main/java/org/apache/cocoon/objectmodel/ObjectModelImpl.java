@@ -16,6 +16,8 @@
  */
 package org.apache.cocoon.objectmodel;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -30,6 +32,9 @@ import org.apache.commons.collections.keyvalue.DefaultKeyValue;
 import org.apache.commons.collections.map.AbstractMapDecorator;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.collections.map.UnmodifiableMap;
+import org.apache.commons.jxpath.DynamicPropertyHandler;
+import org.apache.commons.jxpath.JXPathBeanInfo;
+import org.apache.commons.jxpath.JXPathIntrospector;
 
 /**
  * Prototype implementation of {@link ObjectModel} interface. It <b>must</b> be initialized manually for now.
@@ -127,6 +132,46 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         for (Iterator keysIterator = initialEntries.keySet().iterator(); keysIterator.hasNext(); ) {
             Object key = keysIterator.next();
             put(key, ((ObjectModelProvider)initialEntries.get(key)).getObject());
+        }
+    }
+
+    public void fillContext() {
+        // Hack: I use jxpath to populate the context object's properties
+        // in the jexl context
+        Object contextObject = get(CONTEXTBEAN);
+        final JXPathBeanInfo bi =
+            JXPathIntrospector.getBeanInfo(contextObject.getClass());
+        if (bi.isDynamic()) {
+            Class cl = bi.getDynamicPropertyHandlerClass();
+            try {
+                DynamicPropertyHandler h =
+                    (DynamicPropertyHandler) cl.newInstance();
+                String[] result = h.getPropertyNames(contextObject);
+                int len = result.length;
+                for (int i = 0; i < len; i++) {
+                    try {
+                        put(result[i], h.getProperty(contextObject, result[i]));
+                    } catch (Exception exc) {
+                        exc.printStackTrace();
+                    }
+                }
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
+        } else {
+            PropertyDescriptor[] props =  bi.getPropertyDescriptors();
+            int len = props.length;
+            for (int i = 0; i < len; i++) {
+                try {
+                    Method read = props[i].getReadMethod();
+                    if (read != null) {
+                        put(props[i].getName(),
+                                read.invoke(contextObject, null));
+                    }
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
+            }
         }
     }
     
