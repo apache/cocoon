@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
+
 /**
  * A dynamic wrapper for servlet requests that overwrites the
  * getContextPath, getServletPath and getPathInfo methods to
@@ -28,60 +29,63 @@ import javax.servlet.http.HttpServletRequest;
  * @version $Id$
  */
 public class DynamicProxyRequestHandler implements InvocationHandler {
-	private final HttpServletRequest wrapped;
-	private final String mountPath;
+    private final HttpServletRequest wrapped;
+    private final String mountPath;
 	
     private static final Method getContextPathMethod;
-	private static final Method getServletPathMethod;
-	private static final Method getPathInfoMethod;
+    private static final Method getServletPathMethod;
+    private static final Method getPathInfoMethod;
 	
-	static {
+    static {
         getContextPathMethod = getHttpServletRequestMethod("getContextPath");
-		getServletPathMethod = getHttpServletRequestMethod("getServletPath");
+        getServletPathMethod = getHttpServletRequestMethod("getServletPath");
         getPathInfoMethod = getHttpServletRequestMethod("getPathInfo");
-	}
-	/**
-	 * Helper method for getting methods of the HttpServletRequest interface
-	 * @param name name of the method
-	 * @return the method object
-	 */
-	static private Method getHttpServletRequestMethod(
-            String name) {
-        Class[] paramTypes = new Class[] {};
+    }
+
+    /**
+     * Helper method for getting methods of the HttpServletRequest interface
+     *
+     * @param name name of the method
+     * @return the method object
+     */
+    static private Method getHttpServletRequestMethod(String name) {
+        Class[] paramTypes = new Class[]{};
         try {
             return HttpServletRequest.class.getMethod(name, paramTypes);
         } catch (SecurityException e) {
-            throw new RuntimeException( "could not get method: " + 
-                    name + " from class: " + HttpServletRequest.class);
+            throw new RuntimeException("could not get method: " +
+                                       name + " from class: " + HttpServletRequest.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException( "could not get method: " + 
-                    name + " from class: " + HttpServletRequest.class);
+            throw new RuntimeException("could not get method: " +
+                                       name + " from class: " + HttpServletRequest.class);
         }
     }
-	/**
-	 * Creates a new request wrapper from a specified proxied request and
-	 * the mount path of the block servlet
-	 * @param req the request to proxy
-	 * @param mountPath the mount path of the servlet
-	 */
-	public DynamicProxyRequestHandler(HttpServletRequest req, String mountPath) {
-		this.wrapped = req;
-		this.mountPath = mountPath;
-	}
-	/**
-	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
-	 */
-	public Object invoke(Object proxy, Method method, Object[] arguments)
-			throws Throwable {
-	    if (method.equals(getContextPathMethod)) {
+
+    /**
+     * Creates a new request wrapper from a specified proxied request and
+     * the mount path of the block servlet
+     * @param req the request to proxy
+     * @param mountPath the mount path of the servlet
+     */
+    public DynamicProxyRequestHandler(HttpServletRequest req, String mountPath) {
+        this.wrapped = req;
+        this.mountPath = mountPath;
+    }
+
+    /**
+     * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
+     */
+    public Object invoke(Object proxy, Method method, Object[] arguments)
+    throws Throwable {
+        if (method.equals(getContextPathMethod)) {
             return wrapped.getContextPath() + wrapped.getServletPath();
-		} else if (method.equals(getServletPathMethod)) {
-			return mountPath;
-		} else if (method.equals(getPathInfoMethod)) {
-            String pathInfo = wrapped.getPathInfo().substring(mountPath.length()); 
+        } else if (method.equals(getServletPathMethod)) {
+            return mountPath;
+        } else if (method.equals(getPathInfoMethod)) {
+            String pathInfo = wrapped.getPathInfo().substring(mountPath.length());
             return pathInfo.length() == 0 ? null : pathInfo;
         } else {
-			return method.invoke(wrapped, arguments);
-		}
-	}
+            return method.invoke(wrapped, arguments);
+        }
+    }
 }

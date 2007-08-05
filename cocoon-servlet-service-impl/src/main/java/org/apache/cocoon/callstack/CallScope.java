@@ -39,6 +39,7 @@ public class CallScope implements Scope {
             scopedObject = objectFactory.getObject();
             frame.setAttribute(name, scopedObject);
         }
+
         return scopedObject;
     }
 
@@ -48,8 +49,10 @@ public class CallScope implements Scope {
     public Object remove(String name) {
         CallFrame frame = CallStack.getCurrentFrame();
         Object scopedObject = frame.getAttribute(name);
-        if (scopedObject != null)
+        if (scopedObject != null) {
             frame.removeAttribute(name);
+        }
+
         return scopedObject;
     }
 
@@ -67,5 +70,4 @@ public class CallScope implements Scope {
     public void registerDestructionCallback(String name, Runnable callback) {
         CallStack.getCurrentFrame().registerDestructionCallback(name, callback);
     }
-
 }

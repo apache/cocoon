@@ -22,22 +22,23 @@ import java.util.Stack;
  * Stack used for storing objects in the current call frame.
  *
  * @version $Id$
- * @since 2.2 
+ * @since 2.2
  */
 public class CallStack {
 
     /** The call stack */
     private static final ThreadLocal callStack = new ThreadLocal();
-    
+
     /**
      * This hook must be called each time a call frame is entered.
      */
     public static void enter() {
-        Stack stack = (Stack)callStack.get();
+        Stack stack = (Stack) callStack.get();
         if (stack == null) {
             stack = new Stack();
             callStack.set(stack);
         }
+
         CallFrame info = new CallFrame();
         stack.push(info);
     }
@@ -49,7 +50,7 @@ public class CallStack {
      * method.</p>
      */
     public static void leave() {
-        final Stack stack = (Stack)callStack.get();
+        final Stack stack = (Stack) callStack.get();
         CallFrame info = (CallFrame) stack.pop();
         info.executeDestructionCallbacks();
     }
@@ -59,29 +60,29 @@ public class CallStack {
      * @return a call frame
      */
     public static CallFrame getCurrentFrame() {
-        final Stack stack = (Stack)callStack.get();
+        final Stack stack = (Stack) callStack.get();
         if (stack != null && !stack.isEmpty()) {
-            return (CallFrame)stack.peek();
+            return (CallFrame) stack.peek();
         }
+        
         return null;
     }
-    
+
     /**
      * @return the size of the call stack
      */
     public static int size() {
-        final Stack stack = (Stack)callStack.get();
+        final Stack stack = (Stack) callStack.get();
         return stack != null ? stack.size() : 0;
     }
-    
+
     /**
      * Get the frame at the i:th position in the call stack
      * @param i
      * @return
      */
     public static CallFrame frameAt(int i) {
-        final Stack stack = (Stack)callStack.get();
+        final Stack stack = (Stack) callStack.get();
         return (CallFrame) (stack != null ? stack.elementAt(i) : null);
     }
-
 }

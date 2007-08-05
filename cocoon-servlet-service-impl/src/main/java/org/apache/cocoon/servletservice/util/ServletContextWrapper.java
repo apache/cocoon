@@ -28,8 +28,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 /**
+ *
  * @version $Id$
- * 
  */
 public class ServletContextWrapper implements ServletContext {
 
@@ -260,5 +260,4 @@ public class ServletContextWrapper implements ServletContext {
     public String getServletContextName() {
         return this.servletContext.getServletContextName();
     }
-
 }
