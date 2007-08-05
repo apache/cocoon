@@ -45,14 +45,15 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  * @version $Id$
  */
-public class DispatcherServlet
-    extends HttpServlet {
+public class DispatcherServlet extends HttpServlet {
 
     /** By default we use the logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
+    private final Log logger = LogFactory.getLog(getClass());
     
-    /** The startup date of the Spring application context used to setup the  {@link #blockServletCollector}. 
-     *  TODO: Use a better way to reload {@link #blockServletCollector} when RCL is used, see COCOON-2076 **/
+    /**
+     * The startup date of the Spring application context used to setup the  {@link #blockServletCollector}.
+     * TODO: Use a better way to reload {@link #blockServletCollector} when RCL is used, see COCOON-2076
+     */
     private long applicationContextStartDate;
     
     /** The servlet collector bean */
@@ -65,65 +66,70 @@ public class DispatcherServlet
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         final Map mountableServlets = getBlockServletMap();
         String path = req.getPathInfo();
-        path = path == null ? "" : path;
+        if (path == null) {
+            path = "";
+        }
 
         // find the servlet which mount path is the longest prefix of the path info
         int index = path.length();
         Servlet servlet = null;
         while (servlet == null && index != -1) {
             path = path.substring(0, index);
-            servlet = (Servlet)mountableServlets.get(path);
+            servlet = (Servlet) mountableServlets.get(path);
             index = path.lastIndexOf('/');
         }
         if (servlet == null) {
             throw new ServletException("No block for " + req.getPathInfo());
         }
+
         // Create a dynamic proxy class that overwrites the getServletPath and
         // getPathInfo methods to privide reasonable values in the called servlet
         // the dynamic proxy implements all interfaces of the original request
         HttpServletRequest request = (HttpServletRequest) Proxy.newProxyInstance(
-        		req.getClass().getClassLoader(), 
-        		getInterfaces(req.getClass()), 
-        		new DynamicProxyRequestHandler(req, path));
+                req.getClass().getClassLoader(),
+                getInterfaces(req.getClass()),
+                new DynamicProxyRequestHandler(req, path));
         
-        if(this.logger.isDebugEnabled()) {
-	        this.logger.debug("DispatcherServlet: service servlet=" + servlet +
-	                " mountPath=" + path +
-	                " servletPath=" + request.getServletPath() +
-	                " pathInfo=" + request.getPathInfo());
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("DispatcherServlet: service servlet=" + servlet +
+                              " mountPath=" + path +
+                              " servletPath=" + request.getServletPath() +
+                              " pathInfo=" + request.getPathInfo());
         }
         
         servlet.service(request, res);
     }
     
     private void getInterfaces(Set interfaces, Class clazz) {
-		Class[] clazzInterfaces = clazz.getInterfaces();
-		for (int i = 0; i < clazzInterfaces.length; i++) {
-			//add all interfaces extended by this interface or directly
-			//implemented by this class
-			getInterfaces(interfaces, clazzInterfaces[i]);
-		}
-		//the superclazz is null if class is instanceof Object, is
-		//an interface, a primitive type or void
-		Class superclazz = clazz.getSuperclass();
-		if (superclazz!=null) {
-			//add all interfaces of the superclass to the list
-			getInterfaces(interfaces, superclazz);
-		}
-		interfaces.addAll(Arrays.asList(clazzInterfaces));
-	}
+        Class[] clazzInterfaces = clazz.getInterfaces();
+        for (int i = 0; i < clazzInterfaces.length; i++) {
+            //add all interfaces extended by this interface or directly
+            //implemented by this class
+            getInterfaces(interfaces, clazzInterfaces[i]);
+        }
 
-	private Class[] getInterfaces(final Class clazz) {
-		Set interfaces = new LinkedHashSet();
-		getInterfaces(interfaces, clazz);
-		return (Class[]) interfaces.toArray(new Class[interfaces.size()]);
-	}
+        //the superclazz is null if class is instanceof Object, is
+        //an interface, a primitive type or void
+        Class superclazz = clazz.getSuperclass();
+        if (superclazz != null) {
+            //add all interfaces of the superclass to the list
+            getInterfaces(interfaces, superclazz);
+        }
+
+        interfaces.addAll(Arrays.asList(clazzInterfaces));
+    }
+
+    private Class[] getInterfaces(final Class clazz) {
+        Set interfaces = new LinkedHashSet();
+        getInterfaces(interfaces, clazz);
+        return (Class[]) interfaces.toArray(new Class[interfaces.size()]);
+    }
 
     public Map getBlockServletMap() {
-    	final ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());    
-        if(this.blockServletCollector == null || applicationContext.getStartupDate() != this.applicationContextStartDate) {
-        	this.applicationContextStartDate = applicationContext.getStartupDate();
-        	this.blockServletCollector = (Map)applicationContext.getBean( "org.apache.cocoon.servletservice.spring.BlockServletMap" );
+        ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        if (this.blockServletCollector == null || applicationContext.getStartupDate() != this.applicationContextStartDate) {
+            this.applicationContextStartDate = applicationContext.getStartupDate();
+            this.blockServletCollector = (Map) applicationContext.getBean("org.apache.cocoon.servletservice.spring.BlockServletMap");
         }
         return blockServletCollector;
     }
