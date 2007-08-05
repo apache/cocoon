@@ -191,8 +191,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
         // Ask the parent context
         if (value == null) {
-            // FIXME Huh?
-            super.getInitParameter(name);
+            value = super.getInitParameter(name);
         }
 
         return value;
