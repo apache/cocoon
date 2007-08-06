@@ -208,7 +208,7 @@ public class ServletSource extends AbstractSource implements PostableSource {
         return ServletSource.class.getName() + "$" + getURI();
     }
 
-    private final class ServletValidity implements SourceValidity {
+    private static final class ServletValidity implements SourceValidity {
 
         /**
          *
@@ -242,10 +242,12 @@ public class ServletSource extends AbstractSource implements PostableSource {
                 switch (newServletValidity.getResponseCode()) {
                     case HttpServletResponse.SC_NOT_MODIFIED:
                         return SourceValidity.VALID;
+
                     case HttpServletResponse.SC_OK:
                         return SourceValidity.INVALID;
+
                     default:
-                        return 0;
+                        return SourceValidity.UNKNOWN;
                 }
             }
             return SourceValidity.UNKNOWN;
