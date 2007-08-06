@@ -73,7 +73,12 @@
     <dependency>
       <groupId>commons-jelly</groupId>
       <artifactId>commons-jelly</artifactId>
-      
+      <exclusions>
+        <exclusion>
+          <groupId>pull-parser</groupId>
+          <artifactId>pull-parser</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.excalibur.components</groupId>
