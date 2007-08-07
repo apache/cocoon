@@ -30,8 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.serializers.EncodingSerializer;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.components.serializers.util.EncodingSerializer;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalException;
@@ -201,8 +200,7 @@ public class PortletAdapter
                 HtmlSaxParser.parseString(content, HtmlSaxParser.getContentFilter(contentHandler));
             } else {
                 // stream out the include for the serializer
-                final org.apache.cocoon.environment.Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
-                EncodingSerializer.include(content, request, contentHandler);
+                EncodingSerializer.include(content, this.portalService.getRequestContext().getRequest(), contentHandler);
             }
         } catch (SAXException se) {
             throw se;

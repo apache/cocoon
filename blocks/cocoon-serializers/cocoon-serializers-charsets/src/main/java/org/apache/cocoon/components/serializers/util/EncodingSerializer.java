@@ -5,16 +5,16 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.serializers;
+package org.apache.cocoon.components.serializers.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,55 +23,28 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.components.serializers.encoding.Charset;
 import org.apache.cocoon.components.serializers.encoding.CharsetFactory;
 import org.apache.cocoon.components.serializers.encoding.Encoder;
-import org.apache.cocoon.components.serializers.util.Namespaces;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.sitemap.SitemapModelComponent;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * <p>An abstract serializer supporting multiple encodings.</p>
- * 
- * <p>This serializer can accept the following configuration whenever it
- * is declared into a sitemap:</p>
- * 
- * <pre>
- * &lt;serializer class="org.apache.cocoon.components.serializers..." ... &gt;
- *   &lt;encoding&gt;myencoding&lt;/encoding&gt;
- *   &lt;indent&gt;myindenting&lt;/indent&gt;
- * &lt;/serializer&gt;
- * </pre>
- * 
- * <p>The value indicated by <i>myencoding</i> must be replaced with a valid
- * charset encoding (this serializer does not rely on the JVM for character
- * encoding, you can look into the <code>cocoon-serializers-charsets</code>
- * JAR file for a list).<p>
- * 
- * <p>The value indicated by <i>myindenting</i> will control the indenting
- * level for each element.<p>
+ *
+ * This serializer is reusable. Inbetween uses, {@link #recycle()} should be
+ * called, folled by {@link #setup(HttpServletRequest)} when starting a new serialization.
  *
  * @version $Id$
  */
-public abstract class EncodingSerializer
-    implements Serializer, SitemapModelComponent, Locator, Recyclable, Configurable  {
+public abstract class EncodingSerializer implements Locator  {
 
     /** The line separator string */
     private static final char S_EOL[] = SystemUtils.LINE_SEPARATOR.toCharArray();
@@ -97,7 +70,7 @@ public abstract class EncodingSerializer
 
     /** Our <code>Encoder</code> instance. */
     private final Encoder encoder;
-    
+
     /** Our <code>Locator</code> instance. */
     private Locator locator;
 
@@ -128,7 +101,7 @@ public abstract class EncodingSerializer
     protected int indentPerLevel = 0;
     /* ====================================================================== */
 
-    protected Request request;
+    protected HttpServletRequest request;
 
     protected static final String CONTENT_LIST_ATTRIBUTE = EncodingSerializer.class.getName() + "/ContentList";
 
@@ -141,19 +114,11 @@ public abstract class EncodingSerializer
         this.encoder = encoder;
         this.recycle();
     }
-    
+
     /* ====================================================================== */
 
-
-    /**
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void setup(SourceResolver resolver,
-                      Map            objectModel,
-                      String         src,
-                      Parameters     par)
-    throws ProcessingException, SAXException, IOException {
-        this.request = ObjectModelHelper.getRequest(objectModel);
+    public void setup(HttpServletRequest request) {
+        this.request = request;
     }
 
     /**
@@ -162,7 +127,7 @@ public abstract class EncodingSerializer
      * @param request
      * @param handler
      */
-    public static void include(String content, Request request, ContentHandler handler)
+    public static void include(String content, HttpServletRequest request, ContentHandler handler)
     throws SAXException {
         if ( content != null ) {
             List values = (List)request.getAttribute(CONTENT_LIST_ATTRIBUTE);
@@ -173,18 +138,11 @@ public abstract class EncodingSerializer
             request.setAttribute(CONTENT_LIST_ATTRIBUTE, values);
             handler.startPrefixMapping("encser", NAMESPACE);
             final AttributesImpl attr = new AttributesImpl();
-            attr.addCDATAAttribute("index", String.valueOf(values.size() - 1));
+            attr.addAttribute("", "index", "index", "CDATA", String.valueOf(values.size() - 1));
             handler.startElement(NAMESPACE, "include", "encser:include", attr);
             handler.endElement(NAMESPACE, "include", "encser:include");
             handler.endPrefixMapping("encser");
         }
-    }
-
-    /**
-     * Test if the component wants to set the content length.
-     */
-    public boolean shouldSetContentLength() {
-        return false;
     }
 
     /**
@@ -196,7 +154,6 @@ public abstract class EncodingSerializer
         this.locator = null;
         this.out = null;
         this.prolog = true;
-        this.request = null;
     }
 
     /**
@@ -208,31 +165,24 @@ public abstract class EncodingSerializer
     public void setOutputStream(OutputStream out)
     throws IOException {
         if (out == null) throw new NullPointerException("Null output");
-        
+
         this.out = new OutputStreamWriter(out, this.charset.getName());
     }
 
-    /**
-     * Set the configurations for this serializer.
-     */
-    public void configure(Configuration conf)
-    throws ConfigurationException {
-        String encoding = conf.getChild("encoding").getValue(null);
-        try {
-            this.charset = CharsetFactory.newInstance().getCharset(encoding);
-        } catch (UnsupportedEncodingException exception) {
-            throw new ConfigurationException("Encoding not supported: "
-                                             + encoding, exception);
-        }
+    public void setEncoding(String encoding)
+    throws UnsupportedEncodingException {
+        this.charset = CharsetFactory.newInstance().getCharset(encoding);
+    }
 
-        indentPerLevel = conf.getChild("indent").getValueAsInteger(0);
+    public void setIndentPerLevel(int i) {
+        indentPerLevel = i;
         if (indentPerLevel > 0) {
             assureIndentBuffer(indentPerLevel * 6);
         }
     }
 
     /* ====================================================================== */
-    
+
     private char[] assureIndentBuffer( int size ) {
         if (indentBuffer == null || indentBuffer.length < size) {
             indentBuffer = new char[size];
@@ -249,7 +199,7 @@ public abstract class EncodingSerializer
         char array[] = data.toCharArray();
         this.encode(array, 0, array.length);
     }
-    
+
     /**
      * Encode and write an array of characters.
      */
@@ -257,27 +207,27 @@ public abstract class EncodingSerializer
     throws SAXException {
         this.encode(data, 0, data.length);
     }
-    
+
     /**
      * Encode and write a specific part of an array of characters.
      */
     protected void encode(char data[], int start, int length)
     throws SAXException {
         int end = start + length;
-        
+
         if (data == null) throw new NullPointerException("Null data");
         if ((start < 0) || (start > data.length) || (length < 0) ||
             (end > data.length) || (end < 0))
             throw new IndexOutOfBoundsException("Invalid data");
         if (length == 0) return;
-        
+
         for (int x = start; x < end; x++) {
             char c = data[x];
-            
+
             if (this.charset.allows(c) && this.encoder.allows(c)) {
                 continue;
             }
-            
+
             if (start != x) this.write(data, start, x - start );
             this.write(this.encoder.encode(c));
             start = x + 1;
@@ -314,7 +264,7 @@ public abstract class EncodingSerializer
     public String getSystemId() {
         return(this.locator == null? null: this.locator.getSystemId());
     }
-    
+
     /**
      * Return the line number where the current document event ends.
      *
