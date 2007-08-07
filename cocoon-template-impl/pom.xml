@@ -55,7 +55,12 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-expression-language-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
