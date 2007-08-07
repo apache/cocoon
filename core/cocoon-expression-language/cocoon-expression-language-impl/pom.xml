@@ -58,7 +58,31 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-flowscript-impl</artifactId>
+      <artifactId>cocoon-pipeline-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-pipeline-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-jexl</groupId>
+      <artifactId>commons-jexl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-jxpath</groupId>
+      <artifactId>commons-jxpath</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>rhino</groupId>
+      <artifactId>js</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -75,6 +99,11 @@
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
       <scope>test</scope>
-    </dependency>      
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

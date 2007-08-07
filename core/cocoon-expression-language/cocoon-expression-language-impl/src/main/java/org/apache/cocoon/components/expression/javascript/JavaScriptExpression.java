@@ -24,11 +24,12 @@ import org.apache.cocoon.components.expression.AbstractExpression;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
-import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
 import org.apache.commons.jexl.util.introspection.Info;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
 
 public class JavaScriptExpression extends AbstractExpression {
 
@@ -74,7 +75,7 @@ public class JavaScriptExpression extends AbstractExpression {
             }
 
             Object result = this.script.exec(ctx, scope);
-            return JavaScriptFlowHelper.unwrap(result);
+            return unwrap(result);
         } catch (Exception e) {
             // Note: this catch block is only needed for the Rhino in C2.1 where the older
             //       Rhino does not throw RuntimeExceptions
@@ -129,5 +130,17 @@ public class JavaScriptExpression extends AbstractExpression {
             Context.exit();
         }
         return scope;
+    }
+    
+    /**
+     * Unwrap a Rhino object (getting the raw java object) and convert undefined to null
+     */
+    private Object unwrap(Object obj) {
+        if (obj instanceof Wrapper) {
+            obj = ((Wrapper)obj).unwrap();
+        } else if (obj == Undefined.instance) {
+            obj = null;
+        }
+        return obj;
     }
 }

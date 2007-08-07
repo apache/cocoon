@@ -51,14 +51,4 @@
     </site>
   </distributionManagement>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-pipeline-impl</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>commons-collections</groupId>
-       <artifactId>commons-collections</artifactId>
-     </dependency>
-  </dependencies>
 </project>
