@@ -18,8 +18,6 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Properties;
 
-import org.apache.cocoon.ajax.AjaxHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -65,7 +63,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class CIncludeCopletAspect 
+public class CIncludeCopletAspect
     extends AbstractCIncludeAspect {
 
 	/**
@@ -84,7 +82,7 @@ public class CIncludeCopletAspect
         }
 
         // if ajax is used and the current request is not an ajax request, we just send some javascript stuff back
-        if ( config.useAjax && !AjaxHelper.isAjaxRequest(ObjectModelHelper.getRequest(rendererContext.getPortalService().getProcessInfoProvider().getObjectModel()))) {
+        if ( config.useAjax && !rendererContext.getPortalService().getRequestContext().isAjaxRequest() ) {
             final String uri = rendererContext.getPortalService().getLinkService().getRefreshLinkURI();
             final char separator = (uri.indexOf('?') == -1 ? '?' : '&');
             final StringBuffer buffer = new StringBuffer("cocoon.portal.process(\"");

@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
@@ -111,7 +111,7 @@ public class DefaultLinkService
      * @return A LinkInfo object.
      */
     protected LinkInfo getInfo() {
-        final Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
         LinkInfo info = (LinkInfo)request.getAttribute(DefaultLinkService.class.getName());
         if ( info == null ) {
             info = (LinkInfo)request.getAttribute(DefaultLinkService.class.getName());
@@ -127,7 +127,7 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.services.LinkService#isSecure()
      */
     public boolean isSecure() {
-        final Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
         return request.isSecure();
     }
 
@@ -135,7 +135,7 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.services.LinkService#encodeURL(String url)
      */
     public String encodeURL(String url) {
-        final Response response = ObjectModelHelper.getResponse(this.portalService.getProcessInfoProvider().getObjectModel());
+        final HttpServletResponse response = this.portalService.getRequestContext().getResponse();
         return response.encodeURL(url);
     }
 
@@ -361,7 +361,7 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
     public void process(RequestProcessorAspectContext context) {
-        final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
+        final HttpServletRequest request = context.getPortalService().getRequestContext().getRequest();
         final EventManager publisher = context.getPortalService().getEventManager();
         final EventConverter converter = context.getPortalService().getEventConverter();
 

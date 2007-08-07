@@ -63,13 +63,6 @@ public class DefaultEventManager
     protected Map eventHierarchy = new HashMap();
 
     /**
-     * Helper method to get the current object model
-     */
-    protected Map getObjectModel() {
-        return this.portalService.getProcessInfoProvider().getObjectModel();
-    }
-
-    /**
      * Initialize this component.
      */
     public void init() {

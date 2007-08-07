@@ -22,7 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.environment.Request;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
 
@@ -44,10 +45,13 @@ public class LinkInfo {
     /** Is the page called using https? */
     protected final boolean isSecure;
 
-    public LinkInfo(Request request, int defaultPort, int defaultSecurePort) {
+    public LinkInfo(HttpServletRequest request, int defaultPort, int defaultSecurePort) {
         this.isSecure = request.getScheme().equals("https");
         // create relative url
-        String relativeURI = request.getSitemapURI();
+        String relativeURI = request.getServletPath();
+        if ( request.getPathInfo() != null ) {
+            relativeURI = relativeURI + request.getPathInfo();
+        }
         final int pos = relativeURI.lastIndexOf('/');
         if ( pos != -1 ) {
             relativeURI = relativeURI.substring(pos+1);
@@ -63,7 +67,7 @@ public class LinkInfo {
         }
     }
 
-    protected String getAbsoluteUrl(Request request, boolean useSecure, int port) {
+    protected String getAbsoluteUrl(HttpServletRequest request, boolean useSecure, int port) {
         final StringBuffer buffer = new StringBuffer();
         if ( useSecure ) {
             buffer.append("https://");
@@ -76,14 +80,12 @@ public class LinkInfo {
             buffer.append(':');
             buffer.append(port);
         }
-        if ( request.getContextPath().length() > 0 ) {
-            buffer.append(request.getContextPath());
+        buffer.append(request.getContextPath());
+        buffer.append('/');
+        buffer.append(request.getServletPath());
+        if ( request.getPathInfo() != null ) {
+            buffer.append(request.getPathInfo());
         }
-        buffer.append('/');                        
-        if ( request.getSitemapURIPrefix().length() > 0 ) {
-            buffer.append(request.getSitemapURIPrefix());
-        }
-        buffer.append(request.getSitemapURI());
         return buffer.toString();
     }
 
@@ -127,7 +129,7 @@ public class LinkInfo {
      * Add an event to each link in this page.
      */
     public void addEvent(Event event) {
-        if ( event != null ) { 
+        if ( event != null ) {
             if (event instanceof ComparableEvent) {
                 if ( this.comparableEvents != null ) {
                     // search if we already have an event for this!

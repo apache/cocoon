@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -33,8 +35,10 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.RequestContext;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
@@ -404,4 +408,45 @@ public class PortalServiceImpl
             throw new PortalRuntimeException("Unable to lookup event converter.", e);
         }
     }
+
+    /**
+     * TODO - Remove dependency on ProcessInfoProvider!
+     * @see org.apache.cocoon.portal.PortalService#getRequestContext()
+     */
+    public RequestContext getRequestContext() {
+        return new RequestContextImpl(this.processInfoProvider);
+    }
+
+    public static final class RequestContextImpl implements RequestContext {
+
+        protected final ProcessInfoProvider provider;
+
+        public RequestContextImpl(ProcessInfoProvider prov) {
+            this.provider = prov;
+        }
+
+        /**
+         * @see org.apache.cocoon.portal.RequestContext#getRequest()
+         */
+        public HttpServletRequest getRequest() {
+            return this.provider.getRequest();
+        }
+
+        /**
+         * @see org.apache.cocoon.portal.RequestContext#getResponse()
+         */
+        public HttpServletResponse getResponse() {
+            return this.provider.getResponse();
+        }
+
+        /**
+         * @see org.apache.cocoon.portal.RequestContext#isAjaxRequest()
+         */
+        public boolean isAjaxRequest() {
+            final HttpServletRequest req = this.getRequest();
+            return req.getParameter(AjaxHelper.AJAX_REQUEST_PARAMETER) != null;
+        }
+
+    }
 }
+

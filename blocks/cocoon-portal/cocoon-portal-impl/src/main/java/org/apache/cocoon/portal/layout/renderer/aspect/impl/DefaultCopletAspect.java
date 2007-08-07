@@ -18,8 +18,6 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Properties;
 
-import org.apache.cocoon.ajax.AjaxHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -41,7 +39,7 @@ import org.xml.sax.SAXException;
  * This aspect directly invokes the coplet adapter to stream out the coplet content.
  * An alternative solution is to generate only cinclude tags by using the
  * {@link org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect}
- * and include the coplet contents later. That would allow caching up to the point 
+ * and include the coplet contents later. That would allow caching up to the point
  * of the cinclude transformer.
  *
  * <h2>Example XML:</h2>
@@ -76,7 +74,7 @@ public class DefaultCopletAspect extends AbstractAspect {
 
         final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
         // if ajax is used and the current request is not an ajax request, we just send some javascript stuff back
-        if ( config.useAjax && !AjaxHelper.isAjaxRequest(ObjectModelHelper.getRequest(rendererContext.getPortalService().getProcessInfoProvider().getObjectModel()))) {
+        if ( config.useAjax && !rendererContext.getPortalService().getRequestContext().isAjaxRequest() ) {
             final String uri = rendererContext.getPortalService().getLinkService().getRefreshLinkURI();
             final char separator = (uri.indexOf('?') == -1 ? '?' : '&');
             final StringBuffer buffer = new StringBuffer("cocoon.portal.process(\"");

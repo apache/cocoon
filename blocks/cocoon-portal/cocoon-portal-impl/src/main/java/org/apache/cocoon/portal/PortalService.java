@@ -132,6 +132,12 @@ public interface PortalService {
     ProcessInfoProvider getProcessInfoProvider();
 
     /**
+     * Get the current request context.
+     * @since 2.2
+     */
+    RequestContext getRequestContext();
+
+    /**
      * Get the user service.
      */
     UserService getUserService();

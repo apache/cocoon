@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -93,7 +93,7 @@ public class PageLabelLinkService
     public void process(RequestProcessorAspectContext context) {
         final Map pageLabelMap = (Map)context.getPortalService().getUserService().getAttribute(PAGE_LABEL_MAP);
         if ( pageLabelMap != null ) {
-            final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
+            final HttpServletRequest request = context.getPortalService().getRequestContext().getRequest();
             final EventManager publisher = context.getPortalService().getEventManager();
 
             final String[] values = request.getParameterValues( this.pageLabelRequestParameter );
