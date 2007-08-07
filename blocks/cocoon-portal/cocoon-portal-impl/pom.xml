@@ -96,6 +96,10 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-serializers-charset</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
       <type>test-jar</type>
       <scope>test</scope>

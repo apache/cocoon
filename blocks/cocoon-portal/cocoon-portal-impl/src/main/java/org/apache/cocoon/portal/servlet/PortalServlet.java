@@ -23,15 +23,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cocoon.components.serializers.util.EncodingSerializer;
+import org.apache.cocoon.components.serializers.util.XHTMLSerializer;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.services.PortalManager;
 import org.springframework.web.HttpRequestHandler;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * 
+ *
  * @version $Id$
  */
 public class PortalServlet implements HttpRequestHandler {
@@ -59,8 +60,9 @@ public class PortalServlet implements HttpRequestHandler {
         try {
             pm.process();
             // TODO - what do we here? We don't have an xml consumer
-            final ContentHandler xmlConsumer = null;
-            pm.render(xmlConsumer, this.properties);
+            // create serializer
+            EncodingSerializer serializer = new XHTMLSerializer();
+            pm.render(serializer, this.properties);
         } catch (SAXException se) {
             throw new ServletException(se);
         } catch (PortalException pe) {

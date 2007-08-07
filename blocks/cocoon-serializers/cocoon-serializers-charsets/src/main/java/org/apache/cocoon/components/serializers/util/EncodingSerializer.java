@@ -34,6 +34,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -44,7 +45,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @version $Id$
  */
-public abstract class EncodingSerializer implements Locator  {
+public abstract class EncodingSerializer implements ContentHandler, LexicalHandler, Locator  {
 
     /** The line separator string */
     private static final char S_EOL[] = SystemUtils.LINE_SEPARATOR.toCharArray();
