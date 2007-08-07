@@ -139,6 +139,10 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         // Hack: I use jxpath to populate the context object's properties
         // in the jexl context
         Object contextObject = get(CONTEXTBEAN);
+        if (contextObject != null)
+            //nothing to do
+            return;
+        
         final JXPathBeanInfo bi =
             JXPathIntrospector.getBeanInfo(contextObject.getClass());
         if (bi.isDynamic()) {
