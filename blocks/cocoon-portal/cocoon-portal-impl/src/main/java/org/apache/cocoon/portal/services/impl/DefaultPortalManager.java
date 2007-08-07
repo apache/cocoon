@@ -20,10 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.ajax.BrowserUpdateTransformer;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
@@ -131,7 +128,6 @@ public class DefaultPortalManager
     throws SAXException {
         final ProfileManager profileManager = this.portalService.getProfileManager();
 
-        final Request req = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
         // check for render parameters
         // if a parameter for a layout or a coplet is defined
         // then only this coplet or layout object is rendered
@@ -163,7 +159,7 @@ public class DefaultPortalManager
 
         // If no parameter is specified test for ajax request which will
         // only render the changed coplets
-        if ( portalLayout == null && AjaxHelper.isAjaxRequest(req) ) {
+        if ( portalLayout == null && portalService.getRequestContext().isAjaxRequest() ) {
             Layout rootLayout = profileManager.getLayout(null);
             ch.startPrefixMapping("bu", BrowserUpdateTransformer.BU_NSURI);
             ch.startElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
