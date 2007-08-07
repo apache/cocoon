@@ -169,6 +169,7 @@
         <module>cocoon-querybean</module>
         <module>cocoon-repository</module>
         <module>cocoon-scratchpad</module>
+        <module>cocoon-serializers/cocoon-serializers-charsets</module>
         <module>cocoon-serializers/cocoon-serializers-impl</module>
         <module>cocoon-session-fw</module>
         <module>cocoon-slide</module>
