@@ -96,7 +96,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-serializers-charset</artifactId>
+      <artifactId>cocoon-serializers-charsets</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
