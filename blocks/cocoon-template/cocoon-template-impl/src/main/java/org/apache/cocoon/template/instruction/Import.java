@@ -21,7 +21,6 @@ import java.util.Stack;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.objectmodel.ObjectModel;
-import org.apache.cocoon.objectmodel.ObjectModelImpl;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
