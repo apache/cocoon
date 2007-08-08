@@ -94,7 +94,7 @@ public class JXTemplateGenerator
      * @see org.apache.cocoon.generation.ServiceableGenerator#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
+        if (this.scriptManager != null) {
             this.manager.release(this.scriptManager);
             this.scriptManager = null;
         }
