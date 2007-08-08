@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="AN" type="fix" fixes-bug="COCOON-2098" due-to="Andreas Deininger" due-to-email="andreas@deininger.net">
+      build.sh: Allow for quoted shell arguments containing spaces.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2027" due-to="Jan Oberst" due-to-email="mail@janoberst.com">
       CForms: Handling of empty responses in AJAX Forms with IFrame transport.
     </action>
