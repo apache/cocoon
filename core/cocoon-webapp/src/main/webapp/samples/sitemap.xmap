@@ -15,14 +15,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:pipelines>
     <map:pipeline>
       <map:match pattern="*/**">
         <map:mount uri-prefix="{1}" src="blockcontext:/{1}/"/>
       </map:match>
-    </map:pipeline>
-    <map:pipeline>
+
       <map:match pattern="">
         <map:generate type="xpathtraversable" src="blockcontext:/"> 
           <map:parameter name="xpath" value="/xsamples/group"/> 
