@@ -21,14 +21,16 @@
 
   @version $Id$
 -->
-
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
 
-  <xsl:param name="dojo-debug">false</xsl:param><!-- option to turn on console debugging for dojo on the browser, from a parameter in the sitemap -->
-  <xsl:param name="dojo-locale">en</xsl:param> <!-- Allows to configure the dojo locale from a parameter in the sitemap. This should be the same as the form locale. -->
+  <!-- option to turn on console debugging for dojo on the browser, from a parameter in the sitemap -->
+  <xsl:param name="dojo-debug">false</xsl:param>
+
+  <!-- Allows to configure the dojo locale from a parameter in the sitemap. This should be the same as the form locale. -->
+  <xsl:param name="dojo-locale">en</xsl:param>
 
   <!-- Create a variable with the normalized locale, dojo needs locale parts to be separated with a dash -->
   <xsl:variable name="dojoLocale">
@@ -87,11 +89,10 @@
     <script src="{$dojo-resources}/dojo.js" type="text/javascript"/>           <!-- load dojo -->
     <script type="text/javascript">dojo.require("dojo.widget.*");</script>         <!-- require dojo.widget for auto-loading -->
     <xsl:if test="$dojo-debug = 'true'">                                           <!-- require console etc. for dojo debug, if requested -->
-        <script type="text/javascript">dojo.require("dojo.debug.console"); dojo.require("dojo.widget.Tree");</script>
+      <script type="text/javascript">dojo.require("dojo.debug.console"); dojo.require("dojo.widget.Tree");</script>
     </xsl:if>
     <script src="{$forms-resources}/js/forms-lib.js" type="text/javascript"/>  <!-- load legacy scripts -->
-    <!-- load forms library -->
-    <script type="text/javascript">
+    <script type="text/javascript">                                            <!-- load forms library -->
     <xsl:value-of select="concat('dojo.registerModulePath(', $doubleQuote, 'cocoon.forms', $doubleQuote, ', ', $doubleQuote, $forms-resources, '/js', $doubleQuote, ');')"/>                        <!-- tell dojo how to find our forms module. NB: (since 2.1.11, replaces cocoon.js) -->
     dojo.require("cocoon.forms.common");                                           <!-- tell dojo we require the commons library -->
     dojo.require("cocoon.forms.manifest");                                         <!-- tell dojo we require cocoon.forms.manifest registering namespace handler -->
@@ -371,6 +372,14 @@
   </xsl:template>
 
   <!--+
+      | fi:output with selections-list should display the label
+      +-->
+  <xsl:template match="fi:output[fi:selection-list]" priority="3">
+    <xsl:variable name="value" select="fi:value/node()"/>
+    <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:selection-list/fi:item[@value=$value]/fi:label/node()"/></span>
+  </xsl:template>
+
+  <!--+
       | fi:field with @type 'output' used to be allowed but causes too much problems
       +-->
   <xsl:template match="fi:field[fi:styling/@type='output']" priority="10">
@@ -587,6 +596,7 @@
           <xsl:apply-templates select="." mode="styling"/>
       </input>
   </xsl:template>
+
   <!--+
       | fi:repeater
       +-->
