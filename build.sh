@@ -38,7 +38,7 @@ OLD_ANT_OPTS="$ANT_OPTS"
 ANT_OPTS="-Xms32M -Xmx512M -Djava.endorsed.dirs=lib/endorsed"
 export ANT_HOME ANT_OPTS
 
-"$ANT_HOME/bin/ant" -logger org.apache.tools.ant.NoBannerLogger --noconfig -emacs  $@
+"$ANT_HOME/bin/ant" -logger org.apache.tools.ant.NoBannerLogger --noconfig -emacs "$@"
 ERR=$?
 
 # ----- Restore ANT_HOME and ANT_OPTS
