@@ -43,9 +43,12 @@ import org.apache.commons.jxpath.JXPathIntrospector;
 public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel {
     //FIXME: It seems that there is no easy way to reuse MuliValueMap
     
+    private static final String SEGMENT_SEPARATOR = "/";
+    
     private ArrayStack localContexts;
     private Map singleValueMap;
     private MultiMap multiValueMap;
+    private MultiMap multiValueMapForLocated;
     private Map initialEntries = null;
     
     public ObjectModelImpl() {
@@ -53,6 +56,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         super.map = UnmodifiableMap.decorate(singleValueMap);
         localContexts = new ArrayStack();
         multiValueMap = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
+        multiValueMapForLocated = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
     }
 
     public static class StackReversedIteration extends ArrayStack {
@@ -99,21 +103,89 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         singleValueMap.putAll(mapToCopy);
         multiValueMap.putAll(mapToCopy);
     }
+    
+    /**
+     * Locates map at given path
+     * @param path where Map can be found
+     * @param createIfNeeded indicates if map(s) should be created if no corresponding found
+     * @return located Map or null if <code>createIfNeeded</code> is false and Map cannot be found
+     */
+    private Map locateMapAt(String path, boolean createIfNeeded) {
+        if (path.lastIndexOf(SEGMENT_SEPARATOR) == -1)
+            return this;
+        
+        Map map = this;
+        int segmentBegin = 0;
+        int segmentEnd = path.indexOf(SEGMENT_SEPARATOR);
+        while (segmentEnd != -1) {
+            String key = path.substring(segmentBegin, segmentEnd);
+            if (map.containsKey(key)) {
+                Object obj = map.get(key);
+                if (!(obj instanceof Map))
+                    throw new ClassCastException("Object at path " + path.substring(0, segmentEnd) + "is not a Map");
+                map = (Map)obj;
+            } else {
+                if (!createIfNeeded)
+                    return null;
+                Map newMap = new HashMap();
+                map.put(key, newMap);
+                map = newMap;
+            }
+            segmentBegin = segmentEnd + 1;
+            segmentEnd = path.indexOf(SEGMENT_SEPARATOR, segmentBegin);
+        }
+        return map;
+    }
+    
+    public void putAt(String path, Object value) {
+        if (path == null)
+            throw new NullPointerException("Path cannot be null.");
+        if (path.length() == 0)
+            throw new IllegalArgumentException("Path cannot be empty");
+        
+        Map map = locateMapAt(path, true);
+        String key = path.substring(path.lastIndexOf(SEGMENT_SEPARATOR) + 1, path.length());
+        if (!localContexts.empty())
+            ((ArrayStack) localContexts.peek()).push(new PathValue(path, value));
+        map.put(key, value);
+    }
+    
+    private void removeAt(String path, Object value) {
+        if (path == null)
+            throw new NullPointerException("Path cannot be null.");
+        if (path.length() == 0)
+            throw new IllegalArgumentException("Path cannot be empty");
+        
+        Map map = locateMapAt(path, false);
+        String key = path.substring(path.lastIndexOf(SEGMENT_SEPARATOR) + 1, path.length());
+        if (map == null)
+            return;
+        multiValueMapForLocated.remove(key, value);
+        if (multiValueMap.containsKey(key))
+            map.put(key, ((StackReversedIteration)multiValueMap.get(key)).peek());
+        else
+            map.remove(key);
+    }
 
     public void cleanupLocalContext() {
         if (localContexts.empty())
             throw new IllegalStateException("Local contexts stack is empty");
         ArrayStack removeEntries = (ArrayStack)localContexts.pop();
         while (!removeEntries.isEmpty()) {
-            KeyValue entry = (KeyValue)removeEntries.pop();
-            Object key = entry.getKey();
-            Object value = entry.getValue();
+            if (removeEntries.peek() instanceof PathValue) {
+                PathValue entry = (PathValue)removeEntries.pop(); 
+                removeAt(entry.getPath(), entry.getValue());
+            } else {
+                KeyValue entry = (KeyValue)removeEntries.pop();
+                Object key = entry.getKey();
+                Object value = entry.getValue();
             
-            multiValueMap.remove(key, value);
-            if (multiValueMap.containsKey(key))
-                singleValueMap.put(key, ((StackReversedIteration)multiValueMap.get(key)).peek());
-            else
-                singleValueMap.remove(key);
+                multiValueMap.remove(key, value);
+                if (multiValueMap.containsKey(key))
+                    singleValueMap.put(key, ((StackReversedIteration)multiValueMap.get(key)).peek());
+                else
+                    singleValueMap.remove(key);
+            }
         }
     }
 
@@ -178,5 +250,24 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
             }
         }
     }
+    
+    private final class PathValue {
+        private String path;
+        private Object value;
+        
+        public PathValue(String path, Object value) {
+            this.path = path;
+            this.value = value;
+        }
+        
+        public String getPath() { 
+            return this.path; 
+        };
+        
+        public Object getValue() {
+            return this.value;
+        }
+        
+    };
     
 }
