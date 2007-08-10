@@ -29,8 +29,8 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.objectmodel.helper.ParametersMap;
 import org.apache.cocoon.template.environment.ExecutionContext;
-import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 import org.apache.cocoon.template.environment.JXCacheKey;
 import org.apache.cocoon.template.environment.JXSourceValidity;
 import org.apache.cocoon.template.expression.JXTExpression;
@@ -143,12 +143,15 @@ public class JXTemplateGenerator
 
     public void performGeneration(Event startEvent, Event endEvent) throws SAXException {
         newObjectModel.markLocalContext();
-        FlowObjectModelHelper.fillNewObjectModelWithFOM(newObjectModel, objectModel, parameters);
+        
+        newObjectModel.putAt(ObjectModel.PARAMETERS_PATH, new ParametersMap(parameters));
+        
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
         //not sure why this is needed
         newObjectModel.putAt("cocoon/consumer", consumer);
         Invoker.execute(consumer, this.newObjectModel, new ExecutionContext(this.definitions, this.scriptManager,
                 this.manager), null, namespaces, startEvent, null);
+        
         newObjectModel.cleanupLocalContext();
     }
 
