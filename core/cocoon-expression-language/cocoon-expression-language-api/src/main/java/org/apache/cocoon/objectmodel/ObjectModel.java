@@ -29,6 +29,8 @@ public interface ObjectModel extends Map {
     public static final String CONTEXTBEAN = "contextBean";
 
     public static final String NAMESPACE = "namespace";
+    
+    public static final String PARAMETERS_PATH = "cocoon/parameters";
 
     /**
      * @return a {@link org.apache.commons.collections.MultiMap} that contains all stored values in all context in
