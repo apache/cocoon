@@ -17,6 +17,7 @@
 package org.apache.cocoon.objectmodel;
 
 import java.util.Collection;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -109,5 +110,46 @@ public class ObjectModelImplTestCase extends TestCase {
         ObjectModel objectModel = new ObjectModelImpl();
         assertEquals(objectModel, objectModel.get("this"));
     }
-    
+
+    public void testKeyAsPath() {
+        ObjectModel objectModel = new ObjectModelImpl();
+        
+        objectModel.putAt("foo", "bar");
+        assertEquals("bar", objectModel.get("foo"));
+    }
+
+    public void testPutAt() {
+        ObjectModel objectModel = new ObjectModelImpl();
+        
+        objectModel.putAt("foo/bar", "xyz");
+        assertTrue(objectModel.containsKey("foo"));
+        assertTrue(objectModel.get("foo") instanceof Map);
+        assertEquals(((Map)objectModel.get("foo")).get("bar"), "xyz");
+    }
+
+    public void testPathInLocalContext() {
+        ObjectModel objectModel = new ObjectModelImpl();
+        
+        objectModel.markLocalContext();
+        objectModel.putAt("foo/bar", "xyz");
+        
+        objectModel.markLocalContext();
+        objectModel.putAt("foo2/bar", "abc");
+        assertEquals(((Map)objectModel.get("foo")).get("bar"), "xyz");
+        assertEquals(((Map)objectModel.get("foo2")).get("bar"), "abc");
+        objectModel.cleanupLocalContext();
+        
+        assertEquals(((Map)objectModel.get("foo")).get("bar"), "xyz");
+        assertTrue(!objectModel.containsKey("foo2"));
+        objectModel.cleanupLocalContext();
+        
+        assertTrue(objectModel.isEmpty());
+    }
+
+    public void testIfMapIsCreated() {
+        ObjectModel objectModel = new ObjectModelImpl();
+        
+        objectModel.putAt("foo/bar/xyz", "abc");
+        assertTrue(((Map)objectModel.get("foo")).get("bar") instanceof Map);
+    }
 }

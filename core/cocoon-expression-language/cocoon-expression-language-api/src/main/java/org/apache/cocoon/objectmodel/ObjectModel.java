@@ -60,6 +60,17 @@ public interface ObjectModel extends Map {
     public void cleanupLocalContext();
 
     /**
+     * Puts object at certain <code>path</code>. Each segment of path is separated by "/" symbol. This method
+     * supports only traversing through objects implementing {@link Map} interface. If certain segment does not exist it
+     * will be created automatically.
+     * 
+     * @param path
+     *            where the <code>value</code> should be put at
+     * @param value that is going to be put
+     */
+    public void putAt(String path, Object value);
+
+    /**
      * <p>
      * Copies properties (both static and dynamic) of current context bean to the Object Model. The method is useful
      * when you want, for example, to access properties of context bean in JEXL expression and omit

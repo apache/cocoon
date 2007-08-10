@@ -76,8 +76,7 @@ public class FlowHelper {
     public final static void setWebContinuation(Map objectModel,
                                           ObjectModel newObjectModel, WebContinuation kont) {
         objectModel.put(CONTINUATION_OBJECT, kont);
-        //FIXME: I think there should be a better way to do this (GK)
-        ((Map)newObjectModel.get("cocoon")).put("continuation", kont);
+        newObjectModel.putAt("cocoon/continuation", kont);
     }
 
     /**

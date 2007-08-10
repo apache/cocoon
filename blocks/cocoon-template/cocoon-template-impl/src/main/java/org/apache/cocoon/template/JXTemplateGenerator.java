@@ -145,7 +145,8 @@ public class JXTemplateGenerator
         newObjectModel.markLocalContext();
         FlowObjectModelHelper.fillNewObjectModelWithFOM(newObjectModel, objectModel, parameters);
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
-        ((Map) newObjectModel.get("cocoon")).put("consumer", consumer);
+        //not sure why this is needed
+        newObjectModel.putAt("cocoon/consumer", consumer);
         Invoker.execute(consumer, this.newObjectModel, new ExecutionContext(this.definitions, this.scriptManager,
                 this.manager), null, namespaces, startEvent, null);
         newObjectModel.cleanupLocalContext();

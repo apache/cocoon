@@ -40,7 +40,7 @@ public class FlowObjectModelHelper {
     public static void fillNewObjectModelWithFOM(ObjectModel newObjectModel, 
                                                             final Map objectModel, final Parameters parameters) {
         
-        ((Map)newObjectModel.get("cocoon")).put("parameters", new ParametersMap(parameters));
+        newObjectModel.putAt("cocoon/parameters", new ParametersMap(parameters));
     }
 
 }
