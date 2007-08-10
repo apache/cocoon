@@ -57,21 +57,6 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-databases-impl</artifactId>
-      <version>1.0.0-RC2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-databases-hsqldb-server</artifactId>
-      <version>1.0.0-RC2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-databases-hsqldb-client</artifactId>
-      <version>1.0.0-RC2-SNAPSHOT</version>
-    </dependency>
   </dependencies>
 
 </project>
