@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <!DOCTYPE status [
-<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT status (developers?, todo?, changes)>
 <!ELEMENT developers (person+)>
 <!ELEMENT person EMPTY>
 <!ATTLIST person
