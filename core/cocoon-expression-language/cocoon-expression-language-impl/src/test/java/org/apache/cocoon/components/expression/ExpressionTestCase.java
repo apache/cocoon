@@ -16,10 +16,19 @@
  */
 package org.apache.cocoon.components.expression;
 
-import org.apache.cocoon.CocoonTestCase;
+import java.util.HashMap;
+import java.util.Map;
+
+import junit.framework.TestCase;
+
+import org.apache.cocoon.components.expression.javascript.JavaScriptCompiler;
+import org.apache.cocoon.components.expression.jexl.JexlCompiler;
+import org.apache.cocoon.components.expression.jxpath.JXPathCompiler;
 import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
-public class ExpressionTestCase extends CocoonTestCase {
+public class ExpressionTestCase extends TestCase {
+    
+    private DefaultExpressionFactory expressionFactory;
 
     /*public void testContext() {
         ObjectModel parentContext = new ObjectModelImpl();
@@ -45,40 +54,49 @@ public class ExpressionTestCase extends CocoonTestCase {
         assertEquals("foo", parentContext.getContextBean());
         assertEquals("bar", objectModel.getContextBean());
     }*/
+    
+    protected void setUp() throws Exception {
+        super.setUp();
+        expressionFactory = new DefaultExpressionFactory();
+        Map expressionCompilers = new HashMap();
+        expressionCompilers.put("js", new JavaScriptCompiler());
+        expressionCompilers.put("jexl", new JexlCompiler());
+        JXPathCompiler jXPathCompiler = new JXPathCompiler();
+        expressionCompilers.put("jxpath", jXPathCompiler);
+        expressionCompilers.put("default", jXPathCompiler);
+        expressionFactory.setExpressionCompilers(expressionCompilers);
+    }
 
     public void testFactoryJexl() throws ExpressionException {
-        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
-        assertNotNull("Test lookup of expression factory", factory);
+        assertNotNull("Test lookup of expression factory", expressionFactory);
 
-        Expression expression = factory.getExpression("jexl", "1+2");
+        Expression expression = expressionFactory.getExpression("jexl", "1+2");
         assertNotNull("Test expression compilation", expression);
 
         assertEquals(new Long(3), expression.evaluate(new ObjectModelImpl()));
     }
 
     public void testFactoryJXPath() throws ExpressionException {
-        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
-        assertNotNull("Test lookup of expression factory", factory);
+        assertNotNull("Test lookup of expression expressionFactory", expressionFactory);
 
-        Expression expression = factory.getExpression("jxpath", "1+2");
+        Expression expression = expressionFactory.getExpression("jxpath", "1+2");
         assertNotNull("Test expression compilation", expression);
 
         assertEquals(new Double(3), expression.evaluate(new ObjectModelImpl()));
     }
 
     public void testFactoryPluggable() throws ExpressionException {
-        ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
-        assertNotNull("Test lookup of expression factory", factory);
+        assertNotNull("Test lookup of expression expressionFactory", expressionFactory);
 
-        Expression expression = factory.getExpression("1+2");
+        Expression expression = expressionFactory.getExpression("1+2");
         assertNotNull("Test expression compilation", expression);
         assertEquals(new Double(3), expression.evaluate(new ObjectModelImpl()));
 
-        expression = factory.getExpression("jexl:1+2");
+        expression = expressionFactory.getExpression("jexl:1+2");
         assertNotNull("Test expression compilation", expression);
         assertEquals(new Long(3), expression.evaluate(new ObjectModelImpl()));
 
-        expression = factory.getExpression("jxpath:1+2");
+        expression = expressionFactory.getExpression("jxpath:1+2");
         assertNotNull("Test expression compilation", expression);
         assertEquals(new Double(3), expression.evaluate(new ObjectModelImpl()));
     }
