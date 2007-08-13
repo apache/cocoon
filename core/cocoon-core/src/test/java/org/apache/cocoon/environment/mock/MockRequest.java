@@ -19,16 +19,19 @@ package org.apache.cocoon.environment.mock;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpSession;
 
 import junit.framework.AssertionFailedError;
 
@@ -70,6 +73,7 @@ public class MockRequest extends AbstractRequest {
     private Hashtable parameters = new Hashtable();
     private Hashtable headers = new Hashtable();
     private Map cookies = new HashMap();
+    private Map cocoonCookies = new HashMap();
     
     private MockSession session;
     private Environment environment;
@@ -247,12 +251,12 @@ public class MockRequest extends AbstractRequest {
     /**
      * @see org.apache.cocoon.environment.Request#getCookies()
      */
-    public Cookie[] getCookies() {
+    public javax.servlet.http.Cookie[] getCookies() {
         if (cookies.isEmpty()) {
             return null;
         }
-        Cookie[] cookieArray = new Cookie[cookies.size()];
-        return (Cookie []) cookies.values().toArray(cookieArray);
+        javax.servlet.http.Cookie[] cookieArray = new javax.servlet.http.Cookie[cookies.size()];
+        return (javax.servlet.http.Cookie[]) cookies.values().toArray(cookieArray);
     }
 
     /**
@@ -260,6 +264,18 @@ public class MockRequest extends AbstractRequest {
      */
     public Map getCookieMap() {
         return cookies;
+    }
+
+    public Cookie[] getCocoonCookies() {
+        if (cocoonCookies.isEmpty()) {
+            return null;
+        }
+        Cookie[] cookieArray = new Cookie[cocoonCookies.size()];
+        return (Cookie[]) cocoonCookies.values().toArray(cookieArray);
+    }
+
+    public Map getCocoonCookieMap() {
+        return this.cocoonCookies;
     }
 
     /**
@@ -425,7 +441,7 @@ public class MockRequest extends AbstractRequest {
     /**
      * @see org.apache.cocoon.environment.Request#getSession(boolean)
      */
-    public Session getSession(boolean create) {
+    public HttpSession getSession(boolean create) {
         if ((session == null) && (create)) {
             this.session = new MockSession();
         } else if ((session != null) && (!(session).isValid()) && (create)) {
@@ -440,7 +456,7 @@ public class MockRequest extends AbstractRequest {
     /**
      * @see org.apache.cocoon.environment.Request#getSession()
      */
-    public Session getSession() {
+    public HttpSession getSession() {
         return getSession(true);
     }
 
@@ -594,8 +610,12 @@ public class MockRequest extends AbstractRequest {
     /**
      * @see org.apache.cocoon.environment.Request#getInputStream()
      */
-    public InputStream getInputStream() throws IOException, UnsupportedOperationException {
-        return this.inputStream;
+    public ServletInputStream getInputStream() throws IOException, UnsupportedOperationException {
+        return new ServletInputStream() {
+            public int read() throws IOException {
+                return MockRequest.this.inputStream.read();
+            }
+        };
     }
 
     public void setInputStream(InputStream is) {
@@ -616,4 +636,15 @@ public class MockRequest extends AbstractRequest {
     public void setUserRole(String value) {
         this.userRole = value;
     }
+
+    public Session getCocoonSession(boolean create) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Session getCocoonSession() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

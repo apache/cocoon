@@ -16,13 +16,15 @@
  */
 package org.apache.cocoon.environment.background;
 
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Cookie;
@@ -31,8 +33,8 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractRequest;
 import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * Creates a specific servlet request simulation from command line usage.
@@ -295,8 +297,12 @@ public class BackgroundRequest extends AbstractRequest {
     public String getMethod() { return "get"; }
     public String getRemoteUser() { return SystemUtils.USER_NAME; }
 
-    public Cookie[] getCookies() { return null; }
+    public javax.servlet.http.Cookie[] getCookies() { return null; }
     public Map getCookieMap() {
+        return Collections.unmodifiableMap(new HashMap());
+    }
+    public Cookie[] getCocoonCookies() { return null; }
+    public Map getCocoonCookieMap() {
         return Collections.unmodifiableMap(new HashMap());
     }
 
@@ -309,7 +315,7 @@ public class BackgroundRequest extends AbstractRequest {
      *
      * @see        #getSession(boolean)
      */
-    public Session getSession() {
+    public HttpSession getSession() {
         return this.getSession(true);
     }
 
@@ -338,10 +344,24 @@ public class BackgroundRequest extends AbstractRequest {
      *
      * @see  #getSession()
      */
-    public Session getSession(boolean create) {
+    public HttpSession getSession(boolean create) {
         return BackgroundSession.getSession(create);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getCocoonSession(boolean)
+     */
+    public Session getCocoonSession(boolean create) {
+        return (Session) getSession(create);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getCocoonSession()
+     */
+    public Session getCocoonSession() {
+        return (Session) getSession();
+    }
+    
     /**
      * Returns the session ID specified by the client. This may
      * not be the same as the ID of the actual session in use.
@@ -426,7 +446,7 @@ public class BackgroundRequest extends AbstractRequest {
 	/*
 	 * @see org.apache.cocoon.environment.Request#getInputStream()
 	 */
-	public InputStream getInputStream() throws UnsupportedOperationException {
+	public ServletInputStream getInputStream() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 

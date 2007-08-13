@@ -16,12 +16,16 @@
  */
 package org.apache.cocoon.environment.wrapper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
@@ -200,7 +204,7 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getCookies()
      */
-    public Cookie[] getCookies() {
+    public javax.servlet.http.Cookie[] getCookies() {
         return this.req.getCookies();
     }
 
@@ -242,7 +246,7 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.environment.Request#getInputStream()
 	 */
-	public InputStream getInputStream() throws IOException, UnsupportedOperationException {
+	public ServletInputStream getInputStream() throws IOException, UnsupportedOperationException {
 		return this.req.getInputStream();
 	}
 
@@ -326,14 +330,14 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getSession(boolean)
      */
-    public Session getSession(boolean create) {
+    public HttpSession getSession(boolean create) {
         return this.req.getSession(create);
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getSession()
      */
-    public Session getSession() {
+    public HttpSession getSession() {
         return this.req.getSession();
     }
 
@@ -419,6 +423,111 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
      */
     public Object searchAttribute(String name) {
         return this.req.searchAttribute(name);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getCocoonCookieMap()
+     */
+    public Map getCocoonCookieMap() {
+        return this.req.getCocoonCookieMap();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getCocoonCookies()
+     */
+    public Cookie[] getCocoonCookies() {
+        return this.req.getCocoonCookies();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getCocoonSession(boolean)
+     */
+    public Session getCocoonSession(boolean create) {
+        return this.req.getCocoonSession(create);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getCocoonSession()
+     */
+    public Session getCocoonSession() {
+        return this.req.getCocoonSession();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
+     */
+    public int getIntHeader(String name) {
+        return this.req.getIntHeader(name);
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServletRequest#getRequestURL()
+     */
+    public StringBuffer getRequestURL() {
+        return this.req.getRequestURL();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
+     */
+    public boolean isRequestedSessionIdFromUrl() {
+        return this.req.isRequestedSessionIdFromUrl();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getLocalAddr()
+     */
+    public String getLocalAddr() {
+        return this.req.getLocalAddr();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getLocalName()
+     */
+    public String getLocalName() {
+        return this.req.getLocalName();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getLocalPort()
+     */
+    public int getLocalPort() {
+        return this.req.getLocalPort();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getParameterMap()
+     */
+    public Map getParameterMap() {
+        return this.req.getParameterMap();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getReader()
+     */
+    public BufferedReader getReader() throws IOException {
+        return this.req.getReader();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getRealPath(java.lang.String)
+     */
+    public String getRealPath(String path) {
+        return this.req.getRealPath(path);
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getRemotePort()
+     */
+    public int getRemotePort() {
+        return this.req.getRemotePort();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
+     */
+    public RequestDispatcher getRequestDispatcher(String path) {
+        return this.req.getRequestDispatcher(path);
     }
 
 }

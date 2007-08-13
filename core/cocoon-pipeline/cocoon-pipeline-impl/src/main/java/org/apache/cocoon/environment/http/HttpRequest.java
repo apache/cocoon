@@ -18,7 +18,7 @@ package org.apache.cocoon.environment.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -26,9 +26,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 import java.util.WeakHashMap;
-import java.lang.ref.WeakReference;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.environment.Cookie;
@@ -107,15 +107,39 @@ public final class HttpRequest extends AbstractRequest {
 
     private Cookie[] wrappedCookies = null;
     private Map wrappedCookieMap = null;
+    private Map cookieMap = null;
 
-    public Cookie[] getCookies() {
+    public javax.servlet.http.Cookie[] getCookies() {
+        return this.req.getCookies();
+    }
+
+    public Map getCookieMap() {
+        if (this.cookieMap == null) {
+            createCookieMap();
+        }
+        return this.cookieMap;
+    }
+
+    private synchronized void createCookieMap() {
+        Map cookieMap = new HashMap();
+        javax.servlet.http.Cookie[] cookies = this.req.getCookies();
+        if (cookies != null) {
+            for (int i=0; i < cookies.length; i++) {
+                javax.servlet.http.Cookie cookie = cookies[i];
+                cookieMap.put(cookie.getName(),cookie);
+            }
+        }
+        this.cookieMap = Collections.unmodifiableMap(cookieMap);
+    }
+
+    public Cookie[] getCocoonCookies() {
         if (this.wrappedCookieMap == null) {
             wrapCookies();
         }
         return this.wrappedCookies;
     }
 
-    public Map getCookieMap() {
+    public Map getCocoonCookieMap() {
         if (this.wrappedCookieMap == null) {
             wrapCookies();
         }
@@ -237,7 +261,7 @@ public final class HttpRequest extends AbstractRequest {
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getSession(boolean)
      */
-    public Session getSession(boolean create) {
+    public javax.servlet.http.HttpSession getSession(boolean create) {
         javax.servlet.http.HttpSession serverSession = this.req.getSession(create);
         HttpSession session;
         if (serverSession != null)
@@ -262,8 +286,16 @@ public final class HttpRequest extends AbstractRequest {
         return session;
     }
 
-    public Session getSession() {
+    public javax.servlet.http.HttpSession getSession() {
         return this.getSession(true);
+    }
+
+    public Session getCocoonSession(boolean create) {
+        return (Session) this.getSession(true);
+    }
+
+    public Session getCocoonSession() {
+        return (Session) this.getSession(true);
     }
 
     public boolean isRequestedSessionIdValid() {
@@ -385,7 +417,7 @@ public final class HttpRequest extends AbstractRequest {
         return this.req.getContentType();
     }
 
-    public InputStream getInputStream() throws IOException {
+    public ServletInputStream getInputStream() throws IOException {
         return this.req.getInputStream();
     }
 

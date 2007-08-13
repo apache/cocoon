@@ -19,6 +19,8 @@ package org.apache.cocoon.environment;
 import java.util.Enumeration;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 /**
  *
  * Provides a way to identify a user across more than one page
@@ -46,7 +48,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public interface Session {
+public interface Session extends HttpSession {
 
     /**
      *

@@ -22,8 +22,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.springframework.web.context.request.RequestAttributes;
 
 /**
@@ -56,7 +57,7 @@ public class MockRequestAttributes
         if ( scope == RequestAttributes.SCOPE_SESSION ) {
             return this.request.getAttribute(key, Request.GLOBAL_SCOPE);
         }
-        final Session session = this.request.getSession(false);
+        final HttpSession session = this.request.getSession(false);
         if ( session != null ) {
             return session.getAttribute(key);
         }
@@ -81,7 +82,7 @@ public class MockRequestAttributes
             this.request.removeAttribute(key, Request.GLOBAL_SCOPE);
         }
         if ( scope == RequestAttributes.SCOPE_GLOBAL_SESSION ) {
-            final Session session = this.request.getSession(false);
+            final HttpSession session = this.request.getSession(false);
             if ( session != null ) {
                 session.removeAttribute(key);
             }
@@ -99,7 +100,7 @@ public class MockRequestAttributes
             this.request.setAttribute(key, value, Request.GLOBAL_SCOPE);
         }
         if ( scope == RequestAttributes.SCOPE_GLOBAL_SESSION ) {
-            final Session session = this.request.getSession(true);
+            final HttpSession session = this.request.getSession(true);
             session.setAttribute(key, value);
         }
     }
