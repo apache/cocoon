@@ -16,24 +16,6 @@
  */
 package org.apache.cocoon.forms.transformation;
 
-import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.forms.formmodel.Form;
-import org.apache.cocoon.i18n.I18nUtils;
-import org.apache.cocoon.util.Deprecation;
-
-import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.JXPathException;
-import org.apache.commons.jxpath.Variables;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -41,6 +23,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.forms.formmodel.Form;
+import org.apache.cocoon.i18n.I18nUtils;
+import org.apache.cocoon.util.Deprecation;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Variables;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @version $Id$
@@ -115,7 +114,7 @@ public class FormsPipelineConfig {
         // of accessing things as in the jxtg
         // as soon as we have our unified om, we should use that
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         final Map cocoonOM = new HashMap();
         cocoonOM.put("continuation", wk);
         cocoonOM.put("request", request);
