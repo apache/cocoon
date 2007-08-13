@@ -2759,6 +2759,13 @@
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-sitemap-impl</artifactId>
+        <version>1.0.0-RC2-SNAPSHOT</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-slide-impl</artifactId>
         <version>1.0.0-SNAPSHOT</version>
       </dependency>
