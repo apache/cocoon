@@ -22,12 +22,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.modules.input.AbstractInputModule;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.http.HttpCookie;
 
 /**
  * Input module for cookies. Retrieves the value of the requested cookie.
@@ -43,7 +43,7 @@ public class CookieModule extends AbstractInputModule implements ThreadSafe {
     public Object getAttribute(String name, Configuration modeConf,
             Map objectModel) throws ConfigurationException {
         
-        HttpCookie cookie = (HttpCookie) getCookieMap(objectModel).get(name);
+        Cookie cookie = (Cookie) getCookieMap(objectModel).get(name);
         String value = (cookie == null ? null : cookie.getValue());
         
         if (getLogger().isDebugEnabled()) {
@@ -79,7 +79,7 @@ public class CookieModule extends AbstractInputModule implements ThreadSafe {
         Iterator it = allCookies.values().iterator();
         List matched = new LinkedList();
         while (it.hasNext()) {
-            HttpCookie cookie = (HttpCookie) it.next();
+            Cookie cookie = (Cookie) it.next();
             if (cookie.getName().matches(name)) {
                 matched.add(cookie.getValue());
             }

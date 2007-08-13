@@ -16,20 +16,21 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.dom.DOMBuilder;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -63,7 +64,7 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
      */
     private boolean setup = false;
 
-    private Session session;
+    private HttpSession session;
     private DOMBuilder builder;
 
     private String DOMName;

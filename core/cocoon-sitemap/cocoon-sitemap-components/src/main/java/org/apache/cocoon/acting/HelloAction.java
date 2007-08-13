@@ -16,15 +16,16 @@
  */
 package org.apache.cocoon.acting;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Map;
 
 /**
  * A simple Action that tracks if a <code>Session</code> object
@@ -41,7 +42,7 @@ public class HelloAction extends ServiceableAction implements ThreadSafe {
     public Map act (Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
         Request request = ObjectModelHelper.getRequest(objectModel);
         if (request != null) {
-            Session session = request.getSession (false);
+            HttpSession session = request.getSession (false);
 
             if (session != null) {
                 if (session.isNew()) {

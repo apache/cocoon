@@ -20,11 +20,12 @@ package org.apache.cocoon.components.modules.output;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
 
 /**
  * Abstraction layer to encapsulate different output
@@ -63,7 +64,7 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
         } else {
             // use read uncommitted isolation level
 
-            Session session = ObjectModelHelper.getRequest(objectModel).getSession();
+            HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession();
 
             name = getName(name);
 
@@ -100,7 +101,7 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
             if (getLogger().isDebugEnabled())
                 getLogger().debug("start rolling back");
             
-            Session session = ObjectModelHelper.getRequest(objectModel).getSession();
+            HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession();
             Object tmp = this.prepareCommit(objectModel,ROLLBACK_LIST);
             if (tmp != null) {
                 Map rollbackList = (Map) tmp;
@@ -160,7 +161,7 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
             } else {
                 prefix = null;
             }
-            Session session = ObjectModelHelper.getRequest(objectModel).getSession();
+            HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession();
             while (iter.hasNext()) {
                 String key = (String) iter.next();
                 Object value = aMap.get(key);

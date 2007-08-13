@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -43,10 +45,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.xslt.TraxErrorListener;
-import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.BooleanUtils;
@@ -445,7 +445,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
                 map = new HashMap(6);
             }
 
-            final Session session = request.getSession(false);
+            final HttpSession session = request.getSession(false);
             if (session != null) {
                 map.put("session-available", "true");
                 map.put("session-is-new", BooleanUtils.toStringTrueFalse(session.isNew()));

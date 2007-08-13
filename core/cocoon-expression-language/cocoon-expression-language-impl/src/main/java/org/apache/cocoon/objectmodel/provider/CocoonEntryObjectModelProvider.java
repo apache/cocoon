@@ -19,16 +19,17 @@ package org.apache.cocoon.objectmodel.provider;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * {@link ObjectModelProvider} for <code>cocoon</code> entry.
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.2
  */
 public class CocoonEntryObjectModelProvider implements ObjectModelProvider {
@@ -62,7 +63,7 @@ public class CocoonEntryObjectModelProvider implements ObjectModelProvider {
         cocoonMap.put("request", request);
         
         //cocoon.session
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             cocoonMap.put("session", session);
         }

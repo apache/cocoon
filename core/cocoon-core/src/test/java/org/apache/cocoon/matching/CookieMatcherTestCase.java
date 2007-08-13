@@ -17,12 +17,15 @@
 package org.apache.cocoon.matching;
 
 import java.util.Map;
+
+import javax.servlet.http.Cookie;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.mock.MockCookie;
 
 public class CookieMatcherTestCase extends SitemapComponentTestCase {
     
@@ -51,9 +54,7 @@ public class CookieMatcherTestCase extends SitemapComponentTestCase {
         // create a cookie
         // setting name := cookieName, value := cookieValue
         Map cookies = getRequest().getCookieMap();
-        MockCookie mockCookie = new MockCookie();
-        mockCookie.setName("cookieName");
-        mockCookie.setValue("cookieValue");
+        Cookie mockCookie = new Cookie("cookieName", "cookieValue");
         cookies.put( "cookieName", mockCookie );
         
         Parameters parameters = new Parameters();
@@ -71,9 +72,7 @@ public class CookieMatcherTestCase extends SitemapComponentTestCase {
         // create a cookie
         // setting name := cookieName, value := cookieValue
         Map cookies = getRequest().getCookieMap();
-        MockCookie mockCookie = new MockCookie();
-        mockCookie.setName("cookieName");
-        mockCookie.setValue("cookieValue");
+        Cookie mockCookie = new Cookie("cookieName", "cookieValue");
         cookies.put( "cookieName", mockCookie );
         
         Parameters parameters = new Parameters();

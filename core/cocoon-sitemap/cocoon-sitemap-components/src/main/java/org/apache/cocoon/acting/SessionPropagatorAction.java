@@ -22,15 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
@@ -91,7 +91,7 @@ public class SessionPropagatorAction extends AbstractConfigurableAction implemen
         HashMap actionMap = new HashMap ();
 
         /* check session validity */
-        Session session = req.getSession (false);
+        HttpSession session = req.getSession (false);
         if (session == null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("No session object");

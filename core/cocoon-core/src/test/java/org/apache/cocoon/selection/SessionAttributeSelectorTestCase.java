@@ -16,12 +16,14 @@
 */
 package org.apache.cocoon.selection;
 
+import javax.servlet.http.HttpSession;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.Session;
 
 public class SessionAttributeSelectorTestCase extends SitemapComponentTestCase {
 
@@ -50,7 +52,7 @@ public class SessionAttributeSelectorTestCase extends SitemapComponentTestCase {
         final String attributeName = "sessionAttributeSelector";
         final String attributeValue = "sessionAttributeSelectorValue";
         
-        Session session = getRequest().getSession(true);
+        HttpSession session = getRequest().getSession(true);
         session.setAttribute( attributeName, attributeValue );        
         Parameters parameters = new Parameters();
         boolean result;
@@ -72,7 +74,7 @@ public class SessionAttributeSelectorTestCase extends SitemapComponentTestCase {
     public void testSessionAttributeSelectOverridden() throws Exception {
         final String attributeName = "sessionAttributeSelector1";
         final String attributeValue = "sessionAttributeSelectorValue1";
-        Session session = getRequest().getSession(true);
+        HttpSession session = getRequest().getSession(true);
         session.setAttribute( attributeName, attributeValue );        
         
         final String attributeNameOverridden = "sessionAttributeSelector";

@@ -16,19 +16,20 @@
  */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.Map;
 
 
 /**
@@ -74,7 +75,7 @@ public class ReadDOMSessionTransformer extends AbstractTransformer  {
     */
     public static final String POSITION = "position";
 
-    Session session;
+    HttpSession session;
     String attributeName;
     String trigger;
     String position;

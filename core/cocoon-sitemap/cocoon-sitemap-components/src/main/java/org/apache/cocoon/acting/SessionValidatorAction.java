@@ -16,16 +16,16 @@
  */
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * This is the action used to validate Session parameters (attributes).
@@ -45,7 +45,7 @@ public class SessionValidatorAction extends AbstractValidatorAction implements T
         String name;
         HashMap params = new HashMap(set.size());
         // put required params into hash
-        Session session = ObjectModelHelper.getRequest(objectModel).getSession();
+        HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession();
         for (Iterator i = set.iterator(); i.hasNext();) {
             name = ((Configuration) i.next()).getAttribute("name", "").trim();
             Object value = session.getAttribute(name);
@@ -60,7 +60,7 @@ public class SessionValidatorAction extends AbstractValidatorAction implements T
      */
     protected Map setResult(Map objectModel, Map actionMap, Map resultMap, boolean allOK) {
         if (allOK){
-            Session session = ObjectModelHelper.getRequest(objectModel).getSession();
+            HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession();
             for (Iterator i = actionMap.keySet().iterator(); i.hasNext(); ){
                 String name = (String) i.next();
                 session.setAttribute(name, actionMap.get(name));

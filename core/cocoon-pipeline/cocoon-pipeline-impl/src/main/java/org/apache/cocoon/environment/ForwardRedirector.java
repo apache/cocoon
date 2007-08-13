@@ -18,6 +18,8 @@ package org.apache.cocoon.environment;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 
@@ -130,7 +132,7 @@ implements Redirector, PermanentRedirector {
         if (sessionmode) {
 
             // The session
-            Session session = null;
+            HttpSession session = null;
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("redirect: entering session mode");
             }

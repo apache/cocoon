@@ -16,15 +16,16 @@
  */
 package org.apache.cocoon.acting;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Map;
 
 /**
  * This is the action used to invalidate an HTTP session. The action returns
@@ -42,7 +43,7 @@ public class SessionInvalidatorAction extends AbstractAction implements ThreadSa
         Request req = ObjectModelHelper.getRequest(objectModel);
 
         /* check session validity */
-        Session session = req.getSession (false);
+        HttpSession session = req.getSession (false);
         if (session != null) {
             session.invalidate ();
             if (this.getLogger().isDebugEnabled()) {

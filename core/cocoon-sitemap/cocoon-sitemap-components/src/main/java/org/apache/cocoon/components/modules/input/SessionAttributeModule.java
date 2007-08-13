@@ -17,13 +17,6 @@
 
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,6 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 
 /**
  * SessionAttributeModule accesses session attributes. If the
@@ -90,7 +91,7 @@ public class SessionAttributeModule extends AbstractInputModule implements Threa
                 suffix = "";
             }
             SortedSet names = new TreeSet();
-            Session session = request.getSession();
+            HttpSession session = request.getSession();
             Enumeration allNames = session.getAttributeNames();
 
             while (allNames.hasMoreElements()) {
