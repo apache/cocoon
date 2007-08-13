@@ -42,7 +42,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.serializers.EncodingSerializer;
+import org.apache.cocoon.components.serializers.util.EncodingSerializer;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
@@ -366,8 +366,7 @@ public class WSRPAdapter
                 HtmlSaxParser.parseString(content, HtmlSaxParser.getContentFilter(handler));
             } else {
                 // stream out the include for the serializer
-                final org.apache.cocoon.environment.Request request = ObjectModelHelper.getRequest(this.portalService.getProcessInfoProvider().getObjectModel());
-                EncodingSerializer.include(content, request, contentHandler);
+                EncodingSerializer.include(content, this.portalService.getRequestContext().getRequest(), contentHandler);
             }
         } catch (WSRPException e) {
             throw new SAXException("Exception during getMarkup of wsrp coplet: " + coplet.getId(), e);
