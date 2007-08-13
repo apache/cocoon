@@ -70,6 +70,12 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-sitemap-impl</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
     <!--  
           Test dependencies
           TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
