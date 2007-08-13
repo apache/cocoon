@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -30,7 +32,6 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
@@ -121,7 +122,7 @@ public class EncodeURLTransformer
     private ElementAttributeMatching elementAttributeMatching;
     private Response response;
     private boolean isEncodeURLNeeded;
-    private Session session;
+    private HttpSession session;
 
     /**
      * check if encoding of URLs is neccessary.

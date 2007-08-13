@@ -17,12 +17,15 @@
 package org.apache.cocoon.selection;
 
 import java.util.Map;
+
+import javax.servlet.http.Cookie;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.mock.MockCookie;
 
 public class CookieSelectorTestCase extends SitemapComponentTestCase {
 
@@ -55,9 +58,7 @@ public class CookieSelectorTestCase extends SitemapComponentTestCase {
         // create a cookie
         // setting name := cookieName, value := cookieValue
         Map cookies = getRequest().getCookieMap();
-        MockCookie mockCookie = new MockCookie();
-        mockCookie.setName( cookieName);
-        mockCookie.setValue( cookieValue );
+        Cookie mockCookie = new Cookie(cookieName, cookieValue);
         cookies.put( cookieName, mockCookie );
         
         Parameters parameters = new Parameters();
@@ -84,17 +85,13 @@ public class CookieSelectorTestCase extends SitemapComponentTestCase {
         // create a cookie
         // setting name := cookieName, value := cookieValue
         Map cookies = getRequest().getCookieMap();
-        MockCookie mockCookie = new MockCookie();
+        Cookie mockCookie = new Cookie(cookieName, cookieValue);
         // this cookie shall get selected
-        mockCookie.setName( cookieName);
-        mockCookie.setValue( cookieValue );
         cookies.put( cookieName, mockCookie );
         
         // this cookie shall be ignored, as its name differs
         // from the parameterized cookie name
-        mockCookie = new MockCookie();
-        mockCookie.setName( "cookieSelectorTestCase" );
-        mockCookie.setValue( "unknownCookieValue" );
+        mockCookie = new Cookie("cookieSelectorTestCase", "unknownCookieValue");
         cookies.put( "cookieSelectorTestCase", mockCookie );
 
         // check the cookie as defined by this parameter, not as

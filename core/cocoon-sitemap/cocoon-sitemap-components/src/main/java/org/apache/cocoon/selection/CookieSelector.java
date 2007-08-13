@@ -16,17 +16,17 @@
  */
 package org.apache.cocoon.selection;
 
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
 
 /**
  * A <code>Selector</code> that matches a string against a configurable cookie's value.

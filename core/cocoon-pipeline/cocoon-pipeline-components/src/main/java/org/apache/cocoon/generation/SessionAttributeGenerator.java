@@ -16,20 +16,21 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -105,7 +106,7 @@ public class SessionAttributeGenerator extends AbstractGenerator {
 
         // Get the object to stream
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             this.attrObject = session.getAttribute(attrName);
         }

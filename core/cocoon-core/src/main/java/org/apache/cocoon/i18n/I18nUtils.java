@@ -16,19 +16,19 @@
  */
 package org.apache.cocoon.i18n;
 
-import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.util.Deprecation;
-
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.util.Deprecation;
 
 /**
  * A utility class for i18n formatting and parsing routing.
@@ -143,7 +143,7 @@ public class I18nUtils {
         }
 
         // 2. Session attribute 'locale'
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session != null &&
                 ((localeStr = (String) session.getAttribute(attribute)) != null)) {
             locale = parseLocale(localeStr);
@@ -249,7 +249,7 @@ public class I18nUtils {
         // store in session if so configured
         if (storeInSession) {
             Request request = ObjectModelHelper.getRequest(objectModel);
-            Session session = request.getSession(createSession);
+            HttpSession session = request.getSession(createSession);
             if (session != null) {
                 session.setAttribute(attribute, locale);
             }

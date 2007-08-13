@@ -16,6 +16,11 @@
  */
 package org.apache.cocoon.acting;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -23,11 +28,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Store the session's current state in a session attribute.
@@ -130,7 +131,7 @@ public class SessionStateAction
         }
 
         if (request != null) {
-            Session session = request.getSession(false);
+            HttpSession session = request.getSession(false);
 
             if (session != null && request.isRequestedSessionIdValid()) {
                 String oldstate = null;

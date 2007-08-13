@@ -19,11 +19,11 @@ package org.apache.cocoon.acting;
 
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.mock.MockCookie;
 import org.apache.cocoon.environment.mock.MockSession;
 
 /**
@@ -93,9 +93,7 @@ public class LocaleActionTestCase extends SitemapComponentTestCase {
 
         // 5. Cookie
         Map cookies = getRequest().getCookieMap();
-        MockCookie mockCookie = new MockCookie();
-        mockCookie.setName("locale");
-        mockCookie.setValue("no_NO_B");
+        Cookie mockCookie = new Cookie("locale", "no_NO_B");
         cookies.put("locale", mockCookie );
         result = act("locale3", null, parameters);
         assertNotNull("Action should always succeed", result);
@@ -131,7 +129,7 @@ public class LocaleActionTestCase extends SitemapComponentTestCase {
         // Test different locations for storing locale
         Parameters parameters = new Parameters();
         Map result;
-        Session session;
+        HttpSession session;
         Cookie cookie;
 
         // 1. Don't store

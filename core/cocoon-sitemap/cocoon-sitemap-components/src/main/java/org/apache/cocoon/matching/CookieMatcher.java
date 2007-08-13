@@ -16,17 +16,17 @@
  */
 package org.apache.cocoon.matching;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.sitemap.PatternException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Matches cookies agains given name. Returns value of the matched cookie.

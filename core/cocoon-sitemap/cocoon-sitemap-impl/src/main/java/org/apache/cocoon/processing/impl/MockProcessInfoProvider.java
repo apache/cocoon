@@ -43,7 +43,7 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 /**
  * Mock implementation of {@link ProcessInfoProvider} interface.
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.2
  */
 public class MockProcessInfoProvider implements ProcessInfoProvider {
@@ -260,7 +260,7 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
         }
 
         public HttpSession getSession(boolean create) {
-            return new StubSession(request.getSession(create));
+            return new StubSession((Session) request.getSession(create));
         }
 
         public String getSitemapPath() {
@@ -412,7 +412,7 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
             return response.containsHeader(name);
         }
 
-        public Cookie createCookie(String name, String value) {
+        public javax.servlet.http.Cookie createCookie(String name, String value) {
             return response.createCookie(name, value);
         }
 

@@ -17,12 +17,15 @@
 package org.apache.cocoon.matching;
 
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.Session;
 
 public class SessionAttributeMatcherTestCase extends SitemapComponentTestCase {
     
@@ -51,7 +54,7 @@ public class SessionAttributeMatcherTestCase extends SitemapComponentTestCase {
         // create a session attribute
         final String sessionAttributeName = "sessionAttributeMatchTestCase";
         final String sessionAttributeValue = "sessionAttributeMatchTestCaseValue";
-        Session session = getRequest().getSession(true);
+        HttpSession session = getRequest().getSession(true);
         session.setAttribute(sessionAttributeName, sessionAttributeValue );
         
         Parameters parameters = new Parameters();
@@ -79,7 +82,7 @@ public class SessionAttributeMatcherTestCase extends SitemapComponentTestCase {
         // create a session attribute
         final String sessionAttributeName = "sessionAttributeMatchTestCase";
         final String sessionAttributeValue = "sessionAttributeMatchTestCaseValue";
-        Session session = getRequest().getSession(true);
+        HttpSession session = getRequest().getSession(true);
         session.setAttribute(sessionAttributeName, sessionAttributeValue );        
 
         // test w an existing session

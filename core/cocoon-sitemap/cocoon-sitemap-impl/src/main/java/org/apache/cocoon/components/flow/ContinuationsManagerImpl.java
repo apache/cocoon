@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
@@ -45,7 +46,6 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 
 
 /**
@@ -491,7 +491,7 @@ public class ContinuationsManagerImpl
         if (!createNew && request.getSession(false) == null)
             return null;
 
-        Session session = request.getSession(true);
+        HttpSession session = request.getSession(true);
         WebContinuationsHolder holder = 
             (WebContinuationsHolder) session.getAttribute(
                     WebContinuationsHolder.CONTINUATIONS_HOLDER);
