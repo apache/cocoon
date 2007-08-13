@@ -17,14 +17,14 @@
 package org.apache.cocoon.environment;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.AbstractTestCase;
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.ExpressionFactory;
-import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.objectmodel.helper.ParametersMap;
 
-public class FOMTestCase extends ContainerTestCase {
+public class FOMTestCase extends AbstractTestCase {
 
     public void testFOMJexl() throws ExpressionException {
         ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
