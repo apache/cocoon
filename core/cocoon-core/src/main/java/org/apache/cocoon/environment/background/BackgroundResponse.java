@@ -16,20 +16,23 @@
  */
 package org.apache.cocoon.environment.background;
 
+import java.util.Locale;
+
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Response;
-
-import java.util.Locale;
+import org.apache.cocoon.environment.impl.AbstractResponse;
 
 /**
  * Creates a specific servlet response simulation from command line usage.
  *
  * @version $Id$
  */
-public class BackgroundResponse implements Response {
+public class BackgroundResponse extends AbstractResponse implements Response {
 
     public String getCharacterEncoding() { return null; }
-    public Cookie createCookie(String name, String value) { return null; }
+    public javax.servlet.http.Cookie createCookie(String name, String value) { return null; }
+    public void addCookie(javax.servlet.http.Cookie cookie) {}
+    public Cookie createCocoonCookie(String name, String value) { return null; }
     public void addCookie(Cookie cookie) {}
     public boolean containsHeader(String name) { return false; }
     public void setHeader(String name, String value) {}
@@ -41,4 +44,5 @@ public class BackgroundResponse implements Response {
     public void addDateHeader(String name, long date) { }
     public void addHeader(String name, String value) { }
     public void addIntHeader(String name, int value) { }
+
 }

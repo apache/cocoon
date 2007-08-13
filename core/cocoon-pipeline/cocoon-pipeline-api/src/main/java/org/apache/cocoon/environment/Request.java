@@ -17,11 +17,14 @@
 package org.apache.cocoon.environment;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Defines an interface to provide client request information .
@@ -39,7 +42,7 @@ import java.util.Map;
  * 
  * @version $Id$
  */
-public interface Request extends ValueHolder {
+public interface Request extends ValueHolder, HttpServletRequest {
 
     /**
      * This constant defines an request wide scope for the request attribute.
@@ -489,27 +492,53 @@ public interface Request extends ValueHolder {
 
     /**
      *
-     * Returns an array containing all of the <code>Cookie</code>
+     * Returns an array containing all of the {@link javax.servlet.http.Cookie}
      * objects the client sent with this request.
      * This method returns <code>null</code> if no cookies were sent.
      *
-     * @return                an array of all the <code>Cookies</code>
+     * @return                an array of all the {@link javax.servlet.http.Cookie}
      *                        included with this request, or <code>null</code>
      *                        if the request has no cookies
      *
      *
      */
 
-    Cookie[] getCookies();
+    javax.servlet.http.Cookie[] getCookies();
 
     /**
-     * Returns a map of the <code>Cookie</code> objects the client sent
+     * Returns a map of the {@link javax.servlet.http.Cookie} objects the client sent
      * with this request, indexed by name. This method returns an empty
      * map if no cookies were sent.
      *
-     * @return a Map of <code>Cookie</code> objects
+     * @return a Map of {@link javax.servlet.http.Cookie} objects
      */
     Map getCookieMap();
+
+    /**
+    *
+    * Returns an array containing all of the <code>Cookie</code>
+    * objects the client sent with this request.
+    * This method returns <code>null</code> if no cookies were sent.
+    *
+    * @return                an array of all the <code>Cookies</code>
+    *                        included with this request, or <code>null</code>
+    *                        if the request has no cookies
+    *
+    * @deprecated use {@link #getCookies()} instead.
+    */
+
+   Cookie[] getCocoonCookies();
+
+   /**
+    * Returns a map of the <code>Cookie</code> objects the client sent
+    * with this request, indexed by name. This method returns an empty
+    * map if no cookies were sent.
+    *
+    * @return a Map of <code>Cookie</code> objects
+    * 
+    * @deprecated use {@link #getCookieMap()} instead.
+    */
+   Map getCocoonCookieMap();
 
     /**
      *
@@ -639,7 +668,7 @@ public interface Request extends ValueHolder {
      * @throws IOException            if an input or output exception occurred
      * @throws UnsupportedOperationException
      */
-    InputStream getInputStream() throws IOException, UnsupportedOperationException;
+    ServletInputStream getInputStream() throws IOException, UnsupportedOperationException;
 
     /**
      *
@@ -895,6 +924,55 @@ public interface Request extends ValueHolder {
 
     /**
      *
+     * Returns the current {@link HttpSession}
+     * associated with this request or, if if there is no
+     * current session and <code>create</code> is true, returns
+     * a new session.
+     *
+     * <p>If <code>create</code> is <code>false</code>
+     * and the request has no valid <code>Session</code>,
+     * this method returns <code>null</code>.
+     *
+     * <p>To make sure the session is properly maintained,
+     * you must call this method before
+     * the response is committed.
+     *
+     *
+     *
+     *
+     * @param create          <code>true</code> to create
+     *                        a new session for this request if necessary;
+     *                        <code>false</code> to return <code>null</code>
+     *                        if there's no current session
+     *
+     *
+     * @return                 the {@link HttpSession} associated
+     *                        with this request or <code>null</code> if
+     *                         <code>create</code> is <code>false</code>
+     *                        and the request has no valid session
+     *
+     * @see        #getSession()
+     *
+     *
+     */
+
+    HttpSession getSession(boolean create);
+
+    /**
+     *
+     * Returns the current session associated with this request,
+     * or if the request does not have a session, creates one.
+     *
+     * @return                the {@link HttpSession} associated
+     *                        with this request
+     *
+     * @see        #getSession(boolean)
+     *
+     */
+
+     HttpSession getSession();
+     /**
+     *
      * Returns the current <code>Session</code>
      * associated with this request or, if if there is no
      * current session and <code>create</code> is true, returns
@@ -924,10 +1002,10 @@ public interface Request extends ValueHolder {
      *
      * @see        #getSession()
      *
-     *
+     * @deprecated use {@link #getSession(boolean)} instead.
      */
 
-    Session getSession(boolean create);
+    Session getCocoonSession(boolean create);
 
     /**
      *
@@ -939,9 +1017,10 @@ public interface Request extends ValueHolder {
      *
      * @see        #getSession(boolean)
      *
+     * @deprecated use {@link #getSession()} instead.
      */
 
-     Session getSession();
+     Session getCocoonSession();
 
     /**
      *

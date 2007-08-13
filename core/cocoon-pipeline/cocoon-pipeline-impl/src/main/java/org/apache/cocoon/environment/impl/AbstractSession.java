@@ -18,6 +18,9 @@ package org.apache.cocoon.environment.impl;
 
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSessionContext;
+
 import org.apache.cocoon.environment.Session;
 
 /**
@@ -30,5 +33,35 @@ public abstract class AbstractSession
 
     public Map getAttributes() {
 	return new SessionMap(this);
+    }
+
+    public ServletContext getServletContext() {
+        // TODO The method was added when Session was made extending HttpSession, implement the method
+        throw new UnsupportedOperationException();
+    }
+
+    public HttpSessionContext getSessionContext() {
+        // TODO Deprecated method that was added when Session was made extending HttpSession, should it be implemented?
+        throw new UnsupportedOperationException();
+    }
+
+    public Object getValue(String name) {
+        // TODO Deprecated method that was added when Session was made extending HttpSession, should it be implemented?
+        throw new UnsupportedOperationException();
+    }
+
+    public String[] getValueNames() {
+        // TODO Deprecated method that was added when Session was made extending HttpSession, should it be implemented?
+        throw new UnsupportedOperationException();
+    }
+
+    public void putValue(String name, Object value) {
+        // TODO Deprecated method that was added when Session was made extending HttpSession, should it be implemented?
+        throw new UnsupportedOperationException();
+    }
+
+    public void removeValue(String name) {
+        // TODO Deprecated method that was added when Session was made extending HttpSession, should it be implemented?
+        throw new UnsupportedOperationException();
     }
 }

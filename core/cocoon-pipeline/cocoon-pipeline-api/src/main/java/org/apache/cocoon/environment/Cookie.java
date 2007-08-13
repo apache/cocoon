@@ -50,6 +50,7 @@ package org.apache.cocoon.environment;
  * (by RFC 2109) cookie specifications. By default, cookies are
  * created using Version 0 to ensure the best interoperability.
  *
+ * @deprecated Use {@link javax.servlet.http.Cookie} instead.
  *
  * @version $Id$
  */

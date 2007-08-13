@@ -24,12 +24,14 @@ import java.util.Set;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractResponse;
 
-public class MockResponse implements Response {
+public class MockResponse extends AbstractResponse implements Response {
 
     private String encoding;
     private Locale locale;
     private Set cookies = new HashSet();
+    private Set cocoonCookies = new HashSet();
     private Map header = new HashMap();
 
     private Session session;
@@ -50,7 +52,16 @@ public class MockResponse implements Response {
         return locale;
     }
 
-    public Cookie createCookie(String name, String value) {
+    public javax.servlet.http.Cookie createCookie(String name, String value) {
+        javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie(name, value);
+        return cookie;
+    }
+
+    public void addCookie(javax.servlet.http.Cookie cookie) {
+        cookies.add(cookie);
+    }
+
+    public Cookie createCocoonCookie(String name, String value) {
         MockCookie cookie = new MockCookie();
         cookie.setName(name);
         cookie.setValue(value);
@@ -58,7 +69,7 @@ public class MockResponse implements Response {
     }
 
     public void addCookie(Cookie cookie) {
-        cookies.add(cookie);
+        cocoonCookies.add(cookie);
     }
 
     public Set getCookies() {

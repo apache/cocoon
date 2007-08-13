@@ -20,13 +20,14 @@ import java.util.Locale;
 
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.impl.AbstractResponse;
 
 /**
  * This is a wrapper class for the Response object.
  * It contains the same properties as the wrapped instance
  * but swallows calls that would modify response headers.
  */
-public class ResponseWrapper implements Response {
+public class ResponseWrapper extends AbstractResponse implements Response {
 
     private Response res;
     
@@ -46,8 +47,16 @@ public class ResponseWrapper implements Response {
         return res.getLocale();
     }
 
-    public Cookie createCookie(String name, String value) {
+    public javax.servlet.http.Cookie createCookie(String name, String value) {
         return res.createCookie(name, value);
+    }
+
+    public void addCookie(javax.servlet.http.Cookie cookie) {
+        res.addCookie(cookie);
+    }
+
+    public Cookie createCocoonCookie(String name, String value) {
+        return res.createCocoonCookie(name, value);
     }
 
     public void addCookie(Cookie cookie) {

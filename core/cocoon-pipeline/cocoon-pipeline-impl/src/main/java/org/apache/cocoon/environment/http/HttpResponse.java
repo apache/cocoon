@@ -16,14 +16,16 @@
  */
 package org.apache.cocoon.environment.http;
 
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Response;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.impl.AbstractResponse;
 
 /**
  * Implements the {@link org.apache.cocoon.environment.Response} interface
@@ -31,7 +33,7 @@ import java.util.Locale;
  * 
  * @version $Id$
  */
-public final class HttpResponse implements Response {
+public final class HttpResponse extends AbstractResponse implements Response {
 
     /** The real HttpServletResponse object */
     private final HttpServletResponse res;
@@ -46,7 +48,15 @@ public final class HttpResponse implements Response {
     /**
      * Create a new cookie which is not added to the response
      */
-    public Cookie createCookie(String name, String value) {
+    public javax.servlet.http.Cookie createCookie(String name, String value) {
+        return new javax.servlet.http.Cookie(name, value);
+    }
+
+    public void addCookie(javax.servlet.http.Cookie cookie) {
+        this.res.addCookie(cookie);
+    }
+
+    public Cookie createCocoonCookie(String name, String value) {
         return new HttpCookie(name, value);
     }
 
@@ -205,5 +215,6 @@ public final class HttpResponse implements Response {
     public Locale getLocale() {
         return this.res.getLocale();
     }
+
 }
 

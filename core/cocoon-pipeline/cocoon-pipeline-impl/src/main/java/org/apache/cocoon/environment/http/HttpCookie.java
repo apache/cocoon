@@ -54,6 +54,8 @@ import org.apache.cocoon.environment.Cookie;
  *
  *
  * @version $Id$
+ * 
+ * @deprecated use {@link javax.servlet.http.Cookie} instead.
  */
 public final class HttpCookie
 implements Cookie {

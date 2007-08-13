@@ -16,9 +16,9 @@
  */
 package org.apache.cocoon.environment.http;
 
-import org.apache.cocoon.environment.impl.AbstractSession;
-
 import java.util.Enumeration;
+
+import org.apache.cocoon.environment.impl.AbstractSession;
 
 /**
  *
