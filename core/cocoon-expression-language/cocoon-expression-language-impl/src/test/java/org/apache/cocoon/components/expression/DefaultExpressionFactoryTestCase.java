@@ -26,7 +26,7 @@ import org.apache.cocoon.components.expression.jexl.JexlCompiler;
 import org.apache.cocoon.components.expression.jxpath.JXPathCompiler;
 import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
-public class ExpressionTestCase extends TestCase {
+public class DefaultExpressionFactoryTestCase extends TestCase {
     
     private DefaultExpressionFactory expressionFactory;
 
