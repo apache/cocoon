@@ -16,13 +16,23 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -38,15 +48,6 @@ import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.regexp.RE;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  *
@@ -239,7 +240,7 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
         URL uri = null;
         String host = null;
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Session session = request.getSession(true);
+        HttpSession session = request.getSession(true);
         HttpClient httpClient = null;
         if (session != null) {
             httpClient = (HttpClient)session.getAttribute(HTTP_CLIENT);

@@ -16,16 +16,17 @@
  */
 package org.apache.cocoon.acting;
 
+import java.util.Collections;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
-
-import java.util.Map;
-import java.util.Collections;
 
 /**
  * The CookieCreatorAction action creates or removes cookies. The action needs

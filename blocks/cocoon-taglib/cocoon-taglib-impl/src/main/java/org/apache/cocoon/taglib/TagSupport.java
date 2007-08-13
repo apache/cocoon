@@ -16,8 +16,10 @@
  */
 package org.apache.cocoon.taglib;
 
-import java.util.Map;
 import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -25,9 +27,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -116,7 +116,7 @@ public abstract class TagSupport extends AbstractLogEnabled implements Tag, Recy
         if (o != null)
             return o;
 
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             o = session.getAttribute(name);
             if (o != null)

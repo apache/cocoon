@@ -16,14 +16,15 @@
  */
 package org.apache.cocoon.components.profiler;
 
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
-
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Enumeration;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 
 /**
  * Holds information about the environment (such as request
@@ -51,7 +52,7 @@ public class EnvironmentInfo {
         }
 
         // make a copy of the session contents
-        final Session session = request.getSession(false);
+        final HttpSession session = request.getSession(false);
         if (session != null) {
             final Enumeration sessionAttributeNames = session.getAttributeNames();
             while (sessionAttributeNames.hasMoreElements()) {

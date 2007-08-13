@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -39,7 +41,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
@@ -148,12 +149,12 @@ public class DefaultAuthenticationManager
         return ContextHelper.getRequest(this.context);
     }
 
-    private Session getSession(boolean create) {
+    private HttpSession getSession(boolean create) {
         return this.getRequest().getSession(create);
     }
 
     private UserState getUserState() {
-        final Session session = this.getSession( false );
+        final HttpSession session = this.getSession( false );
         UserState status = null;
         if ( session != null) {
             status = (UserState) session.getAttribute(SESSION_ATTRIBUTE_USER_STATUS);
@@ -164,7 +165,7 @@ public class DefaultAuthenticationManager
     private UserState createUserState() {
         UserState status = this.getUserState();
         if ( status == null ) {
-            final Session session = this.getSession(true);
+            final HttpSession session = this.getSession(true);
             status = new UserState();
             session.setAttribute(SESSION_ATTRIBUTE_USER_STATUS, status);
         }
@@ -180,7 +181,7 @@ public class DefaultAuthenticationManager
     }
 
     private void updateUserState() {
-        final Session session = this.getSession(true);
+        final HttpSession session = this.getSession(true);
         Object status = session.getAttribute(SESSION_ATTRIBUTE_USER_STATUS);
         session.setAttribute(SESSION_ATTRIBUTE_USER_STATUS, status);
     }

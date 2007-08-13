@@ -21,11 +21,12 @@ import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
@@ -111,7 +112,7 @@ public class CaptchaField extends Field {
         }
         String id = new String(result);
         Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-        Session session = ObjectModelHelper.getRequest(objectModel).getSession(true);
+        HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession(true);
         String secret = generateSecret();
         session.setAttribute(SESSION_ATTR_PREFIX + id, secret);
         this.setAttribute("secret", secret);

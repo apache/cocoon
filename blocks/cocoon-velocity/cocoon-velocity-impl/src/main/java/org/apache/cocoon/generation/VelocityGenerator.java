@@ -258,7 +258,7 @@ public class VelocityGenerator extends ServiceableGenerator
             super(null, ctx);
             this.request = request;
             this.response = response;
-            this.session = request.getSession(false);
+            this.session = (Session) request.getSession(false);
             this.application = application;
             this.parameters = parameters;
         }

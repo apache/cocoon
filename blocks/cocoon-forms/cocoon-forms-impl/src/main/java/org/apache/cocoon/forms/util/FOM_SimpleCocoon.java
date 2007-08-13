@@ -23,6 +23,7 @@ import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_Context;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_Request;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_Session;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Session;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -80,7 +81,7 @@ public class FOM_SimpleCocoon extends ScriptableObject {
         }
         session = new FOM_Session(
                 getParentScope(),
-                ObjectModelHelper.getRequest(objectModel).getSession(true));
+                (Session) ObjectModelHelper.getRequest(objectModel).getSession(true));
         return session;
     }
 

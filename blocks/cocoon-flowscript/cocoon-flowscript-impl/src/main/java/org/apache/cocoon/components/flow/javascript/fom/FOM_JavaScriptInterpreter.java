@@ -28,11 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
-
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.CompilingInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
@@ -46,8 +47,6 @@ import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
@@ -205,7 +204,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         ThreadScope scope;
 
         // Get/create the scope attached to the current context
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             scope = (ThreadScope) session.getAttribute(scopeID);
         } else {
@@ -236,7 +235,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             // FIXME: Where "session scope" should go when session is invalidated?
             // Attach the scope to the current context
             try {
-                Session session = request.getSession(true);
+                HttpSession session = request.getSession(true);
                 session.setAttribute(scopeID, scope);
             } catch (IllegalStateException e) {
                 // Session might be invalidated already.

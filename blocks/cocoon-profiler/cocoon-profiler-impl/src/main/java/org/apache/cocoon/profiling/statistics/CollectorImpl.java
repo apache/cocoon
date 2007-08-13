@@ -23,6 +23,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -32,7 +34,6 @@ import org.apache.cocoon.auth.ApplicationUtil;
 import org.apache.cocoon.auth.User;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.store.Store;
@@ -172,7 +173,7 @@ public class CollectorImpl
         final Map objectModel = this.provider.getObjectModel();
         final User user = ApplicationUtil.getUser(objectModel);
         final Request request = ObjectModelHelper.getRequest(objectModel);
-        final Session session = request.getSession();
+        final HttpSession session = request.getSession();
         Integer counter = (Integer) request.getAttribute(CollectorImpl.COUNT_ATTRIBUTE);
         if ( counter == null) {
             counter = (Integer) session.getAttribute(CollectorImpl.COUNT_ATTRIBUTE);

@@ -20,6 +20,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -32,7 +34,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.FormManager;
 import org.apache.cocoon.webapps.session.SessionConstants;
@@ -121,7 +122,7 @@ public final class DefaultFormManager
             throw new ProcessingException("SessionManager.registerInputField: Context not found " + contextName);
         }
         final Request request = ContextHelper.getRequest(this.context);
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             throw new ProcessingException("SessionManager.registerInputField: Session is required for context " + contextName);
         }
@@ -163,7 +164,7 @@ public final class DefaultFormManager
         final Request request = ObjectModelHelper.getRequest( objectModel );
         final String formName = request.getParameter(SessionConstants.SESSION_FORM_PARAMETER);
         if ( null != formName ) {
-            final Session session = request.getSession(false);
+            final HttpSession session = request.getSession(false);
             if (session != null) {
                 synchronized(session) {
                     final Map inputFields = (Map)session.getAttribute(ATTRIBUTE_INPUTXML_STORAGE);

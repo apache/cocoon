@@ -16,17 +16,21 @@
  */
 package org.apache.cocoon.webapps.authentication.generation;
 
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
@@ -36,7 +40,6 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
@@ -47,10 +50,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Map;
 
 /**
  *  This is the authentication Configuration Generator.
@@ -146,7 +145,7 @@ public final class ConfigurationGenerator extends ServiceableGenerator {
         // get some important information
         Request request = ObjectModelHelper.getRequest(this.objectModel);
         Response response = ObjectModelHelper.getResponse(this.objectModel);
-        Session session = request.getSession();
+        HttpSession session = request.getSession();
 
         boolean isAdmin = (src == null || src.equals("admin"));
 

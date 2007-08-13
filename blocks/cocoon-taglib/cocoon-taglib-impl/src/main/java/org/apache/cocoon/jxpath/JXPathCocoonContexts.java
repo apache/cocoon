@@ -44,6 +44,9 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpSession;
+
 /**
  * Component that allocate and cache JXPathContexts bound to VariableContext,
  * Cocoon Request, Cocoon Session and Cocoon Context.
@@ -118,7 +121,7 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
             Context envContext = ObjectModelHelper.getContext(objectModel);
             JXPathContext parentContext = null;
 
-            Session session = request.getSession(false);
+            Session session = (Session) request.getSession(false);
             if (session != null) {
                 parentContext = getSessionContext(session, envContext);
             } else {
@@ -256,7 +259,7 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
             return this.delegate.isSecure();
         }
 
-        public Cookie[] getCookies() {
+        public javax.servlet.http.Cookie[] getCookies() {
             return this.delegate.getCookies();
         }
 
@@ -324,11 +327,11 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
             return this.delegate.getServletPath();
         }
 
-        public Session getSession(boolean create) {
+        public HttpSession getSession(boolean create) {
             return this.delegate.getSession(create);
         }
 
-        public Session getSession() {
+        public HttpSession getSession() {
             return this.delegate.getSession();
         }
 
@@ -373,7 +376,7 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
         /**
          * @see org.apache.cocoon.environment.Request#getInputStream()
          */
-        public InputStream getInputStream() 
+        public ServletInputStream getInputStream() 
         throws IOException, UnsupportedOperationException {
             return this.delegate.getInputStream();
         }
@@ -404,6 +407,22 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
          */
         public Object searchAttribute(String name) {
             return this.delegate.searchAttribute(name);
+        }
+
+        public Map getCocoonCookieMap() {
+            return this.delegate.getCocoonCookieMap();
+        }
+
+        public Cookie[] getCocoonCookies() {
+            return this.delegate.getCocoonCookies();
+        }
+
+        public Session getCocoonSession(boolean create) {
+            return this.delegate.getCocoonSession(create);
+        }
+
+        public Session getCocoonSession() {
+            return this.delegate.getCocoonSession();
         }
     }
 

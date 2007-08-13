@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -48,7 +50,6 @@ import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
@@ -296,7 +297,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         throws Exception {
         Request request = ContextHelper.getRequest(avalonContext);
         Scriptable scope = null;
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
             if (userScopes != null) {
@@ -330,7 +331,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     private Scriptable setSessionScope(Scriptable scope)
         throws Exception {
         Request request = ContextHelper.getRequest(this.avalonContext);
-        Session session = request.getSession(true);
+        HttpSession session = request.getSession(true);
 
         HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
         if (userScopes == null) {

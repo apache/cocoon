@@ -16,6 +16,15 @@
  */
 package org.apache.cocoon.acting;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -23,17 +32,9 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This action is used to authenticate user by comparing several request
@@ -125,7 +126,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
 
             if (rs.next ()) {
                 getLogger ().debug ("DBAUTH: authorized successfully");
-                Session session = null;
+                HttpSession session = null;
 
                 if (cs) {
                     session = req.getSession (false);
@@ -236,7 +237,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
     }
 
     private HashMap propagateParameters (Configuration conf, ResultSet rs,
-            Session session) {
+            HttpSession session) {
         Configuration table = conf.getChild ("table");
         Configuration[] select = table.getChildren ("select");
         String session_param, type;
