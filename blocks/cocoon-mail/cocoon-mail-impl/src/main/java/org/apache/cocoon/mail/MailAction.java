@@ -28,6 +28,7 @@ import javax.mail.Message;
 import javax.mail.Provider;
 import javax.mail.Store;
 import javax.mail.URLName;
+import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
@@ -38,7 +39,6 @@ import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.mail.command.AbstractMailCommand;
 
@@ -100,7 +100,7 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
         String password = request.getParameter("mail-password");
 
         // assert mailContext is available
-        Session session = request.getSession(true);
+        HttpSession session = request.getSession(true);
         MailContext mailContext = (MailContext) session.getAttribute(MailContext.SESSION_MAIL_CONTEXT);
         if (mailContext == null) {
             // no mailContext is yet available

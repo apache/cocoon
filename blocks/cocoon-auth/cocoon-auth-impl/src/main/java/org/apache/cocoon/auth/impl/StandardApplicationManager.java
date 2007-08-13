@@ -33,7 +33,6 @@ import org.apache.cocoon.auth.SecurityHandler;
 import org.apache.cocoon.auth.User;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -118,7 +117,7 @@ public class StandardApplicationManager
         Object appData = null;
         final Map objectModel = this.processInfoProvider.getObjectModel();
         final Request req = ObjectModelHelper.getRequest(objectModel);
-        final Session session = req.getSession(false);
+        final HttpSession session = req.getSession(false);
         if ( session != null ) {
             appData = session.getAttribute(APPLICATION_KEY_PREFIX + appName);
 
@@ -161,7 +160,7 @@ public class StandardApplicationManager
             user = ApplicationUtil.getUser(objectModel);
         } else {
             final Request req = ObjectModelHelper.getRequest(objectModel);
-            Session session = req.getSession(false);
+            HttpSession session = req.getSession(false);
 
             LoginInfo info = null;
             Map loginInfos = null;
@@ -225,7 +224,7 @@ public class StandardApplicationManager
     public void logout(final String appName, final Map logoutContext) {
         final Map objectModel = this.processInfoProvider.getObjectModel();
         final Request req = ObjectModelHelper.getRequest(objectModel);
-        final Session session = req.getSession(false);
+        final HttpSession session = req.getSession(false);
         if ( session != null ) {
             // remove application data from session
             session.removeAttribute(APPLICATION_KEY_PREFIX + appName);

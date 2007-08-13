@@ -133,7 +133,7 @@ public class FOM_Cocoon extends ScriptableObject {
             }
             session = new FOM_Session(
                     getParentScope(),
-                    ObjectModelHelper.getRequest(this.getObjectModel()).getSession(true));
+                    (Session) ObjectModelHelper.getRequest(this.getObjectModel()).getSession(true));
             return session;
         }
 
@@ -627,7 +627,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The session (may be null)
      */
     public Session getSession() {
-        return ObjectModelHelper.getRequest(currentCall.getObjectModel()).getSession(true);
+        return (Session) ObjectModelHelper.getRequest(currentCall.getObjectModel()).getSession(true);
     }
 
     /**

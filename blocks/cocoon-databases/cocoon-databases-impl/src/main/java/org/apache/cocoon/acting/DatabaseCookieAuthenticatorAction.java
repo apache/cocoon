@@ -16,6 +16,15 @@
  */
 package org.apache.cocoon.acting;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -24,17 +33,9 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *  This action is used to authenticate user by comparing several cookie values
@@ -147,7 +148,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("DBCOOKIEAUTH: authorized successfully");
                 }
-                Session session = null;
+                HttpSession session = null;
 
                 if (cs) {
                     session = req.getSession(false);
@@ -299,7 +300,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
         
         Request request = ObjectModelHelper.getRequest(objectModel);
         
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = request.getCocoonCookies();
         if (cookies != null) {
             for(int count = 0; count < cookies.length; count++) {
                 Cookie currentCookie = cookies[count];
@@ -320,7 +321,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
      * @return          Description of the Returned Value
      */
     private HashMap propagateParameters(Configuration conf, ResultSet rs,
-            Session session) {
+            HttpSession session) {
         Configuration table = conf.getChild("table");
         Configuration[] select = table.getChildren("select");
         String session_param;

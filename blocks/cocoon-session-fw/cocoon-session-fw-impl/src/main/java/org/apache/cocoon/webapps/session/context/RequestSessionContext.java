@@ -21,11 +21,12 @@ import java.io.StringReader;
 import java.util.Enumeration;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.transformation.CIncludeTransformer;

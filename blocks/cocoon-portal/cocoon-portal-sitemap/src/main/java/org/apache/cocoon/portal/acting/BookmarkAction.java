@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
@@ -36,7 +38,6 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.acting.helpers.CopletMapping;
 import org.apache.cocoon.portal.acting.helpers.FullScreenMapping;
@@ -211,7 +212,7 @@ public class BookmarkAction
         this.portalService.getPortalManager().process();
 
         final Request request = ObjectModelHelper.getRequest(objectModel);
-        final Session session = request.getSession(false);
+        final HttpSession session = request.getSession(false);
         final List events = new ArrayList();
 
         // is the history invoked?

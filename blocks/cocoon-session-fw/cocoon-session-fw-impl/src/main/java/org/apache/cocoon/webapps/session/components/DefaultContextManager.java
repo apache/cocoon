@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -33,7 +35,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
@@ -86,7 +87,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
     /**
      * Get the session
      */
-    private Session getSession(boolean create) {
+    private HttpSession getSession(boolean create) {
         final Request request = ContextHelper.getRequest( this.context );
         return request.getSession( create );
     }
@@ -94,7 +95,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
     /**
      * Get the list of contexts
      */
-    private Map getSessionContexts(Session session) {
+    private Map getSessionContexts(HttpSession session) {
         Map contexts;
         contexts = (Map)session.getAttribute(SessionContext.class.getName());
         if (contexts == null) {
@@ -190,7 +191,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
         if (name == null) {
             throw new ProcessingException("CreateContext: Name is required");
         }
-        Session session = this.getSession(true);
+        HttpSession session = this.getSession(true);
         if (session == null) {
             throw new ProcessingException("CreateContext: Session is required");
         }
@@ -238,7 +239,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
         if (this.isReservedContextName(name)) {
             throw new ProcessingException("SessionContext with name " + name + " is reserved and cannot be deleted manually.");
         }
-        Session session = this.getSession(false);
+        HttpSession session = this.getSession(false);
         if (session == null) {
             throw new ProcessingException("SessionManager.deleteContext: Session is required");
         }
@@ -271,7 +272,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
         if (this.isReservedContextName(name) ) {
             context = this.getReservedContext(name);
         } else {
-            Session session = this.getSession(false);
+            HttpSession session = this.getSession(false);
             if ( session != null) {
                 synchronized (session) {
                     final Map contexts = this.getSessionContexts( session );
@@ -294,7 +295,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
      */
     public boolean hasSessionContext() 
     throws ProcessingException {
-        Session session = this.getSession(false);
+        HttpSession session = this.getSession(false);
         if (session == null) {
             throw new ProcessingException("SessionManager.hasSessionContext: Session is required.");
         }
@@ -311,7 +312,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
      */
     public boolean existsContext(String name) 
     throws ProcessingException {
-        Session session = this.getSession(false);
+        HttpSession session = this.getSession(false);
         if (session == null) {
             throw new ProcessingException("SessionManager.existsContext: Session is required.");
         }

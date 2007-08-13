@@ -21,6 +21,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.acting.ServiceableAction;
@@ -41,7 +43,7 @@ public class TagtestAction extends ServiceableAction implements ThreadSafe {
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters par)
             throws Exception {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Session session = request.getSession();
+        HttpSession session = request.getSession();
         Enumeration locales = request.getLocales();
         List info = new ArrayList();
 

@@ -16,20 +16,20 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * The <code>Request</code> object helper
@@ -502,7 +502,7 @@ public class XSPRequestHelper {
     public static Object getSessionAttribute(Map objectModel, String name,
                                              Object defaultValue ) {
 
-        Session session = ObjectModelHelper.getRequest(objectModel).getSession();
+        HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession();
         Object obj = session.getAttribute(name);
         return (obj != null ? obj : defaultValue );
     }

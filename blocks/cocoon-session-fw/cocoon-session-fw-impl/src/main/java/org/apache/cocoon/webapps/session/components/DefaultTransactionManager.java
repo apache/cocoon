@@ -19,6 +19,8 @@ package org.apache.cocoon.webapps.session.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -27,7 +29,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.TransactionManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 
@@ -48,7 +49,7 @@ public final class DefaultTransactionManager
      */
     private TransactionState getSessionContextsTransactionState(SessionContext context) {
         final Request request = ContextHelper.getRequest(this.context);
-        final Session session = request.getSession(true);
+        final HttpSession session = request.getSession(true);
         Map transactionStates = (Map)session.getAttribute(this.getClass().getName());
         if (transactionStates == null) {
             transactionStates = new HashMap(5, 3);

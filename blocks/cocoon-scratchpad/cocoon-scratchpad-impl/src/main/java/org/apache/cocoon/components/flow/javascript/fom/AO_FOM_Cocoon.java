@@ -373,7 +373,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         }
         
         public FOM_Cookie[] jsFunction_getCookies() {
-            Cookie[] cookies = request.getCookies();
+            Cookie[] cookies = request.getCocoonCookies();
             FOM_Cookie[] FOM_cookies = new FOM_Cookie[cookies.length];
             for (int i = 0 ; i < cookies.length ; ++i) {
                 FOM_cookies[i] = new FOM_Cookie(cookies[i]);

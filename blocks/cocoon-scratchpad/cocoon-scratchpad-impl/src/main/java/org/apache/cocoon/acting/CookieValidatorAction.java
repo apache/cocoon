@@ -62,7 +62,7 @@ public class CookieValidatorAction extends AbstractValidatorAction {
         
         Request request = ObjectModelHelper.getRequest(objectModel);
         
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = request.getCocoonCookies();
         if (cookies != null) {
             for(int count = 0; count < cookies.length; count++) {
                 Cookie currentCookie = cookies[count];

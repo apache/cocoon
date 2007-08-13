@@ -16,17 +16,20 @@
  */
 package org.apache.cocoon.acting;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
-
 import org.apache.xpath.XPathAPI;
 import org.apache.xpath.objects.XObject;
 import org.w3c.dom.Node;
@@ -38,10 +41,6 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This action is used to authenticate user by comparing several request
@@ -135,7 +134,7 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
         if (rs != null )
         {
           getLogger ().debug ("DBXMLAUTH: authorized successfully");
-          Session session = null;
+          HttpSession session = null;
 
           if (cs) {
             session = req.getSession (false);
@@ -315,7 +314,7 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
     return col;
   }
 
-  private HashMap propagateParameters (Configuration conf,  ResourceSet resultSet, Session session) {
+  private HashMap propagateParameters (Configuration conf,  ResourceSet resultSet, HttpSession session) {
 
       Configuration table = conf.getChild ("root");
       Configuration[] select = table.getChildren ("select");

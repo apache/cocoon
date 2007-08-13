@@ -16,19 +16,24 @@
  */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
-
 import org.apache.excalibur.source.Source;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
@@ -39,12 +44,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Castor transformer marshals a object from the Sitemap, Session, Request or
@@ -331,7 +330,7 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
                 bean = request.getAttribute(name);
             }
             if (bean == null) {
-                Session session = request.getSession(false);
+                HttpSession session = request.getSession(false);
                 if (session != null) {
                     bean = session.getAttribute(name);
                 }
@@ -347,7 +346,7 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
         } else if (SCOPE_REQUEST.equals(scope)) {
             bean = request.getAttribute(name);
         } if (SCOPE_SESSION.equals(scope)) {
-            Session session = request.getSession(false);
+            HttpSession session = request.getSession(false);
             if (session != null) {
                 bean = session.getAttribute(name);
             }

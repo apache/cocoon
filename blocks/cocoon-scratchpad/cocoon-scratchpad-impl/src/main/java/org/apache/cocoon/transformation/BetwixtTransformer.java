@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -28,7 +30,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.SAXBeanWriter;
@@ -161,7 +162,7 @@ public class BetwixtTransformer
             }
             if ((scope == null && bean == null)
                 || SCOPE_SESSION.equals(scope)) {
-                final Session session =
+                final HttpSession session =
                     ObjectModelHelper.getRequest(objectModel).getSession(false);
                 if (session != null) {
                     bean = session.getAttribute(name);

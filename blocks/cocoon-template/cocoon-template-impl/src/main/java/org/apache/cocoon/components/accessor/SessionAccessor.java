@@ -16,9 +16,10 @@
  */
 package org.apache.cocoon.components.accessor;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 
 /**
  * @version $Id$
@@ -30,7 +31,7 @@ public class SessionAccessor extends ObjectModelAccessor {
      */
     public Object getObject() {
         Request request = ObjectModelHelper.getRequest(getObjectModel());
-        Session session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         return session;
     }
 }

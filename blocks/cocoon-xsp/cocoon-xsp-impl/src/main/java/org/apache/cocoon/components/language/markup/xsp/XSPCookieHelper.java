@@ -79,7 +79,7 @@ public class XSPCookieHelper extends XSPObjectHelper {
                                     String secure, int version)
     {
         Response response = ObjectModelHelper.getResponse(objectModel);
-        Cookie cookieToSet = response.createCookie(name,value);
+        Cookie cookieToSet = response.createCocoonCookie(name,value);
 
         if ((comment.trim()).length() > 0)
             cookieToSet.setComment(comment);
@@ -112,7 +112,7 @@ public class XSPCookieHelper extends XSPObjectHelper {
     public static Cookie[] getCookies(Map objectModel)
     {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        return request.getCookies();
+        return request.getCocoonCookies();
     }
 
     /**
@@ -145,7 +145,7 @@ public class XSPCookieHelper extends XSPObjectHelper {
         throws SAXException
     {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = request.getCocoonCookies();
 
         if(cookies != null && cookies.length > 0)
         {
@@ -230,7 +230,7 @@ public class XSPCookieHelper extends XSPObjectHelper {
             retrieveByIndex =  true;
         }
 
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = request.getCocoonCookies();
         if (cookies != null && retrieveByName) {
             for(count = 0; count < cookies.length; count++) {
                 currentCookie = cookies[count];

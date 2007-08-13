@@ -16,7 +16,13 @@
  */
 package org.apache.cocoon.components.xscript;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -25,16 +31,10 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.ContextException;
-
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.Constants;
-
-import java.util.Map;
+import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 
 /**
  * The actual implementation of the <code>XScriptManager</code> interface.
@@ -210,7 +210,7 @@ public class XScriptManagerImpl
                 }
             }
         } else if (scope == XScriptManager.SESSION_SCOPE) {
-            Session session = ObjectModelHelper.getRequest(objectModel).getSession();
+            HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession();
             synchronized (session) {
                 s = (XScriptVariableScope) session.getAttribute(CONTEXT);
                 if (s == null) {

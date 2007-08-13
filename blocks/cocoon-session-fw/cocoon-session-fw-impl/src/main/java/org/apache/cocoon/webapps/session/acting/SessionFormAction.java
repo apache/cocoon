@@ -16,16 +16,16 @@
  */
 package org.apache.cocoon.webapps.session.acting;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.acting.FormValidatorAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.session.SessionConstants;
-
-import java.util.Map;
 
 /**
  * This is the action used to validate Request parameters.
@@ -104,7 +104,7 @@ public class SessionFormAction extends FormValidatorAction {
         Map objectModel,
         Parameters parameters) {
 
-        Session session = ObjectModelHelper.getRequest(objectModel).getSession(true);
+        HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession(true);
         return (Configuration) session.getAttribute(
             ObjectModelHelper.getRequest(objectModel).getParameter(
                 SessionConstants.SESSION_FORM_PARAMETER));
