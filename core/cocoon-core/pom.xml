@@ -232,6 +232,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-sitemap-impl</artifactId>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
+    <dependency>
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
       <scope>test</scope>
