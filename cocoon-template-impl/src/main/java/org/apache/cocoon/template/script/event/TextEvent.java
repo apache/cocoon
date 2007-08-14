@@ -39,7 +39,7 @@ public class TextEvent extends Event {
         super(location);
         this.raw = new char[length];
         System.arraycopy(chars, start, this.raw, 0, length);
-        this.substitutions = new Substitutions(parsingContext, getLocation(), chars, start, length);
+        this.substitutions = new Substitutions(parsingContext.getStringTemplateParser(), getLocation(), chars, start, length);
     }
 
     final Substitutions substitutions;

@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.cocoon.objectmodel.ObjectModel;
-import org.apache.cocoon.template.environment.ErrorHolder;
-import org.apache.cocoon.template.environment.ParsingContext;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -37,17 +35,17 @@ public class Substitutions {
     final private List substitutions;
     final private boolean hasSubstitutions;
 
-    public Substitutions(ParsingContext parsingContext, Locator location, String stringTemplate) throws SAXException {
-        this(parsingContext, location, new StringReader(stringTemplate));
+    public Substitutions(StringTemplateParser stringTemplateParser, Locator location, String stringTemplate) throws SAXException {
+        this(stringTemplateParser, location, new StringReader(stringTemplate));
     }
 
-    public Substitutions(ParsingContext parsingContext, Locator location, char[] chars, int start, int length)
+    public Substitutions(StringTemplateParser stringTemplateParser, Locator location, char[] chars, int start, int length)
             throws SAXException {
-        this(parsingContext, location, new CharArrayReader(chars, start, length));
+        this(stringTemplateParser, location, new CharArrayReader(chars, start, length));
     }
 
-    private Substitutions(ParsingContext parsingContext, Locator location, Reader in) throws SAXException {
-        this.substitutions = parsingContext.getStringTemplateParser().parseSubstitutions( in, "", location );
+    private Substitutions(StringTemplateParser stringTemplateParser, Locator location, Reader in) throws SAXException {
+        this.substitutions = stringTemplateParser.parseSubstitutions( in, "", location );
         this.hasSubstitutions = !substitutions.isEmpty();
     }
 
@@ -82,8 +80,9 @@ public class Substitutions {
                     val = expr.getValue(objectModel);
                 } catch (Exception e) {
                     throw new SAXParseException(e.getMessage(), location, e);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(), location, new ErrorHolder(err));
+                //FIXME: Don't catch java.lang.Error
+                //} catch (Error err) {
+                //    throw new SAXParseException(err.getMessage(), location, new ErrorHolder(err));
                 }
                 buf.append(val != null ? val.toString() : "");
             }
