@@ -37,6 +37,7 @@ public final class VariableExpressionTokenizer {
         int TEXT = -5;
         int MODULE = -6;
         int VARIABLE = -8;
+        int NEW_EXPRESSION = -12;
 
         /**
          * Reports parsed tokens.
@@ -68,11 +69,31 @@ public final class VariableExpressionTokenizer {
                 escape = false;
             } else if (c == '\\' && i < expression.length()) {
                 char nextChar = expression.charAt(i + 1);
-                if (nextChar == '{' || nextChar == '}') {
+                if (nextChar == '{' || nextChar == '}' || nextChar == '$') {
                     expression = expression.substring(0, i) + expression.substring(i + 1);
                     escape = true;
                     i--;
                 }
+            } else if (c == '$') {
+                if (expression.charAt(i+1) != '{')
+                    //it's not an expression like ${cocoon.request}, skipping
+                    continue;
+                
+                if (i > pos) {
+                    reciever.addToken(lastTokenType = TokenReciever.TEXT, expression.substring(pos, i));
+                }
+                
+                i++;
+                openCount++;
+                reciever.addToken(lastTokenType = TokenReciever.OPEN, null);
+                
+                int closePos = indexOf(expression, '}', i);
+
+                //expression conforming cocoon-expression-language
+                String newExpression = expression.substring(i+1, closePos);
+                reciever.addToken(lastTokenType = TokenReciever.NEW_EXPRESSION, newExpression);
+                i = closePos - 1;
+                
             } else if (c == '{') {
                 if (i > pos) {
                     reciever.addToken(lastTokenType = TokenReciever.TEXT, expression.substring(pos, i));

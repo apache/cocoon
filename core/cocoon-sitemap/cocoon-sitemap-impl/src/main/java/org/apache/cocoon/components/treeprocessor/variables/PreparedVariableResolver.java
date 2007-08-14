@@ -16,21 +16,24 @@
  */
 package org.apache.cocoon.components.treeprocessor.variables;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.sitemap.PatternException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.expression.Expression;
+import org.apache.cocoon.components.expression.ExpressionException;
+import org.apache.cocoon.components.expression.ExpressionFactory;
+import org.apache.cocoon.components.modules.input.InputModule;
+import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.sitemap.PatternException;
 
 /**
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
@@ -78,6 +81,9 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                         break;
                     case VariableExpressionTokenizer.TokenReciever.TEXT:
                         tokens.add(new Token(value));
+                        break;
+                    case VariableExpressionTokenizer.TokenReciever.NEW_EXPRESSION:
+                        tokens.add(new Token(NEW_EXPRESSION, value));
                         break;
                     case VariableExpressionTokenizer.TokenReciever.MODULE:
                         Token token;
@@ -184,6 +190,23 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                         Token module = (Token)stack.pop();
                         stack.pop(); // Pop the OPEN
                         result = processModule(module, expr, objectModel, context, mapStack, stackSize);
+                    } else if (lastButOne.hasType(VariableExpressionTokenizer.TokenReciever.NEW_EXPRESSION)) {
+                        stack.pop(); // Pop the OPEN
+                        ExpressionFactory expressionFactory = null;
+                        ObjectModel newObjectModel = null;
+                        try {
+                            expressionFactory = (ExpressionFactory)manager.lookup(ExpressionFactory.ROLE);
+                            newObjectModel = (ObjectModel)manager.lookup(ObjectModel.ROLE);
+                            result = processNewExpression(lastButOne, expressionFactory, newObjectModel);
+                        } catch (ServiceException e) {
+                            throw new PatternException("Cannot obtain necessary components to evaluate new expression '"
+                                    + lastButOne.getStringValue() + "' in expression '" + this.originalExpr + "'", e);
+                        } finally {
+                            if (expressionFactory != null)
+                                manager.release(expressionFactory);
+                            if (newObjectModel != null)
+                                manager.release(newObjectModel);
+                        }
                     } else {
                         result = processVariable(expr, mapStack, stackSize);
                     }
@@ -297,6 +320,18 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
         Object result = ((Map)mapStack.get(stackSize - type)).get(value);
         return new Token(EXPR, result==null ? "" : result.toString());
+    }
+    
+    private Token processNewExpression(Token expr, ExpressionFactory expressionFactory, ObjectModel newObjectModel) throws PatternException {
+        Object result;
+        try {
+            Expression newExpression = expressionFactory.getExpression(expr.getStringValue());
+            result = newExpression.evaluate(newObjectModel);
+        } catch (ExpressionException e) {
+            throw new PatternException("Cannot evaluate new expression '" + expr.getStringValue() + "' in expression "
+                                       + "'" + this.originalExpr + "'", e);
+        }
+        return new Token(EXPR, result == null ? "" : result.toString());
     }
 
     /**
