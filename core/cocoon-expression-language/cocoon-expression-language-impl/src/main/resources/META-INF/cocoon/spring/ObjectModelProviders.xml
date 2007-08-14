@@ -15,17 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: $ -->
+<!-- SVN $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-
-    <!-- ObjectModelEntry provider for 'cocoon' -->
-    <bean name="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider"
-          class="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider">
-        <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
-        <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
-    </bean>
     
     <!-- ObjectModelEntry provider for 'Packages' -->
     <bean name="org.apache.cocoon.objectmodel.provider.PackagesEntryObjectModelProvider"
