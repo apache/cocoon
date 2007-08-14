@@ -281,6 +281,7 @@
      <default-locale language="en" country="US"/>
          +-->
    </map:action>
+   <map:action logger="sitemap.action.log" name="log" src="org.apache.cocoon.acting.LogAction"/>
  </map:actions>
 
 
