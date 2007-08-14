@@ -220,6 +220,20 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         assertEquals("", resolver.resolve(context, getObjectModel()));
     }
     
+    public void testNewExpression() throws PatternException {
+        String expr = "${$cocoon/request/parameters/foo}";
+        InvokeContext context = new InvokeContext(true);
+        context.enableLogging(getLogger());
+        MockRequest request = getRequest();
+        request.addParameter("foo", "bar");
+        
+        Map sitemapElements = new HashMap();
+        context.pushMap("sitemap", sitemapElements);
+        
+        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        assertEquals("bar", resolver.resolve(context, getObjectModel()));
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.CocoonTestCase#addSourceFactories()
      */
