@@ -149,6 +149,11 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-thread-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-expression-language-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!--  excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components</groupId>
