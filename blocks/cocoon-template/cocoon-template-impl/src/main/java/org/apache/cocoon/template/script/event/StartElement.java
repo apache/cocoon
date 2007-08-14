@@ -50,7 +50,7 @@ public class StartElement extends Event {
             String qname = attrs.getQName(i);
             String type = attrs.getType(i);
             String value = attrs.getValue(i);
-            Substitutions substitutions = new Substitutions(parsingContext, getLocation(), value);
+            Substitutions substitutions = new Substitutions(parsingContext.getStringTemplateParser(), getLocation(), value);
             if (substitutions.hasSubstitutions()) {
                 getAttributeEvents().add(
                         new SubstituteAttribute(uri, local, qname, type,

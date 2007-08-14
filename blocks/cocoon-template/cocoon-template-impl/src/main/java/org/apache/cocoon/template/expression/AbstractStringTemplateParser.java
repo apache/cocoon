@@ -27,7 +27,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.expression.ExpressionFactory;
-import org.apache.cocoon.template.environment.ErrorHolder;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -111,8 +110,9 @@ public abstract class AbstractStringTemplateParser
             return parseSubstitutions(in);
         } catch (Exception exc) {
             throw new SAXParseException(errorPrefix + exc.getMessage(), location, exc);
-        } catch (Error err) {
-            throw new SAXParseException(errorPrefix + err.getMessage(), location, new ErrorHolder(err));
+        //FIXME: Don't catch java.lang.Error
+        //} catch (Error err) {
+        //    throw new SAXParseException(errorPrefix + err.getMessage(), location, new ErrorHolder(err));
         }
     }
 }
