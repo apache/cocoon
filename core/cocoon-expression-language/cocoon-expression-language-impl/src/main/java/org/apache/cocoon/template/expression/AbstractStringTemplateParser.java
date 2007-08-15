@@ -20,42 +20,14 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.expression.ExpressionFactory;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public abstract class AbstractStringTemplateParser
-    extends AbstractLogEnabled
-    implements Serviceable, Disposable, ThreadSafe, StringTemplateParser {
+public abstract class AbstractStringTemplateParser implements StringTemplateParser {
 
-    private ServiceManager manager;
     private ExpressionFactory expressionFactory;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.expressionFactory = (ExpressionFactory) this.manager.lookup(ExpressionFactory.ROLE);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.expressionFactory);
-            this.manager = null;
-            this.expressionFactory = null;
-        }
-    }
 
     protected Subst compile(final String expression) throws Exception {
         return new JXTExpression(expression, this.expressionFactory.getExpression(expression));
@@ -114,5 +86,13 @@ public abstract class AbstractStringTemplateParser
         //} catch (Error err) {
         //    throw new SAXParseException(errorPrefix + err.getMessage(), location, new ErrorHolder(err));
         }
+    }
+
+    public ExpressionFactory getExpressionFactory() {
+        return expressionFactory;
+    }
+
+    public void setExpressionFactory(ExpressionFactory expressionFactory) {
+        this.expressionFactory = expressionFactory;
     }
 }
