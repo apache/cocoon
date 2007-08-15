@@ -27,8 +27,8 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.StringTemplateParser;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.xml.NamespacesTable;
@@ -43,18 +43,18 @@ import org.xml.sax.SAXParseException;
  * @version SVN $Id$
  */
 public class FormatNumber extends LocaleAwareInstruction {
-    private JXTExpression value;
-    private JXTExpression type;
-    private JXTExpression pattern;
-    private JXTExpression currencyCode;
-    private JXTExpression currencySymbol;
-    private JXTExpression isGroupingUsed;
-    private JXTExpression maxIntegerDigits;
-    private JXTExpression minIntegerDigits;
-    private JXTExpression maxFractionDigits;
-    private JXTExpression minFractionDigits;
+    private Subst value;
+    private Subst type;
+    private Subst pattern;
+    private Subst currencyCode;
+    private Subst currencySymbol;
+    private Subst isGroupingUsed;
+    private Subst maxIntegerDigits;
+    private Subst minIntegerDigits;
+    private Subst maxFractionDigits;
+    private Subst minFractionDigits;
 
-    private JXTExpression var;
+    private Subst var;
 
     private static Class currencyClass;
     private static final String NUMBER = "number";

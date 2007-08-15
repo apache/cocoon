@@ -22,7 +22,6 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.Literal;
 import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.instruction.MacroContext;
@@ -54,7 +53,7 @@ public class Characters extends TextEvent {
                 chars = ((Literal) subst).getCharArray();
                 consumer.characters(chars, 0, chars.length);
             } else {
-                JXTExpression expr = (JXTExpression) subst;
+                Subst expr = (Subst) subst;
                 try {
                     Object val = expr.getNode(objectModel);
                     Invoker.executeNode(consumer, val);

@@ -21,7 +21,7 @@ import java.util.Stack;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
@@ -39,8 +39,8 @@ import org.xml.sax.SAXParseException;
  */
 public class Set extends Instruction {
 
-    private final JXTExpression var;
-    private final JXTExpression value;
+    private final Subst var;
+    private final Subst value;
 
     public Set(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack)
         throws SAXException {
@@ -50,8 +50,8 @@ public class Set extends Instruction {
         Locator locator = getLocation();
         String var = attrs.getValue("var");
         String value = attrs.getValue("value");
-        JXTExpression varExpr = null;
-        JXTExpression valueExpr = null;
+        Subst varExpr = null;
+        Subst valueExpr = null;
         if (var != null) {
             varExpr = parsingContext.getStringTemplateParser().compileExpr(var, "set: \"var\":", locator);
         }

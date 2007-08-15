@@ -22,7 +22,7 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXParseException;
  * @version SVN $Id$
  */
 public class Eval extends Instruction {
-    private final JXTExpression value;
+    private final Subst value;
 
     public Eval(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack)
         throws SAXException {

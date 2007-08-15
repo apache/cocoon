@@ -26,8 +26,8 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.StringTemplateParser;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.xml.NamespacesTable;
@@ -45,13 +45,13 @@ public class FormatDate extends LocaleAwareInstruction {
     private static final String TIME = "time";
     private static final String DATETIME = "both";
 
-    private JXTExpression var;
-    private JXTExpression value;
-    private JXTExpression type;
-    private JXTExpression pattern;
-    private JXTExpression timeZone;
-    private JXTExpression dateStyle;
-    private JXTExpression timeStyle;
+    private Subst var;
+    private Subst value;
+    private Subst type;
+    private Subst pattern;
+    private Subst timeZone;
+    private Subst dateStyle;
+    private Subst timeStyle;
     public FormatDate(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack) 
         throws SAXException{
         super(parsingContext, raw, attrs, stack);
