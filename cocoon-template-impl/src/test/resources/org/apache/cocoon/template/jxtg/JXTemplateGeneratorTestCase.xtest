@@ -19,7 +19,6 @@
     <roles>
         <role name="org.apache.cocoon.generation.GeneratorSelector" shorthand="generators" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
         <role name="org.apache.excalibur.store.Store/TransientStore" shorthand="store" default-class="org.apache.excalibur.store.impl.MemoryStore"/>
-        <role name="org.apache.cocoon.template.expression.StringTemplateParserSelector" shorthand="string-template-parsers" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
     </roles>
     <components>
         <generators logger="test">
@@ -27,9 +26,5 @@
         </generators>
         <component role="org.apache.cocoon.template.script.ScriptManager" class="org.apache.cocoon.template.script.DefaultScriptManager"/>
         <component role="org.apache.cocoon.template.script.InstructionFactory" class="org.apache.cocoon.template.script.DefaultInstructionFactory"/>
-        <string-template-parsers>
-        	<component-instance class="org.apache.cocoon.template.expression.JXTGStringTemplateParser" name="jxtg"/>
-        	<component-instance class="org.apache.cocoon.template.expression.DefaultStringTemplateParser" name="default"/>
-        </string-template-parsers>
     </components>
 </testcase>
