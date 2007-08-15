@@ -57,18 +57,18 @@ public abstract class AbstractStringTemplateParser
         }
     }
 
-    protected JXTExpression compile(final String expression) throws Exception {
+    protected Subst compile(final String expression) throws Exception {
         return new JXTExpression(expression, this.expressionFactory.getExpression(expression));
     }
 
-    protected JXTExpression compile(final String expression, String language) throws Exception {
+    protected Subst compile(final String expression, String language) throws Exception {
         return new JXTExpression(expression, this.expressionFactory.getExpression(language, expression));
     }
 
     /**
      * @see org.apache.cocoon.template.expression.StringTemplateParser#compileBoolean(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
-    public JXTExpression compileBoolean(String val, String msg, Locator location) throws SAXException {
+    public Subst compileBoolean(String val, String msg, Locator location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null && res.getCompiledExpression() == null && res.getRaw() != null) {
             res.setCompiledExpression(Boolean.valueOf(res.getRaw()));
@@ -79,7 +79,7 @@ public abstract class AbstractStringTemplateParser
     /**
      * @see org.apache.cocoon.template.expression.StringTemplateParser#compileInt(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
-    public JXTExpression compileInt(String val, String msg, Locator location) throws SAXException {
+    public Subst compileInt(String val, String msg, Locator location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null && res.getCompiledExpression() == null && res.getRaw() != null) {
             res.setCompiledExpression(Integer.valueOf(res.getRaw()));

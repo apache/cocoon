@@ -34,13 +34,13 @@ public interface StringTemplateParser {
      * Compile a boolean expression (returns either a Compiled Expression or a
      * Boolean literal)
      */
-    JXTExpression compileBoolean(String val, String msg, Locator location) throws SAXException;
+    Subst compileBoolean(String val, String msg, Locator location) throws SAXException;
 
     /**
      * Compile an integer expression (returns either a Compiled Expression or an
      * Integer literal)
      */
-    JXTExpression compileInt(String val, String msg, Locator location) throws SAXException;
+    Subst compileInt(String val, String msg, Locator location) throws SAXException;
 
     JXTExpression compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException;
 

@@ -22,7 +22,7 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.xml.NamespacesTable;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXParseException;
  * @version SVN $Id$
  */
 public class If extends Instruction {
-    private final JXTExpression test;
+    private final Subst test;
 
     public If(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack) 
         throws SAXException {

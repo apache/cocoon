@@ -23,8 +23,8 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.StringTemplateParser;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
@@ -40,12 +40,12 @@ import org.xml.sax.SAXParseException;
  */
 public class ForEach extends Instruction {
 
-    private final JXTExpression items;
-    private final JXTExpression var;
-    private final JXTExpression varStatus;
-    private final JXTExpression begin;
-    private final JXTExpression end;
-    private final JXTExpression step;
+    private final Subst items;
+    private final Subst var;
+    private final Subst varStatus;
+    private final Subst begin;
+    private final Subst end;
+    private final Subst step;
 
     public ForEach(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack)
         throws SAXException {
@@ -88,7 +88,7 @@ public class ForEach extends Instruction {
         try {
             iter = (this.items != null ) 
                     ? this.items.getIterator(objectModel)
-                    : JXTExpression.NULL_ITER;
+                    : Subst.NULL_ITER;
             begin = this.begin == null
                 ? 0
                 : this.begin.getIntValue(objectModel);

@@ -25,10 +25,10 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 /**
  * @version $Id$
  */
-public class JXTExpression extends Subst {
+public class JXTExpression implements Subst {
 
     private String raw;
-    private Object compiledExpression;
+    Object compiledExpression;
 
     public JXTExpression(String raw, Object expr) {
         this.raw = raw;
@@ -144,32 +144,4 @@ public class JXTExpression extends Subst {
             //TODO: hack! bases on particular expression implementation.
             ((Expression)this.compiledExpression).setProperty(JXPathExpression.LENIENT, lenient);
     }
-
-    public static final Iterator EMPTY_ITER = new Iterator() {
-        public boolean hasNext() {
-            return false;
-        }
-
-        public Object next() {
-            return null;
-        }
-
-        public void remove() {
-            // EMPTY
-        }
-    };
-
-    static public final Iterator NULL_ITER = new Iterator() {
-        public boolean hasNext() {
-            return true;
-        }
-
-        public Object next() {
-            return null;
-        }
-
-        public void remove() {
-            // EMPTY
-        }
-    };
 }

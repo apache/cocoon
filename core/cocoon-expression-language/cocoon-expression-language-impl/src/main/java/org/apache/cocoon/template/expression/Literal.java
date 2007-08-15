@@ -16,6 +16,10 @@
  */
 package org.apache.cocoon.template.expression;
 
+import java.util.Iterator;
+
+import org.apache.cocoon.objectmodel.ObjectModel;
+
 /*
   From efficiency reasons it might be better to split this class in
   two, one that represent attribute content that are strings and one
@@ -27,7 +31,7 @@ package org.apache.cocoon.template.expression;
 /**
  * @version $Id$
  */
-public class Literal extends Subst {
+public class Literal implements Subst {
     public Literal(String val) {
         this.value = val.toCharArray();
     }
@@ -38,6 +42,41 @@ public class Literal extends Subst {
 
     public char[] getCharArray() {
         return value;
+    }
+
+    public void setLenient(Boolean lenient) {
+    }
+
+    public Object getValue(ObjectModel objectModel) throws Exception {
+        return null;
+    }
+
+    public int getIntValue(ObjectModel objectModel) throws Exception {
+        return 0;
+    }
+
+    public Number getNumberValue(ObjectModel objectModel) throws Exception {
+        return null;
+    }
+
+    public String getStringValue(ObjectModel objectModel) throws Exception {
+        return null;
+    }
+
+    public Boolean getBooleanValue(ObjectModel objectModel) throws Exception {
+        return null;
+    }
+
+    public Iterator getIterator(ObjectModel objectModel) throws Exception {
+        return null;
+    }
+
+    public Object getNode(ObjectModel objectModel) throws Exception {
+        return null;
+    }
+
+    public Object getCompiledExpression() {
+        return null;
     }
 
     private final char[] value;

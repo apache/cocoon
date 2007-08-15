@@ -47,7 +47,7 @@ import org.xml.sax.SAXParseException;
 public class Import extends Instruction {
 
     private final AttributeEvent uri;
-    private final JXTExpression select;
+    private final Subst select;
 
     public Import(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack)
         throws SAXException {
@@ -58,7 +58,7 @@ public class Import extends Instruction {
         Locator locator = getLocation();
         Iterator iter = raw.getAttributeEvents().iterator();
         AttributeEvent uri = null;
-        JXTExpression select = null;
+        Subst select = null;
         while (iter.hasNext()) {
             AttributeEvent e = (AttributeEvent) iter.next();
             if (e.getLocalName().equals("uri")) {
@@ -99,7 +99,7 @@ public class Import extends Instruction {
                     Literal lit = (Literal) subst;
                     buf.append(lit.getValue());
                 } else if (subst instanceof JXTExpression) {
-                    JXTExpression expr = (JXTExpression) subst;
+                    Subst expr = (Subst) subst;
                     Object val;
                     try {
                         val = expr.getValue(objectModel);

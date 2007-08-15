@@ -22,7 +22,7 @@ import java.util.Stack;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.environment.ValueHelper;
-import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * @version SVN $Id$
  */
 public class LocaleAwareInstruction extends Instruction {
-    private JXTExpression locale;
+    private Subst locale;
 
     public LocaleAwareInstruction(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack) throws SAXException {
         super(raw);

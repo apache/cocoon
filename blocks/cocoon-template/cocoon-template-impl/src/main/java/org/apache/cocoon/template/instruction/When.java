@@ -19,7 +19,7 @@ package org.apache.cocoon.template.instruction;
 import java.util.Stack;
 
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXParseException;
  * @version SVN $Id$
  */
 public class When extends Instruction {
-    private final JXTExpression test;
+    private final Subst test;
     private When nextChoice;
 
     public When(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack) 
@@ -64,7 +64,7 @@ public class When extends Instruction {
         }
     }
 
-    public JXTExpression getTest() {
+    public Subst getTest() {
         return test;
     }
 

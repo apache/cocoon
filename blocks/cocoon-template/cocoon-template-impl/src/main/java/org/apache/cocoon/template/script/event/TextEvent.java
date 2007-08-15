@@ -22,8 +22,8 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
 import org.apache.cocoon.template.expression.Literal;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.expression.Substitutions;
 import org.apache.commons.lang.ArrayUtils;
 import org.xml.sax.Locator;
@@ -68,7 +68,7 @@ public class TextEvent extends Event {
             if (subst instanceof Literal) {
                 chars = ((Literal) subst).getCharArray();
             } else {
-                JXTExpression expr = (JXTExpression) subst;
+                Subst expr = (Subst) subst;
                 try {
                     Object val = expr.getValue(objectModel);
                     chars = val != null ? val.toString().toCharArray()

@@ -16,9 +16,58 @@
  */
 package org.apache.cocoon.template.expression;
 
+import java.util.Iterator;
+
+import org.apache.cocoon.objectmodel.ObjectModel;
+
 /**
  * @version $Id$
  */
-public class Subst {
+public interface Subst {
+
+    public Object getCompiledExpression();
+
+    public Object getNode(ObjectModel objectModel) throws Exception;
+
+    public Iterator getIterator(ObjectModel objectModel) throws Exception;
+
+    public Boolean getBooleanValue(ObjectModel objectModel) throws Exception;
+
+    public String getStringValue(ObjectModel objectModel) throws Exception;
+
+    public Number getNumberValue(ObjectModel objectModel) throws Exception;
+
+    public int getIntValue(ObjectModel objectModel) throws Exception;
+
+    public Object getValue(ObjectModel objectModel) throws Exception;
+
+    public void setLenient(Boolean lenient);
+
+    public static final Iterator EMPTY_ITER = new Iterator() {
+            public boolean hasNext() {
+                return false;
+            }
+    
+            public Object next() {
+                return null;
+            }
+    
+            public void remove() {
+                // EMPTY
+            }
+        };
+    public static final Iterator NULL_ITER = new Iterator() {
+            public boolean hasNext() {
+                return true;
+            }
+    
+            public Object next() {
+                return null;
+            }
+    
+            public void remove() {
+                // EMPTY
+            }
+        };
     // VOID
 }
