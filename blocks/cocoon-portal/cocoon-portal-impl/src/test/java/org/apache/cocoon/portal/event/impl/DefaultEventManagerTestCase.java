@@ -16,19 +16,16 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
-import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
-import org.apache.cocoon.portal.AbstractPortalTestCase;
+import junit.framework.TestCase;
+
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
 
 /**
  * $Id$
  */
-public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
+public class DefaultEventManagerTestCase extends TestCase {
 
     protected DefaultEventManager eventManager;
 
@@ -37,20 +34,7 @@ public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        this.eventManager = (DefaultEventManager)this.getBeanFactory().getBean(EventManager.class.getName());
-    }
-
-    /**
-     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo)
-     */
-    protected void addComponents(ConfigurationInfo info) throws Exception {
-        super.addComponents(info);
-        // Add event manager
-        final ComponentInfo component = new ComponentInfo();
-        component.setComponentClassName(DefaultEventManager.class.getName());
-        component.setRole(EventManager.class.getName());
-        component.setConfiguration(new DefaultConfiguration("-"));
-        info.addComponent(component);
+        this.eventManager = new DefaultEventManager();
     }
 
     public void testEventReceiver() throws Exception {
