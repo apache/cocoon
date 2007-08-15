@@ -82,5 +82,13 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
+    <!-- FIXME: This dependency is transitive and should be obtained automatically
+                see http://jira.codehaus.org/browse/MNG-1378 -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-sitemap-impl</artifactId>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
   </dependencies>
 </project>
