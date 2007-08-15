@@ -33,7 +33,7 @@ import org.apache.cocoon.objectmodel.helper.ParametersMap;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.JXCacheKey;
 import org.apache.cocoon.template.environment.JXSourceValidity;
-import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.ScriptManager;
 import org.apache.cocoon.template.script.event.Event;
@@ -159,7 +159,7 @@ public class JXTemplateGenerator
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
     public Serializable getKey() {
-        JXTExpression cacheKeyExpr = (JXTExpression) this.startDocument
+        Subst cacheKeyExpr = (Subst) this.startDocument
                 .getTemplateProperty(JXTemplateGenerator.CACHE_KEY);
         if (cacheKeyExpr == null) {
             return null;
@@ -179,7 +179,7 @@ public class JXTemplateGenerator
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
      */
     public SourceValidity getValidity() {
-        JXTExpression validityExpr = (JXTExpression) this.startDocument
+        Subst validityExpr = (Subst) this.startDocument
                 .getTemplateProperty(JXTemplateGenerator.VALIDITY);
         if (validityExpr == null) {
             return null;

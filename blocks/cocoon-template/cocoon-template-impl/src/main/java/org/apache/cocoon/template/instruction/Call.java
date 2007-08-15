@@ -25,7 +25,7 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.AttributeEvent;
 import org.apache.cocoon.template.script.event.Characters;
@@ -47,7 +47,7 @@ import org.xml.sax.SAXParseException;
 public class Call extends Instruction {
 
     private Object macro;
-    private JXTExpression targetNamespace;
+    private Subst targetNamespace;
     private Map parameters;
     private Event body;
 
@@ -168,7 +168,7 @@ public class Call extends Instruction {
 
         Object macroName;
         Object namespace;
-        JXTExpression macroNameExpression = (JXTExpression) macro;
+        Subst macroNameExpression = (Subst) macro;
         try {
             macroName = macroNameExpression.getValue(objectModel);
             namespace = targetNamespace.getValue(objectModel);

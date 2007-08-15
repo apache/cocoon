@@ -74,7 +74,7 @@ public class Substitutions {
                 Literal lit = (Literal) subst;
                 buf.append(lit.getValue());
             } else if (subst instanceof JXTExpression) {
-                JXTExpression expr = (JXTExpression) subst;
+                Subst expr = (Subst) subst;
                 Object val;
                 try {
                     val = expr.getValue(objectModel);

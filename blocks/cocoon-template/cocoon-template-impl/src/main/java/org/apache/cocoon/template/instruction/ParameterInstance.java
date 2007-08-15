@@ -22,6 +22,7 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.JXTExpression;
+import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.event.AttributeEvent;
 import org.apache.cocoon.template.script.event.CopyAttribute;
 import org.apache.cocoon.template.script.event.StartElement;
@@ -70,7 +71,7 @@ public class ParameterInstance extends Instruction {
 
     public Object getValue(ObjectModel objectModel) throws SAXException {
         if (this.value instanceof JXTExpression)
-            return getExpressionValue((JXTExpression) this.value, objectModel);
+            return getExpressionValue((Subst) this.value, objectModel);
         else if (this.value instanceof CopyAttribute) {
             CopyAttribute copy = (CopyAttribute) this.value;
             return copy.getValue();
@@ -78,7 +79,7 @@ public class ParameterInstance extends Instruction {
             SubstituteAttribute substEvent = (SubstituteAttribute) this.value;
             if (substEvent.getSubstitutions().size() == 1
                     && substEvent.getSubstitutions().get(0) instanceof JXTExpression)
-                return getExpressionValue((JXTExpression) substEvent.getSubstitutions().get(0), objectModel);
+                return getExpressionValue((Subst) substEvent.getSubstitutions().get(0), objectModel);
             else
                 return substEvent.getSubstitutions().toString(getLocation(), objectModel);
 
@@ -87,7 +88,7 @@ public class ParameterInstance extends Instruction {
         }
     }
 
-    private Object getExpressionValue(JXTExpression expr, ObjectModel objectModel) throws SAXException {
+    private Object getExpressionValue(Subst expr, ObjectModel objectModel) throws SAXException {
         Object val;
         try {
             val = expr.getNode(objectModel);
