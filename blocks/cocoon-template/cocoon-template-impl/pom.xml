@@ -64,6 +64,10 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
     </dependency>
+    <!--  
+          Test dependencies
+          TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
+     -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
@@ -76,10 +80,6 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-    <!--  
-          Test dependencies
-          TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
-     -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
