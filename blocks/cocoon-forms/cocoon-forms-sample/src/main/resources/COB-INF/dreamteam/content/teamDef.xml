@@ -61,16 +61,16 @@
                     <fd:label>Select</fd:label>
                 </fd:booleanfield>
 
-            <fd:row-action id="add" action-command="add-after">
+            <fd:row-action id="add" command="add-after">
               <fd:label>+</fd:label>
             </fd:row-action>
-            <fd:row-action id="up" action-command="move-up">
+            <fd:row-action id="up" command="move-up">
               <fd:label>^</fd:label>
             </fd:row-action>
-            <fd:row-action id="down" action-command="move-down">
+            <fd:row-action id="down" command="move-down">
               <fd:label>v</fd:label>
             </fd:row-action>
-            <fd:row-action id="delete" action-command="delete">
+            <fd:row-action id="delete" command="delete">
               <fd:label>X</fd:label>
             </fd:row-action>
         </fd:widgets>
@@ -87,7 +87,7 @@
         </fd:repeater>
 
         <fd:repeater-action id="addmember" 
-           action-command="add-row" repeater="teammembers">
+           command="add-row" repeater="teammembers">
             <fd:label>Add player</fd:label>
             <fd:on-action>
                 <fd:javascript>
@@ -96,7 +96,7 @@
                 </fd:javascript>
             </fd:on-action>
         </fd:repeater-action>
-        <fd:repeater-action id="removemember" action-command="delete-rows"
+        <fd:repeater-action id="removemember" command="delete-rows"
             repeater="teammembers" select="select">
             <fd:label>Remove selected players</fd:label>
         </fd:repeater-action>

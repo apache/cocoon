@@ -44,7 +44,7 @@
         </fd:datatype>
     </fd:field>
 
-    <fd:submit id="ok" action-command="foo" >
+    <fd:submit id="ok" command="foo" >
       <fd:label>Submit</fd:label>
     </fd:submit>
   </fd:widgets>

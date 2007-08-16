@@ -172,7 +172,7 @@
       </fd:widgets>
     </fd:aggregatefield>
 
-    <fd:submit id="switch" action-command="switch" validate="false">
+    <fd:submit id="switch" command="switch" validate="false">
       <fd:label>Switch</fd:label>
     </fd:submit>
   </fd:widgets>

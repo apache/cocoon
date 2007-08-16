@@ -83,12 +83,12 @@
 			<fd:datatype base="long"/>
 		</fd:output>
 
-		<fd:submit id="cancel" action-command="cancel" validate="false">
+		<fd:submit id="cancel" command="cancel" validate="false">
 			<fd:label><i18n:text i18n:catalogue="local">cancel.label</i18n:text></fd:label>
 			<fd:hint><i18n:text i18n:catalogue="local">cancel.hint</i18n:text></fd:hint>
 		</fd:submit> 
 
-		<fd:submit id="submit" action-command="submit" validate="true">
+		<fd:submit id="submit" command="submit" validate="true">
 			<fd:label><i18n:text i18n:catalogue="local">submit.label</i18n:text></fd:label>
 			<fd:hint><i18n:text i18n:catalogue="local">submit.hint</i18n:text></fd:hint>
 		</fd:submit> 
@@ -137,7 +137,7 @@
 					</fd:selection-list>
 				</fd:field>
 
-				<fd:row-action id="delete" action-command="delete">
+				<fd:row-action id="delete" command="delete">
 					<fd:label><i18n:text i18n:catalogue="local">criterion.delete.label</i18n:text></fd:label>
 					<fd:hint><i18n:text i18n:catalogue="local">criterion.delete.hint</i18n:text></fd:hint>
 				</fd:row-action>
@@ -145,7 +145,7 @@
       </fd:widgets>
     </fd:repeater>
     
-    <fd:repeater-action id="addcriterion" action-command="add-row" repeater="criteria">
+    <fd:repeater-action id="addcriterion" command="add-row" repeater="criteria">
       <fd:label><i18n:text i18n:catalogue="local">criterion.add.label</i18n:text></fd:label>
 			<fd:hint><i18n:text i18n:catalogue="local">criterion.add.hint</i18n:text></fd:hint>
     </fd:repeater-action>
