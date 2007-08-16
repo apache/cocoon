@@ -150,11 +150,11 @@
       </fd:widgets>
     </fd:repeater>
   
-    <fd:repeater-action id="addcontact" action-command="add-row" repeater="contacts">
+    <fd:repeater-action id="addcontact" command="add-row" repeater="contacts">
       <fd:label>Add contact</fd:label>
     </fd:repeater-action>
   
-    <fd:repeater-action id="removecontacts" action-command="delete-rows" repeater="contacts" select="select">
+    <fd:repeater-action id="removecontacts" command="delete-rows" repeater="contacts" select="select">
       <fd:label>Remove selected contacts</fd:label>
     </fd:repeater-action>
   </fd:widgets>

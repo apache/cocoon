@@ -84,12 +84,12 @@
         </fd:repeater>
 
         <!-- Forms action: add a new comment -->
-        <fd:repeater-action id="addcomment" action-command="add-row" repeater="comments">
+        <fd:repeater-action id="addcomment" command="add-row" repeater="comments">
           <fd:label>Add comment</fd:label>
         </fd:repeater-action>
 
         <!-- Forms action: remove a comment -->
-        <fd:repeater-action id="removecomment" action-command="delete-rows" repeater="comments" select="select">
+        <fd:repeater-action id="removecomment" command="delete-rows" repeater="comments" select="select">
           <fd:label>Remove selected comments</fd:label>
         </fd:repeater-action>
 

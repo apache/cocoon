@@ -39,7 +39,7 @@
             <fd:new id="item-row-class"/>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addItem" action-command="add-row" repeater="items">
+        <fd:repeater-action id="addItem" command="add-row" repeater="items">
           <fd:label>Add Child</fd:label>
           <fd:hint>Add child</fd:hint>
           <fd:on-action>
@@ -88,7 +88,7 @@
             </javascript>
           </fd:on-value-changed>
         </fd:field>
-        <fd:action id="fold-view" action-command="fold-view">
+        <fd:action id="fold-view" command="fold-view">
           <fd:label>F</fd:label>
           <fd:hint>Fold</fd:hint>
           <fd:on-action>
@@ -98,7 +98,7 @@
             </javascript>
           </fd:on-action>
         </fd:action>
-        <fd:action id="view-view" action-command="view-view">
+        <fd:action id="view-view" command="view-view">
           <fd:label>V</fd:label>
           <fd:hint>View</fd:hint>
           <fd:on-action>
@@ -108,7 +108,7 @@
             </javascript>
           </fd:on-action>
         </fd:action>
-        <fd:action id="edit-view" action-command="edit-view">
+        <fd:action id="edit-view" command="edit-view">
           <fd:label>E</fd:label>
           <fd:hint>Edit</fd:hint>
           <fd:on-action>
@@ -157,17 +157,17 @@
     <fd:class id="item-row-class">
       <fd:widgets>
 
-        <fd:row-action id="up" action-command="move-up">
+        <fd:row-action id="up" command="move-up">
           <fd:label>^</fd:label>
           <fd:hint>Move up</fd:hint>
         </fd:row-action>
 
-        <fd:row-action id="down" action-command="move-down">
+        <fd:row-action id="down" command="move-down">
           <fd:label>v</fd:label>
           <fd:hint>Move down</fd:hint>
         </fd:row-action>
 
-        <fd:row-action id="add" action-command="add-after">
+        <fd:row-action id="add" command="add-after">
           <fd:label>+</fd:label>
           <fd:hint>Add after</fd:hint>
           <fd:on-action>
@@ -181,7 +181,7 @@
           </fd:on-action>
         </fd:row-action>
 
-        <fd:row-action id="delete" action-command="delete">
+        <fd:row-action id="delete" command="delete">
           <fd:label>X</fd:label>
           <fd:hint>Delete</fd:hint>
         </fd:row-action>

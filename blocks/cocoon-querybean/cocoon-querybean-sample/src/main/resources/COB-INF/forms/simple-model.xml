@@ -69,12 +69,12 @@
 			<fd:datatype base="long"/>
 		</fd:output>
 
-		<fd:submit id="cancel" action-command="cancel" validate="false">
+		<fd:submit id="cancel" command="cancel" validate="false">
 			<fd:label><i18n:text i18n:catalogue="local">cancel.label</i18n:text></fd:label>
 			<fd:hint><i18n:text i18n:catalogue="local">cancel.hint</i18n:text></fd:hint>
 		</fd:submit> 
 
-		<fd:submit id="submit" action-command="submit" validate="true">
+		<fd:submit id="submit" command="submit" validate="true">
 			<fd:label><i18n:text i18n:catalogue="local">submit.label</i18n:text></fd:label>
 			<fd:hint><i18n:text i18n:catalogue="local">submit.hint</i18n:text></fd:hint>
 		</fd:submit> 
