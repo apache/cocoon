@@ -55,7 +55,7 @@ public class DefaultScriptManager extends AbstractLogEnabled
     private StringTemplateParser stringTemplateParser;
 
     public DefaultScriptManager() {
-        stringTemplateParserName = "jxtg";
+        stringTemplateParserName = "legacy";
     }
 
     /**

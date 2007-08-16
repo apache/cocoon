@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @version $Id$
  */
-public class JXTGStringTemplateParser extends AbstractStringTemplateParser {
+public class LegacyStringTemplateParser extends AbstractStringTemplateParser {
 
     public final static String JXPATH = "jxpath";
     public final static String JEXL = "jexl";
