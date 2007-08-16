@@ -19,12 +19,12 @@ package org.apache.cocoon.template.instruction;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.apache.cocoon.el.parsing.StringTemplateParser;
+import org.apache.cocoon.el.parsing.Subst;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.StringTemplateParser;
-import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
