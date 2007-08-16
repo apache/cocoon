@@ -24,8 +24,6 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.JXTExpression;
-import org.apache.cocoon.template.expression.Literal;
 import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.AttributeEvent;
@@ -95,22 +93,15 @@ public class Import extends Instruction {
             Iterator i = substAttr.getSubstitutions().iterator();
             while (i.hasNext()) {
                 Subst subst = (Subst) i.next();
-                if (subst instanceof Literal) {
-                    Literal lit = (Literal) subst;
-                    buf.append(lit.getValue());
-                } else if (subst instanceof JXTExpression) {
-                    Subst expr = (Subst) subst;
-                    Object val;
-                    try {
-                        val = expr.getValue(objectModel);
-                    } catch (Exception exc) {
-                        throw new SAXParseException(exc.getMessage(), getLocation(), exc);
-                    } catch (Error err) {
-                        throw new SAXParseException(err.getMessage(),
-                                                    getLocation(), new ErrorHolder(err));
-                    }
-                    buf.append(val != null ? val.toString() : "");
+                Object val;
+                try {
+                    val = subst.getValue(objectModel);
+                } catch (Exception exc) {
+                    throw new SAXParseException(exc.getMessage(), getLocation(), exc);
+                } catch (Error err) {
+                    throw new SAXParseException(err.getMessage(), getLocation(), new ErrorHolder(err));
                 }
+                buf.append(val != null ? val.toString() : "");
             }
             uri = buf.toString();
         }
