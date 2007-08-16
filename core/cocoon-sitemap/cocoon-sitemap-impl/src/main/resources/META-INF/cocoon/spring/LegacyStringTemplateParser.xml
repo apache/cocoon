@@ -21,7 +21,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
   
   <bean name="org.apache.cocoon.el.parsing.StringTemplateParser/legacy" 
-        class="org.apache.cocoon.template.expression.LegacyStringTemplateParser"
+    class="org.apache.cocoon.components.treeprocessor.variables.LegacyStringTemplateParser"
         parent="org.apache.cocoon.template.expression.AbstractStringTemplateParser"/>
 
 </beans>
