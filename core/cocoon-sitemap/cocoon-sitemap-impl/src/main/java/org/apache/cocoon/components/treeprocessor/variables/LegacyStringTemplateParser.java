@@ -14,11 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.template.expression;
+package org.apache.cocoon.components.treeprocessor.variables;
 
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.cocoon.template.expression.AbstractStringTemplateParser;
+import org.apache.cocoon.template.expression.Literal;
 
 /**
  * @version $Id$
