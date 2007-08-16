@@ -49,10 +49,10 @@
             <fd:new id="item-row-class"/>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addItem" action-command="add-row" repeater="items">
+        <fd:repeater-action id="addItem" command="add-row" repeater="items">
           <fd:label>New</fd:label>
         </fd:repeater-action>
-        <fd:repeater-action id="removeItems" action-command="delete-rows" repeater="items" select="select">
+        <fd:repeater-action id="removeItems" command="delete-rows" repeater="items" select="select">
           <fd:label>Del</fd:label>
         </fd:repeater-action>
       </fd:widgets>
@@ -263,10 +263,10 @@
             <fd:new id="catalog-class"/>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addCatalog" action-command="add-row" repeater="catalogs">
+        <fd:repeater-action id="addCatalog" command="add-row" repeater="catalogs">
           <fd:label>New</fd:label>
         </fd:repeater-action>
-        <fd:repeater-action id="removeCatalogs" action-command="delete-rows" repeater="catalogs" select="select">
+        <fd:repeater-action id="removeCatalogs" command="delete-rows" repeater="catalogs" select="select">
           <fd:label>Del</fd:label>
         </fd:repeater-action>
       </fd:widgets>
@@ -327,10 +327,10 @@
             </fd:union>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addItem" action-command="add-row" repeater="dialect">
+        <fd:repeater-action id="addItem" command="add-row" repeater="dialect">
           <fd:label>New</fd:label>
         </fd:repeater-action>
-        <fd:repeater-action id="removeItems" action-command="delete-rows" repeater="dialect" select="select">
+        <fd:repeater-action id="removeItems" command="delete-rows" repeater="dialect" select="select">
           <fd:label>Del</fd:label>
         </fd:repeater-action>
       </fd:widgets>
@@ -353,10 +353,10 @@
             <fd:new id="step-class"/>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addStep" action-command="add-row" repeater="flow">
+        <fd:repeater-action id="addStep" command="add-row" repeater="flow">
           <fd:label>New</fd:label>
         </fd:repeater-action>
-        <fd:repeater-action id="removeStep" action-command="delete-rows" repeater="flow" select="select">
+        <fd:repeater-action id="removeStep" command="delete-rows" repeater="flow" select="select">
           <fd:label>Del</fd:label>
         </fd:repeater-action>
       </fd:widgets>
@@ -379,10 +379,10 @@
             <fd:new id="step-parameter-class"/>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addParameter" action-command="add-row" repeater="interaction">
+        <fd:repeater-action id="addParameter" command="add-row" repeater="interaction">
           <fd:label>New</fd:label>
         </fd:repeater-action>
-        <fd:repeater-action id="removeParameters" action-command="delete-rows" repeater="interaction" select="select">
+        <fd:repeater-action id="removeParameters" command="delete-rows" repeater="interaction" select="select">
           <fd:label>Del</fd:label>
         </fd:repeater-action>
       </fd:widgets>
