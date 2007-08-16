@@ -18,8 +18,8 @@ package org.apache.cocoon.template.script;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.el.parsing.StringTemplateParser;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.StringTemplateParser;
 import org.apache.cocoon.template.script.event.StartDocument;
 import org.apache.cocoon.util.location.LocationUtils;
 

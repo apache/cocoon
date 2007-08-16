@@ -26,7 +26,7 @@ import java.util.List;
 public class DefaultStringTemplateParser extends AbstractStringTemplateParser {
 
     /**
-     * @see org.apache.cocoon.template.expression.StringTemplateParser#parseSubstitutions(java.io.Reader)
+     * @see org.apache.cocoon.el.parsing.StringTemplateParser#parseSubstitutions(java.io.Reader)
      */
     public List parseSubstitutions(Reader in) throws Exception {
         LinkedList substitutions = new LinkedList();

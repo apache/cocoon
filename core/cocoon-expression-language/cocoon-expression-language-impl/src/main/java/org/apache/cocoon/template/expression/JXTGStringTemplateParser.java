@@ -30,7 +30,7 @@ public class JXTGStringTemplateParser extends AbstractStringTemplateParser {
     public final static String JAVASCRIPT = "js";
 
     /**
-     * @see org.apache.cocoon.template.expression.StringTemplateParser#parseSubstitutions(java.io.Reader)
+     * @see org.apache.cocoon.el.parsing.StringTemplateParser#parseSubstitutions(java.io.Reader)
      */
     public List parseSubstitutions(Reader in) throws Exception {
         LinkedList substitutions = new LinkedList();

@@ -21,6 +21,8 @@ import java.io.StringReader;
 import java.util.List;
 
 import org.apache.cocoon.components.expression.ExpressionFactory;
+import org.apache.cocoon.el.parsing.StringTemplateParser;
+import org.apache.cocoon.el.parsing.Subst;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -38,7 +40,7 @@ public abstract class AbstractStringTemplateParser implements StringTemplatePars
     }
 
     /**
-     * @see org.apache.cocoon.template.expression.StringTemplateParser#compileBoolean(java.lang.String, java.lang.String, org.xml.sax.Locator)
+     * @see org.apache.cocoon.el.parsing.StringTemplateParser#compileBoolean(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
     public Subst compileBoolean(String val, String msg, Locator location) throws SAXException {
         Subst res = compileExpr(val, msg, location);
@@ -49,7 +51,7 @@ public abstract class AbstractStringTemplateParser implements StringTemplatePars
     }
 
     /**
-     * @see org.apache.cocoon.template.expression.StringTemplateParser#compileInt(java.lang.String, java.lang.String, org.xml.sax.Locator)
+     * @see org.apache.cocoon.el.parsing.StringTemplateParser#compileInt(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
     public Subst compileInt(String val, String msg, Locator location) throws SAXException {
         Subst res = compileExpr(val, msg, location);
@@ -60,7 +62,7 @@ public abstract class AbstractStringTemplateParser implements StringTemplatePars
     }
 
     /**
-     * @see org.apache.cocoon.template.expression.StringTemplateParser#compileExpr(java.lang.String, java.lang.String, org.xml.sax.Locator)
+     * @see org.apache.cocoon.el.parsing.StringTemplateParser#compileExpr(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
     public Subst compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException {
         if (inStr == null) {
@@ -75,7 +77,7 @@ public abstract class AbstractStringTemplateParser implements StringTemplatePars
     }
 
     /**
-     * @see org.apache.cocoon.template.expression.StringTemplateParser#parseSubstitutions(java.io.Reader, java.lang.String, org.xml.sax.Locator)
+     * @see org.apache.cocoon.el.parsing.StringTemplateParser#parseSubstitutions(java.io.Reader, java.lang.String, org.xml.sax.Locator)
      */
     public List parseSubstitutions(Reader in, String errorPrefix, Locator location) throws SAXParseException {
         try {

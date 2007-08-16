@@ -22,6 +22,8 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.cocoon.el.parsing.StringTemplateParser;
+import org.apache.cocoon.el.parsing.Subst;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
