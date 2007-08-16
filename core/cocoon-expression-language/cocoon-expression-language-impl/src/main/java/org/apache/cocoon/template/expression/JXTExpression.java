@@ -28,7 +28,7 @@ import org.apache.cocoon.objectmodel.ObjectModel;
 public class JXTExpression implements Subst {
 
     private String raw;
-    Object compiledExpression;
+    private Object compiledExpression;
 
     public JXTExpression(String raw, Object expr) {
         this.raw = raw;

@@ -42,7 +42,7 @@ public interface StringTemplateParser {
      */
     Subst compileInt(String val, String msg, Locator location) throws SAXException;
 
-    JXTExpression compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException;
+    Subst compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException;
 
     /**
      * Parse a set of expressions spaced with literals

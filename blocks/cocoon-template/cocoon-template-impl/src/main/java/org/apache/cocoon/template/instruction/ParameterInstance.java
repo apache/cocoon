@@ -70,7 +70,7 @@ public class ParameterInstance extends Instruction {
     }
 
     public Object getValue(ObjectModel objectModel) throws SAXException {
-        if (this.value instanceof JXTExpression)
+        if (this.value instanceof Subst)
             return getExpressionValue((Subst) this.value, objectModel);
         else if (this.value instanceof CopyAttribute) {
             CopyAttribute copy = (CopyAttribute) this.value;
