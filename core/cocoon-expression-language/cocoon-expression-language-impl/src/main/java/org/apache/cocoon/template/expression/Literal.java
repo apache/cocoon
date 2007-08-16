@@ -32,52 +32,67 @@ import org.apache.cocoon.objectmodel.ObjectModel;
  * @version $Id$
  */
 public class Literal implements Subst {
+    
+    private final char[] charValue;
+    private final Object value;
+    
     public Literal(String val) {
-        this.value = val.toCharArray();
+        this.value = val;
+        this.charValue = val.toCharArray();
     }
-
-    public String getValue() {
-        return new String(this.value);
+    
+    public Literal(Integer val) {
+        this.value = val;
+        this.charValue = val.toString().toCharArray();
+    }
+    
+    public Literal(Boolean val) {
+        this.value = val;
+        this.charValue = val.toString().toCharArray();
     }
 
     public char[] getCharArray() {
-        return value;
+        return charValue;
     }
 
     public void setLenient(Boolean lenient) {
+        //ignore
     }
 
     public Object getValue(ObjectModel objectModel) throws Exception {
-        return null;
+        return value;
     }
 
     public int getIntValue(ObjectModel objectModel) throws Exception {
-        return 0;
+        return value instanceof Integer ? ((Integer)value).intValue() : Integer.parseInt(getStringValue(objectModel));
     }
 
     public Number getNumberValue(ObjectModel objectModel) throws Exception {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public String getStringValue(ObjectModel objectModel) throws Exception {
-        return null;
+        return value.toString();
     }
 
     public Boolean getBooleanValue(ObjectModel objectModel) throws Exception {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getIterator(ObjectModel objectModel) throws Exception {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public Object getNode(ObjectModel objectModel) throws Exception {
-        return null;
+        return value;
     }
 
     public Object getCompiledExpression() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
-    private final char[] value;
+    public String getRaw() {
+        return value.toString();
+    }
+
 }

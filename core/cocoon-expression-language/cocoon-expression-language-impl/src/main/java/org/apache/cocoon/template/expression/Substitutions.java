@@ -70,22 +70,16 @@ public class Substitutions {
         Iterator iterSubst = iterator();
         while (iterSubst.hasNext()) {
             Subst subst = (Subst) iterSubst.next();
-            if (subst instanceof Literal) {
-                Literal lit = (Literal) subst;
-                buf.append(lit.getValue());
-            } else if (subst instanceof JXTExpression) {
-                Subst expr = (Subst) subst;
-                Object val;
-                try {
-                    val = expr.getValue(objectModel);
-                } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), location, e);
-                //FIXME: Don't catch java.lang.Error
-                //} catch (Error err) {
-                //    throw new SAXParseException(err.getMessage(), location, new ErrorHolder(err));
-                }
-                buf.append(val != null ? val.toString() : "");
+            Object val;
+            try {
+                val = subst.getValue(objectModel);
+            } catch (Exception e) {
+                throw new SAXParseException(e.getMessage(), location, e);
+            //FIXME: Don't catch java.lang.Error
+            //} catch (Error err) {
+            //    throw new SAXParseException(err.getMessage(), location, new ErrorHolder(err));
             }
+            buf.append(val != null ? val.toString() : "");
         }
         return buf.toString();
     }

@@ -41,9 +41,9 @@ public abstract class AbstractStringTemplateParser implements StringTemplatePars
      * @see org.apache.cocoon.template.expression.StringTemplateParser#compileBoolean(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
     public Subst compileBoolean(String val, String msg, Locator location) throws SAXException {
-        JXTExpression res = compileExpr(val, msg, location);
-        if (res != null && res.getCompiledExpression() == null && res.getRaw() != null) {
-            res.setCompiledExpression(Boolean.valueOf(res.getRaw()));
+        Subst res = compileExpr(val, msg, location);
+        if (res instanceof Literal) {
+            res = new Literal(Boolean.valueOf(res.getRaw()));
         }
         return res;
     }
@@ -52,9 +52,9 @@ public abstract class AbstractStringTemplateParser implements StringTemplatePars
      * @see org.apache.cocoon.template.expression.StringTemplateParser#compileInt(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
     public Subst compileInt(String val, String msg, Locator location) throws SAXException {
-        JXTExpression res = compileExpr(val, msg, location);
-        if (res != null && res.getCompiledExpression() == null && res.getRaw() != null) {
-            res.setCompiledExpression(Integer.valueOf(res.getRaw()));
+        Subst res = compileExpr(val, msg, location);
+        if (res instanceof Literal) {
+            res = new Literal(Integer.valueOf(res.getRaw()));
         }
         return res;
     }
@@ -62,14 +62,14 @@ public abstract class AbstractStringTemplateParser implements StringTemplatePars
     /**
      * @see org.apache.cocoon.template.expression.StringTemplateParser#compileExpr(java.lang.String, java.lang.String, org.xml.sax.Locator)
      */
-    public JXTExpression compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException {
+    public Subst compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException {
         if (inStr == null) {
             return null;
         }
         StringReader in = new StringReader(inStr.trim());
         List substitutions = parseSubstitutions(in, errorPrefix, location);
         if (substitutions.size() == 0 || !(substitutions.get(0) instanceof JXTExpression))
-            return new JXTExpression(inStr, null);
+            return new Literal(inStr);
 
         return (JXTExpression) substitutions.get(0);
     }

@@ -43,6 +43,8 @@ public interface Subst {
 
     public void setLenient(Boolean lenient);
 
+    public String getRaw();
+
     public static final Iterator EMPTY_ITER = new Iterator() {
             public boolean hasNext() {
                 return false;
