@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.template.expression;
+package org.apache.cocoon.el.parsing;
 
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;

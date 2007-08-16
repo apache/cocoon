@@ -23,12 +23,12 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Stack;
 
+import org.apache.cocoon.el.parsing.StringTemplateParser;
+import org.apache.cocoon.el.parsing.Subst;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.StringTemplateParser;
-import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.cocoon.xml.NamespacesTable;

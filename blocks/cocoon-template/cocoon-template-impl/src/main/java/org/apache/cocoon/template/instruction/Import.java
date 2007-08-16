@@ -20,11 +20,11 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.el.parsing.Subst;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
-import org.apache.cocoon.template.expression.Subst;
 import org.apache.cocoon.template.script.Invoker;
 import org.apache.cocoon.template.script.event.AttributeEvent;
 import org.apache.cocoon.template.script.event.CopyAttribute;
