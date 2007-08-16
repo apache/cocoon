@@ -28,7 +28,7 @@
   <import resource="classpath:META-INF/cocoon/spring/CocoonEntryObjectModelProvider.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/RhinoScope.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/AbstractStringTemplateParser.xml"/>
-  <import resource="classpath:META-INF/cocoon/spring/JXTGStringTemplateParser.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/LegacyStringTemplateParser.xml"/>
   
   <!-- Redefining this bean instead of importing because originally it is in "call" scope -->
   <bean name="org.apache.cocoon.objectmodel.ObjectModel" class="org.apache.cocoon.objectmodel.ObjectModelImpl">
