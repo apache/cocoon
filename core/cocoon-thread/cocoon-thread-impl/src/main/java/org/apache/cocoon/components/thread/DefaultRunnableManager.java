@@ -24,28 +24,27 @@ import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * The DefaultRunnableManager implements the {@link RunnableManager} interface
  * and is responsible to create {@link ThreadPool}s and run {@link Runnable}s
  * in them as background commands.
- * 
+ *
  * <p>
  * The configuration of the <code>DefaultRunnableManager</code>:
- * 
+ *
  * <pre>
  *     &lt;property name=&quot;workerThreadPools&quot;&gt;
  *       &lt;configurator:bean-map type=&quot;org.apache.cocoon.components.thread.ThreadPool&quot; strip-prefix=&quot;true&quot;/&gt;
  *     &lt;/property&gt;
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * @version $Id: DefaultRunnableManager.java 498489 2007-01-21 23:19:09Z
  *          jjohnston $
  */
-public class DefaultRunnableManager implements InitializingBean, RunnableManager, Runnable {
+public class DefaultRunnableManager implements RunnableManager, Runnable {
 
     // ~ Static fields/initializers
     // ---------------------------------------------
@@ -85,7 +84,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
     /**
      * Initialize
      */
-    public void afterPropertiesSet() throws Exception {
+    public void init() throws Exception {
         if (workerThreadPools != null) {
             final Iterator iter = workerThreadPools.keySet().iterator();
             while (iter.hasNext()) {
@@ -113,7 +112,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Create a shared ThreadPool
-     * 
+     *
      * @param name
      *            The name of the thread pool
      * @param queueSize
@@ -138,7 +137,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
      * @param shutdownWaitTime
      *            After what time a normal shutdown should take into account if
      *            a graceful shutdown has not come to an end
-     * 
+     *
      * @throws IllegalArgumentException
      *             If the pool already exists
      */
@@ -166,7 +165,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Create a private ThreadPool
-     * 
+     *
      * @param queueSize
      *            The size of the queue
      * @param maxPoolSize
@@ -189,7 +188,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
      * @param shutdownWaitTime
      *            After what time a normal shutdown should take into account if
      *            a graceful shutdown has not come to an end
-     * 
+     *
      * @return A newly created <code>ThreadPool</code>
      */
     public ThreadPool createPool(final int queueSize, final int maxPoolSize, final int minPoolSize, final int priority,
@@ -246,7 +245,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Run a {@link Runnable} in the background using a {@link ThreadPool}
-     * 
+     *
      * @param threadPoolName
      *            The thread pool name to be used
      * @param command
@@ -255,7 +254,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
      *            the delay befor first run
      * @param interval
      *            The interval for repeated runs
-     * 
+     *
      * @throws IllegalArgumentException
      *             DOCUMENT ME!
      */
@@ -288,7 +287,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Run a {@link Runnable} in the background using a {@link ThreadPool}
-     * 
+     *
      * @param command
      *            The {@link Runnable} to execute
      * @param delay
@@ -302,7 +301,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Run a {@link Runnable} in the background using a {@link ThreadPool}
-     * 
+     *
      * @param command
      *            The {@link Runnable} to execute
      * @param delay
@@ -314,7 +313,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Run a {@link Runnable} in the background using a {@link ThreadPool}
-     * 
+     *
      * @param command
      *            The {@link Runnable} to execute
      */
@@ -324,7 +323,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Run a {@link Runnable} in the background using a {@link ThreadPool}
-     * 
+     *
      * @param threadPoolName
      *            The thread pool name to be used
      * @param command
@@ -338,7 +337,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Run a {@link Runnable} in the background using a {@link ThreadPool}
-     * 
+     *
      * @param threadPoolName
      *            The thread pool name to be used
      * @param command
@@ -350,7 +349,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Remove a <code>Runnable</code> from the command stack
-     * 
+     *
      * @param command
      *            The <code>Runnable</code> to be removed
      */
@@ -422,7 +421,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * Start the managing thread
-     * 
+     *
      * @throws Exception
      *             DOCUMENT ME!
      */
@@ -448,10 +447,10 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @param priority
      *            The priority to set as string value.
-     * 
+     *
      * @return The priority as int value.
      */
     private int convertPriority(final String priority) {
@@ -473,7 +472,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
     /**
      * The $classType$ class ...
-     * 
+     *
      * @version $Id: DefaultRunnableManager.java 498489 2007-01-21 23:19:09Z
      *          jjohnston $
      */
@@ -504,7 +503,7 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
         /**
          * Creates a new ExecutionInfo object.
-         * 
+         *
          * @param pool
          *            DOCUMENT ME!
          * @param command
@@ -537,10 +536,10 @@ public class DefaultRunnableManager implements InitializingBean, RunnableManager
 
         /**
          * DOCUMENT ME!
-         * 
+         *
          * @param other
          *            DOCUMENT ME!
-         * 
+         *
          * @return DOCUMENT ME!
          */
         public int compareTo(final Object other) {

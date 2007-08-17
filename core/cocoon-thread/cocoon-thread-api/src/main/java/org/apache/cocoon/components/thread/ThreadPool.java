@@ -19,7 +19,7 @@ package org.apache.cocoon.components.thread;
 /**
  * The ThreadPool interface gives access to methods needed to inspect and use of
  * a pool of threads
- * 
+ *
  * @version $Id$
  */
 public interface ThreadPool {
@@ -28,34 +28,34 @@ public interface ThreadPool {
     // --------------------------------------------------------
 
     /** The default queue size */
-    public static int DEFAULT_QUEUE_SIZE = -1;
+    int DEFAULT_QUEUE_SIZE = -1;
 
     /** The default maximum pool size */
-    public static int DEFAULT_MAX_POOL_SIZE = 5;
+    int DEFAULT_MAX_POOL_SIZE = 5;
 
     /** The default minimum pool size */
-    public static int DEFAULT_MIN_POOL_SIZE = 5;
+    int DEFAULT_MIN_POOL_SIZE = 5;
 
     /** The default thread priority */
-    public static String DEFAULT_THREAD_PRIORITY = "NORM";
+    String DEFAULT_THREAD_PRIORITY = "NORM";
 
     /** The default daemon mode */
-    public static boolean DEFAULT_DAEMON_MODE = false;
+    boolean DEFAULT_DAEMON_MODE = false;
 
     /** The default keep alive time */
-    public static long DEFAULT_KEEP_ALIVE_TIME = 60000L;
+    long DEFAULT_KEEP_ALIVE_TIME = 60000L;
 
     /** The default way to shutdown gracefully */
-    public static boolean DEFAULT_SHUTDOWN_GRACEFUL = false;
+    boolean DEFAULT_SHUTDOWN_GRACEFUL = false;
 
     /** The default shutdown waittime time */
-    public static int DEFAULT_SHUTDOWN_WAIT_TIME = -1;
+    int DEFAULT_SHUTDOWN_WAIT_TIME = -1;
 
     /** The default shutdown waittime time */
-    public static String DEFAULT_THREADPOOL_NAME = "default";
+    String DEFAULT_THREADPOOL_NAME = "default";
 
     /** The default shutdown waittime time */
-    public static String DEFAULT_BLOCK_POLICY = "RUN";
+    String DEFAULT_BLOCK_POLICY = "RUN";
 
     /** ThreadPool block policy ABORT */
     String POLICY_ABORT = "ABORT";
@@ -79,195 +79,195 @@ public interface ThreadPool {
     // ----------------------------------------------------------------
 
     /**
-         * Gets the block policy
-         * 
-         * @return Returns the blockPolicy.
-         */
-    public String getBlockPolicy();
+     * Gets the block policy
+     *
+     * @return Returns the blockPolicy.
+     */
+    String getBlockPolicy();
 
     /**
-         * Gets the maximum queue size
-         * 
-         * @return maximum size of the queue (0 if isQueued() == false)
-         */
-    public int getMaxQueueSize();
+     * Gets the maximum queue size
+     *
+     * @return maximum size of the queue (0 if isQueued() == false)
+     */
+    int getMaxQueueSize();
 
     /**
-         * Gets the name of the thread pool
-         * 
-         * @return name of the thread pool
-         */
-    public String getName();
+     * Gets the name of the thread pool
+     *
+     * @return name of the thread pool
+     */
+    String getName();
 
     /**
-         * Gets the priority used to create Threads
-         * 
-         * @return {@link Thread#MIN_PRIORITY}, {@link Thread#NORM_PRIORITY},
-         *         or {@link Thread#MAX_PRIORITY}
-         */
-    public int getPriority();
+     * Gets the priority used to create Threads
+     *
+     * @return {@link Thread#MIN_PRIORITY}, {@link Thread#NORM_PRIORITY},
+     *         or {@link Thread#MAX_PRIORITY}
+     */
+    int getPriority();
 
     /**
-         * Gets the queue size of the thread pool
-         * 
-         * @return current size of the queue (0 if isQueued() == false)
-         */
-    public int getQueueSize();
+     * Gets the queue size of the thread pool
+     *
+     * @return current size of the queue (0 if isQueued() == false)
+     */
+    int getQueueSize();
 
     /**
-         * Whether this DefaultThreadPool has a queue
-         * 
-         * @return Returns the m_isQueued.
-         */
-    public boolean isQueued();
+     * Whether this DefaultThreadPool has a queue
+     *
+     * @return Returns the m_isQueued.
+     */
+    boolean isQueued();
 
     /**
-         * Execute a command
-         * 
-         * @param command
-         *                The {@link Runnable} to execute
-         * 
-         * @throws InterruptedException
-         *                 In case of interruption
-         */
-    public void execute(Runnable command) throws InterruptedException;
+     * Execute a command
+     *
+     * @param command
+     *                The {@link Runnable} to execute
+     *
+     * @throws InterruptedException
+     *                 In case of interruption
+     */
+    void execute(Runnable command) throws InterruptedException;
 
     /**
-         * Set the blocking policy
-         * 
-         * @param blockPolicy
-         *                The blocking policy value
-         */
+     * Set the blocking policy
+     *
+     * @param blockPolicy
+     *                The blocking policy value
+     */
     void setBlockPolicy(String blockPolicy);
 
     /**
-         * DOCUMENT ME!
-         * 
-         * @param name
-         *                The name to set.
-         */
+     * DOCUMENT ME!
+     *
+     * @param name
+     *                The name to set.
+     */
     void setName(String name);
 
     /**
-         * Sets the shutdownGraceful (true if graceful)
-         * 
-         * @param shutdownGraceful
-         *                The shutdownGraceful to set.
-         */
+     * Sets the shutdownGraceful (true if graceful)
+     *
+     * @param shutdownGraceful
+     *                The shutdownGraceful to set.
+     */
     void setShutdownGraceful(boolean shutdownGraceful);
 
     /**
-         * Returns true if shutdown is graceful
-         * 
-         * @return Returns the shutdownGraceful.
-         */
-    public boolean isShutdownGraceful();
+     * Returns true if shutdown is graceful
+     *
+     * @return Returns the shutdownGraceful.
+     */
+    boolean isShutdownGraceful();
 
     /**
-         * Sets the shutdownWaitTime in milliseconds
-         * 
-         * @param shutdownWaitTimeMs
-         *                The shutdownWaitTimeMs to set.
-         */
+     * Sets the shutdownWaitTime in milliseconds
+     *
+     * @param shutdownWaitTimeMs
+     *                The shutdownWaitTimeMs to set.
+     */
     void setShutdownWaitTimeMs(int shutdownWaitTimeMs);
 
     /**
-         * Gets the shutdownWaitTime in milliseconds
-         * 
-         * @return Returns the shutdownWaitTimeMs.
-         */
-    public int getShutdownWaitTimeMs();
+     * Gets the shutdownWaitTime in milliseconds
+     *
+     * @return Returns the shutdownWaitTimeMs.
+     */
+    int getShutdownWaitTimeMs();
 
     /**
-         * Gets the keepAliveTime in milliseconds
-         * 
-         * @return the keepAliveTime
-         */
-    public long getKeepAliveTime();
+     * Gets the keepAliveTime in milliseconds
+     *
+     * @return the keepAliveTime
+     */
+    long getKeepAliveTime();
 
     /**
-         * Sets the keepAliveTime in milliseconds
-         * 
-         * @param keepAliveTime
-         *                the keepAliveTime to set
-         */
-    public void setKeepAliveTime(long keepAliveTime);
+     * Sets the keepAliveTime in milliseconds
+     *
+     * @param keepAliveTime
+     *                the keepAliveTime to set
+     */
+    void setKeepAliveTime(long keepAliveTime);
 
     /**
-         * Gets the maximum pool size
-         * 
-         * @return the maxPoolSize
-         */
-    public int getMaxPoolSize();
+     * Gets the maximum pool size
+     *
+     * @return the maxPoolSize
+     */
+    int getMaxPoolSize();
 
     /**
-         * Sets the maximum pool size
-         * 
-         * @param maxPoolSize
-         *                the maxPoolSize to set
-         */
-    public void setMaxPoolSize(int maxPoolSize);
+     * Sets the maximum pool size
+     *
+     * @param maxPoolSize
+     *                the maxPoolSize to set
+     */
+    void setMaxPoolSize(int maxPoolSize);
 
     /**
-         * Gets the minimum pool size
-         * 
-         * @return the minPoolSize
-         */
-    public int getMinPoolSize();
+     * Gets the minimum pool size
+     *
+     * @return the minPoolSize
+     */
+    int getMinPoolSize();
 
     /**
-         * Sets the minimum pool size
-         * 
-         * @param minPoolSize
-         *                the minPoolSize to set
-         */
-    public void setMinPoolSize(int minPoolSize);
+     * Sets the minimum pool size
+     *
+     * @param minPoolSize
+     *                the minPoolSize to set
+     */
+    void setMinPoolSize(int minPoolSize);
 
     /**
-         * Sets the priority of this thread pool: {@link Thread#MIN_PRIORITY},
-         * {@link Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
-         * 
-         * @param priority
-         *                the priority to set
-         */
-    public void setPriority(int priority);
+     * Sets the priority of this thread pool: {@link Thread#MIN_PRIORITY},
+     * {@link Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+     *
+     * @param priority
+     *                the priority to set
+     */
+    void setPriority(int priority);
 
     /**
-         * Sets the queue size of the thread pool
-         * 
-         * @param queueSize
-         *                the queueSize to set
-         */
-    public void setQueueSize(int queueSize);
+     * Sets the queue size of the thread pool
+     *
+     * @param queueSize
+     *                the queueSize to set
+     */
+    void setQueueSize(int queueSize);
 
     /**
-         * Terminates all threads possibly awaiting processing all elements
-         * currently in queue.
-         */
+     * Terminates all threads possibly awaiting processing all elements
+     * currently in queue.
+     */
     void shutdown();
 
     /**
-         * Returns true if thread runs as daemon
-         * 
-         * @return the daemon
-         */
-    public boolean isDaemon();
+     * Returns true if thread runs as daemon
+     *
+     * @return the daemon
+     */
+    boolean isDaemon();
 
     /**
-         * Set to true if thread shall run as daemon
-         * 
-         * @param daemon
-         *                the daemon to set
-         */
-    public void setDaemon(boolean daemon);
+     * Set to true if thread shall run as daemon
+     *
+     * @param daemon
+     *                the daemon to set
+     */
+    void setDaemon(boolean daemon);
 
     /**
-         * Returns true if a shutDown method has succeeded in terminating all
-         * threads
-         * 
-         * @return Whether a shutDown method has succeeded in terminating all
-         *         threads
-         */
-    public boolean isTerminatedAfterShutdown();
+     * Returns true if a shutDown method has succeeded in terminating all
+     * threads
+     *
+     * @return Whether a shutDown method has succeeded in terminating all
+     *         threads
+     */
+    boolean isTerminatedAfterShutdown();
 
 }
