@@ -27,7 +27,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public abstract class AbstractAction extends BREAKAbstractLogEnabled
+public abstract class AbstractAction extends AbstractLogEnabled
     implements Action {
 
     /**
