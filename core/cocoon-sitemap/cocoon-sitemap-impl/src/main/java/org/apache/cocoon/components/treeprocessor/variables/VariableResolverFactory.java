@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.components.treeprocessor.variables;
 
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.sitemap.PatternException;
@@ -102,7 +103,13 @@ public class VariableResolverFactory {
      */
     public static VariableResolver getResolver(String expression, ServiceManager manager) throws PatternException {
         if (needsResolve(expression)) {
-            VariableResolver resolver = new PreparedVariableResolver(expression, manager);
+            VariableResolver resolver;
+            try {
+                resolver = (VariableResolver)manager.lookup(StringTemplateParserVariableResolver.ROLE);
+                resolver.setExpression(expression);
+            } catch (ServiceException e) {
+                throw new PatternException("Couldn't obtain VariableResolver.", e);
+            }
             List collector = (List)disposableCollector.get();
             if (collector != null)
                 collector.add(resolver);
@@ -110,6 +117,13 @@ public class VariableResolverFactory {
             return resolver;
 
         }
-        return new NOPVariableResolver(expression);
+        VariableResolver resolver;
+        try {
+            resolver = (VariableResolver)manager.lookup(NOPVariableResolver.ROLE);
+        } catch (ServiceException e) {
+            throw new PatternException("Couldn't obtain VariableResolver.", e);
+        }
+        resolver.setExpression(expression);
+        return resolver;
     }
 }

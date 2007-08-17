@@ -41,6 +41,8 @@ import org.apache.cocoon.sitemap.PatternException;
  * @version $Id$
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
+    
+    public static final String ROLE = PreparedVariableResolver.class.getName();
 
     private ServiceManager manager;
     protected List tokens;
@@ -61,10 +63,21 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     protected static final Token OPEN_TOKEN = new Token(OPEN);
     protected static final Token CLOSE_TOKEN = new Token(CLOSE);
     protected static final Token EMPTY_TOKEN = new Token(EXPR);
+    
+    public ServiceManager getManager() {
+        return manager;
+    }
 
-    public PreparedVariableResolver(String expr, ServiceManager manager) throws PatternException {
-        super(expr);
+    public void setManager(ServiceManager manager) {
         this.manager = manager;
+    }
+    
+    public PreparedVariableResolver() {
+        super("");
+    }
+
+    public void setExpression(String expr) throws PatternException {
+        this.originalExpr = expr;
         this.tokens = new ArrayList();
 
         VariableExpressionTokenizer.tokenize(expr, new VariableExpressionTokenizer.TokenReciever() {
@@ -413,4 +426,5 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             return null;
         }
     }
+    
 }

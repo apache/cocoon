@@ -31,6 +31,16 @@ import org.apache.cocoon.sitemap.PatternException;
  * @version $Id$
  */
 public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
+    
+    private PreparedVariableResolver resolver;
+    //private Map objectModel;
+    
+    public void setUp() throws Exception {
+        super.setUp();
+        resolver = new PreparedVariableResolver();
+        resolver.setManager(getManager());
+        //objectModel = getObjectModel();
+    }
 
     public void testNestedExpressions() throws Exception {
         String expr = "{request-param:{request-param:foo}}";
@@ -43,7 +53,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         
         Map sitemapElements = new HashMap();
         context.pushMap("sitemap", sitemapElements);
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("123", resolver.resolve(context, getObjectModel()));
     }
 
@@ -58,7 +68,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "oo");
         context.pushMap("sitemap", sitemapElements);
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("123", resolver.resolve(context, getObjectModel()));
     }
     
@@ -71,7 +81,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         Map sitemapElements = new HashMap();
         sitemapElements.put("name", "123");
         context.pushMap("label", sitemapElements);
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("123", resolver.resolve(context, getObjectModel()));        
     }
     
@@ -84,7 +94,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "abc");
         context.pushMap("label", sitemapElements);
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("123abc", resolver.resolve(context, getObjectModel()));
     }
 
@@ -97,7 +107,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "abc");
         context.pushMap("label", sitemapElements);
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("123abc/def", resolver.resolve(context, getObjectModel()));
     }
     
@@ -110,7 +120,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "abc");
         context.pushMap("label", sitemapElements);
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("123abc/def", resolver.resolve(context, getObjectModel()));
     }
 
@@ -129,7 +139,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         sitemapElements.put("1", "oscar");
         context.pushMap("label2", sitemapElements);
 
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("from juliet to oscar", resolver.resolve(context, getObjectModel()));
     }
 
@@ -148,7 +158,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         sitemapElements.put("1", "oscar");
         context.pushMap("label2", sitemapElements);
 
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("from juliet to oscar", resolver.resolve(context, getObjectModel()));
     }
     
@@ -162,7 +172,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         sitemapElements = new HashMap();
         context.pushMap("label", sitemapElements);
         
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("http://cocoon.apache.org", resolver.resolve(context, getObjectModel()));
     }
     
@@ -176,7 +186,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         sitemapElements = new HashMap();
         context.pushMap("label", sitemapElements);
         
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals(":colon-starts-this", resolver.resolve(context, getObjectModel()));
     }
     
@@ -191,7 +201,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         sitemapElements.put("1", "abc");
         context.pushMap("label", sitemapElements);
         
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("abc:abc", resolver.resolve(context, getObjectModel()));
     }
 
@@ -205,7 +215,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         sitemapElements = new HashMap();
         context.pushMap("label", sitemapElements);
 
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("This is a {brace}", resolver.resolve(context, getObjectModel()));
     }
 
@@ -216,7 +226,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         
         Map sitemapElements = new HashMap();
         context.pushMap("sitemap", sitemapElements);
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("", resolver.resolve(context, getObjectModel()));
     }
     
@@ -230,7 +240,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         Map sitemapElements = new HashMap();
         context.pushMap("sitemap", sitemapElements);
         
-        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, getManager());
+        resolver.setExpression(expr);
         assertEquals("bar", resolver.resolve(context, getObjectModel()));
     }
     
