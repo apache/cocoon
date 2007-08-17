@@ -18,7 +18,6 @@ package org.apache.cocoon.components.thread;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
@@ -26,7 +25,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * The DefaultThreadPool class implements the {@link ThreadPool} interface.
  * Instances of this class are made by the {@link RunnableManager} passing a
  * threadpool into the <code>init</code> method.
- * 
+ *
  * <pre>
  *   &lt;!--+
  *       | More indepth information can be found at
@@ -36,7 +35,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *   &lt;!-- required name of the pool --&gt;
  *   &lt;property name=&quot;name&quot; value=&quot;default&quot; /&gt;
  *   &lt;!--+
- *       | optional priority all threads of the pool will have (the ThreadFactory will be 
+ *       | optional priority all threads of the pool will have (the ThreadFactory will be
  *       | set to this priority).The possible values  are:
  *       |    MIN:  corresponds to Thread#MIN_PRIORITY
  *       |    NORM: corresponds to Thread#NORM_PRIORITY (default)
@@ -47,7 +46,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *       | whether newly created Threads should run in daemon mode or not. Default to false.
  *       +--&gt;
  *   &lt;property name=&quot;daemon&quot; value=&quot;false&quot; /&gt;
- *   &lt;!--+ 
+ *   &lt;!--+
  *       | optional size of a queue to hold Runnables if the pool is full. Possible values are:
  *      |    less than 0:    unbounded (default)
  *       |    equal to 0:     no queue at all
@@ -72,7 +71,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *       +--&gt;
  *   &lt;property name=&quot;keepAliveTime&quot; value=&quot;60000&quot; /&gt;
  *   &lt;!--+
- *       | The policy to be used if all resources (thread in the pool and 
+ *       | The policy to be used if all resources (thread in the pool and
  *       | slots in the queue) are exhausted.
  *       | Possible values are:
  *       |    ABORT:         Throw a RuntimeException
@@ -82,19 +81,19 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *       |                   This policy helps guard against lockup.
  *       |    WAIT:          Wait until a thread becomes available. This policy should, in
  *       |                   general, not be used if the minimum number of threads is zero,
- *       |                   in which case a thread may never become available. 
+ *       |                   in which case a thread may never become available.
  *       +--&gt;
  *   &lt;property name=&quot;blockPolicy&quot; value=&quot;ABORT&quot; /&gt;
  *   &lt;!--+
- *       | Terminate thread pool after processing all Runnables currently in queue. Any 
- *       | Runnable entered after this point will be discarded. A shut down pool cannot 
- *       | be restarted. This also means that a pool will need keep-alive-time-ms to 
- *       | terminate. The default value not to shutdown graceful. 
+ *       | Terminate thread pool after processing all Runnables currently in queue. Any
+ *       | Runnable entered after this point will be discarded. A shut down pool cannot
+ *       | be restarted. This also means that a pool will need keep-alive-time-ms to
+ *       | terminate. The default value not to shutdown graceful.
  *       +--&gt;
  *   &lt;property name=&quot;shutdownGraceful&quot; value=&quot;false&quot; /&gt;
  *   &lt;!--+
  *       | The time in ms to wait before issuing an immediate shutdown after a graceful shutdown
- *       | has been requested. 
+ *       | has been requested.
  *       +--&gt;
  *   &lt;property name=&quot;shutdownWaitTimeMs&quot; value=&quot;-1&quot; /&gt;
  *   &lt;!--+
@@ -103,11 +102,12 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *       +--&gt;
  *   &lt;property name=&quot;factory&quot; ref=&quot;defaultThreadFactory&quot;/&gt;
  * </pre>
- * 
+ *
  * @version $Id$
  */
-public class DefaultThreadPool extends PooledExecutor implements
-	InitializingBean, ThreadPool {
+public class DefaultThreadPool
+    extends PooledExecutor
+    implements ThreadPool {
 
     // ~ Static fields/initializers
     // ---------------------------------------------
@@ -164,65 +164,65 @@ public class DefaultThreadPool extends PooledExecutor implements
     // -----------------------------------------------------------
 
     /**
-         * Create a new pool.
-         * 
-         * @param channel
-         *                DOCUMENT ME!
-         */
+     * Create a new pool.
+     *
+     * @param channel
+     *                DOCUMENT ME!
+     */
     private DefaultThreadPool(final ChannelWrapper channel) {
-	super(channel);
-	channelWrapper = channel;
+   	    super(channel);
+	    channelWrapper = channel;
     }
 
     /**
-         * Create a new pool.
-         */
+     * Create a new pool.
+     */
     DefaultThreadPool() {
-	this(new ChannelWrapper());
+  	    this(new ChannelWrapper());
     }
 
     // ~ Methods
     // ----------------------------------------------------------------
 
     /** Initialize the bean after properties set */
-    public void afterPropertiesSet() throws IllegalArgumentException {
-	if (logger.isInfoEnabled()) {
-	    logger.info("ThreadPool [" + name + "] initializing ...");
-	}
+    public void init() throws IllegalArgumentException {
+        if (logger.isInfoEnabled()) {
+            logger.info("ThreadPool [" + name + "] initializing ...");
+        }
 
-	initFactory();
-	super.setThreadFactory(factory);
-	initMinPoolSize();
-	initPriority();
-	initDaemon();
-	initQueueSize();
-	initMaxPoolSize();
-	initKeepAliveTime();
+	    initFactory();
+	    this.setThreadFactory(factory);
+        initMinPoolSize();
+        initPriority();
+        initDaemon();
+        initQueueSize();
+        initMaxPoolSize();
+        initKeepAliveTime();
 
-	if (logger.isInfoEnabled()) {
-	    logger.info(this.toString());
-	    logger.info("ThreadPool [" + name + "] initialized");
-	}
+        if (logger.isInfoEnabled()) {
+            logger.info(this.toString());
+            logger.info("ThreadPool [" + name + "] initialized");
+        }
     }
 
     /**
-         * Get the block policy
-         * 
-         * @return Returns the blockPolicy.
-         */
+     * Get the block policy
+     *
+     * @return Returns the blockPolicy.
+     */
     public String getBlockPolicy() {
-	return blockPolicy;
+        return blockPolicy;
     }
 
     /**
-         * DOCUMENT ME!
-         * 
-         * @return maximum size of the queue (0 if isQueued() == false)
-         * 
-         * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
-         */
+     * DOCUMENT ME!
+     *
+     * @return maximum size of the queue (0 if isQueued() == false)
+     *
+     * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
+     */
     public int getMaxQueueSize() {
-	return ((queueSize < 0) ? Integer.MAX_VALUE : queueSize);
+        return ((queueSize < 0) ? Integer.MAX_VALUE : queueSize);
     }
 
     /**
@@ -234,7 +234,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * Get hte priority used to create Threads
-         * 
+         *
          * @return {@link Thread#MIN_PRIORITY}, {@link Thread#NORM_PRIORITY},
          *         or {@link Thread#MAX_PRIORITY}
          */
@@ -244,9 +244,9 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * DOCUMENT ME!
-         * 
+         *
          * @return current size of the queue (0 if isQueued() == false)
-         * 
+         *
          * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
          */
     public int getQueueSize() {
@@ -255,9 +255,9 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * Whether this DefaultThreadPool has a queue
-         * 
+         *
          * @return Returns the m_isQueued.
-         * 
+         *
          * @see org.apache.cocoon.components.thread.ThreadPool#isQueued()
          */
     public boolean isQueued() {
@@ -266,10 +266,10 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * Execute a command
-         * 
+         *
          * @param command
          *                The {@link Runnable} to execute
-         * 
+         *
          * @throws InterruptedException
          *                 In case of interruption
          */
@@ -311,7 +311,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * Set the blocking policy
-         * 
+         *
          * @param blockPolicy
          *                The blocking policy value
          */
@@ -345,7 +345,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * DOCUMENT ME!
-         * 
+         *
          * @param name
          *                The name to set.
          */
@@ -355,7 +355,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * DOCUMENT ME!
-         * 
+         *
          * @param shutdownGraceful
          *                The shutdownGraceful to set.
          */
@@ -365,7 +365,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * DOCUMENT ME!
-         * 
+         *
          * @return Returns the shutdownGraceful.
          */
     public boolean isShutdownGraceful() {
@@ -374,7 +374,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * DOCUMENT ME!
-         * 
+         *
          * @param shutdownWaitTimeMs
          *                The shutdownWaitTimeMs to set.
          */
@@ -384,7 +384,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * DOCUMENT ME!
-         * 
+         *
          * @return Returns the shutdownWaitTimeMs.
          */
     public int getShutdownWaitTimeMs() {
@@ -461,7 +461,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * Sets the queue size of the thread pool
-         * 
+         *
          * @param queueSize
          *                the queueSize to set
          */
@@ -471,7 +471,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * Returns true if thread runs as daemon
-         * 
+         *
          * @return the daemon
          */
     public boolean isDaemon() {
@@ -480,7 +480,7 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * Set to true if thread shall run as daemon
-         * 
+         *
          * @param daemon
          *                the daemon to set
          */
@@ -523,10 +523,10 @@ public class DefaultThreadPool extends PooledExecutor implements
 
     /**
          * DOCUMENT ME!
-         * 
+         *
          * @param priority
          *                The priority to set as string value.
-         * 
+         *
          * @return The priority as int value.
          */
     private int convertPriority(final String priority) {

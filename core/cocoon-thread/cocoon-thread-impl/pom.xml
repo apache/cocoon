@@ -71,11 +71,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- Spring framework -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-    </dependency>   
     <!--  test dependencies  -->
     <dependency>
       <groupId>org.springframework</groupId>

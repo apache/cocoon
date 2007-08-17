@@ -32,7 +32,7 @@
       +-->
   <bean name="org.apache.cocoon.components.thread.RunnableManager"
         class="org.apache.cocoon.components.thread.DefaultRunnableManager"
-        scope="singleton" destroy-method="destroy">
+        scope="singleton" init-method="init" destroy-method="destroy">
     <!--+
         | This is the default configuration of the runnable-manager. More
         | indepth information can be found at
@@ -50,7 +50,9 @@
       | This is the default thread pool. It's use fits best for short
       | running background tasks.
       +-->
-  <bean name="org.apache.cocoon.components.thread.ThreadPool/default" class="org.apache.cocoon.components.thread.DefaultThreadPool" scope="singleton">
+  <bean name="org.apache.cocoon.components.thread.ThreadPool/default"
+        class="org.apache.cocoon.components.thread.DefaultThreadPool"
+        init-method="init" scope="singleton">
     <!--+
         | More indepth information can be found at
         | http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html
@@ -131,7 +133,9 @@
       | This thread pool should be used for daemons (permanently running
       | threads).
       +-->
-  <bean name="org.apache.cocoon.components.thread.ThreadPool/daemon" class="org.apache.cocoon.components.thread.DefaultThreadPool" scope="singleton">
+  <bean name="org.apache.cocoon.components.thread.ThreadPool/daemon"
+        class="org.apache.cocoon.components.thread.DefaultThreadPool"
+        init-method="init" scope="singleton">
     <property name="name" value="daemon"/>
     <property name="poolPriority" value="NORM"/>
     <property name="daemon" value="true"/>
