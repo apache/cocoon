@@ -26,11 +26,17 @@ import java.util.Map;
  * @version $Id$
  */
 public class NOPVariableResolver extends VariableResolver {
+    
+    public final static String ROLE = NOPVariableResolver.class.getName();
 
     private String expression = null;
+    
+    public NOPVariableResolver() {
+        super("");
+    }
 
-    public NOPVariableResolver(String expression) {
-        super(expression);
+    public void  setExpression(String expression) {
+        this.originalExpr = expression;
         if (expression != null) {
             this.expression = VariableResolverFactory.unescape(expression);
         }

@@ -37,11 +37,13 @@ public abstract class VariableResolver {
 
     public static final Map EMPTY_MAP = Collections.unmodifiableMap(new java.util.HashMap(0));
 
-    protected final String originalExpr;
+    protected String originalExpr;
     
     protected VariableResolver(String expr) {
         this.originalExpr = expr;
     }
+    
+    public abstract void setExpression(String expression) throws PatternException;
 
     public final String toString() {
         return this.originalExpr;
