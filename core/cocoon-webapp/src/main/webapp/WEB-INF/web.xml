@@ -106,21 +106,7 @@
 
   <!-- Servlet Configuration ========================================== -->
 
-  <servlet>
-    <description>Cocoon demo web application</description>
-    <display-name>Cocoon</display-name>
-    <servlet-name>Cocoon</servlet-name>
-
-    <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
-
-    <!--
-      This parameter allows you to startup Cocoon2 immediately after startup
-      of your servlet engine.
-    -->
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
-  <!-- Experimental servlet that dispatch to Spring managed block servlets -->
+  <!-- Servlet that dispatch to Spring managed block servlets -->
   <servlet>
     <description>Cocoon blocks dispatcher</description>
     <display-name>DispatcherServlet</display-name>
@@ -153,7 +139,7 @@
     by '/' mapping, but must be overriden explicitly.
   -->
   <servlet-mapping>
-    <servlet-name>Cocoon</servlet-name>
+    <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>*.jsp</url-pattern>
   </servlet-mapping>
   <!--
@@ -161,7 +147,7 @@
     by '/' mapping, but must be overriden explicitly.
   -->
   <servlet-mapping>
-    <servlet-name>Cocoon</servlet-name>
+    <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>*.html</url-pattern>
   </servlet-mapping>
 
