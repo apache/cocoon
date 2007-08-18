@@ -30,7 +30,7 @@
           <map:parameter name="xmlFiles" value="\.xsamples$"/> 
         </map:generate> 
         <map:transform src="group2samples.xsl"/>
-        <map:transform src="context://stylesheets/simple-samples2html.xsl">
+        <map:transform src="../stylesheets/simple-samples2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
         <map:serialize type="html"/>        

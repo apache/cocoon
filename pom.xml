@@ -2907,6 +2907,11 @@
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-welcome</artifactId>
+        <version>1.0.0-M1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-api</artifactId>
         <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>

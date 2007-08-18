@@ -40,7 +40,7 @@
   </xsl:template>
   
   <xsl:template match="sample">
-    <sample href="../blocks/{../../../../@name}/" name="{@name}">
+    <sample href="../{../../../../@name}/" name="{@name}">
       <xsl:copy-of select="*|text()"/>
     </sample>
   </xsl:template>
