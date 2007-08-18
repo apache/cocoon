@@ -78,6 +78,8 @@ public class DispatcherServlet extends HttpServlet {
             servlet = (Servlet) mountableServlets.get(path);
             index = path.lastIndexOf('/');
         }
+        //case when servlet is mounted at "/" must be handled separately
+        servlet = servlet == null ? (Servlet) mountableServlets.get("/") : servlet;
         if (servlet == null) {
             throw new ServletException("No block for " + req.getPathInfo());
         }
