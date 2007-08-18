@@ -231,6 +231,8 @@ public class InvokeContext extends AbstractLogEnabled
         final String sitemapObjectModelPathPrefix = "sitemap";
         final String sitemapObjectModelNamedPathPrefix = sitemapObjectModelPathPrefix + "/$named$";
         
+        newObjectModel.markLocalContext();
+        
         this.mapStack.add(map);
 
         if (getLogger().isDebugEnabled()) {
@@ -292,6 +294,7 @@ public class InvokeContext extends AbstractLogEnabled
         Object name = this.mapToName.get(map);
         this.mapToName.remove(map);
         this.nameToMap.remove(name);
+        this.newObjectModel.cleanupLocalContext();
     }
 
     /**
