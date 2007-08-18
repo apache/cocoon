@@ -177,22 +177,22 @@
 
     <!-- images -->
     <map:match pattern="images/*.gif">
-      <map:read src="resources/images/{1}.gif" mime-type="image/gif"/>
+      <map:read src="resource/external/images/{1}.gif" mime-type="image/gif"/>
     </map:match>
 
     <!-- CSS stylesheets -->
     <map:match pattern="styles/*.css">
-      <map:read src="resources/styles/{1}.css" mime-type="text/css"/>
+      <map:read src="resource/external/styles/{1}.css" mime-type="text/css"/>
     </map:match>
 
     <!-- JavaScript scripts -->
     <map:match pattern="scripts/*.js">
-      <map:read src="resources/scripts/{1}.js" mime-type="text/javascript"/>
+      <map:read src="resource/external/scripts/{1}.js" mime-type="text/javascript"/>
     </map:match>
 
     <!-- favicon -->
     <map:match pattern="**favicon.ico">
-      <map:read mime-type="image/x-icon" src="resources/icons/cocoon.ico"/>
+      <map:read mime-type="image/x-icon" src="resource/external/icons/cocoon.ico"/>
     </map:match>
 
     <!--+
@@ -280,7 +280,12 @@
 		</map:otherwise>
 	  </map:select>
 	</map:match>
-
+    
+    
+    <!-- FIXME: It's a simple work-around -->
+    <map:match pattern="blocks/**">
+      <map:redirect-to uri="{1}/" global="true"/>
+    </map:match>
     <!--+
         | Mount everything else by calling the sitemap.xmap file located
         | in the requested folder.

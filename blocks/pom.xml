@@ -106,6 +106,7 @@
     <module>cocoon-samples-style/cocoon-samples-style-default</module>
     <module>cocoon-batik/cocoon-batik-impl</module>
     <module>cocoon-batik/cocoon-batik-sample</module>
+    <module>cocoon-welcome</module>
   </modules>
   
   <profiles>

@@ -144,7 +144,7 @@
     to change this parameter.
   -->
   <servlet-mapping>
-    <servlet-name>Cocoon</servlet-name>
+    <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
@@ -163,14 +163,6 @@
   <servlet-mapping>
     <servlet-name>Cocoon</servlet-name>
     <url-pattern>*.html</url-pattern>
-  </servlet-mapping>
-
-  <!--
-    Mount the experimental blocks dispatcher.
-  -->
-  <servlet-mapping>
-    <servlet-name>DispatcherServlet</servlet-name>
-    <url-pattern>/blocks/*</url-pattern>
   </servlet-mapping>
 
   <!-- various MIME type mappings ====================================== -->
