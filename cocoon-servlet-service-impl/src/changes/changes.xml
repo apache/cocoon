@@ -24,6 +24,11 @@
     +-->
 <document>
   <body>
+    <release version="1.0.0-RC1-SNAPSHOT" date="2007-00-00" description="unreleased">  
+      <action dev="gkossakowski" type="fix" issues="COCOON-2121">
+        Fixed bug in DispatcherServlet that caused servlet (blocks) mounted at "/" to be handled improperly. 
+      </action>
+    </release>
     <release version="1.0.0-M2-SNAPSHOT" date="2007-00-00" description="unreleased">  
       
     </release>
