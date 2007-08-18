@@ -33,6 +33,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
 
 /**
@@ -91,6 +92,9 @@ public class InvokeContext extends AbstractLogEnabled
 
     /** The last processor */
     protected Processor lastProcessor;
+    
+    /** Unified Object Model */
+    private ObjectModel newObjectModel;
 
     /**
      * Create an <code>InvokeContext</code> without existing pipelines. This also means
@@ -122,6 +126,7 @@ public class InvokeContext extends AbstractLogEnabled
         if (this.processingPipeline != null) {
             this.processingPipeline.setProcessorManager(manager);
         }
+        this.newObjectModel = (ObjectModel)manager.lookup(ObjectModel.ROLE);
     }
 
     /**
@@ -223,6 +228,9 @@ public class InvokeContext extends AbstractLogEnabled
      * Push a Map on top of the current Map stack.
      */
     public final void pushMap(String anchorName, Map map) {
+        final String sitemapObjectModelPathPrefix = "sitemap";
+        final String sitemapObjectModelNamedPathPrefix = sitemapObjectModelPathPrefix + "/$named$";
+        
         this.mapStack.add(map);
 
         if (getLogger().isDebugEnabled()) {
@@ -238,6 +246,9 @@ public class InvokeContext extends AbstractLogEnabled
                     getLogger().error("name [" + anchorName + "] clashes");
                 }
             }
+            newObjectModel.putAt(sitemapObjectModelNamedPathPrefix + "/" + anchorName, map);
+        } else {
+            newObjectModel.putAt(sitemapObjectModelPathPrefix, map);
         }
     }
 
@@ -318,6 +329,7 @@ public class InvokeContext extends AbstractLogEnabled
             this.processingPipelineParameters = null;
             this.processingPipelineObjectModel = null;
         }
+        this.currentManager.release(this.newObjectModel);
     }
 
     /**
