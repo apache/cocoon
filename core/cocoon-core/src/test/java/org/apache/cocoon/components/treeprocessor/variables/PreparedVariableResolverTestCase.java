@@ -33,12 +33,16 @@ import org.apache.cocoon.sitemap.PatternException;
 public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     
     private PreparedVariableResolver resolver;
+    private InvokeContext context;
     //private Map objectModel;
     
     public void setUp() throws Exception {
         super.setUp();
         resolver = new PreparedVariableResolver();
         resolver.setManager(getManager());
+        context = new InvokeContext(true);
+        context.service(getManager());
+        context.enableLogging(getLogger());
         //objectModel = getObjectModel();
     }
 
@@ -48,8 +52,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         request.reset();
         request.addParameter("foo", "bar");
         request.addParameter("bar", "123");
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
         
         Map sitemapElements = new HashMap();
         context.pushMap("sitemap", sitemapElements);
@@ -62,8 +64,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         MockRequest request = getRequest();
         request.reset();
         request.addParameter("foo", "123");
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
         
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "oo");
@@ -74,10 +74,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     
     public void testAnchors() throws PatternException {
         String expr = "{#label:name}";
-        
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
-        
+
         Map sitemapElements = new HashMap();
         sitemapElements.put("name", "123");
         context.pushMap("label", sitemapElements);
@@ -88,9 +85,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     public void testSitemapVariables() throws PatternException {
         String expr = "123{1}";
         
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
-
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "abc");
         context.pushMap("label", sitemapElements);
@@ -100,9 +94,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
     public void testSitemapVariablesWithText() throws PatternException {
         String expr = "123{1}/def";
-    
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "abc");
@@ -113,9 +104,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     
     public void testPrefixedSitemapVariable() throws PatternException {
         String expr = "123{sitemap:1}/def";
-    
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements = new HashMap();
         sitemapElements.put("1", "abc");
@@ -126,9 +114,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
     public void testMultilevelSitemapVariables() throws PatternException {
         String expr = "from {../1} to {1}";
-        
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements;
         sitemapElements = new HashMap();
@@ -145,9 +130,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
     public void testRootSitemapVariables() throws PatternException {
         String expr = "from {/1} to {1}";
-        
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements;
         sitemapElements = new HashMap();
@@ -164,9 +146,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     
     public void testColonInTextContent() throws PatternException {
         String expr = "http://cocoon.apache.org";
-        
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements;
         sitemapElements = new HashMap();
@@ -178,9 +157,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     
     public void testColonBeginningTextContent() throws PatternException {
         String expr = ":colon-starts-this";
-        
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements;
         sitemapElements = new HashMap();
@@ -192,9 +168,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     
     public void testEmbeddedColon() throws PatternException {
         String expr = "{1}:{1}";
-        
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements;
         sitemapElements = new HashMap();
@@ -207,9 +180,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
     public void testEscapedBraces() throws PatternException {
         String expr = "This is a \\{brace\\}";
-        
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
 
         Map sitemapElements;
         sitemapElements = new HashMap();
@@ -221,8 +191,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
     public void testModuleWithoutOption() throws PatternException {
         String expr = "{baselink:}";
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
         
         Map sitemapElements = new HashMap();
         context.pushMap("sitemap", sitemapElements);
@@ -232,8 +200,7 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
     
     public void testNewExpression() throws PatternException {
         String expr = "${$cocoon/request/parameters/foo}";
-        InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
+
         MockRequest request = getRequest();
         request.addParameter("foo", "bar");
         
