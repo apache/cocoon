@@ -53,7 +53,9 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     
     public ObjectModelImpl() {
         singleValueMap = new HashMap();
-        super.map = UnmodifiableMap.decorate(singleValueMap);
+        //FIXME: Not sure if this makes sense
+        //super.map = UnmodifiableMap.decorate(singleValueMap);
+        super.map = singleValueMap;
         localContexts = new ArrayStack();
         multiValueMap = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
         multiValueMapForLocated = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
