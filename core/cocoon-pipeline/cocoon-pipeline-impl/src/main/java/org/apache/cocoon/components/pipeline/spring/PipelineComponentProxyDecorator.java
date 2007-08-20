@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -66,21 +67,31 @@ public class PipelineComponentProxyDecorator implements BeanPostProcessor {
         public ScopeChangerProxy(Object wrapped, PipelineComponentScopeHolder holder) {
             this.wrapped = wrapped;
             this.holder = holder;
+            this.beans = new HashMap();
+            this.destructionCallbacks = new HashMap();
         }
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Map currentBeans = null;
-            Map currentDestructionCallbacks = null;
             Object result;
+            boolean modified = false;
             try {
-                currentBeans = holder.getBeans();
-                currentDestructionCallbacks = holder.getDestructionCallbacks();
-                holder.setBeans(beans);
-                holder.setDestructionCallbacks(destructionCallbacks);
+                if (!holder.getInScope()) {
+                    holder.setParentBeans(holder.getBeans());
+                    holder.setParentDestructionCallbacks(holder.getDestructionCallbacks());
+                    holder.setBeans(beans);
+                    holder.setDestructionCallbacks(destructionCallbacks);
+                    holder.setInScope(true);
+                    modified = true;
+                }
                 result = method.invoke(wrapped, args);
             } finally {
-                holder.setBeans(currentBeans);
-                holder.setDestructionCallbacks(currentDestructionCallbacks);
+                if (modified) {
+                    holder.setBeans(holder.getParentBeans());
+                    holder.setDestructionCallbacks(holder.getParentDestructionCallbacks());
+                    holder.setParentBeans(null);
+                    holder.setParentDestructionCallbacks(null);
+                    holder.setInScope(false);
+                }
             }
             return result;
         }

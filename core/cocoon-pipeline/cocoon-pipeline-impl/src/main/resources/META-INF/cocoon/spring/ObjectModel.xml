@@ -22,27 +22,10 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
   
-  <!-- Install the pipeline component custom scope -->
-  <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
-    <property name="scopes">
-      <map>
-        <entry key="pipelineComponent">
-          <bean class="org.apache.cocoon.components.pipeline.spring.PipelineComponentScope">
-            <property name="holder" ref="org.apache.cocoon.components.pipeline.spring.PipelineComponentScopeHolder"/>
-          </bean>
-        </entry>
-      </map>
-    </property>
-  </bean>
-  
-  <bean id="org.apache.cocoon.components.pipeline.spring.PipelineComponentScopeHolder"
-        class="org.apache.cocoon.components.pipeline.spring.PipelineComponentScopeHolderImpl" scope="call">
+  <!-- Default implementation of ObjectModel interface in pipelineComponent scope. -->
+  <bean name="org.apache.cocoon.objectmodel.ObjectModel" class="org.apache.cocoon.objectmodel.ObjectModelImpl" 
+        scope="pipelineComponent" parent="org.apache.cocoon.objectmodel.ObjectModel.template">
     <aop:scoped-proxy proxy-target-class="false"/>
-  </bean>
-  
-  <bean id="org.apache.cocoon.components.pipeline.spring.PipelineComponentProxyDecorator"
-        class="org.apache.cocoon.components.pipeline.spring.PipelineComponentProxyDecorator">
-    <property name="holder" ref="org.apache.cocoon.components.pipeline.spring.PipelineComponentScopeHolder"/>
   </bean>
   
 </beans>
