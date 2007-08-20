@@ -29,16 +29,9 @@
   <import resource="classpath:META-INF/cocoon/spring/RhinoScope.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/AbstractStringTemplateParser.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/LegacyStringTemplateParser.xml"/>
+  <import resource="classpath:META-INF/cocoon/spring/ObjectModelTemplate.xml"/>
   
-  <!-- Redefining this bean instead of importing because originally it is in "call" scope -->
-  <bean name="org.apache.cocoon.objectmodel.ObjectModel" class="org.apache.cocoon.objectmodel.ObjectModelImpl">
-    <property name="initialEntries">
-      <map>
-        <entry key="cocoon" value-ref="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider"/>
-        <entry key="Packages" value-ref="org.apache.cocoon.objectmodel.provider.PackagesEntryObjectModelProvider"/>
-        <entry key="java" value-ref="org.apache.cocoon.objectmodel.provider.JavaEntryObjectModelProvider"/>
-      </map>
-    </property>        
-  </bean>
+  <bean name="org.apache.cocoon.objectmodel.ObjectModel" class="org.apache.cocoon.objectmodel.ObjectModelImpl"
+        parent="org.apache.cocoon.objectmodel.ObjectModel.template"/>
   
 </beans>

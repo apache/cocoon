@@ -16,40 +16,29 @@
  */
 package org.apache.cocoon.components.pipeline.spring;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class PipelineComponentScopeHolder {
-    private Map beans;
-    private Map destructionCallbacks;
-    private boolean inScope;
-    
-    public PipelineComponentScopeHolder() {
-        beans = new HashMap();
-        destructionCallbacks = new HashMap();
-    }
-    
-    public Map getBeans() {
-        return beans;
-    }
-    
-    public void setBeans(Map beans) {
-        this.beans = beans;
-    }
-    
-    public Map getDestructionCallbacks() {
-        return destructionCallbacks;
-    }
-    
-    public void setDestructionCallbacks(Map destructionCallbacks) {
-        this.destructionCallbacks = destructionCallbacks;
-    }
+public interface PipelineComponentScopeHolder {
+    //FIXME: This interface needs redesign
 
-    public boolean isInScope() {
-        return inScope;
-    }
+    public Map getBeans();
 
-    public void setInScope(boolean inScope) {
-        this.inScope = inScope;
-    }
+    public void setBeans(Map beans);
+    
+    public Map getParentBeans();
+    
+    public void setParentBeans(Map parentBeans);
+
+    public Map getDestructionCallbacks();
+
+    public void setDestructionCallbacks(Map destructionCallbacks);
+    
+    public Map getParentDestructionCallbacks();
+
+    public void setParentDestructionCallbacks(Map destructionCallbacks);
+    
+    public void setInScope(boolean inScope);
+    
+    public boolean getInScope();
+
 }
