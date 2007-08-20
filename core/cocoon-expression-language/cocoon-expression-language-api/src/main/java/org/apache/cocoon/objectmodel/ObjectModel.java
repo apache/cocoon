@@ -18,6 +18,8 @@ package org.apache.cocoon.objectmodel;
 
 import java.util.Map;
 
+import org.apache.commons.collections.MultiMap;
+
 /**
  * ObjectModel is a special {@link Map} that cannot be modified using standard {@link Map} methods, except
  * {@link #put(Object, Object)} method.
@@ -33,11 +35,10 @@ public interface ObjectModel extends Map {
     public static final String PARAMETERS_PATH = "cocoon/parameters";
 
     /**
-     * @return a {@link org.apache.commons.collections.MultiMap} that contains all stored values in all context in
-     *         LIFO-compliant order. Returned {@link org.apache.commons.collections.MultiMap} is
-     *         {@link org.apache.commons.collections.Unmodifiable}.
+     * @return a {@link MultiMap} that contains all stored values in all context in LIFO-compliant order.
+     *         Returned {@link MultiMap} is {@link org.apache.commons.collections.Unmodifiable}.
      */
-    public Map getAll();
+    public MultiMap getAll();
 
     /**
      * Works exactly the same way as {@link Map#put(Object, Object)} but previous value associated to <code>key</code>
@@ -82,4 +83,11 @@ public interface ObjectModel extends Map {
      * @see org.apache.commons.jxpath.JXPathBeanInfo.isDynamic() for description of static and dynamic properties
      */
     public void fillContext();
+    
+    /**
+     * <p>Sets parent object model so newly created instance can inherit values from parent but cannot modify it.</p>
+     * 
+     * @param parentObjectModel
+     */
+    public void setParent(ObjectModel parentObjectModel);
 }
