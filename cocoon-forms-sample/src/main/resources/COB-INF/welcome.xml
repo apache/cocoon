@@ -43,7 +43,7 @@
   <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
   <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
-  <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget (deprecated, use <a href="xinha">Xinha</a> instead).</sample>
+  <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget (deprecated, use alternatives instead, e.g. <a href="xinha">Xinha</a>).</sample>
   <sample name="Xinha" href="xinha">A simple form using the Xinha editor widget.</sample>
   <sample name="Aggregate" href="aggregate/example">Aggregate field examples</sample>
   <sample name="Multipage wizard" href="do-multipage.flow">(Ajax) A multipage wizard, using widget states and actions to move between pages.</sample>
