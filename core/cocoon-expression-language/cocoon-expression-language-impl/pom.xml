@@ -61,10 +61,6 @@
       <artifactId>cocoon-xml-util</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-pipeline-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
