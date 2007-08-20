@@ -50,6 +50,10 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     private MultiMap multiValueMapForLocated;
     private Map initialEntries = null;
     
+    
+    //FIXME: This is a temporary solution
+    private boolean modified;
+    
     public ObjectModelImpl() {
         singleValueMap = new HashMap();
         //FIXME: Not sure if this makes sense
@@ -58,6 +62,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         localContexts = new ArrayStack();
         multiValueMap = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
         multiValueMapForLocated = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
+        modified = false;
     }
 
     public static class StackReversedIteration extends ArrayStack {
@@ -83,6 +88,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     }
     
     public Object put(Object key, Object value) {
+        modified = true;
         if (!localContexts.empty())
             ((ArrayStack) localContexts.peek()).push(new DefaultKeyValue(key, value));
         
@@ -93,6 +99,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     }
     
     public void putAll(Map mapToCopy) {
+        modified = true;
         if (!localContexts.empty()) {
             ArrayStack entries = (ArrayStack)localContexts.peek();
             for (Iterator keysIterator = mapToCopy.keySet().iterator(); keysIterator.hasNext();) {
@@ -206,6 +213,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
             Object key = keysIterator.next();
             put(key, ((ObjectModelProvider)initialEntries.get(key)).getObject());
         }
+        modified = false;
     }
 
     public void fillContext() {
@@ -275,7 +283,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
      * @see org.apache.cocoon.objectmodel.ObjectModel#setParent(org.apache.cocoon.objectmodel.ObjectModel)
      */
     public void setParent(ObjectModel parentObjectModel) {
-        if (!this.isEmpty())
+        if (this.modified)
             throw new IllegalStateException("Setting parent may occur only if Object Model is empty.");
         singleValueMap.putAll(parentObjectModel);
         multiValueMap.putAll(parentObjectModel.getAll());
