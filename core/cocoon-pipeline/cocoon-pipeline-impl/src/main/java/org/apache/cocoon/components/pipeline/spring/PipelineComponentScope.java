@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.components.pipeline.spring;
 
+import org.apache.cocoon.objectmodel.ObjectModel;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
 
@@ -45,7 +46,11 @@ public final class PipelineComponentScope implements Scope {
         if (bean == null) {
             bean = objectFactory.getObject();
             holder.getBeans().put(name, bean);
-        }            
+            if (bean instanceof ObjectModel && holder.getInScope()) {
+                //FIXME: This should be moved to separate BeanPostProcessor
+                ((ObjectModel)bean).setParent((ObjectModel)holder.getParentBeans().get(name));
+            }
+        }
         return bean;
     }
 
