@@ -39,6 +39,10 @@
           <action dev="felixk" type="add" issue="COCOON-2091">
             Add Xinha as alternative for HTMLArea as WYSIWYG online editor as HTMLArea is no longer maintained.
           </action>
+          <action dev="felixk" type="update">
+            Deprecate HTMLArea. HTMLArea editor will be removed in version 1.1 of cocoon-forms block. 
+            Use alternatives instead (e.g. Xinha).
+          </action>
         </release>
       </body>
     </document>
