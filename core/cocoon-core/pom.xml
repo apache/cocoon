@@ -154,6 +154,10 @@
       <artifactId>cocoon-expression-language-impl</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml-util</artifactId>
+    </dependency>
     <!--  excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components</groupId>

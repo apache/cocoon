@@ -58,7 +58,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-pipeline-impl</artifactId>
+      <artifactId>cocoon-xml-util</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
