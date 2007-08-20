@@ -31,7 +31,6 @@ import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.apache.commons.collections.keyvalue.DefaultKeyValue;
 import org.apache.commons.collections.map.AbstractMapDecorator;
 import org.apache.commons.collections.map.MultiValueMap;
-import org.apache.commons.collections.map.UnmodifiableMap;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
@@ -79,8 +78,8 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         return super.get(key);
     }
     
-    public Map getAll() {
-        return UnmodifiableMap.decorate(multiValueMap);
+    public MultiMap getAll() {
+        return UnmodifiableMultiMap.decorate(multiValueMap);
     }
     
     public Object put(Object key, Object value) {
@@ -270,6 +269,16 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
             return this.value;
         }
         
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.objectmodel.ObjectModel#setParent(org.apache.cocoon.objectmodel.ObjectModel)
+     */
+    public void setParent(ObjectModel parentObjectModel) {
+        if (!this.isEmpty())
+            throw new IllegalStateException("Setting parent may occur only if Object Model is empty.");
+        singleValueMap.putAll(parentObjectModel);
+        multiValueMap.putAll(parentObjectModel.getAll());
     };
     
 }

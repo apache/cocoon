@@ -23,17 +23,20 @@ import junit.framework.TestCase;
 
 public class ObjectModelImplTestCase extends TestCase {
     
+    private ObjectModel objectModel;
+    
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.objectModel = new ObjectModelImpl();
+    }
+    
     public void testMap() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.put("foo1", "bar1");
         assertEquals("bar2", objectModel.put("foo2", "bar2")); 
         assertEquals(true, objectModel.containsKey("foo1"));
     }
     
     public void testMultiValue() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.markLocalContext();
         objectModel.put("foo", "bar1");
         
@@ -51,8 +54,6 @@ public class ObjectModelImplTestCase extends TestCase {
     }
     
     public void testValues() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.put("foo", "bar1");
         Collection values = objectModel.values();
         assertEquals(true, values.contains("bar1"));
@@ -69,8 +70,6 @@ public class ObjectModelImplTestCase extends TestCase {
     }
     
     public void testLocalContext() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.put("foo", "bar1");
         objectModel.markLocalContext();
         objectModel.put("foo", "bar2");
@@ -88,8 +87,6 @@ public class ObjectModelImplTestCase extends TestCase {
     }
     
     public void testNull() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.markLocalContext();
         objectModel.put("foo", "bar");
         
@@ -107,20 +104,15 @@ public class ObjectModelImplTestCase extends TestCase {
     }
     
     public void testThis() {
-        ObjectModel objectModel = new ObjectModelImpl();
         assertEquals(objectModel, objectModel.get("this"));
     }
 
-    public void testKeyAsPath() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
+    public void testKeyAsPath() {        
         objectModel.putAt("foo", "bar");
         assertEquals("bar", objectModel.get("foo"));
     }
 
     public void testPutAt() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.putAt("foo/bar", "xyz");
         assertTrue(objectModel.containsKey("foo"));
         assertTrue(objectModel.get("foo") instanceof Map);
@@ -128,8 +120,6 @@ public class ObjectModelImplTestCase extends TestCase {
     }
 
     public void testPathInLocalContext() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.markLocalContext();
         objectModel.putAt("foo/bar", "xyz");
         
@@ -147,9 +137,26 @@ public class ObjectModelImplTestCase extends TestCase {
     }
 
     public void testIfMapIsCreated() {
-        ObjectModel objectModel = new ObjectModelImpl();
-        
         objectModel.putAt("foo/bar/xyz", "abc");
         assertTrue(((Map)objectModel.get("foo")).get("bar") instanceof Map);
+    }
+    
+    public void testParent() {
+        ObjectModel parentObjectModel = new ObjectModelImpl();
+        
+        parentObjectModel.put("foo", "bar");
+        parentObjectModel.put("foo2", "xyz");
+        objectModel.setParent(parentObjectModel);
+        
+        assertTrue(objectModel.containsKey("foo"));
+        assertEquals("xyz", objectModel.get("foo2"));
+        
+        objectModel.markLocalContext();
+        objectModel.put("foo", "abc");
+        assertEquals("abc", objectModel.get("foo"));
+        assertEquals(2, ((Collection)objectModel.getAll().get("foo")).size());
+        objectModel.cleanupLocalContext();
+        
+        assertEquals("bar", objectModel.get("foo"));
     }
 }
