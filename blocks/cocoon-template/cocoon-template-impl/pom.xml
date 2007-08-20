@@ -64,6 +64,10 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml-util</artifactId>
+    </dependency>
     <!--  
           Test dependencies
           TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
