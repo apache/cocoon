@@ -45,6 +45,16 @@
     
     <map:pipeline id="external-resource">
     
+      <!-- Explicit matcher to show deprecation message in console and log -->
+      <map:match pattern="resource/external/forms/htmlarea/**.js">
+        <map:act type="log">
+          <map:parameter name="level" value="warn"/>
+          <map:parameter name="console" value="true"/>
+          <map:parameter name="message" value="HTMLArea is deprecated. Please use alternatives instead (e.g. Xinha)."/>
+        </map:act>
+        <map:read src="resource://org/apache/cocoon/forms/resources/htmlarea/{1}.js" type="servletLinkRewriter"/>
+      </map:match>
+    
       <map:match pattern="resource/external/forms/**.js">
       	<map:read src="resource://org/apache/cocoon/forms/resources/{1}.js" type="servletLinkRewriter"/>
       </map:match>
