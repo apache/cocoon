@@ -14,7 +14,7 @@
       <plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-maven-plugin</artifactId>
-        <version>1.0.0-M1</version>
+        <version>1.0.0-RC1-SNAPSHOT</version>
         <executions>
           <execution>
             <id>rcl</id>
