@@ -44,17 +44,6 @@
 
 
   <!--+
-      | Input Modules.
-      |
-      +-->
-    <role name="org.apache.cocoon.components.modules.input.InputModule/coplet"
-          default-class="org.apache.cocoon.portal.components.modules.input.CopletModule"/>
-    <role name="org.apache.cocoon.components.modules.input.InputModule/portal-layout"
-          default-class="org.apache.cocoon.portal.components.modules.input.LayoutModule"/>
-    <role name="org.apache.cocoon.components.modules.input.InputModule/portal-skin"
-          default-class="org.apache.cocoon.portal.components.modules.input.SkinModule"/>
-
-  <!--+
       | Portal Service.
       |
       +-->

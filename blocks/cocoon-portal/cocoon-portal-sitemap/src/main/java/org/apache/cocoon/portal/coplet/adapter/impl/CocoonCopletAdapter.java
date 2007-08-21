@@ -17,10 +17,18 @@
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.CopletInstanceFeatures;
+import org.apache.cocoon.portal.sitemap.Constants;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
@@ -31,14 +39,20 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class URICopletAdapter
+public class CocoonCopletAdapter
     extends AbstractCopletAdapter {
 
     /** The source resolver */
     protected SourceResolver resolver;
 
+    protected NotifyingBuilder notifyingBuilder;
+
     public void setSourceResolver(SourceResolver resolver) {
         this.resolver = resolver;
+    }
+
+    public void setNotifyingBuilder(NotifyingBuilder notifyingBuilder) {
+        this.notifyingBuilder = notifyingBuilder;
     }
 
     /**
@@ -62,7 +76,31 @@ public class URICopletAdapter
         }
 		Source copletSource = null;
 		try {
-			copletSource = this.resolver.resolveURI(uri);
+            Boolean handlePars = (Boolean)this.getConfiguration( coplet, "handleParameters", Boolean.FALSE);
+
+            String sourceUri = uri;
+
+            if ( handlePars.booleanValue() ) {
+                List list = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(this.portalService);
+                if ( list.contains( coplet )) {
+                    // add parameters
+                    if ( uri.startsWith("cocoon:raw:") ) {
+                        sourceUri = "cocoon:" + uri.substring(11);
+                    }
+                } else {
+                    // remove parameters
+                    if (!uri.startsWith("cocoon:raw:") ) {
+                        sourceUri = "cocoon:raw:" + uri.substring(7);
+                    }
+                }
+            }
+
+			HashMap par = new HashMap();
+			par.put(Constants.PORTAL_NAME_KEY, this.portalService.getPortalName());
+			par.put(Constants.COPLET_ID_KEY, coplet.getId());
+
+			copletSource = this.resolver.resolveURI(sourceUri, null, par);
+
 			SourceUtil.toSAX(copletSource, contentHandler);
 		} catch (IOException ioe) {
 			throw new SAXException("IOException", ioe);
@@ -90,7 +128,25 @@ public class URICopletAdapter
             // TODO - if an error occured for this coplet, remember this
             //         and use directly the error-uri from now on
 
-            this.streamContent( coplet, uri, handler);
+            // Create a Notifying object - if builder is set
+            Notifying currentNotifying = null;
+            if ( this.notifyingBuilder != null ) {
+                currentNotifying = notifyingBuilder.build(this, error);
+            }
+
+            final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
+            // Add it to the object model
+            if ( currentNotifying != null ) {
+                objectModel.put(org.apache.cocoon.Constants.NOTIFYING_OBJECT, currentNotifying);
+                objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, error);
+            }
+
+            try {
+                this.streamContent( coplet, uri, handler);
+            } finally {
+                objectModel.remove(org.apache.cocoon.Constants.NOTIFYING_OBJECT);
+                objectModel.remove(ObjectModelHelper.THROWABLE_OBJECT);
+            }
 
             return true;
         }
