@@ -14,45 +14,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.thread;
+package org.apache.cocoon.thread.impl;
 
-import EDU.oswego.cs.dl.util.concurrent.CyclicBarrier;
-import EDU.oswego.cs.dl.util.concurrent.Rendezvous;
+import org.apache.cocoon.thread.Queue;
 
 /**
- * A rendezvous channel, similar to those used in CSP and Ada.  Each put must
- * wait for a take, and vice versa.  Synchronous channels are well suited for
- * handoff designs, in which an object running in one thread must synch up
- * with an object running in another thread in order to hand it some
- * information, event, or task.
- * 
- * <p>
- * If you only need threads to synch up without exchanging information,
- * consider using a Barrier. If you need bidirectional exchanges, consider
- * using a Rendezvous.
- * </p>
- * 
- * <p></p>
+ * Efficient array-based bounded buffer class. Adapted from CPJ, chapter 8,
+ * which describes design.
  * 
  * <p>
  * [<a
  * href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
  * Introduction to this package. </a>]
  * </p>
- *
- * @see CyclicBarrier
- * @see Rendezvous
+ * 
+ * <p></p>
  */
-public class SynchronousChannel
-    extends EDU.oswego.cs.dl.util.concurrent.SynchronousChannel
+public class BoundedQueue
+    extends EDU.oswego.cs.dl.util.concurrent.BoundedBuffer
     implements Queue {
+
+    //~ Constructors -----------------------------------------------------------
+
+    /**
+     * Create a buffer with the current default capacity.
+     */
+    public BoundedQueue() {
+        super();
+    }
+
+    /**
+     * Create a BoundedQueue with the given capacity.
+     *
+     * @param capacity The capacity
+     *
+     * @exception IllegalArgumentException if capacity less or equal to zero
+     */
+    public BoundedQueue( int capacity )
+    throws IllegalArgumentException {
+        super( capacity );
+    }
 
     //~ Methods ----------------------------------------------------------------
 
     /**
-     * @see org.apache.cocoon.components.thread.Queue#getQueueSize()
+     * DOCUMENT ME!
+     *
+     * @return current size of queue.
      */
-    public int getQueueSize(){
-        return 0;
+    public int getQueueSize() {
+        return usedSlots_;
     }
 }

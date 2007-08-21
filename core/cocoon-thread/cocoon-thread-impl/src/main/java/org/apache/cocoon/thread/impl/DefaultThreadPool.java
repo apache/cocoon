@@ -14,8 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.thread;
+package org.apache.cocoon.thread.impl;
 
+import org.apache.cocoon.thread.Queue;
+import org.apache.cocoon.thread.RunnableManager;
+import org.apache.cocoon.thread.ThreadFactory;
+import org.apache.cocoon.thread.ThreadPool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -219,14 +223,14 @@ public class DefaultThreadPool
      *
      * @return maximum size of the queue (0 if isQueued() == false)
      *
-     * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
+     * @see org.apache.cocoon.thread.ThreadPool#getQueueSize()
      */
     public int getMaxQueueSize() {
         return ((queueSize < 0) ? Integer.MAX_VALUE : queueSize);
     }
 
     /**
-         * @see org.apache.cocoon.components.thread.ThreadPool#getName()
+         * @see org.apache.cocoon.thread.ThreadPool#getName()
          */
     public String getName() {
 	return name;
@@ -247,7 +251,7 @@ public class DefaultThreadPool
          *
          * @return current size of the queue (0 if isQueued() == false)
          *
-         * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
+         * @see org.apache.cocoon.thread.ThreadPool#getQueueSize()
          */
     public int getQueueSize() {
 	return queue.getQueueSize();
@@ -258,7 +262,7 @@ public class DefaultThreadPool
          *
          * @return Returns the m_isQueued.
          *
-         * @see org.apache.cocoon.components.thread.ThreadPool#isQueued()
+         * @see org.apache.cocoon.thread.ThreadPool#isQueued()
          */
     public boolean isQueued() {
 	return queueSize != 0;
@@ -283,7 +287,7 @@ public class DefaultThreadPool
     }
 
     /**
-         * @see org.apache.cocoon.components.thread.ThreadPool#shutdown()
+         * @see org.apache.cocoon.thread.ThreadPool#shutdown()
          */
     public void shutdown() {
 	if (shutdownGraceful) {
@@ -556,7 +560,7 @@ public class DefaultThreadPool
 	if (factory == null) {
 	    logger.warn("No ThreadFactory is configured. Will use a "
 		    + DefaultThreadFactory.class.getName());
-	    factory = new org.apache.cocoon.components.thread.DefaultThreadFactory();
+	    factory = new org.apache.cocoon.thread.impl.DefaultThreadFactory();
 	}
     }
 

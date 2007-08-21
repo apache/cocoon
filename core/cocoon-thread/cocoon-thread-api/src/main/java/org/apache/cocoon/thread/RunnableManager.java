@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.thread;
+package org.apache.cocoon.thread;
 
 /**
  * The RunnableManager interface describes the functionality of an
