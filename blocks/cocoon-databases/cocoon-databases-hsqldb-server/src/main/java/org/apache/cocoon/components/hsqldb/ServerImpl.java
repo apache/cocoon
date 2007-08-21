@@ -24,7 +24,7 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.thread.RunnableManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hsqldb.Database;
@@ -142,7 +142,7 @@ public class ServerImpl
                 this.getLogger().debug("Configuring database " + name + " with path " + dbCfgPath);
             }
             String dbPath = dbCfgPath;
-            // is the context protocol used? 
+            // is the context protocol used?
             if (dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
                 // Test if we are running inside a WAR file
                 dbPath = this.servletContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
@@ -187,7 +187,7 @@ public class ServerImpl
         this.stop();
     }
 
-    /** 
+    /**
      * Start the server.
      */
     protected void start() {
