@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.thread.impl;
 
-import org.apache.cocoon.thread.Queue;
 import org.apache.cocoon.thread.RunnableManager;
 import org.apache.cocoon.thread.ThreadFactory;
 import org.apache.cocoon.thread.ThreadPool;

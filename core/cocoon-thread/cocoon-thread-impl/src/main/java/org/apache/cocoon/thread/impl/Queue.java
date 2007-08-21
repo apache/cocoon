@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.thread;
+package org.apache.cocoon.thread.impl;
 
 /**
  * Extension to add queue size reporting

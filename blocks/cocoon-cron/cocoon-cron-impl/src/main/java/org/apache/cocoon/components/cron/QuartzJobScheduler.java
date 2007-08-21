@@ -528,7 +528,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         }
 
         initDataMap(jobDataMap, name, canRunConcurrently, params, objects);
-        
+
         final JobDetail detail = createJobDetail(name, jobDataMap);
 
         if (getLogger().isInfoEnabled()) {
@@ -550,7 +550,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         }
     }
 
-    protected JobDataMap initDataMap(JobDataMap jobDataMap, String jobName, boolean concurent, 
+    protected JobDataMap initDataMap(JobDataMap jobDataMap, String jobName, boolean concurent,
                                      Parameters params, Map objects) {
         jobDataMap.put(DATA_MAP_NAME, jobName);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
@@ -565,7 +565,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         }
         return jobDataMap;
     }
-    
+
     protected JobDetail createJobDetail(String name, JobDataMap jobDataMap) {
         final JobDetail detail = new JobDetail(name, DEFAULT_QUARTZ_JOB_GROUP, QuartzJobExecutor.class);
         detail.setJobDataMap(jobDataMap);
@@ -579,7 +579,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
      *
      * @return QuartzThreadPool
      */
-    private QuartzThreadPool createThreadPool(final Configuration poolConfig) 
+    private QuartzThreadPool createThreadPool(final Configuration poolConfig)
     throws ServiceException {
         final int queueSize = poolConfig.getChild("queue-size").getValueAsInteger(-1);
         final int maxPoolSize = poolConfig.getChild("max-pool-size").getValueAsInteger(-1);
@@ -736,7 +736,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     protected Job createJobExecutor() {
         return new QuartzJobExecutor();
     }
-    
+
     /**
      * A QuartzThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
@@ -784,7 +784,8 @@ public class QuartzJobScheduler extends AbstractLogEnabled
          * @see org.quartz.spi.QuartzThreadPool#shutdown(boolean)
          */
         public void shutdown(final boolean waitForJobsToComplete) {
-            this.executor.shutdown();
+            // the pool is managed by the runnable manager, so we should not shut it down
+            this.executor = null;
         }
     }
 }

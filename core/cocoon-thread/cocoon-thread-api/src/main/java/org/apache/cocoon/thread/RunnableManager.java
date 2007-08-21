@@ -24,12 +24,8 @@ package org.apache.cocoon.thread;
  */
 public interface RunnableManager {
 
-    //~ Instance fields --------------------------------------------------------
-
     /** The role name */
     String ROLE = RunnableManager.class.getName();
-
-    //~ Methods ----------------------------------------------------------------
 
     /**
      * Create a shared ThreadPool with a specific {@link ThreadFactory}
@@ -51,7 +47,7 @@ public interface RunnableManager {
      * @param shutdownWaitTime After what time a normal shutdown should take
      *        into account if a graceful shutdown has not come to an end
      */
-    void createPool( String name,
+    ThreadPool createPool( String name,
                      int queueSize,
                      int maxPoolSize,
                      int minPoolSize,
@@ -92,6 +88,12 @@ public interface RunnableManager {
                            String blockPolicy,
                            boolean shutdownGraceful,
                            int shutdownWaitTime );
+
+    /**
+     * Get a thread pool
+     * @param name The name of the thread pool or null for the default pool.
+     */
+    ThreadPool getPool( String name);
 
     /**
      * Immediate Execution of a runnable in the background
