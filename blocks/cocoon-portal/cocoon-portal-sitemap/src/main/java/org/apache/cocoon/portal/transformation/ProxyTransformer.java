@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,11 +36,11 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.services.LinkService;
+import org.apache.cocoon.portal.sitemap.Constants;
 import org.apache.cocoon.portal.util.HtmlDomParser;
 import org.apache.cocoon.portal.util.InputModuleHelper;
 import org.apache.cocoon.transformation.AbstractTransformer;
@@ -237,7 +237,7 @@ public class ProxyTransformer
             final StringBuffer query = new StringBuffer();
             if ( pos != -1 ) {
                 if ( !post ) {
-                    query.append('?');                    
+                    query.append('?');
                 }
                 query.append(remoteURI.substring(pos+1));
                 firstparameter = true;
@@ -265,10 +265,10 @@ public class ProxyTransformer
                     final String value = this.parameters.getParameter(names[i]);
                     if ( value != null && value.trim().length() > 0 ) {
                         final String pName = names[i].substring(4);
-                        firstparameter = this.appendParameter(query, firstparameter, post, pName, value.trim());                        
+                        firstparameter = this.appendParameter(query, firstparameter, post, pName, value.trim());
                     }
                 }
-                
+
             }
 
             Document result = null;
@@ -306,10 +306,10 @@ public class ProxyTransformer
     }
 
     protected boolean appendParameter(StringBuffer buffer,
-                                      boolean firstparameter, 
-                                      boolean post, 
-                                      String name, 
-                                      String value) 
+                                      boolean firstparameter,
+                                      boolean post,
+                                      String name,
+                                      String value)
     throws UnsupportedEncodingException {
         if (firstparameter) {
             if (!post) {
@@ -434,7 +434,7 @@ public class ProxyTransformer
      * @param connection hte HttpURLConnection to read from
      * @return the result as valid W3C DOM XHTML document
      */
-    protected Document readXML(HttpURLConnection connection) 
+    protected Document readXML(HttpURLConnection connection)
     throws SAXException {
         try {
             String encoding = configuredEncoding;

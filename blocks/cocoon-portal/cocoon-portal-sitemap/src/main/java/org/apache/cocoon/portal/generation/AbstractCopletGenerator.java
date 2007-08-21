@@ -23,18 +23,18 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.generation.ServiceableGenerator;
-import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.sitemap.Constants;
 import org.xml.sax.SAXException;
 
 /**
  * Abstract generator implementation that provides a method getCopletInstanceData().
- * There are two possibilities how the generator obtains the information required for 
+ * There are two possibilities how the generator obtains the information required for
  * getting the coplet instance data:<br><br>
  * 1) If it is used within a coplet pipeline and this pipeline is called using the "cocoon:" protocol,
  * all required information are passed automatically.<br>
- * 2) Otherwise the portal name and the coplet id must be passed to the generator 
+ * 2) Otherwise the portal name and the coplet id must be passed to the generator
  * as paremeters in the following way:
  *
  * <pre>&lt;map:generator type="coplet"&gt;
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public abstract class AbstractCopletGenerator 
+public abstract class AbstractCopletGenerator
 extends ServiceableGenerator {
 
     /**
@@ -65,7 +65,7 @@ extends ServiceableGenerator {
      * @return The coplet instance data
      * @throws SAXException If an errors occurs or the instance data is not available
      */
-    protected CopletInstance getCopletInstanceData() 
+    protected CopletInstance getCopletInstanceData()
     throws SAXException {
         CopletInstance cid = this.getCopletInstanceData(null);
         if ( cid == null ) {
@@ -88,7 +88,7 @@ extends ServiceableGenerator {
      * @return The coplet instance data or null
      * @throws SAXException If an error occurs
      */
-    protected CopletInstance getCopletInstanceData(String instanceId) 
+    protected CopletInstance getCopletInstanceData(String instanceId)
     throws SAXException {
         String copletId = instanceId;
         if ( copletId == null ) {
@@ -100,7 +100,7 @@ extends ServiceableGenerator {
                 copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
                 if ( copletId == null ) {
                     try {
-                        copletId = this.parameters.getParameter(COPLET_ID_PARAM);        
+                        copletId = this.parameters.getParameter(COPLET_ID_PARAM);
                     } catch (ParameterException e) {
                         throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
                     }

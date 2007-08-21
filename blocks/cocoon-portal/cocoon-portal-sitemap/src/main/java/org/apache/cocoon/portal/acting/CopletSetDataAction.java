@@ -23,26 +23,26 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.coplet.CopletJXPathEvent;
+import org.apache.cocoon.portal.sitemap.Constants;
 
 /**
  * Using this action, you can set values in a coplet.
  *
  * @version $Id$
  */
-public class CopletSetDataAction 
+public class CopletSetDataAction
     extends AbstractPortalAction {
 
 	/**
 	 * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
 	 */
-	public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) 
+	public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
     throws Exception {
         // determine coplet id
-        String copletId = null;            
+        String copletId = null;
         Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
         if (context != null) {
             copletId = (String)context.get(Constants.COPLET_ID_KEY);
@@ -71,7 +71,7 @@ public class CopletSetDataAction
                     publisher.send(event);
                 }
             }
-        }        
+        }
         return EMPTY_MAP;
 	}
 }

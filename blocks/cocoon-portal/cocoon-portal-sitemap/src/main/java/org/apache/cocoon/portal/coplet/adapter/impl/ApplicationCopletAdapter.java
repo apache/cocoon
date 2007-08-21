@@ -39,10 +39,10 @@ import org.xml.sax.SAXException;
  * TODO: Decide if we still need this adapter.
  * @version $Id$
  */
-public class ApplicationCopletAdapter extends URICopletAdapter {
+public class ApplicationCopletAdapter extends CocoonCopletAdapter {
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, java.lang.String, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.CocoonCopletAdapter#streamContent(org.apache.cocoon.portal.om.CopletInstance, java.lang.String, org.xml.sax.ContentHandler)
      */
     protected void streamContent(final CopletInstance coplet,
                                  final String uri,

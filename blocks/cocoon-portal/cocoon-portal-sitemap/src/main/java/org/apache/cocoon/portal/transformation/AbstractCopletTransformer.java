@@ -22,9 +22,9 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.sitemap.Constants;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.xml.sax.SAXException;
 
@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public abstract class AbstractCopletTransformer 
+public abstract class AbstractCopletTransformer
 extends AbstractSAXTransformer {
 
     /**
@@ -66,7 +66,7 @@ extends AbstractSAXTransformer {
      * @return The coplet instance data
      * @throws SAXException If an errors occurs or the instance data is not available
      */
-    protected CopletInstance getCopletInstanceData() 
+    protected CopletInstance getCopletInstanceData()
     throws SAXException {
         CopletInstance cid = this.getCopletInstanceData(null);
         if ( cid == null ) {
@@ -82,7 +82,7 @@ extends AbstractSAXTransformer {
      * @return The coplet instance data or null
      * @throws SAXException If an error occurs
      */
-    protected CopletInstance getCopletInstanceData(String instanceId) 
+    protected CopletInstance getCopletInstanceData(String instanceId)
     throws SAXException {
         final Map parentContext = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
         String copletId = instanceId;
@@ -95,7 +95,7 @@ extends AbstractSAXTransformer {
                 if ( copletId == null ) {
                     try {
                         copletId = this.parameters.getParameter(COPLET_ID_PARAM);
-                        
+
                     } catch (ParameterException e) {
                         throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
                     }
@@ -116,7 +116,7 @@ extends AbstractSAXTransformer {
      */
     public void service(ServiceManager aManager) throws ServiceException {
         super.service(aManager);
-        this.portalService = (PortalService)this.manager.lookup(PortalService.class.getName());        
+        this.portalService = (PortalService)this.manager.lookup(PortalService.class.getName());
     }
 
     /**
@@ -125,7 +125,7 @@ extends AbstractSAXTransformer {
     public void dispose() {
         if ( this.portalService != null ) {
             this.manager.release( this.portalService );
-            this.portalService = null;            
+            this.portalService = null;
         }
         super.dispose();
     }
