@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.thread;
+package org.apache.cocoon.thread.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.cocoon.thread.RunnableManager;
+import org.apache.cocoon.thread.ThreadPool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

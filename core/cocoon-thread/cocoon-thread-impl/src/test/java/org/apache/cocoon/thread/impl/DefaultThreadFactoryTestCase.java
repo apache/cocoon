@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.thread;
+package org.apache.cocoon.thread.impl;
+
+import org.apache.cocoon.thread.impl.DefaultThreadFactory;
 
 import junit.framework.TestCase;
 

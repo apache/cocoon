@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.thread;
+package org.apache.cocoon.thread.impl;
+
+import org.apache.cocoon.thread.Queue;
 
 /**
  * A linked list based channel implementation. The algorithm avoids contention
@@ -36,7 +38,7 @@ public class LinkedQueue
     //~ Methods ----------------------------------------------------------------
 
     /**
-     * @see org.apache.cocoon.components.thread.Queue#getQueueSize()
+     * @see org.apache.cocoon.thread.Queue#getQueueSize()
      */
     public int getQueueSize() {
         return -1;
