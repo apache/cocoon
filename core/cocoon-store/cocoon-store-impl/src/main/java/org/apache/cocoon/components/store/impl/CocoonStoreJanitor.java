@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.components.store.impl;
 
-import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.thread.RunnableManager;
 
 /**
  * The CocoonStoreJanitor class just subclasses the {@link StoreJanitorImpl} to
@@ -48,7 +48,7 @@ public class CocoonStoreJanitor extends StoreJanitorImpl {
     /**
      * Name of the thread pool to use.
      * If not specified, defaults to 'daemon'.
-     * 
+     *
      * @param threadPool
      */
     public void setThreadPool(String threadPool) {
@@ -57,7 +57,7 @@ public class CocoonStoreJanitor extends StoreJanitorImpl {
 
     /**
      * Set the <code>RunnableManager</code>
-     * 
+     *
      * @param runnableManager
      */
     public void setRunnableManager(RunnableManager runnableManager) {
