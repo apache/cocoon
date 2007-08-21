@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletContext;
 
-import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.thread.RunnableManager;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.pluto.spi.optional.PortletRegistryService;
