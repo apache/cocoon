@@ -143,14 +143,14 @@ public class DefaultRunnableManager implements RunnableManager, Runnable {
      * @throws IllegalArgumentException
      *             If the pool already exists
      */
-    public void createPool(final String name, final int queueSize, final int maxPoolSize, final int minPoolSize,
+    public ThreadPool createPool(final String name, final int queueSize, final int maxPoolSize, final int minPoolSize,
                     final int priority, final boolean isDaemon, final long keepAliveTime, final String blockPolicy,
                     final boolean shutdownGraceful, final int shutdownWaitTimeMs) {
         if (null != pools.get(name)) {
             throw new IllegalArgumentException("ThreadPool \"" + name + "\" already exists");
         }
 
-        final ThreadPool pool = new DefaultThreadPool();
+        final DefaultThreadPool pool = new DefaultThreadPool();
         pool.setName(name);
         pool.setQueueSize(queueSize);
         pool.setMaxPoolSize(maxPoolSize);
@@ -163,6 +163,7 @@ public class DefaultRunnableManager implements RunnableManager, Runnable {
         synchronized (pools) {
             pools.put(pool.getName(), pool);
         }
+        return pool;
     }
 
     /**
@@ -196,7 +197,7 @@ public class DefaultRunnableManager implements RunnableManager, Runnable {
     public ThreadPool createPool(final int queueSize, final int maxPoolSize, final int minPoolSize, final int priority,
                     final boolean isDaemon, final long keepAliveTime, final String blockPolicy,
                     final boolean shutdownGraceful, final int shutdownWaitTime) {
-        final ThreadPool pool = new DefaultThreadPool();
+        final DefaultThreadPool pool = new DefaultThreadPool();
         final String name = "anon-" + pool.hashCode();
         pool.setName(name);
         pool.setQueueSize(queueSize);
@@ -212,6 +213,18 @@ public class DefaultRunnableManager implements RunnableManager, Runnable {
         }
 
         return pool;
+    }
+
+    /**
+     * @see org.apache.cocoon.thread.RunnableManager#getPool(java.lang.String)
+     */
+    public ThreadPool getPool(String name) {
+        if ( name == null ) {
+            name = ThreadPool.DEFAULT_THREADPOOL_NAME;
+        }
+        synchronized (pools) {
+            return (ThreadPool)pools.get(name);
+        }
     }
 
     /**

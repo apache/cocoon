@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.thread.impl;
 
-import org.apache.cocoon.thread.Queue;
 
 import EDU.oswego.cs.dl.util.concurrent.CyclicBarrier;
 import EDU.oswego.cs.dl.util.concurrent.Rendezvous;
@@ -52,7 +51,7 @@ public class SynchronousChannel
     //~ Methods ----------------------------------------------------------------
 
     /**
-     * @see org.apache.cocoon.thread.Queue#getQueueSize()
+     * @see org.apache.cocoon.thread.impl.Queue#getQueueSize()
      */
     public int getQueueSize(){
         return 0;

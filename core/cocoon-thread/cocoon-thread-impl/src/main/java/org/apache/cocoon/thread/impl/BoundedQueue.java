@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.thread.impl;
 
-import org.apache.cocoon.thread.Queue;
 
 /**
  * Efficient array-based bounded buffer class. Adapted from CPJ, chapter 8,

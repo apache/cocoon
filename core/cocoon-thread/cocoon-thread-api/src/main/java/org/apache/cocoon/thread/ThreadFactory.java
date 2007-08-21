@@ -25,8 +25,6 @@ package org.apache.cocoon.thread;
 public interface ThreadFactory
     extends EDU.oswego.cs.dl.util.concurrent.ThreadFactory {
 
-    //~ Methods ----------------------------------------------------------------
-
     /**
      * Set the daemon mode of created <code>Thread</code>s should have
      *

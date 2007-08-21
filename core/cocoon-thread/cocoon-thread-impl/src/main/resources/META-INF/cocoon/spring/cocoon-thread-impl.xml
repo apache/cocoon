@@ -30,8 +30,8 @@
       | This component manages commands (Runnables) executed in background using
       | preconfigured pools of worker threads
       +-->
-  <bean name="org.apache.cocoon.components.thread.RunnableManager"
-        class="org.apache.cocoon.components.thread.DefaultRunnableManager"
+  <bean name="org.apache.cocoon.thread.RunnableManager"
+        class="org.apache.cocoon.thread.impl.DefaultRunnableManager"
         scope="singleton" init-method="init" destroy-method="destroy">
     <!--+
         | This is the default configuration of the runnable-manager. More
@@ -42,7 +42,7 @@
         | threadPools:       container element for thread-pool elements.
         +-->
     <property name="workerThreadPools">
-      <configurator:bean-map type="org.apache.cocoon.components.thread.ThreadPool" strip-prefix="true"/>
+      <configurator:bean-map type="org.apache.cocoon.thread.ThreadPool" strip-prefix="true"/>
     </property>
   </bean>
   
@@ -50,8 +50,8 @@
       | This is the default thread pool. It's use fits best for short
       | running background tasks.
       +-->
-  <bean name="org.apache.cocoon.components.thread.ThreadPool/default"
-        class="org.apache.cocoon.components.thread.DefaultThreadPool"
+  <bean name="org.apache.cocoon.thread.ThreadPool/default"
+        class="org.apache.cocoon.thread.impl.DefaultThreadPool"
         init-method="init" scope="singleton">
     <!--+
         | More indepth information can be found at
@@ -123,7 +123,7 @@
         +-->
     <property name="shutdownWaitTimeMs" value="-1" />
     <!--+
-        | specifies the fully qualified class name of an org.apache.cocoon.components.thread.ThreadFactory
+        | specifies the fully qualified class name of an org.apache.cocoon.thread.ThreadFactory
         | implementation. It is responsible to create Thread classes.
         +-->
     <property name="factory" ref="defaultThreadFactory"/>
@@ -133,8 +133,8 @@
       | This thread pool should be used for daemons (permanently running
       | threads).
       +-->
-  <bean name="org.apache.cocoon.components.thread.ThreadPool/daemon"
-        class="org.apache.cocoon.components.thread.DefaultThreadPool"
+  <bean name="org.apache.cocoon.thread.ThreadPool/daemon"
+        class="org.apache.cocoon.thread.impl.DefaultThreadPool"
         init-method="init" scope="singleton">
     <property name="name" value="daemon"/>
     <property name="poolPriority" value="NORM"/>
@@ -149,5 +149,5 @@
     <property name="factory" ref="defaultThreadFactory"/>
   </bean>
   
-  <bean id="defaultThreadFactory" class="org.apache.cocoon.components.thread.DefaultThreadFactory" scope="prototype" />
+  <bean id="defaultThreadFactory" class="org.apache.cocoon.thread.impl.DefaultThreadFactory" scope="prototype" />
 </beans>

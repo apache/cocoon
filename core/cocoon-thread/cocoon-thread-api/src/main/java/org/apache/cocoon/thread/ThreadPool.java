@@ -133,43 +133,11 @@ public interface ThreadPool {
     void execute(Runnable command) throws InterruptedException;
 
     /**
-     * Set the blocking policy
-     *
-     * @param blockPolicy
-     *                The blocking policy value
-     */
-    void setBlockPolicy(String blockPolicy);
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param name
-     *                The name to set.
-     */
-    void setName(String name);
-
-    /**
-     * Sets the shutdownGraceful (true if graceful)
-     *
-     * @param shutdownGraceful
-     *                The shutdownGraceful to set.
-     */
-    void setShutdownGraceful(boolean shutdownGraceful);
-
-    /**
      * Returns true if shutdown is graceful
      *
      * @return Returns the shutdownGraceful.
      */
     boolean isShutdownGraceful();
-
-    /**
-     * Sets the shutdownWaitTime in milliseconds
-     *
-     * @param shutdownWaitTimeMs
-     *                The shutdownWaitTimeMs to set.
-     */
-    void setShutdownWaitTimeMs(int shutdownWaitTimeMs);
 
     /**
      * Gets the shutdownWaitTime in milliseconds
@@ -186,27 +154,11 @@ public interface ThreadPool {
     long getKeepAliveTime();
 
     /**
-     * Sets the keepAliveTime in milliseconds
-     *
-     * @param keepAliveTime
-     *                the keepAliveTime to set
-     */
-    void setKeepAliveTime(long keepAliveTime);
-
-    /**
      * Gets the maximum pool size
      *
      * @return the maxPoolSize
      */
     int getMaxPoolSize();
-
-    /**
-     * Sets the maximum pool size
-     *
-     * @param maxPoolSize
-     *                the maxPoolSize to set
-     */
-    void setMaxPoolSize(int maxPoolSize);
 
     /**
      * Gets the minimum pool size
@@ -216,50 +168,11 @@ public interface ThreadPool {
     int getMinPoolSize();
 
     /**
-     * Sets the minimum pool size
-     *
-     * @param minPoolSize
-     *                the minPoolSize to set
-     */
-    void setMinPoolSize(int minPoolSize);
-
-    /**
-     * Sets the priority of this thread pool: {@link Thread#MIN_PRIORITY},
-     * {@link Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
-     *
-     * @param priority
-     *                the priority to set
-     */
-    void setPriority(int priority);
-
-    /**
-     * Sets the queue size of the thread pool
-     *
-     * @param queueSize
-     *                the queueSize to set
-     */
-    void setQueueSize(int queueSize);
-
-    /**
-     * Terminates all threads possibly awaiting processing all elements
-     * currently in queue.
-     */
-    void shutdown();
-
-    /**
      * Returns true if thread runs as daemon
      *
      * @return the daemon
      */
     boolean isDaemon();
-
-    /**
-     * Set to true if thread shall run as daemon
-     *
-     * @param daemon
-     *                the daemon to set
-     */
-    void setDaemon(boolean daemon);
 
     /**
      * Returns true if a shutDown method has succeeded in terminating all
