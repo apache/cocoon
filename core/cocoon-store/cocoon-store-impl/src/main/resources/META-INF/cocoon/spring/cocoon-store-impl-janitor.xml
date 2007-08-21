@@ -111,6 +111,6 @@
     <property name="threadPriority" value="5"/>
         +-->
         
-    <property name="runnableManager" ref="org.apache.cocoon.components.thread.RunnableManager"/>
+    <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
   </bean>
 </beans>
