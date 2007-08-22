@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,7 +57,7 @@ public class ForEach extends Instruction {
 
         String items = attrs.getValue("items");
         String select = attrs.getValue("select");
-        
+
         StringTemplateParser expressionCompiler = parsingContext.getStringTemplateParser();
         this.var = expressionCompiler.compileExpr(attrs.getValue("var"), null, locator);
         this.varStatus = expressionCompiler.compileExpr(attrs.getValue("varStatus"), null, locator);
@@ -74,21 +74,21 @@ public class ForEach extends Instruction {
             throw new SAXParseException("forEach: only one of \"select\" or \"items\" may be specified",
                                         locator, null);
         }
-        
+
         this.items = expressionCompiler.compileExpr(items == null ? select : items, null, locator);
     }
 
     public Event execute(final XMLConsumer consumer,
                          ObjectModel objectModel, ExecutionContext executionContext,
-                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent)
         throws SAXException {
         Iterator iter = null;
         int begin, end, step;
         String var = null, varStatus = null;
         try {
-            iter = (this.items != null ) 
+            iter = (this.items != null )
                     ? this.items.getIterator(objectModel)
-                    : Subst.NULL_ITER;
+                    : null;
             begin = this.begin == null
                 ? 0
                 : this.begin.getIntValue(objectModel);
@@ -101,7 +101,7 @@ public class ForEach extends Instruction {
 
             if ( this.var != null )
                 var = this.var.getStringValue(objectModel);
-            
+
             if ( this.varStatus != null )
                 varStatus = this.varStatus.getStringValue(objectModel);
         } catch (Exception exc) {
@@ -114,9 +114,13 @@ public class ForEach extends Instruction {
         objectModel.markLocalContext();
         int i = 0;
         // Move to the begin row
-        while (i < begin && iter.hasNext()) {
-            iter.next();
+        if ( iter == null ) {
             i++;
+        } else {
+            while (i < begin && iter.hasNext()) {
+                iter.next();
+                i++;
+            }
         }
         LoopTagStatus status = null;
         if (varStatus != null) {
@@ -152,11 +156,11 @@ public class ForEach extends Instruction {
             // Increase index
             i += step;
             count++;
-            
+
             objectModel.cleanupLocalContext();
         }
         objectModel.cleanupLocalContext();
-            
+
         return getEndInstruction().getNext();
     }
 }

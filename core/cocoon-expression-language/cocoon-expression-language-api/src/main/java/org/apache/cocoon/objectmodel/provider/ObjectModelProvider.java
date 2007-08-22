@@ -18,14 +18,14 @@ package org.apache.cocoon.objectmodel.provider;
 
 
 /**
- * This simple interface should be implemented by Spring beans providing initial entries for 
+ * This simple interface should be implemented by Spring beans providing initial entries for
  * {@link org.apache.cocoon.objectmodel.ObjectModel}.
- * 
- * @version $Id: $
+ *
+ * @version $Id$
  * @since 2.2
  */
 public interface ObjectModelProvider {
-    
-    public Object getObject();
-    
+
+    Object getObject();
+
 }

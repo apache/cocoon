@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +30,20 @@ public class JXTExpression implements Subst {
 
     private String raw;
     private Object compiledExpression;
+
+    protected static final Iterator NULL_ITER = new Iterator() {
+        public boolean hasNext() {
+            return true;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+            // EMPTY
+        }
+    };
 
     public JXTExpression(String raw, Object expr) {
         this.raw = raw;
@@ -70,17 +84,17 @@ public class JXTExpression implements Subst {
                 // literal value
                 iter = new Iterator() {
                         Object val = this;
-                        
+
                         public boolean hasNext() {
                             return val != null;
                         }
-                        
+
                         public Object next() {
                             Object res = val;
                             val = null;
                             return res;
                         }
-                        
+
                         public void remove() {
                             // EMPTY
                         }
