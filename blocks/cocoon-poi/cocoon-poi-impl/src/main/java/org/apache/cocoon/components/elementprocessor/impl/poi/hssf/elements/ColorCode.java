@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,6 +31,7 @@ public class ColorCode {
     private static final int _green           = 1;
     private static final int _blue            = 2;
     private static final int _component_count = 3;
+    private static final String SEPARATOR = ":";
     private int[]            _components      = new int[ _component_count ];
     private String           rgbstring;
 
@@ -47,12 +48,13 @@ public class ColorCode {
         if (value == null) {
             throw new IOException("cannot process a null color code");
         }
-        StringTokenizer tokenizer = new StringTokenizer(value.trim(), ":");
+        StringTokenizer tokenizer = new StringTokenizer(value.trim(), SEPARATOR);
 
         if (tokenizer.countTokens() != _component_count) {
             throw new IOException("color code must have exactly "
                       + _component_count + " components, no more, no less");
         }
+        StringBuffer constructedRgbString = new StringBuffer();
         for (int j = 0; j < _component_count; j++) {
             try {
                 _components[j] = Integer.parseInt(tokenizer.nextToken(), 16);
@@ -63,8 +65,15 @@ public class ColorCode {
             if (_components[j] < 0 || _components[j] > 65535) {
                 throw new IOException("Component #" + j + " is out of range");
             }
+            if (j > 0) {
+                constructedRgbString.append(SEPARATOR);
+            }
+            constructedRgbString.append(
+                StringUtils.leftPad(Integer.toHexString(_components[j]), 4, '0').toUpperCase());
         }
+        rgbstring = constructedRgbString.toString();
     }
+
 
     /**
      * @return red component
@@ -89,7 +98,7 @@ public class ColorCode {
     public int getBlue() {
         return _components[_blue];
     }
-    
+
     public String toString() {
         return rgbstring;
     }

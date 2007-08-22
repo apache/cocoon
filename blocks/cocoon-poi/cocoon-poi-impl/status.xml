@@ -66,6 +66,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1440" due-to="Krystian Nowak" due-to-email="krystian@man.poznan.pl">
+      Color string normalization.
+    </action> 
     <action dev="JH" type="fix" fixes-bug="COCOON-1976" due-to="Rob Berens">
       Prevent NPE in ElementProcessorSerializer on characters before first startElement.
     </action>
