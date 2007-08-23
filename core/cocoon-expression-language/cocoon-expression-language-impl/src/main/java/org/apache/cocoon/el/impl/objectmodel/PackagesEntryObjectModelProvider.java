@@ -1,7 +1,6 @@
 package org.apache.cocoon.el.impl.objectmodel;
 
-import org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider;
-import org.apache.cocoon.el.impl.objectmodel.ObjectModelProvider;
+import org.apache.cocoon.el.objectmodel.ObjectModelProvider;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.Scriptable;
@@ -9,11 +8,11 @@ import org.mozilla.javascript.ScriptableObject;
 
 /**
  * Adds java packages to {@link org.apache.cocoon.el.objectmodel.ObjectModel ObjectModel}. Allows to construct java objects.
- * 
+ *
  * @see JavaEntryObjectModelProvider
  */
 public class PackagesEntryObjectModelProvider implements ObjectModelProvider {
-    
+
     private Scriptable rootScope;
 
     //FIXME: This method is duplicated in JavaEntryObjectModelProvider

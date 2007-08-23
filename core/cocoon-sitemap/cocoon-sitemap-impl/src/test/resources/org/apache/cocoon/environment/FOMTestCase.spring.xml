@@ -28,12 +28,12 @@
   <import resource="classpath:META-INF/cocoon/spring/RhinoScope.xml"/>
   
   <!-- Redefining this bean instead of importing because originally it is in "call" scope -->
-  <bean name="org.apache.cocoon.objectmodel.ObjectModel" class="org.apache.cocoon.objectmodel.ObjectModelImpl">
+  <bean name="org.apache.cocoon.el.objectmodel.ObjectModel" class="org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl">
     <property name="initialEntries">
       <map>
-        <entry key="cocoon" value-ref="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider"/>
-        <entry key="Packages" value-ref="org.apache.cocoon.objectmodel.provider.PackagesEntryObjectModelProvider"/>
-        <entry key="java" value-ref="org.apache.cocoon.objectmodel.provider.JavaEntryObjectModelProvider"/>
+        <entry key="cocoon" value-ref="org.apache.cocoon.el.impl.objectmodel.CocoonEntryObjectModelProvider"/>
+        <entry key="Packages" value-ref="org.apache.cocoon.el.impl.objectmodel.PackagesEntryObjectModelProvider"/>
+        <entry key="java" value-ref="org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider"/>
       </map>
     </property>        
   </bean>

@@ -26,7 +26,7 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.commons.javaflow.Continuation;
 import org.apache.excalibur.source.SourceUtil;
 

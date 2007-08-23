@@ -23,7 +23,7 @@
   <bean name="org.apache.cocoon.components.treeprocessor.variables.StringTemplateParserVariableResolver"
     class="org.apache.cocoon.components.treeprocessor.variables.StringTemplateParserVariableResolver" scope="prototype">
     <property name="stringTemplateParser" ref="org.apache.cocoon.el.parsing.StringTemplateParser/legacySitemap"/>
-    <property name="objectModel" ref="org.apache.cocoon.objectmodel.ObjectModel"/>
+    <property name="objectModel" ref="org.apache.cocoon.el.objectmodel.ObjectModel"/>
   </bean>
   
 </beans>

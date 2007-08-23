@@ -29,7 +29,7 @@ import org.apache.cocoon.forms.binding.BindingManager;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;

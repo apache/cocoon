@@ -31,7 +31,7 @@
   <import resource="classpath:META-INF/cocoon/spring/LegacyStringTemplateParser.xml"/>
   <import resource="classpath:META-INF/cocoon/spring/ObjectModelTemplate.xml"/>
   
-  <bean name="org.apache.cocoon.objectmodel.ObjectModel" class="org.apache.cocoon.objectmodel.ObjectModelImpl"
-        parent="org.apache.cocoon.objectmodel.ObjectModel.template"/>
+  <bean name="org.apache.cocoon.el.objectmodel.ObjectModel" class="org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl"
+        parent="org.apache.cocoon.el.objectmodel.ObjectModel.template"/>
   
 </beans>
