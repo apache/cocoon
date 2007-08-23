@@ -415,7 +415,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         }
 
         Servlet servlet = (Servlet) this.connections.get(name);
-        return servlet != null ? ((ServletServiceContextAware) servlet).getServletServiceContext() : null;
+        return servlet != null ? servlet.getServletConfig().getServletContext() : null;
     }
 
     /**

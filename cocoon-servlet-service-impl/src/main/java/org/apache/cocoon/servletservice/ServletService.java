@@ -46,7 +46,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class ServletService extends HttpServlet
     implements ApplicationContextAware, ServletContextAware, BeanNameAware,
-    InitializingBean, DisposableBean, ServletServiceContextAware {
+    InitializingBean, DisposableBean {
     
     private ServletServiceContext servletServiceContext;
     private String embeddedServletClass;
@@ -63,7 +63,6 @@ public class ServletService extends HttpServlet
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
      */
     public void init(ServletConfig servletConfig) throws ServletException {
-        super.init(servletConfig);
         this.servletServiceContext.setServletContext(servletConfig.getServletContext());
 
         // create a sub container that resolves paths relative to the block
@@ -92,6 +91,8 @@ public class ServletService extends HttpServlet
                     return super.getServletContext().getInitParameterNames();
                 }
             };
+            
+        super.init(blockServletConfig);
 
         // create and initialize the embedded servlet
         this.embeddedServlet = createEmbeddedServlet(this.embeddedServletClass, blockServletConfig);
@@ -126,13 +127,6 @@ public class ServletService extends HttpServlet
     public void destroy() {
         this.embeddedServlet.destroy();        
         super.destroy();
-    }
-    
-    /**
-     * @return the servletServiceContext
-     */
-    public ServletServiceContext getServletServiceContext() {
-        return this.servletServiceContext;
     }
     
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

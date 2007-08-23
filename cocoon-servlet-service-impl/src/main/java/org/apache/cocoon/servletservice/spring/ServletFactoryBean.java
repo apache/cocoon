@@ -30,7 +30,6 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.cocoon.servletservice.Mountable;
 import org.apache.cocoon.servletservice.ServletServiceContext;
-import org.apache.cocoon.servletservice.ServletServiceContextAware;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.DefaultIntroductionAdvisor;
 import org.springframework.aop.support.DelegatingIntroductionInterceptor;
@@ -199,7 +198,6 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         if (this.mountPath != null) {
             proxyFactory.addAdvisor(new MountableMixinAdvisor());
         }
-        proxyFactory.addAdvisor(new ServletServiceContextMixinAdvisor());
         return proxyFactory.getProxy();
     }
 
@@ -231,6 +229,12 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
                         ServletFactoryBean.this.servletServiceContext.getRequestDispatcher(request.getPathInfo());
                 dispatcher.forward(request, response);
                 return null;
+            } else if ("init".equals(invocation.getMethod().getName())) {
+                // The embedded servlet is initialized by this factory bean, ignore other containers
+                return null;                
+            } else if ("destroy".equals(invocation.getMethod().getName())) {
+                // The embedded servlet is destroyed up by this factory bean, ignore other containers
+                return null;
             }
 
             return invocation.proceed();
@@ -249,21 +253,6 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
 
         public MountableMixinAdvisor() {
             super(new MountableMixin(), Mountable.class);
-        }
-    }
-
-    private class ServletServiceContextMixin extends DelegatingIntroductionInterceptor
-                                             implements ServletServiceContextAware {
-
-        public ServletServiceContext getServletServiceContext() {
-            return ServletFactoryBean.this.servletServiceContext;
-        }
-    }
-
-    private class ServletServiceContextMixinAdvisor extends DefaultIntroductionAdvisor {
-
-        public ServletServiceContextMixinAdvisor() {
-            super(new ServletServiceContextMixin(), ServletServiceContextAware.class);
         }
     }
 }
