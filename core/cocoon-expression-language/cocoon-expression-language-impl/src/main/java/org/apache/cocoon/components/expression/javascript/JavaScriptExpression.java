@@ -22,8 +22,8 @@ import java.io.StringReader;
 
 import org.apache.cocoon.components.expression.AbstractExpression;
 import org.apache.cocoon.objectmodel.ObjectModel;
-import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
+import org.apache.cocoon.el.ExpressionException;
 import org.apache.commons.jexl.util.introspection.Info;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;

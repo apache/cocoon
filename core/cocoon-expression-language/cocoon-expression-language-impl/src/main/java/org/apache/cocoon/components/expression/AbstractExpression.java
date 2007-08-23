@@ -18,6 +18,8 @@ package org.apache.cocoon.components.expression;
 
 import java.util.Iterator;
 
+import org.apache.cocoon.el.Expression;
+
 /**
  * @version $Id$
  */

@@ -22,7 +22,7 @@
   
   <bean id="org.apache.cocoon.template.expression.AbstractStringTemplateParser" 
         class="org.apache.cocoon.template.expression.AbstractStringTemplateParser" abstract="true">
-    <property name="expressionFactory" ref="org.apache.cocoon.components.expression.ExpressionFactory"/>
+    <property name="expressionFactory" ref="org.apache.cocoon.el.ExpressionFactory"/>
   </bean>
   
 </beans>

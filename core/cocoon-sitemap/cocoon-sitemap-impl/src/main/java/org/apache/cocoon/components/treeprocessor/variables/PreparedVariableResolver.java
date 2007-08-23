@@ -27,11 +27,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionException;
-import org.apache.cocoon.components.expression.ExpressionFactory;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.el.Expression;
+import org.apache.cocoon.el.ExpressionException;
+import org.apache.cocoon.el.ExpressionFactory;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.sitemap.PatternException;
 

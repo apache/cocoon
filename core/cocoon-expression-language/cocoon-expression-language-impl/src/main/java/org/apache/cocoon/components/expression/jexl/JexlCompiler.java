@@ -16,9 +16,9 @@
  */
 package org.apache.cocoon.components.expression.jexl;
 
-import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionCompiler;
-import org.apache.cocoon.components.expression.ExpressionException;
+import org.apache.cocoon.el.Expression;
+import org.apache.cocoon.el.ExpressionCompiler;
+import org.apache.cocoon.el.ExpressionException;
 
 /**
  * @version $Id$
@@ -26,7 +26,7 @@ import org.apache.cocoon.components.expression.ExpressionException;
 public class JexlCompiler implements ExpressionCompiler {
 
     /**
-     * @see org.apache.cocoon.components.expression.ExpressionCompiler#compile(java.lang.String, java.lang.String)
+     * @see org.apache.cocoon.el.ExpressionCompiler#compile(java.lang.String, java.lang.String)
      */
     public Expression compile(String language, String expression) throws ExpressionException {
         return new JexlExpression(language, expression);

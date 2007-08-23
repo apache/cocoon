@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
-import org.apache.cocoon.components.expression.ExpressionFactory;
+import org.apache.cocoon.el.ExpressionFactory;
 import org.apache.cocoon.el.parsing.StringTemplateParser;
 import org.apache.cocoon.el.parsing.Subst;
 import org.xml.sax.Locator;

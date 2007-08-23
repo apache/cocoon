@@ -20,9 +20,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
+import org.apache.cocoon.el.Expression;
+import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.xml.NamespacesTable;
