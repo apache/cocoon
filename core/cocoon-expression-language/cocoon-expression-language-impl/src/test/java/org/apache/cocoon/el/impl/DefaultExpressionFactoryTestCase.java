@@ -21,12 +21,12 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.apache.cocoon.components.expression.DefaultExpressionFactory;
-import org.apache.cocoon.components.expression.javascript.JavaScriptCompiler;
-import org.apache.cocoon.components.expression.jexl.JexlCompiler;
-import org.apache.cocoon.components.expression.jxpath.JXPathCompiler;
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionException;
+import org.apache.cocoon.el.impl.DefaultExpressionFactory;
+import org.apache.cocoon.el.impl.javascript.JavaScriptCompiler;
+import org.apache.cocoon.el.impl.jexl.JexlCompiler;
+import org.apache.cocoon.el.impl.jxpath.JXPathCompiler;
 import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
 public class DefaultExpressionFactoryTestCase extends TestCase {

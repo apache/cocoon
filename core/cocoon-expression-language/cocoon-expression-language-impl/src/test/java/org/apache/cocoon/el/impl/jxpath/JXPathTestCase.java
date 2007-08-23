@@ -18,10 +18,10 @@ package org.apache.cocoon.el.impl.jxpath;
 
 import junit.framework.TestCase;
 
-import org.apache.cocoon.components.expression.jxpath.JXPathCompiler;
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionCompiler;
 import org.apache.cocoon.el.ExpressionException;
+import org.apache.cocoon.el.impl.jxpath.JXPathCompiler;
 import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
 public class JXPathTestCase extends TestCase {

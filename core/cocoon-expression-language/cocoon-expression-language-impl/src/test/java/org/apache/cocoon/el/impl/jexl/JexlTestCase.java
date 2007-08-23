@@ -20,10 +20,10 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.apache.cocoon.components.expression.jexl.JexlCompiler;
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionCompiler;
 import org.apache.cocoon.el.ExpressionException;
+import org.apache.cocoon.el.impl.jexl.JexlCompiler;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.objectmodel.ObjectModelImpl;
 

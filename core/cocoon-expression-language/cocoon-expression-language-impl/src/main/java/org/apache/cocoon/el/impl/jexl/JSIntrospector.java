@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.jexl;
+package org.apache.cocoon.el.impl.jexl;
 
 import java.util.Enumeration;
 import java.util.Iterator;

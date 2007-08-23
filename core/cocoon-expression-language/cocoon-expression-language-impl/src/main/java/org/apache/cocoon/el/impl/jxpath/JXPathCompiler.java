@@ -14,26 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.helpers;
+package org.apache.cocoon.el.impl.jxpath;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
+import org.apache.cocoon.el.Expression;
+import org.apache.cocoon.el.ExpressionCompiler;
+import org.apache.cocoon.el.ExpressionException;
 
 /**
- * This is a simple factory class that produces Rhino scope.
- * Scope returned by this factory will be used as Spring bean.
+ * @version SVN $Id$
  */
-public final class RhinoScopeFactory {
-
-    public static Scriptable createRhinoScope() {
-        final Scriptable rootScope;
-
-        Context ctx = Context.enter();
-        try {
-            rootScope = ctx.initStandardObjects(null);
-        } finally {
-            Context.exit();
-        }
-        return rootScope;
+public class JXPathCompiler implements ExpressionCompiler {
+    public Expression compile(String language, String expression)
+        throws ExpressionException{
+        return new JXPathExpression(language, expression);
     }
 }

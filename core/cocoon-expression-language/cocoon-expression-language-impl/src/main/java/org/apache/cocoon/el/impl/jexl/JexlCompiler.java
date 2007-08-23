@@ -14,32 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.javascript;
+package org.apache.cocoon.el.impl.jexl;
 
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionCompiler;
 import org.apache.cocoon.el.ExpressionException;
-import org.mozilla.javascript.Scriptable;
 
 /**
  * @version $Id$
  */
-public class JavaScriptCompiler implements ExpressionCompiler {
-
-    Scriptable rootScope;
+public class JexlCompiler implements ExpressionCompiler {
 
     /**
      * @see org.apache.cocoon.el.ExpressionCompiler#compile(java.lang.String, java.lang.String)
      */
     public Expression compile(String language, String expression) throws ExpressionException {
-        return new JavaScriptExpression(language, expression, rootScope);
-    }
-
-    public Scriptable getRootScope() {
-        return rootScope;
-    }
-
-    public void setRootScope(Scriptable rootScope) {
-        this.rootScope = rootScope;
+        return new JexlExpression(language, expression);
     }
 }

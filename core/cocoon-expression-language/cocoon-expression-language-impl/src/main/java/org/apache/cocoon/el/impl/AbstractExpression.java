@@ -14,21 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.jexl;
+package org.apache.cocoon.el.impl;
+
+import java.util.Iterator;
 
 import org.apache.cocoon.el.Expression;
-import org.apache.cocoon.el.ExpressionCompiler;
-import org.apache.cocoon.el.ExpressionException;
 
 /**
  * @version $Id$
  */
-public class JexlCompiler implements ExpressionCompiler {
+public abstract class AbstractExpression implements Expression {
 
-    /**
-     * @see org.apache.cocoon.el.ExpressionCompiler#compile(java.lang.String, java.lang.String)
-     */
-    public Expression compile(String language, String expression) throws ExpressionException {
-        return new JexlExpression(language, expression);
+    private String language;
+    private String expression;
+
+    public AbstractExpression(String language, String expression) {
+        this.language = language;
+        this.expression = expression;
     }
+
+    public String getExpression() {
+        return this.expression;
+    }
+
+    public String getLanguage() {
+        return this.language;
+    }
+
+    public void setProperty(String property, Object value) {
+        // has no properties
+    }
+
+    protected static final Iterator EMPTY_ITER = new Iterator() {
+        public boolean hasNext() {
+            return false;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+            // EMPTY
+        }
+    };
+
 }
