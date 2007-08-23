@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 
 /**
  * <p>Wrapper class for {@link Parameters} class that exposes parameters through {@link Map} interface.</p>

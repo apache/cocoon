@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.el.objectmodel.ObjectModelProvider;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.processing.ProcessInfoProvider;

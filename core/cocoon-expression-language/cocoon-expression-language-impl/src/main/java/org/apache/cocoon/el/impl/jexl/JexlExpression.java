@@ -20,9 +20,9 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.el.impl.AbstractExpression;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.util.Introspector;
 import org.apache.commons.jexl.util.introspection.Info;

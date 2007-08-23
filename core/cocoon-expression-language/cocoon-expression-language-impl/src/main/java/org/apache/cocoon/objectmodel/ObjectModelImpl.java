@@ -23,7 +23,8 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.apache.cocoon.objectmodel.provider.ObjectModelProvider;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModelProvider;
 import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.MultiMap;

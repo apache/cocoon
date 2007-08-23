@@ -20,8 +20,8 @@ import java.util.Iterator;
 
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.impl.jxpath.JXPathExpression;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.Subst;
-import org.apache.cocoon.objectmodel.ObjectModel;
 
 /**
  * @version $Id$

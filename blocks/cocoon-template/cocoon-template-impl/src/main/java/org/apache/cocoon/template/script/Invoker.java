@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.template.script;
 
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.template.JXTemplateGenerator;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.LocatorFacade;

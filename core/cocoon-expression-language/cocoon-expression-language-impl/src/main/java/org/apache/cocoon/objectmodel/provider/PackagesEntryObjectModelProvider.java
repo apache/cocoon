@@ -1,12 +1,14 @@
 package org.apache.cocoon.objectmodel.provider;
 
+import org.apache.cocoon.objectmodel.JavaEntryObjectModelProvider;
+import org.apache.cocoon.objectmodel.ObjectModelProvider;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 /**
- * Adds java packages to {@link org.apache.cocoon.objectmodel.ObjectModel ObjectModel}. Allows to construct java objects.
+ * Adds java packages to {@link org.apache.cocoon.el.objectmodel.ObjectModel ObjectModel}. Allows to construct java objects.
  * 
  * @see JavaEntryObjectModelProvider
  */

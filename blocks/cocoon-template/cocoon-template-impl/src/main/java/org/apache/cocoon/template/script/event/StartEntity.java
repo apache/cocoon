@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.template.script.event;
 
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.instruction.MacroContext;
 import org.apache.cocoon.xml.NamespacesTable;

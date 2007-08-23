@@ -19,8 +19,8 @@ package org.apache.cocoon.template.instruction;
 import java.util.Locale;
 import java.util.Stack;
 
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.Subst;
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.environment.ValueHelper;
 import org.apache.cocoon.template.script.event.StartElement;

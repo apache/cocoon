@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.Subst;
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.expression.Substitutions;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;

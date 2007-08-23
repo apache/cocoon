@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.objectmodel;
+package org.apache.cocoon.el.objectmodel;
 
 import java.util.Map;
 

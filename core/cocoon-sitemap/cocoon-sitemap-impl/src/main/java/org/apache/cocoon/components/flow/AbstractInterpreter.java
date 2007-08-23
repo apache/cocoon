@@ -31,8 +31,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.SourceUtil;
 
