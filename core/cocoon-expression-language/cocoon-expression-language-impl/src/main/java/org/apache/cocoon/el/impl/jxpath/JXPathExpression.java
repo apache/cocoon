@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.jxpath;
+package org.apache.cocoon.el.impl.jxpath;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.cocoon.components.expression.jexl.JSIntrospector;
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionException;
+import org.apache.cocoon.el.impl.jexl.JSIntrospector;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.xml.NamespacesTable;
