@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: $ -->
+<!-- SVN $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
@@ -24,14 +24,14 @@
 
     <!-- Default implementation of ObjectModel interface. This bean definition, is a template actually because it has
          abstract attribute set to "true". It enables Object Model to be defined as scoped bean elsewhere. -->
-    <bean name="org.apache.cocoon.objectmodel.ObjectModel.template"
-          class="org.apache.cocoon.objectmodel.ObjectModelImpl"
+    <bean name="org.apache.cocoon.el.objectmodel.ObjectModel.template"
+          class="org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl"
           abstract="true">
         <property name="initialEntries">
           <map>
-            <entry key="cocoon" value-ref="org.apache.cocoon.objectmodel.provider.CocoonEntryObjectModelProvider"/>
-            <entry key="Packages" value-ref="org.apache.cocoon.objectmodel.provider.PackagesEntryObjectModelProvider"/>
-            <entry key="java" value-ref="org.apache.cocoon.objectmodel.provider.JavaEntryObjectModelProvider"/>
+            <entry key="cocoon" value-ref="org.apache.cocoon.el.impl.objectmodel.CocoonEntryObjectModelProvider"/>
+            <entry key="Packages" value-ref="org.apache.cocoon.el.impl.objectmodel.PackagesEntryObjectModelProvider"/>
+            <entry key="java" value-ref="org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider"/>
           </map>
         </property>        
     </bean>

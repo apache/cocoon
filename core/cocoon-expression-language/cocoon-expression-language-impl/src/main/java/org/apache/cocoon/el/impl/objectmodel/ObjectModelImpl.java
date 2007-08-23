@@ -42,19 +42,19 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  */
 public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel {
     //FIXME: It seems that there is no easy way to reuse MuliValueMap
-    
+
     private static final String SEGMENT_SEPARATOR = "/";
-    
+
     private ArrayStack localContexts;
     private Map singleValueMap;
     private MultiMap multiValueMap;
     private MultiMap multiValueMapForLocated;
     private Map initialEntries = null;
-    
-    
+
+
     //FIXME: This is a temporary solution
     private boolean modified;
-    
+
     public ObjectModelImpl() {
         singleValueMap = new HashMap();
         //FIXME: Not sure if this makes sense
@@ -67,38 +67,38 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     }
 
     public static class StackReversedIteration extends ArrayStack {
-        
+
         public Iterator iterator() {
             return new ReverseListIterator(this);
         }
-        
+
         public ListIterator listIterator() {
             throw new UnsupportedOperationException();
         }
     }
-    
+
     public Object get(Object key) {
         //FIXME: This should be done more elegantly
         if ("this".equals(key))
             return this;
         return super.get(key);
     }
-    
+
     public MultiMap getAll() {
         return UnmodifiableMultiMap.decorate(multiValueMap);
     }
-    
+
     public Object put(Object key, Object value) {
         modified = true;
         if (!localContexts.empty())
             ((ArrayStack) localContexts.peek()).push(new DefaultKeyValue(key, value));
-        
+
         singleValueMap.put(key, value);
         multiValueMap.put(key, value);
-        
+
         return value;
     }
-    
+
     public void putAll(Map mapToCopy) {
         modified = true;
         if (!localContexts.empty()) {
@@ -108,11 +108,11 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
                 entries.push(new DefaultKeyValue(key, mapToCopy.get(key)));
             }
         }
-        
+
         singleValueMap.putAll(mapToCopy);
         multiValueMap.putAll(mapToCopy);
     }
-    
+
     /**
      * Locates map at given path
      * @param path where Map can be found
@@ -122,7 +122,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     private Map locateMapAt(String path, boolean createIfNeeded) {
         if (path.lastIndexOf(SEGMENT_SEPARATOR) == -1)
             return this;
-        
+
         Map map = this;
         int segmentBegin = 0;
         int segmentEnd = path.indexOf(SEGMENT_SEPARATOR);
@@ -145,26 +145,26 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         }
         return map;
     }
-    
+
     public void putAt(String path, Object value) {
         if (path == null)
             throw new NullPointerException("Path cannot be null.");
         if (path.length() == 0)
             throw new IllegalArgumentException("Path cannot be empty");
-        
+
         Map map = locateMapAt(path, true);
         String key = path.substring(path.lastIndexOf(SEGMENT_SEPARATOR) + 1, path.length());
         if (!localContexts.empty())
             ((ArrayStack) localContexts.peek()).push(new PathValue(path, value));
         map.put(key, value);
     }
-    
+
     private void removeAt(String path, Object value) {
         if (path == null)
             throw new NullPointerException("Path cannot be null.");
         if (path.length() == 0)
             throw new IllegalArgumentException("Path cannot be empty");
-        
+
         Map map = locateMapAt(path, false);
         String key = path.substring(path.lastIndexOf(SEGMENT_SEPARATOR) + 1, path.length());
         if (map == null)
@@ -182,13 +182,13 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         ArrayStack removeEntries = (ArrayStack)localContexts.pop();
         while (!removeEntries.isEmpty()) {
             if (removeEntries.peek() instanceof PathValue) {
-                PathValue entry = (PathValue)removeEntries.pop(); 
+                PathValue entry = (PathValue)removeEntries.pop();
                 removeAt(entry.getPath(), entry.getValue());
             } else {
                 KeyValue entry = (KeyValue)removeEntries.pop();
                 Object key = entry.getKey();
                 Object value = entry.getValue();
-            
+
                 multiValueMap.remove(key, value);
                 if (multiValueMap.containsKey(key))
                     singleValueMap.put(key, ((StackReversedIteration)multiValueMap.get(key)).peek());
@@ -224,7 +224,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         if (contextObject == null)
             //nothing to do
             return;
-        
+
         final JXPathBeanInfo bi =
             JXPathIntrospector.getBeanInfo(contextObject.getClass());
         if (bi.isDynamic()) {
@@ -260,28 +260,28 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
             }
         }
     }
-    
+
     private final class PathValue {
         private String path;
         private Object value;
-        
+
         public PathValue(String path, Object value) {
             this.path = path;
             this.value = value;
         }
-        
-        public String getPath() { 
-            return this.path; 
+
+        public String getPath() {
+            return this.path;
         };
-        
+
         public Object getValue() {
             return this.value;
         }
-        
+
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.objectmodel.ObjectModel#setParent(org.apache.cocoon.objectmodel.ObjectModel)
+     * @see org.apache.cocoon.el.objectmodel.ObjectModel#setParent(org.apache.cocoon.el.objectmodel.ObjectModel)
      */
     public void setParent(ObjectModel parentObjectModel) {
         if (this.modified)
@@ -289,5 +289,5 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         singleValueMap.putAll(parentObjectModel);
         multiValueMap.putAll(parentObjectModel.getAll());
     };
-    
+
 }

@@ -143,15 +143,15 @@ public class JXTemplateGenerator
 
     public void performGeneration(Event startEvent, Event endEvent) throws SAXException {
         newObjectModel.markLocalContext();
-        
+
         newObjectModel.putAt(ObjectModel.PARAMETERS_PATH, new ParametersMap(parameters));
-        
+
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
         //not sure why this is needed
         newObjectModel.putAt("cocoon/consumer", consumer);
         Invoker.execute(consumer, this.newObjectModel, new ExecutionContext(this.definitions, this.scriptManager,
                 this.manager), null, namespaces, startEvent, null);
-        
+
         newObjectModel.cleanupLocalContext();
     }
 
