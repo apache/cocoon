@@ -20,11 +20,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-  <bean name="org.apache.cocoon.el.ExpressionCompiler/jxpath" class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler"/>
+  <bean name="org.apache.cocoon.el.ExpressionCompiler/jxpath" class="org.apache.cocoon.el.impl.jxpath.JXPathCompiler"/>
   
   <!-- JXPath is our default language so second bean is defined
        FIXME: I think that it would be better to use alias for bean defined above, see:
        http://thread.gmane.org/gmane.text.xml.cocoon.devel/73907 -->
-  <bean name="org.apache.cocoon.el.ExpressionCompiler/default" class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler"/>
+  <bean name="org.apache.cocoon.el.ExpressionCompiler/default" class="org.apache.cocoon.el.impl.jxpath.JXPathCompiler"/>
 
 </beans>

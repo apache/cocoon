@@ -21,7 +21,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
   <bean name="org.apache.cocoon.el.ExpressionCompiler/js" 
-        class="org.apache.cocoon.components.expression.javascript.JavaScriptCompiler">
+        class="org.apache.cocoon.el.impl.javascript.JavaScriptCompiler">
     <property name="rootScope" ref="org.mozilla.javascript.Scriptable/rootScope"/>
   </bean>
 
