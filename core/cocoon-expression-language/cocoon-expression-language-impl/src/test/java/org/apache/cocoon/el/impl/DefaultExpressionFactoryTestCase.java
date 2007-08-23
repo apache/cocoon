@@ -27,7 +27,7 @@ import org.apache.cocoon.el.impl.DefaultExpressionFactory;
 import org.apache.cocoon.el.impl.javascript.JavaScriptCompiler;
 import org.apache.cocoon.el.impl.jexl.JexlCompiler;
 import org.apache.cocoon.el.impl.jxpath.JXPathCompiler;
-import org.apache.cocoon.objectmodel.ObjectModelImpl;
+import org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl;
 
 public class DefaultExpressionFactoryTestCase extends TestCase {
     

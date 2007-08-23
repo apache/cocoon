@@ -22,7 +22,7 @@ import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionCompiler;
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.el.impl.jxpath.JXPathCompiler;
-import org.apache.cocoon.objectmodel.ObjectModelImpl;
+import org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl;
 
 public class JXPathTestCase extends TestCase {
 

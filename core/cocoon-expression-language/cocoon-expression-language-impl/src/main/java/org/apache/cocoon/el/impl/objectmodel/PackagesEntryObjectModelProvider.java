@@ -1,7 +1,7 @@
-package org.apache.cocoon.objectmodel.provider;
+package org.apache.cocoon.el.impl.objectmodel;
 
-import org.apache.cocoon.objectmodel.JavaEntryObjectModelProvider;
-import org.apache.cocoon.objectmodel.ObjectModelProvider;
+import org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider;
+import org.apache.cocoon.el.impl.objectmodel.ObjectModelProvider;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.Scriptable;
