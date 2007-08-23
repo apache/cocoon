@@ -46,7 +46,7 @@
     <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     <property name="serviceManager" ref="org.apache.avalon.framework.service.ServiceManager"/>    
     <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>    
-    <property name="runnableManager" ref="org.apache.cocoon.components.thread.RunnableManager"/>    
+    <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>    
     <property name="avalonContext" ref="org.apache.avalon.framework.context.Context"/>
   </bean>       
   
