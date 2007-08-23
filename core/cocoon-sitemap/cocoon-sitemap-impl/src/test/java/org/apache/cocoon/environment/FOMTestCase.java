@@ -21,7 +21,7 @@ import org.apache.cocoon.AbstractTestCase;
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.el.ExpressionFactory;
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.objectmodel.helper.ParametersMap;
 
 public class FOMTestCase extends AbstractTestCase {

@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.expression.Substitutions;

@@ -19,6 +19,8 @@ package org.apache.cocoon.objectmodel;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.cocoon.el.objectmodel.ObjectModel;
+
 import junit.framework.TestCase;
 
 public class ObjectModelImplTestCase extends TestCase {

@@ -18,7 +18,7 @@ package org.apache.cocoon.components.flow;
 
 import java.util.Map;
 
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 
 /**
  * Provides the interface between the flow controller layer and the 

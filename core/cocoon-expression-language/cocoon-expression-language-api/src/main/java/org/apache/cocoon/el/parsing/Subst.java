@@ -18,7 +18,7 @@ package org.apache.cocoon.el.parsing;
 
 import java.util.Iterator;
 
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 
 /**
  * @version $Id$

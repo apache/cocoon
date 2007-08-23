@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.Subst;
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;

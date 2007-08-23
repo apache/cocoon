@@ -19,8 +19,8 @@ package org.apache.cocoon.components.treeprocessor.variables;
 import java.util.Map;
 
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.StringTemplateParser;
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.template.expression.Substitutions;
 

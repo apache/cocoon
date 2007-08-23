@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.util.jxpath;
+package org.apache.cocoon.el.impl.jxpath;
 
 import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.commons.jxpath.ri.QName;

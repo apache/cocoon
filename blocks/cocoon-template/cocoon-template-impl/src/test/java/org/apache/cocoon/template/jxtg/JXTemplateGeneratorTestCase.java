@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.objectmodel.ObjectModel;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 
 /**
  * @version SVN $Id: JXTemplateGeneratorTestCase.java 358974 2005-12-25

@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.objectmodel.provider;
+package org.apache.cocoon.el.objectmodel;
 
 
 /**
  * This simple interface should be implemented by Spring beans providing initial entries for
- * {@link org.apache.cocoon.objectmodel.ObjectModel}.
+ * {@link org.apache.cocoon.el.objectmodel.ObjectModel}.
  *
  * @version $Id$
  * @since 2.2

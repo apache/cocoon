@@ -22,9 +22,9 @@ import java.util.Locale;
 import java.util.Stack;
 import java.util.TimeZone;
 
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.StringTemplateParser;
 import org.apache.cocoon.el.parsing.Subst;
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.template.environment.ErrorHolder;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.ParsingContext;

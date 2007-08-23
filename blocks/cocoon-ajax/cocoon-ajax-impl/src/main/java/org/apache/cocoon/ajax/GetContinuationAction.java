@@ -28,10 +28,10 @@ import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.sitemap.SitemapParameters;
 
 /**
