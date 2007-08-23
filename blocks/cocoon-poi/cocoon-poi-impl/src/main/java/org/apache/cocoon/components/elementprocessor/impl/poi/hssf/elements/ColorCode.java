@@ -44,7 +44,6 @@ public class ColorCode {
      */
 
     public ColorCode(final String value) throws IOException {
-        rgbstring = value;
         if (value == null) {
             throw new IOException("cannot process a null color code");
         }
@@ -59,7 +58,7 @@ public class ColorCode {
             try {
                 _components[j] = Integer.parseInt(tokenizer.nextToken(), 16);
             } catch (Exception e) {
-                throw new IOException("cannot parse component #" + j + " ("
+                throw new IOException("Cannot parse component #" + j + " ("
                                       + e.getMessage() + ")");
             }
             if (_components[j] < 0 || _components[j] > 65535) {
@@ -68,8 +67,7 @@ public class ColorCode {
             if (j > 0) {
                 constructedRgbString.append(SEPARATOR);
             }
-            constructedRgbString.append(
-                StringUtils.leftPad(Integer.toHexString(_components[j]), 4, '0').toUpperCase());
+            constructedRgbString.append(Integer.toHexString(_components[j]).toUpperCase());
         }
         rgbstring = constructedRgbString.toString();
     }
