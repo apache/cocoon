@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.jxpath;
+package org.apache.cocoon.el.impl.jxpath;
 
 import junit.framework.TestCase;
 
+import org.apache.cocoon.components.expression.jxpath.JXPathCompiler;
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionCompiler;
 import org.apache.cocoon.el.ExpressionException;

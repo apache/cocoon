@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression;
+package org.apache.cocoon.el.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.apache.cocoon.components.expression.DefaultExpressionFactory;
 import org.apache.cocoon.components.expression.javascript.JavaScriptCompiler;
 import org.apache.cocoon.components.expression.jexl.JexlCompiler;
 import org.apache.cocoon.components.expression.jxpath.JXPathCompiler;

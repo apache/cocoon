@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression.javascript;
+package org.apache.cocoon.el.impl.javascript;
 
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 import org.apache.cocoon.components.expression.helpers.RhinoScopeFactory;
+import org.apache.cocoon.components.expression.javascript.JavaScriptCompiler;
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.objectmodel.ObjectModel;
