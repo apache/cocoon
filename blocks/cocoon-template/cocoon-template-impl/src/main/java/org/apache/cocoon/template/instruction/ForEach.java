@@ -132,7 +132,7 @@ public class ForEach extends Instruction {
             objectModel.put(varStatus, status);
         }
         int skipCounter, count = 1;
-        while (i <= end && iter.hasNext()) {
+        while (i <= end && iter != null && iter.hasNext()) {
             objectModel.markLocalContext();
             Object value = iter.next();
             objectModel.put(ObjectModel.CONTEXTBEAN, value);
