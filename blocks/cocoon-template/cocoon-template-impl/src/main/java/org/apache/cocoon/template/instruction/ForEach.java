@@ -40,6 +40,20 @@ import org.xml.sax.SAXParseException;
  */
 public class ForEach extends Instruction {
 
+    protected static final Iterator NULL_ITER = new Iterator() {
+        public boolean hasNext() {
+            return true;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+            // EMPTY
+        }
+    };
+
     private final Subst items;
     private final Subst var;
     private final Subst varStatus;
@@ -88,7 +102,7 @@ public class ForEach extends Instruction {
         try {
             iter = (this.items != null )
                     ? this.items.getIterator(objectModel)
-                    : null;
+                    : NULL_ITER;
             begin = this.begin == null
                 ? 0
                 : this.begin.getIntValue(objectModel);
@@ -114,13 +128,9 @@ public class ForEach extends Instruction {
         objectModel.markLocalContext();
         int i = 0;
         // Move to the begin row
-        if ( iter == null ) {
+        while (i < begin && iter.hasNext()) {
+            iter.next();
             i++;
-        } else {
-            while (i < begin && iter.hasNext()) {
-                iter.next();
-                i++;
-            }
         }
         LoopTagStatus status = null;
         if (varStatus != null) {
@@ -132,7 +142,7 @@ public class ForEach extends Instruction {
             objectModel.put(varStatus, status);
         }
         int skipCounter, count = 1;
-        while (i <= end && iter != null && iter.hasNext()) {
+        while (i <= end && iter.hasNext()) {
             objectModel.markLocalContext();
             Object value = iter.next();
             objectModel.put(ObjectModel.CONTEXTBEAN, value);
