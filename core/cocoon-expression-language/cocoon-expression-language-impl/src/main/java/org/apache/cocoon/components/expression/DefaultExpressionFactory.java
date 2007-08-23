@@ -18,6 +18,11 @@ package org.apache.cocoon.components.expression;
 
 import java.util.Map;
 
+import org.apache.cocoon.el.Expression;
+import org.apache.cocoon.el.ExpressionCompiler;
+import org.apache.cocoon.el.ExpressionException;
+import org.apache.cocoon.el.ExpressionFactory;
+
 /**
  * @version $Id$
  */

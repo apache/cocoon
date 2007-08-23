@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.apache.cocoon.components.expression.AbstractExpression;
 import org.apache.cocoon.objectmodel.ObjectModel;
-import org.apache.cocoon.components.expression.ExpressionException;
+import org.apache.cocoon.el.ExpressionException;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.util.Introspector;
 import org.apache.commons.jexl.util.introspection.Info;

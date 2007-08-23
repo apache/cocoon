@@ -18,9 +18,9 @@ package org.apache.cocoon.environment;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.AbstractTestCase;
-import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionException;
-import org.apache.cocoon.components.expression.ExpressionFactory;
+import org.apache.cocoon.el.Expression;
+import org.apache.cocoon.el.ExpressionException;
+import org.apache.cocoon.el.ExpressionFactory;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.objectmodel.helper.ParametersMap;
 

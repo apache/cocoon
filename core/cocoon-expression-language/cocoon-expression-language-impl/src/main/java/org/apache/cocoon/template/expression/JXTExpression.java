@@ -18,8 +18,8 @@ package org.apache.cocoon.template.expression;
 
 import java.util.Iterator;
 
-import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.jxpath.JXPathExpression;
+import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.parsing.Subst;
 import org.apache.cocoon.objectmodel.ObjectModel;
 

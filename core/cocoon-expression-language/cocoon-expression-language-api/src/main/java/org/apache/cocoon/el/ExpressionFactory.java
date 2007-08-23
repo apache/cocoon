@@ -14,33 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.expression;
-
-import java.io.IOException;
+package org.apache.cocoon.el;
 
 /**
  * @version $Id$
  */
-public class ExpressionException extends IOException {
+public interface ExpressionFactory {
 
-    /**
-     * Construct a new <code>ExpressionException</code> instance.
-     *
-     * @param message the detail message for this exception.
-     */
-    public ExpressionException(String message) {
-        super(message);
-    }
+    String ROLE = ExpressionFactory.class.getName();
 
-    /**
-     * Construct a new <code>ExpressionException</code> instance.
-     *
-     * @param message the detail message for this exception.
-     * @param cause the root cause of the exception.
-     */
-    public ExpressionException(String message, Throwable cause) {
-        super(message);
-        super.initCause(cause);
-    }
+    Expression getExpression(String language, String expression) throws ExpressionException;
 
+    Expression getExpression(String expression) throws ExpressionException;
 }
