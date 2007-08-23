@@ -92,7 +92,7 @@ public class ShieldingServletService extends ServletService {
                 this.classLoaderFactory);
         
         this.classLoader = 
-            ShieldedGroupClassLoaderManager.getClassLoader(getServletServiceContext(), parameters);
+            ShieldedGroupClassLoaderManager.getClassLoader(getServletContext(), parameters);
 
         // Create the servlet
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
