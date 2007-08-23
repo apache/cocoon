@@ -23,7 +23,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.apache.cocoon.servletservice.ServletService;
 
 import org.springframework.aop.framework.ProxyFactory;
 
