@@ -24,8 +24,8 @@ import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.el.impl.helpers.RhinoScopeFactory;
 import org.apache.cocoon.el.impl.javascript.JavaScriptCompiler;
+import org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
-import org.apache.cocoon.objectmodel.ObjectModelImpl;
 
 /**
  * @version $Id$
