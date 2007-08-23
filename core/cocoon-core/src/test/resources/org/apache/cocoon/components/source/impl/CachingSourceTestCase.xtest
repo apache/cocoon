@@ -47,9 +47,9 @@
         default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"
   />
 
-  <role name="org.apache.cocoon.components.thread.RunnableManager"
+  <role name="org.apache.cocoon.thread.RunnableManager"
         shorthand="runnable-manager"
-        default-class="org.apache.cocoon.components.thread.DefaultRunnableManager"/>
+        default-class="org.apache.cocoon.thread.impl.DefaultRunnableManager"/>
 
  </roles>
 
