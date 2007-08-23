@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: $ -->
+<!-- SVN $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:configurator="http://cocoon.apache.org/schema/configurator"
@@ -23,7 +23,7 @@
   http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
   
   <bean name="org.mozilla.javascript.Scriptable/rootScope" 
-        class="org.apache.cocoon.components.expression.helpers.RhinoScopeFactory" factory-method="createRhinoScope">
+        class="org.apache.cocoon.el.impl.helpers.RhinoScopeFactory" factory-method="createRhinoScope">
   </bean>
   
 </beans>

@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.components.expression.JSIntrospector;
 import org.apache.cocoon.objectmodel.ObjectModel;
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.el.impl.AbstractExpression;
