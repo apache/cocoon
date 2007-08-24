@@ -19,7 +19,7 @@
 <!-- Normally uses the org.apache.excalibur.store.impl.StoreJanitorImpl as
      the default-class but as that uses its own Thread spawning there is
      the org.apache.cocoon.components.store.impl.CocoonStoreJanitor class
-     to use a daemon thread from the org.apache.cocoon.components.thread.RunnableManager
+     to use a daemon thread from the org.apache.cocoon.thread.RunnableManager
      component.
      NOTE: As soon as our patch has been accepted by the Excalibur community and an
            excalibur-store has been release we can switch back to the original
