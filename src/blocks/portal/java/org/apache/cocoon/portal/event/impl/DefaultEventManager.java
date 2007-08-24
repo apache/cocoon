@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,23 +54,23 @@ import org.apache.cocoon.util.Deprecation;
 
 /**
  * This is the default implementation of the event manager.
- * 
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
+ *
  * @version CVS $Id$
  */
-public class DefaultEventManager 
+public class DefaultEventManager
     extends AbstractLogEnabled
-    implements EventManager, 
-                Serviceable, 
-                Initializable, 
+    implements EventManager,
+                Serviceable,
+                Initializable,
                 ThreadSafe,
                 Configurable,
                 Disposable,
                 Contextualizable,
                 Publisher, Register {
-                    
+
     private final String rootEventType = Event.class.getName();
     private Class eventClass;
     /** The list of all subscribers. */
@@ -80,9 +80,9 @@ public class DefaultEventManager
 
     private ServiceManager manager;
     private Configuration configuration;
-    
+
     protected EventAspectChain chain;
-    
+
     protected ServiceSelector aspectSelector;
 
     protected Context context;
@@ -107,16 +107,16 @@ public class DefaultEventManager
     public Publisher getPublisher() {
         return this;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.EventManager#getRegister()
      */
     public Register getRegister() {
         return this;
     }
-    
+
     /**
-     * Helper method to get the current object model 
+     * Helper method to get the current object model
      */
     protected Map getObjectModel() {
         return ContextHelper.getObjectModel( this.context );
@@ -125,7 +125,7 @@ public class DefaultEventManager
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void configure(Configuration conf) 
+    public void configure(Configuration conf)
     throws ConfigurationException {
         this.configuration = conf;
     }
@@ -151,9 +151,9 @@ public class DefaultEventManager
      */
     public void initialize()
     throws Exception {
-        this.eventClass = Class.forName( rootEventType );
+        this.eventClass = Class.forName( this.rootEventType );
         if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("Initialising eventClass " + eventClass);
+            this.getLogger().debug("Initialising eventClass " + this.eventClass);
         }
 
         // FIXME - the following configuration is not portal specific, it's global!
@@ -164,7 +164,7 @@ public class DefaultEventManager
             for(int i=0; i<rolesConf.length;i++) {
                 final Configuration current = rolesConf[i];
                 final String name = current.getAttribute("name");
-                
+
                 Subscriber subscriber = null;
                 try {
                     subscriber = (Subscriber) this.manager.lookup(name);
@@ -182,7 +182,7 @@ public class DefaultEventManager
             for(int i=0; i<classesConf.length;i++) {
                 final Configuration current = classesConf[i];
                 final String name = current.getAttribute("name");
-                
+
                 Deprecation.logger.warn("Subscriber is deprecated. Please convert the following component to a Receiver: " + name);
                 Subscriber subscriber = (Subscriber) ClassUtils.newInstance(name);
                 ContainerUtil.enableLogging(subscriber, this.getLogger());
@@ -199,7 +199,7 @@ public class DefaultEventManager
             for(int i=0; i<rolesConf.length;i++) {
                 final Configuration current = rolesConf[i];
                 final String name = current.getAttribute("name");
-                
+
                 Receiver receiver = null;
                 try {
                     receiver = (Receiver) this.manager.lookup(name);
@@ -216,7 +216,7 @@ public class DefaultEventManager
             for(int i=0; i<classesConf.length;i++) {
                 final Configuration current = classesConf[i];
                 final String name = current.getAttribute("name");
-                
+
                 Receiver receiver = (Receiver)ClassUtils.newInstance(name);
                 ContainerUtil.enableLogging(receiver, this.getLogger());
                 ContainerUtil.contextualize(receiver, this.context);
@@ -232,49 +232,49 @@ public class DefaultEventManager
      * @see org.apache.cocoon.portal.event.Publisher#publish(org.apache.cocoon.portal.event.Event)
      */
     public void publish( final Event event ) {
-        this.send(event);        
+        this.send(event);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.Register#subscribe(org.apache.cocoon.portal.event.Subscriber)
      */
     public void subscribe( final Subscriber subscriber ) {
-        if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
+        if ( !this.eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
             throw new RuntimeException("Invalid event type " + subscriber.getEventType()
                                       +" for subscriber " + subscriber);
         }
 
-        if ( getLogger().isDebugEnabled() ) {
-            getLogger().debug( "Subscribing event " + subscriber.getEventType().getName() );
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug( "Subscribing event " + subscriber.getEventType().getName() );
         }
-        
+
         // Add to list but prevent duplicate subscriptions
-        if ( !subscribers.contains( subscriber ) ) {
-            subscribers.add( subscriber );
-            if ( getLogger().isDebugEnabled() ) {
-                getLogger().debug( "Subscribed Event " + subscriber.getEventType().getName() );
-                getLogger().debug( "Subscribers now active: " + subscribers.size() );
+        if ( !this.subscribers.contains( subscriber ) ) {
+            this.subscribers.add( subscriber );
+            if ( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug( "Subscribed Event " + subscriber.getEventType().getName() );
+                this.getLogger().debug( "Subscribers now active: " + this.subscribers.size() );
             }
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.Register#unsubscribe(org.apache.cocoon.portal.event.Subscriber)
      */
     public void unsubscribe( Subscriber subscriber ) {
-        
-        if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
+
+        if ( !this.eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
             throw new RuntimeException("Invalid event type " + subscriber.getEventType()
                     +" for unsubscribing " + subscriber);
         }
-        if ( subscribers.contains( subscriber ) ) {
-            subscribers.remove( subscriber );
-            if ( getLogger().isDebugEnabled() ) {
-                getLogger().debug( "Unsubscribed Event " + subscriber.getEventType().getName() );
-                getLogger().debug( "Subscribers now active: " + subscribers.size() );
+        if ( this.subscribers.contains( subscriber ) ) {
+            this.subscribers.remove( subscriber );
+            if ( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug( "Unsubscribed Event " + subscriber.getEventType().getName() );
+                this.getLogger().debug( "Subscribers now active: " + this.subscribers.size() );
             }
         } else {
-            getLogger().warn( "Subscriber " + subscriber + " not found" );
+            this.getLogger().warn( "Subscriber " + subscriber + " not found" );
         }
     }
 
@@ -284,16 +284,20 @@ public class DefaultEventManager
     public void processEvents()
     throws ProcessingException {
         if ( this.configuration != null ) {
-            try {
-                this.aspectSelector = (ServiceSelector) this.manager.lookup( EventAspect.ROLE+"Selector");
-                this.chain = new EventAspectChain();
-                this.chain.configure(this.aspectSelector, this.configuration.getChild("event-aspects"));
-            } catch (ConfigurationException ce) {
-                throw new ProcessingException("Unable configure component.", ce);
-            } catch (ServiceException ce) {
-                throw new ProcessingException("Unable to lookup component.", ce);
+            synchronized ( this ) {
+                if ( this.configuration != null ) {
+                    try {
+                        this.aspectSelector = (ServiceSelector) this.manager.lookup( EventAspect.ROLE+"Selector");
+                        this.chain = new EventAspectChain();
+                        this.chain.configure(this.aspectSelector, this.configuration.getChild("event-aspects"));
+                    } catch (ConfigurationException ce) {
+                        throw new ProcessingException("Unable configure component.", ce);
+                    } catch (ServiceException ce) {
+                        throw new ProcessingException("Unable to lookup component.", ce);
+                    }
+                    this.configuration = null;
+                }
             }
-            this.configuration = null;
         }
         DefaultEventAspectContext context = new DefaultEventAspectContext(this.chain);
         EventConverter converter = null;
@@ -304,7 +308,7 @@ public class DefaultEventManager
             Publisher publisher = this.getPublisher();
 
             converter.start();
-            
+
             // Invoke aspects
             context.setEventPublisher( publisher );
             context.setObjectModel(this.getObjectModel());
@@ -325,7 +329,7 @@ public class DefaultEventManager
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) 
+    public void contextualize(Context context)
     throws ContextException {
         this.context = context;
     }
@@ -334,20 +338,20 @@ public class DefaultEventManager
      * @see org.apache.cocoon.portal.event.EventManager#send(org.apache.cocoon.portal.event.Event)
      */
     public void send(Event event) {
-        if ( getLogger().isDebugEnabled() ) {
-            getLogger().debug("Publishing event " + event.getClass());
-        } 
-        for ( Iterator e = subscribers.iterator(); e.hasNext(); ){
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Publishing event " + event.getClass());
+        }
+        for ( Iterator e = this.subscribers.iterator(); e.hasNext(); ){
             Subscriber subscriber = (Subscriber)e.next();
             if (subscriber.getEventType().isAssignableFrom(event.getClass())
             && (subscriber.getFilter() == null || subscriber.getFilter().filter(event))) {
-                if ( getLogger().isDebugEnabled() ) {
-                    getLogger().info("Informing subscriber "+subscriber+" of event "+event.getClass());
+                if ( this.getLogger().isDebugEnabled() ) {
+                    this.getLogger().info("Informing subscriber "+subscriber+" of event "+event.getClass());
                 }
                 subscriber.inform(event);
             }
         }
-        for (Iterator re = receivers.entrySet().iterator(); re.hasNext(); ) {
+        for (Iterator re = this.receivers.entrySet().iterator(); re.hasNext(); ) {
             final Map.Entry current = (Map.Entry)re.next();
             final Receiver receiver = (Receiver)current.getKey();
             final List methodInfos = (List)current.getValue();
@@ -356,8 +360,8 @@ public class DefaultEventManager
             while ( !found && ci.hasNext() ) {
                 final MethodInfo info = (MethodInfo)ci.next();
                 if ( info.eventClass.isAssignableFrom(event.getClass()) ) {
-                    if ( getLogger().isDebugEnabled() ) {
-                        getLogger().info("Informing receiver "+receiver+" of event "+event.getClass());
+                    if ( this.getLogger().isDebugEnabled() ) {
+                        this.getLogger().info("Informing receiver "+receiver+" of event "+event.getClass());
                     }
                     try {
                         info.method.invoke(receiver, new Object[] {event, this.service});
@@ -372,7 +376,7 @@ public class DefaultEventManager
     }
 
     protected static final class MethodInfo {
-        
+
         public Class eventClass;
         public Method method;
     }
@@ -386,9 +390,9 @@ public class DefaultEventManager
                 final Method current = methods[i];
                 if ( current.getName().equals("inform") ) {
                     final Class[] params = current.getParameterTypes();
-                    if ( params.length == 2 
+                    if ( params.length == 2
                          && params[1].getName().equals(PortalService.class.getName())) {
-                        if ( eventClass.isAssignableFrom( params[0] ) ) {
+                        if ( this.eventClass.isAssignableFrom( params[0] ) ) {
                             MethodInfo info = new MethodInfo();
                             info.eventClass = params[0];
                             info.method = current;
@@ -403,7 +407,7 @@ public class DefaultEventManager
         }
         return result;
     }
- 
+
     /**
      * @see org.apache.cocoon.portal.event.EventManager#subscribe(org.apache.cocoon.portal.event.Receiver)
      */
@@ -418,9 +422,9 @@ public class DefaultEventManager
         if ( eventClassesForReceiver == null ) {
             this.receivers.put(receiver, infos);
         }
-        if ( getLogger().isDebugEnabled() ) {
+        if ( this.getLogger().isDebugEnabled() ) {
             for(int i=0; i<infos.size();i++) {
-                getLogger().debug( "Receiver " + receiver + " subscribed for event: " + ((MethodInfo)infos.get(i)).eventClass.getName() );
+                this.getLogger().debug( "Receiver " + receiver + " subscribed for event: " + ((MethodInfo)infos.get(i)).eventClass.getName() );
             }
         }
     }
@@ -429,8 +433,8 @@ public class DefaultEventManager
      * @see org.apache.cocoon.portal.event.EventManager#unsubscribe(org.apache.cocoon.portal.event.Receiver)
      */
     public void unsubscribe(Receiver receiver) {
-        if ( getLogger().isDebugEnabled() ) {
-            getLogger().debug( "Receiver " + receiver + " unsubscribed.");
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug( "Receiver " + receiver + " unsubscribed.");
         }
         this.receivers.remove(receiver);
     }
