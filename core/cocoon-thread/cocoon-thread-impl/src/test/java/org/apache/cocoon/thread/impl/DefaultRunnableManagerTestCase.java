@@ -461,10 +461,10 @@ public class DefaultRunnableManagerTestCase
             createStrictControl( Logger.class );
         final Logger childLogger = (Logger)childLoggerControl.getMock(  );
         childLoggerControl.expectAndReturn( childLogger.isDebugEnabled(  ), true );
-        childLogger.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLogger.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerControl.setMatcher( MockControl.ALWAYS_MATCHER );
         childLoggerControl.expectAndReturn( childLogger.isDebugEnabled(  ), true );
-        childLogger.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLogger.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerControl.replay(  );
 
         final MockControl loggerControl = createStrictControl( Logger.class );
@@ -550,10 +550,10 @@ public class DefaultRunnableManagerTestCase
             createStrictControl( Logger.class );
         final Logger childLogger = (Logger)childLoggerControl.getMock(  );
         childLoggerControl.expectAndReturn( childLogger.isDebugEnabled(  ), true );
-        childLogger.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLogger.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerControl.setMatcher( MockControl.ALWAYS_MATCHER );
         childLoggerControl.expectAndReturn( childLogger.isDebugEnabled(  ), true );
-        childLogger.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLogger.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerControl.replay(  );
 
         final MockControl loggerControl = createStrictControl( Logger.class );
@@ -637,10 +637,10 @@ public class DefaultRunnableManagerTestCase
             createStrictControl( Logger.class );
         final Logger childLogger = (Logger)childLoggerControl.getMock(  );
         childLoggerControl.expectAndReturn( childLogger.isDebugEnabled(  ), true );
-        childLogger.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLogger.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerControl.setMatcher( MockControl.ALWAYS_MATCHER );
         childLoggerControl.expectAndReturn( childLogger.isDebugEnabled(  ), true );
-        childLogger.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLogger.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerControl.replay(  );
 
         final MockControl loggerControl = createStrictControl( Logger.class );
@@ -723,7 +723,7 @@ public class DefaultRunnableManagerTestCase
             (Logger)childLoggerDefaultControl.getMock(  );
         childLoggerDefaultControl.expectAndReturn( childLoggerDefault.isDebugEnabled(  ),
                                                    true );
-        childLoggerDefault.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLoggerDefault.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerDefaultControl.setMatcher( MockControl.ALWAYS_MATCHER );
         childLoggerDefaultControl.replay(  );
 
@@ -828,7 +828,7 @@ public class DefaultRunnableManagerTestCase
             (Logger)childLoggerDefaultControl.getMock(  );
         childLoggerDefaultControl.expectAndReturn( childLoggerDefault.isDebugEnabled(  ),
                                                    true );
-        childLoggerDefault.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLoggerDefault.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerDefaultControl.setMatcher( MockControl.ALWAYS_MATCHER );
         childLoggerDefaultControl.replay(  );
 
@@ -933,7 +933,7 @@ public class DefaultRunnableManagerTestCase
             (Logger)childLoggerDefaultControl.getMock(  );
         childLoggerDefaultControl.expectAndReturn( childLoggerDefault.isDebugEnabled(  ),
                                                    true );
-        childLoggerDefault.debug( "Executing Command: org.apache.cocoon.components.thread.DefaultRunnableManager" );
+        childLoggerDefault.debug( "Executing Command: org.apache.cocoon.thread.impl.DefaultRunnableManager" );
         childLoggerDefaultControl.setMatcher( MockControl.ALWAYS_MATCHER );
         childLoggerDefaultControl.replay(  );
 

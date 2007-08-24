@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * <pre>
  *     &lt;property name=&quot;workerThreadPools&quot;&gt;
- *       &lt;configurator:bean-map type=&quot;org.apache.cocoon.components.thread.ThreadPool&quot; strip-prefix=&quot;true&quot;/&gt;
+ *       &lt;configurator:bean-map type=&quot;org.apache.cocoon.thread.ThreadPool&quot; strip-prefix=&quot;true&quot;/&gt;
  *     &lt;/property&gt;
  * </pre>
  *

@@ -100,7 +100,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *       +--&gt;
  *   &lt;property name=&quot;shutdownWaitTimeMs&quot; value=&quot;-1&quot; /&gt;
  *   &lt;!--+
- *       | specifies the fully qualified class name of an org.apache.cocoon.components.thread.ThreadFactory
+ *       | specifies the fully qualified class name of an org.apache.cocoon.thread.ThreadFactory
  *       | implementation. It is responsible to create Thread classes.
  *       +--&gt;
  *   &lt;property name=&quot;factory&quot; ref=&quot;defaultThreadFactory&quot;/&gt;
