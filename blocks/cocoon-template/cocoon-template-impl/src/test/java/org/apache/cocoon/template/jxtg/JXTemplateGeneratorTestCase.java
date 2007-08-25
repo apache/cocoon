@@ -29,8 +29,7 @@ import org.apache.cocoon.xml.XMLUtils;
 import org.w3c.dom.Document;
 
 /**
- * @version SVN $Id: JXTemplateGeneratorTestCase.java 358974 2005-12-25
- *          14:00:24Z lgawron $
+ * @version SVN $Id$
  */
 public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     String docBase = "resource://org/apache/cocoon/template/jxtg/";
@@ -57,8 +56,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        newObjectModel = (ObjectModel) getBeanFactory().getBean(
-                ObjectModel.ROLE);
+        newObjectModel = (ObjectModel) getBeanFactory().getBean(ObjectModel.ROLE);
     }
 
     public Map getFlowContext() {
@@ -66,8 +64,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     }
 
     public void addFlowContextToObjectModel(ObjectModel newObjectModel) {
-        FlowHelper.setContextObject(getObjectModel(), newObjectModel,
-                flowContext);
+        FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContext);
     }
 
     public ObjectModel getNewObjectModel() {
@@ -238,6 +235,14 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().markLocalContext();
         getFlowContext().put("importURI", importURI);
         addFlowContextToObjectModel(getNewObjectModel());
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        getNewObjectModel().cleanupLocalContext();
+    }
+
+    public void testPrefixMapping() throws Exception {
+        String inputURI = docBase + "jxPrefixMapping.xml";
+        String outputURI = docBase + "jxPrefixMapping-output.xml";
+        getNewObjectModel().markLocalContext();
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
         getNewObjectModel().cleanupLocalContext();
     }
