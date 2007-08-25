@@ -109,6 +109,8 @@ public final class ServletConnection {
         if (requestBody != null) {
             request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
             request.setMethod("POST");
+        } else {
+            request.setMethod("GET");
         }
     	
         ByteArrayOutputStream os = new ByteArrayOutputStream();
