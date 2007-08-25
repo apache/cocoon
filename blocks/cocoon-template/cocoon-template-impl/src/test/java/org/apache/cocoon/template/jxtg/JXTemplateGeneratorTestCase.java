@@ -25,8 +25,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
-import org.apache.cocoon.xml.XMLUtils;
-import org.w3c.dom.Document;
 
 /**
  * @version SVN $Id$
