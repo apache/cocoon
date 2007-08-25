@@ -25,6 +25,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
+import org.apache.cocoon.xml.XMLUtils;
+import org.w3c.dom.Document;
 
 /**
  * @version SVN $Id: JXTemplateGeneratorTestCase.java 358974 2005-12-25
@@ -55,17 +57,19 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        newObjectModel = (ObjectModel)getBeanFactory().getBean(ObjectModel.ROLE);
+        newObjectModel = (ObjectModel) getBeanFactory().getBean(
+                ObjectModel.ROLE);
     }
 
     public Map getFlowContext() {
         return this.flowContext;
     }
-    
+
     public void addFlowContextToObjectModel(ObjectModel newObjectModel) {
-        FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContext);
+        FlowHelper.setContextObject(getObjectModel(), newObjectModel,
+                flowContext);
     }
-    
+
     public ObjectModel getNewObjectModel() {
         return this.newObjectModel;
     }
@@ -92,9 +96,9 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         parameters.setParameter("test", "foo");
         getFlowContext().put("test", "bar");
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEqual(load(outputURI), generate(JX, inputURI, parameters));
-        
+
         getNewObjectModel().cleanupLocalContext();
     }
 
@@ -114,10 +118,10 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         parameters.setParameter("test", "foo");
         getFlowContext().put("test", "bar");
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEquals("HTTP/1.1", getRequest().getProtocol());
         assertEqual(load(outputURI), generate(JX, inputURI, parameters));
-        
+
         getNewObjectModel().cleanupLocalContext();
     }
 
@@ -136,9 +140,9 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String[] array = { "one", "two", "three" };
         getFlowContext().put("test", array);
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
-        
+
         getNewObjectModel().cleanupLocalContext();
     }
 
@@ -149,9 +153,9 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().markLocalContext();
         getFlowContext().put("container", new StringContainer("foobar"));
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
-        
+
         getNewObjectModel().cleanupLocalContext();
     }
 
@@ -177,9 +181,9 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         Calendar cal = new GregorianCalendar(1979, 0, 1, 10, 21, 33);
         getFlowContext().put("date", cal.getTime());
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
-        
+
         getNewObjectModel().cleanupLocalContext();
     }
 
@@ -191,9 +195,9 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         Calendar cal = new GregorianCalendar(1979, 0, 1, 10, 21, 33);
         getFlowContext().put("date", cal.getTime());
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
-        
+
         getNewObjectModel().cleanupLocalContext();
     }
 
@@ -204,9 +208,9 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().markLocalContext();
         getFlowContext().put("value", new Double(979.0101));
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
-        
+
         getNewObjectModel().cleanupLocalContext();
     }
 
@@ -220,9 +224,21 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getFlowContext().put("xml", "<root><node>value</node></root>");
         getFlowContext().put("document", load(includeURI));
         addFlowContextToObjectModel(getNewObjectModel());
-        
+
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
-        
+
+        getNewObjectModel().cleanupLocalContext();
+    }
+
+    public void testImport() throws Exception {
+        String inputURI = docBase + "jxImport.xml";
+        String outputURI = docBase + "jxImport-output.xml";
+        String importURI = docBase + "jxImportChild.xml";
+
+        getNewObjectModel().markLocalContext();
+        getFlowContext().put("importURI", importURI);
+        addFlowContextToObjectModel(getNewObjectModel());
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
         getNewObjectModel().cleanupLocalContext();
     }
 }
