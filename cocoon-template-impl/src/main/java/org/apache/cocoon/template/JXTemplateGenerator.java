@@ -39,9 +39,9 @@ import org.apache.cocoon.template.script.ScriptManager;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartDocument;
 import org.apache.cocoon.template.xml.AttributeAwareXMLConsumerImpl;
-import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.RedundantNamespacesFilter;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.util.NamespacesTable;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
