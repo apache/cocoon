@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.el.impl.jxpath;
 
-import org.apache.cocoon.xml.NamespacesTable;
+import org.apache.cocoon.xml.util.NamespacesTable;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;

@@ -39,9 +39,9 @@ import org.apache.cocoon.transformation.helpers.NOPRecorder;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.util.NamespacesTable;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;

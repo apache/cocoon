@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.xml;
+package org.apache.cocoon.xml.util;
 
 import junit.framework.TestCase;
 
+import org.apache.cocoon.xml.util.NamespacesTable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.DefaultHandler;
 

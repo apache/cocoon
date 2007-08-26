@@ -24,7 +24,7 @@ import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.el.impl.jexl.JSIntrospector;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
-import org.apache.cocoon.xml.NamespacesTable;
+import org.apache.cocoon.xml.util.NamespacesTable;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;

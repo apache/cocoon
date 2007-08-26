@@ -17,6 +17,7 @@
 package org.apache.cocoon.xml;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.xml.util.NamespacesTable;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.DocumentHandler;
