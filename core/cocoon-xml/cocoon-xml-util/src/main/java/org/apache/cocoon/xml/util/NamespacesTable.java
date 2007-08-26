@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.xml;
+package org.apache.cocoon.xml.util;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

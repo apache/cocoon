@@ -20,6 +20,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.apache.cocoon.xml.util.NamespacesTable;
 import org.xml.sax.AttributeList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DocumentHandler;
