@@ -2,7 +2,7 @@
 <!--
  Licensed to the Outerthought bvba and Schaubroeck NV under one
  or more contributor license agreements. See the NOTICE file
- distributed with this work for additional information regarding 
+ distributed with this work for additional information regarding
  copyright ownership.  Outerthought bvba and Schaubroeck NV license
  this file to you under the Apache License, Version 2.0 (the
  "License"); you may not use this file except in compliance
@@ -15,21 +15,21 @@
  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  KIND, either express or implied.  See the License for the
  specific language governing permissions and limitations
- under the License. 
+ under the License.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
   xmlns:p="http://outerx.org/daisy/1.0#publisher" xmlns:d="http://outerx.org/daisy/1.0"
   xmlns:ns="http://outerx.org/daisy/1.0" exclude-result-prefixes="p d ns">
-  
+
   <xsl:output method="xml"/>
   <xsl:output omit-xml-declaration="no"/>
-  
+
   <xsl:preserve-space elements="pre"/>
-  
+
   <xsl:param name="author"/>
   <xsl:param name="documentName"/>
   <xsl:param name="editUrl"/>
-  
+
   <xsl:template match="/">
     <document>
       <properties>
@@ -47,7 +47,7 @@
       </body>
     </document>
   </xsl:template>
-  
+
   <!--+
       | CocoonDocument (typeId=5)
       | SimpleDocument (typeId=2)
@@ -76,7 +76,31 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+  <!-- Sitemap elements -->
+  <xsl:template match="d:document[@typeId='10']">
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">
+          <xsl:value-of select="@name"/>
+        </h1>
+        <xsl:apply-templates select="d:parts/d:part[@typeId='19']/html/body/*"/>
+        <h1>Attributes</h1>
+        <xsl:apply-templates select="d:parts/d:part[@typeId='16']/html/body/*"/>
+        <h1>Occurence</h1>
+        <h2>Children</h2>
+        <p>This element can have the following children:</p>
+        <ul>
+          <xsl:for-each select="d:fields/d:field[@name='SitemapElementChildren']/d:link">
+            <li><xsl:value-of select="@valueFormatted"/></li>
+          </xsl:for-each>
+        </ul>
+      </div>
+      <xsl:call-template name="addEditUrl"/>
+    </div>
+  </xsl:template>
+
+  <!-- Sitemap components -->
   <xsl:template match="d:document[@typeId='12']">
     <div id="contentBody">
       <div id="bodyText">
@@ -126,7 +150,7 @@
       <xsl:call-template name="addEditUrl"/>
     </div>
   </xsl:template>
-  
+
   <!--+
       | WebpageWithSidebar (typeId=14)
       | - Sidebar (part Id=19)
@@ -193,7 +217,7 @@
       </div>
     </div>
   </xsl:template>
-  
+
   <!--+
       | Add link to Daisy page at the bottom of each page
       +-->
@@ -206,9 +230,9 @@
       </div>
     </div>
   </xsl:template>
-  
+
   <!--+
-      | Work-around for tables as the Maven site plugin changes the attributes of 
+      | Work-around for tables as the Maven site plugin changes the attributes of
       | table, tr and td.
       +-->
   <xsl:template match="table[@daisy-table-type]">
@@ -246,7 +270,7 @@
       </table>
     </div>
   </xsl:template>
-  
+
   <!--+
       | Includes
       |
@@ -259,13 +283,13 @@
         $id]/p:publisherResponse/d:document"/>
     </div>
   </xsl:template>
-  
+
   <!-- images -->
   <xsl:template match="img">
     <img src="{@src}" width="{@p:imageWidth}" height="{@p:imageHeight}" name="{p:linkInfo/@documentName}"
       alt="{p:linkInfo/@documentName}"/>
   </xsl:template>
-  
+
   <!-- links: remove p:linkInfo -->
   <xsl:template match="a/p:linkInfo"/>
   <xsl:template match="pre">
@@ -274,7 +298,7 @@
         <xsl:apply-templates/>
       </pre>
   </xsl:template>
-  
+
   <!-- surround all p elements that have an attribute to some div equivalent -->
   <xsl:template match="p[@class='warning']">
     <div class="warning">
@@ -300,7 +324,7 @@
       </div>
     </div>
   </xsl:template>
-  
+
   <!-- format search results -->
   <xsl:template match="d:searchResult[@styleHint='news']">
     <div class="news">
@@ -317,7 +341,7 @@
       </xsl:for-each>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="d:searchResult[@styleHint='sitemap-components']">
     <xsl:call-template name="createComponentTable">
       <xsl:with-param name="type" select="'Generator'"/>
@@ -338,7 +362,7 @@
       <xsl:with-param name="type" select="'Action'"/>
     </xsl:call-template>
   </xsl:template>
-  
+
   <xsl:template name="createComponentTable">
     <xsl:param name="type"/>
     <h1><xsl:value-of select="$type"/>s</h1>
@@ -363,13 +387,13 @@
       </xsl:for-each>
     </table>
   </xsl:template>
-  
+
   <xsl:template match="d:searchResult">
     <div class="warning">
       <strong style="color:red;font-weight:bold">Warning: There is no styling for this query available.</strong>
     </div>
   </xsl:template>
-  
+
   <!--+
        | default templates
        +-->
