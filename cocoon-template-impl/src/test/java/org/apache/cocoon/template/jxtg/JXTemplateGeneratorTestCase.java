@@ -25,6 +25,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
+import org.xml.sax.SAXParseException;
 
 /**
  * @version SVN $Id$
@@ -69,7 +70,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         return this.newObjectModel;
     }
 
-    public void testGenerate() throws Exception {
+     public void testGenerate() throws Exception {
         String inputURI = docBase + "generate.xml";
 
         assertEqual(load(inputURI), generate(JX, inputURI, EMPTY_PARAMS));
@@ -240,6 +241,27 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     public void testPrefixMapping() throws Exception {
         String inputURI = docBase + "jxPrefixMapping.xml";
         String outputURI = docBase + "jxPrefixMapping-output.xml";
+        getNewObjectModel().markLocalContext();
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+        getNewObjectModel().cleanupLocalContext();
+    }
+
+    public void testPrefixMapping2() throws Exception {
+        String inputURI = docBase + "jxPrefixMapping-2.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {
+            error = true;
+        }
+        assertTrue("should throw on unbound prefix", error);
+        getNewObjectModel().cleanupLocalContext();
+    }
+
+    public void testPrefixMapping3() throws Exception {
+        String inputURI = docBase + "jxPrefixMapping-3.xml";
+        String outputURI = docBase + "jxPrefixMapping-3-output.xml";
         getNewObjectModel().markLocalContext();
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
         getNewObjectModel().cleanupLocalContext();
