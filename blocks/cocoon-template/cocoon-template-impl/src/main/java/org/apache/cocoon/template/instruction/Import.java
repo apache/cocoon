@@ -47,8 +47,7 @@ public class Import extends Instruction {
     private final AttributeEvent uri;
     private final Subst select;
 
-    public Import(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack)
-        throws SAXException {
+    public Import(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack) throws SAXException {
 
         super(raw);
 
@@ -69,7 +68,8 @@ public class Import extends Instruction {
             // as the context object in the imported template
             String context = attrs.getValue("context");
             if (context != null) {
-                select = parsingContext.getStringTemplateParser().compileExpr(context, "import: \"context\": ", locator);
+                select = parsingContext.getStringTemplateParser()
+                        .compileExpr(context, "import: \"context\": ", locator);
             }
         } else {
             throw new SAXParseException("import: \"uri\" is required", locator, null);
@@ -78,10 +78,9 @@ public class Import extends Instruction {
         this.select = select;
     }
 
-    public Event execute(final XMLConsumer consumer,
-                         ObjectModel objectModel, ExecutionContext executionContext,
-                         MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent) 
-        throws SAXException {
+    public Event execute(final XMLConsumer consumer, ObjectModel objectModel, ExecutionContext executionContext,
+            MacroContext macroContext, NamespacesTable namespaces, Event startEvent, Event endEvent)
+            throws SAXException {
         String uri;
         AttributeEvent e = this.uri;
         if (e instanceof CopyAttribute) {
@@ -111,8 +110,9 @@ public class Import extends Instruction {
         } catch (ProcessingException exc) {
             throw new SAXParseException(exc.getMessage(), getLocation(), exc);
         }
-        objectModel.markLocalContext();
+
         if (this.select != null) {
+            objectModel.markLocalContext();
             try {
                 Object obj = this.select.getValue(objectModel);
                 objectModel.put(ObjectModel.CONTEXTBEAN, obj);
@@ -120,21 +120,20 @@ public class Import extends Instruction {
             } catch (Exception exc) {
                 throw new SAXParseException(exc.getMessage(), getLocation(), exc);
             } catch (Error err) {
-                throw new SAXParseException(err.getMessage(), getLocation(),
-                                            new ErrorHolder(err));
+                throw new SAXParseException(err.getMessage(), getLocation(), new ErrorHolder(err));
             }
         }
         try {
-            Invoker.execute(consumer, objectModel, executionContext,
-                            macroContext, namespaces, doc.getNext(), doc.getEndDocument());
+            Invoker.execute(consumer, objectModel, executionContext, macroContext, namespaces, doc.getNext(), doc
+                    .getEndDocument());
         } catch (Exception exc) {
-            throw new SAXParseException(
-                                        "Exception occurred in imported template " + uri
-                                        + ": " + exc.getMessage(), getLocation(), exc);
+            throw new SAXParseException("Exception occurred in imported template " + uri + ": " + exc.getMessage(),
+                    getLocation(), exc);
         }
-        
-        objectModel.cleanupLocalContext();
-        
+
+        if (this.select != null)
+            objectModel.cleanupLocalContext();
+
         return getEndInstruction().getNext();
     }
 }

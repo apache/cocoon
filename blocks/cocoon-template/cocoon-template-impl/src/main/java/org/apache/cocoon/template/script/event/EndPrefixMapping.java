@@ -45,9 +45,6 @@ public class EndPrefixMapping extends Event {
             NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         
         // (endPrefixMapping is sent in EndElement)
-        
-        objectModel.cleanupLocalContext();
-        
         return getNext();
     }
 }
