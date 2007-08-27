@@ -145,10 +145,10 @@ public class JXTemplateGenerator
         newObjectModel.markLocalContext();
 
         newObjectModel.putAt(ObjectModel.PARAMETERS_PATH, new ParametersMap(parameters));
-
+        newObjectModel.put(ObjectModel.NAMESPACE, namespaces);
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
-        //not sure why this is needed
         newObjectModel.putAt("cocoon/consumer", consumer);
+        
         Invoker.execute(consumer, this.newObjectModel, new ExecutionContext(this.definitions, this.scriptManager,
                 this.manager), null, namespaces, startEvent, null);
 

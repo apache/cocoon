@@ -51,8 +51,6 @@ public class StartPrefixMapping extends Event {
             NamespacesTable namespaces, Event startEvent, Event endEvent) throws SAXException {
         // the startPrefixMapping event will be sent in StartElement
         namespaces.addDeclaration(getPrefix(), getUri());
-        objectModel.markLocalContext();
-        objectModel.put(ObjectModel.NAMESPACE, namespaces);
         return getNext();
     }
 }
