@@ -29,6 +29,12 @@ code {
 	font-size: 110%;
 	padding:10px;
 }
+li code, td code {
+	border:0px;
+	font-size: 110%;
+	background: transparent;
+	padding:0px;
+}
 
 #legend li.externalLink {
   background: url(../images/external.png) left top no-repeat;
