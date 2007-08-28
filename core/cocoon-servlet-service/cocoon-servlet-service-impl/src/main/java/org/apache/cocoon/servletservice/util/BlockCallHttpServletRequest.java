@@ -66,6 +66,12 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3
      */
     final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
+    
+    
+    /**
+     * Protocol of block call requests.
+     */
+    private final String protocol = "HTTP/1.1";  
 
     /**
      * @param uri points to the called servlet
@@ -289,8 +295,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.ServletRequest#getProtocol()
      */
     public String getProtocol() {
-        // TODO Implement this
-        throw new UnsupportedOperationException();
+        return this.protocol;
     }
 
     /* (non-Javadoc)
