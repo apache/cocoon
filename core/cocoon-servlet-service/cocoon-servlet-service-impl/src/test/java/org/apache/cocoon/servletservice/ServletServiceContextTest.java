@@ -40,9 +40,11 @@ public class ServletServiceContextTest extends TestCase {
     private ServletServiceContext mainContext;
     private HttpServlet servletA;
     private HttpServlet servletB;
+    private HttpServlet servletC;
     
     private ServletServiceContext servletAContext;
     private ServletServiceContext servletBContext;
+    private ServletServiceContext servletCContext;
     
     BlockCallHttpServletRequest request;
     BlockCallHttpServletResponse response;
@@ -59,9 +61,10 @@ public class ServletServiceContextTest extends TestCase {
         request.setMethod("GET");
         response = new BlockCallHttpServletResponse();
         
-        //creating and setting up ServletContexts
+        //creating ServletContexts
         servletAContext = new ServletServiceContext();
-        servletBContext = new ServletServiceContext();        
+        servletBContext = new ServletServiceContext();
+        servletCContext = new ServletServiceContext();
     }
     
     /**
@@ -147,8 +150,6 @@ public class ServletServiceContextTest extends TestCase {
      * @throws Exception
      */
     public void testContextInServletCalledFromExplicitSuperCall() throws Exception {
-        final ServletServiceContext servletCContext = new ServletServiceContext();
-        
         servletA = new HttpServlet() {
             public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletAContext); }
 
@@ -169,7 +170,7 @@ public class ServletServiceContextTest extends TestCase {
             }
         };
         
-        HttpServlet servletC = new HttpServlet() {
+        servletC = new HttpServlet() {
             public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletCContext); }
             
             protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -209,9 +210,7 @@ public class ServletServiceContextTest extends TestCase {
      * 
      * @throws Exception
      */
-    public void testtrueObjectOrientedBehaviour() throws Exception {
-        final ServletServiceContext servletCContext = new ServletServiceContext();
-        
+    public void testTrueObjectOrientedBehaviour() throws Exception {
         servletA = new HttpServlet() {
             public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletAContext); }
 
@@ -232,7 +231,7 @@ public class ServletServiceContextTest extends TestCase {
             }
         };
         
-        HttpServlet servletC = new HttpServlet() {
+        servletC = new HttpServlet() {
             public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletCContext); }
             
             protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
