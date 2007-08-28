@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
 
-public class ServletServiceContextTest extends TestCase {
+public class ServletServiceContextTestCase extends TestCase {
     
     private ServletServiceContext mainContext;
     private HttpServlet servletA;
