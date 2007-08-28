@@ -16,71 +16,277 @@
 */
 package org.apache.cocoon.servletservice;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
-import org.easymock.MockControl;
 
 public class ServletServiceContextTest extends TestCase {
     
     private ServletServiceContext mainContext;
-    private Servlet servletA;
-    private Servlet servletB;
-    private MockControl servletAControl;
-    private MockControl servletBControl;
-    
-    private MockControl servletAConfigControl;
-    private ServletConfig servletAConfig;
+    private HttpServlet servletA;
+    private HttpServlet servletB;
     
     private ServletServiceContext servletAContext;
+    private ServletServiceContext servletBContext;
+    
+    BlockCallHttpServletRequest request;
+    BlockCallHttpServletResponse response;
     
     
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
     protected void setUp() throws Exception {
         super.setUp();
         this.mainContext = new ServletServiceContext();
         
-        servletAControl = MockControl.createControl(Servlet.class);
-        servletA = (Servlet)servletAControl.getMock();
+        request = new BlockCallHttpServletRequest(new URI("dummy"), null);
+        request.setMethod("GET");
+        response = new BlockCallHttpServletResponse();
         
+        //creating and setting up ServletContexts
         servletAContext = new ServletServiceContext();
-        servletAContext.setServlet(servletA);
-        
-        servletAConfigControl = MockControl.createControl(ServletConfig.class);
-        servletAConfig = (ServletConfig)servletAConfigControl.getMock();
-        servletAConfig.getServletContext();
-        servletAConfigControl.setReturnValue(servletAContext);
-        
-        servletA.getServletConfig();
-        servletAControl.setReturnValue(servletAConfig);
-        
-        Map connections = new HashMap();
-        connections.put("servletA", servletA);
-        mainContext.setConnections(connections);
+        servletBContext = new ServletServiceContext();        
     }
     
+    /**
+     * Tests basic connection to the servlet.
+     * 
+     * @throws Exception
+     */
     public void testBasicConnection() throws Exception {
-        ServletRequest request = new BlockCallHttpServletRequest(new URI("dummy"), null);
-        ServletResponse response = new BlockCallHttpServletResponse();
+        servletA = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletAContext); }
+
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        };
+        servletAContext.setServlet(servletA);
        
-        servletA.service(request, response);
-        servletAControl.replay();
-        servletAConfigControl.replay();
+        setMainConnection(servletA, "servletA");
         
         RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
         dispatcher.forward(request, response);
         
-        servletAControl.verify();
-        servletAConfigControl.verify();
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
+    
+    /**
+     * <p>Tests if explicit super call works and if ServletContexts are properly set up when super call is performed.</p>
+     * 
+     * <p>Servlets are connected that way:</p>
+     * <pre>
+     *    ServletB
+     *       ^
+     *       |
+     *    ServletA
+     * </pre>
+     * @throws Exception
+     */
+    public void testExplicitSuperCall() throws Exception {
+        servletA = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletAContext); }
+
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                ServletContext context = CallStackHelper.getCurrentServletContext();
+                RequestDispatcher dispatcher = context.getNamedDispatcher("super");
+                dispatcher.forward(request, response);
+            }
+
+        };
+        
+        servletB = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletBContext); }
+            
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                assertEquals(servletAContext, CallStackHelper.getBaseServletContext());
+                assertEquals(servletBContext, CallStackHelper.getCurrentServletContext());
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        };
+        
+        servletAContext.setServlet(servletA);
+        servletBContext.setServlet(servletB);
+        
+        //connecting servlets
+        setMainConnection(servletA, "servletA");
+        connectServlets(servletA, servletB, "super");
+
+        RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
+        dispatcher.forward(request, response);
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+    
+    /**
+     * <p>Tests if ServletContext is properly set up in a servlet (C) that is called from super servlet (B) for another one(A).</p>
+     * 
+     * <p>Servlets are connected that way:</p>
+     * <pre>
+     *    ServletB --> ServletC
+     *       ^
+     *       |
+     *    ServletA
+     * </pre>
+     * 
+     * @throws Exception
+     */
+    public void testContextInServletCalledFromExplicitSuperCall() throws Exception {
+        final ServletServiceContext servletCContext = new ServletServiceContext();
+        
+        servletA = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletAContext); }
+
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                ServletContext context = CallStackHelper.getCurrentServletContext();
+                RequestDispatcher dispatcher = context.getNamedDispatcher("super");
+                dispatcher.forward(request, response);
+            }
+        };
+        
+        servletB = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletBContext); }
+            
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                ServletContext context = CallStackHelper.getBaseServletContext();
+                RequestDispatcher dispatcher = context.getNamedDispatcher("servletC");
+                dispatcher.forward(request, response);
+            }
+        };
+        
+        HttpServlet servletC = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletCContext); }
+            
+            protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+                super.service(req, response);
+                assertEquals(request, req);
+                assertEquals(response, res);
+                assertEquals(servletCContext, CallStackHelper.getBaseServletContext());
+                assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
+                res.setStatus(200);
+            }
+        };
+        servletAContext.setServlet(servletA);
+        servletBContext.setServlet(servletB);
+        servletCContext.setServlet(servletC);
+        
+        //connecting servlets
+        setMainConnection(servletA, "servletA");
+        connectServlets(servletA, servletB, "super");
+        connectServlets(servletB, servletC, "servletC");
+
+        RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
+        dispatcher.forward(request, response);
+        assertEquals(200, response.getStatus());
+    }
+    
+    /**
+     * <p>This test is very similar to the {@link #testContextInServletCalledFromExplicitSuperCall()} but tries to use true OO approach so there is
+     *    no explicit super call. See COCOON-2038.</p>
+     * 
+     * <p>Servlets are connected that way:</p>
+     * <pre>
+     *    ServletB --> ServletC
+     *       ^
+     *       |
+     *    ServletA
+     * </pre>
+     * 
+     * @throws Exception
+     */
+    public void testtrueObjectOrientedBehaviour() throws Exception {
+        final ServletServiceContext servletCContext = new ServletServiceContext();
+        
+        servletA = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletAContext); }
+
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                super.service(request, response);
+                response.setStatus(500);
+            }
+
+        };
+        
+        servletB = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletBContext); }
+            
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                ServletContext context = CallStackHelper.getBaseServletContext();
+                RequestDispatcher dispatcher = context.getNamedDispatcher("servletC");
+                dispatcher.forward(request, response);
+            }
+        };
+        
+        HttpServlet servletC = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletCContext); }
+            
+            protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+                super.service(req, response);
+                assertEquals(request, req);
+                assertEquals(response, res);
+                assertEquals(servletCContext, CallStackHelper.getBaseServletContext());
+                assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
+                res.setStatus(200);
+            }
+        };
+        servletAContext.setServlet(servletA);
+        servletBContext.setServlet(servletB);
+        servletCContext.setServlet(servletC);
+        
+        //connecting servlets
+        setMainConnection(servletA, "servletA");
+        connectServlets(servletA, servletB, "super");
+        connectServlets(servletB, servletC, "servletC");
+
+        RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
+        dispatcher.forward(request, response);
+        assertEquals(200, response.getStatus());
+    }
+    
+    //-----------------------------------------------------------------------------------------
+    
+    private void connectServlets(HttpServlet connectFrom, HttpServlet connectTo, String connectionName) {
+        ServletServiceContext context = (ServletServiceContext)connectFrom.getServletConfig().getServletContext();
+        Map connections = new HashMap();
+        connections.put(connectionName, connectTo);
+        context.setConnections(connections);
+    }
+    
+    private void setMainConnection(HttpServlet connectTo, String connectionName) {
+        Map connections = new HashMap();
+        connections.put(connectionName, connectTo);
+        mainContext.setConnections(connections);
+    }
+    
+    private class ServletConfigWithContext implements ServletConfig {
+        private ServletContext context;
+        
+        public ServletConfigWithContext(ServletContext context) {
+            this.context = context;
+        }
+        
+        public String getInitParameter(String arg0) { return null; }
+        public Enumeration getInitParameterNames() { return null; }
+        public String getServletName() { return null; }
+        
+        public ServletContext getServletContext() {
+            return context;
+        }
+    }
+
 }
