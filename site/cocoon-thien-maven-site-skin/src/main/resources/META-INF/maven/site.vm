@@ -257,10 +257,10 @@
            #if( $project.getProperties().get("docs.mode") == "online")
               <ul class="projectList">
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></em></strong></li>
-                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></strong></li>
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Core <span class="pl-version-small">2.2</span></a></li>
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Blocks <span class="pl-version-small">2.2</span></a></li>
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins <span class="pl-version-small">2.2</span></a></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></strong></li>
               </ul>
             #end
          </div>
