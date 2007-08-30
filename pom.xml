@@ -2678,7 +2678,7 @@
         <version>1.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.cocoon</groupId> 
+        <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-rcl-spring-reloader</artifactId>
         <version>1.0.0-RC1-SNAPSHOT</version>
       </dependency>
@@ -3044,7 +3044,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin> 
+      </plugin>
     </plugins>
   </build>
 
@@ -3131,6 +3131,10 @@
     <docs.m.core.version>2.2</docs.m.core.version>
     <docs.m.core.relPath>2.2/core-modules/core/${docs.m.core.version}/</docs.m.core.relPath>
     <!-- Path and version properties: Submodules of core without Daisy documentation -->
+    <docs.m.expression-language-api.version>1.0</docs.m.expression-language-api.version>
+    <docs.m.expression-language-api.relPath>2.2/core-modules/expression-language-api/${docs.m.expression-language-api.version}/</docs.m.expression-language-api.relPath>
+    <docs.m.expression-language-impl.version>1.0</docs.m.expression-language-impl.version>
+    <docs.m.expression-language-impl.relPath>2.2/core-modules/expression-language-impl/${docs.m.expression-language-impl.version}/</docs.m.expression-language-impl.relPath>
     <docs.m.pipeline-api.version>1.0</docs.m.pipeline-api.version>
     <docs.m.pipeline-api.relPath>2.2/core-modules/pipeline-api/${docs.m.pipeline-api.version}/</docs.m.pipeline-api.relPath>
     <docs.m.pipeline-impl.version>1.0</docs.m.pipeline-impl.version>
@@ -3157,10 +3161,8 @@
     <docs.m.xml-impl.relPath>2.2/core-modules/xml-impl/${docs.m.xml-impl.version}/</docs.m.xml-impl.relPath>
     <docs.m.xml-resolver.version>1.0</docs.m.xml-resolver.version>
     <docs.m.xml-resolver.relPath>2.2/core-modules/xml-resolver/${docs.m.xml-resolver.version}/</docs.m.xml-resolver.relPath>
-    <docs.m.expression-language-api.version>1.0</docs.m.expression-language-api.version>
-    <docs.m.expression-language-api.relPath>2.2/core-modules/expression-language-api/${docs.m.expression-language-api.version}/</docs.m.expression-language-api.relPath>
-    <docs.m.expression-language-impl.version>1.0</docs.m.expression-language-impl.version>
-    <docs.m.expression-language-impl.relPath>2.2/core-modules/expression-language-impl/${docs.m.expression-language-impl.version}/</docs.m.expression-language-impl.relPath>
+    <docs.m.xml-util.version>1.0</docs.m.xml-util.version>
+    <docs.m.xml-util.relPath>2.2/core-modules/xml-util/${docs.m.xml-util.version}/</docs.m.xml-util.relPath>
     <!-- Path and version properties: subprojects -->
     <docs.m.servlet-service-impl.version>1.0</docs.m.servlet-service-impl.version>
     <docs.m.servlet-service-impl.relPath>subprojects/servlet-service/servlet-service-impl/${docs.m.servlet-service-impl.version}/</docs.m.servlet-service-impl.relPath>
@@ -3276,6 +3278,7 @@
               <groupId>org.daisycms</groupId>
               <artifactId>daisy-maven-plugin</artifactId>
               <version>1.0.0-alpha-1</version>
+              <!--version>1.0.0-SNAPSHOT</version-->
               <configuration>
                 <repoUrl>${docs.repoUrl}</repoUrl>
                 <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
@@ -3421,6 +3424,11 @@
                   <artifactId>cocoon-daisy-export-strategy</artifactId>
                   <version>1.0.0-SNAPSHOT</version>
                 </dependency>
+                <!--dependency>
+                  <groupId>org.daisycms</groupId>
+                  <artifactId>daisy-java-adapter</artifactId>
+                  <version>1.0.0-SNAPSHOT</version>
+                </dependency-->
               </dependencies>
               <executions>
                 <execution>
