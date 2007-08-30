@@ -1811,7 +1811,7 @@
       <dependency>
         <groupId>rhino</groupId>
         <artifactId>js</artifactId>
-        <version>1.6R5</version>
+        <version>1.6R7</version>
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
@@ -1832,7 +1832,7 @@
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.14</version>
+        <version>1.2.15</version>
       </dependency>
       <dependency>
         <groupId>lucene</groupId>
