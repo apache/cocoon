@@ -90,7 +90,7 @@ public abstract class ResourceUtils {
         if (logger != null && logger.isDebugEnabled()) {
             logger.debug("Reading properties from directory: " + propertiesPath);
         }
-        final ResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
+        final ResourcePatternResolver resolver = (ResourcePatternResolver) resourceLoader;
 
         Resource[] resources = null;
 

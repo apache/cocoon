@@ -30,7 +30,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.context.support.ServletContextResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.w3c.dom.Element;
 
 /**
@@ -166,8 +166,8 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
                                      final String        path,
                                      final boolean       optional)
     throws Exception {
-        final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
-        ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
+        final ResourcePatternResolver resolver = 
+            (ResourcePatternResolver) parserContext.getReaderContext().getReader().getResourceLoader();
 
         // check if the directory to read from exists
         // we only check if optional is set to true
