@@ -175,8 +175,6 @@ public class ServletServiceContextTestCase extends TestCase {
             
             protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
                 super.service(req, response);
-                assertEquals(request, req);
-                assertEquals(response, res);
                 assertEquals(servletCContext, CallStackHelper.getBaseServletContext());
                 assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
                 res.setStatus(200);
@@ -236,8 +234,6 @@ public class ServletServiceContextTestCase extends TestCase {
             
             protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
                 super.service(req, response);
-                assertEquals(request, req);
-                assertEquals(response, res);
                 assertEquals(servletCContext, CallStackHelper.getBaseServletContext());
                 assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
                 res.setStatus(200);
@@ -256,6 +252,66 @@ public class ServletServiceContextTestCase extends TestCase {
         dispatcher.forward(request, response);
         assertEquals(200, response.getStatus());
     }
+    
+    /**
+     * <p>This test is for bug COCOON-1939 for more than 2 level of inheritance.
+     *        
+     * <p>Servlets are connected that way:</p>
+     * <pre>
+     * 	  SerlvetC
+     * 		 ^
+     * 		 |
+     *    ServletB
+     *       ^
+     *       |
+     *    ServletA
+     * </pre>
+     * 
+     * @throws Exception
+     */
+    public void testThreeLevelInheritance() throws Exception {
+        servletA = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletAContext); }
+
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                super.service(request, response);
+                response.setStatus(500);
+            }
+
+        };
+        
+        servletB = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletBContext); }
+            
+            protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            	super.service(request, response);
+                response.setStatus(500);
+            }
+        };
+        
+        servletC = new HttpServlet() {
+            public ServletConfig getServletConfig() { return new ServletConfigWithContext(servletCContext); }
+            
+            protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+                super.service(req, response);
+                assertEquals(servletAContext, CallStackHelper.getBaseServletContext());
+                assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
+                res.setStatus(200);
+            }
+        };
+        servletAContext.setServlet(servletA);
+        servletBContext.setServlet(servletB);
+        servletCContext.setServlet(servletC);
+        
+        //connecting servlets
+        setMainConnection(servletA, "servletA");
+        connectServlets(servletA, servletB, "super");
+        connectServlets(servletB, servletC, "super");
+
+        RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
+        dispatcher.forward(request, response);
+        assertEquals(200, response.getStatus());
+    }    
     
     //-----------------------------------------------------------------------------------------
     

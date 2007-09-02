@@ -41,6 +41,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.cocoon.servletservice.util.ServletContextWrapper;
 import org.apache.commons.logging.Log;
@@ -413,11 +414,22 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         if (this.connections == null) {
             return null;
         }
-
-        Servlet servlet = (Servlet) this.connections.get(name);
+        
+        Servlet servlet =
+            (Servlet) this.connections.get(name);
+        if (servlet == null && !name.equals(SUPER)) {
+        	Servlet _super = ((Servlet)this.connections.get(SUPER));
+        	if (_super != null) {
+        		ServletContext c = _super.getServletConfig().getServletContext();
+        		if (c instanceof ServletServiceContext)
+        			return ((ServletServiceContext)c).getNamedContext(name);
+        		
+        		return null;
+        	}
+        }        
         return servlet != null ? servlet.getServletConfig().getServletContext() : null;
     }
-
+    
     /**
      * @param mountPath The mountPath to set.
      */
@@ -466,16 +478,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
             // Call to a named servlet service that exists in the current context
             this.context = ServletServiceContext.this.getNamedContext(this.servletServiceName);
-            if (this.context == null) {
-                // If there is a super servlet service, the connection might
-                // be defined there instead.
-                ServletServiceContext superContext =
-                        (ServletServiceContext) ServletServiceContext.this.getNamedContext(SUPER);
-                if (superContext != null) {
-                    this.context = superContext.getNamedContext(this.servletServiceName);
-                    this.superCall = true;
-                }
-            }
         }
 
         protected boolean exists() {
@@ -545,19 +547,37 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         protected void forward(ServletRequest request, ServletResponse response, boolean superCall)
         throws ServletException, IOException {
             try {
+                StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse((HttpServletResponse)response);
                 if (!superCall) {
                     // It is important to set the current context each time
                     // a new context is entered, this is used for the servlet
                     // protocol
-                    CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)response);
+                    CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)wrappedResponse);
                 } else {
                     // A super servlet service should be called in the context of
                     // the called servlet service to get polymorphic calls resolved
                     // in the right way. We still need to register the
                     // current context for resolving super calls relative it.
-                    CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)response);
+                    CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)wrappedResponse);
                 }
-                ServletServiceContext.this.servlet.service(request, response);
+                ServletException se = null;
+                try {
+                	ServletServiceContext.this.servlet.service(request, wrappedResponse);
+                }
+                catch (ServletException e) {
+                	se = e;
+                }
+               	int status = wrappedResponse.getStatus();
+               	if (se != null || (status < 200 || status >= 400)) {
+               		wrappedResponse.reset();
+               		NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
+               		if (_super != null) {
+               			_super.forward(request, wrappedResponse);
+               		}
+               		else
+               			throw se;
+               	}
+
             } finally {
                 CallStackHelper.leaveServlet();
             }
@@ -570,4 +590,38 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
             throw new UnsupportedOperationException();
         }
     }
+
+    private static class StatusRetrievableWrappedResponse extends HttpServletResponseWrapper {
+    	
+       	private int status;
+    
+       	public StatusRetrievableWrappedResponse(HttpServletResponse wrapped) {
+       		super(wrapped);
+       	}
+       	
+    	public void setStatus(int sc, String sm) {
+    		this.status = sc;
+    		super.setStatus(sc, sm);
+    	}
+    
+    	public void setStatus(int sc) {
+    		this.status = sc;
+    		super.setStatus(sc);
+    	}
+    	
+    	public int getStatus() {
+    		return this.status;
+    	}
+    	
+    	public void sendError(int errorCode) throws IOException {
+    		this.status = errorCode;
+    		super.sendError(errorCode);	
+    	}
+    	
+    	public void sendError(int errorCode, String errorMessage) throws IOException {
+    		this.status = errorCode;
+    		super.sendError(errorCode, errorMessage);	
+    	}		
+    }
+    
 }
