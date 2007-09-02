@@ -548,6 +548,8 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         throws ServletException, IOException {
             try {
                 StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse((HttpServletResponse)response);
+                //FIXME: I think that Cocoon should always set status code on its own
+                wrappedResponse.setStatus(HttpServletResponse.SC_OK);
                 if (!superCall) {
                     // It is important to set the current context each time
                     // a new context is entered, this is used for the servlet
