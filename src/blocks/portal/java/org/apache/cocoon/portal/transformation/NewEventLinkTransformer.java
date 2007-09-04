@@ -173,7 +173,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
                 }
                 pos = eventLink.indexOf('?');
                 if ( pos != -1 ) {
-                    eventLink = eventLink.substring(0, eventLink.indexOf('?'));
+                    eventLink = eventLink.substring(0, pos);
                 }
             }
 
@@ -183,7 +183,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
 
         this.stack.push(elementName);
 
-        contentHandler.startElement(
+        this.contentHandler.startElement(
             "",
             elementName,
             elementName,
@@ -191,7 +191,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
 
         //generate hidden inputs to add request parameters to the form action
         if (formSpecialTreatment) {
-            sendHiddenFields(contentHandler, portalAction, portalEvent);
+            this.sendHiddenFields(this.contentHandler, portalAction, portalEvent);
         }
     }
 
@@ -216,7 +216,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
             attributes.addCDATAAttribute("value", portalAction);
             XMLUtils.createElement(contentHandler, "input", attributes);
         }
- 
+
         if ( portalEvent != null ) {
             final AttributesImpl attributes = new AttributesImpl();
             attributes.addCDATAAttribute("type", "hidden");
@@ -232,6 +232,6 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
     public void endTransformingElement(String uri, String name, String raw)
     throws SAXException {
         String elementName = (String) this.stack.pop();
-        contentHandler.endElement("", elementName, elementName);
+        this.contentHandler.endElement("", elementName, elementName);
     }
 }
