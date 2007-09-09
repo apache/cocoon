@@ -72,7 +72,7 @@
         | How often shall the cleanup thread check memory?
         | If not specified, defaults to 10 seconds.
         +-->
-    <property name="cleanupThreadInterval" value="600"/>
+    <property name="cleanupThreadInterval" value="10"/>
     <!--+
         | Experimental adaptive algorithm for cleanup interval
     <property name="adaptiveThreadInterval" value="true"/>
