@@ -21,8 +21,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <!-- ObjectModelEntry provider for 'cocoon' -->
-    <bean name="org.apache.cocoon.el.impl.objectmodel.CocoonEntryObjectModelProvider"
-          class="org.apache.cocoon.el.impl.objectmodel.CocoonEntryObjectModelProvider">
+    <bean name="org.apache.cocoon.objectmodel.impl.CocoonEntryObjectModelProvider"
+          class="org.apache.cocoon.objectmodel.impl.CocoonEntryObjectModelProvider">
         <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
         <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
     </bean>

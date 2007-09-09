@@ -31,7 +31,7 @@
   <bean name="org.apache.cocoon.el.objectmodel.ObjectModel" class="org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl">
     <property name="initialEntries">
       <map>
-        <entry key="cocoon" value-ref="org.apache.cocoon.el.impl.objectmodel.CocoonEntryObjectModelProvider"/>
+        <entry key="cocoon" value-ref="org.apache.cocoon.objectmodel.impl.CocoonEntryObjectModelProvider"/>
         <entry key="Packages" value-ref="org.apache.cocoon.el.impl.objectmodel.PackagesEntryObjectModelProvider"/>
         <entry key="java" value-ref="org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider"/>
       </map>
