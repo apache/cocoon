@@ -518,8 +518,8 @@ public class DefaultThreadPool
 	    msg.append(",isDaemon=").append(
 		    ((ThreadFactory) this.getThreadFactory()).isDaemon());
 	    msg.append(",keep-alive-time-ms=").append(keepAliveTime_);
-	    msg.append(",block-policy=").append(blockPolicy);
-	    msg.append(",shutdown-wait-time-ms=").append(shutdownWaitTimeMs);
+	    msg.append(",block-policy=\"").append(blockPolicy);
+	    msg.append("\",shutdown-wait-time-ms=").append(shutdownWaitTimeMs);
 	    return msg.toString();
 	}
     }
