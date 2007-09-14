@@ -24,6 +24,11 @@
     +-->
     <document>
       <body>
+        <release version="1.0.0-RC2" date="2007-??-??" description="unreleased">    
+          <action dev="gkossakowski" type="fix">
+            Added missing dependency on cocoon-flowscript-impl.
+          </action>      
+        </release>
         <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
           <action dev="reinhard" type="add">
             Initial creation.

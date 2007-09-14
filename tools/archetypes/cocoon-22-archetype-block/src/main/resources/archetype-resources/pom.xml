@@ -46,6 +46,11 @@
       <artifactId>cocoon-template-impl</artifactId>
       <version>1.0.0-RC2-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-flowscript-impl</artifactId>
+      <version>1.0.0-RC2-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>
