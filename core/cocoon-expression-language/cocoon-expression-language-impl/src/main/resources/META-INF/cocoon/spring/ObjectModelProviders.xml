@@ -21,13 +21,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     
     <!-- ObjectModelEntry provider for 'Packages' -->
-    <bean name="org.apache.cocoon.el.impl.objectmodel.PackagesEntryObjectModelProvider"
+    <bean name="org.apache.cocoon.el.objectmodel.ObjectModelProvider/Packages"
           class="org.apache.cocoon.el.impl.objectmodel.PackagesEntryObjectModelProvider">
       <property name="rootScope" ref="org.mozilla.javascript.Scriptable/rootScope"/>
     </bean>
     
     <!-- ObjectModelEntry provider for 'java' -->
-    <bean name="org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider"
+    <bean name="org.apache.cocoon.el.objectmodel.ObjectModelProvider/java"
           class="org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider">
       <property name="rootScope" ref="org.mozilla.javascript.Scriptable/rootScope"/>
     </bean>

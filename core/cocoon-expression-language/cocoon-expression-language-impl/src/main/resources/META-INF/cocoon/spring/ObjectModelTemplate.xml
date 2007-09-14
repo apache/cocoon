@@ -19,8 +19,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:configurator="http://cocoon.apache.org/schema/configurator"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+                           http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
     <!-- Default implementation of ObjectModel interface. This bean definition, is a template actually because it has
          abstract attribute set to "true". It enables Object Model to be defined as scoped bean elsewhere. -->
@@ -28,12 +30,8 @@
           class="org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl"
           abstract="true">
         <property name="initialEntries">
-          <map>
-            <entry key="cocoon" value-ref="org.apache.cocoon.objectmodel.impl.CocoonEntryObjectModelProvider"/>
-            <entry key="Packages" value-ref="org.apache.cocoon.el.impl.objectmodel.PackagesEntryObjectModelProvider"/>
-            <entry key="java" value-ref="org.apache.cocoon.el.impl.objectmodel.JavaEntryObjectModelProvider"/>
-          </map>
-        </property>        
+          <configurator:bean-map type="org.apache.cocoon.el.objectmodel.ObjectModelProvider"/>
+        </property>
     </bean>
 
 </beans>

@@ -23,8 +23,8 @@
   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
   
   <!-- Default implementation of ObjectModel interface in pipelineComponent scope. -->
-  <bean name="org.apache.cocoon.el.objectmodel.ObjectModel" class="org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl" 
-        scope="pipelineComponent" parent="org.apache.cocoon.el.objectmodel.ObjectModel.template">
+  <bean name="org.apache.cocoon.el.objectmodel.ObjectModel" scope="pipelineComponent" 
+        parent="org.apache.cocoon.el.objectmodel.ObjectModel.template">
     <aop:scoped-proxy proxy-target-class="false"/>
   </bean>
   
