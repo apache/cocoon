@@ -92,9 +92,7 @@ public class JXPathHelper {
         try {
             JXPathContext jxContext = JXPathContext.newContext(contextObj);
             setup(setup, jxContext, modeConf);
-
-            Object obj = jxContext.getValue(name);
-            return obj;
+            return jxContext.selectSingleNode(name);
         } catch (Exception e) {
             throw new ConfigurationException("Module does not support <" + name + ">" + "attribute.", e);
         }
