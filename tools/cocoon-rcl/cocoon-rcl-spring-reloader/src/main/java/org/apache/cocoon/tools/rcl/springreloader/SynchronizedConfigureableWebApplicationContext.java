@@ -105,6 +105,13 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
         return appContext.getBean(arg0);
     }
 
+    // Make the class compilable with Spring 2.1
+    // FIXME: delegate to appContext, when updating to Spring 2.1
+    public Object getBean(String arg0, Object[] arg1) throws BeansException {
+        throw new UnsupportedOperationException();
+        //return appContext.getBean(arg0, arg1);
+    }
+
     public synchronized int getBeanDefinitionCount() {
         return appContext.getBeanDefinitionCount();
     }
