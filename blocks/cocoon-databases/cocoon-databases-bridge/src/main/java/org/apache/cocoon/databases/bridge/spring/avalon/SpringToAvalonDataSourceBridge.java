@@ -1,14 +1,11 @@
 package org.apache.cocoon.databases.bridge.spring.avalon;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.apache.avalon.excalibur.datasource.DataSourceComponent;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 
@@ -21,41 +18,39 @@ import org.apache.avalon.framework.service.ServiceSelector;
 public class SpringToAvalonDataSourceBridge implements ServiceSelector {
     private ServiceSelector dataSourceSelector;
     private Map springDataSources;
+    
+    private Set sourcesFromDataSourceSelector;
+    
+    public SpringToAvalonDataSourceBridge() {
+        sourcesFromDataSourceSelector = new HashSet();
+    }
 
     public boolean isSelectable(Object policy) {
         return dataSourceSelector.isSelectable(policy) || springDataSources.containsKey(policy);
     }
 
     public void release(Object object) {
-        if (object instanceof DataSourceComponent)
+        if (sourcesFromDataSourceSelector.contains(object)) {
+            sourcesFromDataSourceSelector.remove(object);
             dataSourceSelector.release(object);
+        }
     }
 
     public Object select(Object policy) throws ServiceException {
-        if (dataSourceSelector.isSelectable(policy))
-            return dataSourceSelector.select(policy);
-        else if (springDataSources.containsKey(policy))
-            return new SpringDataSourceWrapper((DataSource) springDataSources.get(policy));
+        if (dataSourceSelector.isSelectable(policy)) {
+            Object object = dataSourceSelector.select(policy);
+            sourcesFromDataSourceSelector.add(object);
+            return object;
+        }
+        else if (springDataSources.containsKey(policy)) {
+            Object object = (DataSource) springDataSources.get(policy);
+            if (!(object instanceof SpringToAvalonDataSourceWrapper))
+                throw new ClassCastException("Bean with key '" + policy + "' is not SpringToAvalonDataSourceWrapper class. " +
+                		"Only this wrapper is allowed when you want to use DataSources defined in Spring way in Avalon components");
+            return object;
+        }
         else
             return null;
-    }
-    
-    private class SpringDataSourceWrapper implements DataSourceComponent {
-        
-        private DataSource springDataSource;
-        
-        private SpringDataSourceWrapper(DataSource springDataSource) {
-            this.springDataSource = springDataSource;
-        }
-
-        public Connection getConnection() throws SQLException {
-            return springDataSource.getConnection();
-        }
-
-        public void configure(Configuration configuration) throws ConfigurationException {
-            //do nothing   
-        }
-        
     }
 
     public Map getSpringDataSources() {
