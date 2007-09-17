@@ -1,4 +1,4 @@
-package org.apache.cocoon.core.container.spring.avalon;
+package org.apache.cocoon.databases.bridge.spring.avalon;
 
 import java.sql.Connection;
 import java.sql.SQLException;
