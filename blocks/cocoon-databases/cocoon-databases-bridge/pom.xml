@@ -49,6 +49,19 @@
   </distributionManagement>
   
   <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-spring-configurator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.excalibur.components</groupId>
+      <artifactId>excalibur-datasource</artifactId>    
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>2.0.6</version>
+    </dependency>
   </dependencies>
   
   <profiles>
