@@ -27,7 +27,7 @@ import org.apache.excalibur.source.SourceResolver;
 public class ZipSourceTestCase extends ContainerTestCase {
 
     public void testURIHandling() throws Exception {
-        final String zipSourceUri = "zip:file:///test.zip!/test.xml";
+        final String zipSourceUri = "zip:file://test.zip!/test.xml";
         Source zipSource;
         SourceResolver resolver = null;
         try {
@@ -41,8 +41,7 @@ public class ZipSourceTestCase extends ContainerTestCase {
         assertTrue("Resolved Source is not an instance of ZipSource.",
                    zipSource instanceof ZipSource);
         assertEquals("Scheme/protocol is wrong.", "zip", zipSource.getScheme());
-        String actualZipSourceUri = zipSource.getURI();
-        assertEquals("Uri is wrong.", zipSourceUri, actualZipSourceUri);
+        assertEquals("Uri is wrong.", zipSourceUri, zipSource.getURI());
     }
 
 }
