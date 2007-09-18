@@ -49,11 +49,11 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     private Map singleValueMap;
     private MultiMap multiValueMap;
     private MultiMap multiValueMapForLocated;
-    private Map initialEntries = null;
-
+    private Map initialEntries;
 
     //FIXME: This is a temporary solution
     private boolean modified;
+
 
     public ObjectModelImpl() {
         singleValueMap = new HashMap();
@@ -63,7 +63,6 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
         localContexts = new ArrayStack();
         multiValueMap = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
         multiValueMapForLocated = MultiValueMap.decorate(new HashMap(), StackReversedIteration.class);
-        modified = false;
     }
 
     public static class StackReversedIteration extends ArrayStack {
@@ -79,8 +78,10 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
 
     public Object get(Object key) {
         //FIXME: This should be done more elegantly
-        if ("this".equals(key))
+        if ("this".equals(key)) {
             return this;
+        }
+
         return super.get(key);
     }
 
@@ -90,8 +91,9 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
 
     public Object put(Object key, Object value) {
         modified = true;
-        if (!localContexts.empty())
+        if (!localContexts.empty()) {
             ((ArrayStack) localContexts.peek()).push(new DefaultKeyValue(key, value));
+        }
 
         singleValueMap.put(key, value);
         multiValueMap.put(key, value);
@@ -120,8 +122,9 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
      * @return located Map or null if <code>createIfNeeded</code> is false and Map cannot be found
      */
     private Map locateMapAt(String path, boolean createIfNeeded) {
-        if (path.lastIndexOf(SEGMENT_SEPARATOR) == -1)
+        if (path.lastIndexOf(SEGMENT_SEPARATOR) == -1) {
             return this;
+        }
 
         Map map = this;
         int segmentBegin = 0;
@@ -130,12 +133,16 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
             String key = path.substring(segmentBegin, segmentEnd);
             if (map.containsKey(key)) {
                 Object obj = map.get(key);
-                if (!(obj instanceof Map))
+                if (!(obj instanceof Map)) {
                     throw new ClassCastException("Object at path " + path.substring(0, segmentEnd) + "is not a Map");
+                }
+
                 map = (Map)obj;
             } else {
-                if (!createIfNeeded)
+                if (!createIfNeeded) {
                     return null;
+                }
+
                 Map newMap = new HashMap();
                 map.put(key, newMap);
                 map = newMap;
@@ -143,42 +150,53 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
             segmentBegin = segmentEnd + 1;
             segmentEnd = path.indexOf(SEGMENT_SEPARATOR, segmentBegin);
         }
+
         return map;
     }
 
     public void putAt(String path, Object value) {
-        if (path == null)
+        if (path == null) {
             throw new NullPointerException("Path cannot be null.");
-        if (path.length() == 0)
+        }
+        if (path.length() == 0) {
             throw new IllegalArgumentException("Path cannot be empty");
+        }
 
         Map map = locateMapAt(path, true);
         String key = path.substring(path.lastIndexOf(SEGMENT_SEPARATOR) + 1, path.length());
-        if (!localContexts.empty())
+        if (!localContexts.empty()) {
             ((ArrayStack) localContexts.peek()).push(new PathValue(path, value));
+        }
         map.put(key, value);
     }
 
     private void removeAt(String path, Object value) {
-        if (path == null)
+        if (path == null) {
             throw new NullPointerException("Path cannot be null.");
-        if (path.length() == 0)
+        }
+        if (path.length() == 0) {
             throw new IllegalArgumentException("Path cannot be empty");
+        }
 
         Map map = locateMapAt(path, false);
         String key = path.substring(path.lastIndexOf(SEGMENT_SEPARATOR) + 1, path.length());
-        if (map == null)
+        if (map == null) {
             return;
+        }
+
         multiValueMapForLocated.remove(key, value);
-        if (multiValueMap.containsKey(key))
-            map.put(key, ((StackReversedIteration)multiValueMap.get(key)).peek());
-        else
+        if (multiValueMap.containsKey(key)) {
+            map.put(key, ((StackReversedIteration) multiValueMap.get(key)).peek());
+        } else {
             map.remove(key);
+        }
     }
 
     public void cleanupLocalContext() {
-        if (localContexts.empty())
+        if (localContexts.empty()) {
             throw new IllegalStateException("Local contexts stack is empty");
+        }
+
         ArrayStack removeEntries = (ArrayStack)localContexts.pop();
         while (!removeEntries.isEmpty()) {
             if (removeEntries.peek() instanceof PathValue) {
@@ -190,10 +208,11 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
                 Object value = entry.getValue();
 
                 multiValueMap.remove(key, value);
-                if (multiValueMap.containsKey(key))
-                    singleValueMap.put(key, ((StackReversedIteration)multiValueMap.get(key)).peek());
-                else
+                if (multiValueMap.containsKey(key)) {
+                    singleValueMap.put(key, ((StackReversedIteration) multiValueMap.get(key)).peek());
+                } else {
                     singleValueMap.remove(key);
+                }
             }
         }
     }
@@ -207,24 +226,29 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     }
 
     public void setInitialEntries(Map initialEntries) {
-        if (this.initialEntries != null)
+        if (this.initialEntries != null) {
             throw new IllegalStateException("Object Model has initial entries set already.");
+        }
+
         this.initialEntries = initialEntries;
         for (Iterator keysIterator = initialEntries.keySet().iterator(); keysIterator.hasNext(); ) {
             Object key = keysIterator.next();
             put(key, ((ObjectModelProvider)initialEntries.get(key)).getObject());
         }
-        modified = false;
+
+        this.modified = false;
     }
 
     public void fillContext() {
         // Hack: I use jxpath to populate the context object's properties
         // in the jexl context
         Object contextObject = get(CONTEXTBEAN);
-        if (contextObject == null)
+        if (contextObject == null) {
             //nothing to do
             return;
+        }
 
+        // FIXME Exception Handling
         final JXPathBeanInfo bi =
             JXPathIntrospector.getBeanInfo(contextObject.getClass());
         if (bi.isDynamic()) {
@@ -237,12 +261,12 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
                 for (int i = 0; i < len; i++) {
                     try {
                         put(result[i], h.getProperty(contextObject, result[i]));
-                    } catch (Exception exc) {
-                        exc.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             PropertyDescriptor[] props =  bi.getPropertyDescriptors();
@@ -252,10 +276,10 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
                     Method read = props[i].getReadMethod();
                     if (read != null) {
                         put(props[i].getName(),
-                                read.invoke(contextObject, null));
+                            read.invoke(contextObject, null));
                     }
-                } catch (Exception ignored) {
-                    ignored.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -272,7 +296,7 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
 
         public String getPath() {
             return this.path;
-        };
+        }
 
         public Object getValue() {
             return this.value;
@@ -281,13 +305,14 @@ public class ObjectModelImpl extends AbstractMapDecorator implements ObjectModel
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.el.objectmodel.ObjectModel#setParent(org.apache.cocoon.el.objectmodel.ObjectModel)
+     * @see ObjectModel#setParent(ObjectModel)
      */
     public void setParent(ObjectModel parentObjectModel) {
-        if (this.modified)
+        if (this.modified) {
             throw new IllegalStateException("Setting parent may occur only if Object Model is empty.");
+        }
+
         singleValueMap.putAll(parentObjectModel);
         multiValueMap.putAll(parentObjectModel.getAll());
-    };
-
+    }
 }
