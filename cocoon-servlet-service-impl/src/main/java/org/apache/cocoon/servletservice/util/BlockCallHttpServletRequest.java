@@ -48,6 +48,12 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  */
 public class BlockCallHttpServletRequest implements HttpServletRequest{
     
+    /**
+     * Protocol of block call requests.
+     */
+    private static final String PROTOCOL = "HTTP/1.1";
+
+
     private URI uri;
     private Hashtable attributes = new Hashtable();
     private RequestParameters parameters;
@@ -68,11 +74,6 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
     final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
     
     
-    /**
-     * Protocol of block call requests.
-     */
-    private final String protocol = "HTTP/1.1";  
-
     /**
      * @param uri points to the called servlet
      * @param callingRequest reference to the request object that makes a servlet call
@@ -295,7 +296,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest{
      * @see javax.servlet.ServletRequest#getProtocol()
      */
     public String getProtocol() {
-        return this.protocol;
+        return this.PROTOCOL;
     }
 
     /* (non-Javadoc)
