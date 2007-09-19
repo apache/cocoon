@@ -162,7 +162,7 @@ public class NetUtils {
         int maxBytesPerChar = 10;
         StringBuffer rewrittenPath = new StringBuffer(path.length());
         ByteArrayOutputStream buf = new ByteArrayOutputStream(maxBytesPerChar);
-        OutputStreamWriter writer = null;
+        OutputStreamWriter writer;
         try {
             writer = new OutputStreamWriter(buf, "UTF8");
         } catch (Exception e) {
@@ -324,7 +324,7 @@ public class NetUtils {
         if ("".equals(uri)) {
             return uri;
         }
-        int leadingSlashes = 0;
+        int leadingSlashes;
         for (leadingSlashes = 0 ; leadingSlashes < uri.length()
                 && uri.charAt(leadingSlashes) == '/' ; ++leadingSlashes) {}
         boolean isDir = (uri.charAt(uri.length() - 1) == '/');
@@ -363,8 +363,9 @@ public class NetUtils {
 
     /**
      * Remove parameters from a uri.
-     * Resulting Map will have either String for single value attributes,
-     * or String arrays for multivalue attributes.
+     * Passed in parameters map will be populated with parameter names as keys and
+     * parameter values as map values. Values are of type String array
+     * (similarly to {@link javax.servlet.ServletRequest#getParameterMap()}).
      * 
      * @param uri The uri path to deparameterize.
      * @param parameters The map that collects parameters.
@@ -376,6 +377,7 @@ public class NetUtils {
             return uri;
         }
 
+        parameters.clear();
         String[] params = StringUtils.split(uri.substring(i + 1), '&');
         for (int j = 0; j < params.length; j++) {
             String p = params[j];
@@ -387,17 +389,16 @@ public class NetUtils {
             String value = p.substring(k + 1);
             Object values = parameters.get(name);
             if (values == null) {
-                parameters.put(name, value);
-            } else if (values.getClass().isArray()) {
+                parameters.put(name, new String[]{value});
+            } else {
                 String[] v1 = (String[])values;
                 String[] v2 = new String[v1.length + 1];
                 System.arraycopy(v1, 0, v2, 0, v1.length);
                 v2[v1.length] = value;
                 parameters.put(name, v2);
-            } else {
-                parameters.put(name, new String[]{values.toString(), value});
             }
         }
+
         return uri.substring(0, i);
     }
 
@@ -450,9 +451,10 @@ public class NetUtils {
      * Remove any authorisation details from a URI
      */
     public static String removeAuthorisation(String uri) {
-        if (uri.indexOf("@")!=-1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
-            return uri.substring(0, uri.indexOf(":")+2)+uri.substring(uri.indexOf("@")+1);
+        if (uri.indexOf("@") != -1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
+            return uri.substring(0, uri.indexOf(":") + 2) + uri.substring(uri.indexOf("@") + 1);
         }
+
         return uri;
     }
 
