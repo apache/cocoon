@@ -35,13 +35,18 @@ import java.util.StringTokenizer;
  */
 public final class RequestParameters implements Serializable {
 
-    /** The parameter names are the keys and the value is a List object */
+    /**
+     * The parameter names are the keys and the value is a List object
+     */
     private Map names;
 
     /**
-     * Decode the string
+     * Decodes URL encoded string
+     *
+     * @param s URL encoded string
+     * @return decoded string
      */
-    private String parseName(String s) {
+    private String decode(String s) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
@@ -49,27 +54,33 @@ public final class RequestParameters implements Serializable {
                 case '+':
                     sb.append(' ');
                     break;
+
                 case '%':
                     try {
-                        if (s.charAt(i+1) == 'u') {
+                        if (s.charAt(i + 1) == 'u') {
                             // working with multi-byte symbols in format %uXXXX
-                            sb.append((char)Integer.parseInt(s.substring(i+2, i+6), 16));
+                            sb.append((char) Integer.parseInt(s.substring(i + 2, i + 6), 16));
                             i += 5; // 4 digits and 1 symbol u
                         } else {
+                            // FIXME: w3c recommends to use UTF-8 instead of platform default encoding
+                            // http://www.w3.org/TR/html40/appendix/notes.html#non-ascii-chars
+
                             // working with single-byte symbols in format %YY
-                            sb.append((char)Integer.parseInt(s.substring(i+1, i+3), 16));
+                            sb.append((char) Integer.parseInt(s.substring(i + 1, i + 3), 16));
                             i += 2;
                         }
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException();
                     } catch (StringIndexOutOfBoundsException e) {
-                        String rest  = s.substring(i);
+                        String rest = s.substring(i);
                         sb.append(rest);
-                        if (rest.length()==2)
+                        if (rest.length() == 2) {
                             i++;
+                        }
                     }
 
                     break;
+
                 default:
                     sb.append(c);
                     break;
@@ -81,6 +92,8 @@ public final class RequestParameters implements Serializable {
 
     /**
      * Construct a new object from a queryString
+     *
+     * @param queryString request query string
      */
     public RequestParameters(String queryString) {
         this.names = new HashMap(5);
@@ -90,8 +103,8 @@ public final class RequestParameters implements Serializable {
                 String pair = st.nextToken();
                 int pos = pair.indexOf('=');
                 if (pos != -1) {
-                    this.setParameter(this.parseName(pair.substring(0, pos)),
-                                      this.parseName(pair.substring(pos+1, pair.length())));
+                    setParameter(decode(pair.substring(0, pos)),
+                                 decode(pair.substring(pos + 1, pair.length())));
                 }
             }
         }
@@ -100,13 +113,14 @@ public final class RequestParameters implements Serializable {
     /**
      * Add a parameter.
      * The parameter is added with the given value.
+     *
      * @param name   The name of the parameter.
      * @param value  The value of the parameter.
      */
     private void setParameter(String name, String value) {
         ArrayList list;
         if (names.containsKey(name)) {
-            list = (ArrayList)names.get(name);
+            list = (ArrayList) names.get(name);
         } else {
             list = new ArrayList(3);
             names.put(name, list);
@@ -116,19 +130,22 @@ public final class RequestParameters implements Serializable {
 
     /**
      * Get the value of a parameter.
+     *
      * @param name   The name of the parameter.
      * @return       The value of the first parameter with the name
      *               or <CODE>null</CODE>
      */
     public String getParameter(String name) {
         if (names.containsKey(name)) {
-            return (String)((ArrayList)names.get(name)).get(0);
+            return (String) ((ArrayList) names.get(name)).get(0);
         }
+
         return null;
     }
 
     /**
      * Get the value of a parameter.
+     *
      * @param name   The name of the parameter.
      * @param defaultValue The default value if the parameter does not exist.
      * @return       The value of the first parameter with the name
@@ -136,13 +153,15 @@ public final class RequestParameters implements Serializable {
      */
     public String getParameter(String name, String defaultValue) {
         if (names.containsKey(name)) {
-            return (String)((ArrayList)names.get(name)).get(0);
+            return (String) ((ArrayList) names.get(name)).get(0);
         }
+
         return defaultValue;
     }
 
     /**
      * Get all values of a parameter.
+     *
      * @param name   The name of the parameter.
      * @return       Array of the (String) values or null if the parameter
      *               is not defined.
@@ -150,17 +169,17 @@ public final class RequestParameters implements Serializable {
     public String[] getParameterValues(String name) {
         if (names.containsKey(name)) {
             String values[] = null;
-            ArrayList list = (ArrayList)names.get(name);
+            ArrayList list = (ArrayList) names.get(name);
             Iterator iter = list.iterator();
             while (iter.hasNext()) {
                 if (values == null) {
                     values = new String[1];
                 } else {
-                    String[] copy = new String[values.length+1];
+                    String[] copy = new String[values.length + 1];
                     System.arraycopy(values, 0, copy, 0, values.length);
                     values = copy;
                 }
-                values[values.length-1] = (String)iter.next();
+                values[values.length - 1] = (String) iter.next();
             }
 
             return values;
@@ -171,6 +190,7 @@ public final class RequestParameters implements Serializable {
 
     /**
      * Get all parameter names.
+     *
      * @return  Enumeration for the (String) parameter names.
      */
     public Enumeration getParameterNames() {
