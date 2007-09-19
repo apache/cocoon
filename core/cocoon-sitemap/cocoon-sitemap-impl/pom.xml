@@ -195,6 +195,10 @@
       <artifactId>xml-apis</artifactId>
     </dependency>
     <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
