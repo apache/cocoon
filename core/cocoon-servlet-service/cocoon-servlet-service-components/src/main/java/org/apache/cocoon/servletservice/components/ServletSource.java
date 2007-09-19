@@ -39,7 +39,8 @@ import org.apache.excalibur.store.Store;
  *
  * @version $Id$
  */
-public class ServletSource extends AbstractSource implements PostableSource {
+public class ServletSource extends AbstractSource
+                           implements PostableSource {
 
     private transient Log logger = LogFactory.getLog(getClass());
 
@@ -58,6 +59,7 @@ public class ServletSource extends AbstractSource implements PostableSource {
     private Store store;
 
     private boolean connected;
+
 
     public ServletSource(String location, Store store) throws IOException {
         // the systemId (returned by getURI()) is by default null
@@ -221,20 +223,16 @@ public class ServletSource extends AbstractSource implements PostableSource {
             setResponseCode(responseCode);
         }
 
-        /*
-           * (non-Javadoc)
-           *
-           * @see org.apache.excalibur.source.SourceValidity#isValid()
-           */
+        /* (non-Javadoc)
+         * @see SourceValidity#isValid()
+         */
         public int isValid() {
-            return 0;
+            return SourceValidity.UNKNOWN;
         }
 
-        /*
-           * (non-Javadoc)
-           *
-           * @see org.apache.excalibur.source.SourceValidity#isValid(org.apache.excalibur.source.SourceValidity)
-           */
+        /* (non-Javadoc)
+         * @see SourceValidity#isValid(SourceValidity)
+         */
         public int isValid(SourceValidity newValidity) {
             if (newValidity instanceof ServletValidity) {
                 ServletValidity newServletValidity = (ServletValidity) newValidity;
@@ -250,6 +248,7 @@ public class ServletSource extends AbstractSource implements PostableSource {
                         return SourceValidity.UNKNOWN;
                 }
             }
+
             return SourceValidity.UNKNOWN;
         }
 
