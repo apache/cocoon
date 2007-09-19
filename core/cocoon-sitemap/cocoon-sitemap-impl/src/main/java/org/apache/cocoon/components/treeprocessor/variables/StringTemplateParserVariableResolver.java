@@ -18,6 +18,7 @@ package org.apache.cocoon.components.treeprocessor.variables;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.StringTemplateParser;
@@ -29,7 +30,7 @@ import org.apache.cocoon.template.expression.Substitutions;
  *
  * @version $Id$
  */
-public final class StringTemplateParserVariableResolver extends VariableResolver {
+public final class StringTemplateParserVariableResolver extends VariableResolver implements Disposable {
     
     public final static String ROLE = StringTemplateParserVariableResolver.class.getName();
     
@@ -79,6 +80,10 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
         } catch (Exception e) {
             throw new PatternException(e);
         }
+    }
+
+    public void dispose() {
+        //nothing to do
     }
 
 }
