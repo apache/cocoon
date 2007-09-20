@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | event-based cache sample.
+    |
+    | @version $Id$
+    +-->
+<page>
+    <title>Demonstrating Event-Aware Caching</title>
+    <content>
+        <para>
+            This page is a sample for event aware caching. We subclassed the
+            JXTG template generate for this sample. If you don't already 
+            understand at least the basics of caching in Cocoon, you should 
+            probably start there, not here.  Read the text below, and the 
+            sitemap and source for more details.
+        </para>
+        <para>
+            I pause for ${cocoon.parameters.DELAY_SECS} seconds during generation, so 
+            that you can tell if I'm being served from the cache or not.
+            <br/>
+            What you see here was generated on <b>${cocoon.parameters.DATE}</b>.
+        </para>
+
+        <para>
+            I'm cached for each unique value of request parameter 'pageKey'.  Other 
+            parameters do not matter.
+            <br/>
+            Here the value is:
+            <b>${cocoon.parameters.KEY}</b>.  
+            <br/>
+            If this is not the same as the 'pageKey' parameter in the page URL, we have a problem.
+        </para>
+
+        <para>
+            Unlike other cacheable pages in Cocoon, I can be un-cached by events external 
+            to Cocoon - for instance, when a database table or row is updated.
+            <br/>
+            My cache entry will be invalidated (actually, removed) when an event named 
+            <i>${cocoon.parameters.KEY}</i> occurs.  This can be manually 
+            simulated by clicking one of the "uncache" links below.
+        </para>
+        <para>Test links:
+            <ul>
+                <li><a href="?pageKey=one">pageKey=one</a> 
+                    (<a href="action?pageKey=one&amp;event=one">uncache with action</a>) 
+                    (<a href="flow?pageKey=one&amp;event=one">uncache with flow</a>)</li>
+                <li><a href="?pageKey=two">pageKey=two</a>
+                    (<a href="action?pageKey=two&amp;event=two">uncache with action</a>) 
+                    (<a href="flow?pageKey=two&amp;event=two">uncache with flow</a>)</li>
+            </ul>
+            Note: the random numbers you see included in the url after an uncache link 
+            serve two purposes in the example, making it easier to see the effect of the 
+            cache invalidation.  They prevent browser caching and they demonstrate that 
+            only our designated key matters in the retrieval from cache.  
+        </para>
+        <para>
+            This event based cache system consists essentially of three parts:
+            <ul>
+                <li>A new type of SourceValidity, EventValidity, which contains information 
+                on the Event which will invalidate this cached content.  Until this event is 
+                received, EventValidities will usually always return valid, though they don't 
+                have to.</li>
+                <li>An extension to Cocoon's Cache implementation.  Cocoon's Cache is really just 
+                a thin wrapper around Avalon-Excalibur's Store project.  The EventAwareCacheImpl 
+                does two things.  It examines each pipeline on its way into the cache to 
+                determine if any of its SourceValidities are instances of EventValidity.  If so, 
+                it notifies an event registry as described next.  The second critical function of 
+                the EventAware cache implementation is that it allows other components to 
+                contact it and notify it of an Event.  The Cache then looks up the keys 
+                mapped to that event in the event registry and cleans out the cache and 
+                registry accordingly.  <i>See the sitemap of this sample for an example of 
+                configuring a pipeline to use this implementation.</i></li>
+                <li>The EventRegistry is responsible for mapping Events to cache keys, and 
+                providing information about that mapping to systems that need it, usually just 
+                the EventAwareCache.  Another crucial responsibility of the EventRegistry is to 
+                persist its data across container shutdown and startup.  The default implementation 
+                does by serializing an object to disk (currently in WEB-INF).  If recovering this 
+                fails, the EventAwareCache is notified, and it is expected to ensure there are no 
+                orphaned EventValidities (currently by clearing the entire cache).
+                </li>
+            </ul>
+            Note that though this example extends the jxtg in combination with actions or flow, 
+            any pipeline component can be 
+            made to use EventValidity, and any code with access to the ServiceManager can 
+            translate real-world events to Events and notify the Cache of them.  
+        </para>
+    </content>
+</page>

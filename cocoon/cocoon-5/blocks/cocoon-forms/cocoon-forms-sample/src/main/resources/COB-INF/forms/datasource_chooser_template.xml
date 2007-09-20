@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+      
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="servlet:forms:/resource/internal/generation/jx-macros.xml"/>
+  <h4 class="samplesGroup">Union widget sample (with AJAX)</h4>
+  <title>Datasource chooser</title>
+  <script type="text/javascript">
+      dojo.addOnLoad(function(){cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight.green});
+  </script>
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+      
+      <p>Datasource name: <ft:widget id="name"/></p>
+      <fieldset>
+        <legend>Type:
+          <ft:widget id="sourcetype"/>
+        </legend>
+        <ft:union id="datasource">
+          <ft:case id="">
+            <span>Please choose a datasource type.</span>
+          </ft:case>
+          <ft:case id="SQL">
+            <ft:group id="SQL">
+              <fi:group>
+                <fi:styling layout="columns"/>
+                <fi:items>
+                  <ft:widget id="jdbc-url"/>
+                  <ft:widget id="login"/>
+                  <ft:widget id="password"><fi:styling type="password"/></ft:widget>
+                </fi:items>
+              </fi:group>
+            </ft:group>
+          </ft:case>
+          <ft:case id="file">
+            <ft:group id="file">
+              <div>File name: <ft:widget id="filename"/></div>
+            </ft:group>
+          </ft:case>
+        </ft:union>
+      </fieldset>
+      
+      <br/>
+      
+      <ft:widget id="ok"/>
+      <br/>
+      <a href="./do-datasourceChooser.flow">Restart this sample</a> -  <a href="./">Back to Forms samples</a>
+
+    </ft:form-template>
+  </content>
+</page>

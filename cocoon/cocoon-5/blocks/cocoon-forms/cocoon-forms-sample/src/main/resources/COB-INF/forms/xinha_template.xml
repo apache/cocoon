@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+  <h4 class="samplesGroup">Xinha widget</h4>
+  <title>Xinha</title>
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+      <div style="width:500px">
+        <ft:widget-label id="data1"/><br/>
+        <ft:widget id="data1">
+          <fi:styling type="xinha" rows="8" style="width:100%">
+            <!-- at this place, the configuration property of the Xinha is under 'conf'
+                 available. Find more info about the available properties at
+                 http://xinha.python-hosting.com/wiki/Documentation/ConfigVariablesList -->
+            <conf>
+              conf.statusBar = false;
+              conf.sizeIncludesBars = false;
+              conf.fullPage = false;
+              conf.toolbar = [
+                ["popupeditor"],
+                ["separator","formatblock","fontname","fontsize","bold","italic","underline","strikethrough"],
+                ["separator","forecolor","hilitecolor","textindicator"],
+                ["separator","subscript","superscript"],
+                ["linebreak","separator","justifyleft","justifycenter","justifyright","justifyfull"],
+                ["separator","insertorderedlist","insertunorderedlist","outdent","indent"],
+                ["separator","inserthorizontalrule","createlink","insertimage","inserttable"],
+                ["separator","htmlmode","showhelp","about"]
+              ];               
+              conf.fontsize = {
+                "&amp;mdash; size &amp;mdash;": "",
+                "1 (8 pt)" : "1",
+                "2 (10 pt)": "2",
+                "3 (12 pt)": "3"
+              };            
+            </conf>
+          </fi:styling>
+        </ft:widget>
+      </div>
+      <p/>
+      <table border="1">
+        <tr>
+          <td><ft:widget-label id="data2"/></td>
+        </tr>
+        <tr>
+          <td>
+            <ft:widget id="data2">
+              <fi:styling type="xinha" rows="8" cols="70">
+                <!-- if you add initFunction, make sure that it is available at the browser -->
+                <!--initFunction>myInit</initFunction-->
+              </fi:styling>
+            </ft:widget>
+          </td>
+        </tr>
+      </table>
+      <p/>
+      <input type="submit"/>      
+    </ft:form-template>
+    <p>
+      <a href="./">Back to Forms samples</a>
+    </p>
+  </content>
+</page>

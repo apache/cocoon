@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | SVN $Id$
+    +-->
+<components>
+
+  <source-factories>
+
+    <!--+
+        | Caching source protocol.
+        | This protocol extension implements a proxy-like source
+        | that can cache the contents of its delegate source.
+        |
+        | The uri syntax is as follows:
+        | cached:subprotocol:/path[?cocoon:cache-expires=60][&cocoon:cache-name=main]
+        |
+        | Where:
+        | - 'cached' is the caching source protocol scheme name as defined below.
+        | - 'subprotcol:/path' identifies the source to get the actual contents from
+        |   eg. http://cocoon.apache.org/doco.html?version=1.2
+        | - optional query string parameters that start with 'cocoon:cache' represent
+        |   special instructions to pass to the implementation.
+        |
+        | The protocol can be parametrized as follows:
+        | - 'async' (false). When this is set to true cached source contents are updated
+        |   in the background, using SourceRefresher component.
+        | - 'cache-role' (org.apache.cocoon.caching.Cache). Use this if you want to use
+        |   a Cache other than the default one.
+        | - 'refresher-role' (org.apache.cocoon.components.source.DelaySourceRefresher).
+        |   Use this if you wish to use a SourceRefresher other than the default one.
+        |   A SourceRefresher is used when asynchronic caching is turned on. It is responsible for
+        |   updating the cached contents in the background and can implement any refresh algorithm.
+        | - 'default-expires' (-1). The expires value if it is not specified on the source
+        |    itself. The default value of -1 means to never expire.
+        +-->
+    <component-instance name="cached"
+                        class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
+                        logger="core.source.cached">
+      <!--
+      <parameter name="async" value="true"/>
+      <parameter name="cache-role" value="org.apache.cocoon.caching.Cache"/>
+      <parameter name="default-expires" value="-1"/>
+      -->
+      <parameter name="refresher-role" value="org.apache.cocoon.components.source.helpers.SourceRefresher/Delay"/>
+    </component-instance>
+  </source-factories>
+
+  <!--+
+      | A SourceRefresher is a component that is used by the CachingSource protocol.
+      | It is responsible for updating the cached contents of sources that are
+      | registered with it by the protocol.
+      |
+      | The DelaySourceRefresher is an implementation that periodically updates the
+      | sources. It recognizes the following parameters:
+      | - 'write-interval' (0). The SourceRefresher can periodically persist its
+      |   list of registered sources. This parameter specifies how often
+      |   it should write this list to file. Specifying a value of 0 (the default)
+      |   means that target configurations will not be persisted at all.
+      | - 'write-file' (refresher-targets.xml). Specifying a different value
+      |   than the default for this parameter only makes sense if you configure
+      |   more than one DelayRefreshers. It represents the file name, relative to
+      |   the cocoon working directory of the file the refresher writes its list
+      |   of registered target configurations to.
+      +-->
+  <component role="org.apache.cocoon.components.source.helpers.SourceRefresher/Delay"
+             class="org.apache.cocoon.components.source.helpers.DelaySourceRefresher"
+             logger="core.refresher.delay">
+    <!--
+    <parameter name="write-interval" value="0"/>
+    <parameter name="write-file" value="refresher-targets.xml"/>
+    -->
+  </component>
+
+</components>

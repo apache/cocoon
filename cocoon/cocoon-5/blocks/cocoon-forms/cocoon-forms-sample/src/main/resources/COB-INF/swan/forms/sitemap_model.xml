@@ -1,0 +1,468 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  Model for the Swan sitemap editor.
+
+  @version $Id$
+-->
+
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <fd:widgets>
+
+    <fd:messages id="messages"/>
+
+    <fd:new id="items-class"/>
+
+    <fd:class id="items-class">
+      <fd:widgets>
+        <fd:repeater id="items" initial-size="0">
+          <fd:label>Items</fd:label>
+          <fd:widgets>
+            <fd:new id="item-row-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addItem" command="add-row" repeater="items">
+          <fd:label>Add Child</fd:label>
+          <fd:hint>Add child</fd:hint>
+          <fd:on-action>
+            <javascript>
+              var repeater = event.getSourceWidget().lookupWidget("../items");
+              var view = repeater.getRow(repeater.getSize() - 1).getChild("view-selector");
+              view.value = "edit";
+            </javascript>
+          </fd:on-action>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="view-selector-class">
+      <fd:widgets>
+        <fd:field id="view-selector" state="invisible">
+          <fd:label>View</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value="fold"><fd:label>Fold</fd:label></fd:item>
+            <fd:item value="view"><fd:label>View</fd:label></fd:item>
+            <fd:item value="edit"><fd:label>Edit</fd:label></fd:item>
+          </fd:selection-list>
+          <fd:on-value-changed>
+            <javascript>
+              var widget = event.getSourceWidget();
+              var union = widget.lookupWidget("../union");
+              var type = widget.lookupWidget("../type-selector");
+              var stuff = union.lookupWidget(union.getValue() + "/stuff");
+              if("edit".equals(widget.getValue())) {
+                union.state = WidgetState.ACTIVE;
+                if(stuff != null) {
+                  stuff.state = WidgetState.ACTIVE;
+                }
+                type.state = WidgetState.ACTIVE;
+              } else if("view".equals(widget.getValue())){
+                union.state = WidgetState.ACTIVE;
+                if(stuff != null) {
+                  stuff.state = WidgetState.DISABLED;
+                }
+                type.state = WidgetState.DISABLED;
+              } else {
+                union.state = WidgetState.DISABLED;
+                type.state = WidgetState.DISABLED;
+              }
+            </javascript>
+          </fd:on-value-changed>
+        </fd:field>
+        <fd:action id="fold-view" command="fold-view">
+          <fd:label>F</fd:label>
+          <fd:hint>Fold</fd:hint>
+          <fd:on-action>
+            <javascript>
+              var view = event.getSourceWidget().lookupWidget("../view-selector");
+              view.value = "fold";
+            </javascript>
+          </fd:on-action>
+        </fd:action>
+        <fd:action id="view-view" command="view-view">
+          <fd:label>V</fd:label>
+          <fd:hint>View</fd:hint>
+          <fd:on-action>
+            <javascript>
+              var view = event.getSourceWidget().lookupWidget("../view-selector");
+              view.value = "view";
+            </javascript>
+          </fd:on-action>
+        </fd:action>
+        <fd:action id="edit-view" command="edit-view">
+          <fd:label>E</fd:label>
+          <fd:hint>Edit</fd:hint>
+          <fd:on-action>
+            <javascript>
+              var view = event.getSourceWidget().lookupWidget("../view-selector");
+              view.value = "edit";
+            </javascript>
+          </fd:on-action>
+        </fd:action>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="type-selector-class">
+      <fd:widgets>
+        <fd:field id="type-selector">
+          <fd:label>Type</fd:label>
+          <fd:datatype base="string"/>
+          <fd:selection-list>
+            <fd:item value=""><fd:label>Nothing</fd:label></fd:item>
+            <fd:item value="components"><fd:label>Components</fd:label></fd:item>
+            <fd:item value="views"><fd:label>Views</fd:label></fd:item>
+            <fd:item value="resources"><fd:label>Resources</fd:label></fd:item>
+            <fd:item value="flow"><fd:label>Flow</fd:label></fd:item>
+            <fd:item value="pipelines"><fd:label>Pipelines</fd:label></fd:item>
+            <fd:item value="pipeline"><fd:label>Pipeline</fd:label></fd:item>
+            <fd:item value="match"><fd:label>Match</fd:label></fd:item>
+            <fd:item value="generate"><fd:label>Generate</fd:label></fd:item>
+            <fd:item value="transform"><fd:label>Transform</fd:label></fd:item>
+            <fd:item value="serialize"><fd:label>Serialize</fd:label></fd:item>
+            <fd:item value="call"><fd:label>Call</fd:label></fd:item>
+            <fd:item value="read"><fd:label>Read</fd:label></fd:item>
+            <fd:item value="redirect-to"><fd:label>Redirect To</fd:label></fd:item>
+            <fd:item value="parameter"><fd:label>Parameter</fd:label></fd:item>
+          </fd:selection-list>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="item-row-class">
+      <fd:widgets>
+
+        <fd:row-action id="up" command="move-up">
+          <fd:label>^</fd:label>
+          <fd:hint>Move up</fd:hint>
+        </fd:row-action>
+
+        <fd:row-action id="down" command="move-down">
+          <fd:label>v</fd:label>
+          <fd:hint>Move down</fd:hint>
+        </fd:row-action>
+
+        <fd:row-action id="add" command="add-after">
+          <fd:label>+</fd:label>
+          <fd:hint>Add after</fd:hint>
+          <fd:on-action>
+            <javascript>
+              var cur_row = Repeater.getParentRow(event.getSourceWidget());
+              var repeater = cur_row.getParent();
+              var new_row = repeater.getChild(repeater.indexOf(cur_row)+1);
+              var view = new_row.getChild("view-selector");
+              view.value = "edit";
+            </javascript>
+          </fd:on-action>
+        </fd:row-action>
+
+        <fd:row-action id="delete" command="delete">
+          <fd:label>X</fd:label>
+          <fd:hint>Delete</fd:hint>
+        </fd:row-action>
+
+        <fd:new id="view-selector-class"/>
+
+        <fd:new id="type-selector-class"/>
+
+        <fd:union id="union" default="" case="type-selector">
+          <fd:label>Type</fd:label>
+          <fd:widgets>
+
+            <fd:group id="components">
+              <fd:label>Components</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                  </fd:widgets>
+                </fd:group>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="views">
+              <fd:label>Views</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                  </fd:widgets>
+                </fd:group>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="resources">
+              <fd:label>Resources</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                  </fd:widgets>
+                </fd:group>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="flow">
+              <fd:label>Flow</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                  </fd:widgets>
+                </fd:group>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="pipelines">
+              <fd:label>Pipelines</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="pipeline">
+              <fd:label>Pipeline</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="type-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="match">
+              <fd:label>Match</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="pattern-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="generate">
+              <fd:label>Generate</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="type-class"/>
+                    <fd:new id="src-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="transform">
+              <fd:label>Transform</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="type-class"/>
+                    <fd:new id="src-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="serialize">
+              <fd:label>Serialize</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="type-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="call">
+              <fd:label>Call</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="continuation-class"/>
+                    <fd:new id="resource-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="read">
+              <fd:label>Read</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="type-class"/>
+                    <fd:new id="src-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="redirect-to">
+              <fd:label>Redirect To</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="uri-class"/>
+                  </fd:widgets>
+                </fd:group>
+                <fd:new id="items-class"/>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="parameter">
+              <fd:label>Parameter</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="name-class"/>
+                    <fd:new id="value-class"/>
+                  </fd:widgets>
+                </fd:group>
+              </fd:widgets>
+            </fd:group>
+
+          </fd:widgets>
+
+        </fd:union>
+
+      </fd:widgets>
+    </fd:class>
+ 
+    <fd:class id="continuation-class">
+      <fd:widgets>
+        <fd:field id="continuation">
+          <fd:label>Continuation</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="id-class">
+      <fd:widgets>
+        <fd:field id="id" required="true">
+          <fd:label>Id</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="initial-size-class">
+      <fd:widgets>
+        <fd:field id="initial-size">
+          <fd:label>Initial Size</fd:label>
+          <fd:datatype base="long"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="label-class">
+      <fd:widgets>
+        <fd:field id="label">
+          <fd:label>Label</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="name-class">
+      <fd:widgets>
+        <fd:field id="name">
+          <fd:label>Name</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="pattern-class">
+      <fd:widgets>
+        <fd:field id="pattern">
+          <fd:label>Pattern</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="required-class">
+      <fd:widgets>
+        <fd:booleanfield id="required">
+          <fd:label>Required</fd:label>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="resource-class">
+      <fd:widgets>
+        <fd:field id="resource">
+          <fd:label>Resource</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="src-class">
+      <fd:widgets>
+        <fd:field id="src">
+          <fd:label>Src</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="type-class">
+      <fd:widgets>
+        <fd:field id="type">
+          <fd:label>Type</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="uri-class">
+      <fd:widgets>
+        <fd:field id="uri">
+          <fd:label>URI</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+    <fd:class id="value-class">
+      <fd:widgets>
+        <fd:field id="value">
+          <fd:label>Value</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+      </fd:widgets>
+    </fd:class>
+
+  </fd:widgets>
+</fd:form>
