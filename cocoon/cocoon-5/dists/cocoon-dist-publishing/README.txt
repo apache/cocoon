@@ -1,5 +1,0 @@
-$Id$
-
-  Cocoon Publishing Distribution
-  ==============================
-
