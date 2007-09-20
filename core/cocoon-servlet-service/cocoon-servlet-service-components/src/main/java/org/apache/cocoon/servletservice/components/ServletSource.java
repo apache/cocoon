@@ -44,20 +44,19 @@ public class ServletSource extends AbstractSource
 
     private transient Log logger = LogFactory.getLog(getClass());
 
-    private ServletConnection servletConnection;
-    private String location;
-
     /**
      * The store is used to store values of Last-Modified header (if it exists).
      * This store is required because in {@link #getValidity()} we need value
      * of Last-Modified header of previous response in order to perform conditional
      * GET.
      *
-     * @see Broken caching of servlet: source in some cases thread
-     *      (http://news.gmane.org/find-root.php?group=gmane.text.xml.cocoon.devel&article=72801)
+     * <strong>NOTE:</strong> Caching of servlet: source is broken in some cases. See thread
+     * http://news.gmane.org/find-root.php?group=gmane.text.xml.cocoon.devel&article=72801
      */
     private Store store;
 
+    private String location;
+    private ServletConnection servletConnection;
     private boolean connected;
 
 
@@ -69,14 +68,11 @@ public class ServletSource extends AbstractSource
         setSystemId(location);
         this.location = location;
         this.servletConnection = new ServletConnection(location);
-        connected = false;
     }
 
-    /*
-      * (non-Javadoc)
-      *
-      * @see org.apache.excalibur.source.impl.AbstractSource#getInputStream()
-      */
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.impl.AbstractSource#getInputStream()
+     */
     public InputStream getInputStream() throws IOException, SourceException {
         try {
             connect();
@@ -94,17 +90,16 @@ public class ServletSource extends AbstractSource
                 servletConnection = new ServletConnection(location);
                 servletConnection.connect();
             }
+
             return this.servletConnection.getInputStream();
         } catch (ServletException e) {
             throw new CascadingIOException(e.getMessage(), e);
         }
     }
 
-    /*
-      * (non-Javadoc)
-      *
-      * @see org.apache.excalibur.source.impl.AbstractSource#getValidity()
-      */
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.impl.AbstractSource#getValidity()
+     */
     public SourceValidity getValidity() {
         try {
             connect();
@@ -116,11 +111,9 @@ public class ServletSource extends AbstractSource
         }
     }
 
-    /*
-      * (non-Javadoc)
-      *
-      * @see org.apache.excalibur.source.impl.AbstractSource#getLastModified()
-      */
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.impl.AbstractSource#getLastModified()
+     */
     public long getLastModified() {
         try {
             connect();
@@ -173,6 +166,7 @@ public class ServletSource extends AbstractSource
 
         servletConnection.connect();
         connected = true;
+
         // If header is present, Last-Modified value will be stored for further
         // use in conditional gets
         setStoredLastModified(servletConnection.getLastModified());
@@ -198,9 +192,11 @@ public class ServletSource extends AbstractSource
      */
     private void setStoredLastModified(long lastModified) throws IOException {
         String key = calculateInternalKey();
-        store.remove(key);
-        if (lastModified > 0)
+        if (lastModified > 0) {
             store.store(key, new Long(lastModified));
+        } else {
+            store.remove(key);
+        }
     }
 
     /**
@@ -209,6 +205,7 @@ public class ServletSource extends AbstractSource
     private String calculateInternalKey() {
         return ServletSource.class.getName() + "$" + getURI();
     }
+
 
     private static final class ServletValidity implements SourceValidity {
 

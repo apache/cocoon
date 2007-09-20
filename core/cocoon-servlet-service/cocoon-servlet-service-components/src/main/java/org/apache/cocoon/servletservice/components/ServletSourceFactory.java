@@ -29,13 +29,12 @@ import org.apache.excalibur.source.URIAbsolutizer;
 import org.apache.excalibur.store.Store;
 
 /**
- * This class implements the servlet: protocol.
- * 
+ * This class implements the <code>servlet:</code> protocol.
  * 
  * @version $Id$
  */
 public final class ServletSourceFactory implements SourceFactory,
-        URIAbsolutizer {
+                                                   URIAbsolutizer {
 
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
@@ -49,6 +48,14 @@ public final class ServletSourceFactory implements SourceFactory,
         return this.logger;
     }
 
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -56,7 +63,7 @@ public final class ServletSourceFactory implements SourceFactory,
      *      java.util.Map)
      */
     public Source getSource(String location, Map parameters)
-            throws MalformedURLException, IOException {
+    throws MalformedURLException, IOException {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Creating source object for " + location);
         }
@@ -70,9 +77,9 @@ public final class ServletSourceFactory implements SourceFactory,
      * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
      */
     public void release(Source source) {
-        if (null != source) {
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("Releasing source " + source.getURI());
+        if (source != null) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Releasing source " + source.getURI());
             }
         }
     }
@@ -86,13 +93,4 @@ public final class ServletSourceFactory implements SourceFactory,
     public String absolutize(String baseURI, String location) {
         return SourceUtil.absolutize(baseURI, location, true);
     }
-
-	public Store getStore() {
-		return store;
-	}
-
-	public void setStore(Store store) {
-		this.store = store;
-	}
-
 }
