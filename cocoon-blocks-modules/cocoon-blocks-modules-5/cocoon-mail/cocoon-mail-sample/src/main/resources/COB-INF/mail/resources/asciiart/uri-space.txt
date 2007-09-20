@@ -1,0 +1,18 @@
+root
+ |
+ +---*.html
+ |
+ +---mail
+ |    +
+ |    +---mail.html    
+ |    \---logout.html
+ |
+ +---*.css
+ |
+ +---*.gif;*.jpg;*.png
+ |
+ +---favicon.ico
+ |
+ +---asciiart
+      +
+      \----*.jpg
