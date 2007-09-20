@@ -49,10 +49,10 @@ public final class ServletConnection {
     /** By default we use the logger for this class. */
     private final Log logger = LogFactory.getLog(getClass());
 
-    /** Wrapped request */
+    /** Connection request */
     private BlockCallHttpServletRequest request;
     
-    /** Wrapped response */
+    /** Connection response */
     private BlockCallHttpServletResponse response;
 
     /** The name of the called block */
@@ -66,8 +66,9 @@ public final class ServletConnection {
     /** If already connected */
     private boolean connected;
     
-    private InputStream responseBody;
     private ByteArrayOutputStream requestBody;
+    private InputStream responseBody;
+
 
     /**
      * Construct a new object
@@ -97,7 +98,6 @@ public final class ServletConnection {
 
         this.request = new BlockCallHttpServletRequest(blockURI, CallFrameHelper.getRequest());
         this.response = new BlockCallHttpServletResponse();
-        this.connected = false;
     }
     
     public void connect() throws IOException, ServletException {
@@ -107,10 +107,8 @@ public final class ServletConnection {
         }
     	
         if (requestBody != null) {
-            request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
             request.setMethod("POST");
-        } else {
-            request.setMethod("GET");
+            request.setInputStream(new ByteArrayInputStream(requestBody.toByteArray()));
         }
     	
         ByteArrayOutputStream os = new ByteArrayOutputStream();
