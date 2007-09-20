@@ -29,7 +29,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>6-SNAPSHOT</version>
+  <version>5</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
@@ -2128,7 +2128,7 @@
         <artifactId>xreporter-grouping</artifactId>
         <version>1.2.1.1</version>
       </dependency>
-      <!-- Cocoon SNAPSHOT dependencies -->
+      <!-- Cocoon SNAPSHOT dependencies 
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
@@ -2951,7 +2951,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
-      </dependency>
+      </dependency-->
     </dependencies>
   </dependencyManagement>
 
