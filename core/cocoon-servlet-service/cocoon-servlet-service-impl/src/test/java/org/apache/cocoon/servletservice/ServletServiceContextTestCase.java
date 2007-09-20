@@ -35,6 +35,9 @@ import junit.framework.TestCase;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
 
+/**
+ * @version $Id$
+ */
 public class ServletServiceContextTestCase extends TestCase {
     
     private ServletServiceContext mainContext;
@@ -58,7 +61,6 @@ public class ServletServiceContextTestCase extends TestCase {
         this.mainContext = new ServletServiceContext();
         
         request = new BlockCallHttpServletRequest(new URI("dummy"), null);
-        request.setMethod("GET");
         response = new BlockCallHttpServletResponse();
         
         //creating ServletContexts
@@ -70,7 +72,7 @@ public class ServletServiceContextTestCase extends TestCase {
     /**
      * Tests basic connection to the servlet.
      * 
-     * @throws Exception
+     * @throws Exception if test fails
      */
     public void testBasicConnection() throws Exception {
         servletA = new HttpServlet() {
@@ -100,7 +102,7 @@ public class ServletServiceContextTestCase extends TestCase {
      *       |
      *    ServletA
      * </pre>
-     * @throws Exception
+     * @throws Exception if test fails
      */
     public void testExplicitSuperCall() throws Exception {
         servletA = new HttpServlet() {
@@ -147,7 +149,7 @@ public class ServletServiceContextTestCase extends TestCase {
      *    ServletA
      * </pre>
      * 
-     * @throws Exception
+     * @throws Exception if test fails
      */
     public void testContextInServletCalledFromExplicitSuperCall() throws Exception {
         servletA = new HttpServlet() {
@@ -206,7 +208,7 @@ public class ServletServiceContextTestCase extends TestCase {
      *    ServletA
      * </pre>
      * 
-     * @throws Exception
+     * @throws Exception if test fails
      */
     public void testTrueObjectOrientedBehaviour() throws Exception {
         servletA = new HttpServlet() {
@@ -267,7 +269,7 @@ public class ServletServiceContextTestCase extends TestCase {
      *    ServletA
      * </pre>
      * 
-     * @throws Exception
+     * @throws Exception if test fails
      */
     public void testThreeLevelInheritance() throws Exception {
         servletA = new HttpServlet() {
