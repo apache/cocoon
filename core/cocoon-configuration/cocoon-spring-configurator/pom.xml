@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-spring-configurator</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>Cocoon Spring Configurator</name>
   <description>
     The Cocoon Spring Configurator is an extension for the Spring framework.
@@ -67,6 +67,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-configuration-api</artifactId>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -119,9 +120,9 @@
   </dependencies>
   
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</developerConnection>
-    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-configuration/cocoon-spring-configurator/</url>    
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-spring-configurator/cocoon-spring-configurator-1.0.1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-spring-configurator/cocoon-spring-configurator-1.0.1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-spring-configurator/cocoon-spring-configurator-1.0.1</url>    
   </scm>    
   
   <profiles>
