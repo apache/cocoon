@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<rss version="2.0">
+ <channel>
+ <image>
+  <title>CNET News.com</title> 
+  <url>http://i.i.com.com/cnwk.1d/i/ne/gr/prtnr/rss_logo.gif</url> 
+  <link>http://www.news.com/</link> 
+  <width>88</width> 
+  <height>31</height> 
+  </image>
+ <item>
+  <title>Intel worker accused of aiding terrorists</title> 
+  <link>http://rss.com.com</link> 
+  <description>The Justice Department charges engineer Mike Hawash, who has been in solitary confinement since March 20, with conspiracy to levy war against America and of supporting terror groups.</description> 
+  <category>Media</category> 
+  <guid isPermaLink="true">http://rss.com.com/2100-1028-998718.html</guid> 
+  <pubDate>Tue, 29 Apr 2003 07:15:00 PDT</pubDate> 
+  </item>
+  </channel>
+  </rss>

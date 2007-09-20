@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fb:context 
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+  path="/booking" >
+  
+  <fb:import prefix="common" uri="../libraries/common-types/types_binding.xml"/>
+  
+  <fb:value id="room" path="room"/>
+  
+  <fb:value id="nrrooms" path="room/@number"/>
+  
+  <fb:group id="booking" path="booking" extends="common:duration"/>
+  
+  <fb:repeater id="persons" parent-path="persons" row-path="person" extends="common:genericRepeater">
+    <fb:on-bind>
+      <fb:group id="person" path="." extends="common:person"/>
+      <fb:value id="child" path="@child"/>
+    </fb:on-bind>
+    <fb:on-insert-row>
+      <fb:insert-node>
+        <person/>
+      </fb:insert-node>
+    </fb:on-insert-row>
+    <fb:on-delete-row>
+      <fb:delete-node/>
+    </fb:on-delete-row>
+  </fb:repeater>
+  
+  <fb:multi-value id="extras" parent-path="extras" row-path="extra"/>
+  
+  <fb:expand id="common:address"/>
+</fb:context>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--
+  Release Announcement Template
+  CVS $Id$
+-->
+
+<announcement site="http://cocoon.apache.org">
+  <project>Apache Cocoon @version@</project>
+  <abstract>
+   The Apache Cocoon Community is proud to announce the new release
+   of Apache Cocoon.
+  </abstract>
+  <body>
+  
+<p>
+  Apache Cocoon is a web development framework built around the concept
+  of separation of concerns (that is: allowing people to do their job
+  without having to step on each other toes) and component-oriented web 
+  RAD.
+</p>
+
+<p>
+  Cocoon implements these concepts around the notion of 'component
+  pipelines' modelled after the 'process chain' concept where each 
+  worker specializes on a particular operation. This makes it possible
+  to use a Lego(tm)-like approach in building web solutions where
+  these components can be hooked together into pipelines without
+  requiring further programming.
+</p>
+
+<p>
+  We like to think at Cocoon as "web glue" for your web application
+  development needs. But most important, a glue that can keep 
+  concerns separate and allow parallel evolution of the two sides, 
+  improving development pace and reducing the chance of conflicts.    
+</p>
+
+  </body>
+  <changes version="@version@" file="status.xml"/>
+</announcement>
+

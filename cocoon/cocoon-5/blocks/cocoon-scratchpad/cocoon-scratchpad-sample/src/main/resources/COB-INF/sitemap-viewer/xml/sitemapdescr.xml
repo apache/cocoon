@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<sitemap xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+    <matcher pattern="*.xsd">
+        <pipeline src="cocoon:/{1}.xml">
+            <matcher pattern="*.xml" used="1">
+                <generate src="../{1}/sitemap.xmap" />
+                <transform src="transforms/sitemap2descr.xsl" />
+                <serialize type="xml" />
+            </matcher>
+        </pipeline>
+        <transform src="transforms/sitemapdescr2xsd.xsl" />
+        <serialize type="xml" />
+    </matcher>
+    <matcher pattern="">
+        <generate src="sitemap.xmap" />
+        <transform src="transforms/sitemap2descr.xsl" />
+        <serialize type="xml" mime-type="text/xml" />
+    </matcher>
+    <matcher pattern="nav.xhtml" used="3">
+        <generate src="xml/links.xml" />
+        <transform src="transforms/nav2xhtml.xsl" />
+        <serialize />
+    </matcher>
+    <matcher pattern="static/*.xhtml" used="3">
+        <generate src="html/{1}.xhtml" />
+        <serialize type="xml" />
+    </matcher>
+    <matcher pattern="top/*.xhtml" used="3">
+        <generate src="html/{1}.xhtml" />
+        <transform src="transforms/topLink.xsl" />
+        <serialize type="xml" />
+    </matcher>
+    <matcher pattern="body/_*.xhtml">
+        <generate src="xsp/doc-{1}.xsp" />
+        <transform src="transforms/doc2xhtml.xsl" />
+        <serialize type="xml" mime-type="text/xml" />
+    </matcher>
+    <matcher pattern="body/*.xhtml" used="3">
+        <generate src="xml/doc-{1}.xml" />
+        <transform src="transforms/doc2xhtml.xsl" />
+        <serialize />
+    </matcher>
+    <matcher pattern="alt/*.html">
+        <aggregate element="site">
+            <pipeline src="cocoon:/top/top-alt.xhtml?myTwinUrl=../school/{1}.html" element="top">
+                <matcher ref="top/*.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/nav.xhtml?myUrl={1}.html" element="navigation">
+                <matcher ref="nav.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/body/{1}.xhtml" element="body">
+                <matcher ref="body/*.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/static/footer.xhtml" element="bottom">
+                <matcher ref="static/*.xhtml" />
+            </pipeline>
+        </aggregate>
+        <transform src="transforms/sitepage2xhtml-bis.xsl" />
+        <serialize />
+    </matcher>
+    <matcher pattern="school/*.html">
+        <aggregate element="site">
+            <pipeline src="cocoon:/top/top.xhtml?myTwinUrl=../{1}.html" element="top">
+                <matcher ref="top/*.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/nav.xhtml?myUrl={1}.html" element="navigation">
+                <matcher ref="nav.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/body/{1}.xhtml" element="body">
+                <matcher ref="body/*.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/static/footer.xhtml" element="bottom">
+                <matcher ref="static/*.xhtml" />
+            </pipeline>
+        </aggregate>
+        <transform src="transforms/sitepage2xhtml-school.xsl" />
+        <serialize />
+    </matcher>
+    <matcher pattern="*.html">
+        <aggregate element="site">
+            <pipeline src="cocoon:/top/top.xhtml?myTwinUrl=alt/{1}.html" element="top">
+                <matcher ref="top/*.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/nav.xhtml?myUrl={1}.html" element="navigation">
+                <matcher ref="nav.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/body/{1}.xhtml" element="body">
+                <matcher ref="body/*.xhtml" />
+            </pipeline>
+            <pipeline src="cocoon:/static/footer.xhtml" element="bottom">
+                <matcher ref="static/*.xhtml" />
+            </pipeline>
+        </aggregate>
+        <transform src="transforms/sitepage2xhtml.xsl" />
+        <serialize />
+    </matcher>
+    <matcher pattern="alt/**.gif">
+        <read src="images/{1}.gif" />
+    </matcher>
+    <matcher pattern="alt/**.jpg">
+        <read src="images/{1}.jpg" />
+    </matcher>
+    <matcher pattern="alt/**.css">
+        <read src="styles/{1}.css" />
+    </matcher>
+    <matcher pattern="school/**.css">
+        <read src="styles/school.css" />
+    </matcher>
+    <matcher pattern="**.css">
+        <read src="styles/{1}.css" />
+    </matcher>
+    <matcher pattern="*/Pand*.jpg">
+        <read src="images/Pand{2}.jpg" />
+    </matcher>
+    <matcher pattern="**.jpg">
+        <read src="images/{1}.jpg" />
+    </matcher>
+    <matcher pattern="**.gif">
+        <read src="images/{1}.gif" />
+    </matcher>
+</sitemap>
