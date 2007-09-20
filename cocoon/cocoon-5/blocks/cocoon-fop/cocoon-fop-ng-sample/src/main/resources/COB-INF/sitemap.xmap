@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | FOP block samples sitemap
+    | $Id$
+    +-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
+
+    <map:view from-label="xsl-fo" name="xsl-fo">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Resources =================================== -->
+
+  <map:resources>
+    <map:resource name="hello">
+      <!-- TODO: Can servlet-services can be use here also? -->
+      <map:generate src="servlet:main-sample:/hello-world/hello.xml" />
+      <map:transform label="xsl-fo" src="servlet:main-sample:/hello-world/style/xsl/page2fo.xsl" />
+    </map:resource>
+  </map:resources>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline type="caching">
+      <map:match pattern="">
+        <map:redirect-to uri="welcome" />
+      </map:match>
+
+      <!-- list of samples -->
+      <map:match pattern="welcome">
+        <map:generate src="misc/samples.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
+      </map:match>
+
+      <!-- hello world -->
+      <map:match pattern="hello.pdf">
+        <map:call resource="hello" />
+        <map:serialize type="fo2pdf" />
+      </map:match>
+
+      <!--
+        This one does not work, gives a java.util.EmptyStackException
+        
+        map:match pattern="hello.rtf">
+        <map:call resource="hello"/>
+        <map:serialize type="fo2rtf"/>
+        </map:match-->
+
+      <map:match pattern="hello.ps">
+        <map:call resource="hello" />
+        <map:serialize type="fo2ps" />
+      </map:match>
+
+      <map:match pattern="hello.png">
+        <map:call resource="hello" />
+        <map:serialize type="fo2png" />
+      </map:match>
+
+      <!-- xsl-fo document access -->
+      <map:match pattern="**/*.fo.xml">
+        <map:generate src="{1}/{2}.fo.xml" />
+        <!-- This stylesheet makes image URLs absolute, so that FOP can
+          display images. {realpath:/} returns the absolute path of the
+          context root. -->
+        <map:transform src="misc/fix-imagelinks.xsl" label="content">
+          <map:parameter name="ctxroot" value="{realpath:/}" />
+          <map:parameter name="dir" value="samples/fop/{1}/" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+
+      <!-- PDF conversion -->
+      <map:match pattern="**/*.pdf">
+        <map:generate src="cocoon:/{1}/{2}.fo.xml" />
+        <map:serialize type="fo2pdf" />
+      </map:match>
+
+      <map:match pattern="**/*.png">
+        <map:generate src="cocoon:/{1}/{2}.fo.xml" />
+        <map:serialize type="fo2png" />
+      </map:match>
+
+      <!-- reuse the XSP caching example for our caching test
+        Disabled for now as we don't want a dependency to XSP!
+        <map:match pattern="cache-test-*.pdf">-->
+      <!-- note that caching didn't work when accessing the XSP using the cocoon:/ protocol -->
+      <!--map:generate src="../xsp/java/cacheable.xsp" type="serverpages"/>
+        <map:transform src="cache-test/xsp-sample-to-fo.xsl">
+        <map:parameter name="pages" value="{1}"/>
+        </map:transform>
+        <map:serialize type="fo2pdf"/>
+        </map:match>
+      -->
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

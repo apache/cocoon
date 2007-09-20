@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <fd:widgets>
+    <fd:import prefix="lib" uri="../libraries/library_form1-second.xml"/>
+
+    <fd:new id="lib:class1"/>
+    <fd:expand id="lib:ext:field2"/>
+
+    <fd:field id="myField3" extends="lib:ext:field2">
+      <fd:label>Field3:</fd:label>
+      <fd:datatype base="string"/>
+      <fd:help>
+        help test from the form model
+        <small>Anyway, the point of all this was to show a popup help with mixed html content.</small>
+      </fd:help>
+    </fd:field>
+
+    <fd:field id="myField4" extends="lib:ext:field2">
+      <fd:label>Field4:</fd:label>
+      <fd:on-value-changed>
+        <javascript>
+          var newValue = event.source.value;
+          java.lang.System.err.println("Was here! value=" + newValue);
+          var field5 = event.source.parent.lookupWidget("myField5");
+          field5.value = "model";
+        </javascript>
+      </fd:on-value-changed>
+    </fd:field>
+
+    <fd:field id="myField5" extends="lib:ext:field2">
+      <fd:label>Field5:</fd:label>
+    </fd:field>
+
+    <fd:field id="myEmail" extends="lib:ext:email" required="true">
+      <fd:validation>
+        <fd:length exact="10">
+          <fd:failmessage>Must be 10 characters long</fd:failmessage>
+        </fd:length>
+      </fd:validation>
+      <fd:datatype base="string"/>
+      <fd:label>Enter your customer's email adress: (inherited)</fd:label>
+    </fd:field>
+
+    <fd:field id="myAccount" extends="lib:ext:account">
+      <fd:datatype base="string"/>
+    </fd:field>
+
+    <fd:field id="myAccount1" extends="lib:ext:account">
+      <fd:label>Indicate the size of your bank account (in m<sup>3</sup>): (inherited)</fd:label>
+      <fd:datatype base="string"/>
+      <fd:selection-list>
+        <fd:item value="6"/>
+        <fd:item value="7"/>
+        <fd:item value="8">
+          <fd:label>eight</fd:label>
+        </fd:item>
+        <fd:item value="9"/>
+        <fd:item value="10"/>
+      </fd:selection-list>
+    </fd:field>
+
+    <fd:multivaluefield id="myBeer" extends="lib:ext:drinks">
+      <fd:validation>
+        <fd:value-count exact="2"/>
+      </fd:validation>
+      <fd:datatype base="string"/>
+      <fd:selection-list>
+        <fd:item value="Amstel"/>
+        <fd:item value="Heineken"/>
+        <fd:item value="Erdinger"/>
+        <fd:item value="Ottakringer"/>
+      </fd:selection-list>
+    </fd:multivaluefield>
+
+
+    <fd:repeater id="contacts">
+      <fd:validation>
+        <fd:javascript>
+          java.lang.System.err.println("Validating");
+          return true;
+        </fd:javascript>
+      </fd:validation>
+      <fd:widgets>
+        <fd:field id="firstname">
+          <fd:label>Firstname</fd:label>
+          <fd:datatype base="string"/>
+          <fd:on-create>
+            <fd:javascript>
+              java.lang.System.err.println("Creating a new contact row");
+            </fd:javascript>
+          </fd:on-create>
+        </fd:field>
+        <fd:field id="lastname">
+          <fd:label>Lastname</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="phone">
+          <fd:label>Phone</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="email">
+          <fd:label>Email</fd:label>
+          <fd:datatype base="string"/>
+          <fd:validation>
+            <fd:email/>
+          </fd:validation>
+        </fd:field>
+        <fd:field id="birthdate">
+          <fd:label>Birthdate (dd/MM/yyyy):</fd:label>
+          <fd:datatype base="date">
+            <fd:convertor>
+              <fd:patterns>
+                <fd:pattern>dd/MM/yyyy</fd:pattern>
+              </fd:patterns>
+            </fd:convertor>
+          </fd:datatype>
+        </fd:field>
+        <fd:booleanfield id="select">
+          <fd:label>Select</fd:label>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:repeater>
+    <fd:repeater-action repeater="contacts" id="addcontact" command="add-row">
+      <fd:label>Add Contact</fd:label>
+    </fd:repeater-action>
+    <fd:repeater-action repeater="contacts" id="removecontacts" command="delete-rows" select="select">
+      <fd:label>Remove selected Contacts</fd:label>
+    </fd:repeater-action>
+
+    <fd:new id="lib:rec-class-1"/>
+
+    <fd:submit id="cancel" extends="lib:ext:cancel"/>
+  </fd:widgets>
+</fd:form>

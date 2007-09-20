@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link href="local-resources/dreamteam.css" type="text/css" rel="stylesheet"/>
+      <!--
+         The Sortable Table script from WebFX (http://webfx.eae.net/) has
+         no Apache compatible license and can therefore not be added to
+         the repository.
+         If you want to use the adjusted version of the Sortable Table
+         email Helma van der Linden (hepabolu@gmail.com) and
+         uncomment the line below
+        -->
+      <!-- <script type="text/javascript" src="resources/sortabletable.js"></script> -->
+      <title>Your Dream Team</title>
+    </head>
+    <body>
+      <h1>Your Dream Team</h1>
+      <p>And here is your dream team. May the best team win!</p>
+      <!--
+             uncomment the lines below if you want to use the
+             adjusted version of the SortableTable script
+          -->
+      <!--
+        <p>If you click on a table header, the table will be sorted for
+           that column. Click again and the sort will be reversed.</p>
+        -->
+      <table id="sortTable1">
+        <thead>
+          <tr>
+            <td class="tableheader">Name</td>
+            <td class="tableheader">Position</td>
+            <td class="tableheader">Country</td>
+            <td class="tableheader">&#160;</td>
+          </tr>
+        </thead>
+        <tbody>
+          <jx:choose>
+            <jx:when test="${teamsize &lt; 1}"><!--  -->
+              <tr>
+                <td colspan="4" align="center">
+                  <strong>No team selected</strong>
+                </td>
+              </tr>
+            </jx:when>
+            <jx:otherwise>
+              <jx:forEach var="person" items="${list.getTeam()}">
+                <jx:set var="name" value="${person.getName()}"/>
+                <jx:set var="lastname" value="${person.getLastName()}"/>
+                <jx:set var="position" value="${person.getPosition()}"/>
+                <jx:set var="country" value="${person.getCountry()}"/>
+                <tr>
+                  <td>${name}</td>
+                  <td>
+                    <i18n:text>${position}</i18n:text>
+                  </td>
+                  <td>
+                    <img src="flags/${country}.gif"/>
+                  </td>
+                  <td>
+                    <i18n:text>${country}</i18n:text>
+                  </td>
+                  <!--
+                     replace the lines above with the lines below if you
+                     want to use the adjusted Sortable Table script.
+                  -->
+                  <!--
+                    <td sort="${lastname}">${name}</td>
+                    <td sort="${position}"><i18n:text>${position}</i18n:text></td>
+                    <td sort="${country}"><img src="flags/${country}.gif"/></td>
+                    <td><i18n:text>${country}</i18n:text></td>
+                  -->
+                </tr>
+              </jx:forEach>
+            </jx:otherwise>
+          </jx:choose>
+        </tbody>
+      </table>
+      <!--
+             uncomment the lines below if you want to use the
+             adjusted version of the SortableTable script
+         -->
+      <!--
+        <script type="text/javascript">
+            var st1 = new SortableTable(document.getElementById("sortTable1"),
+            [   "CaseInsensitiveString",
+                "String",
+                "String",
+                "None"    ]);
+            var initSortCol = 0;
+            st1.updateHeaderArrows();
+            st1.sort(initSortCol);
+            st1.updateHeaderArrows();
+        </script>
+        -->
+      <p class="developer-header"> Developer Notes </p>
+      <p class="developer-note"> This is the last page of the sample. It is built by the <i>prot_showTeam</i> function
+        in <b>team.js</b>. It takes the dream team list, stored in the Manager class and adds it to the JXTemplate for
+        display. </p>
+      <p class="developer-note"> This page also uses some i18n tags to show words rather than codes (for positions and
+        countries). </p>
+      <h2>Do study the code</h2>
+      <p>
+        <a href="../">Back to Forms samples</a>
+      </p>            
+    </body>
+  </html>
+</jx:template>
