@@ -29,7 +29,7 @@
     <version>5</version>
   </parent>
   <artifactId>cocoon-maven-javadocs-script-report</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>Cocoon Maven Javadocs Script Report</name>
 
@@ -76,11 +76,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-javadocs-script-report/cocoon-maven-javadocs-script-report-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-javadocs-script-report/cocoon-maven-javadocs-script-report-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-javadocs-script-report/cocoon-maven-javadocs-script-report-1.0.0-M1</url>
-  </scm>
 </project>
