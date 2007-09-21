@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fb:library 
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+  >
+  
+  <fb:group id="person" path="person">
+    <fb:value id="firstname" path="firstname"/>
+    <fb:value id="lastname" path="lastname"/>
+    <fb:value id="title" path="title"/>
+  </fb:group>
+  
+  <fb:group id="address" path="address">
+    <fb:value id="street" path="street"/>
+    <fb:value id="number" path="number"/>
+    <fb:value id="zipcode" path="zipcode"/>
+    <fb:value id="city" path="city"/>
+    <fb:value id="country" path="country"/>
+  </fb:group>
+  
+  <fb:group id="duration" path="duration">
+    <fb:value id="from" path="@from"/>
+    <fb:value id="to" path="@to"/>
+  </fb:group>
+  
+  <fb:group id="contactInformation" path="contact-info">
+    <fb:value id="kind" path="@kind"/>
+    
+    <fb:union id="info" path=".">
+      <fb:case id="email" path=".">
+        <fb:value id="email" path="email"/>
+      </fb:case>
+      <fb:case id="phone" path=".">
+        <fb:aggregate id="phone" path="phone" >
+          <fb:value id="number" path="number" />
+          <fb:value id="zone"   path="zone"   />
+          <fb:value id="cntr"   path="@cntr"  />
+        </fb:aggregate>
+      </fb:case>
+      <fb:case id="mail" path=".">
+        <fb:expand id="address"/>
+      </fb:case>
+    </fb:union>
+    
+    <fb:value id="description" path="description"/>
+    
+    <fb:group id="validity" path="validity" extends="duration"/>
+    
+  </fb:group>
+  
+  <!-- generic repeater -->
+  <fb:repeater id="genericRepeater"
+    parent-path="repeater"
+    row-path="row">
+    
+    <fb:on-bind>
+      <!-- to be specified by inheriting type -->
+    </fb:on-bind>
+    <!-- on-insert and on-delete have to be specified later -->
+  </fb:repeater>
+  
+  <fb:group id="postalPerson" path="postalPerson" extends="person">
+    <fb:expand id="address"/>
+  </fb:group>
+
+  <fb:group id="contact" path="contact">
+    <fb:group id="postalPerson" path="." extends="postalPerson"/>
+    
+    <fd:repeater id="contactInformationRepeater" parent-path="contacts" row-path="." extends="genericRepeater">
+      <fd:on-bind>
+        <fd:expand id="contactInformation"/>
+      </fd:on-bind>
+      <fb:on-delete>
+        <fb:delete-node/>
+      </fb:on-delete>
+    </fd:repeater>
+      
+  </fb:group>
+  
+</fb:library>

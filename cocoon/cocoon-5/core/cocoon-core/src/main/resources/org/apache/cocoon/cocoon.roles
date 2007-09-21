@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<!DOCTYPE role-list [
+<!ELEMENT role-list (role+)>
+<!ELEMENT role (hint*)>
+<!ELEMENT hint EMPTY>
+<!ATTLIST role-list cocoon-version CDATA #IMPLIED
+>
+<!ATTLIST role name CDATA #REQUIRED
+               shorthand CDATA #IMPLIED
+               default-class CDATA #IMPLIED
+               model CDATA #IMPLIED
+>
+<!ATTLIST hint shorthand CDATA #REQUIRED
+               class CDATA #REQUIRED
+>
+]>
+
+<!-- Roles for the cocoon core. The "cocoon-version" attribute is used by the Cocoon build system
+     for shared blocks, that should add their roles here in 2.1 but not in 2.2 -->
+<role-list cocoon-version = '2.2'>
+  <role name="org.apache.cocoon.classloader.ClassLoaderFactory"
+        default-class="org.apache.cocoon.classloader.DefaultClassLoaderFactory"/>
+
+  <role name="org.apache.excalibur.source.SourceFactorySelector"
+        shorthand="source-factories"
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector">
+  </role>
+
+  <role name="org.apache.excalibur.source.SourceResolver"
+        shorthand="source-resolver"
+        default-class="org.apache.cocoon.components.source.CocoonSourceResolver"/>
+
+  <!-- A Dom Serializer -->
+  <role default-class="org.apache.excalibur.xml.dom.DefaultDOMSerializer" name="org.apache.excalibur.xml.dom.DOMSerializer" shorthand="dom-serializer"/>
+
+  <!-- XSLT: -->
+  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
+        shorthand="xslt-processor"
+        default-class="org.apache.cocoon.components.xslt.TraxProcessor"/>
+
+  <role name="org.apache.excalibur.xml.xpath.XPathProcessor"
+        shorthand="xpath-processor"
+        default-class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"/>
+
+  <!--=========================================================================
+       Sitemap engine
+      =========================================================================-->
+
+  <!-- the sitemap engine -->
+  <role name="org.apache.cocoon.Processor"
+        shorthand="sitemap"
+        default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
+  
+  <!-- the tree builder for the sitemap language (additional implementations can be added here
+       or in cocoon.xconf for other implementations) -->
+  <role name="org.apache.cocoon.components.treeprocessor.TreeBuilder/sitemap-1.0"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage"/>
+
+  <!-- the various elements of map:components -->
+  <role name="org.apache.cocoon.components.pipeline.ProcessingPipelineSelector"
+        shorthand="pipes"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+
+  <role name="org.apache.cocoon.acting.ActionSelector"
+        shorthand="actions"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.selection.SelectorSelector"
+        shorthand="selectors"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.matching.MatcherSelector"
+        shorthand="matchers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.generation.GeneratorSelector"
+        shorthand="generators"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.transformation.TransformerSelector"
+        shorthand="transformers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.serialization.SerializerSelector"
+        shorthand="serializers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.reading.ReaderSelector"
+        shorthand="readers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+          
+  <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
+        shorthand="notifying-builder"
+        default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"
+        model="non-thread-safe-pooled"/>  
+
+  <!-- system-defined sitemap components -->
+  <role name="org.apache.cocoon.generation.Generator/&lt;notifier&gt;"
+        default-class="org.apache.cocoon.sitemap.NotifyingGenerator"
+        model="non-thread-safe-pooled"/>
+        
+  <role name="org.apache.cocoon.generation.Generator/&lt;aggregator&gt;"
+        default-class="org.apache.cocoon.sitemap.DefaultContentAggregator"
+        model="non-thread-safe-pooled"/>
+
+  <role name="org.apache.cocoon.transformation.Transformer/&lt;translator&gt;"
+        default-class="org.apache.cocoon.sitemap.LinkTranslator"
+        model="non-thread-safe-pooled"/>
+
+  <role name="org.apache.cocoon.transformation.Transformer/&lt;gatherer&gt;"
+        default-class="org.apache.cocoon.sitemap.LinkGatherer"
+        model="non-thread-safe-pooled"/>
+	
+  <!--=========================================================================-->
+  <role name="org.apache.cocoon.classloader.reloading.Monitor"
+        shorthand="fam"
+        default-class="org.apache.cocoon.components.fam.MonitorImpl"/>
+
+  <role name="org.apache.excalibur.xmlizer.XMLizer"
+        shorthand="xmlizer"
+        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
+
+  <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
+        shorthand="notifying-builder"
+        default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>
+
+  <!-- i18n components for resource bundle handling -->
+  <role name="org.apache.cocoon.i18n.BundleFactory"
+        shorthand="i18n-bundles"
+        default-class="org.apache.cocoon.i18n.XMLResourceBundleFactory"/>
+
+  <!-- Control flow layer: the interpreters selector and continuations  manager -->
+  <role name="org.apache.cocoon.components.flow.InterpreterSelector" 
+        shorthand="flow-interpreters"
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+  <role name="org.apache.cocoon.components.flow.ContinuationsManager"
+        shorthand="continuations-manager"
+        default-class="org.apache.cocoon.components.flow.ContinuationsManagerImpl" />
+
+  <!-- input/output modules -->
+  <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
+        shorthand="input-modules"
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+  <role name="org.apache.cocoon.components.modules.output.OutputModuleSelector"
+        shorthand="output-modules"
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+  <!-- Storing data in the current request -->
+  <role name="org.apache.cocoon.components.persistence.RequestDataStore"
+        shorthand="request-data-store"
+        default-class="org.apache.cocoon.components.persistence.RequestDataStoreImpl"/>
+
+</role-list>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Important to be encoding="iso-8859-1" -->
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- SVN $Id$ -->
+
+<xsp:page
+  language="java"
+  xmlns:xsp-interpolation="http://apache.org/xsp/interpolation/1.0"
+  xmlns:xsp="http://apache.org/xsp">
+
+  <!-- 
+       Check that LATIN1 characters are properly propagated
+       by applying XSLTExtension:escape in xsp.xsl.
+       The string constant contain also a quote (") in order to
+       verify that XSLTExtension:escapeJava is used where required.
+   -->
+
+  <xsp:logic>
+    String logicHeader = "Héllô \"wörld\"! 1";
+  </xsp:logic>
+
+  <xsp:init-page>
+    String initPage = "Héllô \"wörld\"! 2";
+  </xsp:init-page>
+
+  <xsp:init-page>
+    String exprInit = <xsp:expr>"Héllô \"wörld\"! 3"</xsp:expr>;
+  </xsp:init-page>
+
+  <xsp:logic>
+    // Use static to check exit-page logic the second time the page is called.
+    static String exitPage = "Reload page please";
+    static String exprExit = "Reload page please";
+  </xsp:logic>
+  <xsp:exit-page>
+    exitPage = "Héllô \"wörld\"! 4";
+    exprExit = <xsp:expr>"Héllô \"wörld\"! 5"</xsp:expr>;
+  </xsp:exit-page>
+
+  <xsp:logicsheet location="logicsheets/interpolation.xsl"/>
+
+  <page>
+    <title>Escaping of non-ASCII characters</title>
+    <content>
+      <xsp:logic>
+        String logicContent = "Héllô \"wörld\"! 6";
+      </xsp:logic>
+
+      <xsp:logic>
+        String exprLogic = <xsp:expr>"Héllô \"wörld\"! 7"</xsp:expr>;
+      </xsp:logic>
+
+      <p>
+        For the various Java compilers which have been interfaced to Cocoon
+        there is no unified method to tell the compiler the encoding of the
+        Java source.
+        Some compilers always assume UTF-8, others deduce it from the
+        systems locale settings.
+      </p>
+
+      <p>
+        If there is a mismatch in the encodings, umlauts, accents,
+        and other international characters will be mutilated in the output.
+        In order to avoid this problem, XSP preprocesses all Java code and
+        converts all non-ASCII characters to their \u1234 equivalent.
+        Thus the Java compiler sees only ASCII characters, and the encoding
+        becomes irrelevant (at least for character sets such as ISO-8859-1
+        which coincide which ASCII in the lower 128 characters).
+      </p>
+
+      <p>
+        Older Cocoon versions omitted to do the \u1234 conversion in some of
+        the XSP contexts where Java string constants could be used.
+      </p>
+
+      <p>
+        In Cocoon 2.1.8 this is now fixed, as this test is supposed to show:
+      </p>
+      <table border="1">
+        <tr>
+          <th>Context</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td>xsp:page/xsp:logic</td>
+          <td><xsp:expr>logicHeader</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>xsp:page/xsp:init-page</td>
+          <td><xsp:expr>initPage</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>xsp:init-page/xsp:expr</td>
+          <td><xsp:expr>exprInit</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>xsp:page/xsp:exit-page</td>
+          <td><xsp:expr>exitPage</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>xsp:exit-page/xsp:expr</td>
+          <td><xsp:expr>exprExit</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>xsp:logic</td>
+          <td><xsp:expr>logicContent</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>xsp:logic/xsp:expr</td>
+          <td><xsp:expr>exprLogic</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>xsp:content/xsp:expr</td>
+          <td><xsp:content><xsp:expr>"Héllô \"wörld\"! 8"</xsp:expr></xsp:content></td>
+        </tr>
+        <tr>
+          <td>xsp:expr</td>
+          <td><xsp:expr>"Héllô \"wörld\"! 9"</xsp:expr></td>
+        </tr>
+        <tr>
+          <td>text()</td>
+          <td>Héllô "wörld"! 10</td>
+        </tr>
+        <tr>
+          <td>attribute</td>
+          <td><img src=".gif" alt='Héllô "wörld"! 11'/></td>
+        </tr>
+        <tr>
+          <td>xsp:attribute/text()</td>
+          <td><img src=".gif"><xsp:attribute name="alt">Héllô "wörld"! 12</xsp:attribute></img></td>
+        </tr>
+        <tr>
+          <td>xsp:attribute/xsp:expr</td>
+          <td><img src=".gif"><xsp:attribute name="alt"><xsp:expr>"Héllô \"wörld\"! 13"</xsp:expr></xsp:attribute></img></td>
+        </tr>
+      </table>
+    </content>
+  </page>
+
+</xsp:page>

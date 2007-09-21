@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"  xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+   <!-- Import the macros that define CForms template elements -->
+   <jx:import uri="servlet:forms:/resource/internal/generation/jx-macros.xml"/>
+  <h4 class="samplesGroup">AJAX sample</h4>
+  <title>Car selector</title>
+  <para>This example illustrates:
+     <ul>
+        <li>how you can programmatically update the content of a selection list,</li>
+        <li>the AJAX features that allow partial page reloads and the associated visual effects.</li>
+     </ul>
+  </para>
+  <para>
+    Event-handlers are defined in the form definition to update the selection lists and set
+    the comment text below the table. This requires only a few lines of server-side JavaScript.
+    Selection widgets also have a "submit-on-change" attribute set in the form template so that
+    changes are considered immediately by the server.
+  </para>
+  <para>
+    See "carselector_form.xml" and "carselector_template.xml" to see how this is done.
+  </para>
+  <content>
+    <script type="text/javascript">
+       // avoid doing this before everything is loaded
+       dojo.addOnLoad(function(){cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight.blue});
+       var currentEffect = "blue";
+       function setEffect(effect) {
+           if (effect == "none") {
+               cocoon.ajax.BUHandler.highlight = null;
+           } else if (effect == "blink") {
+               cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.blink;
+           } else if (cocoon.ajax.effects.highlight[effect]) {
+               cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight[effect];
+           }
+           
+           document.getElementById(currentEffect).style.fontWeight = "";
+           document.getElementById(effect).style.fontWeight = "bold";
+           currentEffect = effect;
+           return false;
+       }
+    </script>
+    <para>
+      Page update effect:
+      <a id="none" href="#" onclick="return setEffect('none')">None</a> - 
+      <a id="yellow" href="#" onclick="return setEffect('yellow')">Yellow</a> - 
+      <a id="blue" href="#" onclick="return setEffect('blue')" style="font-weight: bold">Blue</a> - 
+      <a id="red" href="#" onclick="return setEffect('red')">Red</a> - 
+      <a id="green" href="#" onclick="return setEffect('green')">Green</a> - 
+      <a id="orange" href="#" onclick="return setEffect('orange')">Orange</a> - 
+      <a id="purple" href="#" onclick="return setEffect('purple')">Purple</a> - 
+      <a id="grey" href="#" onclick="return setEffect('grey')">Grey</a> - 
+      <a id="blink" href="#" onclick="return setEffect('blink')">Blink</a>
+    </para>
+      
+    <ft:form-template action="continue" method="POST" ajax="true">
+      <ft:continuation-id/>
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="make"/>
+          <ft:widget id="type"/>
+          <ft:widget id="model"/>
+          <ft:widget id="message"/>
+          <ft:widget id="buy"/>
+        </fi:items>
+      </fi:group>
+    </ft:form-template>
+    <p>
+      <a href="./">Back to Forms samples</a>
+    </p>
+  </content>
+</page>
