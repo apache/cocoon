@@ -107,25 +107,30 @@ public class JavadocsScriptGeneratorReport extends AbstractMavenReport {
 
     private String createScript() {
         StringBuffer sb = new StringBuffer();
+        sb.append("echo \"----------------------------------------------------------------\"\n");
+        sb.append("echo \"Creating JavaDocs for " + project.getArtifactId() + ":" + project.getVersion() + "\"\n");
         sb.append("f=" + project.getArtifactId() + "-" + project.getVersion() + "-javadoc.jar\n");
         sb.append("jd=" + project.getGroupId().replace('.', '/') + "/" +
                         project.getArtifactId() + "/" + project.getVersion() + "/$f\n");
+        sb.append("dl=0");
         sb.append("\n");
         sb.append("if [ -f $f ]\n");
         sb.append("then\n");
         sb.append("else\n");
         sb.append("  wget --header \"User-Agent: Mozilla/5.0 Firefox/2.0.0.7\" http://repo1.maven.org/maven2/$jd\n");
+        sb.append("  dl=1");
         sb.append("fi\n");
         sb.append("\n");
         sb.append("if [ -f $f ]\n");
         sb.append("then\n");
         sb.append("else\n");
         sb.append("  wget --header \"User-Agent: Mozilla/5.0 Firefox/2.0.0.7\" http://people.apache.org/builds/cocoon/$jd\n");
+        sb.append("  dl=1");
         sb.append("fi\n");
         sb.append("\n");
-        sb.append("if [ -f index-all.html ]\n");
+        sb.append("if [ $dl -eq 0 ]\n");
         sb.append("then\n");
-        sb.append("  echo \"JavaDocs have already been downloaded and unzipped in this directory.\"\n");
+        sb.append("  echo \"No downloads.\"\n");
         sb.append("  exit 0\n");
         sb.append("else\n");
         sb.append("  unzip $f\n");
