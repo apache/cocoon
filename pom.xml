@@ -2128,7 +2128,7 @@
         <artifactId>xreporter-grouping</artifactId>
         <version>1.2.1.1</version>
       </dependency>
-      <!-- Cocoon SNAPSHOT dependencies --> 
+      <!-- Cocoon SNAPSHOT dependencies
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
@@ -2951,7 +2951,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
-      </dependency>
+      </dependency-->
     </dependencies>
   </dependencyManagement>
 
@@ -3042,6 +3042,28 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <maxmemory>512m</maxmemory>
+          <links>
+            <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+            <link>http://static.springframework.org/spring/docs/2.0.x/api/</link>
+            <link>http://excalibur.apache.org/apidocs/</link>
+            <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+            <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
+            <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+            <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
+            <link>http://logging.apache.org/log4j/docs/api/</link>
+            <link>http://jakarta.apache.org/regexp/apidocs/</link>
+            <link>http://jakarta.apache.org/velocity/api/</link>
+          </links>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -3062,29 +3084,6 @@
         </reportSets>
       </plugin>
       <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <maxmemory>512m</maxmemory>
-          <links>
-            <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
-            <link>http://static.springframework.org/spring/docs/2.0.x/api/</link>
-            <link>http://excalibur.apache.org/apidocs/</link>
-            <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
-            <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
-            <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
-            <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
-            <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
-            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-            <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
-            <link>http://www.junit.org/junit/javadoc/</link>
-            <link>http://logging.apache.org/log4j/docs/api/</link>
-            <link>http://jakarta.apache.org/regexp/apidocs/</link>
-            <link>http://jakarta.apache.org/velocity/api/</link>
-          </links>
-        </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-changes-plugin</artifactId>
         <version>2.0-beta-2</version>
         <reportSets>
@@ -3095,16 +3094,6 @@
           </reportSet>
         </reportSets>
       </plugin>
-      <!-- Doesn't work because the maven-report extension needs to be released before. -->
-      <!--plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.1</version>
-        <configuration>
-          <configLocation>org/apache/cocoon/maven/reports/checkstyle.xml</configLocation>
-          <headerLocation>org/apache/cocoon/maven/reports/checkstyle-header.txt</headerLocation>
-        </configuration>
-      </plugin-->
     </plugins>
   </reporting>
 
@@ -3237,6 +3226,15 @@
           </plugin>
         </plugins>
       </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-maven-javadocs-script-report</artifactId>
+            <version>1.0.0-M1</version>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
     <profile>
       <id>daisy</id>
@@ -3420,11 +3418,6 @@
                   <artifactId>cocoon-daisy-export-strategy</artifactId>
                   <version>1.0.0-SNAPSHOT</version>
                 </dependency>
-                <!--dependency>
-                  <groupId>org.daisycms</groupId>
-                  <artifactId>daisy-java-adapter</artifactId>
-                  <version>1.0.0-SNAPSHOT</version>
-                </dependency-->
               </dependencies>
               <executions>
                 <execution>
@@ -3501,6 +3494,16 @@
               <omitVisitors>FindDeadLocalStores,UnreadFields</omitVisitors>
             </configuration>
           </plugin>
+          <!-- Doesn't work because the maven-report extension needs to be released before. -->
+          <!--plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>2.1</version>
+            <configuration>
+              <configLocation>org/apache/cocoon/maven/reports/checkstyle.xml</configLocation>
+              <headerLocation>org/apache/cocoon/maven/reports/checkstyle-header.txt</headerLocation>
+            </configuration>
+          </plugin-->
         </plugins>
       </reporting>
     </profile>
