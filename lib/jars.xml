@@ -636,7 +636,14 @@
     <title>XML Xindice</title>
     <description>Native XML Database by Apache XML project</description>
     <used-by>xmldb block</used-by>
-    <lib>optional/xindice-1.1b4.jar</lib>
+    <lib>optional/xindice-1.1.jar</lib>
+    <homepage>http://xml.apache.org/xindice/</homepage>
+  </file>
+  <file>
+    <title>XML Xindice DOM Compatibility</title>
+    <description>Native XML Database by Apache XML project</description>
+    <used-by>xmldb block</used-by>
+    <lib>optional/xindice-dom-1.1.jar</lib>
     <homepage>http://xml.apache.org/xindice/</homepage>
   </file>
 
