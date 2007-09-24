@@ -133,7 +133,7 @@ public class JavadocsScriptGeneratorReport extends AbstractMavenReport {
         sb.append("  echo \"No downloads.\"\n");
         sb.append("  exit 0\n");
         sb.append("else\n");
-        sb.append("  unzip $f\n");
+        sb.append("  unzip -qo $f\n");
         sb.append("fi\n");
         sb.append("\n");
         sb.append("exit 0\n");
