@@ -25,9 +25,9 @@
   xmlns:servlet="http://cocoon.apache.org/schema/servlet"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
   http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
-  
-  <bean id="${groupId}.${artifactId}.block" class="org.apache.cocoon.sitemap.SitemapServlet">
+
+  <bean id="${groupId}.${artifactId}.service" class="org.apache.cocoon.sitemap.SitemapServlet">
     <servlet:context mount-path="/${artifactId}" context-path="blockcontext:/${artifactId}/"/>
   </bean>
-  
+
 </beans>
