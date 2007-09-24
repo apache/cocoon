@@ -21,10 +21,10 @@
     | @version $Id$
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-  
+
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
@@ -39,19 +39,19 @@
     It describes a mechanism for handling properties in an standardized way.
   </description>
   <url>http://cocoon.apache.org/${docs.m.configuration-api.relPath}</url>
-  
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.configuration-api.relPath}</url>
     </site>
   </distributionManagement>
-  
+
   <properties>
     <docs.name>Cocoon Configuration API</docs.name>
     <docs.version>${docs.m.configuration-api.version}</docs.version>
   </properties>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -60,9 +60,9 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
-    </plugins> 
+    </plugins>
   </build>
-  
+
   <reporting>
     <plugins>
       <plugin>
@@ -78,7 +78,7 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
@@ -91,8 +91,8 @@
         </reportSets>
       </plugin>
     </plugins>
-  </reporting>     
-  
+  </reporting>
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -101,14 +101,26 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <navDocId>1313</navDocId>
-              <collection>cdocs-configuration-api</collection>          
+              <collection>cdocs-configuration-api</collection>
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
             </configuration>
-          </plugin>  
+          </plugin>
         </plugins>
-      </build>      
+      </build>
+    </profile>
+    <profile>
+      <id>release</id>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-maven-javadocs-script-report</artifactId>
+            <version>1.0.0-M1</version>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
   </profiles>
 </project>
