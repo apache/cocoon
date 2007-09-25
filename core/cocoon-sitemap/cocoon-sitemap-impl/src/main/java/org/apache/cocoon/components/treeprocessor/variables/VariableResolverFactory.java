@@ -24,7 +24,6 @@ import org.apache.cocoon.sitemap.PatternException;
 import java.util.List;
 
 /**
- *
  * @version $Id$
  */
 public class VariableResolverFactory {
@@ -105,25 +104,21 @@ public class VariableResolverFactory {
         if (needsResolve(expression)) {
             VariableResolver resolver;
             try {
-                resolver = (VariableResolver)manager.lookup(StringTemplateParserVariableResolver.ROLE);
+                resolver = (VariableResolver) manager.lookup(StringTemplateParserVariableResolver.ROLE);
                 resolver.setExpression(expression);
             } catch (ServiceException e) {
                 throw new PatternException("Couldn't obtain VariableResolver.", e);
             }
-            List collector = (List)disposableCollector.get();
-            if (collector != null)
+
+            List collector = (List) disposableCollector.get();
+            if (collector != null) {
                 collector.add(resolver);
+            }
 
             return resolver;
 
         }
-        VariableResolver resolver;
-        try {
-            resolver = (VariableResolver)manager.lookup(NOPVariableResolver.ROLE);
-        } catch (ServiceException e) {
-            throw new PatternException("Couldn't obtain VariableResolver.", e);
-        }
-        resolver.setExpression(expression);
-        return resolver;
+
+        return new NOPVariableResolver(expression);
     }
 }

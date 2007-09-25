@@ -27,33 +27,41 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+/**
+ * @version $Id$
+ */
 public class LegacySubstitutions extends Substitutions {
-    
+
     public LegacySubstitutions(LegacySitemapStringTemplateParser stringTemplateParser, Locator location, String stringTemplate) throws SAXException {
         super(stringTemplateParser, location, stringTemplate);
     }
-    
+
     public String toString(Locator location, ObjectModel objectModel) throws SAXException {
         throw new UnsupportedOperationException();
     }
-    
+
     public String toString(Locator location, ObjectModel objectModel, InvokeContext context, Map oldObjectModel) throws SAXParseException {
         StringBuffer buf = new StringBuffer();
-        Iterator iterSubst = iterator();
-        while (iterSubst.hasNext()) {
-            Subst subst = (Subst) iterSubst.next();
+
+        Iterator i = iterator();
+        while (i.hasNext()) {
+            Subst subst = (Subst) i.next();
+
             Object val;
             try {
                 if (subst instanceof LegacySitemapStringTemplateParser.SitemapExpressionSubstitution)
-                    val = ((LegacySitemapStringTemplateParser.SitemapExpressionSubstitution)subst).getStringValue(context, oldObjectModel);
+                    val = ((LegacySitemapStringTemplateParser.SitemapExpressionSubstitution) subst).getStringValue(context, oldObjectModel);
                 else
                     val = subst.getValue(objectModel);
             } catch (Exception e) {
                 throw new SAXParseException(e.getMessage(), location, e);
             }
-            buf.append(val != null ? val.toString() : "");
+
+            if (val != null) {
+                buf.append(val.toString());
+            }
         }
+        
         return buf.toString();
     }
-
 }

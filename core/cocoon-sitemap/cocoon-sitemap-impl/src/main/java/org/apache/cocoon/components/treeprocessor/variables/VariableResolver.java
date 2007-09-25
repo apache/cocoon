@@ -28,6 +28,8 @@ import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.location.Locatable;
 import org.apache.cocoon.util.location.Location;
 
+import org.apache.commons.lang.ObjectUtils;
+
 /**
  * Utility class for handling {...} pattern substitutions in sitemap statements.
  *
@@ -35,14 +37,16 @@ import org.apache.cocoon.util.location.Location;
  */
 public abstract class VariableResolver {
 
-    public static final Map EMPTY_MAP = Collections.unmodifiableMap(new java.util.HashMap(0));
-
     protected String originalExpr;
+
+
+    protected VariableResolver() {
+    }
     
     protected VariableResolver(String expr) {
         this.originalExpr = expr;
     }
-    
+
     public abstract void setExpression(String expression) throws PatternException;
 
     public final String toString() {
@@ -53,13 +57,12 @@ public abstract class VariableResolver {
      * Compare two VariableResolvers
      */
     public boolean equals(Object object) {
-        if (object instanceof VariableResolver) {
-            VariableResolver other = (VariableResolver)object;
-            return (this.originalExpr == null && other.originalExpr == null) ||
-                   (this.originalExpr.equals(other.originalExpr));
-        } else {
+        //noinspection SimplifiableIfStatement
+        if (!(object instanceof VariableResolver)) {
             return false;
         }
+
+        return ObjectUtils.equals(this.originalExpr, ((VariableResolver) object).originalExpr);
     }
 
     /**
@@ -91,12 +94,11 @@ public abstract class VariableResolver {
     public static Parameters buildParameters(Map expressions, InvokeContext context, Map objectModel) throws PatternException {
         Location location;
         if (expressions instanceof Locatable) {
-            location = ((Locatable)expressions).getLocation();
+            location = ((Locatable) expressions).getLocation();
         } else {
             location = Location.UNKNOWN;
         }
-        
-        if ((expressions == null || expressions.size() == 0) && location.equals(Location.UNKNOWN)) {
+        if (expressions == null || expressions.size() == 0 && location.equals(Location.UNKNOWN)) {
             return Parameters.EMPTY_PARAMETERS;
         }
 
@@ -104,10 +106,10 @@ public abstract class VariableResolver {
 
         Iterator iter = expressions.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry)iter.next();
+            Map.Entry entry = (Map.Entry) iter.next();
             result.setParameter(
-                ((VariableResolver)entry.getKey()).resolve(context, objectModel),
-                ((VariableResolver)entry.getValue()).resolve(context, objectModel)
+                    ((VariableResolver) entry.getKey()).resolve(context, objectModel),
+                    ((VariableResolver) entry.getValue()).resolve(context, objectModel)
             );
         }
 
@@ -123,12 +125,12 @@ public abstract class VariableResolver {
     public static Map buildMap(Map expressions, InvokeContext context, Map objectModel) throws PatternException {
         int size;
         if (expressions == null || (size = expressions.size()) == 0) {
-            return EMPTY_MAP;
+            return Collections.EMPTY_MAP;
         }
 
         Map result;
-        if ( expressions instanceof Locatable ) {
-            result = new SitemapParameters.LocatedHashMap(((Locatable)expressions).getLocation(), size);   
+        if (expressions instanceof Locatable) {
+            result = new SitemapParameters.LocatedHashMap(((Locatable) expressions).getLocation(), size);
         } else {
             result = new HashMap(size);
         }
@@ -137,23 +139,11 @@ public abstract class VariableResolver {
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry)iter.next();
             result.put(
-                ((VariableResolver)entry.getKey()).resolve(context, objectModel),
-                ((VariableResolver)entry.getValue()).resolve(context, objectModel)
+                    ((VariableResolver) entry.getKey()).resolve(context, objectModel),
+                    ((VariableResolver) entry.getValue()).resolve(context, objectModel)
             );
         }
 
         return result;
     }
-
-//    /**
-//     * Release a <code>Map</code> of expressions.
-//     */
-//    public static void release(Map expressions) {
-//        Iterator iter = expressions.entrySet().iterator();
-//        while (iter.hasNext()) {
-//            Map.Entry entry = (Map.Entry)iter.next();
-//            ((VariableResolver)entry.getKey()).release();
-//            ((VariableResolver)entry.getValue()).release();
-//        }
-//    }
 }

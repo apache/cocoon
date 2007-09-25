@@ -27,15 +27,19 @@ import java.util.Map;
  */
 public class NOPVariableResolver extends VariableResolver {
     
-    public final static String ROLE = NOPVariableResolver.class.getName();
+    private String expression;
 
-    private String expression = null;
-    
+
     public NOPVariableResolver() {
-        super("");
+        super();
     }
 
-    public void  setExpression(String expression) {
+    public NOPVariableResolver(String expression) {
+        super();
+        setExpression(expression);
+    }
+
+    public void setExpression(String expression) {
         this.originalExpr = expression;
         if (expression != null) {
             this.expression = VariableResolverFactory.unescape(expression);
@@ -44,9 +48,5 @@ public class NOPVariableResolver extends VariableResolver {
 
     public final String resolve(InvokeContext context, Map objectModel) {
         return this.expression;
-    }
-    
-    public final void release() {
-        // Nothing to do
     }
 }

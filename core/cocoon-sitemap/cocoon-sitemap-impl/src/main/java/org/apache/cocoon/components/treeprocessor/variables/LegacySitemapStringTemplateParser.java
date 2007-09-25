@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
@@ -32,10 +31,13 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.template.expression.AbstractStringTemplateParser;
 import org.apache.commons.io.IOUtils;
 
+/**
+ * @version $Id$
+ */
 public class LegacySitemapStringTemplateParser extends AbstractStringTemplateParser {
     
     private ServiceManager serviceManager;
-    
+
     public ServiceManager getServiceManager() {
         return serviceManager;
     }
@@ -53,17 +55,12 @@ public class LegacySitemapStringTemplateParser extends AbstractStringTemplatePar
         return substitutions;
     }
     
-public final class SitemapExpressionSubstitution implements Subst {
+    public final class SitemapExpressionSubstitution implements Subst {
         
         private PreparedVariableResolver resolver;
         
-        public SitemapExpressionSubstitution(String expression, ServiceManager serviceManager) throws PatternException {
-            try {
-                this.resolver = (PreparedVariableResolver)serviceManager.lookup(PreparedVariableResolver.ROLE);
-                this.resolver.setExpression(expression);
-            } catch (ServiceException e) {
-                throw new PatternException("Could not obtain PreparedVariableResolver", e);
-            }
+        private SitemapExpressionSubstitution(String expression, ServiceManager manager) throws PatternException {
+            this.resolver = new PreparedVariableResolver(expression, manager);
         }
 
         public Boolean getBooleanValue(ObjectModel objectModel) throws Exception {
@@ -110,5 +107,4 @@ public final class SitemapExpressionSubstitution implements Subst {
             //ignore
         }   
     }
-
 }
