@@ -34,8 +34,8 @@ import org.xml.sax.SAXParseException;
  */
 public class Substitutions {
 
-    final private List substitutions;
-    final private boolean hasSubstitutions;
+    private final List substitutions;
+    private final boolean hasSubstitutions;
 
     public Substitutions(StringTemplateParser stringTemplateParser, Locator location, String stringTemplate) throws SAXException {
         this(stringTemplateParser, location, new StringReader(stringTemplate));
@@ -47,7 +47,7 @@ public class Substitutions {
     }
 
     private Substitutions(StringTemplateParser stringTemplateParser, Locator location, Reader in) throws SAXException {
-        this.substitutions = stringTemplateParser.parseSubstitutions( in, "", location );
+        this.substitutions = stringTemplateParser.parseSubstitutions(in, "", location);
         this.hasSubstitutions = !substitutions.isEmpty();
     }
 
@@ -69,9 +69,11 @@ public class Substitutions {
 
     public String toString(Locator location, ObjectModel objectModel) throws SAXException {
         StringBuffer buf = new StringBuffer();
-        Iterator iterSubst = iterator();
-        while (iterSubst.hasNext()) {
-            Subst subst = (Subst) iterSubst.next();
+
+        Iterator i = iterator();
+        while (i.hasNext()) {
+            Subst subst = (Subst) i.next();
+
             Object val;
             try {
                 val = subst.getValue(objectModel);
@@ -81,8 +83,12 @@ public class Substitutions {
             //} catch (Error err) {
             //    throw new SAXParseException(err.getMessage(), location, new ErrorHolder(err));
             }
-            buf.append(val != null ? val.toString() : "");
+
+            if (val != null) {
+                buf.append(val.toString());
+            }
         }
+
         return buf.toString();
     }
 }
