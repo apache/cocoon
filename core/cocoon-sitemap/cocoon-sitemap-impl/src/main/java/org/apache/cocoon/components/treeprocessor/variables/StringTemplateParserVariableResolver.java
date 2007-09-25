@@ -30,7 +30,8 @@ import org.apache.cocoon.template.expression.Substitutions;
  *
  * @version $Id$
  */
-public final class StringTemplateParserVariableResolver extends VariableResolver implements Disposable {
+public final class StringTemplateParserVariableResolver extends VariableResolver
+                                                        implements Disposable {
     
     public final static String ROLE = StringTemplateParserVariableResolver.class.getName();
     
@@ -38,10 +39,11 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
     private ObjectModel objectModel;
     
     private Substitutions substitutions;
-    
+
+
     public StringTemplateParserVariableResolver() {
-        super("");
-    };
+        super();
+    }
     
     public StringTemplateParser getStringTemplateParser() {
         return stringTemplateParser;
@@ -63,7 +65,7 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
         this.originalExpr = expression;
         try {
             if (stringTemplateParser instanceof LegacySitemapStringTemplateParser)
-                this.substitutions = new LegacySubstitutions((LegacySitemapStringTemplateParser)stringTemplateParser, null, expression);
+                this.substitutions = new LegacySubstitutions((LegacySitemapStringTemplateParser) stringTemplateParser, null, expression);
             else 
                 this.substitutions = new Substitutions(stringTemplateParser, null, expression);
         } catch (Exception e) {
@@ -74,7 +76,7 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
     public String resolve(InvokeContext context, Map objectModel) throws PatternException {
         try {
             if (this.substitutions instanceof LegacySubstitutions)
-                return ((LegacySubstitutions)substitutions).toString(null, this.objectModel, context, objectModel);
+                return ((LegacySubstitutions) substitutions).toString(null, this.objectModel, context, objectModel);
             else
                 return substitutions.toString(null, this.objectModel);
         } catch (Exception e) {
@@ -85,5 +87,4 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
     public void dispose() {
         //nothing to do
     }
-
 }

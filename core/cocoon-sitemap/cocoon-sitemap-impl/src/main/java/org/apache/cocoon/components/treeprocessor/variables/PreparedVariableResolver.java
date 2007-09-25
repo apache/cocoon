@@ -40,14 +40,11 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @version $Id$
  */
-final public class PreparedVariableResolver extends VariableResolver implements Disposable {
+final public class PreparedVariableResolver extends VariableResolver
+                                            implements Disposable {
     
-    public static final String ROLE = PreparedVariableResolver.class.getName();
-
-    private ServiceManager manager;
-    protected List tokens;
-    protected boolean needsMapStack;
-
+    private static final int ROOT_SITEMAP_VARIABLE = 0;
+    private static final int ANCHOR_VAR = -1;
     private static final int OPEN = -2;
     private static final int CLOSE = -3;
     private static final int COLON = -4;
@@ -56,24 +53,32 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static final int SITEMAP_VAR = -9;
     private static final int THREADSAFE_MODULE = -10;
     private static final int STATEFUL_MODULE = -11;
-    private static final int ROOT_SITEMAP_VARIABLE = 0;
-    private static final int ANCHOR_VAR = -1;
 
     protected static final Token COLON_TOKEN = new Token(COLON);
     protected static final Token OPEN_TOKEN = new Token(OPEN);
     protected static final Token CLOSE_TOKEN = new Token(CLOSE);
     protected static final Token EMPTY_TOKEN = new Token(EXPR);
     
+    private ServiceManager manager;
+    protected List tokens;
+    protected boolean needsMapStack;
+
+
+    public PreparedVariableResolver() {
+        super();
+    }
+
+    public PreparedVariableResolver(String expression, ServiceManager manager) throws PatternException {
+        setManager(manager);
+        setExpression(expression);
+    }
+
     public ServiceManager getManager() {
         return manager;
     }
 
     public void setManager(ServiceManager manager) {
         this.manager = manager;
-    }
-    
-    public PreparedVariableResolver() {
-        super("");
     }
 
     public void setExpression(String expr) throws PatternException {
@@ -399,7 +404,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
         public String getStringValue() {
             if (value instanceof String) {
-                return (String)this.value;
+                return (String) this.value;
             }
             return null;
         }
@@ -410,7 +415,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
         public boolean equals(Object o) {
             if (o instanceof Token) {
-                return ((Token)o).hasType(this.type);
+                return ((Token) o).hasType(this.type);
             }
             return false;
         }
@@ -421,10 +426,9 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
         public InputModule getModule() {
             if (value instanceof InputModule) {
-                return (InputModule)value;
+                return (InputModule) value;
             }
             return null;
         }
     }
-    
 }
