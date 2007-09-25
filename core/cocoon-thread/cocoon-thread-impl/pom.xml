@@ -25,11 +25,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-thread-impl</artifactId>
-  <version> 1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC2</version>
   <name>Cocoon Thread Implementation</name>
   <description>
    Implementation of thread pool and factory components.
@@ -54,7 +54,6 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-thread-api</artifactId>
-      
     </dependency>
     <!--  Commons logging -->
     <dependency>
@@ -88,4 +87,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thread-impl/cocoon-thread-impl-1.0.0-RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thread-impl/cocoon-thread-impl-1.0.0-RC2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thread-impl/cocoon-thread-impl-1.0.0-RC2</url>
+  </scm>
 </project>
