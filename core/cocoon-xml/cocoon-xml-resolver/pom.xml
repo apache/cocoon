@@ -31,7 +31,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-xml-resolver</artifactId>
-  <version>1.0.0-RC2</version>
+  <version>1.0.0-RC3-SNAPSHOT</version>
   <name>Cocoon XML Resolver</name>
   <description>
     The Cocoon system resolver component together with default enteties.
@@ -60,11 +60,4 @@
       <artifactId>cocoon-xml-impl</artifactId>
     </dependency>
   </dependencies>
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-resolver/cocoon-xml-resolver-1.0.0-RC2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-resolver/cocoon-xml-resolver-1.0.0-RC2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-resolver/cocoon-xml-resolver-1.0.0-RC2</url>
-  </scm>
 </project>
