@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-expression-language-impl</artifactId>
-  <version>1.0.0-RC2</version>
+  <version>1.0.0-RC3-SNAPSHOT</version>
   <name>Cocoon Expression Language Implementation.</name>
   <description>
     Implementation of several expressions languages like: JXPath, JEXL, Javascript and implementation of unified Object Model.
@@ -105,10 +105,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-impl/cocoon-expression-language-impl-1.0.0-RC2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-impl/cocoon-expression-language-impl-1.0.0-RC2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-impl/cocoon-expression-language-impl-1.0.0-RC2</url>
-  </scm>
 </project>
