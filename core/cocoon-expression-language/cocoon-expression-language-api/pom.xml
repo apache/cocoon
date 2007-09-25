@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-expression-language-api</artifactId>
-  <version>1.0.0-M1-SNAPSHOT</version>
+  <version>1.0.0-RC2</version>
   <name>Cocoon Expression Language API</name>
   <description>
     Interfaces for expression language and object model.
@@ -57,4 +57,10 @@
       <artifactId>commons-collections</artifactId>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-api/cocoon-expression-language-api-1.0.0-RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-api/cocoon-expression-language-api-1.0.0-RC2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-api/cocoon-expression-language-api-1.0.0-RC2</url>
+  </scm>
 </project>
