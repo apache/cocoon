@@ -36,16 +36,18 @@ import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.springframework.beans.factory.BeanCreationException;
 
 /**
- * Use this servlet as entry point to Cocoon. It wraps the @link {@link TreeProcessor} and delegates
- * all requests to it.
+ * Use this servlet as entry point to Cocoon. It wraps the {@link TreeProcessor}
+ * and delegates all requests to it.
  *
  * @version $Id$
  */
 public class SitemapServlet extends HttpServlet {
 
     protected RequestProcessor processor;
+
     /**
-     * Initialize the servlet. The main purpose of this method is creating a configured @link {@link TreeProcessor}.
+     * Initialize the servlet. The main purpose of this method is creating a
+     * configured {@link TreeProcessor}.
      */
     public void init() throws ServletException {
         super.init();
@@ -66,7 +68,7 @@ public class SitemapServlet extends HttpServlet {
      * @see javax.servlet.GenericServlet#destroy()
      */
     public void destroy() {
-        if ( this.processor != null ) {
+        if (this.processor != null) {
             this.processor.destroy();
         }
         super.destroy();
