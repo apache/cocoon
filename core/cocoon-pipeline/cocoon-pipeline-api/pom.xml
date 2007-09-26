@@ -4,11 +4,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-pipeline-api</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC2</version>
   <packaging>jar</packaging>
   <name>Cocoon Pipeline API</name>
   <description>
@@ -87,4 +87,10 @@
     </dependency>
   </dependencies>    
   
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-pipeline-api/cocoon-pipeline-api-1.0.0-RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-pipeline-api/cocoon-pipeline-api-1.0.0-RC2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-pipeline-api/cocoon-pipeline-api-1.0.0-RC2</url>
+  </scm>
 </project>
