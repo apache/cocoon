@@ -32,12 +32,6 @@
   </parent>  
 
   <artifactId>cocoon-22-archetype-block-plain</artifactId>
-  <version>1.0.0-RC2</version>
+  <version>1.0.0-RC3-SNAPSHOT</version>
   <name>Cocoon 2.2 Archetype: Block (plain)</name>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-block-plain/cocoon-22-archetype-block-plain-1.0.0-RC2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-block-plain/cocoon-22-archetype-block-plain-1.0.0-RC2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-block-plain/cocoon-22-archetype-block-plain-1.0.0-RC2</url>
-  </scm>
 </project>
