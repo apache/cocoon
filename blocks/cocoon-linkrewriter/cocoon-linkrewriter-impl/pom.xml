@@ -27,11 +27,11 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-linkrewriter-impl</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC2</version>
   <name>Cocoon Linkrewriter Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.linkrewriter.relPath}</url>  
   
@@ -51,6 +51,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0-RC2</version>
     </dependency>
   </dependencies>
   
@@ -71,4 +72,10 @@
       </build>      
     </profile>
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-linkrewriter-impl/cocoon-linkrewriter-impl-1.0.0-RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-linkrewriter-impl/cocoon-linkrewriter-impl-1.0.0-RC2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-linkrewriter-impl/cocoon-linkrewriter-impl-1.0.0-RC2</url>
+  </scm>
 </project>
