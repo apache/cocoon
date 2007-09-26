@@ -28,12 +28,12 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-mail-impl</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC2</version>
   <name>Cocoon Mail Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>  
 
@@ -53,6 +53,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0-RC2</version>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
@@ -83,4 +84,10 @@
       </build>      
     </profile>
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-mail-impl/cocoon-mail-impl-1.0.0-RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-mail-impl/cocoon-mail-impl-1.0.0-RC2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-mail-impl/cocoon-mail-impl-1.0.0-RC2</url>
+  </scm>
 </project>
