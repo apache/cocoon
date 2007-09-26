@@ -28,10 +28,10 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
   </parent>
   <artifactId>cocoon-util</artifactId>
-  <version> 1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC2</version>
   <name>Cocoon Util</name>
   <description>
     Utility classes.
@@ -87,4 +87,10 @@
     </dependency>
   </dependencies>
   
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-util/cocoon-util-1.0.0-RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-util/cocoon-util-1.0.0-RC2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-util/cocoon-util-1.0.0-RC2</url>
+  </scm>
 </project>
