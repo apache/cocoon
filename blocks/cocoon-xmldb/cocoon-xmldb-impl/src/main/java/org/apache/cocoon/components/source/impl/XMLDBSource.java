@@ -61,7 +61,13 @@ import org.xmldb.api.modules.XPathQueryService;
  * @version $Id$
  */
 public class XMLDBSource extends AbstractLogEnabled
-    implements ModifiableTraversableSource, XMLizable {
+                         implements ModifiableTraversableSource, XMLizable {
+
+    private static final int ST_UNKNOWN     = 0;
+    private static final int ST_COLLECTION  = 1;
+    private static final int ST_RESOURCE    = 2;
+    private static final int ST_NO_PARENT   = 3;
+    private static final int ST_NO_RESOURCE = 4;
 
     //
     // Static Strings used for XML Collection representation
@@ -127,26 +133,20 @@ public class XMLDBSource extends AbstractLogEnabled
     /** The part of URL after # sign */
     protected String query;
 
-    /** The System ID */
-    protected String systemId;
-
     /** The path for the collection (same as url if it's a collection) */
     private final String colPath;
     
     /** The name of the resource in the collection (null if a collection) */
     private String resName;
-    
+
+    /** Collection corresponding to {@link #colPath} */
     private Collection collection;
     
+    /** Resource corresponding to {@link #resName} */
     private Resource resource;
     
-    private static final int ST_UNKNOWN = 0;
-    private static final int ST_COLLECTION = 1;
-    private static final int ST_RESOURCE = 2;
-    private static final int ST_NO_PARENT = 3;
-    private static final int ST_NO_RESOURCE = 4;
-
     private int status = ST_UNKNOWN;
+
 
     /**
      * The constructor.
@@ -176,48 +176,50 @@ public class XMLDBSource extends AbstractLogEnabled
             this.url = srcUrl;
         }
 
-        // Split path in collection and resource
-        if (this.url.endsWith("/")) {
-            this.url = this.url.substring(0, this.url.length() - 1);
+        // Split path in collection name and resource name (if any)
+        if (url.endsWith("/")) {
+            colPath = url.substring(0, url.length() - 1);
+        } else {
+            int pos = url.lastIndexOf('/');
+            colPath = url.substring(0, pos);
+            resName = url.substring(pos + 1);
         }
-        int pos = this.url.lastIndexOf('/');
-        colPath = this.url.substring(0, pos);
-        resName = this.url.substring(pos + 1);
     }
     
     private void setup() throws XMLDBException, SourceException {
-        status = ST_UNKNOWN;
-        try {
-            collection = DatabaseManager.getCollection(url, user, password);
-            if (collection != null) {
-                status = ST_COLLECTION;
-                return;
-            }
-            
-            // That may be a resource: get the parent collection
-            collection = DatabaseManager.getCollection(colPath, user, password);
-            if (collection == null) {
-                // Even parent is unknown
-                status = ST_NO_PARENT;
-            } else {
-                resource = collection.getResource(resName);
-                if (resource != null) {
-                    // A resource
-                    status = ST_RESOURCE;
-                } else {
-                    status = ST_NO_RESOURCE;
+        if (status == ST_UNKNOWN) {
+            try {
+                // This can be a collection
+                collection = DatabaseManager.getCollection(colPath, user, password);
+                if (collection == null) {
+                    // Nope
+                    status = ST_NO_PARENT;
+                    return;
                 }
-            }
-        } finally {
-            if (status == ST_UNKNOWN) {
-                // Something went wrong: ensure any collection is closed
-                cleanup();
+
+                if (resName == null) {
+                    status = ST_COLLECTION;
+                } else {
+                    // Or this can be a resource
+                    resource = collection.getResource(resName);
+                    if (resource == null) {
+                        // Nope
+                        status = ST_NO_RESOURCE;
+                    } else {
+                        status = ST_RESOURCE;
+                    }
+                }
+            } finally {
+                if (status == ST_UNKNOWN) {
+                    // Something went wrong: ensure any collection is closed
+                    cleanup();
+                }
             }
         }
     }
     
     private void cleanup() {
-        close(this.collection);
+        close(collection);
     }
 
     private Collection createCollection(String path) throws XMLDBException, SourceException {
@@ -250,11 +252,12 @@ public class XMLDBSource extends AbstractLogEnabled
     
     /**
      * Close an XMLDB collection, ignoring any exception
+     * @param collection collection to be closed
      */
-    private void close(Collection coll) {
-        if (coll != null) {
+    private void close(Collection collection) {
+        if (collection != null) {
             try {
-                coll.close();
+                collection.close();
             } catch (XMLDBException e) {
                 // ignore;
             }
@@ -269,9 +272,9 @@ public class XMLDBSource extends AbstractLogEnabled
         try {
             setup();
             if (status == ST_COLLECTION) {
-                this.collectionToSAX(handler);
+                collectionToSAX(handler);
             } else if (status == ST_RESOURCE) {
-                this.resourceToSAX(handler);
+                resourceToSAX(handler);
             } else {
                 throw new SourceNotFoundException(getURI());
             }
@@ -285,7 +288,7 @@ public class XMLDBSource extends AbstractLogEnabled
     }
     
     private void resourceToSAX(ContentHandler handler)
-        throws SAXException, XMLDBException {
+    throws SAXException, XMLDBException {
 
         if (!(resource instanceof XMLResource)) {
             throw new SAXException("Not an XML resource: " + getURI());
@@ -304,12 +307,12 @@ public class XMLDBSource extends AbstractLogEnabled
                 getLogger().debug("Obtaining resource " + resName + " from collection " + colPath);
             }
 
-            ((XMLResource)resource).getContentAsSAX(handler);
+            ((XMLResource) resource).getContentAsSAX(handler);
         }
     }
 
     private void collectionToSAX(ContentHandler handler)
-        throws SAXException, XMLDBException {
+    throws SAXException, XMLDBException {
 
         AttributesImpl attributes = new AttributesImpl();
 
@@ -364,7 +367,7 @@ public class XMLDBSource extends AbstractLogEnabled
     }
 
     private void queryToSAX(ContentHandler handler, Collection collection, String resource)
-        throws SAXException, XMLDBException {
+    throws SAXException, XMLDBException {
 
         AttributesImpl attributes = new AttributesImpl();
 
@@ -466,18 +469,18 @@ public class XMLDBSource extends AbstractLogEnabled
      */
     public InputStream getInputStream()
     throws IOException {
-        
         try {
             setup();
+
             // Check if it's binary
             if (resource instanceof BinaryResource) {
                 Object obj = resource.getContent();
                 if (obj == null) obj = new byte[0];
                 if (obj instanceof byte[]) {
                     return new ByteArrayInputStream((byte[])obj);
-                } else {
-                    throw new SourceException("Binary resource has returned a " + obj.getClass() + " for " + getURI());
                 }
+
+                throw new SourceException("Binary resource has returned a " + obj.getClass() + " for " + getURI());
             } else {
                 // Serialize SAX result
                 TransformerFactory tf = TransformerFactory.newInstance();
@@ -508,6 +511,7 @@ public class XMLDBSource extends AbstractLogEnabled
         if (query != null) {
             throw new MalformedURLException("Cannot modify a resource that includes an XPATH expression");
         }
+
         return new XMLDBOutputStream(false);
     }
     
@@ -518,6 +522,7 @@ public class XMLDBSource extends AbstractLogEnabled
         if (query != null) {
             throw new MalformedURLException("Cannot modify a resource that includes an XPATH expression");
         }
+
         return new XMLDBOutputStream(true);
     }
     
@@ -525,7 +530,7 @@ public class XMLDBSource extends AbstractLogEnabled
      * Create a new identifier for a resource within a collection. The current source must be
      * an existing collection.
      * 
-     * @throws SourceException 
+     * @throws SourceException if collection does not exist or failed to create id
      */
     public String createId() throws SourceException {
         try {
@@ -533,8 +538,9 @@ public class XMLDBSource extends AbstractLogEnabled
             if (status != ST_COLLECTION) {
                 throw new SourceNotFoundException("Collection for createId not found: " + getURI());
             }
+
             return collection.createId();
-        } catch(XMLDBException xdbe) {
+        } catch (XMLDBException xdbe) {
             throw new SourceException("Cannot get Id for " + getURI(), xdbe);
         } finally {
             cleanup();
@@ -542,7 +548,6 @@ public class XMLDBSource extends AbstractLogEnabled
     }
 
     private void writeOutputStream(ByteArrayOutputStream baos, boolean binary) throws SourceException {
-
         try {
             setup();
             if (status == ST_NO_PARENT) {
@@ -551,8 +556,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 status = ST_NO_RESOURCE;
             }
             
-            // If it's a collection create an id for a child resource.
-            // FIXME(SW): kept for backwards compatibility, but do we really want this?
+            // If it's a collection - create an id for a new child resource.
             String name;
             if (status == ST_COLLECTION) {
                 name = collection.createId();
@@ -572,7 +576,7 @@ public class XMLDBSource extends AbstractLogEnabled
 
             collection.storeResource(resource);
 
-            getLogger().debug("Written to resource " + resName);
+            getLogger().debug("Written to resource " + name);
         } catch (XMLDBException e) {
             String message = "Failed to create resource " + resName + ": " + e.errorCode;
             throw new SourceException(message, e);
@@ -622,18 +626,18 @@ public class XMLDBSource extends AbstractLogEnabled
      * <p>After cancelling, the stream should no longer be used.</p>
      */
     public void cancel(OutputStream stream) throws IOException {
-        if (canCancel(stream)) {
-            ((XMLDBOutputStream)stream).cancel();
-        } else {
+        if (!canCancel(stream)) {
             throw new SourceException("Cannot cancel stream for " + getURI());
         }
+
+        ((XMLDBOutputStream) stream).cancel();
     }
 
     private class XMLDBOutputStream extends OutputStream {
-
         private ByteArrayOutputStream baos;
         private boolean isClosed;
         private boolean binary;
+
         public XMLDBOutputStream(boolean binary) {
             baos = new ByteArrayOutputStream();
             isClosed = false;
@@ -670,6 +674,7 @@ public class XMLDBSource extends AbstractLogEnabled
         public boolean isClosed() {
             return this.isClosed;
         }
+
         public void cancel() {
             this.isClosed = true;
         }
@@ -677,7 +682,7 @@ public class XMLDBSource extends AbstractLogEnabled
 
     public void makeCollection() throws SourceException {
         try {
-            createCollection(this.url);
+            createCollection(url);
         } catch (SourceException e) {
             throw e;
         } catch (XMLDBException e) {
@@ -702,14 +707,16 @@ public class XMLDBSource extends AbstractLogEnabled
             if (status != ST_COLLECTION) {
                 throw new SourceException("Not a collection: " + getURI());
             }
+
             String[] childColl = collection.listChildCollections();
             String[] childRes = collection.listResources();
+
             ArrayList children = new ArrayList(childColl.length + childRes.length);
             for (int i = 0; i < childColl.length; i++) {
-                children.add(new XMLDBSource(getLogger(), user, password, url + "/" + childColl[i]));
+                children.add(new XMLDBSource(getLogger(), user, password, url + childColl[i]));
             }
             for (int i = 0; i < childRes.length; i++) {
-                children.add(new XMLDBSource(getLogger(), user, password, url + "/" + childRes[i]));
+                children.add(new XMLDBSource(getLogger(), user, password, url + childRes[i]));
             }
             
             return children;
@@ -723,14 +730,28 @@ public class XMLDBSource extends AbstractLogEnabled
     }
     
     public Source getChild(String name) throws SourceException {
-        return new XMLDBSource(getLogger(), user, password, this.url + "/" + name);
+        if (resName != null) {
+            throw new SourceException("Resource at " + url + " can not have child resources.");
+        }
+
+        return new XMLDBSource(getLogger(), user, password, url + name);
     }
 
     public String getName() {
+        if (resName == null) {
+            int pos = colPath.lastIndexOf('/');
+            return colPath.substring(pos + 1);
+        }
+
         return resName;
     }
 
     public Source getParent() throws SourceException {
-        return new XMLDBSource(getLogger(), user, password, this.colPath);
+        if (resName == null) {
+            int pos = colPath.lastIndexOf('/');
+            return new XMLDBSource(getLogger(), user, password, colPath.substring(0, pos + 1));
+        }
+
+        return new XMLDBSource(getLogger(), user, password, colPath);
     }
 }
