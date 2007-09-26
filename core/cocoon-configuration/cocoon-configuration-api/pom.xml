@@ -117,7 +117,6 @@
           <plugin>
             <groupId>org.apache.cocoon</groupId>
             <artifactId>cocoon-maven-javadocs-script-report</artifactId>
-            <version>1.0.0-M1</version>
           </plugin>
         </plugins>
       </reporting>
