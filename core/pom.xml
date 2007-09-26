@@ -80,7 +80,8 @@
     <url>https://svn.apache.org/repos/asf/cocoon/trunk/core</url>
   </scm>
 
-  <dependencyManagement>
+  <!--  Only uncomment this section when doing the release -->
+  <!--dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -117,12 +118,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-components</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-impl</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -134,18 +135,25 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-api</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-components</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-impl</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-sitemap-impl</artifactId>
+        <version>1.0.0-RC2</version>
+        <scope>test</scope>
+        <type>test-jar</type>        
+      </dependency>      
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-spring-configurator</artifactId>
@@ -154,45 +162,45 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-store-impl</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-thread-api</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-thread-impl</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-util</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-resolver</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>      
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-api</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-impl</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-util</artifactId>
-        <version> 1.0.0-RC2</version>
+        <version>1.0.0-RC2</version>
       </dependency>
     </dependencies>        
-  </dependencyManagement>
+  </dependencyManagement-->
     
   <profiles>
     <profile>
