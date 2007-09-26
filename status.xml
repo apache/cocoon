@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="VG" type="fix">
+      XMLDB Block: Fix collection URLs in XMLDBSource. Fixes URL resolution and 'Mount DB' sample.
+    </action>
     <action dev="VG" type="update">
       XMLDB Block: Update Xindice to 1.1 release.
     </action>
