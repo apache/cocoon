@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-fop-impl</artifactId>
-  <version>1.0.0-RC2</version>
+  <version>1.0.0-RC3-SNAPSHOT</version>
   <name>Cocoon FOP Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.fop.relPath}</url>    
   
@@ -101,10 +101,4 @@
       </build>      
     </profile>
   </profiles>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-fop-impl/cocoon-fop-impl-1.0.0-RC2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-fop-impl/cocoon-fop-impl-1.0.0-RC2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-fop-impl/cocoon-fop-impl-1.0.0-RC2</url>
-  </scm>
 </project>
