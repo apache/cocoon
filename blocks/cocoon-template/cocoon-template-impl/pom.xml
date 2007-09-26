@@ -6,7 +6,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5</version>
+    <version>5-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-template-impl</artifactId>
@@ -30,22 +30,18 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
-      <version>1.0.0-RC2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
-      <version>1.0.0-RC2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-util</artifactId>
-      <version>1.0.0-RC2</version>
     </dependency>
     <!--  
           Test dependencies
@@ -54,14 +50,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-RC2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
-      <version>1.0.0-RC2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -73,7 +67,6 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>1.0.0-RC2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
