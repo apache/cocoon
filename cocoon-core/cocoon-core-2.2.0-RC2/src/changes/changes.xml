@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--+
+    | @version $Id$
+    +-->
+<document>
+  <properties>
+    <title>Changes Cocoon Core</title>
+  </properties>
+  <body>
+    <release version="2.2.0-M3-SNAPSHOT" date="2007-00-00" description="unreleased">
+      <action dev="dfagerstrom" type="update">
+        Refactoring to make the pipelines usable outside the tree processor:
+          (1) The source resolver in AbstractProcessingPipeline is looked up from the service 
+              manager that is inserted with the setProcessorManager instead of from the 
+              EnvironmentHelper.getCurrentProccessor method. After having traced the call 
+              sequence it seem to be equivalent and from testing it seem to work.
+          (2) Changed the return type SitemapErrorHandler.prepareErrorHandler to Processing 
+              pipeline which is the same as it in Cocoon 2.1.x. Before the pipeline was embedded 
+              in a descriptor object. The only use for that in the pipeline context was that 
+              it was used for having a refernce to the container that created the pipeline and 
+              could use that for releasing the pipeline. But in the Spring Avalon implementation 
+              the release method is a noop.
+      </action>      
+    </release>    
+    <release version="2.2.0-M2" date="2006-12-00" description="pending">
+      <action dev="cziegeler" type="update">
+        Cocoon becomes a normal Spring application which means that it is initialized by
+        Spring and not the other way around.
+      </action>      
+    </release> 
+    <release version="2.2.0-M1" date="2006-08-01" description="released">
+      <action dev="cziegeler" type="update">
+        Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
+      </action>      
+    </release>
+  </body>
+</document>
