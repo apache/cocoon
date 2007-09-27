@@ -2132,7 +2132,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2142,7 +2142,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-apples-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2162,12 +2162,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-auth-api</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-auth-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2197,7 +2197,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-batik-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
         <exclusions>
           <exclusion>
             <groupId>fop</groupId>
@@ -2238,7 +2238,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-captcha-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2258,17 +2258,17 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-configuration-api</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-core</artifactId>
-        <version>2.2.0-RC2-SNAPSHOT</version>
+        <version>2.2.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-core</artifactId>
-        <version>2.2.0-RC2-SNAPSHOT</version>
+        <version>2.2.0-RC3-SNAPSHOT</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
@@ -2290,22 +2290,22 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-databases-hsqldb-client</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-databases-hsqldb-server</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-databases-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-databases-mocks</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2335,12 +2335,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-expression-language-api</artifactId>
-        <version>1.0.0-M1-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-expression-language-impl</artifactId>
-        <version>1.0.0-M1-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2355,12 +2355,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-flowscript-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-fop-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2380,7 +2380,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-forms-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2390,7 +2390,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-html-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2475,7 +2475,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-linkrewriter-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2495,7 +2495,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-mail-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2550,22 +2550,22 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-api</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-components</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-pipeline-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
@@ -2717,12 +2717,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-servlet-service-components</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-servlet-service-impl</artifactId>
-        <version>1.0.0-RC1-SNAPSHOT</version>
+        <version>1.0.0-RC2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2742,22 +2742,22 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-api</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-components</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-sitemap-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
@@ -2784,12 +2784,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-spring-configurator</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-store-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2819,7 +2819,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-template-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2829,12 +2829,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-thread-api</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-thread-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2849,7 +2849,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-util</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2910,17 +2910,17 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-api</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-impl</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-util</artifactId>
-        <version>1.0.0-M1-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2935,7 +2935,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-xml-resolver</artifactId>
-        <version>1.0.0-RC2-SNAPSHOT</version>
+        <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
