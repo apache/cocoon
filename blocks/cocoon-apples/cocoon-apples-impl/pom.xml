@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <artifactId>cocoon-apples-impl</artifactId>
-  <version>1.0.0-RC2</version>
+  <version>1.0.0-RC3-SNAPSHOT</version>
   <name>Cocoon Apples Block Implementation</name>
   
   <dependencies>
@@ -42,10 +42,4 @@
       <version>2.2.0-RC2</version>
     </dependency>
   </dependencies>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-apples-impl/cocoon-apples-impl-1.0.0-RC2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-apples-impl/cocoon-apples-impl-1.0.0-RC2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-apples-impl/cocoon-apples-impl-1.0.0-RC2</url>
-  </scm>
 </project>
