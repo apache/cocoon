@@ -28,12 +28,12 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-databases-hsqldb-client</artifactId>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0-RC2</version>
   <name>Cocoon Hsqldb Client Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.hsqldb-client.relPath}</url>  
   <description>
@@ -76,6 +76,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>hsqldb</groupId>
@@ -99,4 +100,10 @@
       </build>      
     </profile>
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-client/cocoon-databases-hsqldb-client-1.0.0-RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-client/cocoon-databases-hsqldb-client-1.0.0-RC2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-databases-hsqldb-client/cocoon-databases-hsqldb-client-1.0.0-RC2</url>
+  </scm>
 </project>
