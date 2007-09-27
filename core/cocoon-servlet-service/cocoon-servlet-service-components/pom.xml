@@ -39,6 +39,7 @@
   <properties>
     <docs.name>${project.name}</docs.name>    
     <docs.version>${docs.m.servlet-service-components.version}</docs.version>
+    <docs.urlRelativizer>../../../../../</docs.urlRelativizer>
   </properties>  
   
   <distributionManagement>
@@ -134,12 +135,14 @@
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
             <configuration>
-              <createSiteXmlOnly>true</createSiteXmlOnly>
-            </configuration>
+              <navDocId>1411</navDocId>
+              <collection>cdocs-servlet-service-components</collection>
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+            </configuration>            
           </plugin> 
         </plugins>
       </build>      
-    </profile>
+    </profile>   
   </profiles>   
   
 </project>
