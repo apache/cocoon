@@ -46,7 +46,7 @@
     <module>cocoon-configuration-site</module>
 
     <!-- Cocoon Blocks -->
-    <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
+    <!--module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
     <module>../blocks/cocoon-auth/cocoon-auth-impl</module>
     <module>../blocks/cocoon-captcha/cocoon-captcha-impl</module>
     <module>../blocks/cocoon-flowscript/cocoon-flowscript-impl</module>
@@ -59,26 +59,26 @@
     <module>../blocks/cocoon-linkrewriter/cocoon-linkrewriter-impl</module>
     <module>../blocks/cocoon-databases/cocoon-databases-impl</module>
     <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-server</module>
-    <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module>
+    <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module-->
 
     <!-- Unreleased Cocoon Blocks -->
-    <module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module>
+    <!--module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module>
     <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>
     <module>../blocks/cocoon-portal/cocoon-portal-impl</module>
     <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>
-    <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
+    <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module-->
 
     <!-- Subprojects -->
-    <module>../core/cocoon-configuration/cocoon-configuration-api</module>
+    <!--module>../core/cocoon-configuration/cocoon-configuration-api</module>
     <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
     <module>../core/cocoon-servlet-service/cocoon-servlet-service-impl</module>
-    <module>../core/cocoon-servlet-service/cocoon-servlet-service-components</module>
+    <module>../core/cocoon-servlet-service/cocoon-servlet-service-components</module-->
 
     <!-- Maven plugins -->
     <module>../tools/cocoon-maven-plugin</module>
 
     <!-- Core modules -->
-    <module>../core/cocoon-expression-language/cocoon-expression-language-api</module>
+    <!--module>../core/cocoon-expression-language/cocoon-expression-language-api</module>
     <module>../core/cocoon-expression-language/cocoon-expression-language-impl</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-api</module>
     <module>../core/cocoon-pipeline/cocoon-pipeline-impl</module>
@@ -94,7 +94,7 @@
     <module>../core/cocoon-xml/cocoon-xml-impl</module>
     <module>../core/cocoon-xml/cocoon-xml-resolver</module>
     <module>../core/cocoon-xml/cocoon-xml-util</module>
-    <module>../core/cocoon-core</module>
+    <module>../core/cocoon-core</module-->
   </modules>
 
   <distributionManagement>
