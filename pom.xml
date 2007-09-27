@@ -2128,7 +2128,7 @@
         <artifactId>xreporter-grouping</artifactId>
         <version>1.2.1.1</version>
       </dependency>
-      <!-- Cocoon SNAPSHOT dependencies -->
+      <!-- Cocoon SNAPSHOT dependencies
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
@@ -2951,7 +2951,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
-      </dependency>
+      </dependency-->
     </dependencies>
   </dependencyManagement>
 
@@ -3151,13 +3151,13 @@
     <docs.m.xml-util.relPath>2.2/core-modules/xml-util/${docs.m.xml-util.version}/</docs.m.xml-util.relPath>
     <!-- Path and version properties: subprojects -->
     <docs.m.servlet-service-impl.version>1.0</docs.m.servlet-service-impl.version>
-    <docs.m.servlet-service-impl.relPath>subprojects/servlet-service/servlet-service-impl/${docs.m.servlet-service-impl.version}/</docs.m.servlet-service-impl.relPath>
+    <docs.m.servlet-service-impl.relPath>${docs.m.site-servlet-service.relPath}servlet-service-impl/${docs.m.servlet-service-impl.version}/</docs.m.servlet-service-impl.relPath>
     <docs.m.servlet-service-components.version>1.0</docs.m.servlet-service-components.version>
-    <docs.m.servlet-service-components.relPath>subprojects/servlet-service/servlet-service-components/${docs.m.servlet-service-components.version}/</docs.m.servlet-service-components.relPath>
+    <docs.m.servlet-service-components.relPath>${docs.m.site-servlet-service.relPath}servlet-service-components/${docs.m.servlet-service-components.version}/</docs.m.servlet-service-components.relPath>
     <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
-    <docs.m.configuration-api.relPath>subprojects/configuration/configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>
+    <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>
     <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
-    <docs.m.spring-configurator.relPath>subprojects/configuration/spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>
+    <docs.m.spring-configurator.relPath>${docs.m.site-configuration.relPath}spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>
     <!-- Path and version properties: blocks -->
     <docs.m.ajax.version>1.0</docs.m.ajax.version>
     <docs.m.ajax.relPath>2.2/blocks/ajax/${docs.m.ajax.version}/</docs.m.ajax.relPath>
@@ -3226,6 +3226,9 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>javadocs-script</id>
       <reporting>
         <plugins>
           <plugin>
@@ -3235,7 +3238,7 @@
           </plugin>
         </plugins>
       </reporting>
-    </profile>
+    </profile>    
     <profile>
       <id>daisy</id>
       <modules>
@@ -3328,6 +3331,14 @@
                     <name>cdocs-spring-configurator</name>
                     <path>${docs.m.spring-configurator.relPath}</path>
                   </collection>
+                  <collection>
+                    <name>cdocs-servlet-service-impl</name>
+                    <path>${docs.m.servlet-service-impl.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-servlet-service-components</name>
+                    <path>${docs.m.servlet-service-components.relPath}</path>
+                  </collection>                  
                   <!-- blocks -->
                   <collection>
                     <name>cdocs-ajax</name>
