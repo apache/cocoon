@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This catalogue file contains translations for built-in CForms messages. -->
+<catalogue xml:lang="pt_BR">
+  <message key="validation.captcha.mismatch">checagem CAPTCHA falhou.</message>
+
+   <message key="general.field-required">Este campo é obrigatório.</message>
+   <message key="datatype.conversion-failed">Formato {0} inválido.</message>
+   <message key="datatype.decimal">Número decimal</message>
+   <message key="datatype.integer">Número inteiro</message>
+   <message key="datatype.long">Número long</message>
+   <message key="datatype.float">Número float</message>
+   <message key="datatype.double">Número double</message>
+   <message key="datatype.date.date">Data</message>
+   <message key="datatype.date.time">Hora</message>
+   <message key="datatype.date.datetime">data-hora</message>
+   <message key="validation.string.exact-length">Este campo deve conter exatamente {0} caracteres.</message>
+   <message key="validation.string.range-length">Este campo deve conter entre {0} e {1} caracteres.</message>
+   <message key="validation.string.min-length">Este campo de ter ao menos {0} caracteres.</message>
+   <message key="validation.string.max-length">Este campo deve ter no máximo {0} caracteres.</message>
+   <message key="validation.string.regexp">O valor não corresponde à expressão regular: {0}</message>
+   <message key="validation.string.invalidemail">Este campo não contém um endereço de email válido</message>
+   <message key="validation.array.exact-valuecount">Selecione exatamente {0} item(s).</message>
+   <message key="validation.array.range-valuecount">Selecione no mínimo {0} item(s) e no máximo {1}.</message>
+   <message key="validation.array.min-valuecount">Selecione ao menos {0} item(s).</message>
+   <message key="validation.array.max-valuecount">Selecione no máximo {0} items.</message>
+   <message key="multivaluefield.conversionfailed">O valor {0} não é válido.</message>
+   <message key="validation.numeric.range">O valor deve estar no intervale de {0} a {1}.</message>
+   <message key="validation.numeric.min">O valor deve ser maior ou igual a {0}.</message>
+   <message key="validation.numeric.max">O valor deve ser menor ou igual a {0}.</message>
+   <message key="validation.mod10">Checagem Mod 10 falhou.</message>
+   <message key="aggregatedfield.split-failed">O valor não corresponde à expressão regular: {0}</message>
+   <message key="upload.invalid-type">Tipo de conteúdo inválido: {0}.</message>
+   <message key="upload.rejected">Tamanho do arquivo muito grande ({0} kbytes). No máximo {1} kbytes é permitido.</message>
+   <message key="calendar.alt">Calendário</message>
+   <message key="repeater.cardinality">Este repeater deve conter de {0} a {1} linhas.</message>
+</catalogue>

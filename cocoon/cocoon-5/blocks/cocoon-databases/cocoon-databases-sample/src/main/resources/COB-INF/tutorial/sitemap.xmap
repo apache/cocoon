@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Components ================================ -->
+
+  <map:components>
+
+    <!-- =========================== Actions ================================ -->
+
+    <map:actions>
+      <map:action name="dbAdd" logger="sitemap.tutorial.action.dbAdd" src="org.apache.cocoon.acting.DatabaseAddAction" />
+
+      <map:action name="dbDel" logger="sitemap.tutorial.action.dbDel" src="org.apache.cocoon.acting.DatabaseDeleteAction" />
+
+      <map:action name="dbUpd" logger="sitemap.tutorial.action.dbUpd" src="org.apache.cocoon.acting.DatabaseUpdateAction" />
+    </map:actions>
+
+  </map:components>
+
+  <!-- ========================== Action sets ================================ -->
+
+  <map:action-sets>
+    <map:action-set name="process">
+      <map:act type="form-validator" action="Create Department">
+        <map:parameter name="constraint-set" value="add" />
+        <map:act type="dbAdd" />
+      </map:act>
+      <map:act type="form-validator" action="Update Department">
+        <map:parameter name="constraint-set" value="update" />
+        <map:act type="dbUpd" />
+      </map:act>
+      <map:act type="dbDel" action="Delete Department" />
+      <map:act type="form-validator" action="Create Employee">
+        <map:parameter name="constraint-set" value="add" />
+        <map:act type="dbAdd" />
+      </map:act>
+      <map:act type="form-validator" action="Update Employee">
+        <map:parameter name="constraint-set" value="update" />
+        <map:act type="dbUpd" />
+      </map:act>
+      <map:act type="dbDel" action="Delete Employee" />
+    </map:action-set>
+  </map:action-sets>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="">
+        <map:redirect-to uri="home.html" />
+      </map:match>
+
+      <map:match pattern="*-dept.html">
+        <map:act set="process">
+          <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/department-form.xml" />
+          <map:generate type="serverpages" src="docs/confirm-dept.xsp" />
+          <map:transform src="apache.xsl" />
+          <map:serialize />
+        </map:act>
+        <map:generate type="serverpages" src="docs/{1}-dept.xsp" />
+        <map:transform src="apache.xsl" />
+        <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
+        <map:serialize />
+      </map:match>
+
+      <map:match pattern="*-empl.html">
+        <map:act set="process">
+          <map:parameter name="descriptor" value="{servlet:/}/tutorial/docs/employee-form.xml" />
+          <map:generate type="serverpages" src="docs/confirm-empl.xsp" />
+          <map:transform src="apache.xsl" />
+          <map:serialize />
+        </map:act>
+        <map:generate type="serverpages" src="docs/{1}-empl.xsp" />
+        <map:transform src="apache.xsl" />
+        <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
+        <map:serialize />
+      </map:match>
+
+      <map:match pattern="**.html">
+        <map:generate src="docs/{1}.xml" />
+        <map:transform src="apache.xsl" />
+        <!--map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/-->
+        <map:serialize />
+      </map:match>
+
+      <map:match pattern="images/**">
+        <map:read src="context://docs/{0}" />
+      </map:match>
+
+    </map:pipeline>
+
+  </map:pipelines>
+
+</map:sitemap>

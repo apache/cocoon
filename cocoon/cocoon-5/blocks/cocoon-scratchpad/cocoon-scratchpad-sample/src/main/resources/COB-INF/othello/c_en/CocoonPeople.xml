@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html xmlns:osm="http://osmosis.gr/osml/1.0">
+  <head>
+    <osm:pageTitle>
+      <osm:text>Apache Cocoon</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">The Apache Cocoon PMC 
+</p>
+    <p id="" class="" width="" height="">The Apache Cocoon Project Management Committee oversees the entire project, and consists of all willing committers on Cocoon and its subprojects. Its main concerns are community health, fostering the Apache Cocoon brand, and making sure all legal requirements are met when people contribute.</p>
+    <p id="" class="" width="" height="">The current Cocoon PMC members are:</p>
+    <osm:list>
+      <osm:listItem>Nicola Ken Barozzi</osm:listItem>
+      <osm:listItem>Marcus Crafter </osm:listItem>
+      <osm:listItem>David Crossley </osm:listItem>
+      <osm:listItem>Torsten Curdt </osm:listItem>
+      <osm:listItem>Bertrand Delacretaz </osm:listItem>
+      <osm:listItem>Bruno Dumon </osm:listItem>
+      <osm:listItem>Vadim Gritsenko</osm:listItem>
+      <osm:listItem>Christian Haul </osm:listItem>
+      <osm:listItem>Joerg Heinicke </osm:listItem>
+      <osm:listItem>Geoff Howard </osm:listItem>
+      <osm:listItem>Bernhard Huber </osm:listItem>
+      <osm:listItem>Ivelin Ivanov </osm:listItem>
+      <osm:listItem>Matthew Langham </osm:listItem>
+      <osm:listItem>Berin Loritsch </osm:listItem>
+      <osm:listItem>Stefano Mazzocchi </osm:listItem>
+      <osm:listItem>Michael Melhem </osm:listItem>
+      <osm:listItem>John Morrison </osm:listItem>
+      <osm:listItem>Steven Noels </osm:listItem>
+      <osm:listItem>Andrew C. Oliver </osm:listItem>
+      <osm:listItem>Giacomo Pati </osm:listItem>
+      <osm:listItem>Konstantin Piroumian </osm:listItem>
+      <osm:listItem>Ovidiu Predescu </osm:listItem>
+      <osm:listItem>Jeremy Quinn </osm:listItem>
+      <osm:listItem>Gianugo Rabellino </osm:listItem>
+      <osm:listItem>Peter Royal </osm:listItem>
+      <osm:listItem>Jeff Turner </osm:listItem>
+      <osm:listItem>Sylvain Wallez </osm:listItem>
+      <osm:listItem>Michael Wechner (for Lenya) </osm:listItem>
+    </osm:list>
+  </body>
+</html>
