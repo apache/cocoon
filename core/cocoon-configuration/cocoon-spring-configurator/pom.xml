@@ -50,6 +50,7 @@
   <properties>
     <docs.name>Cocoon Spring Configurator</docs.name>
     <docs.version>${docs.m.spring-configurator.version}</docs.version>
+    <docs.urlRelativizer>../../../../../</docs.urlRelativizer>    
   </properties>
 
   <build>
@@ -140,17 +141,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-    <profile>
-      <id>release</id>
-      <reporting>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.cocoon</groupId>
-            <artifactId>cocoon-maven-javadocs-script-report</artifactId>
-          </plugin>
-        </plugins>
-      </reporting>
     </profile>
   </profiles>
 
