@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id$
+-->
+
+<html>
+  <head>
+
+    <link rel="stylesheet" type="text/css" href="swan/resources/css/swan_sections.css" />
+
+    <title>Swan: CForms-based XML Editor Demo</title>
+    <h2>Swan: CForms-based XML Editor Demo</h2>
+
+  </head>
+  <body>
+    This is a work-in-progress, do not trust it with your own precious files quite yet...<br/>
+    <p>
+    <b>Try editing a few test files:</b>
+    </p>
+    <div class="section">
+      <b>Sample xReport</b>
+      <div class="section">
+        <b>xReport:</b>
+        <a href="xreport.flow?file=report1.xml">report</a>
+      </div>
+    </div>
+    <div class="section">
+      <b>Sample Sitemap</b>
+      <div class="section">
+        <b>Sitemap:</b>
+        <a href="sitemap.flow?file=sitemap.xmap">sitemap</a>
+      </div>
+    </div>
+    <div class="section">
+      <b>Sample Forms</b>
+      <div class="section">
+      <b>Simple:</b>
+        <a href="binding.flow?file=sample_form_1.xml">binding</a>
+        <a href="model.flow?file=sample_form_1.xml">model</a>
+        <a href="template.flow?file=sample_form_1_template.xml">template</a>
+      </div>
+      <div class="section">
+      <b>Medium:</b>
+        <a href="binding.flow?file=sample_form_2.xml">binding</a>
+        <a href="model.flow?file=sample_form_2.xml">model</a>
+        <a href="template.flow?file=sample_form_2_template.xml">template</a>
+      </div>
+      <div class="section">
+        <b>Complex:</b>
+        <a href="binding.flow?file=form_model_gui_binding.xml">binding</a>
+        <a href="model.flow?file=form_model_gui_data.xml">model</a>
+        <a href="template.flow?file=form_model_gui_template_data.xml">template</a>
+      </div>
+    </div>
+  </body>
+</html>
+

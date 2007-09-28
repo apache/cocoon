@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id$
+-->
+
+<page
+  xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+  xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+
+    <!--
+    TODO: Add features to "widgets-class" (e.g. move-up, move-down, add-before, add-after).
+    -->
+
+  <h4 class="samplesGroup">Class, New, Struct and Union widgets</h4>
+  <title>Form GUI</title>
+
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+
+      <ft:class id="id-class"><ft:widget-label id="id"/>:<ft:widget id="id"/></ft:class>
+      <ft:class id="label-class"><ft:widget-label id="label"/>:<ft:widget id="label"/></ft:class>
+      <ft:class id="required-class"><ft:widget-label id="required"/>:<ft:widget id="required"/></ft:class>
+      <ft:class id="initial-size-class"><ft:widget-label id="initial-size"/>:<ft:widget id="initial-size"/></ft:class>
+
+      <ft:class id="widget-row-class">
+        <td>
+          <ft:widget id="select"/>
+        </td>
+        <td>
+          <ft:widget id="type">
+            <fi:styling list-type="dropdown"/>
+          </ft:widget>
+
+          <ft:union id="union">
+
+            <ft:case id="">
+            </ft:case>
+
+            <ft:case id="action">
+              <ft:group id="action">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="aggregatefield">
+                <ft:group id="aggregatefield">
+                  <ft:new id="id-class"/>
+                  <ft:new id="label-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="booleanfield">
+              <ft:group id="booleanfield">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="class">
+              <ft:group id="class">
+                <ft:new id="id-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="field">
+              <ft:group id="field">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="required-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="new">
+              <ft:group id="new">
+                <ft:new id="id-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="output">
+              <ft:group id="output">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="group">
+              <ft:group id="group">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="repeater">
+              <ft:group id="repeater">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="initial-size-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="row-action">
+              <ft:group id="row-action">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="submit">
+              <ft:group id="submit">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+              </ft:group>
+            </ft:case>
+
+            <ft:case id="union">
+              <ft:group id="union">
+                <ft:new id="id-class"/>
+                <ft:new id="label-class"/>
+                <ft:new id="widgets-class"/>
+              </ft:group>
+            </ft:case>
+
+          </ft:union>
+        </td>
+      </ft:class>
+
+      <ft:class id="widgets-class">
+        <ft:repeater-size id="widgets"/>
+        <table border="4">
+          <ft:repeater-widget id="widgets">
+            <tr><ft:new id="widget-row-class"/></tr>
+          </ft:repeater-widget>
+        </table>
+        <ft:widget id="addWidget"/>
+        <ft:widget id="removeWidgets"/><br/>
+      </ft:class>
+
+      <table align="center" border="3">
+        <tr>
+          <td>
+            <p>
+              <ft:new id="widgets-class"/>
+            </p>
+           <input type="submit"/>
+          </td>
+        </tr>
+      </table>
+
+    </ft:form-template>
+    <p>
+      <a href="./">Back to Forms samples</a>
+    </p>
+  </content>
+
+</page>
