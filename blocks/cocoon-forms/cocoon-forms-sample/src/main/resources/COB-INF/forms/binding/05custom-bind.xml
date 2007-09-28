@@ -39,10 +39,10 @@
   </fb:javascript>
 
   <fb:custom id="custom" path="custom-value" 
-      class="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"/>
+      ref="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"/>
   
   <fb:custom id="config" path="config-value" 
-      builderclass="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"
+      builderref="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"
       factorymethod="createBinding" >
       <fb:config prefixchar="[" suffixchar="]" />      
   </fb:custom>

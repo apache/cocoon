@@ -261,7 +261,7 @@
       <fd:datatype base="date">
         <fd:convertor variant="date" style="full"/>
       </fd:datatype>
-      <fd:selection-list type="java" class="org.apache.cocoon.forms.samples.DateTestJavaSelectionList" nullable="false"/>
+      <fd:selection-list type="java" ref="org.apache.cocoon.forms.samples.DateTestJavaSelectionList" nullable="false"/>
     </fd:field>
 
     <fd:field id="dieselprice" required="true">

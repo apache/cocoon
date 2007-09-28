@@ -29,7 +29,7 @@
     </fd:field>
     
     <fd:tree id="tree" root-visible="true">
-      <fd:tree-model type="java" class="org.apache.cocoon.forms.formmodel.tree.DefaultTreeModel$Sample"/>
+      <fd:tree-model type="java" ref="org.apache.cocoon.forms.samples.SampleTreeModel"/>
       <!-- no tree model given, to see the default one -->
       <fd:ttree-model type="source" src="context://samples/">
         <fd:fileset>
@@ -40,7 +40,7 @@
 
     <fd:tree id="tree2">
       <!-- sample tree model -->
-      <fd:tree-model type="java" class="org.apache.cocoon.forms.formmodel.tree.DefaultTreeModel$Sample"/>
+      <fd:tree-model type="java" ref="org.apache.cocoon.forms.samples.SampleTreeModel"/>
     </fd:tree>
 
     <fd:tree id="files" root-visible="false">
