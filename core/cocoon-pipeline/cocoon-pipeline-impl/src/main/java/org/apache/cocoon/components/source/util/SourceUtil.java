@@ -151,45 +151,78 @@ public abstract class SourceUtil {
         toSAX(manager, source, null, handler);
     }
 
-	/**
-	 * Generates SAX events from the given source by using XMLizer.
-	 *
-	 * <p><b>NOTE</b>: If the implementation can produce lexical events,
-	 * care should be taken that <code>handler</code> can actually
-	 * directly implement the LexicalHandler interface!</p>
-	 *
-	 * @param  source    the data
-	 * @throws ProcessingException if no suitable converter is found
-	 */
-	public static void toSAX(ServiceManager manager,
-			                 Source         source,
-			                 String         mimeTypeHint,
-			                 ContentHandler handler)
-	throws SAXException, IOException, ProcessingException {
-	    if (source instanceof XMLizable) {
-	        toSAX((XMLizable) source, handler);
-	    } else {
-	        String mimeType = source.getMimeType();
-	        if (null == mimeType) {
-	            mimeType = mimeTypeHint;
-	        }
-	
-	        XMLizer xmlizer = null;
-	        try {
-	            xmlizer = (XMLizer) manager.lookup(XMLizer.ROLE);
-	            xmlizer.toSAX(source.getInputStream(),
-	                          mimeType,
-	                          source.getURI(),
-	                          handler);
-	        } catch (SourceException e) {
-	            throw SourceUtil.handle(e);
-	        } catch (ServiceException e) {
-	            throw new ProcessingException("Exception during streaming source.", e);
-	        } finally {
-	            manager.release(xmlizer);
-	        }
-	    }
-	}
+    /**
+     * Generates SAX events from the given source by using XMLizer.
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
+     * @param  source    the data
+     * @throws ProcessingException if no suitable converter is found
+     */
+    public static void toSAX(ServiceManager manager,
+                             Source         source,
+                             String         mimeTypeHint,
+                             ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
+        if (source instanceof XMLizable) {
+            toSAX((XMLizable) source, handler);
+        } else {
+            String mimeType = source.getMimeType();
+            if (null == mimeType) {
+                mimeType = mimeTypeHint;
+            }
+    
+            XMLizer xmlizer = null;
+            try {
+                xmlizer = (XMLizer) manager.lookup(XMLizer.ROLE);
+                xmlizer.toSAX(source.getInputStream(),
+                              mimeType,
+                              source.getURI(),
+                              handler);
+            } catch (SourceException e) {
+                throw SourceUtil.handle(e);
+            } catch (ServiceException e) {
+                throw new ProcessingException("Exception during streaming source.", e);
+            } finally {
+                manager.release(xmlizer);
+            }
+        }
+    }
+
+    /**
+     * Generates SAX events from the given source by using XMLizer.
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
+     * @param  source    the data
+     * @throws ProcessingException if no suitable converter is found
+     */
+    public static void toSAX(XMLizer        xmlizer,
+                             Source         source,
+                             String         mimeTypeHint,
+                             ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
+        if (source instanceof XMLizable) {
+            toSAX((XMLizable) source, handler);
+        } else {
+            String mimeType = source.getMimeType();
+            if (null == mimeType) {
+                mimeType = mimeTypeHint;
+            }
+            try {
+                xmlizer.toSAX(source.getInputStream(),
+                              mimeType,
+                              source.getURI(),
+                              handler);
+            } catch (SourceException e) {
+                throw SourceUtil.handle(e);
+            }
+        }
+    }
 
 	/**
 	 * Generates character SAX events from the given source.
