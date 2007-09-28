@@ -18,8 +18,6 @@ package org.apache.cocoon.forms.formmodel;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.formmodel.library.LibraryManager;
 import org.apache.cocoon.util.location.LocationAttributes;
@@ -33,11 +31,6 @@ import org.w3c.dom.Element;
 public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuilder {
 
     protected LibraryManager libraryManager;
-
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
-        libraryManager = (LibraryManager) serviceManager.lookup(LibraryManager.ROLE);
-    }
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
     throws Exception {
@@ -68,5 +61,10 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
 
         this.context = null;
         return formDefinition;
+    }
+
+    public void setLibraryManager( LibraryManager libraryManager )
+    {
+        this.libraryManager = libraryManager;
     }
 }

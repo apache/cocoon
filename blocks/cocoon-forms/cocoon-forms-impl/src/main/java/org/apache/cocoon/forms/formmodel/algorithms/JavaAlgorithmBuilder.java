@@ -16,8 +16,13 @@
  */
 package org.apache.cocoon.forms.formmodel.algorithms;
 
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithm;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.w3c.dom.Element;
 
 
@@ -29,19 +34,42 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class JavaAlgorithmBuilder extends AbstractBaseAlgorithmBuilder {
+public class JavaAlgorithmBuilder extends AbstractBaseAlgorithmBuilder implements BeanFactoryAware{
+
+    private BeanFactory beanFactory;
+    
+    public void setBeanFactory(BeanFactory beanFactory)
+                                                  throws BeansException
+    {
+        this.beanFactory = beanFactory;        
+    }
 
     public CalculatedFieldAlgorithm build(Element algorithmElement) throws Exception {
-        String clazzname = DomHelper.getAttribute(algorithmElement, "class");
-        Class clazz = Thread.currentThread().getContextClassLoader().loadClass(clazzname);
-        if (AbstractBaseAlgorithm.class.isAssignableFrom(clazz)) {
-            AbstractBaseAlgorithm algorithm = (AbstractBaseAlgorithm) clazz.newInstance();
-            super.setup(algorithmElement, algorithm);
-            return algorithm;
-        } else {
-            CalculatedFieldAlgorithm algorithm = (CalculatedFieldAlgorithm) clazz.newInstance();
-            super.setupComponent(algorithm);
-            return algorithm;
+
+        // hard way deprecation
+        if (DomHelper.getAttribute(algorithmElement, "class", null) != null) {
+            throw new RuntimeException("The 'class' attribute is not supported anymore at "
+                                       + DomHelper.getLocationObject( algorithmElement )
+                                       + ". Use a 'ref' attribute to address a Spring bean");
+        }
+        
+        String name = DomHelper.getAttribute(algorithmElement, "ref");
+        try {
+            Class clazz = beanFactory.getType(name);
+            if (AbstractBaseAlgorithm.class.isAssignableFrom(clazz)) {
+                AbstractBaseAlgorithm algorithm = (AbstractBaseAlgorithm)beanFactory.getBean( name );
+                super.setup(algorithmElement, algorithm);
+                return algorithm;
+            } if (CalculatedFieldAlgorithm.class.isAssignableFrom(clazz)) {
+                CalculatedFieldAlgorithm algorithm = (CalculatedFieldAlgorithm)beanFactory.getBean( name );
+                return algorithm;
+            } else {
+                throw new FormsException("Spring bean " + name + " is not a " + CalculatedFieldAlgorithm.class.getName(), DomHelper.getLocationObject( algorithmElement ));
+            }
+        } catch(NoSuchBeanDefinitionException nsbde) {
+            throw new FormsException("Spring bean " + name + " does not exist in Spring context", DomHelper.getLocationObject( algorithmElement ));
+        } catch(BeansException be) {
+            throw new FormsException("Spring bean " + name + " cannot be retrieved/instantiated", DomHelper.getLocationObject( algorithmElement ));
         }
     }
 

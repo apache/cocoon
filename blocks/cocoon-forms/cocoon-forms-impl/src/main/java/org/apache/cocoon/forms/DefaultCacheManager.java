@@ -18,10 +18,6 @@ package org.apache.cocoon.forms;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 
@@ -32,8 +28,7 @@ import org.apache.commons.collections.FastHashMap;
  *
  * @version $Id$
  */
-public class DefaultCacheManager extends AbstractLogEnabled
-                                 implements CacheManager, Disposable, ThreadSafe, Component {
+public class DefaultCacheManager implements CacheManager {
     // NOTE: Component is there to allow this block to also run in the 2.1 branch
 
     // FIXME Unbounded map - the road to OOME
@@ -42,10 +37,6 @@ public class DefaultCacheManager extends AbstractLogEnabled
 
     public DefaultCacheManager() {
         this.cache = new FastHashMap();
-    }
-
-    public void dispose() {
-        this.cache = null;
     }
 
     public Object get(Source source, String prefix) {

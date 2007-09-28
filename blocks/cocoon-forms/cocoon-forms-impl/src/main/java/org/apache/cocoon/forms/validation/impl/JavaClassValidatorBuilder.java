@@ -16,75 +16,68 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.forms.validation.ConfigurableWidgetValidator;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.forms.validation.WidgetValidatorBuilder;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.ConfigurationUtil;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.w3c.dom.Element;
 
 /**
- * A {@link org.apache.cocoon.forms.validation.WidgetValidatorBuilder} that creates java classes.
+ * A {@link org.apache.cocoon.forms.validation.WidgetValidatorBuilder} that uses Spring beans.
  * <p>
  * The syntax for this validator is as follows :<br/>
  * <pre>
- *   &lt;java class="com.my.SuperValidator"/&gt;
+ *   &lt;java ref="spring-bean-id"/&gt;
  * </pre>
  *
  * @version $Id$
  */
 public class JavaClassValidatorBuilder
-    implements WidgetValidatorBuilder, ThreadSafe, Serviceable, LogEnabled, Contextualizable  {
-
-    private ServiceManager manager;
-    private Logger logger;
-    private Context context;
+    implements WidgetValidatorBuilder, BeanFactoryAware {
     
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    private BeanFactory beanFactory;
+    
+    public void setBeanFactory( BeanFactory beanFactory )
+                                                  throws BeansException
+    {
+        this.beanFactory = beanFactory;
     }
 
     /**
      * @see org.apache.cocoon.forms.validation.WidgetValidatorBuilder#build(org.w3c.dom.Element, org.apache.cocoon.forms.formmodel.WidgetDefinition)
      */
-    public WidgetValidator build(Element validationRuleElement, WidgetDefinition definition) throws Exception {
-        String name = DomHelper.getAttribute(validationRuleElement, "class");
-
-        Object validator = ClassUtils.newInstance(name);
-        if (validator instanceof WidgetValidator) {
-            LifecycleHelper.setupComponent(validator, logger, context, manager, ConfigurationUtil.toConfiguration(validationRuleElement));
-            return (WidgetValidator)validator;
-        } else {
-            throw new Exception("Class " + validator.getClass() + " is not a " + WidgetValidator.class.getName());
+    public WidgetValidator build(Element validationRuleElement, WidgetDefinition definition) 
+    throws Exception {
+        
+        // hard way deprecation
+        if (DomHelper.getAttribute(validationRuleElement, "class", null) != null) {
+            throw new RuntimeException("The 'class' attribute is not supported anymore at "
+                                       + DomHelper.getLocationObject( validationRuleElement )
+                                       + ". Use a 'ref' attribute to address a Spring bean");
         }
-    }
-    
-    /**
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
 
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+        String name = DomHelper.getAttribute(validationRuleElement, "ref");
+
+        try {
+            Object validator = beanFactory.getBean( name );
+            if (validator instanceof WidgetValidator) {
+                if (validator instanceof ConfigurableWidgetValidator) {
+                    ((ConfigurableWidgetValidator)validator).setConfiguration( validationRuleElement );
+                }
+                return (WidgetValidator)validator;
+            } else {
+                throw new FormsException("Spring bean " + name + " is not a " 
+                                         + WidgetValidator.class.getName(), 
+                                         DomHelper.getLocationObject( validationRuleElement ));
+            }
+        } catch (BeansException be) {
+            throw new FormsException("Spring bean " + name + " does not exist in Spring context", 
+                                     DomHelper.getLocationObject( validationRuleElement ));
+        }
     }
 }

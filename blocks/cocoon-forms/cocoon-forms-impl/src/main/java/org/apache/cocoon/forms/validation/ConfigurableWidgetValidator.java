@@ -14,9 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.forms.datatype.convertor;
+package org.apache.cocoon.forms.validation;
 
-public interface BeanConvertorBuilder
-    extends ConvertorBuilder
-{
+import org.w3c.dom.Element;
+
+/**
+ * A {@link WidgetValidator} that can recieve a configuration {@link Element}
+ * 
+ * @version $Id$
+ */
+public interface ConfigurableWidgetValidator extends WidgetValidator {
+    
+    /**
+     * Set the configuration Element
+     */
+    void setConfiguration(Element element) throws Exception;
 }

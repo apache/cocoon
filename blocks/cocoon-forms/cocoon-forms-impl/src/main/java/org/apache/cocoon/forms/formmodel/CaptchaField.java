@@ -19,15 +19,11 @@ package org.apache.cocoon.forms.formmodel;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -60,8 +56,8 @@ public class CaptchaField extends Field {
     private static final String SECRET_CHARS = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
     private static final int SESSION_ATTR_NAME_LENGTH = 6;
 
-    private Context avalonContext;
     private int length;
+    private ProcessInfoProvider processInfoProvider;
 
     /**
      * Random number generator used to create session attribute name.
@@ -77,7 +73,7 @@ public class CaptchaField extends Field {
             try {
                 sr = SecureRandom.getInstance("IBMSecureRandom");
             } catch (NoSuchAlgorithmException e) {
-                throw new CascadingRuntimeException("No random number generator available", e);
+                throw new RuntimeException("No random number generator available", e);
             }
         } finally {
             random = sr;
@@ -85,10 +81,10 @@ public class CaptchaField extends Field {
         random.setSeed(System.currentTimeMillis());
     }
 
-    public CaptchaField(CaptchaFieldDefinition fieldDefinition, Context avalonContext) {
+    public CaptchaField(CaptchaFieldDefinition fieldDefinition, ProcessInfoProvider processInfoProvider) {
         super(fieldDefinition);
-        this.avalonContext = avalonContext;
         this.length = fieldDefinition.getLength();
+        this.processInfoProvider = processInfoProvider;
     }
 
     private String generateSecret() {
@@ -111,8 +107,7 @@ public class CaptchaField extends Field {
             result[2 * i + 1] = Character.forDigit(Math.abs(ch & 0x0f), 16);
         }
         String id = new String(result);
-        Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-        HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession(true);
+        HttpSession session = processInfoProvider.getRequest().getSession( true );
         String secret = generateSecret();
         session.setAttribute(SESSION_ATTR_PREFIX + id, secret);
         this.setAttribute("secret", secret);

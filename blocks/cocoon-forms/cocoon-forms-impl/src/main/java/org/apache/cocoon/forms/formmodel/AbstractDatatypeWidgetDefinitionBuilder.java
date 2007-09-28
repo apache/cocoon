@@ -18,8 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 
 import java.util.Iterator;
 import java.util.Locale;
-
-import org.apache.avalon.framework.service.ServiceSelector;
+import java.util.Map;
 
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormsException;
@@ -30,6 +29,9 @@ import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.i18n.I18nUtils;
+import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xmlizer.XMLizer;
 
 import org.w3c.dom.Element;
 
@@ -39,6 +41,12 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+
+    private Map selectionListBuilders;
+    private String defaultSelectionListBuilder;
+    private XMLizer xmlizer;
+    private SourceResolver sourceResolver;
+    private ProcessInfoProvider processInfoProvider; 
 
     protected void setupDefinition(Element widgetElement,
                                    AbstractDatatypeWidgetDefinition definition)
@@ -50,6 +58,9 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
                                    AbstractDatatypeWidgetDefinition definition,
                                    boolean isArrayType)
     throws Exception {
+        definition.setProcessInfoProvider( processInfoProvider );
+        definition.setSourceResolver( sourceResolver );
+        definition.setXmlizer( xmlizer );
         super.setupDefinition(widgetElement, definition);
         // parse "label", "hint", etc.
         setDisplayData(widgetElement, definition);
@@ -87,7 +98,7 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
         //---- parse "selection-list"
         // FIXME: pass the manager to the definition as a side effect. Should be removed
         // when definition are managed like components.
-        definition.service(this.serviceManager);
+        definition.checkMutable();
 
         SelectionList list = buildSelectionList(widgetElement, definition, "selection-list");
         if (list != null) {
@@ -110,24 +121,47 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
             return null;
         }
 
-        // Get an appropriate list builder
-        ServiceSelector builderSelector = (ServiceSelector) this.serviceManager.lookup(SelectionListBuilder.ROLE + "Selector");
-        SelectionListBuilder builder = null;
-        try {
-            // listType can be null, meaning we will use the default selection list
-            String listType = selectionListElement.getAttribute("type");
-            if ("".equals(listType)) {
-                listType = null;
-            }
-
-            builder = (SelectionListBuilder)builderSelector.select(listType);
-            return builder.build(selectionListElement, definition.getDatatype());
-
-        } finally {
-            if (builder != null) {
-                builderSelector.release(builder);
-            }
-            this.serviceManager.release(builderSelector);
+        // listType can be null, meaning we will use the default selection list
+        String listType = selectionListElement.getAttribute("type");
+        if ("".equals(listType)) {
+            listType = defaultSelectionListBuilder;
         }
+
+        // Get an appropriate list builder
+        SelectionListBuilder builder = (SelectionListBuilder)selectionListBuilders.get(listType);
+        if( builder == null) {
+            throw new FormsException("Unknown selection list builder: " + listType);
+        }
+        return builder.build(selectionListElement, definition.getDatatype());
+    }
+
+    public void setSelectionListBuilders( Map selectionListBuilders )
+    {
+        this.selectionListBuilders = selectionListBuilders;
+    }
+
+    public void setXmlizer( XMLizer xmlizer )
+    {
+        this.xmlizer = xmlizer;
+    }
+
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
+    }
+
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
+    }
+
+    protected ProcessInfoProvider getProcessInfoProvider()
+    {
+        return processInfoProvider;
+    }
+
+    public void setDefaultSelectionListBuilder( String defaultSelectionListBuilder )
+    {
+        this.defaultSelectionListBuilder = defaultSelectionListBuilder;
     }
 }

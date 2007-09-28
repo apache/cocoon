@@ -20,16 +20,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.service.ServiceManager;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -38,6 +37,7 @@ import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xmlizer.XMLizer;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -61,8 +61,9 @@ public class DynamicSelectionList implements FilterableSelectionList {
     private String src;
     private boolean usePerRequestCache;
     private Datatype datatype;
-    private ServiceManager serviceManager;
-    private Context context;
+    private XMLizer xmlizer;
+    private SourceResolver sourceResolver;
+    private ProcessInfoProvider processInfoProvider;
 
     /**
      * @param datatype
@@ -71,12 +72,13 @@ public class DynamicSelectionList implements FilterableSelectionList {
      * @param serviceManager
      * @param context
      */
-    public DynamicSelectionList(Datatype datatype, String src, boolean usePerRequestCache, ServiceManager serviceManager, Context context) {
+    public DynamicSelectionList(Datatype datatype, String src, boolean usePerRequestCache, XMLizer xmlizer, SourceResolver sourceResolver, ProcessInfoProvider processInfoProvider) {
         this.datatype = datatype;
         this.src = src;
-        this.serviceManager = serviceManager;
         this.usePerRequestCache = usePerRequestCache;
-        this.context = context;
+        this.xmlizer = xmlizer;
+        this.sourceResolver = sourceResolver;
+        this.processInfoProvider = processInfoProvider;
     }
 
     /**
@@ -85,12 +87,8 @@ public class DynamicSelectionList implements FilterableSelectionList {
      * @param src - 
      * @param serviceManager -
      */
-    public DynamicSelectionList(Datatype datatype, String src, ServiceManager serviceManager) {
-        this.usePerRequestCache = false;
-        this.context = null;
-        this.datatype = datatype;
-        this.src = src;
-        this.serviceManager = serviceManager;
+    public DynamicSelectionList(Datatype datatype, String src, XMLizer xmlizer, SourceResolver sourceResolver, ProcessInfoProvider processInfoProvider) {
+        this(datatype, src, false, xmlizer, sourceResolver, processInfoProvider);
     }
 
     public Datatype getDatatype() {
@@ -105,17 +103,15 @@ public class DynamicSelectionList implements FilterableSelectionList {
     throws ProcessingException, SAXException, IOException {
         SelectionListHandler handler = new SelectionListHandler(locale);
         handler.setContentHandler(contentHandler);
-        SourceUtil.toSAX(serviceManager, source, null, handler);
+        SourceUtil.toSAX(xmlizer, source, null, handler);
     }
     
     /*
      * This method generate SaxFragment directly from source.
      */
     private void generateSaxFragmentFromSrc(String url, ContentHandler contentHandler, Locale locale) throws SAXException {
-        SourceResolver sourceResolver = null;
         Source source = null;
         try {
-            sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
             source = sourceResolver.resolveURI(url);
             generateSaxFragment(contentHandler, locale, source);
         } catch (SAXException e) {
@@ -127,7 +123,6 @@ public class DynamicSelectionList implements FilterableSelectionList {
                 if (source != null) {
                     try { sourceResolver.release(source); } catch (Exception e) {}
                 }
-                serviceManager.release(sourceResolver);
             }
         }
     }
@@ -153,7 +148,7 @@ public class DynamicSelectionList implements FilterableSelectionList {
 
         if (usePerRequestCache) {
             // Search the sax buffer in request attributes
-            Request request = ContextHelper.getRequest(this.context);
+            HttpServletRequest request = processInfoProvider.getRequest();
             String attributeName = "DynamicSelectionListCache/" + url;
             SaxBuffer saxBuffer = (SaxBuffer)request.getAttribute(attributeName);
             

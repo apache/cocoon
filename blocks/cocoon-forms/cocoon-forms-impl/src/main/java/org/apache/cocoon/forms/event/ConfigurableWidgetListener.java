@@ -14,27 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.forms.samples;
+package org.apache.cocoon.forms.event;
 
+import org.w3c.dom.Element;
 
 /**
- * Description of Sex.
+ * A {@link WidgetListener} that can recieve a configuration {@link Element}
+ * 
  * @version $Id$
  */
-public class Sex {
+public interface ConfigurableWidgetListener extends WidgetListener {
 
-    public static final Sex MALE = new Sex("M");
-    public static final Sex FEMALE = new Sex("F");
-    private String code;
-
-    private Sex(String code) { this.code = code; }
-
-    public String toString() {
-      // Will probably have some i18n support here
-      switch(code.charAt(0)) {
-          case 'M' : return this.getClass().getName() + ".MALE";
-          case 'F' : return this.getClass().getName() + ".FEMALE";
-          default : return "unknown"; // Should never happen
-      }
-    }
+    /**
+     * Set the configuration Element
+     */
+    void setConfiguration(Element element) throws Exception;
 }

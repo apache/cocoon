@@ -14,14 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.forms.samples.bindings;
+package org.apache.cocoon.forms.datatype.convertor;
 
-/**
- * LenientNotOKBean
- * @version $Id$
- */
-public class LenientNotOKBean extends LenientBaseBean{
-    public LenientNotOKBean(String initVal) {
-        super(initVal);
-    }
+public interface LongConvertorBuilder
+    extends ConvertorBuilder
+{
 }

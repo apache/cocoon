@@ -16,79 +16,43 @@
  */
 package org.apache.cocoon.forms.formmodel.library;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.forms.CacheManager;
-import org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.location.LocationImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+
+import java.util.Map;
 
 /**
  * @version $Id$
  *
  */
-public class LibraryManagerImpl extends AbstractLogEnabled
-                                implements LibraryManager, Serviceable, Configurable,
-                                           Disposable, ThreadSafe, Component {
+public class LibraryManagerImpl implements LibraryManager {
 
+    private static Log LOG = LogFactory.getLog( LibraryManagerImpl.class );
     private static final String PREFIX = "CocoonFormsLibrary:";
 
-    private ServiceManager manager;
+    private SourceResolver sourceResolver;
     private CacheManager cacheManager;
-
-    private ServiceSelector widgetDefinitionBuilderSelector;
-
-    //
-    // Lifecycle
-    //
-
-    public void configure(Configuration configuration) throws ConfigurationException {
-        // TODO Read config to "preload" libraries
-    }
-
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.manager = serviceManager;
-        this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
-        this.widgetDefinitionBuilderSelector = (ServiceSelector) manager.lookup(WidgetDefinitionBuilder.class.getName() + "Selector");
-    }
-
-    public void dispose() {
-        if (this.cacheManager != null) {
-            this.manager.release(this.cacheManager);
-            this.cacheManager = null;
-        }
-        this.manager = null;
-    }
-
-    //
-    // Business methods
-    //
+    private Map widgetDefinitionBuilders;
+    private SAXParser parser;
 
     public Library get(String sourceURI) throws LibraryException {
         return get(sourceURI, null);
     }
 
     public Library get(String sourceURI, String baseURI) throws LibraryException {
-        SourceResolver sourceResolver = null;
         Source source = null;
         try {
             try {
-                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
                 source = sourceResolver.resolveURI(sourceURI, baseURI, null);
             } catch (Exception e) {
                 throw new LibraryException("Unable to resolve library.",
@@ -97,18 +61,18 @@ public class LibraryManagerImpl extends AbstractLogEnabled
 
             Library lib = (Library) this.cacheManager.get(source, PREFIX);
             if (lib != null && lib.dependenciesHaveChanged()) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Library IS REMOVED from cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Library IS REMOVED from cache: '" + sourceURI + "' relative to '" + baseURI + "'");
                 }
                 this.cacheManager.remove(source, PREFIX); // evict?
                 return null;
             }
 
-            if (getLogger().isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 if (lib != null) {
-                    getLogger().debug("Library IS in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                    LOG.debug("Library IS in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
                 } else {
-                    getLogger().debug("Library IS NOT in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                    LOG.debug("Library IS NOT in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
                 }
             }
 
@@ -116,9 +80,6 @@ public class LibraryManagerImpl extends AbstractLogEnabled
         } finally {
             if (source != null) {
                 sourceResolver.release(source);
-            }
-            if (sourceResolver != null) {
-                manager.release(sourceResolver);
             }
         }
     }
@@ -128,16 +89,14 @@ public class LibraryManagerImpl extends AbstractLogEnabled
     }
 
     public Library load(String sourceURI, String baseURI) throws LibraryException {
-        SourceResolver sourceResolver = null;
         Source source = null;
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Loading library: '" + sourceURI + "' relative to '" + baseURI + "'");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Loading library: '" + sourceURI + "' relative to '" + baseURI + "'");
         }
 
         try {
             try {
-                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
                 source = sourceResolver.resolveURI(sourceURI, baseURI, null);
             } catch (Exception e) {
                 throw new LibraryException("Unable to resolve library.",
@@ -146,22 +105,22 @@ public class LibraryManagerImpl extends AbstractLogEnabled
 
             Library lib = (Library) this.cacheManager.get(source, PREFIX);
             if (lib != null && lib.dependenciesHaveChanged()) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Library IS EXPIRED in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Library IS EXPIRED in cache: '" + sourceURI + "' relative to '" + baseURI + "'");
                 }
                 lib = null;
             }
 
             if (lib == null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Library IS NOT in cache, loading: '" + sourceURI + "' relative to '" + baseURI + "'");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Library IS NOT in cache, loading: '" + sourceURI + "' relative to '" + baseURI + "'");
                 }
 
                 try {
                     InputSource inputSource = new InputSource(source.getInputStream());
                     inputSource.setSystemId(source.getURI());
 
-                    Document doc = DomHelper.parse(inputSource, this.manager);
+                    Document doc = DomHelper.parse(inputSource, this.parser);
                     lib = newLibrary();
                     lib.buildLibrary(doc.getDocumentElement());
 
@@ -177,19 +136,35 @@ public class LibraryManagerImpl extends AbstractLogEnabled
             if (source != null) {
                 sourceResolver.release(source);
             }
-            if (sourceResolver != null) {
-                manager.release(sourceResolver);
-            }
         }
     }
 
     public Library newLibrary() {
-        Library lib = new Library(this, widgetDefinitionBuilderSelector);
-        lib.enableLogging(getLogger());
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Created a new library: " + lib);
+        Library lib = new Library(this, widgetDefinitionBuilders);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Created a new library: " + lib);
         }
 
         return lib;
+    }
+
+    public void setWidgetDefinitionBuilders( Map widgetDefinitionBuilders )
+    {
+        this.widgetDefinitionBuilders = widgetDefinitionBuilders;
+    }
+
+    public void setCacheManager( CacheManager cacheManager )
+    {
+        this.cacheManager = cacheManager;
+    }
+
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
+    }
+
+    public void setParser( SAXParser parser )
+    {
+        this.parser = parser;
     }
 }

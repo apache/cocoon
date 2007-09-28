@@ -17,8 +17,7 @@
 package org.apache.cocoon.forms.formmodel.tree.builder;
 
 import java.util.Iterator;
-
-import org.apache.avalon.framework.service.ServiceSelector;
+import java.util.Map;
 
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormsException;
@@ -38,6 +37,8 @@ import org.w3c.dom.Element;
  */
 public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
+    private Map treeModelDefinitionBuilders;
+    
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         TreeDefinition definition = new TreeDefinition();
         setupDefinition(widgetElement, definition);
@@ -68,15 +69,10 @@ public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         Element modelElt = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "tree-model", false);
         if (modelElt != null) {
             String type = DomHelper.getAttribute(modelElt, "type");
-            ServiceSelector selector =
-                (ServiceSelector)this.serviceManager.lookup(TreeModelDefinitionBuilder.ROLE + "Selector");
 
-            TreeModelDefinitionBuilder builder = (TreeModelDefinitionBuilder)selector.select(type);
-            try {
+            TreeModelDefinitionBuilder builder = (TreeModelDefinitionBuilder)treeModelDefinitionBuilders.get(type);
+            if (builder != null) {
                 definition.setModelDefinition(builder.build(modelElt));
-            } finally {
-                selector.release(builder);
-                serviceManager.release(selector);
             }
         }
 
@@ -88,5 +84,10 @@ public class TreeDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         //TODO: allow child widgets, that will be attached to each node of the tree
         //It may be useful to add TreeModel.getNodeType(Object) so that the container holding child
         //widgets can have a value used by a union widget.
+    }
+
+    public void setTreeModelDefinitionBuilders( Map treeModelDefinitionBuilders )
+    {
+        this.treeModelDefinitionBuilders = treeModelDefinitionBuilders;
     }
 }

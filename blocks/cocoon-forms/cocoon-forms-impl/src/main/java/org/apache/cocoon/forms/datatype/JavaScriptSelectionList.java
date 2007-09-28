@@ -19,11 +19,10 @@ package org.apache.cocoon.forms.datatype;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.util.location.Locatable;
 import org.apache.cocoon.util.location.LocatedRuntimeException;
 import org.apache.cocoon.util.location.Location;
@@ -45,15 +44,15 @@ import org.xml.sax.SAXException;
  */
 public class JavaScriptSelectionList implements FilterableSelectionList, Locatable {
 
-    private Context context;
+    private ProcessInfoProvider processInfoProvider;
     private Datatype type;
     private Function function;
     private Location location = null;
     private boolean labelIsI18nKey = false;
     private String i18nCatalog = null;
     
-    public JavaScriptSelectionList(Context context, Datatype type, Function function, String catalogue, Location location) {
-        this.context = context;
+    public JavaScriptSelectionList(ProcessInfoProvider processInfoProvider, Datatype type, Function function, String catalogue, Location location) {
+        this.processInfoProvider = processInfoProvider;
         this.type = type;
         this.function = function;
         this.location = location;
@@ -74,7 +73,7 @@ public class JavaScriptSelectionList implements FilterableSelectionList, Locatab
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String filter) throws SAXException {
-        Map objectModel = ContextHelper.getObjectModel(this.context);
+        Map objectModel = processInfoProvider.getObjectModel();
         Object result;
         try {
             result = JavaScriptHelper.callFunction(function, null /*this*/, new Object[] {filter}, objectModel);

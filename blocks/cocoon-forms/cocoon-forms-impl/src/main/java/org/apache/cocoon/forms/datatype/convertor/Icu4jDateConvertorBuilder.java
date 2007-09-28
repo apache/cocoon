@@ -30,7 +30,7 @@ import com.ibm.icu.text.DateFormat;
  *
  * @version $Id$
  */
-public class Icu4jDateConvertorBuilder implements ConvertorBuilder {
+public class Icu4jDateConvertorBuilder implements DateConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         Icu4jDateConvertor convertor = new Icu4jDateConvertor();
 

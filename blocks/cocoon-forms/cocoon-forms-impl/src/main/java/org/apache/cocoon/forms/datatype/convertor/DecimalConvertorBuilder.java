@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
-public interface BeanConvertorBuilder
+public interface DecimalConvertorBuilder
     extends ConvertorBuilder
 {
 }

@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.util;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,11 +26,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import javax.xml.XMLConstants;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
 
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationAttributes;
@@ -38,6 +37,8 @@ import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -49,7 +50,6 @@ import org.w3c.dom.Text;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotSupportedException;
 
 /**
  * Helper class to create and retrieve information from DOM-trees. It provides
@@ -67,6 +67,8 @@ import org.xml.sax.SAXNotSupportedException;
 public class DomHelper {
 
     public static final String XMLNS_URI = XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
+    
+    private static Log LOG = LogFactory.getLog( DomHelper.class );
 
     public static Location getLocationObject(Element element) {
         return LocationAttributes.getLocation(element);
@@ -307,20 +309,15 @@ public class DomHelper {
      * @param inputSource the inputSource to read the document from
      * @param manager the service manager where to lookup the entity resolver
      */
-    public static Document parse(InputSource inputSource, ServiceManager manager)
-    throws SAXException, SAXNotSupportedException, IOException, ServiceException {
+    public static Document parse(InputSource inputSource, SAXParser parser)
+    throws SAXException, IOException {
 
-        SAXParser parser = (SAXParser)manager.lookup(SAXParser.ROLE);
         DOMBuilder builder = new DOMBuilder();
 
         // Enhance the sax stream with location information
         ContentHandler locationHandler = new LocationAttributes.Pipe(builder);
 
-        try {
-            parser.parse(inputSource, locationHandler);
-        } finally {
-            manager.release(parser);
-        }
+        parser.parse(inputSource, locationHandler);
 
         return builder.getDocument();
     }

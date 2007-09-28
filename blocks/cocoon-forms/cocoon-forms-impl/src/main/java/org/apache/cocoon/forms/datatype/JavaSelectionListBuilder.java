@@ -16,59 +16,49 @@
  */
 package org.apache.cocoon.forms.datatype;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.component.Component;
-
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
- * Builds {@link SelectionList}s from a JavaSelectionList class
+ * Builds {@link SelectionList}s from a JavaSelectionList classes configured in Spring context
  *
  * @version $Id$
  */
-public class JavaSelectionListBuilder extends AbstractLogEnabled
-                                      implements SelectionListBuilder,
-                                                 Contextualizable, Serviceable, ThreadSafe, Component {
+public class JavaSelectionListBuilder implements SelectionListBuilder, BeanFactoryAware {
 
-    /**
-     * The Avalon Context
-     */
-    private Context context;
+    private static Log LOG = LogFactory.getLog( JavaSelectionListBuilder.class );
+    private BeanFactory beanFactory;
 
-    /**
-     * The Service Manager
-     */
-	private ServiceManager manager;
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void setBeanFactory( BeanFactory beanFactory )
+                                                  throws BeansException
+    {
+        this.beanFactory = beanFactory;
     }
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
+    
 	public SelectionList build(Element selectionListElement, Datatype datatype)
     throws Exception {
-		String className = DomHelper.getAttribute(selectionListElement, "class");
+        
+        // hard way deprecation
+        if (DomHelper.getAttribute(selectionListElement, "class", null) != null) {
+            throw new RuntimeException("The 'class' attribute is not supported anymore at " 
+                                       + DomHelper.getLocationObject( selectionListElement )
+                                       + ". Use a 'ref' attribute to address a Spring bean");
+        }
+
+        String beanRef = DomHelper.getAttribute(selectionListElement, "ref");
 		boolean nullable = DomHelper.getAttributeAsBoolean(selectionListElement, "nullable", true);
 
 		try {
-			Class clasz = Thread.currentThread().getContextClassLoader().loadClass(className);
-			if (JavaSelectionList.class.isAssignableFrom(clasz)) {
-				JavaSelectionList list = (JavaSelectionList) clasz.newInstance();
-				LifecycleHelper.setupComponent(list, getLogger(), this.context, this.manager, null, true);
+			Object bean = beanFactory.getBean(beanRef);
+			if (bean != null && bean instanceof JavaSelectionList) {
+				JavaSelectionList list = (JavaSelectionList) bean;
 				list.setDatatype(datatype);
 				list.setNullable(nullable);
 
@@ -83,12 +73,19 @@ public class JavaSelectionListBuilder extends AbstractLogEnabled
 
 				return list;
 			} else {
-                getLogger().warn("Class " + className + " does not implement JavaSelectionList, returning empty selection list.");
+                LOG.warn("Spring bean reference " + beanRef + " is not a " 
+                         + JavaSelectionList.class.getName() + ", , returning empty selection list: " 
+                         + DomHelper.getLocationObject( selectionListElement ).getDescription());
 				return new StaticSelectionList(datatype);
 			}
+		} catch (BeansException be) {
+            LOG.warn("Spring bean reference " + beanRef 
+                     + " does not exist, returning empty selection list: "
+                     + DomHelper.getLocationObject( selectionListElement ).getDescription());
+            return new StaticSelectionList(datatype);
 		} catch (Exception e) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Got exception in build, re-throwing", e);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Got exception in build, re-throwing", e);
             }
 			throw e;
 		}

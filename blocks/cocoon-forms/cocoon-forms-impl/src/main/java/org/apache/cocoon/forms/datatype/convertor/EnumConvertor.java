@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Locale;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -48,7 +47,7 @@ public class EnumConvertor implements Convertor {
             clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
         }
         catch (ClassNotFoundException e) {
-            throw new CascadingRuntimeException("Class " + className + " not found", e);
+            throw new RuntimeException("Class " + className + " not found", e);
         }
     }
 
@@ -77,7 +76,7 @@ public class EnumConvertor implements Convertor {
                 return new ConversionResult(field.get(null));
             }
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Got exception trying to convert " + value, e);
+            throw new RuntimeException("Got exception trying to convert " + value, e);
         }
     }
 
@@ -99,7 +98,7 @@ public class EnumConvertor implements Convertor {
                     return clazz.getName() + "." + fields[i].getName();
                 }
             } catch (Exception e) {
-                throw new CascadingRuntimeException("Got exception trying to get value of field " + fields[i], e);
+                throw new RuntimeException("Got exception trying to get value of field " + fields[i], e);
             }
         }
         // Fall back on toString

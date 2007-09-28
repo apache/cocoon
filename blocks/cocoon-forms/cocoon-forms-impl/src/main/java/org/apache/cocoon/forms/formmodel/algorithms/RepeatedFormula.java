@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.CascadingError;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.formmodel.CannotYetResolveWarning;
 import org.apache.cocoon.forms.formmodel.ExpressionContextImpl;
@@ -103,7 +102,7 @@ public class RepeatedFormula extends SimpleFormula {
         } catch (CannotYetResolveWarning w) {
             return null;
         } catch (ExpressionException e) {
-            throw new CascadingError("Error evaluating calculated field formula", e);
+            throw new Error("Error evaluating calculated field formula", e);
         }
     }
     

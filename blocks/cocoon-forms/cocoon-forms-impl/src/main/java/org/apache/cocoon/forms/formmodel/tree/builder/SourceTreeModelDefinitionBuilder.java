@@ -19,10 +19,6 @@ package org.apache.cocoon.forms.formmodel.tree.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.formmodel.tree.SourceTreeModelDefinition;
 import org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition;
@@ -35,18 +31,9 @@ import org.w3c.dom.Element;
  * 
  * @version $Id$
  */
-public class SourceTreeModelDefinitionBuilder extends AbstractLogEnabled
-    implements Serviceable, TreeModelDefinitionBuilder {
+public class SourceTreeModelDefinitionBuilder implements TreeModelDefinitionBuilder {
 
-    private ServiceManager manager;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
+    private SourceResolver sourceResolver;
     /**
      * @see org.apache.cocoon.forms.formmodel.tree.builder.TreeModelDefinitionBuilder#build(org.w3c.dom.Element)
      */
@@ -67,7 +54,7 @@ public class SourceTreeModelDefinitionBuilder extends AbstractLogEnabled
                     getPatterns(dirSet, "exclude"));
         }
         
-        definition.setSourceResolver((SourceResolver)this.manager.lookup(SourceResolver.ROLE));
+        definition.setSourceResolver(sourceResolver);
         
         return definition;
     }
@@ -85,6 +72,11 @@ public class SourceTreeModelDefinitionBuilder extends AbstractLogEnabled
             result.add(pattern);
         }
         return result;
+    }
+
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
     }
 
 }

@@ -19,16 +19,15 @@ package org.apache.cocoon.forms.binding;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.context.Context;
-
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.javascript.ScriptableMap;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
@@ -41,16 +40,18 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     final static String[] LOAD_PARAMS = { "widget", "jxpathPointer", "jxpathContext", "childBindings" };
     final static String[] SAVE_PARAMS = { "widget", "jxpathPointer", "jxpathContext", "childBindings" };
 
-    private final Context avalonContext;
+    private static Log LOG = LogFactory.getLog( JavaScriptJXPathBinding.class );
+    
     private final String id;
     private final String path;
     private final Function loadScript;
     private final Function saveScript;
     private final Scriptable childBindings;
     private final Map childBindingsMap;
+    private ProcessInfoProvider processInfoProvider;
 
 
-    public JavaScriptJXPathBinding(Context context,
+    public JavaScriptJXPathBinding(ProcessInfoProvider processInfoProvider,
                                    JXPathBindingBuilderBase.CommonAttributes commonAtts,
                                    String id,
                                    String path,
@@ -62,7 +63,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
         this.path = path;
         this.loadScript = loadScript;
         this.saveScript = saveScript;
-        this.avalonContext = context;
+        this.processInfoProvider = processInfoProvider;
 
         // Set parent on child bindings
         for (Iterator i = childBindings.values().iterator(); i.hasNext();) {
@@ -75,7 +76,6 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
     public String getPath() { return path; }
     public String getId() { return id; }
-    public Context getContext() { return avalonContext; }
     public Function getLoadScript() { return loadScript; }
     public Function getSaveScript() { return saveScript; }
     public Map getChildBindingsMap() { return childBindingsMap; }
@@ -87,7 +87,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             // Move to widget context
             Pointer pointer = jctx.getPointer(this.path);
 
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+            Map objectModel = processInfoProvider.getObjectModel();
 
             try {
                 JXPathContext newCtx = pointer.getNode() == null ? null :
@@ -100,11 +100,11 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
                 // rethrow
                 throw re;
             } catch (Exception e) {
-                throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
+                throw new RuntimeException("Error invoking JavaScript event handler", e);
             }
         } else {
-            if (getLogger().isInfoEnabled()) {
-                getLogger().info("[Javascript Binding] - loadForm: No javascript code available. Widget id=" + this.getId());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("[Javascript Binding] - loadForm: No javascript code available. Widget id=" + this.getId());
             }
         }
     }
@@ -117,7 +117,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             Pointer pointer = jctx.createPath(this.path);
             JXPathContext widgetCtx = jctx.getRelativeContext(pointer);
             try {
-                Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+                Map objectModel = processInfoProvider.getObjectModel();
 
                 JavaScriptHelper.callFunction(this.saveScript, widget,
                         new Object[]{widget, pointer, widgetCtx, this.childBindings}, objectModel);
@@ -126,11 +126,11 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
                 // rethrow
                 throw re;
             } catch (Exception e) {
-                throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
+                throw new RuntimeException("Error invoking JavaScript event handler", e);
             }
         } else {
-            if (getLogger().isInfoEnabled()) {
-                getLogger().info("[Javascript Binding] - saveForm: No code available on the javascript binding with id '" + getId() + "'");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("[Javascript Binding] - saveForm: No code available on the javascript binding with id '" + getId() + "'");
             }
         }
     }

@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class PlainFloatConvertorBuilder implements ConvertorBuilder {
+public class PlainFloatConvertorBuilder implements FloatConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         return new PlainFloatConvertor();
     }

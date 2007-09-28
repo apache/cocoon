@@ -16,10 +16,6 @@
  */
 package org.apache.cocoon.forms.event.impl;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.ProcessingPhaseListener;
@@ -29,6 +25,7 @@ import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.formmodel.tree.TreeSelectionListener;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.mozilla.javascript.Function;
 import org.w3c.dom.Element;
 
@@ -47,32 +44,33 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe, Contextualizable {
+public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
 
-    private Context context;
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
+    private ProcessInfoProvider processInfoProvider;
 
     public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
 
         Function func = JavaScriptHelper.buildFunction(element, "handleEvent", new String[]{"widget", "event"});
 
         if (listenerClass == ActionListener.class) {
-            return new JavaScriptWidgetListener.JSActionListener(func, context);
+            return new JavaScriptWidgetListener.JSActionListener(func, processInfoProvider);
         } else if (listenerClass == CreateListener.class) {
-            return new JavaScriptWidgetListener.JSCreateListener(func, context);
+            return new JavaScriptWidgetListener.JSCreateListener(func, processInfoProvider);
         } else if (listenerClass == ValueChangedListener.class) {
-            return new JavaScriptWidgetListener.JSValueChangedListener(func, context);
+            return new JavaScriptWidgetListener.JSValueChangedListener(func, processInfoProvider);
         } else if (listenerClass == TreeSelectionListener.class) {
-            return new JavaScriptWidgetListener.JSTreeSelectionListener(func, context);
+            return new JavaScriptWidgetListener.JSTreeSelectionListener(func, processInfoProvider);
         } else if (listenerClass == ProcessingPhaseListener.class) {
-            return new JavaScriptWidgetListener.JSProcessingPhaseListener(func, context);
+            return new JavaScriptWidgetListener.JSProcessingPhaseListener(func, processInfoProvider);
         } else if (listenerClass == RepeaterListener.class) {
-            return new JavaScriptWidgetListener.JSRepeaterListener(func, context);
+            return new JavaScriptWidgetListener.JSRepeaterListener(func, processInfoProvider);
         } else {
             throw new Exception("Unkonwn event class: " + listenerClass);
         }
+    }
+
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
     }
 }

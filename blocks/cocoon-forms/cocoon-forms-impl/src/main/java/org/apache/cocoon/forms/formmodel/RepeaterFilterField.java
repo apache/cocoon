@@ -16,7 +16,6 @@
 */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.forms.binding.BindingException;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
@@ -52,7 +51,7 @@ public class RepeaterFilterField extends Field {
                     try {
                         repeater.setFilter(field, event.getNewValue());
                     } catch (BindingException e) {
-                        throw new CascadingRuntimeException("Error setting filter", e);
+                        throw new RuntimeException("Error setting filter", e);
                     }
                 }
             }

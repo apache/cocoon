@@ -16,11 +16,9 @@
  */
 package org.apache.cocoon.forms.datatype;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.w3c.dom.Element;
 
 import java.util.Map;
@@ -48,13 +46,9 @@ import java.util.Map;
  * @see org.apache.cocoon.forms.datatype.FlowJXPathSelectionList
  * @version $Id$
  */
-public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Contextualizable {
+public class FlowJXPathSelectionListBuilder implements SelectionListBuilder {
 
-    private Context context;
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
+    private ProcessInfoProvider processInfoProvider;
 
     public SelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
 
@@ -88,7 +82,7 @@ public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Con
 
         String i18nCatalog = DomHelper.getAttribute(selectionListElement, "catalogue", null);
 
-        return new FlowJXPathSelectionList(context,
+        return new FlowJXPathSelectionList(processInfoProvider,
                                            listPath,
                                            valuePath,
                                            labelPath,
@@ -97,6 +91,11 @@ public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Con
                                            nullTextIsI18nKey,
                                            i18nCatalog,
                                            labelIsI18nKey);
+    }
+
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
     }
 
 }

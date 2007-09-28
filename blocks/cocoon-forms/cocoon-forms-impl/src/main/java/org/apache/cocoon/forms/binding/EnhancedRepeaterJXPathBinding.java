@@ -18,8 +18,6 @@ package org.apache.cocoon.forms.binding;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-
 import org.apache.cocoon.forms.binding.JXPathBindingBuilderBase.CommonAttributes;
 import org.apache.cocoon.forms.formmodel.EnhancedRepeater;
 import org.apache.cocoon.forms.formmodel.Repeater;
@@ -60,7 +58,7 @@ public class EnhancedRepeaterJXPathBinding extends RepeaterJXPathBinding {
 			try {
 				adapter = (RepeaterAdapter) Thread.currentThread().getContextClassLoader().loadClass(this.adapterClass).newInstance();
 			} catch (Exception e) {
-				throw new CascadingRuntimeException("Cannot instantiate adapter class for advanced repeater binding", e);
+				throw new RuntimeException("Cannot instantiate adapter class for advanced repeater binding", e);
 			}
 		} else {
 			adapter = new RepeaterJXPathAdapter();

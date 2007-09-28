@@ -16,9 +16,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.avalon.framework.context.Context;
-
 import org.apache.cocoon.forms.FormsException;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * A {@link FieldDefinition} for {@link CaptchaField}s.
@@ -28,11 +27,11 @@ import org.apache.cocoon.forms.FormsException;
  */
 public class CaptchaFieldDefinition extends FieldDefinition {
 
-    private Context avalonContext;
     private int length;
+    private ProcessInfoProvider processInfoProvider;
 
-    public CaptchaFieldDefinition(Context avalonContext) {
-        this.avalonContext = avalonContext;
+    public CaptchaFieldDefinition(ProcessInfoProvider processInfoProvider) {
+        this.processInfoProvider = processInfoProvider;
     }
 
     /**
@@ -52,7 +51,7 @@ public class CaptchaFieldDefinition extends FieldDefinition {
     }
 
     public Widget createInstance() {
-        return new CaptchaField(this, avalonContext);
+        return new CaptchaField(this, processInfoProvider);
     }
 
     public int getLength() {

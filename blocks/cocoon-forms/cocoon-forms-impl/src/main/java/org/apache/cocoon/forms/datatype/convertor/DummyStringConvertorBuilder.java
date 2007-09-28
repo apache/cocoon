@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class DummyStringConvertorBuilder implements ConvertorBuilder {
+public class DummyStringConvertorBuilder implements StringConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         return new DummyStringConvertor();
     }

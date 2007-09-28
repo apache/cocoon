@@ -18,16 +18,6 @@ package org.apache.cocoon.forms.formmodel.algorithms;
 
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithm;
 import org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithmBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
@@ -43,14 +33,9 @@ import org.w3c.dom.Element;
  * </p>
  * @version $Id$
  */
-public abstract class AbstractBaseAlgorithmBuilder implements CalculatedFieldAlgorithmBuilder, LogEnabled, Contextualizable, Serviceable {
-
-    private Logger logger;
-    protected Context context;
-    private ServiceManager manager;
+public abstract class AbstractBaseAlgorithmBuilder implements CalculatedFieldAlgorithmBuilder {
 
     protected void setup(Element algorithmElement, AbstractBaseAlgorithm algorithm) throws Exception {
-        setupComponent(algorithm);        
         setupTriggers(algorithmElement, algorithm);
     }
 
@@ -66,25 +51,5 @@ public abstract class AbstractBaseAlgorithmBuilder implements CalculatedFieldAlg
             String fname = stok.nextToken();
             algorithm.addTrigger(fname);
         }        
-    }
-
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
-    
-    protected Logger getLogger() {
-        return this.logger;
-    }
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-    
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
-    public void setupComponent(CalculatedFieldAlgorithm algorithm) throws Exception {
-        LifecycleHelper.setupComponent(algorithm, logger, context, manager, null);        
     }
 }

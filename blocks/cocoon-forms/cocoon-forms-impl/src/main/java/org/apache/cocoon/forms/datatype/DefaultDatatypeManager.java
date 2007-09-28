@@ -16,24 +16,11 @@
  */
 package org.apache.cocoon.forms.datatype;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.CascadingException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.forms.util.SimpleServiceSelector;
 import org.w3c.dom.Element;
+
+import java.util.Map;
 
 /**
  * Implementation of the {@link DatatypeManager} component.
@@ -46,71 +33,43 @@ import org.w3c.dom.Element;
  * @version $Id$
  *
  */
-public class DefaultDatatypeManager extends AbstractLogEnabled implements DatatypeManager, ThreadSafe, Serviceable,
-        Configurable, Initializable, Disposable, Contextualizable {
-    private SimpleServiceSelector typeBuilderSelector;
-    private SimpleServiceSelector validationRuleBuilderSelector;
-    private ServiceManager serviceManager;
-    private Configuration configuration;
-    private Context context;
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-
-    public void configure(Configuration configuration) throws ConfigurationException {
-        this.configuration = configuration;
-    }
-
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
-    }
-
-    public void initialize() throws Exception {
-        typeBuilderSelector = new SimpleServiceSelector("datatype", DatatypeBuilder.class);
-        typeBuilderSelector.enableLogging(getLogger());
-        typeBuilderSelector.contextualize(context);
-        typeBuilderSelector.service(serviceManager);
-        typeBuilderSelector.configure(configuration.getChild("datatypes"));
-
-        validationRuleBuilderSelector = new SimpleServiceSelector("validation-rule", ValidationRuleBuilder.class);
-        validationRuleBuilderSelector.enableLogging(getLogger());
-        validationRuleBuilderSelector.contextualize(context);
-        validationRuleBuilderSelector.service(serviceManager);
-        validationRuleBuilderSelector.configure(configuration.getChild("validation-rules"));
-
-        configuration = null;
-    }
+public class DefaultDatatypeManager implements DatatypeManager {
+    private Map datatypeBuilders;
+    private Map validatorRuleBuilders;
 
     public Datatype createDatatype(Element datatypeElement, boolean arrayType) throws Exception {
         String typeName = DomHelper.getAttribute(datatypeElement, "base");
-        DatatypeBuilder builder;
-        try {
-            builder = (DatatypeBuilder) typeBuilderSelector.select(typeName);
-        } catch (ServiceException e) {
-            throw new CascadingException("Unknown datatype '" + typeName + "' specified at " + DomHelper.getLocation(datatypeElement), e);
+        DatatypeBuilder builder = (DatatypeBuilder) datatypeBuilders.get(typeName);
+        if (builder == null) {
+            throw new Exception("Unknown datatype '" + typeName + "' specified at " + DomHelper.getLocation(datatypeElement));
         }
         return builder.build(datatypeElement, arrayType, this);
     }
 
     public ValidationRule createValidationRule(Element validationRuleElement) throws Exception {
         String name  = validationRuleElement.getLocalName();
-        ValidationRuleBuilder builder;
-        try {
-            builder = (ValidationRuleBuilder) validationRuleBuilderSelector.select(name);
-        } catch (ServiceException e) {
-            throw new CascadingException("Unknown validation rule \"" + name + "\" specified at " + DomHelper.getLocation(validationRuleElement), e);
+        ValidationRuleBuilder builder = (ValidationRuleBuilder) validatorRuleBuilders.get(name);
+        if (builder == null) {
+            throw new Exception("Unknown validation rule \"" + name + "\" specified at " + DomHelper.getLocation(validationRuleElement));
         }
         return builder.build(validationRuleElement);
     }
 
     public Convertor createConvertor(String dataTypeName, Element convertorElement) throws Exception {
-        DatatypeBuilder datatypeBulder = (DatatypeBuilder)typeBuilderSelector.select(dataTypeName);
-        return datatypeBulder.buildConvertor(convertorElement);
+        DatatypeBuilder builder = (DatatypeBuilder)datatypeBuilders.get(dataTypeName);
+        if (builder == null) {
+            throw new Exception("Unknown datatype '" + dataTypeName + "' specified for " + DomHelper.getLocation(convertorElement));
+        }
+        return builder.buildConvertor(convertorElement);
     }
 
-    public void dispose() {
-        typeBuilderSelector.dispose();
-        validationRuleBuilderSelector.dispose();
+    public void setDatatypeBuilders( Map datatypeBuilders )
+    {
+        this.datatypeBuilders = datatypeBuilders;
+    }
+
+    public void setValidatorRuleBuilders( Map validatorRuleBuilders )
+    {
+        this.validatorRuleBuilders = validatorRuleBuilders;
     }
 }

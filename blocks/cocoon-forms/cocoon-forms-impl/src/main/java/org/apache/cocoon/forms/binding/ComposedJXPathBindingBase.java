@@ -19,8 +19,6 @@ package org.apache.cocoon.forms.binding;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.apache.avalon.framework.logger.Logger;
-
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
@@ -49,19 +47,6 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
         if (this.subBindings != null) {
             for (int i = 0; i < this.subBindings.length; i++) {
                 this.subBindings[i].setParent(this);
-            }
-        }
-    }
-
-    /**
-     * Receives the logger to use for logging activity, and hands it over to
-     * the nested children.
-     */
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        if (this.subBindings != null) {
-            for (int i = 0; i < this.subBindings.length; i++) {
-                this.subBindings[i].enableLogging(logger);
             }
         }
     }

@@ -20,10 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceSelector;
-
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder;
@@ -32,6 +28,8 @@ import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.location.LocationAttributes;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -39,12 +37,13 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class Library extends AbstractLogEnabled {
+public class Library {
 
+    private static Log LOG = LogFactory.getLog( Library.class );
     public static final String SEPARATOR = ":";
 
     // managed instances
-    protected ServiceSelector widgetDefinitionBuilderSelector;
+    protected Map widgetDefinitionBuilders;
 
     // own references
     protected LibraryManager manager;
@@ -60,11 +59,11 @@ public class Library extends AbstractLogEnabled {
     protected WidgetDefinitionBuilderContext context;
 
 
-    public Library(LibraryManager lm, ServiceSelector builderSelector) {
+    public Library(LibraryManager lm, Map builderSelector) {
         manager = lm;
         context = new WidgetDefinitionBuilderContext();
         context.setLocalLibrary(this);
-        widgetDefinitionBuilderSelector = builderSelector;
+        widgetDefinitionBuilders = builderSelector;
     }
 
     public void setSourceURI(String uri) {
@@ -161,19 +160,17 @@ public class Library extends AbstractLogEnabled {
 
         // add def to our list of defs
         definitions.put(definition.getId(), definition);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug(this + ": Added definition '" + definition.getId() + "'");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this + ": Added definition '" + definition.getId() + "'");
         }
     }
 
     protected WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception {
         String widgetName = widgetDefinition.getLocalName();
-        WidgetDefinitionBuilder builder;
-        try {
-            builder = (WidgetDefinitionBuilder) widgetDefinitionBuilderSelector.select(widgetName);
-        } catch (ServiceException e) {
+        WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder) widgetDefinitionBuilders.get(widgetName);
+        if (builder == null) {
             throw new LibraryException("Unknown kind of widget '" + widgetName + "'.",
-                                       e, DomHelper.getLocationObject(widgetDefinition));
+                                       DomHelper.getLocationObject(widgetDefinition));
         }
 
         context.setSuperDefinition(null);
@@ -204,6 +201,12 @@ public class Library extends AbstractLogEnabled {
             Library lib = manager.get(dependencyURI, sourceURI);
             return lib != null && this.shared == lib.shared;
         }
+    }
+
+
+    public void setWidgetDefinitionBuilderSelector( Map widgetDefinitionBuilderSelector )
+    {
+        this.widgetDefinitionBuilders = widgetDefinitionBuilderSelector;
     }
 
 }

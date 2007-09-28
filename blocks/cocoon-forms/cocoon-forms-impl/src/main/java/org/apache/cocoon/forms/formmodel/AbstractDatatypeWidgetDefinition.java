@@ -16,9 +16,6 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.DynamicSelectionList;
 import org.apache.cocoon.forms.datatype.FlowJXPathSelectionList;
@@ -28,26 +25,24 @@ import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.FormsRuntimeException;
+import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xmlizer.XMLizer;
 
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
  *
  * @version $Id$
  */
-public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition
-                                                       implements Serviceable {
+public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition {
 
     private Datatype datatype;
     private Object initialValue;
     private SelectionList selectionList;
     private ValueChangedListener listener;
-    private ServiceManager manager;
-
-
-    public void service(ServiceManager manager) throws ServiceException {
-        checkMutable();
-        this.manager = manager;
-    }
+    private XMLizer xmlizer;
+    private SourceResolver sourceResolver;
+    private ProcessInfoProvider processInfoProvider; 
 
     /**
      * checks definition's completeness
@@ -77,6 +72,9 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
         this.initialValue = other.initialValue;
         this.selectionList = other.selectionList;
         this.listener = other.listener;
+        this.xmlizer = other.xmlizer;
+        this.sourceResolver = other.sourceResolver;
+        this.processInfoProvider = other.processInfoProvider; 
     }
 
     public Datatype getDatatype() {
@@ -113,7 +111,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
      * @param uri The URI of the source.
      */
     public SelectionList buildSelectionList(String uri) {
-        return new DynamicSelectionList(datatype, uri, this.manager);
+        return new DynamicSelectionList(datatype, uri, this.xmlizer, this.sourceResolver, this.processInfoProvider);
     }
 
     /**
@@ -149,5 +147,20 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
 
     public ValueChangedListener getValueChangedListener() {
         return this.listener;
+    }
+
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
+    }
+
+    public void setXmlizer( XMLizer xmlizer )
+    {
+        this.xmlizer = xmlizer;
+    }
+
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
     }
 }

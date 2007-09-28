@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithm;
 import org.apache.cocoon.forms.formmodel.Form;
@@ -45,7 +44,7 @@ public class JavaScript implements CalculatedFieldAlgorithm {
             // at least between different numbers types and eventually between numbers and strings.
             return JavaScriptHelper.callFunction(this.jsfunction, null, new Object[]{form, parent}, null);
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Error invoking JavaScript server side calculation", e);
+            throw new RuntimeException("Error invoking JavaScript server side calculation", e);
         }        
     }
 

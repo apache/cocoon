@@ -16,11 +16,9 @@
  */
 package org.apache.cocoon.forms.datatype;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.mozilla.javascript.Function;
 import org.w3c.dom.Element;
 
@@ -45,20 +43,21 @@ import org.w3c.dom.Element;
  * @since 2.1.9
  * @version $Id$
  */
-public class JavaScriptSelectionListBuilder implements SelectionListBuilder, Contextualizable {
+public class JavaScriptSelectionListBuilder implements SelectionListBuilder {
 
-    private Context context;
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-
+    private ProcessInfoProvider processInfoProvider;
+    
     public SelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
 
         String i18nCatalog = DomHelper.getAttribute(selectionListElement, "catalogue", null);
         
         Function function = JavaScriptHelper.buildFunction(selectionListElement, "buildSelectionList", new String[] { "filter" });
 
-        return new JavaScriptSelectionList(context, datatype, function, i18nCatalog, DomHelper.getLocationObject(selectionListElement));
+        return new JavaScriptSelectionList(processInfoProvider, datatype, function, i18nCatalog, DomHelper.getLocationObject(selectionListElement));
+    }
+
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
     }
 }

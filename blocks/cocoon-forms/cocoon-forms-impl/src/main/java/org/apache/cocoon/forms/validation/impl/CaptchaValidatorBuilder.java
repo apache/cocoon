@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.forms.validation.WidgetValidatorBuilder;
@@ -29,7 +28,7 @@ import org.w3c.dom.Element;
  * @see org.apache.cocoon.forms.validation.impl.CaptchaValidator
  * @version $Id$
  */
-public class CaptchaValidatorBuilder implements WidgetValidatorBuilder, ThreadSafe {
+public class CaptchaValidatorBuilder implements WidgetValidatorBuilder {
 
     public WidgetValidator build(Element validationRuleElement,
             WidgetDefinition definition) throws Exception {

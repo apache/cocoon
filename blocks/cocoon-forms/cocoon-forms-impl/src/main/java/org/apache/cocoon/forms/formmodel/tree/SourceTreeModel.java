@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -71,7 +70,7 @@ public class SourceTreeModel implements TreeModel {
             try {
                 this.rootSource = (TraversableSource) this.resolver.resolveURI(this.rootURL);
             } catch (Exception e) {
-                throw new CascadingRuntimeException("Cannot resolve " + this.rootURL, e);
+                throw new RuntimeException("Cannot resolve " + this.rootURL, e);
             }
         }
         return this.rootSource;
@@ -84,7 +83,7 @@ public class SourceTreeModel implements TreeModel {
                 // Return children if it's a collection, null otherwise
                 return dir.isCollection() ? filterChildren(dir.getChildren()) : null;
             } catch (SourceException e) {
-                throw new CascadingRuntimeException("getChildren", e);
+                throw new RuntimeException("getChildren", e);
             }
         } else {
             return null;
@@ -156,7 +155,7 @@ public class SourceTreeModel implements TreeModel {
         try {
             return ((TraversableSource)parent).getChild(key);
         } catch (SourceException e) {
-            throw new CascadingRuntimeException("getChild", e);
+            throw new RuntimeException("getChild", e);
         }
     }
     

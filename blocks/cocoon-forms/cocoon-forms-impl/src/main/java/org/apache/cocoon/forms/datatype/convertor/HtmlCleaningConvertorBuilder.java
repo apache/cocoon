@@ -15,14 +15,10 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
-import org.apache.cocoon.forms.datatype.convertor.ConvertorBuilder;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.CacheManager;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.w3c.dom.Element;
@@ -33,22 +29,16 @@ import org.xml.sax.InputSource;
 /**
  * Builds {@link HtmlCleaningConvertor}s.
  */
-public class HtmlCleaningConvertorBuilder implements ConvertorBuilder, Serviceable {
-    private ServiceManager serviceManager;
+public class HtmlCleaningConvertorBuilder implements StringConvertorBuilder {
 
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
-    }
-
+    private CacheManager cacheManager;
+    private SourceResolver sourceResolver;
+    
     public Convertor build(Element element) throws Exception {
         String config = DomHelper.getAttribute(element, "config");
 
         Source source = null;
-        SourceResolver sourceResolver = null;
-        CacheManager cacheManager = null;
         try {
-            cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
-            sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
             source = sourceResolver.resolveURI(config);
 
             String prefix = HtmlCleanerTemplate.class.getName();
@@ -64,10 +54,14 @@ public class HtmlCleaningConvertorBuilder implements ConvertorBuilder, Serviceab
         } finally {
             if (source != null)
                 sourceResolver.release(source);
-            if (sourceResolver != null)
-                serviceManager.release(sourceResolver);
-            if (cacheManager != null)
-                serviceManager.release(cacheManager);
         }
+    }
+    public void setCacheManager( CacheManager cacheManager )
+    {
+        this.cacheManager = cacheManager;
+    }
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
     }
 }

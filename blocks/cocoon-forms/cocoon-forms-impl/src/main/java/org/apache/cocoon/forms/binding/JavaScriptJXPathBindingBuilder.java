@@ -21,13 +21,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-
 import org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.mozilla.javascript.Function;
 import org.w3c.dom.Element;
@@ -70,15 +69,11 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase
-                                            implements Contextualizable {
+public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
-    private Context avalonContext;
+    private static Log LOG = LogFactory.getLog( JavaScriptJXPathBindingBuilder.class );
 
-
-    public void contextualize(Context context) throws ContextException {
-        this.avalonContext = context;
-    }
+    private ProcessInfoProvider processInfoProvider;
 
     public JXPathBindingBase buildBinding(Element element, Assistant assistant)
     throws BindingException {
@@ -160,14 +155,12 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase
                     }
 
                     ComposedJXPathBindingBase composedBinding = new ComposedJXPathBindingBase(commonAtts, bindings);
-                    composedBinding.enableLogging(getLogger());
                     childBindings.put(name, composedBinding);
                 }
             }
 
-            JXPathBindingBase result = new JavaScriptJXPathBinding(this.avalonContext, commonAtts, id, path, loadScript, saveScript,
+            JXPathBindingBase result = new JavaScriptJXPathBinding(this.processInfoProvider, commonAtts, id, path, loadScript, saveScript,
                     Collections.unmodifiableMap(childBindings));
-            result.enableLogging(getLogger());
             return result;
 
         } catch (BindingException e) {
@@ -176,5 +169,10 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase
             throw new BindingException("Cannot build binding", e,
                                        DomHelper.getLocationObject(element));
         }
+    }
+
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
     }
 }

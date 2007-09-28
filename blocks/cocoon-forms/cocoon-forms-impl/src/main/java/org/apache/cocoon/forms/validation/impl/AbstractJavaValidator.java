@@ -16,13 +16,10 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.forms.validation.ConfigurableWidgetValidator;
 import org.apache.cocoon.forms.validation.ValidationError;
-import org.apache.cocoon.util.ConfigurationUtil;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Element;
 
@@ -32,16 +29,11 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public abstract class AbstractJavaValidator
-    implements Configurable {
+public abstract class AbstractJavaValidator implements ConfigurableWidgetValidator {
 
     protected ValidationError validationError;
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
-        final Element element = ConfigurationUtil.toElement(config);
+    public void setConfiguration(Element element) throws Exception {
         this.validationError = this.buildFailMessage(element);
     }
 

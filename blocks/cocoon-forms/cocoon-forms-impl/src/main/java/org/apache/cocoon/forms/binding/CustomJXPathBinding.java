@@ -16,10 +16,6 @@
  */
 package org.apache.cocoon.forms.binding;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-
 import org.apache.cocoon.forms.binding.JXPathBindingBuilderBase.CommonAttributes;
 import org.apache.cocoon.forms.formmodel.Widget;
 
@@ -28,8 +24,7 @@ import org.apache.commons.jxpath.JXPathContext;
 /**
  * CustomJXPathBinding
  */
-public class CustomJXPathBinding extends JXPathBindingBase
-                                 implements Serviceable {
+public class CustomJXPathBinding extends JXPathBindingBase {
 
     /**
      * The id of the cforms widget
@@ -91,14 +86,5 @@ public class CustomJXPathBinding extends JXPathBindingBase
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget selectedWidget = selectWidget(frmModel, this.widgetId);
         this.wrappedBinding.saveFormToModel(selectedWidget, jxpc);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        if (wrappedBinding instanceof Serviceable) {
-            ((Serviceable) wrappedBinding).service(manager);
-        }
     }
 }

@@ -21,7 +21,7 @@ package org.apache.cocoon.forms.datatype.convertor;
  * 
  * @version $Id$
  */
-public class FormattingIntegerConvertorBuilder extends FormattingDecimalConvertorBuilder {
+public class FormattingIntegerConvertorBuilder extends FormattingDecimalConvertorBuilder implements IntegerConvertorBuilder {
     protected FormattingDecimalConvertor createConvertor() {
         return new FormattingIntegerConvertor();
     }

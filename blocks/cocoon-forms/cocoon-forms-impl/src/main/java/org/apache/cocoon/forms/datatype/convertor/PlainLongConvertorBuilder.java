@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class PlainLongConvertorBuilder implements ConvertorBuilder {
+public class PlainLongConvertorBuilder implements LongConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         return new PlainLongConvertor();
     }

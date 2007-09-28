@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
 import org.apache.cocoon.forms.binding.Binding;
 import org.apache.cocoon.forms.binding.BindingManager;
 import org.apache.cocoon.forms.binding.JXPathBindingManager;
@@ -29,6 +27,8 @@ import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.location.LocationAttributes;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -36,8 +36,9 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class Library extends AbstractLogEnabled {
+public class Library {
 
+    private static Log LOG = LogFactory.getLog( Library.class );
 	public static final String SEPARATOR = ":";
 
 	// own references
@@ -151,8 +152,8 @@ public class Library extends AbstractLogEnabled {
         binding.setEnclosingLibrary(this);
 
         definitions.put(binding.getId(), binding);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug(this + ": Added binding '" + binding.getId() + "'");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this + ": Added binding '" + binding.getId() + "'");
         }
     }
 

@@ -22,9 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
@@ -37,11 +34,9 @@ import org.apache.excalibur.xml.sax.XMLizable;
 /**
  * Abstract implementation of a JavaSelectionList
  */
-public abstract class AbstractJavaSelectionList implements JavaSelectionList,
-                                                           Serviceable {
+public abstract class AbstractJavaSelectionList implements JavaSelectionList {
 
     protected Datatype datatype;
-    protected ServiceManager manager;
 
     private HashMap attributes;
     private List items;
@@ -51,10 +46,6 @@ public abstract class AbstractJavaSelectionList implements JavaSelectionList,
     public AbstractJavaSelectionList() {
         this.items = new ArrayList();
         this.rebuild = true;
-    }
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
     }
 
     public String getAttribute(String name) {

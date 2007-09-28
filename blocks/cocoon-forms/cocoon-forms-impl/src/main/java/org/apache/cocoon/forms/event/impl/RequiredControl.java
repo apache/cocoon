@@ -20,14 +20,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.forms.event.ConfigurableWidgetListener;
 import org.apache.cocoon.forms.event.ProcessingPhase;
 import org.apache.cocoon.forms.event.ProcessingPhaseEvent;
 import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.formmodel.Field;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This processing phase listener can be used to dynamically change the
@@ -38,27 +40,51 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * @version $Id$
  */
 public class RequiredControl
-    implements ProcessingPhaseListener, Configurable {
+    implements ProcessingPhaseListener, ConfigurableWidgetListener {
 
     protected final List descriptions = new ArrayList();
 
     /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     * This method will be called with the {@link Element} node of its configuration
      */
-    public void configure(Configuration config) throws ConfigurationException {
-        final Configuration[] children = config.getChildren("required");
-        for(int i=0; i<children.length; i++) {
-            final Configuration current = children[i];
-            RequiredDescription desc;
-            final String refId = current.getAttribute("widget-id");
-            if ( current.getAttribute("submit-id", null) != null ) {
-                desc = new RequiredDescription(refId, current.getAttribute("submit-id"));
-            } else {
-                final String path = current.getAttribute("widget-path");
-                final String value = current.getAttribute("widget-value");
-                desc = new RequiredDescription(refId, path, value);
+    public void setConfiguration(Element element) throws Exception {
+        
+        final NodeList nodes = element.getChildNodes();
+        final int count = nodes.getLength();
+
+        for( int i = 0; i < count; i++ ) {
+            final Node node = nodes.item( i );
+            if( node instanceof Element ) {
+                if (node.getLocalName().equals("required")) {
+                    final NamedNodeMap attributes = node.getAttributes();
+                    RequiredDescription desc = null;
+                    String refId = null;
+                    String submitId = null;
+                    String widgetPath = null;
+                    String widgetValue = null;
+                    final int length = attributes.getLength();
+                    for( int j = 0; j < length; j++ ) {
+                        final Node attr = attributes.item( j );
+                        final String name = attr.getNodeName();
+                        if ("widget-id".equals(name)) {
+                            refId = attr.getNodeValue();
+                        } else if ("submit-id".equals(name)) {
+                            submitId = attr.getNodeValue();
+                        } else if ("widget-path".equals(name)) {
+                            widgetPath = attr.getNodeValue();
+                        } else if ("widget-value".equals(name)) {
+                            widgetValue = attr.getNodeValue();
+                        }
+                    }
+                    
+                    if (submitId != null) {
+                        desc = new RequiredDescription(refId, submitId);
+                    } else {
+                        desc = new RequiredDescription(refId, widgetPath, widgetValue);
+                    }
+                    this.descriptions.add(desc);
+                }
             }
-            this.descriptions.add(desc);
         }
     }
 
