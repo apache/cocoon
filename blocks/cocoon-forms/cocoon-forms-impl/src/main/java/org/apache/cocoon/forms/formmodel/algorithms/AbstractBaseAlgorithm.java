@@ -20,27 +20,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithm;
 
 /**
  * Abstract base class for algorithms. 
  * 
- * <p> This class implements the getTriggerWidgets method and holds the triggers list. It also implements
- * Contextualizable and LogEnabled to give the algorithms access to the cocoon's ObjectModel and Loggers.
+ * <p> This class implements the getTriggerWidgets method and holds the triggers list.
  * </p>
  * 
  * @version $Id$
  */
-public abstract class AbstractBaseAlgorithm implements CalculatedFieldAlgorithm, LogEnabled, Contextualizable {
+public abstract class AbstractBaseAlgorithm implements CalculatedFieldAlgorithm {
 
     protected List triggers = new ArrayList();
-    private Logger logger = null;
-    private Context context = null;
     
     public Iterator getTriggerWidgets() {
         return triggers.iterator();
@@ -48,22 +40,6 @@ public abstract class AbstractBaseAlgorithm implements CalculatedFieldAlgorithm,
     
     public void addTrigger(String widget) {
         this.triggers.add(widget);
-    }
-
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
-    
-    protected Logger getLogger() {
-        return this.logger;
-    }
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-    
-    protected Context getContext() {
-        return this.context;
     }
 
     public void clearTriggers() {

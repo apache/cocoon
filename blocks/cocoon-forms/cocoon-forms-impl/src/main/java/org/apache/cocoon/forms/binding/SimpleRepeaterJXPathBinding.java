@@ -18,13 +18,13 @@ package org.apache.cocoon.forms.binding;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.logger.Logger;
-
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Simple binding for repeaters: on save, first deletes the target data
@@ -37,6 +37,7 @@ import org.apache.commons.jxpath.Pointer;
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
+    private static Log LOG = LogFactory.getLog( SimpleRepeaterJXPathBinding.class );
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
@@ -60,11 +61,6 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         this.rowBinding.setParent(this);
         this.clearOnLoad = clearOnLoad;
         this.deleteIfEmpty = deleteIfEmpty;
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.rowBinding.enableLogging(logger);
     }
 
     public String getId() { return repeaterId; }
@@ -111,8 +107,8 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
                 this.rowBinding.loadFormFromModel(thisRow, rowContext);
             }
         }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done loading rows " + this);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("done loading rows " + this);
         }
     }
 

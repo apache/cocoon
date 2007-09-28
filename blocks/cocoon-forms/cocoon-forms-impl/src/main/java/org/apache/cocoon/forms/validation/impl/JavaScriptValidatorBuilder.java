@@ -16,14 +16,11 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.forms.validation.WidgetValidatorBuilder;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.mozilla.javascript.Function;
 import org.w3c.dom.Element;
 
@@ -34,25 +31,21 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public class JavaScriptValidatorBuilder 
-    implements WidgetValidatorBuilder, Contextualizable, ThreadSafe {
+    implements WidgetValidatorBuilder {
 
-    private Context avalonContext;
-    
     private static final String[] ARG_NAMES = {"widget"};
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.avalonContext = context;
-    }
-
+    private ProcessInfoProvider processInfoProvider;
     /* (non-Javadoc)
      * @see org.apache.cocoon.forms.validation.ValidatorBuilder#build(org.apache.cocoon.forms.formmodel.WidgetDefinition, org.w3c.dom.Element)
      */
     public WidgetValidator build(Element element, WidgetDefinition definition) throws Exception {
             Function function = JavaScriptHelper.buildFunction(element, "validate", ARG_NAMES);
 
-            return new JavaScriptValidator(this.avalonContext, function);
+            return new JavaScriptValidator(this.processInfoProvider, function);
+    }
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
     }
 }

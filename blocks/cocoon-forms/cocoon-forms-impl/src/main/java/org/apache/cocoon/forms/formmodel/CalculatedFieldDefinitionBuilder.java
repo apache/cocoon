@@ -16,10 +16,11 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
+
+import java.util.Map;
 
 /**
  * Builder for {@link CalculatedField}s.
@@ -46,6 +47,9 @@ import org.w3c.dom.Element;
  */
 public class CalculatedFieldDefinitionBuilder extends FieldDefinitionBuilder {
 
+    private Map calculatedFieldAlgorithmBuilders;
+    private String defaultCalculatedFieldAlgorithmBuilder;
+    
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         CalculatedFieldDefinition definition = new CalculatedFieldDefinition();
         setupDefinition(widgetElement, definition);
@@ -57,18 +61,23 @@ public class CalculatedFieldDefinitionBuilder extends FieldDefinitionBuilder {
         super.setupDefinition(widgetElement, definition);
 
         Element algorithmElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "value");
-        ServiceSelector builderSelector = (ServiceSelector)this.serviceManager.lookup(CalculatedFieldAlgorithmBuilder.ROLE + "Selector");
-        CalculatedFieldAlgorithmBuilder builder = null;
-        try {
-            String algorithmType = algorithmElement.getAttribute("type");
-            if (algorithmType.length() == 0) algorithmType = null;
-            builder = (CalculatedFieldAlgorithmBuilder)builderSelector.select(algorithmType);
-            definition.setAlgorithm(builder.build(algorithmElement));
-        } finally {
-            if (builder != null) {
-                builderSelector.release(builder);
-            }
-            this.serviceManager.release(builderSelector);
+        String algorithmType = algorithmElement.getAttribute("type");
+        if (algorithmType.length() == 0) algorithmType = defaultCalculatedFieldAlgorithmBuilder;
+        CalculatedFieldAlgorithmBuilder builder = (CalculatedFieldAlgorithmBuilder)calculatedFieldAlgorithmBuilders.get(algorithmType);
+        if (builder == null ) {
+            throw new Exception("Unknown algorightm " + algorithmType);
         }
+        definition.setAlgorithm(builder.build(algorithmElement));
+    }
+
+    public void setCalculatedFieldAlgorithmBuilders(
+                                                       Map calculatedFieldAlgorithmBuilders )
+    {
+        this.calculatedFieldAlgorithmBuilders = calculatedFieldAlgorithmBuilders;
+    }
+
+    public void setDefaultCalculatedFieldAlgorithmBuilder( String defaultCalculatedFieldAlgorithmBuilder )
+    {
+        this.defaultCalculatedFieldAlgorithmBuilder = defaultCalculatedFieldAlgorithmBuilder;
     }
 }

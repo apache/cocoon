@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.binding.BindingException;
 import org.apache.cocoon.forms.event.ActionEvent;
@@ -134,7 +133,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                 try {
                     ((EnhancedRepeater) repeater).refreshPage();
                 } catch (BindingException e) {
-                    throw new CascadingRuntimeException("Error refreshing repeater page", e);
+                    throw new RuntimeException("Error refreshing repeater page", e);
                 }
             }
 
@@ -160,7 +159,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                     	try {
                             ((EnhancedRepeater) repeater).goToPage(((EnhancedRepeater) repeater).getMaxPage());
                         } catch (BindingException e) {
-							throw new CascadingRuntimeException("Error switching page", e);
+							throw new RuntimeException("Error switching page", e);
 						}
                     }
                     for (int i = 0; i < AddRowActionDefinition.this.insertRows; i++) {
@@ -242,7 +241,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                             	erep.sortBy(SortActionDefinition.this.field);
                             }
                         } catch (Exception e) {
-                            throw new CascadingRuntimeException("Error switching page", e);
+                            throw new RuntimeException("Error switching page", e);
                         }
                     }
                 }
@@ -304,7 +303,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                             	erep.goToPage(page);
                             }
                         } catch (Exception e) {
-                            throw new CascadingRuntimeException("Error switching page", e);
+                            throw new RuntimeException("Error switching page", e);
                         }
                     } 
                 }

@@ -19,6 +19,8 @@ package org.apache.cocoon.forms.binding;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * SetAttributeJXPathBinding provides an implementation of a {@link Binding}
@@ -32,6 +34,7 @@ import org.apache.commons.jxpath.JXPathContext;
  */
 public class SetAttributeJXPathBinding extends JXPathBindingBase {
 
+    private static Log LOG = LogFactory.getLog( SetAttributeJXPathBinding.class );
     private final String name;
     private final String value;
 
@@ -62,8 +65,8 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) {
         jxpc.setValue("@" + this.name, this.value);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + this);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("done saving " + this);
         }
     }
 

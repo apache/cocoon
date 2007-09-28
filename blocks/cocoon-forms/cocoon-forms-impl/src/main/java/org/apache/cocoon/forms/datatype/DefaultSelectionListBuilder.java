@@ -20,22 +20,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.location.LocationAttributes;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.excalibur.xmlizer.XMLizer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -51,18 +48,12 @@ import java.util.Locale;
  *
  * @version $Id$
  */
-public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable, Contextualizable {
+public class DefaultSelectionListBuilder implements SelectionListBuilder {
 
-    private ServiceManager serviceManager;
-    private Context context;
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.serviceManager = manager;
-    }
+    private SourceResolver sourceResolver;
+    private XMLizer xmlizer;
+    private ProcessInfoProvider processInfoProvider;
+    private SAXParser parser;
 
     public SelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
         SelectionList selectionList;
@@ -90,7 +81,7 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
             }
             // Create SelectionList
             if (dynamic) {
-                selectionList = new DynamicSelectionList(datatype, src, usePerRequestCache, serviceManager, context);
+                selectionList = new DynamicSelectionList(datatype, src, usePerRequestCache, xmlizer, sourceResolver, processInfoProvider);
             } else {
                 selectionListElement = readSelectionList(src);
                 selectionList = buildStaticList(selectionListElement, datatype);                
@@ -153,14 +144,12 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
     }
 
     private Element readSelectionList(String src) throws Exception {
-        SourceResolver resolver = null;
         Source source = null;
         try {
-            resolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(src);
+            source = sourceResolver.resolveURI(src);
             InputSource inputSource = new InputSource(source.getInputStream());
             inputSource.setSystemId(source.getURI());
-            Document document = DomHelper.parse(inputSource, this.serviceManager);
+            Document document = DomHelper.parse(inputSource, parser);
             Element selectionListElement = document.getDocumentElement();
             if (!FormsConstants.DEFINITION_NS.equals(selectionListElement.getNamespaceURI()) ||
                     !"selection-list".equals(selectionListElement.getLocalName())) {
@@ -170,12 +159,29 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
 
             return selectionListElement;
         } finally {
-            if (resolver != null) {
-                if (source != null) {
-                    resolver.release(source);
-                }
-                serviceManager.release(resolver);
+            if (source != null) {
+                sourceResolver.release(source);
             }
         }
+    }
+
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
+    }
+
+    public void setXmlizer( XMLizer xmlizer )
+    {
+        this.xmlizer = xmlizer;
+    }
+
+    public void setProcessInfoProvider( ProcessInfoProvider processInfoProvider )
+    {
+        this.processInfoProvider = processInfoProvider;
+    }
+
+    public void setParser( SAXParser parser )
+    {
+        this.parser = parser;
     }
 }

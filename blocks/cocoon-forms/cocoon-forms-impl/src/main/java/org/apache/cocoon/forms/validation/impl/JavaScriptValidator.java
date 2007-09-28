@@ -18,14 +18,12 @@ package org.apache.cocoon.forms.validation.impl;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.WidgetValidator;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.mozilla.javascript.Function;
 
@@ -54,16 +52,16 @@ import org.mozilla.javascript.Function;
 public class JavaScriptValidator implements WidgetValidator {
     
     private final Function function;
-    private final Context avalonContext;
+    private final ProcessInfoProvider processInfoProvider;
     
-    public JavaScriptValidator(Context context, Function function) {
+    public JavaScriptValidator(ProcessInfoProvider processInfoProvider, Function function) {
         this.function = function;
-        this.avalonContext = context;
+        this.processInfoProvider = processInfoProvider;
     }
 
     public final boolean validate(Widget widget) {
 
-        Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+        Map objectModel = processInfoProvider.getObjectModel();
 
         Object result;
             
@@ -72,7 +70,7 @@ public class JavaScriptValidator implements WidgetValidator {
         } catch(RuntimeException re) {
             throw re; // rethrow
         } catch(Exception e) {
-            throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
+            throw new RuntimeException("Error invoking JavaScript event handler", e);
         }
 
         if (result == null) {

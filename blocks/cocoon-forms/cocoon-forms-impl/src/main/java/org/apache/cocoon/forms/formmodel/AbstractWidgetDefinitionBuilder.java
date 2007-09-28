@@ -23,11 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.excalibur.xml.sax.XMLizable;
 
 import org.apache.cocoon.forms.FormsConstants;
@@ -50,38 +45,15 @@ import org.w3c.dom.NodeList;
  *
  * @version $Id$
  */
-public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
+public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder {
 
-    protected ServiceSelector widgetDefinitionBuilderSelector;
-    protected ServiceSelector widgetValidatorBuilderSelector;
-    protected ServiceSelector widgetListenerBuilderSelector;
+    protected Map widgetDefinitionBuilders;
+    protected Map widgetValidatorBuilders;
+    protected Map widgetListenerBuilders;
     protected DatatypeManager datatypeManager;
     protected ExpressionManager expressionManager;
-    protected ServiceManager serviceManager;
-
     protected WidgetDefinitionBuilderContext context;
 
-
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
-        this.widgetDefinitionBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetDefinitionBuilder.class.getName() + "Selector");
-        this.datatypeManager = (DatatypeManager) serviceManager.lookup(DatatypeManager.ROLE);
-        this.expressionManager = (ExpressionManager) serviceManager.lookup(ExpressionManager.ROLE);
-        this.widgetValidatorBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetValidatorBuilder.ROLE + "Selector");
-        this.widgetListenerBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetListenerBuilder.ROLE + "Selector");
-    }
-
-    public void dispose() {
-        this.serviceManager.release(this.widgetDefinitionBuilderSelector);
-        this.widgetDefinitionBuilderSelector = null;
-        this.serviceManager.release(this.datatypeManager);
-        this.datatypeManager = null;
-        this.serviceManager.release(this.expressionManager);
-        this.expressionManager = null;
-        this.serviceManager.release(this.widgetValidatorBuilderSelector);
-        this.widgetValidatorBuilderSelector = null;
-        this.serviceManager = null;
-    }
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
     throws Exception {
@@ -167,12 +139,10 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetDefinition)
     throws Exception {
         String widgetName = widgetDefinition.getLocalName();
-        WidgetDefinitionBuilder builder;
-        try {
-            builder = (WidgetDefinitionBuilder)widgetDefinitionBuilderSelector.select(widgetName);
-        } catch (ServiceException e) {
+        WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder)widgetDefinitionBuilders.get(widgetName);
+        if (builder == null) {
             throw new FormsException("Unknown kind of widget '" + widgetName + "'.",
-                                     e, DomHelper.getLocationObject(widgetDefinition));
+                                     DomHelper.getLocationObject(widgetDefinition));
         }
 
         return builder.buildWidgetDefinition(widgetDefinition, this.context);
@@ -187,15 +157,12 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
             for (int i = 0; i < list.getLength(); i++) {
                 if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     Element listenerElement = (Element)list.item(i);
-                    WidgetListenerBuilder builder;
-                    try {
-                        builder = (WidgetListenerBuilder) widgetListenerBuilderSelector.select(listenerElement.getLocalName());
-                    } catch (ServiceException e) {
-                        throw new FormsException("Unknown kind of eventlistener '" + listenerElement.getLocalName() + "'.", e,
+                    WidgetListenerBuilder builder = (WidgetListenerBuilder) widgetListenerBuilders.get(listenerElement.getLocalName());
+                    if (builder == null) {
+                        throw new FormsException("Unknown kind of eventlistener '" + listenerElement.getLocalName() + "'.",
                                                  DomHelper.getLocationObject(listenerElement));
                     }
                     WidgetListener listener = builder.buildListener(listenerElement, listenerClass);
-                    widgetListenerBuilderSelector.release(builder);
                     if (result == null) {
                         result = new ArrayList();
                     }
@@ -235,16 +202,13 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
                 if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element)list.item(i);
                     String name = element.getLocalName();
-                    WidgetValidatorBuilder builder;
-                    try {
-                        builder = (WidgetValidatorBuilder)this.widgetValidatorBuilderSelector.select(name);
-                    } catch(ServiceException e) {
+                    WidgetValidatorBuilder builder = (WidgetValidatorBuilder)this.widgetValidatorBuilders.get(name);
+                    if (builder == null) {
                         throw new FormsException("Unknown kind of validator '" + name + "'.",
-                                                 e, DomHelper.getLocationObject(element));
+                                                 DomHelper.getLocationObject(element));
                     }
 
                     widgetDefinition.addValidator(builder.build(element, widgetDefinition));
-                    widgetValidatorBuilderSelector.release(builder);
                 }
             }
         }
@@ -256,5 +220,30 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         while (i.hasNext()) {
             widgetDefinition.addCreateListener((CreateListener)i.next());
         }
+    }
+
+    public void setWidgetDefinitionBuilders( Map widgetDefinitionBuilders )
+    {
+        this.widgetDefinitionBuilders = widgetDefinitionBuilders;
+    }
+
+    public void setWidgetValidatorBuilders( Map widgetValidatorBuilders )
+    {
+        this.widgetValidatorBuilders = widgetValidatorBuilders;
+    }
+
+    public void setWidgetListenerBuilders( Map widgetListenerBuilders )
+    {
+        this.widgetListenerBuilders = widgetListenerBuilders;
+    }
+
+    public void setDatatypeManager( DatatypeManager datatypeManager )
+    {
+        this.datatypeManager = datatypeManager;
+    }
+
+    public void setExpressionManager( ExpressionManager expressionManager )
+    {
+        this.expressionManager = expressionManager;
     }
 }

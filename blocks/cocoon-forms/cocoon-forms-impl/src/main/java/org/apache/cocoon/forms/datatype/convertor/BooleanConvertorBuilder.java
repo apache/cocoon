@@ -14,29 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.forms.samples;
+package org.apache.cocoon.forms.datatype.convertor;
 
-import org.apache.commons.lang.enums.Enum;
-
-/**
- * Test apache enum class.
- * 
- * @version $Id$
- */
-public class PreferredContact extends Enum {
-
-    public static final PreferredContact EMAIL = new PreferredContact("EMAIL");
-    public static final PreferredContact FAX = new PreferredContact("FAX");
-    public static final PreferredContact PHONE = new PreferredContact("PHONE");
-    public static final PreferredContact PAGER = new PreferredContact("PAGER");
-    public static final PreferredContact POSTAL_MAIL = new PreferredContact("POSTAL_MAIL");
-    
-    protected PreferredContact(String name) {
-        super(name);
-    }
-    
-    public String toString() {
-        return PreferredContact.class.getName() + "." + getName();
-    }
-
+public interface BooleanConvertorBuilder
+    extends ConvertorBuilder
+{
 }

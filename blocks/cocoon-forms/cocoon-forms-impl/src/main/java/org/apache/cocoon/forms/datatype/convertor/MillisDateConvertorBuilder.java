@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class MillisDateConvertorBuilder implements ConvertorBuilder {
+public class MillisDateConvertorBuilder implements DateConvertorBuilder {
     public Convertor build(Element configElement) {
         return new MillisDateConvertor();
     }

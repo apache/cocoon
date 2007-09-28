@@ -21,7 +21,6 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlowHelper;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
@@ -132,7 +131,7 @@ public class JavaScriptHelper {
                 try {
                     ScriptableObject.defineClass(_rootScope, FOM_SimpleCocoon.class);
                 } catch (Exception e) {
-                    throw new CascadingRuntimeException("Cannot setup a root context with a cocoon object for javascript", e);
+                    throw new RuntimeException("Cannot setup a root context with a cocoon object for javascript", e);
                 }
             } finally {
                 Context.exit();
@@ -150,7 +149,7 @@ public class JavaScriptHelper {
                 scope.put("cocoon", scope, cocoon);
                 return scope;
             } catch (Exception e) {
-                throw new CascadingRuntimeException("Cannot setup a root context with a cocoon object for javascript", e);
+                throw new RuntimeException("Cannot setup a root context with a cocoon object for javascript", e);
             } finally {
                 Context.exit();
             }
@@ -190,7 +189,7 @@ public class JavaScriptHelper {
                 scope = ctx.newObject(parentScope);
             } catch (Exception e) {
                 // Should normally not happen
-                throw new CascadingRuntimeException("Cannot create script scope", e);
+                throw new RuntimeException("Cannot create script scope", e);
             }
             scope.setParentScope(parentScope);
 
@@ -231,7 +230,7 @@ public class JavaScriptHelper {
                     newScope = ctx.newObject(scope);
                 } catch (Exception e) {
                     // Should normally not happen
-                    throw new CascadingRuntimeException("Cannot create function scope", e);
+                    throw new RuntimeException("Cannot create function scope", e);
                 }
                 newScope.setParentScope(scope);
                 scope = newScope;

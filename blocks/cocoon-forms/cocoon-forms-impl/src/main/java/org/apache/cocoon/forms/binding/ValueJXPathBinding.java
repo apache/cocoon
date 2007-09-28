@@ -18,14 +18,14 @@ package org.apache.cocoon.forms.binding;
 
 import java.util.Locale;
 
-import org.apache.avalon.framework.logger.Logger;
-
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * ValueJXPathBinding provides an implementation of a {@link Binding}
@@ -36,6 +36,8 @@ import org.apache.commons.jxpath.JXPathException;
  * @version $Id$
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
+
+    private static Log LOG = LogFactory.getLog( ValueJXPathBinding.class );
 
     /**
      * The xpath expression to the objectModel property
@@ -84,11 +86,6 @@ public class ValueJXPathBinding extends JXPathBindingBase {
         this.convertorLocale = convertorLocale;
     }
 
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.updateBinding.enableLogging(logger);
-    }
-
     public String getId() { return fieldId; }
     public ComposedJXPathBindingBase getUpdateBinding() { return (ComposedJXPathBindingBase)updateBinding; }
 
@@ -112,13 +109,13 @@ public class ValueJXPathBinding extends JXPathBindingBase {
                 else
                     value = null;
             } else {
-                getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
+                LOG.warn("Convertor ignored on backend-value which isn't of type String.");
             }
         }
 
         widget.setValue(value);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Done loading " + this + " -- value= " + value);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Done loading " + this + " -- value= " + value);
         }
     }
 
@@ -134,8 +131,8 @@ public class ValueJXPathBinding extends JXPathBindingBase {
         }
 
         Object oldValue = jxpc.getValue(this.xpath);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("value= " + value + " -- oldvalue=" + oldValue);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("value= " + value + " -- oldvalue=" + oldValue);
         }
 
         boolean update = false;
@@ -151,8 +148,8 @@ public class ValueJXPathBinding extends JXPathBindingBase {
             } catch (JXPathException e) {
                 // if the value has been set to null and the underlying model is a bean, then
                 // JXPath will not be able to create a relative context
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("(Ignorable) problem binding field " + widget.getRequestParameterName(), e);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("(Ignorable) problem binding field " + widget.getRequestParameterName(), e);
                 }
             }
             if (subContext != null) {
@@ -162,8 +159,8 @@ public class ValueJXPathBinding extends JXPathBindingBase {
             update = true;
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + this + " -- value= " + value + " -- on-update == " + update);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("done saving " + this + " -- value= " + value + " -- on-update == " + update);
         }
     }
 

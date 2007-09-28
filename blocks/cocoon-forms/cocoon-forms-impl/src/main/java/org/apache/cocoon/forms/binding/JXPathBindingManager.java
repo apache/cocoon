@@ -17,26 +17,13 @@
 package org.apache.cocoon.forms.binding;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Stack;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
-import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.forms.CacheManager;
 import org.apache.cocoon.forms.binding.library.Library;
 import org.apache.cocoon.forms.binding.library.LibraryException;
@@ -44,10 +31,11 @@ import org.apache.cocoon.forms.binding.library.LibraryManager;
 import org.apache.cocoon.forms.binding.library.LibraryManagerImpl;
 import org.apache.cocoon.forms.datatype.DatatypeManager;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.forms.util.SimpleServiceSelector;
 import org.apache.cocoon.util.location.LocationAttributes;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -59,67 +47,23 @@ import org.xml.sax.InputSource;
  *
  * @version $Id$
  */
-public class JXPathBindingManager extends AbstractLogEnabled
-                                  implements BindingManager, Contextualizable, Serviceable,
-                                             Configurable, Initializable, Disposable, ThreadSafe {
+public class JXPathBindingManager implements BindingManager {
 
+    private static Log LOG = LogFactory.getLog( JXPathBindingManager.class );
+    
     private static final String PREFIX = "CocoonFormBinding:";
-
-    protected ServiceManager manager;
 
     protected DatatypeManager datatypeManager;
 
-    private Configuration configuration;
-
-    protected SimpleServiceSelector bindingBuilderSelector;
+    protected Map bindingBuilders;
 
     private CacheManager cacheManager;
 
-    private Context avalonContext;
-
     protected LibraryManagerImpl libraryManager;
 
-
-    /**
-     * Java 1.3 logger access method.
-     * <br>
-     * Access to {#getLogger} from inner class on Java 1.3 causes NoSuchMethod error.  
-     */
-    protected Logger getMyLogger() {
-        return getLogger();
-    }
-
-    public void contextualize(Context context) throws ContextException {
-        this.avalonContext = context;
-    }
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.datatypeManager = (DatatypeManager) manager.lookup(DatatypeManager.ROLE);
-        this.cacheManager = (CacheManager) manager.lookup(CacheManager.ROLE);
-    }
-
-    public void configure(Configuration configuration)
-    throws ConfigurationException {
-        this.configuration = configuration;
-    }
-
-    public void initialize() throws Exception {
-        bindingBuilderSelector = new SimpleServiceSelector("binding", JXPathBindingBuilderBase.class);
-        LifecycleHelper.setupComponent(bindingBuilderSelector,
-                                       getLogger(),
-                                       this.avalonContext,
-                                       this.manager,
-                                       configuration.getChild("bindings"));
-
-        libraryManager = new LibraryManagerImpl();
-        libraryManager.setBindingManager(this);
-        LifecycleHelper.setupComponent(libraryManager,
-                                       getLogger(),
-                                       this.avalonContext,
-                                       this.manager,
-                                       configuration.getChild("library"));
-    }
+    private SourceResolver sourceResolver;
+    
+    private SAXParser parser;
 
     public Binding createBinding(Source source) throws BindingException {
 
@@ -134,7 +78,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 InputSource is = new InputSource(source.getInputStream());
                 is.setSystemId(source.getURI());
 
-                Document doc = DomHelper.parse(is, this.manager);
+                Document doc = DomHelper.parse(is, parser);
                 binding = createBinding(doc.getDocumentElement());
                 this.cacheManager.set(binding, source, PREFIX);
             } catch (BindingException e) {
@@ -148,12 +92,10 @@ public class JXPathBindingManager extends AbstractLogEnabled
     }
 
     public Binding createBinding(String bindingURI) throws BindingException {
-        SourceResolver sourceResolver = null;
         Source source = null;
 
         try {
             try {
-                sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
                 source = sourceResolver.resolveURI(bindingURI);
             } catch (Exception e) {
                 throw new BindingException("Error resolving binding source: " + bindingURI);
@@ -163,9 +105,6 @@ public class JXPathBindingManager extends AbstractLogEnabled
             if (source != null) {
                 sourceResolver.release(source);
             }
-            if (sourceResolver != null) {
-                manager.release(sourceResolver);
-            }
         }
     }
 
@@ -173,13 +112,12 @@ public class JXPathBindingManager extends AbstractLogEnabled
         Binding binding = null;
         if (BindingManager.NAMESPACE.equals(bindingElement.getNamespaceURI())) {
             binding = getBuilderAssistant().getBindingForConfigurationElement(bindingElement);
-            ((JXPathBindingBase) binding).enableLogging(getLogger());
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Creation of new binding finished. " + binding);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Creation of new binding finished. " + binding);
             }
         } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Root Element of said binding file is in wrong namespace.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Root Element of said binding file is in wrong namespace.");
             }
         }
         return binding;
@@ -187,18 +125,6 @@ public class JXPathBindingManager extends AbstractLogEnabled
     
     public Assistant getBuilderAssistant() {
         return new Assistant();
-    }
-
-    public void dispose() {
-        if (this.bindingBuilderSelector != null) {
-            this.bindingBuilderSelector.dispose();
-            this.bindingBuilderSelector = null;
-        }
-        this.manager.release(this.datatypeManager);
-        this.datatypeManager = null;
-        this.manager.release(this.cacheManager);
-        this.cacheManager = null;
-        this.manager = null;
     }
 
     /**
@@ -214,13 +140,13 @@ public class JXPathBindingManager extends AbstractLogEnabled
         private BindingBuilderContext context = new BindingBuilderContext();
         private Stack contextStack = new Stack();
 
-        private JXPathBindingBuilderBase getBindingBuilder(String bindingType)
+        private JXPathBindingBuilder getBindingBuilder(String bindingType)
         throws BindingException {
-            try {
-                return (JXPathBindingBuilderBase) bindingBuilderSelector.select(bindingType);
-            } catch (ServiceException e) {
-                throw new BindingException("Cannot handle binding element '" + bindingType + "'.", e);
+            JXPathBindingBuilder builder = (JXPathBindingBuilder) bindingBuilders.get(bindingType);
+            if (builder == null) {
+                throw new BindingException("Cannot handle binding element '" + bindingType + "'.");
             }
+            return builder;
         }
 
         /**
@@ -230,13 +156,12 @@ public class JXPathBindingManager extends AbstractLogEnabled
         public JXPathBindingBase getBindingForConfigurationElement(Element configElm)
         throws BindingException {
             String bindingType = configElm.getLocalName();
-            JXPathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
+            JXPathBindingBuilder bindingBuilder = getBindingBuilder(bindingType);
 
             boolean flag = false;
             if (context.getLocalLibrary() == null) {
                 // FIXME Use newLibrary()?
                 Library lib = new Library(libraryManager, getBuilderAssistant());
-                lib.enableLogging(getMyLogger());
                 context.setLocalLibrary(lib);
                 lib.setSourceURI(LocationAttributes.getURI(configElm));
                 flag = true;
@@ -258,10 +183,6 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 childBinding.setEnclosingLibrary(context.getLocalLibrary());
             }
 
-            // this might get called unnecessarily, but solves issues with the libraries
-            if (childBinding != null) {
-                childBinding.enableLogging(getMyLogger());
-            }
             return childBinding;
         }
 
@@ -367,10 +288,6 @@ public class JXPathBindingManager extends AbstractLogEnabled
             return datatypeManager;
         }
 
-        public ServiceManager getServiceManager() {
-            return manager;
-        }
-
         public LibraryManager getLibraryManager() {
             return libraryManager;
         }
@@ -391,5 +308,35 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 context = new BindingBuilderContext();
             }
         }
+    }
+
+    public void setDatatypeManager( DatatypeManager datatypeManager )
+    {
+        this.datatypeManager = datatypeManager;
+    }
+
+    public void setCacheManager( CacheManager cacheManager )
+    {
+        this.cacheManager = cacheManager;
+    }
+
+    public void setBindingBuilders( Map bindingBuilders )
+    {
+        this.bindingBuilders = bindingBuilders;
+    }
+
+    public void setParser( SAXParser parser )
+    {
+        this.parser = parser;
+    }
+
+    public void setLibraryManager( LibraryManagerImpl libraryManager )
+    {
+        this.libraryManager = libraryManager;
+    }
+
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
     }
 }

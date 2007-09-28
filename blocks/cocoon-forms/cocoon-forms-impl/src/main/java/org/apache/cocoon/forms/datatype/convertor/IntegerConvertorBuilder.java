@@ -14,25 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.forms.samples;
+package org.apache.cocoon.forms.datatype.convertor;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.apache.cocoon.forms.datatype.AbstractJavaSelectionList;
-
-public class DateTestJavaSelectionList extends AbstractJavaSelectionList {
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.forms.datatype.AbstractJavaSelectionList#build()
-     */
-    protected boolean build() throws Exception {
-        Calendar c = Calendar.getInstance();
-        c.set(2003, 0, 1);
-        this.addItem(c.getTime(), (String)null);
-        c.set(2004, 0, 1);
-        this.addItem(c.getTime(), (String)null);
-        this.addItem(new Date(), (String)null);
-        return false;
-    }
+public interface IntegerConvertorBuilder
+    extends ConvertorBuilder
+{
 }

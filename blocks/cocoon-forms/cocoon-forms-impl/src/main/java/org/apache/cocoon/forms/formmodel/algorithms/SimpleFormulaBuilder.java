@@ -19,8 +19,6 @@ package org.apache.cocoon.forms.formmodel.algorithms;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.forms.expression.ExpressionManager;
 import org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithm;
 import org.apache.cocoon.forms.util.DomHelper;
@@ -42,8 +40,6 @@ import org.w3c.dom.Element;
 public class SimpleFormulaBuilder extends AbstractBaseAlgorithmBuilder {
 
     private ExpressionManager expressionManager;
-    private ServiceManager serviceManager;
-    
     
     public CalculatedFieldAlgorithm build(Element algorithmElement) throws Exception {
         String formula = DomHelper.getAttribute(algorithmElement, "eval");
@@ -67,14 +63,8 @@ public class SimpleFormulaBuilder extends AbstractBaseAlgorithmBuilder {
         }
     }
 
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
-        this.expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
-    }
-
-    public void dispose() {
-        this.serviceManager.release(this.expressionManager);
-        this.expressionManager = null;
-        this.serviceManager = null;
+    public void setExpressionManager( ExpressionManager expressionManager )
+    {
+        this.expressionManager = expressionManager;
     }    
 }

@@ -16,49 +16,37 @@
  */
 package org.apache.cocoon.forms.formmodel.tree;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.LifecycleHelper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
- * A {@link org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition} based on an Java class
+ * A {@link org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition} based on a Spring bean
  * implementing {@link org.apache.cocoon.forms.formmodel.tree.TreeModel}.
  *
  * @version $Id$
  */
-public class JavaTreeModelDefinition extends AbstractLogEnabled
-                                     implements TreeModelDefinition, Contextualizable, Serviceable {
+public class JavaTreeModelDefinition implements TreeModelDefinition, BeanFactoryAware {
 
-    private Class modelClass;
+    private String modelBeanRef;
+    private BeanFactory beanFactory;
 
-    Context ctx;
-    ServiceManager manager;
-
-    public void contextualize(Context context) throws ContextException {
-        this.ctx = context;
+    public void setBeanFactory( BeanFactory beanFactory)
+                                                  throws BeansException
+    {
+        this.beanFactory = beanFactory;
     }
 
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
-    public void setModelClass(Class clazz) {
-        this.modelClass = clazz;
+    public void setModelBeanRef(String beanId) {
+        this.modelBeanRef = beanId;
     }
 
     public TreeModel createInstance() {
         TreeModel model;
         try {
-            model = (TreeModel)modelClass.newInstance();
-            LifecycleHelper.setupComponent(model, getLogger(), ctx, manager, null);
+            model = (TreeModel)beanFactory.getBean( modelBeanRef );
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Cannot instanciate class " + modelClass.getName(), e);
+            throw new RuntimeException("Cannot get an instance of Spring bean " + modelBeanRef, e);
         }
 
         return model;

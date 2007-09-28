@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.binding;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
@@ -47,6 +46,9 @@ import org.w3c.dom.NodeList;
  */
 public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
+    private SourceResolver sourceResolver;
+    private XPathProcessor xpathProcessor;
+    
     /**
      * Creates an instance of {@link InsertNodeJXPathBinding} configured
      * with the nested template of the bindingElm.
@@ -62,8 +64,6 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
             String src = DomHelper.getAttribute(bindingElm, "src", null);
             if (src != null) {
-                ServiceManager manager = assistant.getServiceManager();
-                SourceResolver sourceResolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
                 Source source = null;
                 try {
                     source = sourceResolver.resolveURI(src);
@@ -72,21 +72,16 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
                     String xpath = DomHelper.getAttribute(bindingElm, "xpath", null);
                     if (xpath != null) {
-                        XPathProcessor xpathProcessor = (XPathProcessor) manager.lookup(XPathProcessor.ROLE);
-                        try {
-                            Node node = xpathProcessor.selectSingleNode(document, xpath);
-                            if (node == null) {
-                                throw new BindingException("XPath expression '" + xpath + "' didn't return a result.",
-                                                           DomHelper.getLocationObject(bindingElm));
-                            }
-                            if (!(node instanceof Element)) {
-                                throw new BindingException("XPath expression '" + xpath + "' did not return an element node.",
-                                                           DomHelper.getLocationObject(bindingElm));
-                            }
-                            element = (Element) node;
-                        } finally {
-                            manager.release(xpathProcessor);
+                        Node node = xpathProcessor.selectSingleNode(document, xpath);
+                        if (node == null) {
+                            throw new BindingException("XPath expression '" + xpath + "' didn't return a result.",
+                                                       DomHelper.getLocationObject(bindingElm));
                         }
+                        if (!(node instanceof Element)) {
+                            throw new BindingException("XPath expression '" + xpath + "' did not return an element node.",
+                                                       DomHelper.getLocationObject(bindingElm));
+                        }
+                        element = (Element) node;
                     }
                     domTemplate = document.createDocumentFragment();
                     domTemplate.appendChild(element);
@@ -94,7 +89,6 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
                     if (source != null) {
                         sourceResolver.release(source);
                     }
-                    manager.release(sourceResolver);
                 }
             } else if (bindingElm.hasChildNodes()) {
                 // FIXME: using the binding's document prevents it to be garbage collected.
@@ -128,5 +122,15 @@ public class InsertNodeJXPathBindingBuilder extends JXPathBindingBuilderBase {
             throw new BindingException("Error building the insert-node binding", e,
                                        DomHelper.getLocationObject(bindingElm));
         }
+    }
+
+    public void setSourceResolver( SourceResolver sourceResolver )
+    {
+        this.sourceResolver = sourceResolver;
+    }
+
+    public void setXpathProcessor( XPathProcessor pathProcessor )
+    {
+        xpathProcessor = pathProcessor;
     }
 }

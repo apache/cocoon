@@ -18,9 +18,6 @@ package org.apache.cocoon.forms.event.impl;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.event.CreateEvent;
@@ -36,6 +33,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.formmodel.tree.TreeSelectionEvent;
 import org.apache.cocoon.forms.formmodel.tree.TreeSelectionListener;
 import org.apache.cocoon.forms.util.JavaScriptHelper;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.mozilla.javascript.Function;
 
 /**
@@ -46,11 +44,12 @@ import org.mozilla.javascript.Function;
 public abstract class JavaScriptWidgetListener {
     
     private Function func;
-    private Context context;
 
-    public JavaScriptWidgetListener(Function func, Context context) {
+    private ProcessInfoProvider processInfoProvider;
+    
+    public JavaScriptWidgetListener(Function func, ProcessInfoProvider processInfoProvider) {
         this.func = func;
-        this.context = context;
+        this.processInfoProvider = processInfoProvider;
     }
     
     /**
@@ -60,21 +59,21 @@ public abstract class JavaScriptWidgetListener {
         try {
             //FIXME(SW) it would be nice to have "this" be the widget, but I don't know how to define
             //the "this" object for a script (this is easy for a function)
-            Map objectModel = ContextHelper.getObjectModel(context);
+            Map objectModel = processInfoProvider.getObjectModel();
             Widget w = event.getSourceWidget();
             JavaScriptHelper.callFunction(this.func, w, new Object[]{w, event}, objectModel);
         } catch(RuntimeException re) {
             // rethrow
             throw re;
         } catch(Exception e) {
-            throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
+            throw new RuntimeException("Error invoking JavaScript event handler", e);
         }
     }
     
     public static class JSActionListener extends JavaScriptWidgetListener implements ActionListener {
 
-        public JSActionListener(Function func, Context context) {
-            super(func, context);
+        public JSActionListener(Function func, ProcessInfoProvider processInfoProvider) {
+            super(func, processInfoProvider);
         }
 
         public void actionPerformed(ActionEvent event) {
@@ -84,8 +83,8 @@ public abstract class JavaScriptWidgetListener {
     
     public static class JSValueChangedListener extends JavaScriptWidgetListener implements ValueChangedListener {
 
-        public JSValueChangedListener(Function func, Context context) {
-            super(func, context);
+        public JSValueChangedListener(Function func, ProcessInfoProvider processInfoProvider) {
+            super(func, processInfoProvider);
         }
 
         public void valueChanged(ValueChangedEvent event) {
@@ -95,8 +94,8 @@ public abstract class JavaScriptWidgetListener {
     
     public static class JSCreateListener extends JavaScriptWidgetListener implements CreateListener {
 
-        public JSCreateListener(Function func, Context context) {
-            super(func, context);
+        public JSCreateListener(Function func, ProcessInfoProvider processInfoProvider) {
+            super(func, processInfoProvider);
         }
 
         public void widgetCreated(CreateEvent event) {
@@ -106,8 +105,8 @@ public abstract class JavaScriptWidgetListener {
     
     public static class JSTreeSelectionListener extends JavaScriptWidgetListener implements TreeSelectionListener {
 
-        public JSTreeSelectionListener(Function func, Context context) {
-            super(func, context);
+        public JSTreeSelectionListener(Function func, ProcessInfoProvider processInfoProvider) {
+            super(func, processInfoProvider);
         }
 
         public void selectionChanged(TreeSelectionEvent event) {
@@ -117,8 +116,8 @@ public abstract class JavaScriptWidgetListener {
 
     public static class JSProcessingPhaseListener extends JavaScriptWidgetListener implements ProcessingPhaseListener {
 
-        public JSProcessingPhaseListener(Function func, Context context) {
-            super(func, context);
+        public JSProcessingPhaseListener(Function func, ProcessInfoProvider processInfoProvider) {
+            super(func, processInfoProvider);
         }
 
         public void phaseEnded(ProcessingPhaseEvent event) {
@@ -129,14 +128,13 @@ public abstract class JavaScriptWidgetListener {
     
     public static class JSRepeaterListener extends JavaScriptWidgetListener implements RepeaterListener {
 
-        public JSRepeaterListener(Function func, Context context) {
-            super(func, context);
+        public JSRepeaterListener(Function func, ProcessInfoProvider processInfoProvider) {
+            super(func, processInfoProvider);
         }
 
         public void repeaterModified(RepeaterEvent event) {
             super.callScript(event);
         }
-    }
-    
+    }    
 }
 

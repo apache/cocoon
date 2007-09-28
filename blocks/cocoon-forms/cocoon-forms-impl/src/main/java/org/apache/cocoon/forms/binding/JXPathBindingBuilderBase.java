@@ -18,11 +18,7 @@ package org.apache.cocoon.forms.binding;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-
 import org.apache.cocoon.forms.util.DomHelper;
-
 import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.lang.BooleanUtils;
 import org.w3c.dom.Element;
@@ -41,42 +37,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public abstract class JXPathBindingBuilderBase implements LogEnabled {
-
-    private Logger logger;
-
-
-    /**
-     * Receives the Avalon logger to use.
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-        if (logger.isDebugEnabled()) {
-            logger.debug("JXPathBindingBuilderBase got logger...");
-        }
-    }
-
-
-    /**
-     * Makes the logger available to the subclasses.
-     * @return Logger
-     */
-    protected Logger getLogger() {
-        return this.logger;
-    }
-
-    /**
-     * Builds a configured binding object based on the configuration as
-     * described in the bindingElement.  The BuilderMap can be used to
-     * find appropriate builders for possible subBinders.
-     *
-     * @param bindingElm
-     * @param assistant
-     * @return JXPathBindingBase
-     */
-    public abstract JXPathBindingBase buildBinding(Element bindingElm,
-                                                   JXPathBindingManager.Assistant assistant)
-    throws BindingException;
+public abstract class JXPathBindingBuilderBase implements JXPathBindingBuilder {
 
     /**
      * Helper method for interpreting the common attributes which are supported

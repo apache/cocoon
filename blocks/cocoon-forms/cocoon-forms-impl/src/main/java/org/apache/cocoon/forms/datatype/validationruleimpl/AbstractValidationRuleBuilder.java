@@ -20,11 +20,6 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.ValidationRuleBuilder;
 import org.apache.cocoon.forms.expression.ExpressionManager;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.avalon.framework.CascadingException;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Element;
 import org.outerj.expression.Expression;
@@ -36,18 +31,9 @@ import org.outerj.expression.TokenMgrError;
  * @version $Id$
  */
 public abstract class AbstractValidationRuleBuilder 
-    implements ValidationRuleBuilder, Serviceable, Disposable {
+    implements ValidationRuleBuilder {
 
     protected ExpressionManager expressionManager;
-    protected ServiceManager serviceManager;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.serviceManager = serviceManager;
-        this.expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
-    }
 
     /**
      * Checks if the validation rule configuration contains a custom failmessage, and if so,
@@ -68,15 +54,14 @@ public abstract class AbstractValidationRuleBuilder
         try {
             return expressionManager.parse(exprString);
         } catch (TokenMgrError e) {
-            throw new CascadingException("Error in expression \"" + exprString + "\" in attribute \"" + attrName + "\" at " + DomHelper.getLocation(element), e);
+            throw new Exception("Error in expression \"" + exprString + "\" in attribute \"" + attrName + "\" at " + DomHelper.getLocation(element), e);
         } catch (Exception e) {
-            throw new CascadingException("Error in expression \"" + exprString + "\" in attribute \"" + attrName + "\" at " + DomHelper.getLocation(element), e);
+            throw new Exception("Error in expression \"" + exprString + "\" in attribute \"" + attrName + "\" at " + DomHelper.getLocation(element), e);
         }
     }
 
-    public void dispose() {
-        this.serviceManager.release(this.expressionManager);
-        this.expressionManager = null;
-        this.serviceManager = null;
+    public void setExpressionManager( ExpressionManager expressionManager )
+    {
+        this.expressionManager = expressionManager;
     }
 }

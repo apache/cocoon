@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class PlainDecimalConvertorBuilder implements ConvertorBuilder {
+public class PlainDecimalConvertorBuilder implements DecimalConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         return new PlainDecimalConvertor();
     }

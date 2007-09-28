@@ -29,7 +29,7 @@ import java.util.Locale;
  *
  * @version $Id$
  */
-public class FormattingDateConvertorBuilder implements ConvertorBuilder {
+public class FormattingDateConvertorBuilder implements DateConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         FormattingDateConvertor convertor = new FormattingDateConvertor();
 

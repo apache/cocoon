@@ -18,10 +18,14 @@ package org.apache.cocoon.forms.binding;
 
 import java.lang.reflect.Method;
 
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.w3c.dom.Element;
 
 /**
@@ -51,8 +55,11 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
+public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase implements BeanFactoryAware {
 
+    private BeanFactory beanFactory;
+
+    private static Log LOG = LogFactory.getLog( ValueJXPathBinding.class );
     private static final Class[] DOMELEMENT_METHODARGS;
     private static final Class[] EMPTY_METHODARGS;
 
@@ -60,6 +67,12 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
         DOMELEMENT_METHODARGS = new Class[1];
         DOMELEMENT_METHODARGS[0] = Element.class;
         EMPTY_METHODARGS = null;
+    }
+    
+    public void setBeanFactory( BeanFactory beanFactory )
+                                                  throws BeansException
+    {
+        this.beanFactory = beanFactory;
     }
 
     /**
@@ -74,6 +87,18 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
     throws BindingException {
 
         try {
+            // hard way deprecation
+            if (DomHelper.getAttribute(bindingElm, "class", null) != null) {
+                throw new RuntimeException("The 'class' attribute is not supported anymore at "
+                                           + DomHelper.getLocationObject( bindingElm )
+                                           + ". Use a 'ref' attribute to address a Spring bean");
+            }
+            if (DomHelper.getAttribute(bindingElm, "builderclass", null) != null) {
+                throw new RuntimeException("The 'builderclass' attribute is not supported anymore at "
+                                           + DomHelper.getLocationObject( bindingElm )
+                                           + ". Use a 'builderref' attribute to address a Spring bean");
+            }
+
             CommonAttributes commonAtts =
                 JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path", ".");
@@ -81,26 +106,26 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
             Object bindingInstance = null;
 
-            String className = DomHelper.getAttribute(bindingElm, "class", null);
-            if(className != null) {
-                Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
-                bindingInstance = clazz.newInstance();
+            
+            String beanRef = DomHelper.getAttribute(bindingElm, "ref", null);
+            if(beanRef != null) {
+                bindingInstance = beanFactory.getBean( beanRef );
 
             } else {
-                String builderClassName =
-                    DomHelper.getAttribute(bindingElm, "builderclass", null);
+                String builderRefName =
+                    DomHelper.getAttribute(bindingElm, "builderref", null);
                 String factoryMethodName =
                     DomHelper.getAttribute(bindingElm, "factorymethod", null);
                 Element configNode =
                     DomHelper.getChildElement(bindingElm, BindingManager.NAMESPACE, "config");
 
                 // only do it if attributes exist
-                if (builderClassName != null && factoryMethodName != null) {
-	                Class builderClass = Class.forName(builderClassName);
+                if (builderRefName != null && factoryMethodName != null) {
+	                Object builder = beanFactory.getBean( builderRefName );
 	                Method factoryMethod;
 	                Object[] args = null;
 	                try {
-	                    factoryMethod = builderClass.getMethod(factoryMethodName, DOMELEMENT_METHODARGS);
+	                    factoryMethod = builder.getClass().getMethod(factoryMethodName, DOMELEMENT_METHODARGS);
 	                    args = new Object[1];
 	                    args[0] = configNode;
 	                } catch (NoSuchMethodException e) {
@@ -108,7 +133,7 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
 	                }
 
 	                if (factoryMethod == null) {
-	                    factoryMethod = builderClass.getMethod(factoryMethodName, EMPTY_METHODARGS);
+	                    factoryMethod = builder.getClass().getMethod(factoryMethodName, EMPTY_METHODARGS);
 	                    args = null;
 	                }
 
@@ -135,9 +160,6 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
             CustomJXPathBinding customBinding =
                 new CustomJXPathBinding(commonAtts, widgetId, xpath, (AbstractCustomBinding)bindingInstance);
-
-            // Fire Avalon-setup for the custom binding
-            LifecycleHelper.setupComponent(customBinding, getLogger(), null, assistant.getServiceManager(), null);
 
             return customBinding;
         } catch (BindingException e) {

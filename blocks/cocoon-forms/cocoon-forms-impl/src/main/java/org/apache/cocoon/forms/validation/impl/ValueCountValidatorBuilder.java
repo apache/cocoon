@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.datatype.validationruleimpl.ValueCountValidationRuleBuilder;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.validation.WidgetValidator;
@@ -30,7 +29,7 @@ import org.w3c.dom.Element;
  */
 public class ValueCountValidatorBuilder
     extends ValueCountValidationRuleBuilder
-    implements WidgetValidatorBuilder, ThreadSafe {
+    implements WidgetValidatorBuilder {
 
     /**
      * @see org.apache.cocoon.forms.validation.WidgetValidatorBuilder#build(org.w3c.dom.Element, org.apache.cocoon.forms.formmodel.WidgetDefinition)

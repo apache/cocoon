@@ -28,7 +28,7 @@ import java.util.Locale;
  *
  * @version $Id$
  */
-public class FormattingDecimalConvertorBuilder implements ConvertorBuilder {
+public class FormattingDecimalConvertorBuilder implements DecimalConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         FormattingDecimalConvertor convertor = createConvertor();
 

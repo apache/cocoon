@@ -16,66 +16,57 @@
  */
 package org.apache.cocoon.forms.formmodel.tree.builder;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.FormsException;
 import org.apache.cocoon.forms.formmodel.tree.JavaTreeModelDefinition;
 import org.apache.cocoon.forms.formmodel.tree.TreeModel;
 import org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition;
 import org.apache.cocoon.forms.util.DomHelper;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.w3c.dom.Element;
 
 /**
- * Builds a {@link TreeModelDefinition} based on an arbitrary Java class.
- * Avalon lifecycle will be run on the target class when instanciated.
+ * Builds a {@link TreeModelDefinition} based on an Spring bean subclassing {@TreeModel}.
  *
  * @version $Id$
  */
-public class JavaTreeModelDefinitionBuilder extends AbstractLogEnabled
-                                            implements TreeModelDefinitionBuilder, Contextualizable,
-                                                       Serviceable {
+public class JavaTreeModelDefinitionBuilder implements TreeModelDefinitionBuilder, BeanFactoryAware {
 
-    Context ctx;
-    ServiceManager manager;
-
+    private BeanFactory beanFactory;
     
-    public void contextualize(Context context) throws ContextException {
-        this.ctx = context;
-    }
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void setBeanFactory( BeanFactory beanFactory )
+                                                  throws BeansException
+    {
+        this.beanFactory = beanFactory;
     }
 
     public TreeModelDefinition build(Element treeModelElement) throws Exception {
-        String className = DomHelper.getAttribute(treeModelElement, "class");
 
-        Class modelClass;
-        try {
-            modelClass = Thread.currentThread().getContextClassLoader().loadClass(className);
-        } catch(Exception e) {
-            throw new FormsException("Cannot load class '" + className + "'.",
-                                     e, DomHelper.getLocationObject(treeModelElement));
+        // hard way deprecation
+        if (DomHelper.getAttribute(treeModelElement, "class", null) != null) {
+            throw new RuntimeException("The 'class' attribute is not supported anymore at "
+                                       + DomHelper.getLocationObject( treeModelElement )
+                                       + ". Use a 'ref' attribute to address a Spring bean");
         }
-
-        if (!TreeModel.class.isAssignableFrom(modelClass)) {
-            throw new FormsException("Class '" + className + "' doesn't implement TreeModel.",
+        
+        String beanRefId = DomHelper.getAttribute(treeModelElement, "ref");
+        try {
+            Class clazz = beanFactory.getType(beanRefId);
+            if (!TreeModel.class.isAssignableFrom(clazz)) {
+                throw new FormsException("Spring Bean '" + beanRefId + "' doesn't implement TreeModel.",
+                                         DomHelper.getLocationObject(treeModelElement));
+            }
+        } catch(NoSuchBeanDefinitionException nsbde) {
+            throw new FormsException("Spring Bean '" + beanRefId + "' doesn't exists.",
                                      DomHelper.getLocationObject(treeModelElement));
         }
 
         JavaTreeModelDefinition definition = new JavaTreeModelDefinition();
-
-        LifecycleHelper.setupComponent(definition, getLogger(), ctx, manager, null);
-
-        definition.setModelClass(modelClass);
+        definition.setBeanFactory( beanFactory );
+        definition.setModelBeanRef( beanRefId );
 
         return definition;
     }

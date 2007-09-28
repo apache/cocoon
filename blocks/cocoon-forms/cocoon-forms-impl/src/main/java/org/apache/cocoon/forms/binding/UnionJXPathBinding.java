@@ -20,6 +20,8 @@ import org.apache.cocoon.forms.formmodel.Union;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * UnionJXPathBinding provides an implementation of a {@link Binding}
@@ -34,6 +36,7 @@ import org.apache.commons.jxpath.JXPathContext;
  */
 public class UnionJXPathBinding extends ComposedJXPathBindingBase {
 
+    private static Log LOG = LogFactory.getLog( UnionJXPathBinding.class );
     private final String xpath;
 
     private final String widgetId;
@@ -77,8 +80,8 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
                 subBindings[i].loadFormFromModel(unionWidget, subContext);
             }
         }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done loading " + this);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("done loading " + this);
         }
     }
 
@@ -97,8 +100,8 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
                 subBindings[i].saveFormToModel(unionWidget, subContext);
             }
         }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + this);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("done saving " + this);
         }
     }
 

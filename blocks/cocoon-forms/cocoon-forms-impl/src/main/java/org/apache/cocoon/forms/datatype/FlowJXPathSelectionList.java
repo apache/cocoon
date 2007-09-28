@@ -19,11 +19,10 @@ package org.apache.cocoon.forms.datatype;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.I18nMessage;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
@@ -41,7 +40,7 @@ import org.xml.sax.SAXException;
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
-    private Context context;
+    private ProcessInfoProvider processInfoProvider;
     private String listPath;
     private String valuePath;
     private String labelPath;
@@ -53,7 +52,7 @@ public class FlowJXPathSelectionList implements SelectionList {
     private String i18nCatalog;
     private boolean labelIsI18nKey = false;
 
-    public FlowJXPathSelectionList(Context context, 
+    public FlowJXPathSelectionList(ProcessInfoProvider processInfoProvider, 
                                    String listPath, 
                                    String valuePath, 
                                    String labelPath, 
@@ -62,7 +61,7 @@ public class FlowJXPathSelectionList implements SelectionList {
                                    boolean nullTextIsI18nKey, 
                                    String i18nCatalog, 
                                    boolean labelIsI18nKey) {
-        this.context = context;
+        this.processInfoProvider = processInfoProvider;
         this.listPath = listPath;
         this.valuePath = valuePath;
         this.labelPath = labelPath;
@@ -99,7 +98,7 @@ public class FlowJXPathSelectionList implements SelectionList {
         JXPathContext ctx = null;
         Iterator iter = null;
         if (model == null) {
-            Object flowData = FlowHelper.getContextObject(ContextHelper.getObjectModel(this.context));
+            Object flowData = FlowHelper.getContextObject(processInfoProvider.getObjectModel());
             if (flowData == null) {
                 throw new SAXException("No flow data to produce selection list");
             }

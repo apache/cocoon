@@ -23,11 +23,8 @@ import org.apache.cocoon.forms.datatype.convertor.Convertor;
  * Implementations of this class build a Datatype from an XML description
  * (a DOM Element).
  *
- * <p>These builders should be threadsafe, only one instance of them will be created.
+ * <p>These builders should be threadsafe (Spring scope="singleton").
  *
- * <p>Implementations may implement Avalon's Serviceable interface to get access to
- * other components.
- * 
  * @version $Id$
  */
 public interface DatatypeBuilder {

@@ -18,13 +18,13 @@ package org.apache.cocoon.forms.binding;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.logger.Logger;
-
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -41,6 +41,7 @@ import org.w3c.dom.NodeList;
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
+    private static Log LOG = LogFactory.getLog( TempRepeaterJXPathBinding.class );
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
@@ -74,14 +75,6 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         this.virtualRows = virtualRows;
         this.clearOnLoad = clearOnLoad;
         this.deleteIfEmpty = deleteIfEmpty;
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        if (this.insertRowBinding != null) {
-            this.insertRowBinding.enableLogging(logger);
-        }
-        this.rowBinding.enableLogging(logger);
     }
 
     public String getId() { return repeaterId; }
@@ -175,8 +168,8 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
             }
         }
 
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("done loading rows " + this);
+        if (LOG.isDebugEnabled())
+            LOG.debug("done loading rows " + this);
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
@@ -246,10 +239,12 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                                 rowNode.appendChild(list.item(0));
                             }
                         }
-                        getLogger().debug("bound new row");
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("bound new row");
+                        }
                     }
                 } else {
-                    getLogger().warn("TempRepeaterBinding has detected rows to insert, " +
+                    LOG.warn("TempRepeaterBinding has detected rows to insert, " +
                         "but misses the <on-insert-row> binding to do it.");
                 }
             }

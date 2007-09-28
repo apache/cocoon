@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * 
  * @version $Id$
  */
-public class PlainIntegerConvertorBuilder implements ConvertorBuilder {
+public class PlainIntegerConvertorBuilder implements IntegerConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         return new PlainIntegerConvertor();
     }

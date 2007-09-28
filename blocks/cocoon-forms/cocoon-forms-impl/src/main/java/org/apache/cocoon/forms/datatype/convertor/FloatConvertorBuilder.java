@@ -16,28 +16,7 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
-import org.apache.cocoon.forms.FormsConstants;
-import org.apache.cocoon.forms.util.DomHelper;
-import org.w3c.dom.Element;
-
-/**
- * Builds {@link EnumConvertor}s.
- * 
- * @version $Id$
- */
-public class EnumConvertorBuilder implements ConvertorBuilder {
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.form.datatype.convertor.ConvertorBuilder#build(org.w3c.dom.Element)
-     */
-    public Convertor build(Element configElement) throws Exception {
-        if (configElement == null) {
-            return null;
-        }
-        Element enumEl = DomHelper.getChildElement(configElement,
-                FormsConstants.DEFINITION_NS, "enum", true);
-        String clazz = enumEl.getFirstChild().getNodeValue();
-        return new EnumConvertor(clazz);
-    }
-
+public interface FloatConvertorBuilder
+    extends ConvertorBuilder
+{
 }

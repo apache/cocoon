@@ -16,10 +16,6 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 
@@ -29,16 +25,10 @@ import org.w3c.dom.Element;
  * @see <a href="http://www.captcha.net">www.captcha.net</a>
  * @version $Id$
  */
-public class CaptchaDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder implements Contextualizable, ThreadSafe {
-    
-    private Context avalonContext;
-    
-    public void contextualize(Context context) throws ContextException {
-        this.avalonContext = context;
-    }
+public class CaptchaDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        FieldDefinition definition = new CaptchaFieldDefinition(avalonContext);
+        FieldDefinition definition = new CaptchaFieldDefinition(getProcessInfoProvider());
         setupDefinition(widgetElement, definition);
         definition.makeImmutable();
         return definition;

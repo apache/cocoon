@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.commons.jxpath.JXPathContext;
 
@@ -64,7 +63,7 @@ public class BeanConvertor
         try {
             m_class = Thread.currentThread().getContextClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
-            throw new CascadingRuntimeException("Class " + className + " not found", e);
+            throw new RuntimeException("Class " + className + " not found", e);
         }
 
         m_idPath = idPath;

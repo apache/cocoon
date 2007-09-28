@@ -20,14 +20,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import org.apache.avalon.framework.logger.Logger;
-
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Simple binding for multi fields: on save, first deletes the target data
@@ -37,6 +37,7 @@ import org.apache.commons.jxpath.Pointer;
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 
+    private static Log LOG = LogFactory.getLog( MultiValueJXPathBinding.class );
     private final String multiValueId;
     private final String multiValuePath;
     private final String rowPath;
@@ -59,11 +60,6 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
         this.updateBinding = new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, updateBindings);
         this.convertor = convertor;
         this.convertorLocale = convertorLocale;
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.updateBinding.enableLogging(logger);
     }
 
     public String getId() { return multiValueId; }
@@ -102,7 +98,7 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
                         else
                             value = null;
                     } else {
-                        getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
+                        LOG.warn("Convertor ignored on backend-value which isn't of type String.");
                     }
                 }
 
@@ -112,8 +108,8 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
             widget.setValue(list.toArray());
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done loading values " + this);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("done loading values " + this);
         }
     }
 
@@ -167,8 +163,8 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
         }
 
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("done saving " + this + " -- on-update == " + update);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("done saving " + this + " -- on-update == " + update);
         }
 
 

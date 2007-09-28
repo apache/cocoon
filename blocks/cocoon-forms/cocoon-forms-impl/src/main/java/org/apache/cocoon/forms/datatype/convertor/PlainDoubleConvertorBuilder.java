@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class PlainDoubleConvertorBuilder implements ConvertorBuilder {
+public class PlainDoubleConvertorBuilder implements DoubleConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         return new PlainDoubleConvertor();
     }

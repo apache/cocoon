@@ -60,7 +60,7 @@ public class EnumConvertorBuilderTestCase extends TestCase {
         Document sample = parser.parse(confSource.getInputStream());
         Element convertorElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "convertor").item(0);
         String enumClassName = convertorElement.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "enum").item(0).getFirstChild().getNodeValue();
-        EnumConvertorBuilder builder = new EnumConvertorBuilder();
+        PlainEnumConvertorBuilder builder = new PlainEnumConvertorBuilder();
         Convertor convertor = builder.build(convertorElement);
         assertTrue("The returned convertor is not an EnumConvertor",
                 convertor instanceof EnumConvertor);

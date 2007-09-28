@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class PlainBooleanConvertorBuilder implements ConvertorBuilder {
+public class PlainBooleanConvertorBuilder implements BooleanConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
         return new PlainBooleanConvertor();
     }

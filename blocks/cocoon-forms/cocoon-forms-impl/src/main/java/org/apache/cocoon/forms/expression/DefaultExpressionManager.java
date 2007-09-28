@@ -17,13 +17,11 @@
 
 package org.apache.cocoon.forms.expression;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.collections.iterators.EntrySetMapIterator;
 import org.outerj.expression.DefaultFunctionFactory;
 import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionException;
@@ -41,25 +39,10 @@ import org.outerj.expression.ParseException;
  * @version $Id$
  */
 public class DefaultExpressionManager
-        implements ExpressionManager, Component, Configurable, ThreadSafe {
+        implements ExpressionManager {
 // FIXME: Component is there to allow this block to also run in the 2.1 branch
 
-    private DefaultFunctionFactory factory;
-
-    public void configure(Configuration config) throws ConfigurationException {
-        factory = new DefaultFunctionFactory();
-
-        Configuration[] functions = config.getChildren("function");
-        for (int i = 0; i < functions.length; i++) {
-            String name = functions[i].getAttribute("name");
-            String clazz = functions[i].getAttribute("class");
-            try {
-                factory.registerFunction(name, Thread.currentThread().getContextClassLoader().loadClass(clazz));
-            } catch (ClassNotFoundException e) {
-                throw new ConfigurationException("Can not find class " + clazz + " for function " + name + ": " + e);
-            }
-        }
-    }
+    private DefaultFunctionFactory factory = new DefaultFunctionFactory();
 
     public Expression parse(String expressionString) throws ParseException, ExpressionException {
         FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString), factory);
@@ -75,6 +58,16 @@ public class DefaultExpressionManager
         FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString), factory);
         parser.parse();
         return parser.getVariables();
+    }
+
+    public void setFunctions( Map functions )
+    {
+        for (final Iterator i = functions.entrySet().iterator(); i.hasNext();) {
+            final Map.Entry entry = (Map.Entry)i.next();
+            String name = (String)entry.getKey();
+            Class clazz = ((Expression)entry.getValue()).getClass();
+            factory.registerFunction(name, clazz);
+        }
     }
 
 }

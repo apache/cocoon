@@ -14,24 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.forms.samples;
+package org.apache.cocoon.forms.datatype.convertor;
 
-import org.apache.cocoon.forms.event.AbstractFormHandler;
-import org.apache.cocoon.forms.event.ActionEvent;
-import org.apache.cocoon.forms.event.ValueChangedEvent;
-
-/**
- * Example FormHandler for the "Form1" sample form.
- * This implementation currently doesn't do anything interesting.
- * 
- * @version $Id$
- */
-public class Form1Handler extends AbstractFormHandler {
-    public void handleActionEvent(ActionEvent actionEvent) {
-        //System.out.println("action event reported to Form1Handler: " + actionEvent.getActionCommand());
-    }
-
-    public void handleValueChangedEvent(ValueChangedEvent valueChangedEvent) {
-        //System.out.println("value changed reported to Form1Handler");
-    }
+public interface StringConvertorBuilder
+    extends ConvertorBuilder
+{
 }
