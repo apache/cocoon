@@ -39,10 +39,10 @@ import org.xml.sax.SAXException;
  * proper HTML names.</p>
  *
  * <p>For configuration options of this serializer, please look at the
- * {@link EncodingSerializer}, in addition to those, this serializer also
- * support the specification of a default doctype. This default will be used
- * if no document type is received in the SAX events, and can be configured
- * in the following way:</p>
+ * {@link org.apache.cocoon.components.serializers.util.EncodingSerializer},
+ * in addition to those, this serializer also support the specification of a
+ * default doctype. This default will be used if no document type is received
+ * in the SAX events, and can be configured in the following way:</p>
  *
  * <pre>
  * &lt;serializer class="org.apache.cocoon.components.serializers..." ... &gt;
@@ -65,28 +65,8 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class XHTMLSerializer
-    extends org.apache.cocoon.components.serializers.util.XHTMLSerializer
-    implements Serializer, SitemapModelComponent, Recyclable, Configurable  {
-
-    /**
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void setup(SourceResolver resolver,
-                      Map            objectModel,
-                      String         src,
-                      Parameters     par)
-    throws ProcessingException, SAXException, IOException {
-        this.setup((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT));
-    }
-
-
-    /**
-     * Test if the component wants to set the content length.
-     */
-    public boolean shouldSetContentLength() {
-        return false;
-    }
+public class XHTMLSerializer extends org.apache.cocoon.components.serializers.util.XHTMLSerializer
+                             implements Serializer, SitemapModelComponent, Recyclable, Configurable  {
 
     /**
      * Set the configurations for this serializer.
@@ -95,15 +75,32 @@ public class XHTMLSerializer
     throws ConfigurationException {
         String encoding = conf.getChild("encoding").getValue(null);
         try {
-            this.setEncoding(encoding);
+            setEncoding(encoding);
         } catch (UnsupportedEncodingException exception) {
             throw new ConfigurationException("Encoding not supported: "
                                              + encoding, exception);
         }
 
-        this.setIndentPerLevel(conf.getChild("indent").getValueAsInteger(0));
-        this.setOmitXmlDeclaration(conf.getChild("omit-xml-declaration").getValue(null));
-        this.setDoctypeDefault(conf.getChild("doctype-default").getValue(null));
+        setIndentPerLevel(conf.getChild("indent").getValueAsInteger(0));
+        setOmitXmlDeclaration(conf.getChild("omit-xml-declaration").getValue(null));
+        setDoctypeDefault(conf.getChild("doctype-default").getValue(null));
     }
 
+    /**
+     * @see SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
+     */
+    public void setup(SourceResolver resolver,
+                      Map            objectModel,
+                      String         src,
+                      Parameters     par)
+    throws ProcessingException, SAXException, IOException {
+        setup((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT));
+    }
+
+    /**
+     * Test if the component wants to set the content length.
+     */
+    public boolean shouldSetContentLength() {
+        return false;
+    }
 }
