@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>  
 
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-blocks-modules</artifactId>
     <version>6-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>
+
   <artifactId>cocoon-template-impl</artifactId>
   <version>1.0.0-RC3-SNAPSHOT</version>
   <name>Cocoon Template Framework Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.template.relPath}</url>    
-  
+  <packaging>jar</packaging>
+
   <distributionManagement>
     <site>
       <id>website</id>

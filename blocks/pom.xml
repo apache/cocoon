@@ -155,7 +155,8 @@
         <module>cocoon-html/cocoon-html-sample</module>        
         <module>cocoon-imageop</module>  
         <module>cocoon-itext</module>
-        <module>cocoon-javaflow</module>
+        <module>cocoon-javaflow/cocoon-javaflow-impl</module>
+        <module>cocoon-javaflow/cocoon-javaflow-sample</module>
         <!-- module>cocoon-jcr</module -->
         <module>cocoon-jfor</module>
         <module>cocoon-jms</module>
