@@ -138,10 +138,11 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                 source = resolver.resolveURI(contextPath);
                 contextPath = source.getURI();
             } catch (IOException e) {
-                throw new MalformedURLException("Could not resolve " + contextPath);
+                throw new MalformedURLException("Could not resolve " + contextPath + " due to " + e);
             } finally {
-                if (resolver != null)
+                if (resolver != null) {
                     resolver.release(source);
+                }
             }
         }
 
