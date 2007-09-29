@@ -17,9 +17,13 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-  xmlns:p="http://outerx.org/daisy/1.0#publisher" xmlns:d="http://outerx.org/daisy/1.0"
-  xmlns:ns="http://outerx.org/daisy/1.0" exclude-result-prefixes="p d ns">
+
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:p="http://outerx.org/daisy/1.0#publisher"
+                xmlns:d="http://outerx.org/daisy/1.0"
+                xmlns:ns="http://outerx.org/daisy/1.0"
+                exclude-result-prefixes="p d ns">
 
   <xsl:output method="xml"/>
   <xsl:output omit-xml-declaration="no"/>
@@ -107,40 +111,42 @@
         <h1 class="docTitle">
           <xsl:value-of select="@name"/>
         </h1>
+
         <h1>Summary</h1>
         <xsl:if test="not(d:parts/d:part[@typeId='17']/html/body/*)">
           <p>No summary available. The summary needs to be defined using the
-            <tt>@cocoon.sitemap.component.documentation</tt> annotation in the Java source file for this component: </p>
+            <tt>@cocoon.sitemap.component.documentation</tt> annotation in the Java source file for this component.</p>
         </xsl:if>
         <xsl:apply-templates select="d:parts/d:part[@typeId='17']/html/body/*"/>
+
         <h1>Basic information</h1>
         <table>
           <tr>
             <th>Component type</th>
             <td>
-              <xsl:value-of select="d:fields/d:field[@name='JavaClassName']/d:string/@valueFormatted"/>
+              <xsl:value-of select="d:fields/d:field[@name='CocoonComponentReference']/d:string/@valueFormatted"/>
             </td>
           </tr>
           <tr>
             <th>Cocoon block</th>
             <td>
-              <xsl:value-of select="d:fields/d:field[@name='CocoonComponentReference']/d:string/@valueFormatted"/>
+              <xsl:value-of select="d:fields/d:field[@name='CocoonBlock']/d:string/@valueFormatted"/>
             </td>
           </tr>
           <tr>
             <th>Java class</th>
             <td>
-              <xsl:value-of select="d:fields/d:field[@name='CocoonBlock']/d:string/@valueFormatted"/>
+              <xsl:value-of select="d:fields/d:field[@name='JavaClassName']/d:string/@valueFormatted"/>
             </td>
           </tr>
           <tr>
-            <th>Cachable</th>
+            <th>Cacheable</th>
             <td>
-              <xsl:value-of select="d:fields/d:field[@name='SitemapComponentCacheabilityInfo']/d:string/@valueFormatted"
-              />
+              <xsl:value-of select="d:fields/d:field[@name='SitemapComponentCacheabilityInfo']/d:string/@valueFormatted"/>
             </td>
           </tr>
         </table>
+        
         <h1>Documentation</h1>
         <xsl:if test="not(d:parts/d:part[@typeId='18']/html/body/*)">
           <p>No documentation available yet.</p>
