@@ -101,7 +101,7 @@
           <fd:enum>org.apache.cocoon.forms.samples.Sex</fd:enum>
         </fd:convertor>
       </fd:datatype>
-      <fd:selection-list type="enum" class="org.apache.cocoon.forms.samples.Sex"/>
+      <fd:selection-list type="enum" ref="org.apache.cocoon.forms.samples.Sex"/>
     </fd:field>
   
     <fd:multivaluefield id="drinks">
