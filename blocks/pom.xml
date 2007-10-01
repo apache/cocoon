@@ -189,7 +189,8 @@
         <module>cocoon-velocity</module>
         <module>cocoon-web3</module>
         <module>cocoon-webdav</module>
-        <module>cocoon-xmldb</module>
+        <module>cocoon-xmldb/cocoon-xmldb-impl</module>
+        <module>cocoon-xmldb/cocoon-xmldb-sample</module>
         <module>cocoon-xsp/cocoon-xsp-impl</module>
         <module>cocoon-xsp/cocoon-xsp-sample</module>
       </modules>
