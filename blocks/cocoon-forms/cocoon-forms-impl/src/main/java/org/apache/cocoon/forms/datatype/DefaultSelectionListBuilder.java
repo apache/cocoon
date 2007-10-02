@@ -81,7 +81,7 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder {
             }
             // Create SelectionList
             if (dynamic) {
-                selectionList = new DynamicSelectionList(datatype, src, usePerRequestCache, xmlizer, sourceResolver, processInfoProvider);
+                selectionList = new DynamicSelectionList(datatype, src, usePerRequestCache, xmlizer, sourceResolver, processInfoProvider.getRequest());
             } else {
                 selectionListElement = readSelectionList(src);
                 selectionList = buildStaticList(selectionListElement, datatype);                

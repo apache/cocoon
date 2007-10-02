@@ -22,7 +22,9 @@ import java.util.Locale;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSource;
+import org.apache.excalibur.xmlizer.XMLizer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,8 +47,10 @@ public class DynamicSelectionListTestCase extends AbstractSelectionListTestCase 
         Document sourceDoc = this.parser.parse(source.getInputStream());
         Element datatypeElement = (Element) sourceDoc.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "convertor").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
+        final XMLizer xmlizer = (XMLizer)getManager().lookup( XMLizer.ROLE );
+        final SourceResolver sourceResolver = (SourceResolver)getManager().lookup( SourceResolver.ROLE );
         DynamicSelectionList list = 
-            new DynamicSelectionList(datatype, null, this.getManager());
+            new DynamicSelectionList(datatype, null, xmlizer, sourceResolver, null);
         list.generateSaxFragment(dest, Locale.ENGLISH, source);
         ResourceSource expectedSource =
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/DynamicSelectionListTestCase.dest.xml");

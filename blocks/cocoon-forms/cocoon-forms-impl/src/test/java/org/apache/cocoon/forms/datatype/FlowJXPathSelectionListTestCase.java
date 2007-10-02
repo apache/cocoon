@@ -67,7 +67,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList
-            (context, "beans", "key", "value", datatype,null,false,null,false);
+            (objectModel, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
@@ -100,7 +100,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList
-            (context, "beans", "key", "value", datatype,null,false,null,false);
+            (objectModel, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");

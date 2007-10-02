@@ -111,7 +111,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
      * @param uri The URI of the source.
      */
     public SelectionList buildSelectionList(String uri) {
-        return new DynamicSelectionList(datatype, uri, this.xmlizer, this.sourceResolver, this.processInfoProvider);
+        return new DynamicSelectionList(datatype, uri, this.xmlizer, this.sourceResolver, this.processInfoProvider.getRequest());
     }
 
     /**

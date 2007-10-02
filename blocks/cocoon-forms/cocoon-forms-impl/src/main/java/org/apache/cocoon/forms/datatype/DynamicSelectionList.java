@@ -63,7 +63,7 @@ public class DynamicSelectionList implements FilterableSelectionList {
     private Datatype datatype;
     private XMLizer xmlizer;
     private SourceResolver sourceResolver;
-    private ProcessInfoProvider processInfoProvider;
+    private HttpServletRequest request;
 
     /**
      * @param datatype
@@ -72,13 +72,13 @@ public class DynamicSelectionList implements FilterableSelectionList {
      * @param serviceManager
      * @param context
      */
-    public DynamicSelectionList(Datatype datatype, String src, boolean usePerRequestCache, XMLizer xmlizer, SourceResolver sourceResolver, ProcessInfoProvider processInfoProvider) {
+    public DynamicSelectionList(Datatype datatype, String src, boolean usePerRequestCache, XMLizer xmlizer, SourceResolver sourceResolver, HttpServletRequest request) {
         this.datatype = datatype;
         this.src = src;
         this.usePerRequestCache = usePerRequestCache;
         this.xmlizer = xmlizer;
         this.sourceResolver = sourceResolver;
-        this.processInfoProvider = processInfoProvider;
+        this.request = request;
     }
 
     /**
@@ -87,8 +87,8 @@ public class DynamicSelectionList implements FilterableSelectionList {
      * @param src - 
      * @param serviceManager -
      */
-    public DynamicSelectionList(Datatype datatype, String src, XMLizer xmlizer, SourceResolver sourceResolver, ProcessInfoProvider processInfoProvider) {
-        this(datatype, src, false, xmlizer, sourceResolver, processInfoProvider);
+    public DynamicSelectionList(Datatype datatype, String src, XMLizer xmlizer, SourceResolver sourceResolver, HttpServletRequest request) {
+        this(datatype, src, false, xmlizer, sourceResolver, request);
     }
 
     public Datatype getDatatype() {
@@ -148,15 +148,16 @@ public class DynamicSelectionList implements FilterableSelectionList {
 
         if (usePerRequestCache) {
             // Search the sax buffer in request attributes
-            HttpServletRequest request = processInfoProvider.getRequest();
             String attributeName = "DynamicSelectionListCache/" + url;
-            SaxBuffer saxBuffer = (SaxBuffer)request.getAttribute(attributeName);
+            SaxBuffer saxBuffer = (request != null ? (SaxBuffer)request.getAttribute(attributeName) : null);
             
             if (saxBuffer == null) {
                 // Not found: generate the list and store it
                 saxBuffer = new SaxBuffer();
                 generateSaxFragmentFromSrc(url, saxBuffer, locale);
-                request.setAttribute(attributeName, saxBuffer);
+                if (request != null) {
+                    request.setAttribute(attributeName, saxBuffer);
+                }
             }
             
             // Output the stored saxBuffer to the contentHandler
