@@ -128,7 +128,8 @@
         <module>cocoon-auth/cocoon-auth-api</module>
         <module>cocoon-auth/cocoon-auth-impl</module>
         <module>cocoon-auth/cocoon-auth-sample</module>        
-        <module>cocoon-authentication-fw</module>
+        <module>cocoon-authentication-fw/cocoon-authentication-fw-impl</module>
+        <module>cocoon-authentication-fw/cocoon-authentication-fw-sample</module>
         <module>cocoon-axis/cocoon-axis-impl</module>
         <module>cocoon-axis/cocoon-axis-sample</module>
         <module>cocoon-bsf/cocoon-bsf-impl</module>
@@ -159,15 +160,22 @@
         <module>cocoon-fop/cocoon-fop-ng-sample</module>
         <module>cocoon-html/cocoon-html-impl</module>
         <module>cocoon-html/cocoon-html-sample</module>        
-        <module>cocoon-imageop</module>  
-        <module>cocoon-itext</module>
+        <module>cocoon-imageop/cocoon-imageop-impl</module>
+        <module>cocoon-imageop/cocoon-imageop-sample</module>
+        <module>cocoon-itext/cocoon-itext-impl</module>
+        <module>cocoon-itext/cocoon-itext-sample</module>
         <module>cocoon-javaflow/cocoon-javaflow-impl</module>
         <module>cocoon-javaflow/cocoon-javaflow-sample</module>
         <!-- module>cocoon-jcr</module -->
-        <module>cocoon-jfor</module>
-        <module>cocoon-jms</module>
-        <module>cocoon-jsp</module>
-        <module>cocoon-lucene</module>
+        <module>cocoon-jfor/cocoon-jfor-impl</module>
+        <module>cocoon-jfor/cocoon-jfor-sample</module>
+        <module>cocoon-jms/cocoon-jms-impl</module>
+        <module>cocoon-jms/cocoon-jms-sample</module>
+        <module>cocoon-jsp/cocoon-jsp-impl</module>
+        <module>cocoon-jsp/cocoon-jsp-mocks</module>
+        <module>cocoon-jsp/cocoon-jsp-sample</module>
+        <module>cocoon-lucene/cocoon-lucene-impl</module>
+        <module>cocoon-lucene/cocoon-lucene-sample</module>
         <module>cocoon-mail/cocoon-mail-impl</module>
         <module>cocoon-mail/cocoon-mail-sample</module>        
         <module>cocoon-midi</module>
