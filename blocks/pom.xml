@@ -135,8 +135,10 @@
         <module>cocoon-bsf/cocoon-bsf-sample</module>
         <module>cocoon-captcha/cocoon-captcha-impl</module>
         <module>cocoon-captcha/cocoon-captcha-sample</module>        
-        <module>cocoon-chaperon</module>
-        <module>cocoon-cron</module>
+        <module>cocoon-chaperon/cocoon-chaperon-impl</module>
+        <module>cocoon-chaperon/cocoon-chaperon-sample</module>
+        <module>cocoon-cron/cocoon-cron-impl</module>
+        <module>cocoon-cron/cocoon-cron-sample</module>
         <module>cocoon-databases/cocoon-databases-impl</module>
         <module>cocoon-databases/cocoon-databases-mocks</module>
         <module>cocoon-databases/cocoon-databases-sample</module>
@@ -145,9 +147,12 @@
         <module>cocoon-databases/cocoon-databases-odbc-client</module>
         <module>cocoon-databases/cocoon-databases-oracle-client</module>
         <module>cocoon-databases/cocoon-databases-postgresql-client</module>
-        <module>cocoon-deli</module>
-        <module>cocoon-eventcache</module>
-        <module>cocoon-faces</module>
+        <module>cocoon-deli/cocoon-deli-impl</module>
+        <module>cocoon-deli/cocoon-deli-sample</module>
+        <module>cocoon-eventcache/cocoon-eventcache-impl</module>
+        <module>cocoon-eventcache/cocoon-eventcache-sample</module>
+        <module>cocoon-faces/cocoon-faces-impl</module>
+        <module>cocoon-faces/cocoon-faces-sample</module>
         <module>cocoon-fop/cocoon-fop-impl</module>
         <module>cocoon-fop/cocoon-fop-sample</module>  
         <module>cocoon-fop/cocoon-fop-ng-impl</module>
