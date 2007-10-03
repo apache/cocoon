@@ -110,13 +110,7 @@ public class VariableResolverFactory {
                 throw new PatternException("Couldn't obtain VariableResolver.", e);
             }
 
-            List collector = (List) disposableCollector.get();
-            if (collector != null) {
-                collector.add(resolver);
-            }
-
             return resolver;
-
         }
 
         return new NOPVariableResolver(expression);

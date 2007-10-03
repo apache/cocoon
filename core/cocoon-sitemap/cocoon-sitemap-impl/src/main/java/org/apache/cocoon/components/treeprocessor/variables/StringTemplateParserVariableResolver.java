@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,7 +18,6 @@ package org.apache.cocoon.components.treeprocessor.variables;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.StringTemplateParser;
@@ -30,21 +29,20 @@ import org.apache.cocoon.template.expression.Substitutions;
  *
  * @version $Id$
  */
-public final class StringTemplateParserVariableResolver extends VariableResolver
-                                                        implements Disposable {
-    
+public final class StringTemplateParserVariableResolver extends VariableResolver {
+
     public final static String ROLE = StringTemplateParserVariableResolver.class.getName();
-    
+
     private StringTemplateParser stringTemplateParser;
     private ObjectModel objectModel;
-    
+
     private Substitutions substitutions;
 
 
     public StringTemplateParserVariableResolver() {
         super();
     }
-    
+
     public StringTemplateParser getStringTemplateParser() {
         return stringTemplateParser;
     }
@@ -52,7 +50,7 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
     public void setStringTemplateParser(StringTemplateParser stringTemplateParser) {
         this.stringTemplateParser = stringTemplateParser;
     }
-    
+
     public ObjectModel getObjectModel() {
         return objectModel;
     }
@@ -60,13 +58,13 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
     public void setObjectModel(ObjectModel objectModel) {
         this.objectModel = objectModel;
     }
-    
+
     public void setExpression(String expression) throws PatternException {
         this.originalExpr = expression;
         try {
             if (stringTemplateParser instanceof LegacySitemapStringTemplateParser)
                 this.substitutions = new LegacySubstitutions((LegacySitemapStringTemplateParser) stringTemplateParser, null, expression);
-            else 
+            else
                 this.substitutions = new Substitutions(stringTemplateParser, null, expression);
         } catch (Exception e) {
             throw new PatternException(e);
@@ -82,9 +80,5 @@ public final class StringTemplateParserVariableResolver extends VariableResolver
         } catch (Exception e) {
             throw new PatternException(e);
         }
-    }
-
-    public void dispose() {
-        //nothing to do
     }
 }
