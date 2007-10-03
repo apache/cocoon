@@ -21,9 +21,7 @@
 <!--
   - @version $Id$
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -124,14 +122,17 @@
         </property>
       </activation>
       <modules>
-        <module>cocoon-asciiart</module>
+        <module>cocoon-asciiart/cocoon-asciiart-impl</module>
+        <module>cocoon-asciiart/cocoon-asciiart-sample</module>
         <module>cocoon-auth/cocoon-acegisecurity-sample</module>
         <module>cocoon-auth/cocoon-auth-api</module>
         <module>cocoon-auth/cocoon-auth-impl</module>
         <module>cocoon-auth/cocoon-auth-sample</module>        
         <module>cocoon-authentication-fw</module>
-        <module>cocoon-axis</module>
-        <module>cocoon-bsf</module>
+        <module>cocoon-axis/cocoon-axis-impl</module>
+        <module>cocoon-axis/cocoon-axis-sample</module>
+        <module>cocoon-bsf/cocoon-bsf-impl</module>
+        <module>cocoon-bsf/cocoon-bsf-sample</module>
         <module>cocoon-captcha/cocoon-captcha-impl</module>
         <module>cocoon-captcha/cocoon-captcha-sample</module>        
         <module>cocoon-chaperon</module>
