@@ -84,18 +84,18 @@
   <map:pipelines>
     <map:pipeline type="caching">
       <map:match pattern="library/**">
-        <map:read src="libraries/{1}" />
+        <map:read src="libraries/{1}"/>
       </map:match>
     </map:pipeline>
 
     <map:pipeline type="noncaching">
       <map:match pattern="">
-        <map:generate src="index.xml" />
-        <map:serialize />
+        <map:generate src="index.xml"/>
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="*.continue">
-        <map:call continuation="{1}" />
+        <map:call continuation="{1}"/>
       </map:match>
 
       <map:match pattern="*-display-pipeline">
@@ -105,7 +105,7 @@
         <map:transform type="i18n" label="form">
           <map:parameter name="locale" value="en-US" />
         </map:transform>
-        <map:transform src="servlet:style:default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
         <map:transform src="../resources/forms-samples-styling.xsl">
           <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
           <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
@@ -115,39 +115,38 @@
       </map:match>
 
       <map:match pattern="*-error-pipeline">
-        <map:generate src="error.xml" />
-        <map:serialize />
+        <map:generate src="error.xml"/>
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="*-success-pipeline.jx">
         <map:generate type="jx" src="resources/result_jx.xml" />
-        <map:transform src="servlet:style:default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
         <map:serialize type="xml" />
       </map:match>
 
       <!--
-        | Sample building a forms-form-gui editor in forms
-        | Doubles as a showcase for class, new, struct, union widgets
-      -->
+        - Sample building a forms-form-gui editor in forms
+        - Doubles as a showcase for class, new, struct, union widgets
+        -->
 
       <!-- TODO: Fix edit-any-file security hole! -->
       <map:match pattern="*.flow">
         <map:call function="handleForm">
-          <map:parameter name="function" value="show_{1}" />
-          <map:parameter name="form-definition" value="forms/{1}_model.xml" />
-          <map:parameter name="bindingURI" value="forms/{1}_binding.xml" />
+          <map:parameter name="function" value="show_{1}"/>
+          <map:parameter name="form-definition" value="forms/{1}_model.xml"/>
+          <map:parameter name="bindingURI" value="forms/{1}_binding.xml"/>
         </map:call>
       </map:match>
 
       <map:match pattern="*">
-        <map:redirect-to uri="{1}/" />
+        <map:redirect-to uri="{1}/"/>
       </map:match>
 
       <map:match pattern="*/**">
-        <map:mount src="{1}/" uri-prefix="{1}" />
+        <map:mount src="{1}/" uri-prefix="{1}"/>
       </map:match>
 
     </map:pipeline>
   </map:pipelines>
-
 </map:sitemap>
