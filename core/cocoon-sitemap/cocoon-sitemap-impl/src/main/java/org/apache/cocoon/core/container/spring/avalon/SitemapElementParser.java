@@ -64,7 +64,9 @@ public class SitemapElementParser extends BridgeElementParser {
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
     throws Exception {
         WebApplicationContext parentContext = WebAppContextUtils.getCurrentWebApplicationContext();
-        return ConfigurationReader.readSitemap((ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName()), location, resourceLoader);
+        return ConfigurationReader.readSitemap((ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName()),
+                                               location,
+                                               new SourceResourceLoader(resourceLoader));
     }
 
     protected String getConfigurationLocation() {

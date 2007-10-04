@@ -112,6 +112,9 @@ public class ConfigurationReader {
     private ConfigurationReader(ConfigurationInfo parentInfo,
                                 ResourceLoader    resourceLoader)
     throws Exception {
+        if ( resourceLoader == null ) {
+            throw new IllegalArgumentException("ResourceLoader not set!");
+        }
         this.isRootContext = parentInfo == null;
         this.resolver = new ServletContextResourcePatternResolver(resourceLoader);
 
