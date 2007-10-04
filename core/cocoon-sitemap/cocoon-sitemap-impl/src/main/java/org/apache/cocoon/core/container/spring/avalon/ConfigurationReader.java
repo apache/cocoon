@@ -165,8 +165,17 @@ public class ConfigurationReader {
     protected InputSource getInputSource(Resource rsrc)
     throws Exception {
         final InputSource is = new InputSource(rsrc.getInputStream());
-        is.setSystemId(rsrc.getURL().toExternalForm());
+        is.setSystemId(this.getUrl(rsrc));
         return is;
+    }
+
+    protected String getUrl(Resource rsrc)
+    throws IOException {
+        if ( rsrc instanceof SourceResource ) {
+            return ((SourceResource)rsrc).getUrlString();
+        } else {
+            return rsrc.getURL().toExternalForm();
+        }
     }
 
     protected String getUrl(String url, String base) {
@@ -206,7 +215,7 @@ public class ConfigurationReader {
                     "Invalid configuration schema version. Must be '"
                             + Constants.CONF_VERSION + "'.");
         }
-        this.convert(config, null, root.getURL().toExternalForm());
+        this.convert(config, null, this.getUrl(root));
     }
 
     protected void convertSitemap(String sitemapLocation)
@@ -228,7 +237,7 @@ public class ConfigurationReader {
         }
         final Configuration completeConfig = SitemapHelper.createSitemapConfiguration(config);
         if ( completeConfig != null ) {
-            this.convert(completeConfig, null, root.getURL().toExternalForm());
+            this.convert(completeConfig, null, this.getUrl(root));
         }
     }
 
@@ -260,7 +269,7 @@ public class ConfigurationReader {
                 final Resource userRolesSource = this.resolver.getResource(this.getUrl(userRoles, rootUri));
                 final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
                 final Configuration userRolesConfig = b.build(this.getInputSource(userRolesSource));
-                this.parseConfiguration(userRolesConfig, userRolesSource.getURL().toExternalForm(), loadedConfigs);
+                this.parseConfiguration(userRolesConfig, this.getUrl(userRolesSource), loadedConfigs);
             }
         }
         if ( additionalConfig != null ) {
@@ -547,7 +556,7 @@ public class ConfigurationReader {
             try {
                 src = this.resolver.getResource(this.getUrl(includeURI, contextURI));
 
-                this.configInfo.addImport(src.getURL().toExternalForm());
+                this.configInfo.addImport(this.getUrl(src));
             } catch (Exception e) {
                 throw new ConfigurationException("Cannot load '" + includeURI + "' at "
                         + includeStatement.getLocation(), e);
@@ -563,7 +572,7 @@ public class ConfigurationReader {
                     if ( resources != null ) {
                         Arrays.sort(resources, ResourceUtils.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
-                           this.configInfo.addImport(resources[i].getURL().toExternalForm());
+                           this.configInfo.addImport(this.getUrl(resources[i]));
                         }
                     }
                 } catch (IOException ioe) {
