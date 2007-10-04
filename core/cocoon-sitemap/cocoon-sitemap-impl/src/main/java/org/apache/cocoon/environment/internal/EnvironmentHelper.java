@@ -169,17 +169,16 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public void changeContext(Environment env)
     throws ProcessingException {
-        if ( this.lastPrefix != null ) {
-            final String uris = env.getURI();
-            if (!uris.startsWith(this.lastPrefix)) {
-                final String message = "The current URI (" + uris +
-                                 ") doesn't start with given prefix (" + this.lastPrefix + ")";
-                throw new ProcessingException(message);
+        if (this.lastPrefix != null) {
+            final String uri = env.getURI();
+            if (!uri.startsWith(this.lastPrefix)) {
+                throw new ProcessingException("The current URI (" + uri +
+                                              ") doesn't start with given prefix (" + this.lastPrefix + ")");
             }
             // we don't need to check for slash at the beginning
-            // of uris - the prefix always ends with a slash!
+            // of uri - the prefix always ends with a slash!
             final int l = this.lastPrefix.length();
-            env.setURI(this.prefix, uris.substring(l));
+            env.setURI(this.prefix, uri.substring(l));
         }
     }
 
@@ -274,7 +273,7 @@ implements SourceResolver, Serviceable, Disposable {
         if (null == processor) {
             throw new ProcessingException("Processor is not set.");
         }
-        EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
         if (stack == null) {
             stack = new EnvironmentStack();
             environmentStack.set(stack);
@@ -290,8 +289,8 @@ implements SourceResolver, Serviceable, Disposable {
      * method.</p>
      */
     public static void leaveProcessor() {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final EnvironmentInfo info = (EnvironmentInfo)stack.pop();
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        final EnvironmentInfo info = (EnvironmentInfo) stack.pop();
         stack.setOffset(info.oldStackCount);
     }
 
@@ -302,9 +301,9 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public static void enterEnvironment(Environment env)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        EnvironmentInfo info = null;
-        if ( stack != null && !stack.isEmpty()) {
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        EnvironmentInfo info;
+        if (stack != null && !stack.isEmpty()) {
             info = stack.getCurrentInfo();
         } else {
             throw new ProcessingException("There must be a current processing environment.");
@@ -320,10 +319,9 @@ implements SourceResolver, Serviceable, Disposable {
      * <p>It's the counterpart to the {@link #enterEnvironment(Environment)} method.</p>
      */
     public static Environment leaveEnvironment() {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final EnvironmentInfo info = (EnvironmentInfo)stack.pop();
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        final EnvironmentInfo info = (EnvironmentInfo) stack.pop();
         stack.setOffset(info.oldStackCount);
-
         return info.environment;
     }
 
@@ -332,7 +330,7 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public static int markEnvironment() {
         // TODO (CZ): This is only for testing - remove it later on. See also Cocoon.java.
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
         if (stack != null) {
             return stack.size();
         }
@@ -344,10 +342,10 @@ implements SourceResolver, Serviceable, Disposable {
      * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     public static void checkEnvironment(int depth, Logger logger)
-    throws Exception {
+            throws Exception {
         // TODO (CZ): This is only for testing - remove it later on. See also Cocoon.java.
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        int currentDepth = stack != null? stack.size() : 0;
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        int currentDepth = stack != null ? stack.size() : 0;
         if (currentDepth != depth) {
             logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY!");
             throw new ProcessingException("Environment stack has not been cleaned up properly. " +
@@ -362,7 +360,7 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public static Environment getCurrentEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
-        if ( stack != null && !stack.empty() ) {
+        if (stack != null && !stack.empty()) {
             final EnvironmentInfo info = stack.getCurrentInfo();
             return info.environment;
         }
@@ -374,8 +372,8 @@ implements SourceResolver, Serviceable, Disposable {
      * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     public static Processor getCurrentProcessor() {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( stack != null && !stack.isEmpty()) {
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        if (stack != null && !stack.isEmpty()) {
             final EnvironmentInfo info = stack.getCurrentInfo();
             return info.processor;
         }
@@ -390,9 +388,9 @@ implements SourceResolver, Serviceable, Disposable {
      * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     static public ServiceManager getSitemapServiceManager() {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( stack != null && !stack.isEmpty()) {
-            return (ServiceManager)WebAppContextUtils.getCurrentWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
+        if (stack != null && !stack.isEmpty()) {
+            return (ServiceManager) WebAppContextUtils.getCurrentWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
         }
         return null;
     }
