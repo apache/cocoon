@@ -76,6 +76,10 @@
       <artifactId>xindice</artifactId>
     </dependency>
     <dependency>
+      <groupId>xindice</groupId>
+      <artifactId>xindice-dom</artifactId>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>

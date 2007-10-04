@@ -2061,7 +2061,12 @@
       <dependency>
         <groupId>xindice</groupId>
         <artifactId>xindice</artifactId>
-        <version>1.1b4</version>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>xindice</groupId>
+        <artifactId>xindice-dom</artifactId>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>xml-apis</groupId>
