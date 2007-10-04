@@ -598,8 +598,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
                 int i = 0;
                 while (responseIsValid && i < fromCacheValidityObjects.length) {
-                    boolean isValid = false;
-
                     // BH Check if validities[i] is null, may happen
                     //    if exception was thrown due to malformed content
                     SourceValidity validity = fromCacheValidityObjects[i];
@@ -611,27 +609,23 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                             valid = fromCacheValidityObjects[i].isValid(validity);
                             if (valid == SourceValidity.UNKNOWN) {
                                 validity = null;
-                            } else {
-                                isValid = (valid == SourceValidity.VALID);
                             }
                         }
-                    } else {
-                        isValid = (valid == SourceValidity.VALID);
                     }
 
-                    if (!isValid) {
+                    if (valid != SourceValidity.VALID) {
                         responseIsValid = false;
                         // update validity
                         if (validity == null) {
                             responseIsUsable = false;
                             if (getLogger().isDebugEnabled()) {
                                 getLogger().debug("validatePipeline: responseIsUsable is false, valid=" +
-                                        valid + " at index " + i);
+                                                  valid + " at index " + i);
                             }
                         } else {
                             if (getLogger().isDebugEnabled()) {
                                 getLogger().debug("validatePipeline: responseIsValid is false due to " +
-                                        validity);
+                                                  validity);
                             }
                         }
                     } else {
@@ -642,7 +636,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 if (responseIsValid) {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("validatePipeline: using valid cached content for '" +
-                                environment.getURI() + "'.");
+                                          environment.getURI() + "'.");
                     }
 
                     // we are valid, ok that's it
@@ -651,7 +645,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 } else {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("validatePipeline: cached content is invalid for '" +
-                                environment.getURI() + "'.");
+                                          environment.getURI() + "'.");
                     }
                     // we are not valid!
 
@@ -689,7 +683,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     this.completeResponseIsCached = false;
                 }
             } else {
-
                 // check if there might be one being generated
                 if(!waitForLock(this.fromCacheKey)) {
                     finished = false;
@@ -706,7 +699,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 this.completeResponseIsCached = false;
             }
         }
-
     }
 
     boolean setupFromCacheKey() {
@@ -772,7 +764,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                                                    this.readerRole,
                                                    readerKey));
 
-                while(!finished) {
+                while (!finished) {
                     finished = true;
                     // now we have the key to get the cached object
                     CachedResponse cachedObject = this.cache.get(pcKey);
@@ -788,12 +780,12 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                             this.cache.remove(pcKey);
                             if (getLogger().isDebugEnabled()) {
                                 getLogger().debug("Cached response for '" + environment.getURI() +
-                                        "' using key: " + pcKey + " is invalid.");
+                                                  "' using key: " + pcKey + " is invalid.");
                             }
                             this.cachedResponse = null;
                         } else {
                             SourceValidity cachedValidity = validities[0];
-                            boolean isValid = false;
+                            
                             int valid = cachedValidity.isValid();
                             if (valid == SourceValidity.UNKNOWN) {
                                 // get reader validity and compare
@@ -802,15 +794,11 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                                     valid = cachedValidity.isValid(readerValidity);
                                     if (valid == SourceValidity.UNKNOWN) {
                                         readerValidity = null;
-                                    } else {
-                                        isValid = (valid == SourceValidity.VALID);
                                     }
                                 }
-                            } else {
-                                isValid = (valid == SourceValidity.VALID);
                             }
 
-                            if (isValid) {
+                            if (valid == SourceValidity.VALID) {
                                 if (getLogger().isDebugEnabled()) {
                                     getLogger().debug("processReader: using valid cached content for '" +
                                             environment.getURI() + "'.");
