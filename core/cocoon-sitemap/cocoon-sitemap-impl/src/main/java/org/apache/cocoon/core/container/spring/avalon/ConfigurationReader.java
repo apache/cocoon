@@ -102,13 +102,11 @@ public class ConfigurationReader {
     }
 
     public static ConfigurationInfo readConfiguration(Configuration     rolesConfig,
-                                                      Configuration     componentConfig,
-                                                      ConfigurationInfo parentInfo,
-                                                      ResourceLoader    resourceLoader)
+                                                      Configuration     componentConfig)
     throws Exception {
-        final ConfigurationReader converter = new ConfigurationReader(parentInfo, resourceLoader);
+        final ConfigurationReader converter = new ConfigurationReader(null, null);
         converter.convert(rolesConfig, componentConfig, null);
-        return converter.configInfo;        
+        return converter.configInfo;
     }
 
     private ConfigurationReader(ConfigurationInfo parentInfo,
@@ -194,7 +192,7 @@ public class ConfigurationReader {
         }
         Resource root = this.resolver.getResource(this.getUrl(relativePath, null));
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
-        
+
         final Configuration config = b.build(this.getInputSource(root));
         // validate cocoon.xconf
         if (!"cocoon".equals(config.getName())) {
@@ -208,7 +206,7 @@ public class ConfigurationReader {
             throw new ConfigurationException(
                     "Invalid configuration schema version. Must be '"
                             + Constants.CONF_VERSION + "'.");
-        }            
+        }
         this.convert(config, null, root.getURL().toExternalForm());
     }
 
@@ -291,7 +289,7 @@ public class ConfigurationReader {
 
     protected void parseConfiguration(final Configuration configuration,
                                       String              contextURI,
-                                      Set                 loadedURIs) 
+                                      Set                 loadedURIs)
     throws ConfigurationException {
         final Configuration[] configurations = configuration.getChildren();
 
@@ -320,7 +318,7 @@ public class ConfigurationReader {
     throws ConfigurationException {
         final Iterator i = this.componentConfigs.iterator();
         while ( i.hasNext() ) {
-            final Configuration componentConfig = (Configuration)i.next(); 
+            final Configuration componentConfig = (Configuration)i.next();
             final String componentName = componentConfig.getName();
 
             // Find the role
@@ -354,11 +352,11 @@ public class ConfigurationReader {
                 }
                 className = info.getComponentClassName();
                 if ( name != null ) {
-                    info = info.copy();                    
+                    info = info.copy();
                 } else if ( !className.endsWith("Selector") ) {
                     this.configInfo.removeRole(role);
                 }
-            } else {                    
+            } else {
                 info = new ComponentInfo();
                 if ( !className.endsWith("Selector") ) {
                     this.configInfo.removeRole(role);
@@ -397,7 +395,7 @@ public class ConfigurationReader {
                     classAttribute = "class";
                 } else if (className.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector") ) {
                     classAttribute = "src";
-                } 
+                }
                 if ( classAttribute == null ) {
                     this.logger.warn("Found unknown selector type (continuing anyway: " + className);
                 } else {
@@ -407,14 +405,14 @@ public class ConfigurationReader {
                     }
                     componentRole += '/';
                     Configuration[] children = info.getConfiguration().getChildren();
-                    final Map hintConfigs = (Map)this.configInfo.getKeyClassNames().get(role);                       
+                    final Map hintConfigs = (Map)this.configInfo.getKeyClassNames().get(role);
                     for (int j=0; j<children.length; j++) {
                         final Configuration current = children[j];
                         final ComponentInfo childInfo = new ComponentInfo();
                         childInfo.fill(current);
                         childInfo.setConfiguration(current);
                         final ComponentInfo hintInfo = (hintConfigs == null ? null : (ComponentInfo)hintConfigs.get(current.getName()));
-                        if ( current.getAttribute(classAttribute, null ) != null 
+                        if ( current.getAttribute(classAttribute, null ) != null
                              || hintInfo == null ) {
                             childInfo.setComponentClassName(current.getAttribute(classAttribute));
                         } else {
@@ -425,7 +423,7 @@ public class ConfigurationReader {
                     }
                 }
             }
-        }        
+        }
     }
 
     /**
@@ -443,7 +441,7 @@ public class ConfigurationReader {
         String directoryURI = null;
         if ( includeURI == null ) {
             // check for directories
-            directoryURI = includeStatement.getAttribute("dir", null);                    
+            directoryURI = includeStatement.getAttribute("dir", null);
         }
         if ( includeURI == null && directoryURI == null ) {
             throw new ConfigurationException("Include statement must either have a 'src' or 'dir' attribute, at " +
@@ -459,7 +457,7 @@ public class ConfigurationReader {
             } catch (Exception e) {
                 throw new ConfigurationException("Cannot load '" + includeURI + "' at " + includeStatement.getLocation(), e);
             }
-            
+
         } else {
             boolean load = true;
             // test if directory exists (only if not classpath protocol is used)
@@ -491,7 +489,7 @@ public class ConfigurationReader {
 
     protected void loadURI(final Resource      src,
                            final Set           loadedURIs,
-                           final Configuration includeStatement) 
+                           final Configuration includeStatement)
     throws ConfigurationException, IOException {
         // If already loaded: do nothing
         final String uri = ResourceUtils.getUri(src);
@@ -648,12 +646,12 @@ public class ConfigurationReader {
 
                 for( int j = 0; j < keys.length; j++ ) {
                     Configuration key = keys[j];
-                    
+
                     final String shortHand = key.getAttribute( "shorthand" ).trim();
                     final String className = key.getAttribute( "class" ).trim();
 
                     ComponentInfo info = (ComponentInfo)keyMap.get(shortHand);
-                    if (info == null) {       
+                    if (info == null) {
                         info = new ComponentInfo();
                         info.setComponentClassName(className);
                         info.fill(key);
