@@ -41,8 +41,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.AbstractTestCase;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.core.container.spring.avalon.AvalonBeanPostProcessor;
-import org.apache.cocoon.core.container.spring.avalon.BridgeElementParser;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.cocoon.core.container.spring.avalon.BridgeElementParser;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationReader;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -313,12 +313,12 @@ public abstract class ContainerTestCase extends AbstractTestCase {
                                          final Configuration confRM)
     throws Exception {
         // read roles and components
-        ConfigurationInfo rolesInfo = ConfigurationReader.readConfiguration(confRM, confCM, null, null);
+        ConfigurationInfo rolesInfo = ConfigurationReader.readConfiguration(confRM, confCM);
         this.addComponents( rolesInfo );
-        
+
         final AvalonInstantiator aep = new AvalonInstantiator(this.contextProperties);
         aep.createComponents(null, rolesInfo, (BeanDefinitionRegistry) this.getBeanFactory(),  null, new DefaultResourceLoader());
-        
+
         AvalonBeanPostProcessor postProcessor = new AvalonBeanPostProcessor();
         postProcessor.setLogger(new ConsoleLogger());
         postProcessor.setContext(this.context);
@@ -475,7 +475,7 @@ public abstract class ContainerTestCase extends AbstractTestCase {
         public Object get(Object arg0) throws ContextException {
             Object result;
             try {
-                result = super.get(arg0);                
+                result = super.get(arg0);
             } catch (ContextException e) {
                 result = this.map.get(arg0);
                 if ( result == null ) {
