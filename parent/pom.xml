@@ -34,20 +34,6 @@
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
 
-  <modules>
-    <module>blocks</module>
-    <module>commons</module>
-    <module>core</module>
-    <module>tools</module>
-    <module>dists</module>
-    <!-- sub projects -->
-    <module>core/cocoon-configuration/cocoon-configuration-api</module>
-    <module>core/cocoon-configuration/cocoon-spring-configurator</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-components</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-impl</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-sample</module>
-  </modules>
-
   <repositories>
     <repository>
       <id>central</id>
