@@ -17,58 +17,53 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    |
-    +-->
+
+<!--
+  - @version $Id$
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-scratchpad</artifactId>
-    <version>1-SNAPSHOT</version>
+    <artifactId>cocoon-blocks-modules</artifactId>
+    <version>6-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon</groupId>
+
   <artifactId>cocoon-scratchpad-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
   <name>Scratchpad Block Implementation</name>
-  <description/>
+  <packaging>jar</packaging>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-repository-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-flowscript-impl</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.axis</groupId>
       <artifactId>axis</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>axis</groupId>
       <artifactId>axis-wsdl4j</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>commons-betwixt</groupId>
       <artifactId>commons-betwixt</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>commons-jelly</groupId>
@@ -83,7 +78,6 @@
     <dependency>
       <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
-      
       <exclusions>
         <exclusion>
           <groupId>d-haven-managed-pool</groupId>
@@ -102,23 +96,19 @@
     <dependency>
       <groupId>castor</groupId>
       <artifactId>castor</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
       <type>test-jar</type>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      
       <scope>test</scope>
     </dependency>
   </dependencies>

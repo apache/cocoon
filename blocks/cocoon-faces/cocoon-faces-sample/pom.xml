@@ -26,8 +26,9 @@
 
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-faces</artifactId>
-    <version>1-SNAPSHOT</version>
+    <artifactId>cocoon-blocks-modules</artifactId>
+    <version>6-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>cocoon-faces-sample</artifactId>
