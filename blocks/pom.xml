@@ -178,26 +178,43 @@
         <module>cocoon-lucene/cocoon-lucene-sample</module>
         <module>cocoon-mail/cocoon-mail-impl</module>
         <module>cocoon-mail/cocoon-mail-sample</module>        
-        <module>cocoon-midi</module>
-        <module>cocoon-naming</module>
-        <module>cocoon-ojb</module>
-        <module>cocoon-petstore</module>
-        <module>cocoon-poi</module>
+        <module>cocoon-midi/cocoon-midi-impl</module>
+        <module>cocoon-midi/cocoon-midi-sample</module>
+        <module>cocoon-naming/cocoon-naming-impl</module>
+        <module>cocoon-naming/cocoon-naming-sample</module>
+        <module>cocoon-ojb/cocoon-ojb-impl</module>
+        <module>cocoon-ojb/cocoon-ojb-mocks</module>
+        <module>cocoon-ojb/cocoon-ojb-sample</module>
+        <module>cocoon-petstore/cocoon-petstore-impl</module>
+        <module>cocoon-petstore/cocoon-petstore-sample</module>
+        <module>cocoon-poi/cocoon-poi-impl</module>
+        <module>cocoon-poi/cocoon-poi-sample</module>
         <module>cocoon-portal</module>
-        <module>cocoon-profiler</module>
-        <module>cocoon-proxy</module>
-        <module>cocoon-python</module>
-        <module>cocoon-qdox</module>
-        <module>cocoon-querybean</module>
-        <module>cocoon-repository</module>
-        <module>cocoon-scratchpad</module>
+        <module>cocoon-profiler/cocoon-profiler-impl</module>
+        <module>cocoon-profiler/cocoon-profiler-sample</module>
+        <module>cocoon-proxy/cocoon-proxy-impl</module>
+        <module>cocoon-proxy/cocoon-proxy-sample</module>
+        <module>cocoon-python/cocoon-python-impl</module>
+        <module>cocoon-python/cocoon-python-mocks</module>
+        <module>cocoon-qdox/cocoon-qdox-impl</module>
+        <module>cocoon-qdox/cocoon-qdox-sample</module>
+        <module>cocoon-querybean/cocoon-querybean-impl</module>
+        <module>cocoon-querybean/cocoon-querybean-sample</module>
+        <module>cocoon-repository/cocoon-repository-impl</module>
+        <module>cocoon-scratchpad/cocoon-scratchpad-impl</module>
+        <module>cocoon-scratchpad/cocoon-scratchpad-sample</module>
         <module>cocoon-serializers/cocoon-serializers-charsets</module>
         <module>cocoon-serializers/cocoon-serializers-impl</module>
-        <module>cocoon-session-fw</module>
-        <module>cocoon-slide</module>
-        <module>cocoon-slop</module>
-        <module>cocoon-stx</module>
-        <module>cocoon-taglib</module>
+        <module>cocoon-session-fw/cocoon-session-fw-impl</module>
+        <module>cocoon-session-fw/cocoon-session-fw-sample</module>
+        <module>cocoon-slide/cocoon-slide-impl</module>
+        <module>cocoon-slide/cocoon-slide-sample</module>
+        <module>cocoon-slop/cocoon-slop-impl</module>
+        <module>cocoon-slop/cocoon-slop-sample</module>
+        <module>cocoon-stx/cocoon-stx-impl</module>
+        <module>cocoon-stx/cocoon-stx-sample</module>
+        <module>cocoon-taglib/cocoon-taglib-impl</module>
+        <module>cocoon-taglib/cocoon-taglib-sample</module>
         <module>cocoon-tour</module>
         <module>cocoon-validation</module>
         <module>cocoon-velocity</module>
