@@ -104,7 +104,7 @@ public class ConfigurationReader {
     public static ConfigurationInfo readConfiguration(Configuration     rolesConfig,
                                                       Configuration     componentConfig)
     throws Exception {
-        final ConfigurationReader converter = new ConfigurationReader(null, null);
+        final ConfigurationReader converter = new ConfigurationReader(null, new DefaultResourceLoader());
         converter.convert(rolesConfig, componentConfig, null);
         return converter.configInfo;
     }
@@ -113,11 +113,7 @@ public class ConfigurationReader {
                                 ResourceLoader    resourceLoader)
     throws Exception {
         this.isRootContext = parentInfo == null;
-        if ( resourceLoader != null ) {
-            this.resolver = new ServletContextResourcePatternResolver(resourceLoader);
-        } else {
-            this.resolver = new ServletContextResourcePatternResolver(new DefaultResourceLoader());
-        }
+        this.resolver = new ServletContextResourcePatternResolver(resourceLoader);
 
         // now add selectors from parent
         if ( parentInfo != null ) {
