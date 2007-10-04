@@ -19,6 +19,7 @@
 package org.apache.cocoon.core.container.spring.avalon;
 
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
+import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.ResourceLoader;
@@ -66,7 +67,7 @@ public class SitemapElementParser extends BridgeElementParser {
         WebApplicationContext parentContext = WebAppContextUtils.getCurrentWebApplicationContext();
         return ConfigurationReader.readSitemap((ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName()),
                                                location,
-                                               new SourceResourceLoader(resourceLoader));
+                                               new SourceResourceLoader(resourceLoader, (SourceResolver)parentContext.getBean(SourceResolver.ROLE)));
     }
 
     protected String getConfigurationLocation() {
