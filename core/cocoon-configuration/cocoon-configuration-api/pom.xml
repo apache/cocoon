@@ -29,7 +29,7 @@
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../../../parent</relativePath>
   </parent>
   <artifactId>cocoon-configuration-api</artifactId>
   <version>1.0.2-SNAPSHOT</version>

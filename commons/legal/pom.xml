@@ -28,6 +28,7 @@
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
     <version>6-SNAPSHOT</version>
+    <relativePath>../../parent</relativePath>
   </parent>
   <artifactId>cocoon-licenses</artifactId>
   <version>1.0.0-M2-SNAPSHOT</version>
