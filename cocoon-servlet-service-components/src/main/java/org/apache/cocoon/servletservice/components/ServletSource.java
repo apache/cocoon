@@ -45,13 +45,13 @@ public class ServletSource extends AbstractSource
     private transient Log logger = LogFactory.getLog(getClass());
 
     /**
-     * The store is used to store values of Last-Modified header (if it exists).
+     * <p>The store is used to store values of Last-Modified header (if it exists).
      * This store is required because in {@link #getValidity()} we need value
      * of Last-Modified header of previous response in order to perform conditional
-     * GET.
+     * GET.</p>
      *
-     * <strong>NOTE:</strong> Caching of servlet: source is broken in some cases. See thread
-     * http://news.gmane.org/find-root.php?group=gmane.text.xml.cocoon.devel&article=72801
+     * <p><strong>NOTE:</strong> Caching of servlet: source is broken in some cases. See thread
+     * http://news.gmane.org/find-root.php?group=gmane.text.xml.cocoon.devel&article=72801</p>
      */
     private Store store;
 
