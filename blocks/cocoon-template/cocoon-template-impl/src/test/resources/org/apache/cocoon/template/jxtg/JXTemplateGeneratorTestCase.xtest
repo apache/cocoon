@@ -18,6 +18,5 @@
 <testcase>
     <roles>
         <role name="org.apache.cocoon.generation.GeneratorSelector" shorthand="generators" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
-        <role name="org.apache.excalibur.store.Store/TransientStore" shorthand="store" default-class="org.apache.excalibur.store.impl.MemoryStore"/>
     </roles>
 </testcase>
