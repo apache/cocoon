@@ -32,13 +32,11 @@
   <import resource="classpath:META-INF/cocoon/spring/LegacyStringTemplateParser.xml" />
   <import resource="classpath:META-INF/cocoon/spring/ObjectModelTemplate.xml" />
   <import resource="classpath:META-INF/cocoon/spring/cocoon-template.xml" />
-  <import resource="classpath:META-INF/cocoon/spring/cocoon-xml-impl.xml" />
-  <import resource="classpath:META-INF/cocoon/spring/cocoon-store-impl-transient.xml" />
 
-  <bean id="placeholderConfig" class="org.apache.cocoon.spring.configurator.impl.SettingsBeanFactoryPostProcessor"
-    init-method="init">
-    <property name="runningMode" value="dev" />
-  </bean>
+  <import resource="classpath:META-INF/cocoon/spring/cocoon-thread-impl.xml" />
+  <import resource="classpath:META-INF/cocoon/spring/cocoon-xml-impl.xml" />
+  <import resource="classpath:META-INF/cocoon/spring/cocoon-store-impl-janitor.xml" />
+  <import resource="classpath:META-INF/cocoon/spring/cocoon-store-impl-transient.xml" />
 
   <bean name="org.apache.cocoon.el.objectmodel.ObjectModel"
     parent="org.apache.cocoon.el.objectmodel.ObjectModel.template" />
