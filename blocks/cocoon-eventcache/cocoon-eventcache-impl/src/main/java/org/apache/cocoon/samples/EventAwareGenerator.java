@@ -48,7 +48,7 @@ public class EventAwareGenerator extends JXTemplateGenerator {
      *         is currently not cacheable.
      */
     public Serializable getKey() {
-        final Request request = ObjectModelHelper.getRequest(this.objectModel);
+        final Request request = ObjectModelHelper.getRequest(this.getObjectModel());
         // for our test, pages having the same value of "pageKey" will share
         // the same cache location
         String key = request.getParameter("pageKey") ;
@@ -67,7 +67,7 @@ public class EventAwareGenerator extends JXTemplateGenerator {
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        final Request request = ObjectModelHelper.getRequest(this.objectModel);
+        final Request request = ObjectModelHelper.getRequest(this.getObjectModel());
         String key = request.getParameter("pageKey") ;
         return new EventValidity(
                    new NamedEvent(
