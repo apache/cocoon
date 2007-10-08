@@ -31,6 +31,7 @@ import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.processing.impl.MockProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
+import org.apache.cocoon.spring.configurator.impl.SettingsBeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
@@ -89,10 +90,6 @@ public abstract class AbstractTestCase extends TestCase {
         // setup object model
         this.setUpObjectModel();
 
-        // setting up an webapplicationcontext is neccesarry to make spring believe
-        // it runs in a servlet container. we initialize it with our current
-        // bean factory to get consistent bean resolution behaviour
-        this.setUpRootApplicationContext();
 
         // create bean factory
         this.createBeanFactory();
@@ -104,6 +101,10 @@ public abstract class AbstractTestCase extends TestCase {
         this.requestAttributes = new MockRequestAttributes(this.getRequest());
         RequestContextHolder.setRequestAttributes(this.requestAttributes);
 
+        // setting up an webapplicationcontext is neccesarry to make spring believe
+        // it runs in a servlet container. we initialize it with our current
+        // bean factory to get consistent bean resolution behaviour
+        this.setUpRootApplicationContext();
     }
 
     /**
@@ -142,7 +143,7 @@ public abstract class AbstractTestCase extends TestCase {
         final ServletContextFactoryBean scfb = new ServletContextFactoryBean();
         scfb.setServletContext(this.getContext());
 
-        this.staticWebApplicationContext = new MockWebApplicationContext(this.getContext());
+        this.staticWebApplicationContext = new MockWebApplicationContext(this.beanFactory, this.getContext());
         this.getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
                 staticWebApplicationContext);
     }
@@ -150,12 +151,13 @@ public abstract class AbstractTestCase extends TestCase {
     protected void createBeanFactory() throws Exception {
         ClassPathResource cpr = new ClassPathResource(getClass().getName().replace('.', '/') + ".spring.xml");
         if (cpr.exists()) {
-            this.beanFactory = new XmlBeanFactory(cpr, this.staticWebApplicationContext);
+            this.beanFactory = new XmlBeanFactory(cpr);
         } else {
-            this.beanFactory = new DefaultListableBeanFactory(this.staticWebApplicationContext);
+            this.beanFactory = new DefaultListableBeanFactory();
         }
         this.addSettings();
         this.addProcessingInfoProvider();
+        this.addSettingsBeanFactoryPostProcessor();
     }
 
     protected void initBeanFactory() {
@@ -185,6 +187,17 @@ public abstract class AbstractTestCase extends TestCase {
         def.getPropertyValues().addPropertyValue("servletContext", getContext());
         BeanDefinitionHolder holder = new BeanDefinitionHolder(def, ProcessInfoProvider.ROLE);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
+    }
+
+    protected void addSettingsBeanFactoryPostProcessor() {
+        SettingsBeanFactoryPostProcessor processor = new SettingsBeanFactoryPostProcessor();
+        processor.setBeanFactory(this.beanFactory);
+        try {
+            processor.init();
+        } catch (Exception e) {
+            throw new RuntimeException("unable to create SettingsBeanFactoryPostProcessor", e);
+        }
+        processor.postProcessBeanFactory(beanFactory);
     }
 
     protected MockRequest createRequest() {
