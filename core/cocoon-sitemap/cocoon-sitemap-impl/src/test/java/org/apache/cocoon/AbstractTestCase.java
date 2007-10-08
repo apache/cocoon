@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,8 +42,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 
 /**
- * This class sets up all necessary environment information to implement
- * own test cases.
+ * This class sets up all necessary environment information to implement own test cases.
  *
  * @version $Id$
  * @since 2.2
@@ -59,6 +58,7 @@ public abstract class AbstractTestCase extends TestCase {
 
     /** The bean factory. */
     private DefaultListableBeanFactory beanFactory;
+    private MockWebApplicationContext staticWebApplicationContext;
 
     public final MockRequest getRequest() {
         return this.request;
@@ -89,8 +89,14 @@ public abstract class AbstractTestCase extends TestCase {
         // setup object model
         this.setUpObjectModel();
 
+        // setting up an webapplicationcontext is neccesarry to make spring believe
+        // it runs in a servlet container. we initialize it with our current
+        // bean factory to get consistent bean resolution behaviour
+        this.setUpRootApplicationContext();
+
         // create bean factory
         this.createBeanFactory();
+
         // initialize bean factory
         this.initBeanFactory();
 
@@ -98,23 +104,19 @@ public abstract class AbstractTestCase extends TestCase {
         this.requestAttributes = new MockRequestAttributes(this.getRequest());
         RequestContextHolder.setRequestAttributes(this.requestAttributes);
 
-        // setting up an webapplicationcontext is neccesarry to make spring believe
-        // it runs in a servlet container. we initialize it with our current
-        // bean factory to get consistent bean resolution behaviour
-        this.setUpRootApplicationContext();
     }
 
     /**
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        if ( this.requestAttributes != null ) {
+        if (this.requestAttributes != null) {
             this.requestAttributes.requestCompleted();
             this.requestAttributes = null;
         }
         RequestContextHolder.resetRequestAttributes();
 
-        if( this.beanFactory != null ) {
+        if (this.beanFactory != null) {
             this.beanFactory.destroySingletons();
             this.beanFactory = null;
         }
@@ -132,7 +134,7 @@ public abstract class AbstractTestCase extends TestCase {
 
         this.objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, this.getRequest());
         this.objectmodel.put(ObjectModelHelper.RESPONSE_OBJECT, this.getResponse());
-        this.objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, this.getContext());        
+        this.objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, this.getContext());
     }
 
     protected void setUpRootApplicationContext() {
@@ -140,23 +142,24 @@ public abstract class AbstractTestCase extends TestCase {
         final ServletContextFactoryBean scfb = new ServletContextFactoryBean();
         scfb.setServletContext(this.getContext());
 
-        WebApplicationContext staticWebApplicationContext = new MockWebApplicationContext(this.getBeanFactory(), this.getContext());
-        this.getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, staticWebApplicationContext);
+        this.staticWebApplicationContext = new MockWebApplicationContext(this.getContext());
+        this.getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+                staticWebApplicationContext);
     }
 
     protected void createBeanFactory() throws Exception {
         ClassPathResource cpr = new ClassPathResource(getClass().getName().replace('.', '/') + ".spring.xml");
-        if(cpr.exists()) {
-            this.beanFactory = new XmlBeanFactory(cpr);                
+        if (cpr.exists()) {
+            this.beanFactory = new XmlBeanFactory(cpr, this.staticWebApplicationContext);
         } else {
-            this.beanFactory = new DefaultListableBeanFactory();
+            this.beanFactory = new DefaultListableBeanFactory(this.staticWebApplicationContext);
         }
         this.addSettings();
         this.addProcessingInfoProvider();
     }
 
     protected void initBeanFactory() {
-        this.beanFactory.preInstantiateSingletons();        
+        this.beanFactory.preInstantiateSingletons();
     }
 
     protected void addSettings() {
@@ -170,7 +173,7 @@ public abstract class AbstractTestCase extends TestCase {
         BeanDefinitionHolder holder = new BeanDefinitionHolder(def, Settings.ROLE);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
     }
-    
+
     protected void addProcessingInfoProvider() {
         RootBeanDefinition def = new RootBeanDefinition();
         def.setBeanClass(MockProcessInfoProvider.class);
