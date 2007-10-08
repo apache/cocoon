@@ -18,76 +18,72 @@ package org.apache.cocoon.template.script;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.el.parsing.StringTemplateParser;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.script.event.StartDocument;
 import org.apache.cocoon.util.location.LocationUtils;
-
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
-
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
 
 /**
  * @version $Id$
  */
-public class DefaultScriptManager extends AbstractLogEnabled
-                                  implements Serviceable, Disposable, ScriptManager,
-                                             ThreadSafe {
-
+public class DefaultScriptManager implements ScriptManager {
     private static final String JX_STORE_PREFIX = "jxtg:";
 
-    private String stringTemplateParserName;
-
-    private ServiceManager manager;
     private Store store;
     private InstructionFactory instructionFactory;
     private StringTemplateParser stringTemplateParser;
+    private SourceResolver sourceResolver;
+    private SAXParser saxParser;
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public InstructionFactory getInstructionFactory() {
+        return instructionFactory;
+    }
+
+    public void setInstructionFactory(InstructionFactory instructionFactory) {
+        this.instructionFactory = instructionFactory;
+    }
+
+    public StringTemplateParser getStringTemplateParser() {
+        return stringTemplateParser;
+    }
+
+    public void setStringTemplateParser(StringTemplateParser stringTemplateParser) {
+        this.stringTemplateParser = stringTemplateParser;
+    }
+
+    public SourceResolver getSourceResolver() {
+        return sourceResolver;
+    }
+
+    public void setSourceResolver(SourceResolver sourceResolver) {
+        this.sourceResolver = sourceResolver;
+    }
+
+    public SAXParser getSaxParser() {
+        return saxParser;
+    }
+
+    public void setSaxParser(SAXParser saxParser) {
+        this.saxParser = saxParser;
+    }
 
     public DefaultScriptManager() {
-        stringTemplateParserName = "legacy";
-    }
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.store = (Store) manager.lookup(Store.TRANSIENT_STORE);
-        this.instructionFactory = (InstructionFactory) manager.lookup(InstructionFactory.ROLE);
-        this.stringTemplateParser = (StringTemplateParser)
-                manager.lookup(StringTemplateParser.ROLE + "/" + stringTemplateParserName);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (stringTemplateParser != null) {
-            manager.release(stringTemplateParser);
-            stringTemplateParser = null;
-        }
-        if (this.manager != null) {
-            this.manager.release(this.store);
-            this.manager.release(this.instructionFactory);
-            this.store = null;
-            this.instructionFactory = null;
-            this.manager = null;
-        }
-    }
-
-    private Store getStore() {
-        return store;
     }
 
     public StartDocument resolveTemplate(String uri) throws SAXParseException, ProcessingException {
@@ -97,10 +93,8 @@ public class DefaultScriptManager extends AbstractLogEnabled
     public StartDocument resolveTemplate(String uri, Locator location) throws SAXParseException, ProcessingException {
         Source input = null;
         StartDocument doc = null;
-        SourceResolver resolver = null;
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            input = resolver.resolveURI(uri);
+            input = sourceResolver.resolveURI(uri);
             SourceValidity validity = null;
 
             String storeUri = JX_STORE_PREFIX + input.getURI();
@@ -133,7 +127,7 @@ public class DefaultScriptManager extends AbstractLogEnabled
                 if (validity == null) {
                     validity = input.getValidity();
                 }
-                SourceUtil.parse(manager, input, parser);
+                SourceUtil.parse(saxParser, input, parser);
                 doc = parser.getStartEvent();
                 doc.setUri(input.getURI());
                 doc.setSourceValidity(validity);
@@ -148,10 +142,7 @@ public class DefaultScriptManager extends AbstractLogEnabled
             throw new SAXParseException(e.getMessage(), location, e);
         } finally {
             if (input != null) {
-                resolver.release(input);
-            }
-            if (resolver != null) {
-                manager.release(resolver);
+                sourceResolver.release(input);
             }
         }
 

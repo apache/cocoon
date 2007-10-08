@@ -9,13 +9,13 @@
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-blocks-modules</artifactId>
     <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>cocoon-template-impl</artifactId>
-  <version>1.0.0-RC3-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <name>Cocoon Template Framework Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.template.relPath}</url>    
+  <url>http://cocoon.apache.org/${docs.m.template.relPath}</url>
   <packaging>jar</packaging>
 
   <distributionManagement>
@@ -24,12 +24,12 @@
       <url>${docs.deploymentBaseUrl}/${docs.m.template.relPath}</url>
     </site>
   </distributionManagement>
-  
+
   <properties>
-    <docs.name>Cocoon Template</docs.name>    
+    <docs.name>Cocoon Template</docs.name>
     <docs.version>${docs.m.template.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -47,7 +47,7 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-util</artifactId>
     </dependency>
-    <!--  
+    <!--
           Test dependencies
           TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
      -->
@@ -95,7 +95,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -104,14 +104,14 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <navDocId>1216</navDocId>
-              <collection>cdocs-template</collection>          
+              <collection>cdocs-template</collection>
               <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
             </configuration>
-          </plugin>   
+          </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
   </profiles>
 </project>

@@ -22,14 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.Subst;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.ServiceableGenerator;
+import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.objectmodel.helper.ParametersMap;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.JXCacheKey;
@@ -43,12 +42,13 @@ import org.apache.cocoon.xml.RedundantNamespacesFilter;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.util.NamespacesTable;
 import org.apache.excalibur.source.SourceValidity;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation Provides a generic page template with
- *                                         embedded JSTL and XPath expression
- *                                         substitution to access data sent by
+ * @cocoon.sitemap.component.documentation Provides a generic page template with embedded JSTL and
+ *                                         XPath expression substitution to access data sent by
  *                                         Cocoon Flowscripts.
  *
  * @cocoon.sitemap.component.name jx
@@ -60,70 +60,60 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class JXTemplateGenerator
-    extends ServiceableGenerator
-    implements CacheableProcessingComponent {
-
+public class JXTemplateGenerator extends AbstractGenerator implements CacheableProcessingComponent {
     /** The namespace used by this generator */
     public final static String NS = "http://apache.org/cocoon/templates/jx/1.0";
 
     public final static String CACHE_KEY = "cache-key";
     public final static String VALIDITY = "cache-validity";
 
-    private ObjectModel newObjectModel;
+    private ObjectModel objectModel;
     private NamespacesTable namespaces;
     private ScriptManager scriptManager;
 
     private StartDocument startDocument;
     private Map definitions;
+    private SAXParser saxParser;
+
+    public ScriptManager getScriptManager() {
+        return scriptManager;
+    }
+
+    public void setScriptManager(ScriptManager scriptManager) {
+        this.scriptManager = scriptManager;
+    }
+
+    public SAXParser getSaxParser() {
+        return saxParser;
+    }
+
+    public void setSaxParser(SAXParser saxParser) {
+        this.saxParser = saxParser;
+    }
+
+    public ObjectModel getObjectModel() {
+        return objectModel;
+    }
+
+    public void setObjectModel(ObjectModel objectModel) {
+        this.objectModel = objectModel;
+    }
 
     public XMLConsumer getConsumer() {
         return this.xmlConsumer;
     }
 
     /**
-     * @see org.apache.cocoon.generation.ServiceableGenerator#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
-        this.scriptManager = (ScriptManager) this.manager.lookup(ScriptManager.ROLE);
-        this.newObjectModel = (ObjectModel) this.manager.lookup(ObjectModel.ROLE);
-    }
-
-    /**
-     * @see org.apache.cocoon.generation.ServiceableGenerator#dispose()
-     */
-    public void dispose() {
-        if (this.scriptManager != null) {
-            this.manager.release(this.scriptManager);
-            this.scriptManager = null;
-        }
-        if (this.newObjectModel != null) {
-            this.manager.release(this.newObjectModel);
-            this.newObjectModel = null;
-        }
-        super.dispose();
-    }
-
-    /**
-     * @see org.apache.cocoon.generation.AbstractGenerator#recycle()
-     */
-    public void recycle() {
-        this.startDocument = null;
-        this.namespaces = null;
-        this.definitions = null;
-        super.recycle();
-    }
-
-    /**
-     * @see org.apache.cocoon.generation.AbstractGenerator#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.generation.AbstractGenerator#setup(org.apache.cocoon.environment.SourceResolver,
+     *      java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
-    throws ProcessingException, SAXException, IOException {
+            throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
-        // src can be null if this generator is triggered by the jxt transformer (through the TransformerAdapter)
-        if ( src != null ) {
+        // src can be null if this generator is triggered by the jxt transformer (through the
+        // TransformerAdapter)
+        if (src != null) {
             this.startDocument = scriptManager.resolveTemplate(src);
         }
 
@@ -142,30 +132,29 @@ public class JXTemplateGenerator
     }
 
     public void performGeneration(Event startEvent, Event endEvent) throws SAXException {
-        newObjectModel.markLocalContext();
+        objectModel.markLocalContext();
 
-        newObjectModel.putAt(ObjectModel.PARAMETERS_PATH, new ParametersMap(parameters));
-        newObjectModel.put(ObjectModel.NAMESPACE, namespaces);
+        objectModel.putAt(ObjectModel.PARAMETERS_PATH, new ParametersMap(parameters));
+        objectModel.put(ObjectModel.NAMESPACE, namespaces);
         XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
-        newObjectModel.putAt("cocoon/consumer", consumer);
-        
-        Invoker.execute(consumer, this.newObjectModel, new ExecutionContext(this.definitions, this.scriptManager,
-                this.manager), null, namespaces, startEvent, null);
+        objectModel.putAt("cocoon/consumer", consumer);
 
-        newObjectModel.cleanupLocalContext();
+        Invoker.execute(consumer, this.objectModel, new ExecutionContext(this.definitions, this.scriptManager,
+                this.saxParser), null, namespaces, startEvent, null);
+
+        objectModel.cleanupLocalContext();
     }
 
     /**
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
     public Serializable getKey() {
-        Subst cacheKeyExpr = (Subst) this.startDocument
-                .getTemplateProperty(JXTemplateGenerator.CACHE_KEY);
+        Subst cacheKeyExpr = (Subst) this.startDocument.getTemplateProperty(JXTemplateGenerator.CACHE_KEY);
         if (cacheKeyExpr == null) {
             return null;
         }
         try {
-            final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.newObjectModel);
+            final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.objectModel);
             if (templateKey != null) {
                 return new JXCacheKey(this.startDocument.getUri(), templateKey);
             }
@@ -179,14 +168,13 @@ public class JXTemplateGenerator
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
      */
     public SourceValidity getValidity() {
-        Subst validityExpr = (Subst) this.startDocument
-                .getTemplateProperty(JXTemplateGenerator.VALIDITY);
+        Subst validityExpr = (Subst) this.startDocument.getTemplateProperty(JXTemplateGenerator.VALIDITY);
         if (validityExpr == null) {
             return null;
         }
         try {
             final SourceValidity sourceValidity = this.startDocument.getSourceValidity();
-            final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.newObjectModel);
+            final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.objectModel);
             if (sourceValidity != null && templateValidity != null) {
                 return new JXSourceValidity(sourceValidity, templateValidity);
             }
@@ -195,4 +183,5 @@ public class JXTemplateGenerator
         }
         return null;
     }
+
 }
