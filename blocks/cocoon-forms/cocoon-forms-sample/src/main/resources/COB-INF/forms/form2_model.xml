@@ -106,7 +106,7 @@
           <fd:enum>org.apache.cocoon.forms.samples.Sex</fd:enum>
         </fd:convertor>
       </fd:datatype>
-      <fd:selection-list type="enum" ref="org.apache.cocoon.forms.samples.Sex"/>
+      <fd:selection-list type="enum" class="org.apache.cocoon.forms.samples.Sex"/>
     </fd:field>
     
     <fd:booleanfield id="enable">
@@ -164,7 +164,7 @@
               <fd:enum>org.apache.cocoon.forms.samples.PreferredContact</fd:enum>
             </fd:convertor>
           </fd:datatype>
-          <fd:selection-list type="enum" ref="org.apache.cocoon.forms.samples.PreferredContact" nullable="true" null-text="Select..."/>
+          <fd:selection-list type="enum" class="org.apache.cocoon.forms.samples.PreferredContact" nullable="true" null-text="Select..."/>
         </fd:field>
         <fd:booleanfield id="select">
           <fd:label>Select</fd:label>
