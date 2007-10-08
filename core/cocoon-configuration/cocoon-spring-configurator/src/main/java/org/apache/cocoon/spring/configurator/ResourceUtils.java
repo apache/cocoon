@@ -29,8 +29,8 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 
 /**
  * Utility class for Spring resource handling.
@@ -90,7 +90,12 @@ public abstract class ResourceUtils {
         if (logger != null && logger.isDebugEnabled()) {
             logger.debug("Reading properties from directory: " + propertiesPath);
         }
-        final ResourcePatternResolver resolver = (ResourcePatternResolver) resourceLoader;
+
+        ResourcePatternResolver resolver;
+		if (resourceLoader instanceof ResourcePatternResolver)
+			resolver = (ResourcePatternResolver) resourceLoader;
+		else
+			resolver = new PathMatchingResourcePatternResolver(resourceLoader);
 
         Resource[] resources = null;
 
