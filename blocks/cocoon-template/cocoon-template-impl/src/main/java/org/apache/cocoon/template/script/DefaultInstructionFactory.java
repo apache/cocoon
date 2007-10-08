@@ -21,21 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.template.environment.ParsingContext;
 import org.apache.cocoon.template.instruction.Instruction;
 import org.apache.cocoon.template.script.event.StartElement;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.springframework.beans.factory.BeanCreationException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -43,15 +38,23 @@ import org.xml.sax.SAXParseException;
 /**
  * @version $Id$
  */
-public class DefaultInstructionFactory
-    extends AbstractLogEnabled
-    implements ThreadSafe, Serviceable, Configurable, InstructionFactory {
+public class DefaultInstructionFactory implements InstructionFactory {
+    private SourceResolver sourceResolver;
 
     private final Map instructions = new HashMap();
-    private ServiceManager manager;
+
     private final static Class[] INSTRUCTION_CONSTRUCTOR_PARAMS = new Class[] { ParsingContext.class,
             StartElement.class, Attributes.class, Stack.class };
+
     private final static String CONFIG_LOCATION = "resource://org/apache/cocoon/template/template-instructions.xml";
+
+    public SourceResolver getSourceResolver() {
+        return sourceResolver;
+    }
+
+    public void setSourceResolver(SourceResolver sourceResolver) {
+        this.sourceResolver = sourceResolver;
+    }
 
     private void registerInstruction(String instructionName, String targetNamespace, String className)
             throws ConfigurationException {
@@ -86,7 +89,8 @@ public class DefaultInstructionFactory
         return this.instructions.containsKey(instructionKey);
     }
 
-    public Instruction createInstruction(ParsingContext parsingContext, StartElement startElement, Attributes attrs, Stack stack) throws SAXException {
+    public Instruction createInstruction(ParsingContext parsingContext, StartElement startElement, Attributes attrs,
+            Stack stack) throws SAXException {
         String instructionKey = instructionKey(startElement);
         Constructor constructor = (Constructor) this.instructions.get(instructionKey);
         if (constructor == null)
@@ -121,35 +125,21 @@ public class DefaultInstructionFactory
         }
     }
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration omitted) throws ConfigurationException {
-        SourceResolver resolver = null;
+    public void initialize() throws BeanCreationException {
         Source source = null;
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(CONFIG_LOCATION);
+            source = sourceResolver.resolveURI(CONFIG_LOCATION);
             DefaultConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
             Configuration conf = configurationBuilder.build(source.getInputStream());
             setupInstructions(conf);
         } catch (Exception e) {
-            if (e instanceof ConfigurationException)
-                throw (ConfigurationException) e;
+            if (e instanceof BeanCreationException)
+                throw (BeanCreationException) e;
             else
-                throw new ConfigurationException("unable to parse template instructions configuration", e);
+                throw new BeanCreationException("unable to parse template instructions configuration", e);
         } finally {
             if (source != null)
-                resolver.release(source);
-            if (resolver != null)
-                this.manager.release(resolver);
+                sourceResolver.release(source);
         }
     }
 }
