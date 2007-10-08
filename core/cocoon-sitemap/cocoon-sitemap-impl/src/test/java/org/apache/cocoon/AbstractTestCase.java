@@ -157,7 +157,7 @@ public abstract class AbstractTestCase extends TestCase {
         }
         this.addSettings();
         this.addProcessingInfoProvider();
-        this.addSettingsBeanFactoryPostProcessor();
+        this.configureBeans();
     }
 
     protected void initBeanFactory() {
@@ -189,7 +189,7 @@ public abstract class AbstractTestCase extends TestCase {
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
     }
 
-    protected void addSettingsBeanFactoryPostProcessor() {
+    protected void configureBeans() {
         SettingsBeanFactoryPostProcessor processor = new SettingsBeanFactoryPostProcessor();
         processor.setBeanFactory(this.beanFactory);
         try {
