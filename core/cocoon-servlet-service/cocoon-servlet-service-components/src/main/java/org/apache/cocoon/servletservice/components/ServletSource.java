@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,10 +78,17 @@ public class ServletSource extends AbstractSource
             connect();
             // FIXME: This is not the most elegant solution
             if (servletConnection.getResponseCode() != HttpServletResponse.SC_OK) {
-                throw new ServletException("If you see this exception you probably called Source.getInputStream"
-                        + " even though the source reported proper validity. "
-                        + "The only way to solve this is to implement "
-                        + "a resource heavy version of postable source.");
+                //most probably, servlet returned 304 (not modified) and we need to perform second request to get data
+
+                //
+                // FIXME This does not work: previous instance of servletConnection
+                //       most probably had non empty requestBody. Re-instantiating
+                //       it results in new servletConnection with null requestBody
+                //       and, as a result, GET request instead of POST.
+                //
+
+                servletConnection = new ServletConnection(location);
+                servletConnection.connect();
             }
 
             return this.servletConnection.getInputStream();
