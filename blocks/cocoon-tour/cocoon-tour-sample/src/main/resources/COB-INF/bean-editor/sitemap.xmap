@@ -23,7 +23,6 @@
   <map:components>
 
     <map:generators default="file">
-      <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator" label="content" logger="sitemap.generator.jx" />
     </map:generators>
 
   </map:components>

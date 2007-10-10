@@ -24,7 +24,6 @@
   <!-- make sure we have the required components -->
   <map:components>
     <map:generators id="generators" default="file">
-      <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator" label="content" logger="sitemap.generator.jx" />
     </map:generators>
   </map:components>
 

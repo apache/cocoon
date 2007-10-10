@@ -25,8 +25,6 @@
     <!-- =========================== Generators =================================== -->
 
     <map:generators default="file">
-      <!-- use the new implementation of JX -->
-      <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator" />
       <map:generator name="suggestion-list" src="org.apache.cocoon.forms.generation.SuggestionListGenerator" />
     </map:generators>
 
@@ -115,7 +113,7 @@
           <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
         </map:serialize>
       </map:match>
-      
+
       <map:match pattern="sitemap.xmap">
         <map:read src="sitemap.xmap"/>
       </map:match>
@@ -204,7 +202,7 @@
       </map:match>
 
       <!--
-        | Show a suggestion list 
+        | Show a suggestion list
       -->
       <map:match pattern="_cocoon/forms/suggest">
         <map:generate type="suggestion-list" />
@@ -577,7 +575,7 @@
               <map:parameter name="form-method" value="POST" />
             </map:transform>
           </map:when>
-          <!-- 
+          <!--
             | If the template file does not exist, the code below generates the
             | form, but results in a document fragment rather than a correct HTML
             | tagged page (i.e. it lacks the HTML, HEAD and BODY tags).
