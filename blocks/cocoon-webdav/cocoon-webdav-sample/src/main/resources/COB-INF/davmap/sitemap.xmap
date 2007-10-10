@@ -23,49 +23,44 @@
     <map:include-properties dir="properties"/>
 
     <map:generators default="file">
-      <map:generator 
-        name="traverse" 
-        src="org.apache.cocoon.generation.TraversableSourceDescriptionGenerator" 
-        logger="generator.traverse" 
-        label="content" 
+      <map:generator
+        name="traverse"
+        src="org.apache.cocoon.generation.TraversableSourceDescriptionGenerator"
+        logger="generator.traverse"
+        label="content"
         pool-max="16"
       />
-      <map:generator name="jx" 
-        src="org.apache.cocoon.template.JXTemplateGenerator" 
-        logger="generator.jx" 
-        pool-max="16" 
-      />
     </map:generators>
-    
-    <map:transformers default="xslt">    
-      <map:transformer 
-        name="spw" 
-        src="org.apache.cocoon.transformation.SourcePropsWritingTransformer" 
-        logger="transformer.spw" 
-        pool-max="16" 
+
+    <map:transformers default="xslt">
+      <map:transformer
+        name="spw"
+        src="org.apache.cocoon.transformation.SourcePropsWritingTransformer"
+        logger="transformer.spw"
+        pool-max="16"
       />
     </map:transformers>
-    
+
     <!-- If event caching is enabled you'll need to uncomment this in order
-         for PROPPATCH to work properly 
+         for PROPPATCH to work properly
     <map:pipes default="caching">
-      <map:pipe name="event-caching" 
+      <map:pipe name="event-caching"
         src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
       >
         <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
       </map:pipe>
     </map:pipes>
     -->
-    
+
     <map:matchers default="wildcard">
-      <map:matcher 
+      <map:matcher
         name="destination"
-        src="org.apache.cocoon.matching.WildcardHeaderMatcher" 
+        src="org.apache.cocoon.matching.WildcardHeaderMatcher"
       >
         <header-name>Destination</header-name>
       </map:matcher>
     </map:matchers>
-    
+
   </map:components>
 
 <!-- ========================== Flowscript ================================= -->
@@ -76,7 +71,7 @@
 
 <!-- =========================== Views ===================================== -->
 
-  <map:views>    
+  <map:views>
     <map:view name="content" from-label="content">
       <map:serialize type="xml" />
     </map:view>
@@ -86,20 +81,20 @@
 <!-- ========================= Private Resources =========================== -->
 
     <map:pipeline type="noncaching" internal-only="true">
-      
+
       <!-- Read the request for binaries PUT -->
       <!--
       <map:match pattern="request/read">
         <map:read type="request" />
       </map:match>
       -->
-      
+
       <map:match pattern="request/generate">
         <map:generate type="stream" />
         <map:serialize type="xml" />
       </map:match>
-      
-      <!--+ 
+
+      <!--+
           | If you need to check or change the XML that is being PUT
           | you can do that here. This is the pipeline that will
           | generate the input for the PUT method.
@@ -110,15 +105,15 @@
         </map:generate>
         <map:serialize type="xml" />
       </map:match>
-      
+
     </map:pipeline>
-    
+
 <!-- ========================= Public Resources =========================== -->
-    
+
     <!--map:pipeline type="event-caching"-->
-    
+
     <map:pipeline type="caching">
-      
+
       <map:match pattern="repo">
         <map:call function="selectMethod">
           <map:parameter name="page" value=""/>
@@ -131,7 +126,7 @@
           <map:parameter name="requestURI" value="{request:requestURI}" />
         </map:call>
       </map:match>
-      
+
       <map:match pattern="GET/**">
         <map:match pattern="GET/**.*">
           <map:generate src="{global:staging}{1}.{2}"/>
@@ -148,12 +143,12 @@
         </map:generate>
         <map:transform src="styles/collection2html.xsl">
           <map:parameter name="requestURI" value="{request:requestURI}" />
-          <map:parameter name="footer" 
+          <map:parameter name="footer"
             value="{cocoon-properties:fullname} {cocoon-properties:released.version}" />
         </map:transform>
         <map:serialize type="html"/>
       </map:match>
-      
+
       <map:match pattern="PROPFIND/**">
         <map:generate type="traverse" src="{global:staging}{1}">
           <map:parameter name="depth" value="{request-header:Depth}" />
@@ -170,13 +165,13 @@
         </map:transform>
         <map:serialize type="xml" status-code="207" />
       </map:match>
-      
+
       <map:match pattern="OPTIONS/**">
         <map:call function="options">
           <map:parameter name="uri" value="{request:requestURI}" />
         </map:call>
       </map:match>
-      
+
       <map:match pattern="HEAD/**">
         <map:generate src="dummy.xml"/>
         <map:serialize type="xml"/>
@@ -189,18 +184,18 @@
         <map:generate src="dummy.xml"/>
         <map:serialize type="xml"/>
       </map:match>
-      
+
     </map:pipeline>
-    
+
     <map:pipeline type="noncaching">
-    
+
       <map:match pattern="PUT/**.*">
         <map:call function="put">
           <map:parameter name="src" value="cocoon:/request/PUT" />
           <map:parameter name="dest" value="{global:staging}{1}.{2}" />
         </map:call>
       </map:match>
-      
+
       <map:match pattern="MKCOL/**">
         <map:match pattern="MKCOL/**.*">
           <map:call function="sendStatus">
@@ -211,13 +206,13 @@
           <map:parameter name="location" value="{global:staging}{1}" />
         </map:call>
       </map:match>
-      
+
       <map:match pattern="DELETE/**">
         <map:call function="remove">
           <map:parameter name="location" value="{global:staging}{1}" />
         </map:call>
       </map:match>
-      
+
       <map:match pattern="COPY/**">
         <map:match pattern="http://**/repo/**" type="destination">
           <map:call function="copy">
@@ -231,7 +226,7 @@
           <map:parameter name="status" value="405" />
         </map:call>
       </map:match>
-      
+
       <map:match pattern="MOVE/**">
         <map:match pattern="http://**/repo/**" type="destination">
           <map:call function="move">
@@ -245,7 +240,7 @@
           <map:parameter name="status" value="405" />
         </map:call>
       </map:match>
-      
+
       <!--+
           | In order for proppatch to work you need to uncomment
           | the simple jdbc source descriptor in cocoon.xconf
@@ -259,12 +254,12 @@
         <map:transform type="spw" />
         <map:serialize type="xml" />
       </map:match>
-      
+
       <map:match pattern="LOCK/**">
         <map:generate src="dummy.xml"/>
         <map:serialize type="xml"/>
       </map:match>
-      
+
     </map:pipeline>
 
   </map:pipelines>

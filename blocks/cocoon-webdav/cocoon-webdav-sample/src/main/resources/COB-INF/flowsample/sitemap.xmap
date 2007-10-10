@@ -20,10 +20,8 @@
     <map:include-properties dir="properties" />
     <map:generators default="file">
       <map:generator name="traverse" src="org.apache.cocoon.generation.TraversableGenerator" />
-      <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator" />
     </map:generators>
     <map:transformers default="xslt">
-      <map:transformer name="jx" src="org.apache.cocoon.template.JXTemplateTransformer" />
     </map:transformers>
   </map:components>
   <map:flow language="javascript">
