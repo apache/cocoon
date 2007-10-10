@@ -28,9 +28,9 @@
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>parent</artifactId>
+  <artifactId>cocoon-parent</artifactId>
   <version>1</version>
-  <name>Apache Cocoon</name>
+  <name>Apache Cocoon [build root]</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
 
@@ -53,5 +53,14 @@
     <name>The Apache Software Foundation</name>
     <url>http://www.apache.org/</url>
   </organization>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+    </plugins>
+  </build>  
 
 </project>
