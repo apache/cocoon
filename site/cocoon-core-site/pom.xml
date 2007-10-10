@@ -27,7 +27,7 @@
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
     <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../../parent/pom.xml</relativePath>
   </parent>
   
   <artifactId>cocoon-core-site</artifactId>
