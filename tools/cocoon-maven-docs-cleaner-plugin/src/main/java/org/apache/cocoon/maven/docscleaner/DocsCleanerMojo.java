@@ -30,13 +30,11 @@ public class DocsCleanerMojo extends AbstractMojo {
     protected File siteOutputDirectory;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        System.out.println("OutputDirectory: " + siteOutputDirectory);
         File[] files = this.siteOutputDirectory.listFiles();
         for (int i = 0; i < files.length; i++) {
             File f = files[i];
             if(deleteFile(f)) {
-                this.getLog().debug("[delete] " + f.getAbsolutePath());
-                System.out.println("Deleting: " + f.getAbsolutePath());
+                this.getLog().info("[delete] " + f.getAbsolutePath());
                 if(f.isDirectory()) {
                     try {
                         FileUtils.deleteDirectory(f);
@@ -51,49 +49,13 @@ public class DocsCleanerMojo extends AbstractMojo {
     }
 
     private boolean deleteFile(File file) {
-        String fileName = file.getName();
-
-        // find out if it is a Daisy page -> don't delete them
-        int pos = fileName.indexOf('_');
-        if (pos > 0) {
-        String documentId = fileName.substring(0, fileName.indexOf('_'));
-            boolean isDaisyDocument = false;
-            try {
-                Integer.parseInt(documentId);
-                isDaisyDocument = true;
-            } catch (NumberFormatException nfe) {
-                isDaisyDocument = false;
-            }
-
-            if (isDaisyDocument) {
-                return false;
-            }
+        if("project-summary.html".equals(file.getName())) {
+            return true;
         }
-
-        if (".htaccess".equals(fileName)) {
-            return false;
+        if("dependencies.html".equals(file.getName())) {
+            return true;
         }
-
-        // is it a status report --> don't delete it
-        if ("changes-report.html".equals(fileName)) {
-            return false;
-        }
-
-        // is it the css directory --> don't delete it
-        if ("css".equals(fileName)) {
-            return false;
-        }
-        // is it the images directory --> don't delete it
-        if ("images".equals(fileName)) {
-            return false;
-        }
-
-        // is it the index page --> don't delete it
-        if ("index.html".equals(fileName)) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
 }
