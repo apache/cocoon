@@ -3036,6 +3036,8 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.3</version>
+        <!-- keep this in-sync with the configuration in /project/profiles/profile[id='javadocs']
+                 (unfortunatly this has to be set twice) -->
         <configuration>
           <maxmemory>512m</maxmemory>
           <links>
@@ -3229,6 +3231,49 @@
           </plugin>
         </plugins>
       </reporting>
+    </profile>
+    <profile>
+      <id>javadocs</id>
+      <reporting>
+        <plugins>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.2</version>
+            <!-- keep this in-sync with the configuration in /project/build/plugins/plugin[id='maven-javadoc-plugin']
+                 (unfortunatly this has to be set twice) -->
+            <configuration>
+              <maxmemory>512m</maxmemory>
+              <links>
+                <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+                <link>http://static.springframework.org/spring/docs/2.0.x/api/</link>
+                <link>http://excalibur.apache.org/apidocs/</link>
+                <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+                <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
+                <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+                <link>http://jakarta.apache.org/commons/pool/apidocs/</link>
+                <link>http://logging.apache.org/log4j/docs/api/</link>
+                <link>http://jakarta.apache.org/regexp/apidocs/</link>
+                <link>http://jakarta.apache.org/velocity/api/</link>
+              </links>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+    <profile>
+      <id>cocoon-docs-cleaner</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-maven-docs-cleaner-plugin</artifactId>
+            <version>1.0.0-M1-SNAPSHOT</version>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>daisy</id>
