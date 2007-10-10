@@ -28,7 +28,7 @@
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
     <version>6-SNAPSHOT</version>
-    <relativePath>../../parent</relativePath>
+    <relativePath>../parent</relativePath>
   </parent>
 
   <artifactId>cocoon-blocks-modules</artifactId>
