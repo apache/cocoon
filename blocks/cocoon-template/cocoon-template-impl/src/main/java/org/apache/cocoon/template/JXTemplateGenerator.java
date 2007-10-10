@@ -28,7 +28,7 @@ import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.parsing.Subst;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.AbstractGenerator;
+import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.objectmodel.helper.ParametersMap;
 import org.apache.cocoon.template.environment.ExecutionContext;
 import org.apache.cocoon.template.environment.JXCacheKey;
@@ -41,9 +41,9 @@ import org.apache.cocoon.template.xml.AttributeAwareXMLConsumerImpl;
 import org.apache.cocoon.xml.RedundantNamespacesFilter;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.util.NamespacesTable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.SourceValidity;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.xml.sax.SAXException;
 
 /**
@@ -60,20 +60,28 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class JXTemplateGenerator extends AbstractGenerator implements CacheableProcessingComponent {
+public class JXTemplateGenerator implements Generator, CacheableProcessingComponent {
+    protected final static Log logger = LogFactory.getLog(JXTemplateGenerator.class);
+
     /** The namespace used by this generator */
     public final static String NS = "http://apache.org/cocoon/templates/jx/1.0";
 
     public final static String CACHE_KEY = "cache-key";
     public final static String VALIDITY = "cache-validity";
 
-    private ObjectModel objectModel;
-    private NamespacesTable namespaces;
-    private ScriptManager scriptManager;
+    protected ObjectModel objectModel;
+    protected NamespacesTable namespaces;
+    protected ScriptManager scriptManager;
 
-    private StartDocument startDocument;
-    private Map definitions;
-    private SAXParser saxParser;
+    protected StartDocument startDocument;
+    protected Map definitions;
+    protected SAXParser saxParser;
+
+    protected XMLConsumer consumer;
+
+    protected Parameters parameters;
+
+    protected String src;
 
     public ScriptManager getScriptManager() {
         return scriptManager;
@@ -99,8 +107,8 @@ public class JXTemplateGenerator extends AbstractGenerator implements CacheableP
         this.objectModel = objectModel;
     }
 
-    public XMLConsumer getConsumer() {
-        return this.xmlConsumer;
+    public void setConsumer(XMLConsumer consumer) {
+        this.consumer = consumer;
     }
 
     /**
@@ -109,8 +117,9 @@ public class JXTemplateGenerator extends AbstractGenerator implements CacheableP
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
+        this.parameters = parameters;
+        this.src = src;
 
-        super.setup(resolver, objectModel, src, parameters);
         // src can be null if this generator is triggered by the jxt transformer (through the
         // TransformerAdapter)
         if (src != null) {
@@ -136,7 +145,7 @@ public class JXTemplateGenerator extends AbstractGenerator implements CacheableP
 
         objectModel.putAt(ObjectModel.PARAMETERS_PATH, new ParametersMap(parameters));
         objectModel.put(ObjectModel.NAMESPACE, namespaces);
-        XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.xmlConsumer));
+        XMLConsumer consumer = new AttributeAwareXMLConsumerImpl(new RedundantNamespacesFilter(this.consumer));
         objectModel.putAt("cocoon/consumer", consumer);
 
         Invoker.execute(consumer, this.objectModel, new ExecutionContext(this.definitions, this.scriptManager,
@@ -159,7 +168,7 @@ public class JXTemplateGenerator extends AbstractGenerator implements CacheableP
                 return new JXCacheKey(this.startDocument.getUri(), templateKey);
             }
         } catch (Exception e) {
-            getLogger().error("error evaluating cache key", e);
+            logger.error("error evaluating cache key", e);
         }
         return null;
     }
@@ -179,9 +188,8 @@ public class JXTemplateGenerator extends AbstractGenerator implements CacheableP
                 return new JXSourceValidity(sourceValidity, templateValidity);
             }
         } catch (Exception e) {
-            getLogger().error("error evaluating cache validity", e);
+            logger.error("error evaluating cache validity", e);
         }
         return null;
     }
-
 }
