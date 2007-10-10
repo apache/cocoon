@@ -3278,8 +3278,8 @@
     <profile>
       <id>daisy</id>
       <modules>
-        <module>tools/cocoon-daisy-export-strategy</module>
-        <module>site/cocoon-thien-maven-site-skin</module>
+        <module>../tools/cocoon-daisy-export-strategy</module>
+        <module>../site/cocoon-thien-maven-site-skin</module>
       </modules>
       <repositories>
         <repository>
