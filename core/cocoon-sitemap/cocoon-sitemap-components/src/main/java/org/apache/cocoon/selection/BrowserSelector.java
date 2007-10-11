@@ -24,6 +24,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Tests a specific browser pattern against the requesting user-agent.
  *
  * @version $Id$

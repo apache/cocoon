@@ -22,6 +22,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string in the parameters object passed to it.
  *
  * <pre>

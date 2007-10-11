@@ -28,9 +28,11 @@ import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Additional to the inherited functionality from its superclass ExceptionSelector,
  * this selector allows to define xpath expressions to evaluate supplemental information
  * given in the thrown exception.
+ * 
  * The configuration of this selector allows to map not only exceptions but also
  * xpath expressions to symbolic names that are used in the &lt;map:when> alternatives.
  * <p>

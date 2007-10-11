@@ -30,6 +30,7 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Selects the first of a set of Resources (usually files) that exists.
  * 
  * <p>

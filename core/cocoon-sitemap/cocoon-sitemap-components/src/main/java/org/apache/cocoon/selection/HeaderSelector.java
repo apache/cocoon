@@ -28,6 +28,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string against a configurable
  * request header, e.g. "referer".
  *
