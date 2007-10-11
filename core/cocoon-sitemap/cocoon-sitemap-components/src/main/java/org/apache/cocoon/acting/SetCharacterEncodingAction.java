@@ -29,7 +29,9 @@ import org.apache.cocoon.environment.SourceResolver;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Sets the character encoding of parameters.
+ * 
  * Components use this encoding as default after the action.
  * <p>
  * <b>Configuration parameters:</b>

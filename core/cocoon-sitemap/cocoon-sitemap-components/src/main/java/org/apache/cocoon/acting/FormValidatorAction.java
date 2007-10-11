@@ -28,7 +28,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This is the action used to validate Request parameters.
+ * 
  * The parameters are described via the external xml
  * file (its format is defined in AbstractValidatorAction).
  * @see org.apache.cocoon.acting.AbstractValidatorAction

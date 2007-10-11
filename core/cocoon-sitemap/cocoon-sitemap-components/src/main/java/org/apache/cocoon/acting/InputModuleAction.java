@@ -31,7 +31,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Simple helper action to allow passing sitemap variables to InputModules.
+ * 
  * Sitemap evaluation of input modules using the curly bracket syntax e.g.
  * {defaults:skin} suffers from the fact that it is not
  * possible to use a sitemap variable as part of the invocation like

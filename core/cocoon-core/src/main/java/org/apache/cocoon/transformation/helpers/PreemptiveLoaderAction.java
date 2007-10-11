@@ -25,6 +25,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action starts the preemptive loader and runs forever.
  * 
  *  @version $Id$

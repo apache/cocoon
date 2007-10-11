@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action adds HTTP headers to the response.
  *
  * @version $Id$

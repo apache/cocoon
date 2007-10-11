@@ -29,6 +29,7 @@ import org.apache.cocoon.environment.SourceResolver;
 
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action just checks if a session exists and whether the current
  * seesion is still valid.
  *

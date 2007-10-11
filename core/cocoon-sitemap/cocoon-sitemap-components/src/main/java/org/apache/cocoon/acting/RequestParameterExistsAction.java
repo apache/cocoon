@@ -30,8 +30,11 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action simply checks to see if a given request parameter
- * exists. It takes an arbitrary number of default parameters to check
+ * exists. 
+ * 
+ * It takes an arbitrary number of default parameters to check
  * named 'parameter-name'. Non-default parameters need to be separated
  * by spaces and passed as value of a sitemap parameter named
  * 'parameters'. The action returns a map with all parameters if all
