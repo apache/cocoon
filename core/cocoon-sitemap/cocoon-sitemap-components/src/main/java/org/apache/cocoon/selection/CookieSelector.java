@@ -29,6 +29,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string against a configurable cookie's value.
  *
  * <p><b>Global and local configuration</b></p>

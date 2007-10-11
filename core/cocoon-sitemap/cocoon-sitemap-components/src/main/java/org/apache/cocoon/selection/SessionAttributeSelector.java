@@ -27,8 +27,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string against a configurable session
- * attribute's string represenation.
+ * attribute's string representation.
  *
  * <p><b>Global and local configuration</b></p>
  * <table border="1">

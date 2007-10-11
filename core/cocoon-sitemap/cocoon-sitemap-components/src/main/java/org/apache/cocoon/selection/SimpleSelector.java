@@ -21,8 +21,11 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A very simple selector that operates on string literals, useful especially 
- * in conjunction with input modules. Usage example:
+ * in conjunction with input modules. 
+ * 
+ * Usage example:
  * <pre>
  *    &lt;map:selector name="simple" src="org.apache.cocoon.selection.SimpleSelector"/&gt;
  * 

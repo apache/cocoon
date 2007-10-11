@@ -27,9 +27,11 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * In a &lt;map:handle-errors>, selects depending on the exception that caused the error.
  * The configuration of this selector allows to map exception class names to symbolic names
  * that are used in the &lt;map:when> alternatives.
+ * 
  * <p>
  * Example configuration :
  * <pre>

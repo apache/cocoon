@@ -24,8 +24,9 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
- * <p>The {@link RegexpRequestParameterSelector} class defines a selector matching
- * specific request parameters to configured regular-expression patterns.</p> 
+ * @cocoon.sitemap.component.documentation
+ * The <code>RegexpRequestParameterSelector</code> class defines a selector matching
+ * specific request parameters to configured regular-expression patterns. 
  *
  * <p>The configuration of an {@link RegexpRequestParameterSelector} follows exactly
  * what has been outlined in {@link AbstractRegexpSelector} regarting regular
