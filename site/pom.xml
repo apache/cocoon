@@ -121,5 +121,20 @@
       </plugin>
     </plugins>
   </reporting>
+  
+  <profiles>
+    <profile>
+      <id>cocoon-docs-cleaner</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-maven-docs-cleaner-plugin</artifactId>
+            <version>1.0.0-M1-SNAPSHOT</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>  
+  </profiles>
 
 </project>
