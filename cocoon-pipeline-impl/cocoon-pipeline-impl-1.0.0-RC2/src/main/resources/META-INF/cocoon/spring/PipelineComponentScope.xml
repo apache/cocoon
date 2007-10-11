@@ -40,9 +40,10 @@
     <aop:scoped-proxy proxy-target-class="false"/>
   </bean>
   
-  <bean id="org.apache.cocoon.components.pipeline.spring.PipelineComponentProxyDecorator"
+  <!-- Disabled PipelineComponentProxyDecorator because it is not used at this time anyway -->
+  <!-- <bean id="org.apache.cocoon.components.pipeline.spring.PipelineComponentProxyDecorator"
         class="org.apache.cocoon.components.pipeline.spring.PipelineComponentProxyDecorator">
     <property name="holder" ref="org.apache.cocoon.components.pipeline.spring.PipelineComponentScopeHolder"/>
-  </bean>
+  </bean> -->
   
 </beans>
