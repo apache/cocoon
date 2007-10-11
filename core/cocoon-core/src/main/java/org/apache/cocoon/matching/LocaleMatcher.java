@@ -39,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A matcher that locates and identifies to the pipeline a source document to
  * be used as the content for an i18n site, based upon a locale provided in a
  * range of ways.

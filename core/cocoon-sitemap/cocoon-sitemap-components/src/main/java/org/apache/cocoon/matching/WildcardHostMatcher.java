@@ -21,6 +21,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Matches the target host ("Host" request header) against a wildcard expression.
  *
  * @version $Id$

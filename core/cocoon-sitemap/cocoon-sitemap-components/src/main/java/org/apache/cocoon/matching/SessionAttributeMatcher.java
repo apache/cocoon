@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This class allows for matching based on a session attribute.
  * If the specified session attribute exists, its string representation
  * is retrieved for later sitemap substitution.

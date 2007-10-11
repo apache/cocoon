@@ -34,6 +34,7 @@ import org.apache.cocoon.matching.AbstractWildcardMatcher;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Matches against a wildcard expression. Needs an input module to
  * obtain value to match against.
  *

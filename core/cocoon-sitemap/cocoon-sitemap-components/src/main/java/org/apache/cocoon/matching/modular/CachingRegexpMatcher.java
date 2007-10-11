@@ -35,6 +35,7 @@ import org.apache.cocoon.matching.AbstractRegexpMatcher;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Matches against a regular expression. Needs an input module to
  * obtain value to match against.
  *

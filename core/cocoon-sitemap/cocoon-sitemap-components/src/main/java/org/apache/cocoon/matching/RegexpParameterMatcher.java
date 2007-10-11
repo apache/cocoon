@@ -24,6 +24,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Matches a sitemap parameter against a regular expression.
  *
  * <p><b>Global and local configuration</b></p>

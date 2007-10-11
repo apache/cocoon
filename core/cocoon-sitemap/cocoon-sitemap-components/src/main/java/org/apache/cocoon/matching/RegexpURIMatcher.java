@@ -22,6 +22,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Matches the request URIs against a regular expression pattern.
  *
  * @version $Id$
