@@ -35,7 +35,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.NamespaceSupport;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A serializer that builds Zip archives by aggregating several sources.
+ * 
  * <p>
  * The input document should describe entries of the archive by means of
  * their name (which can be a path) and their content either as URLs or
