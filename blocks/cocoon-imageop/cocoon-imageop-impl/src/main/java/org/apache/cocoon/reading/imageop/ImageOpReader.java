@@ -51,6 +51,7 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * The <code>ImageOpReader</code> component is used to serve binary image data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>
