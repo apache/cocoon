@@ -26,6 +26,7 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action simply checks to see if a resource identified by the <code>src</code>
  * sitemap attribute exists or not. The action returns empty <code>Map</code> if
  * resource exists, <code>null</code> otherwise.

@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * An action that locates and provides to the pipeline locale information
  * looked up in a range of ways.
  *

@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A simple Action that logs a given message for a given log level.
  * 
  * <p>

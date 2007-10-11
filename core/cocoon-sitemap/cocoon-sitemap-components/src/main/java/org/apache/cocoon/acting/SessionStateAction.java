@@ -31,6 +31,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Store the session's current state in a session attribute.
  *
  * <p> To keep track of the state of a user's session, a string is

@@ -34,6 +34,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This is the action used to propagate parameters into session. It
  * simply propagates given expression to the session. If session does not
  * exist, action fails. Additionaly it will make all propagated values

@@ -31,8 +31,10 @@ import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.TraversableSource;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * The CopySourceAction copies the content of it's "src" attribute to its "dest" parameter.
  * The destination must of course resolve to a <code>WriteableSource</code>
+ * 
  * <p>
  * Example :
  * <pre>

@@ -28,6 +28,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This is the action used to invalidate an HTTP session. The action returns
  * empty map if everything is ok, null otherwise.
  *

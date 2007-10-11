@@ -28,6 +28,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This is the action used to validate Session parameters (attributes).
  * The parameters are described via the external xml
  * file.
