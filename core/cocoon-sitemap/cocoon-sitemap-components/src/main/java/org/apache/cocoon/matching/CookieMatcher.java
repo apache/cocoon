@@ -29,6 +29,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Matches cookies agains given name. Returns value of the matched cookie.
  *
  * @version $Id$

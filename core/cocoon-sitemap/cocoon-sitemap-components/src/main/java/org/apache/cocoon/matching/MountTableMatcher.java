@@ -42,9 +42,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A matcher that manages a "mount table", allowing to add subsitemaps to a Cocoon application without
  * modifying the main sitemap. This is especially useful for prototypes and demos where installing
  * a separate instance of Cocoon is overkill.
+ * 
  * <p>
  * The mount table is an xml file which has a format similar to the <code>map:mount</code> syntax:
  * <pre>

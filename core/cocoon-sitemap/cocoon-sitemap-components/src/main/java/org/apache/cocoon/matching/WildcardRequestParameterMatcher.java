@@ -26,6 +26,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Matches a request parameter against a wildcard expression.
  *
  * <p><b>Global and local configuration</b></p>
