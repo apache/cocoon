@@ -26,11 +26,12 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -98,6 +99,9 @@ public final class SitemapSource
     private SourceResolver sourceResolver;
 
     private String mimeType;
+
+    //if we touched (marked) new OM we will need to do a clean up work
+    boolean touchedOM = false;
 
     /**
      * Construct a new object
@@ -208,6 +212,17 @@ public final class SitemapSource
         } catch (Exception e) {
             throw new SourceException("Exception during processing of " + this.systemId, e);
         } finally {
+            if (touchedOM) {
+                //Because of complicated flow of this source it must maintain the cleaness of OM on its own
+                ObjectModel newObjectModel;
+                try {
+                    newObjectModel = (ObjectModel)manager.lookup(ObjectModel.ROLE);
+                } catch (ServiceException e) {
+                    throw new RuntimeException("Couldn't look up Object Model", e);
+                }
+                newObjectModel.cleanupLocalContext();
+                touchedOM = false;
+            }
             // Unhide wrapped environment output stream
             this.environment.setOutputStream(null);
             this.needsRefresh = true;
@@ -265,6 +280,12 @@ public final class SitemapSource
             this.processed = true;
             this.pipelineDescription = this.processor.buildPipeline(this.environment);
             this.environment.setURI(this.pipelineDescription.prefix, this.pipelineDescription.uri);
+
+            //Because of complicated flow of this source it must maintain the cleaness of OM on its own
+            ObjectModel newObjectModel = (ObjectModel)manager.lookup(ObjectModel.ROLE);
+            newObjectModel.markLocalContext();
+            touchedOM = true;
+            manager.release(newObjectModel);
 
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL == null) {
@@ -354,6 +375,17 @@ public final class SitemapSource
         } catch (Exception e) {
             throw new SAXException("Exception during processing of " + this.systemId, e);
         } finally {
+            if (touchedOM) {
+                //Because of complicated flow of this source it must maintain the cleaness of OM on its own
+                ObjectModel newObjectModel;
+                try {
+                    newObjectModel = (ObjectModel)manager.lookup(ObjectModel.ROLE);
+                } catch (ServiceException e) {
+                    throw new SAXException("Couldn't look up Object Model", e);
+                }
+                newObjectModel.cleanupLocalContext();
+                touchedOM = false;
+            }
             this.needsRefresh = true;
         }
     }

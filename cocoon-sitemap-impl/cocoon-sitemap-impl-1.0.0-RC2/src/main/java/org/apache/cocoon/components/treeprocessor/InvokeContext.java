@@ -231,7 +231,11 @@ public class InvokeContext extends AbstractLogEnabled
         final String sitemapObjectModelPathPrefix = "sitemap";
         final String sitemapObjectModelNamedPathPrefix = sitemapObjectModelPathPrefix + "/$named$";
         
-        newObjectModel.markLocalContext();
+        //if cocoon: protocol is used the isBuildingPipelineOnly() is true that means pipeline going to be set up 
+        //but not executed at the same time therefore it must be cocoon: protocol that takes responsibility for 
+        //maintaining OM's cleaness 
+        if (!isBuildingPipelineOnly())
+            newObjectModel.markLocalContext();
         
         this.mapStack.add(map);
 
@@ -294,7 +298,11 @@ public class InvokeContext extends AbstractLogEnabled
         Object name = this.mapToName.get(map);
         this.mapToName.remove(map);
         this.nameToMap.remove(name);
-        this.newObjectModel.cleanupLocalContext();
+        //if cocoon: protocol is used the isBuildingPipelineOnly() is true that means pipeline going to be set up 
+        //but not executed at the same time therefore it must be cocoon: protocol that takes responsibility for 
+        //maintaining OM's cleaness 
+        if (!isBuildingPipelineOnly())
+            this.newObjectModel.cleanupLocalContext();
     }
 
     /**
