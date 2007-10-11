@@ -26,6 +26,7 @@ import org.apache.cocoon.generation.FileGenerator;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This generator extends the usual FileGenerator with a pause parameter.
  * During generation of the content, this generator pauses for the given
  * amount of time.

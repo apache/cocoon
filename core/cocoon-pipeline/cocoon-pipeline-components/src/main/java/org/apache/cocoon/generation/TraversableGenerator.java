@@ -52,7 +52,9 @@ import java.util.Comparator;
 import java.util.TimeZone;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML source hierarchy listing from a Traversable Source.
+ * 
  * <p>
  * The root node of the generated document will normally be a
  * <code>collection</code> node and a collection node can contain zero or more
