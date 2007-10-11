@@ -31,7 +31,8 @@ import org.apache.excalibur.store.Store;
 import org.xml.sax.SAXException;
 
 /**
- * The generation half of FragmentExtractor.
+ * @cocoon.sitemap.component.documentation
+ * The generation half of FragmentExtractor (see also <code>FragmentExtractorTransformer)</code>.
  *
  * FragmentExtractor is a transformer-generator pair which is designed to allow
  * sitemap managers to extract certain nodes from a SAX stream and move them

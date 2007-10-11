@@ -37,7 +37,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * <p>A simple parser converting a Comma Separated Values (CSV) file into XML.</p>
+ * @cocoon.sitemap.component.documentation
+ * A simple parser converting a Comma Separated Values (CSV) file into XML.
  * 
  * <p>This parser is controlled by the following sitemap parameters:</p>
  * 

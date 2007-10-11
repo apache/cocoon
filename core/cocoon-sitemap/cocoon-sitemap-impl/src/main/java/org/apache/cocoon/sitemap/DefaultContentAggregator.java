@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This generator implements the sitemap content aggregation.
  * It combines several parts into one big XML document which is streamed
  * into the pipeline.

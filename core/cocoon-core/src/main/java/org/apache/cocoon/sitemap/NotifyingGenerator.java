@@ -30,6 +30,7 @@ import org.apache.cocoon.Constants;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the current notification.
  *
  * @version $Id$

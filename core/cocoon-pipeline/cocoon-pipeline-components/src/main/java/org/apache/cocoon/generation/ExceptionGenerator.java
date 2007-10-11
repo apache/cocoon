@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A generator that dumps an XML representation of the exception raised during
  * pipeline execution.
  *

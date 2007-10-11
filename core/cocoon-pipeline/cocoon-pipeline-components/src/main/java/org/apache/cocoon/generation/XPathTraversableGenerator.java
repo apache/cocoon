@@ -42,6 +42,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML collection listing performing XPath queries on XML sources.
  * It can be used both as a plain TraversableGenerator or, if an XPath is
  * specified, it will perform an XPath query on every XML resource, where "xml
