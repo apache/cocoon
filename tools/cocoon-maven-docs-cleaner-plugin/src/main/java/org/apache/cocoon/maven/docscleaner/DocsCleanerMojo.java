@@ -31,18 +31,20 @@ public class DocsCleanerMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         File[] files = this.siteOutputDirectory.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            File f = files[i];
-            if(deleteFile(f)) {
-                this.getLog().info("[delete] " + f.getAbsolutePath());
-                if(f.isDirectory()) {
-                    try {
-                        FileUtils.deleteDirectory(f);
-                    } catch (IOException e) {
-                        throw new MojoExecutionException("Can't delete directory " + f.getAbsolutePath());
+        if (null != files) {
+            for (int i = 0; i < files.length; i++) {
+                File f = files[i];
+                if (deleteFile(f)) {
+                    this.getLog().info("[delete] " + f.getAbsolutePath());
+                    if (f.isDirectory()) {
+                        try {
+                            FileUtils.deleteDirectory(f);
+                        } catch (IOException e) {
+                            throw new MojoExecutionException("Can't delete directory " + f.getAbsolutePath());
+                        }
+                    } else {
+                        f.delete();
                     }
-                } else {
-                    f.delete();
                 }
             }
         }
