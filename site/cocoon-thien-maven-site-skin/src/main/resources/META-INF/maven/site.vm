@@ -141,11 +141,6 @@
       ${project.organization.name}
     #end
   #end
-  <br/>
-  #set ( $format = "dd/MM/yyyy HH:mm" )
-  $dateFormat.applyPattern( $format )
-  #set ( $dateToday = $dateFormat.format( $currentDate ) )
-  $i18n.getString( "site-renderer", $locale, "template.lastpublished" ): $dateToday
 #end
 
 #macro ( poweredByLogo $poweredBy )
@@ -210,7 +205,6 @@
   #end
 #end
 
-
 <html>
   <head>
     <title>#title()</title>
@@ -266,21 +260,13 @@
          </div>
          <div class="projectBarClear"><!-- --></div>
       </div>
-<!-- end of top -->
+    <!-- end of top -->
 
     <div id="content">
        #mainMenu( $decoration.body.menus )
-<!--
-       #poweredByLogo( $decoration.poweredBy )
-       <div id="lastPublished">
-          #set ( $format = "dd/MM/yyyy HH:mm" )
-          $dateFormat.applyPattern( $format )
-          #set ( $dateToday = $dateFormat.format( $currentDate ) )
-         $i18n.getString( "site-renderer", $locale, "template.lastpublished" ): $dateToday
-       </div>
--->
          $bodyContent
     </div>
+
     <!-- end of content -->
     <div id="footer">
       <p>&#169;#copyright()</p>
@@ -291,5 +277,6 @@
       _uacct = "UA-1740622-3";
       urchinTracker();
     </script>
+
   </body>
 </html>
