@@ -50,8 +50,10 @@ import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
 /**
- * <p>LinkRewriterReader realizes servlet: link rewriting in text resources. It should be used especially for serving js files that have
- * paths refering to other blocks (servlet: links).</p>
+ * @cocoon.sitemap.component.documentation
+ * <code>LinkRewriterReader<code> realizes servlet: link rewriting in text resources. It should be used especially for serving js files that have
+ * paths refering to other blocks (servlet: links).
+ * 
  * <p><b>Configuration</b><br>
  * <code>encoding</code> - see {@link #setEncoding}<br>
  * <code>expires</code> - see {@link #setExpires}.
