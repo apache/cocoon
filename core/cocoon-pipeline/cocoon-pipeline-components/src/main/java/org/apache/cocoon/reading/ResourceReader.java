@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>

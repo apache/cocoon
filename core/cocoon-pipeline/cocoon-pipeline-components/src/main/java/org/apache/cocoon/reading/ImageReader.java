@@ -42,6 +42,7 @@ import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * The <code>ImageReader</code> component is used to serve binary image data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>
