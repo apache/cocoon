@@ -38,8 +38,10 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 /**
- * The Sendmail action class sends email. Action supports following
- * parameters:
+ * @cocoon.sitemap.component.documentation
+ * The <code>Sendmail</code> action class sends email.
+ *
+ * Action supports following parameters:
  *
  * <dl>
  *   <dt>smtp-host</dt>

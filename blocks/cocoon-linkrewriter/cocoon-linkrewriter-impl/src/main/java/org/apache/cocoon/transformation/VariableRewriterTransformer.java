@@ -37,9 +37,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Rewrites URIs in links to a value determined by an InputModule.
  * The URI scheme identifies the InputModule to use, and the rest of the URI is
  * used as the attribute name.
+ * 
  * <h3>Example</h3>
  * For instance, if we had an {@link
  * org.apache.cocoon.components.modules.input.XMLFileModule}, configured to

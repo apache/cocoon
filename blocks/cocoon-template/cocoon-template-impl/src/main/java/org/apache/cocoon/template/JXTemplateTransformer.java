@@ -17,6 +17,10 @@
 package org.apache.cocoon.template;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * Provides a XML stream with embedded JSTL and XPath expression substitution 
+ * access to data sent by Cocoon Flowscripts.
+ *
  * @version $Id$
  */
 public class JXTemplateTransformer extends TransformerAdapter {

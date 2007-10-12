@@ -26,8 +26,11 @@ import org.apache.cocoon.environment.SourceResolver;
 import java.util.Map;
 
 /**
- * The SendmailAction class sends email. Please use the {@link Sendmail Sendmail}
- * action instead. The action needs four parameters:
+ * @cocoon.sitemap.component.documentation
+ * The <code>SendmailAction</code> class sends email. Please use the <code>Sendmail</code>
+ * action instead.
+ *
+ * The action needs four parameters:
  *
  * <dl>
  *   <dt>from</dt>

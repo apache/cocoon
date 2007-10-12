@@ -43,8 +43,10 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.mail.command.AbstractMailCommand;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action creates javamail objects, and puts XMLizable object wrappers
  * of these objects into the request attribute map.
+ *
  * <p>
  *  This action enables javamail access as action. It creates an http sesion,
  *  and puts the MailContext object into the session attributes.

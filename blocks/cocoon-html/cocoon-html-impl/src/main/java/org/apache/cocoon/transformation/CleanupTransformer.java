@@ -36,8 +36,9 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Cleanup transformer: Removes excess whitespace while adding some where needed
- *  for legibility. Strips unwanted namespace declarations.
+ * for legibility. Strips unwanted namespace declarations.
  *
  * <p>The cleanup transformer can be used for basically any document as-is or customized by
  *  schema (inline vs. block elements) for easier reading.</p>

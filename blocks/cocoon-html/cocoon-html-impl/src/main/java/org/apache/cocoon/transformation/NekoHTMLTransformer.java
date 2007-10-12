@@ -41,6 +41,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Converts (escaped) HTML snippets into tidied HTML using the NekoHTML library.
  * This transformer expects a list of elements, passed as comma separated
  * values of the "tags" parameter. It records the text enclosed in such

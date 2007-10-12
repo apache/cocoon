@@ -27,6 +27,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Adapter that makes this generator usable as a transformer (Note there is a performance penalty
  * for this however: you effectively recompile the template for every instance document)
  *
