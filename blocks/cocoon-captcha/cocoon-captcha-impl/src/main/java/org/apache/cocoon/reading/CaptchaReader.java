@@ -35,8 +35,9 @@ import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
- * <p>The {@link CaptchaReader} is a simple tool generating JPEG images for the text
- * supplied as its source in a way so that it's hard to parse automatically.</p>
+ * @cocoon.sitemap.component.documentation
+ * The <code>CaptchaReader</code> is a simple tool generating JPEG images for the text
+ * supplied as its source in a way so that it's hard to parse automatically.
  * 
  * <p><i>CAPTCHA</i> means quite literally <i>Completely Automated Public Turing
  * Test to Tell Computers and Humans Apart</i> and one of the best resources on

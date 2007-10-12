@@ -28,6 +28,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.auth.User;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action logs the current user into a given application. If the
  * authentication is successful, a map is returned with the authentication
  * information and a session is created (if it not already exists).

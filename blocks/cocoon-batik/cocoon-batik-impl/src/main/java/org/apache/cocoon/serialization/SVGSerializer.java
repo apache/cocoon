@@ -46,6 +46,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * A <a href="http://xml.apache.org/batik/">Batik</a> based Serializer for generating PNG/JPEG images
  *
  * @version $Id$
