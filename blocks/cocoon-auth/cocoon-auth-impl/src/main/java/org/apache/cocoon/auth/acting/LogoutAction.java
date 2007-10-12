@@ -28,6 +28,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.auth.ApplicationManager;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action logs the current user out of a given application.
  *
  * @version $Id$

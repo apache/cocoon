@@ -29,6 +29,7 @@ import org.apache.cocoon.auth.ApplicationUtil;
 import org.apache.cocoon.auth.User;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * This action tests if the user is logged in for a given application.
  *
  * @version $Id$
