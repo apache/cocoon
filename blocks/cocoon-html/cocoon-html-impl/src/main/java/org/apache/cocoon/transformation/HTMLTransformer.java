@@ -41,6 +41,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Converts (escaped) HTML snippets into JTidied HTML.
  * This transformer expects a list of elements, passed as comma separated
  * values of the "tags" parameter. It records the text enclosed in such

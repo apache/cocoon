@@ -52,7 +52,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * The SendMailTransformer send mails with optional attachments using a SMTP
+ * @cocoon.sitemap.component.documentation
+ * The <code>SendMailTransformer</code> send mails with optional attachments using a SMTP
  * server and delivers furthermore a status report of each sent mail.
  *
  * <p>
