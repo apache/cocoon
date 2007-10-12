@@ -25,6 +25,7 @@ import org.apache.cocoon.selection.AbstractSwitchSelector;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Choose a select branch depending on if the current request is an Ajax request.
  * The test value can be either "<code>true</code>" or "<code>false</code>".
  * 

@@ -33,6 +33,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * The <code>BrowserUpdateTransformer</code> transformer filters the result of the template, so that only 
+ * updated widgets are sent back to the browser
  * 
  * @version $Id$
  */
