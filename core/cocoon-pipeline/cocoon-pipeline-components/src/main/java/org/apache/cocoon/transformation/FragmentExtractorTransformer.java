@@ -47,8 +47,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * The transformation half of the FragmentExtractor.
- *
+ * @cocoon.sitemap.component.documentation
+ * The transformation half of the FragmentExtractor (see also <code>FragmentExtractorGenerator</code>.
  * This transformer recieves an incoming stream of xml and replaces
  * fragments with an fragment extractor locator pointing to the fragments.
  *

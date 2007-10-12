@@ -48,13 +48,15 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.logger sitemap.transformer.tee
  * @cocoon.sitemap.component.pooling.max  16
  * 
- * The Teetransformer serializes SAX events as-is to the {@link org.apache.excalibur.source.ModifiableSource}
+ * @cocoon.sitemap.component.documentation
+ * This transformer works just like the unix "tee" command and is useful for debugging
+ * received XML streams.
+ * It is also able to launch an optional system command to view or edit the generated file, so that every time the
+ * pipeline is executed, your editor pops up.
+ * 
+ * <p>The Teetransformer serializes SAX events as-is to the {@link org.apache.excalibur.source.ModifiableSource}
  * specified by its <code>src</code> parameter. 
- * It does not in any way change the events. 
- * <p>This transformer works just like the unix "tee" command and is useful for debugging
- * received XML streams.</p>
- * <p>It is also able to launch an optional system command to view or edit the generated file, so that every time the
- * pipeline is executed, your editor pops up.</p>
+ * It does not in any way change the events.</p> 
  *
  * Usage:<br>
  * <pre>

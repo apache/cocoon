@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
 /**
  * @cocoon.sitemap.component.documentation
  * The generation half of FragmentExtractor (see also <code>FragmentExtractorTransformer)</code>.
- *
  * FragmentExtractor is a transformer-generator pair which is designed to allow
  * sitemap managers to extract certain nodes from a SAX stream and move them
  * into a separate pipeline. The main use for this is to extract inline SVG
