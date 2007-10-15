@@ -542,44 +542,45 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
          */
         public void forward(ServletRequest request, ServletResponse response)
         throws ServletException, IOException {
-            this.forward(request, response, false);
+            forward(request, response, false);
         }
 
         protected void forward(ServletRequest request, ServletResponse response, boolean superCall)
         throws ServletException, IOException {
             try {
-                StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse((HttpServletResponse)response);
+                StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse((HttpServletResponse) response);
                 //FIXME: I think that Cocoon should always set status code on its own
                 wrappedResponse.setStatus(HttpServletResponse.SC_OK);
                 if (!superCall) {
                     // It is important to set the current context each time
                     // a new context is entered, this is used for the servlet
                     // protocol
-                    CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)wrappedResponse);
+                    CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest) request, wrappedResponse);
                 } else {
                     // A super servlet service should be called in the context of
                     // the called servlet service to get polymorphic calls resolved
                     // in the right way. We still need to register the
                     // current context for resolving super calls relative it.
-                    CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest)request, (HttpServletResponse)wrappedResponse);
+                    CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest) request, wrappedResponse);
                 }
+
                 ServletException se = null;
                 try {
                 	ServletServiceContext.this.servlet.service(request, wrappedResponse);
-                }
-                catch (ServletException e) {
+                } catch (ServletException e) {
                 	se = e;
                 }
-               	int status = wrappedResponse.getStatus();
-               	if (se != null || (status < 200 || status >= 400)) {
-               		wrappedResponse.reset();
-               		NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
-               		if (_super != null) {
-               			_super.forward(request, wrappedResponse);
-               		}
-               		else
-               			throw se;
-               	}
+
+                int status = wrappedResponse.getStatus();
+                if (se != null || (status < 200 || status >= 400)) {
+                    wrappedResponse.reset();
+                    NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
+                    if (_super != null) {
+                        _super.forward(request, wrappedResponse);
+                    } else {
+                        throw se;
+                    }
+                }
 
             } finally {
                 CallStackHelper.leaveServlet();
