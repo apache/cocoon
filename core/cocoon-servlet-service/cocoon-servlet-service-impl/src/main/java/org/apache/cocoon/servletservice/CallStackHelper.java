@@ -87,7 +87,8 @@ public class CallStackHelper {
 
     /**
      * Use this method for getting the context that should be used for
-     * resolving a polymorphic servlet protocol call
+     * resolving a polymorphic servlet protocol call.
+     *
      * @return a servlet context
      */
     public static ServletContext getBaseServletContext() {
@@ -103,7 +104,8 @@ public class CallStackHelper {
 
     /**
      * Use this method for getting the context that should be used for
-     * resolving a servlet protocol call to a super servlet service
+     * resolving a servlet protocol call to a super servlet service.
+     *
      * @return a servlet context
      */
     public static ServletContext getCurrentServletContext() {
