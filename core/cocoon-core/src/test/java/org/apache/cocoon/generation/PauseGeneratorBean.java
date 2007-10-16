@@ -28,43 +28,40 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation
  * This generator extends the usual FileGenerator with a pause parameter.
  * During generation of the content, this generator pauses for the given
- * amount of time.
- * This is very usefull for caching tests.
+ * amount of time (in seconds). This is very usefull for caching tests.
  * 
  * @version $Id$
- * @since   2.2
+ * @since 2.2
  */
-public class PauseGeneratorBean 
-    extends FileGeneratorBean {
+public class PauseGeneratorBean extends FileGeneratorBean {
 
     protected long secs;
 
     /**
-     * @see org.apache.cocoon.generation.FileGenerator#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * Sets delay to the passed <code>pause</code> parameter. Defaults to 60 seconds
+     * if parameter is missing.
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         this.secs = par.getParameterAsLong("pause", 60);
     }
 
-    /**
-     * @see org.apache.cocoon.generation.FileGenerator#generate()
-     */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("Waiting for " + secs + " secs.");
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("Waiting for " + secs + " secs.");
         }
+
         try {
             Thread.sleep(secs * 1000);
         } catch (InterruptedException ie) {
             // ignore
         }
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("Finished waiting.");
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("Finished waiting.");
         }
+
         super.generate();
     }
-
-
 }
