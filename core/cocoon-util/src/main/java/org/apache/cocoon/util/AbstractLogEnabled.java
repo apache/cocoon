@@ -21,9 +21,11 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * Support for logging.
- * By default this class uses the commons-logging logger configured
- * for the current class. However it is possible to change the logger
+ * Support for logging. This class is the replacement for the
+ * <code>org.apache.avalon.framework.logger.AbstractLogEnabled</code>.
+ *
+ * <p>By default this class uses the commons-logging logger configured
+ * for the current class. However it is possible to supply custom logger
  * by calling {@link #setLogger(Log)}.
  *
  * @version $Id$
