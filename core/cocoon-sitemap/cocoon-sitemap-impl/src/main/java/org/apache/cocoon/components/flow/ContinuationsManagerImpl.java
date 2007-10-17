@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -37,15 +36,16 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.thread.RunnableManager;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 
 /**
@@ -67,9 +67,9 @@ import org.apache.cocoon.thread.RunnableManager;
  * @see ContinuationsManager
  * @version $Id$
  */
-public class ContinuationsManagerImpl
-        extends AbstractLogEnabled
-        implements ContinuationsManager, Configurable, ThreadSafe, Serviceable, Contextualizable  {
+public class ContinuationsManagerImpl extends AbstractLogEnabled
+                                      implements ContinuationsManager, Configurable, ThreadSafe,
+                                                 Serviceable, Contextualizable  {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
@@ -112,7 +112,8 @@ public class ContinuationsManagerImpl
     protected Context context;
 
     protected long expirationCheckInterval;
-    
+
+
     public ContinuationsManagerImpl() throws Exception {
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
@@ -163,7 +164,6 @@ public class ContinuationsManagerImpl
         int ttl = (timeToLive == 0 ? defaultTimeToLive : timeToLive);
 
         WebContinuation wk = generateContinuation(kont, parent, ttl, interpreterId, disposer);
-        wk.enableLogging(getLogger());
 
         if (parent == null) {
             forest.add(wk);
@@ -262,7 +262,7 @@ public class ContinuationsManagerImpl
                                                  ContinuationsDisposer disposer) {
 
         char[] result = new char[bytes.length * 2];
-        WebContinuation wk = null;
+        WebContinuation wk;
         WebContinuationsHolder continuationsHolder = lookupWebContinuationsHolder(true);
         while (true) {
             random.nextBytes(bytes);
@@ -278,17 +278,18 @@ public class ContinuationsManagerImpl
                 if (!continuationsHolder.contains(id)) {
                     if (this.bindContinuationsToSession)
                         wk = new HolderAwareWebContinuation(id, kont, parent,
-                                ttl, interpreterId, disposer,
-                                continuationsHolder);
+                                                            ttl, interpreterId, disposer,
+                                                            continuationsHolder);
                     else
                         wk = new WebContinuation(id, kont, parent, ttl,
-                                interpreterId, disposer);
+                                                 interpreterId, disposer);
                     continuationsHolder.addContinuation(wk);
                     break;
                 }
             }
         }
 
+        wk.setLogger(getLogger());
         return wk;
     }
 
@@ -321,7 +322,7 @@ public class ContinuationsManagerImpl
      * Detach this continuation from parent. This method removes
      * continuation from {@link #forest} set, or, if it has parent,
      * from parent's children collection.
-     * @param continuationsHolder
+     *
      * @param wk Continuation to detach from parent.
      */
     protected void _detach(WebContinuation wk) {
@@ -431,8 +432,8 @@ public class ContinuationsManagerImpl
         Iterator i = expirations.iterator();
         while (i.hasNext() && ((wk = (WebContinuation) i.next()).hasExpired())) {
             i.remove();
-            WebContinuationsHolder continuationsHolder = null;
-            if ( wk instanceof HolderAwareWebContinuation )
+            WebContinuationsHolder continuationsHolder;
+            if (wk instanceof HolderAwareWebContinuation)
                 continuationsHolder = ((HolderAwareWebContinuation) wk).getContinuationsHolder();
             else
                 continuationsHolder = this.continuationsHolder;
