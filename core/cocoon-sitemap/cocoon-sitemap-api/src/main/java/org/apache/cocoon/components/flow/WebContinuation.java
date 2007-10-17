@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
 
 /**
  * Representation of continuations in a Web environment.
@@ -42,8 +42,16 @@ import org.apache.commons.lang.StringUtils;
  * @since March 19, 2002
  * @version $Id$
  */
-public class WebContinuation extends AbstractLogEnabled
-                             implements Comparable {
+public class WebContinuation implements Comparable {
+
+    /**
+     * Logger to be used in {@link #display()}.
+     *
+     * <p>Not using here <code>org.apache.cocoon.util.AbstractLogEnabled</code>
+     * because there is no dependency on cocoon-util, and want to avoid
+     * calling LogFactory for each continuation.
+     */
+    private Log logger;
 
     /**
      * The continuation this object represents.
@@ -141,6 +149,14 @@ public class WebContinuation extends AbstractLogEnabled
         if (parentContinuation != null) {
             this.parentContinuation.children.add(this);
         }
+    }
+
+    public final Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log logger) {
+        this.logger = logger;
     }
 
     /**
