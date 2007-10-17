@@ -25,17 +25,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.source.InspectableSource;
-import org.apache.cocoon.components.source.SourceDescriptor;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
+
+import org.apache.cocoon.components.source.InspectableSource;
+import org.apache.cocoon.components.source.SourceDescriptor;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Source wrapper that enhances the wrapped sources with additional capabilities.
@@ -49,8 +48,8 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * Wrapped sources must implement ModifiableTraversableSource.
  * </p>
  */
-public class RepositorySource extends AbstractLogEnabled 
-implements Source, ModifiableTraversableSource, InspectableSource {
+public class RepositorySource extends AbstractLogEnabled
+                              implements Source, ModifiableTraversableSource, InspectableSource {
 
     // the original source prefix
     final String m_prefix;
@@ -60,16 +59,13 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     
     // ---------------------------------------------------- Lifecycle
     
-    public RepositorySource(
-        final String prefix,
-        final ModifiableTraversableSource delegate, 
-        final SourceDescriptor descriptor,
-        final Logger logger) throws SourceException {
+    public RepositorySource(final String prefix,
+                            final ModifiableTraversableSource delegate,
+                            final SourceDescriptor descriptor) throws SourceException {
         
         m_prefix = prefix;
         m_delegate = delegate;
         m_descriptor = descriptor;
-        enableLogging(logger);
     }
     
     // ---------------------------------------------------- InspectableSource implementation
@@ -147,8 +143,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
         return m_delegate.getContentLength();
     }
     
-    public InputStream getInputStream()
-        throws IOException, SourceNotFoundException {
+    public InputStream getInputStream() throws IOException {
         return m_delegate.getInputStream();
     }
     
@@ -201,34 +196,30 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     // ---------------------------------------------------- ModifiableTraversableSource
     
     public Source getChild(String name) throws SourceException {
-        if (!m_delegate.isCollection()) return null;
+        if (!m_delegate.isCollection()) {
+            return null;
+        }
+
         ModifiableTraversableSource child = (ModifiableTraversableSource) m_delegate.getChild(name);
-        if (child == null) return null;
+        if (child == null) {
+            return null;
+        }
         
-        return new RepositorySource(
-            m_prefix,
-            child,
-            m_descriptor,
-            getLogger()
-        );
+        return new RepositorySource(m_prefix, child, m_descriptor);
     }
 
     public Collection getChildren() throws SourceException {
-        if (!m_delegate.isCollection()) return null;
-    	Collection result = new ArrayList();
-		Iterator iter = m_delegate.getChildren().iterator();
-    	while(iter.hasNext()) {
-            ModifiableTraversableSource child = (ModifiableTraversableSource) iter.next();
-            
-    		result.add(
-                new RepositorySource(
-                    m_prefix,
-                    child,
-                    m_descriptor,
-    		        getLogger()
-                )
-            );
+        if (!m_delegate.isCollection()) {
+            return null;
+        }
+
+        Collection result = new ArrayList();
+		Iterator i = m_delegate.getChildren().iterator();
+    	while(i.hasNext()) {
+            ModifiableTraversableSource child = (ModifiableTraversableSource) i.next();
+    		result.add(new RepositorySource(m_prefix, child, m_descriptor));
     	}
+        
         return result;
     }
 
@@ -237,12 +228,9 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     }
 
     public Source getParent() throws SourceException {
-        return new RepositorySource(
-            m_prefix,
-            (ModifiableTraversableSource) m_delegate.getParent(),
-        	m_descriptor, 
-            getLogger()
-        );
+        return new RepositorySource(m_prefix,
+                                    (ModifiableTraversableSource) m_delegate.getParent(),
+                                    m_descriptor);
     }
 
     public boolean isCollection() {

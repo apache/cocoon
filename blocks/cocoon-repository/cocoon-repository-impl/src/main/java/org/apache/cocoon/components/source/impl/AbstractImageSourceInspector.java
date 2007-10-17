@@ -16,22 +16,23 @@
  */
 package org.apache.cocoon.components.source.impl;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.components.source.SourceInspector;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 
+import org.apache.cocoon.components.source.SourceInspector;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * Abstract base class for inspectors that can calculate 
  * the size of an image of a particular type.
- * 
+ *
+ * @version $Id$
  */
-public abstract class AbstractImageSourceInspector
-    extends AbstractLogEnabled
-    implements SourceInspector {
+public abstract class AbstractImageSourceInspector extends AbstractLogEnabled
+                                                   implements SourceInspector {
 
     /** 
      * The namespace uri of the properties exposed by this SourceInspector.

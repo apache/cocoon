@@ -23,21 +23,23 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.repository.helpers.CredentialsToken;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 
 /**
  * A factory component to create instances of repositories.
  */
 public class RepositoryManager extends AbstractLogEnabled
-implements Serviceable, Disposable, Configurable, ThreadSafe {
+                               implements Serviceable, Disposable, Configurable, ThreadSafe {
 
     /** The Avalon role name */
     public static final String ROLE = RepositoryManager.class.getName();
@@ -90,14 +92,13 @@ implements Serviceable, Disposable, Configurable, ThreadSafe {
      */
     public Repository getRepository(String hint, CredentialsToken credentials) throws ProcessingException {
 
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("get repository for: " + hint);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("get repository for: " + hint);
         }
-        
+
         String className = null;
 
         try {
-    
             Configuration repoConfiguration = (Configuration)this.repos.get(hint);
             className = repoConfiguration.getAttribute("class");
             Class repoClass = Class.forName(className);
@@ -105,10 +106,10 @@ implements Serviceable, Disposable, Configurable, ThreadSafe {
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("loading class" + className);
             }
-    
-            Repository repo = (Repository)repoClass.newInstance();
+
+            Repository repo = (Repository) repoClass.newInstance();
             LifecycleHelper.setupComponent(repo,
-                                           this.getLogger(),
+                                           new CLLoggerWrapper(getLogger()),
                                            null,
                                            this.manager,
                                            repoConfiguration,
@@ -117,16 +118,16 @@ implements Serviceable, Disposable, Configurable, ThreadSafe {
             repo.setCredentials(credentials);
             return repo;
 
-        } catch (ConfigurationException ce) {
-            throw new ProcessingException("Could not get configuration for " + hint, ce);
-        } catch (ClassNotFoundException cnfe) {
-            throw new ProcessingException("Could not load class " + className, cnfe);
-        } catch (InstantiationException ie) {
-            throw new ProcessingException("Could not instantiate class " + className, ie);
-        } catch (IllegalAccessException iae) {
-             throw new ProcessingException("Could not instantiate class " + className, iae);
+        } catch (ConfigurationException e) {
+            throw new ProcessingException("Could not get configuration for " + hint, e);
+        } catch (ClassNotFoundException e) {
+            throw new ProcessingException("Could not load class " + className, e);
+        } catch (InstantiationException e) {
+            throw new ProcessingException("Could not instantiate class " + className, e);
+        } catch (IllegalAccessException e) {
+            throw new ProcessingException("Could not instantiate class " + className, e);
         } catch (Exception e) {
-             throw new ProcessingException("Could not setup component " + className, e);
+            throw new ProcessingException("Could not setup component " + className, e);
         }
     }
     

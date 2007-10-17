@@ -17,68 +17,64 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.source.SourceDescriptor;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
 
+import org.apache.cocoon.components.source.SourceDescriptor;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * Creates RepositorySources.
  */
 public class RepositorySourceFactory extends AbstractLogEnabled
-implements SourceFactory, Serviceable, Configurable, ThreadSafe {
+                                     implements SourceFactory, Serviceable, Configurable, ThreadSafe {
     
     private ServiceManager m_manager;
     private SourceResolver m_resolver;
     private SourceDescriptor m_descriptor;
     private String m_name;
     private boolean m_isInitialized;
-    
+
+
     public RepositorySourceFactory() {
     }
     
     private synchronized void lazyInitialize() throws IOException {
-        if (m_isInitialized) {
-            return;
-        }
-        if (m_resolver == null) {
-            try {
-                m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
+        if (!m_isInitialized) {
+            if (m_resolver == null) {
+                try {
+                    m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
+                } catch (ServiceException e) {
+                    throw new IOException("Resolver service is not available: " + e.toString());
+                }
             }
-            catch (ServiceException e) {
-                throw new IOException("Resolver service is not available: " + e.toString());
+            if (m_manager.hasService(SourceDescriptor.ROLE)) {
+                try {
+                    m_descriptor = (SourceDescriptor) m_manager.lookup(SourceDescriptor.ROLE);
+                } catch (ServiceException e) {
+                    // impossible
+                }
+            } else {
+                m_descriptor = null;
+                if (getLogger().isInfoEnabled()) {
+                    getLogger().info("SourceDescriptor is not available. " +
+                                     "RepositorySource will not support source properties.");
+                }
             }
-        }
-        if (m_manager.hasService(SourceDescriptor.ROLE)) {
-            try {
-                m_descriptor = (SourceDescriptor) m_manager.lookup(SourceDescriptor.ROLE);
-            }
-            catch (ServiceException e) {
-                // impossible
-            }
-        }
-        else {
-            m_descriptor = null;
-            if (getLogger().isInfoEnabled()) {
-                final String message =
-                    "SourceDescriptor is not available. " +
-                    "RepositorySource will not support " +
-                    "source properties.";
-                getLogger().info(message);
-            }
+
+            m_isInitialized = true;
         }
     }
     
@@ -96,8 +92,7 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
         m_manager = manager;
     }
     
-    public Source getSource(String location, Map parameters)
-        throws IOException, MalformedURLException {
+    public Source getSource(String location, Map parameters) throws IOException {
         
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Creating RepositorySource for " + location);
@@ -107,27 +102,23 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
         if (!m_isInitialized) {
             lazyInitialize();
         }
-        
+
         // assert location.startsWith(m_name)
-        location = location.substring(m_name.length()+1);
+        location = location.substring(m_name.length() + 1);
         Source source = m_resolver.resolveURI(location);
         if (!(source instanceof ModifiableTraversableSource)) {
             final String message = "Delegate should be a ModifiableTraversableSource";
             throw new SourceException(message);
         }
-        
-        return new RepositorySource(
-            m_name,
-            (ModifiableTraversableSource) source, 
-            m_descriptor,
-            getLogger()
-        );
+
+        return new RepositorySource(m_name,
+                                    (ModifiableTraversableSource) source,
+                                    m_descriptor);
     }
-    
+
     public void release(final Source source) {
         if (source instanceof RepositorySource) {
             m_resolver.release(((RepositorySource) source).m_delegate);
         }
     }
-
 }

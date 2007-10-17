@@ -18,7 +18,6 @@ package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -26,14 +25,17 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.source.SourceInspector;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
+
+import org.apache.cocoon.components.source.SourceInspector;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -149,5 +151,4 @@ public class XPathSourceInspector extends AbstractLogEnabled
     public SourceValidity getValidity(Source source) {
         return NOPValidity.SHARED_INSTANCE;
     }
-
 }
