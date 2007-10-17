@@ -47,7 +47,7 @@ public class MRUMemoryStore implements Store {
 
     private int maxObjects = MAX_OBJECTS;
 
-    protected boolean persistent = false;
+    protected boolean persistent;
 
     private Store persistentStore;
 
@@ -56,6 +56,7 @@ public class MRUMemoryStore implements Store {
     private Hashtable cache;
 
     private LinkedList mrulist;
+
 
     public Log getLogger() {
         return this.logger;
@@ -106,18 +107,19 @@ public class MRUMemoryStore implements Store {
      * @exception ParameterException
      */
     public void init() throws Exception {
-        if ((this.maxObjects < 1))
+        if (this.maxObjects < 1) {
             throw new Exception("MRUMemoryStore maxobjects must be at least 1!");
+        }
 
-        if (this.persistent == true && this.persistentStore == null)
-            throw new Exception(
-                    "The persistent store must be set if usePersistentStore is required");
+        if (this.persistent && this.persistentStore == null) {
+            throw new Exception("The persistent store must be set if usePersistentStore is required");
+        }
 
         this.persistent = this.persistentStore != null;
 
         this.cache = new Hashtable((int) (this.maxObjects * 1.2));
         this.mrulist = new LinkedList();
-        if(this.storeJanitor != null) {
+        if (this.storeJanitor != null) {
             this.storeJanitor.register(this);
         }
     }
@@ -276,8 +278,7 @@ public class MRUMemoryStore implements Store {
      */
     public synchronized boolean containsKey(Object key) {
         if (this.persistent) {
-            return (this.cache.containsKey(key) || this.persistentStore
-                    .containsKey(key));
+            return this.cache.containsKey(key) || this.persistentStore.containsKey(key);
         } else {
             return this.cache.containsKey(key);
         }
@@ -339,17 +340,13 @@ public class MRUMemoryStore implements Store {
     }
 
     /**
-     * This method checks if an object is seriazable.
+     * This method checks if an object is serializable.
      * 
      * @param object
      *            The object to be checked
      * @return true if the object is storeable
      */
     private boolean checkSerializable(Object object) {
-
-        if (object == null)
-            return false;
-
-        return (object instanceof java.io.Serializable);
+        return object instanceof java.io.Serializable;
     }
 }
