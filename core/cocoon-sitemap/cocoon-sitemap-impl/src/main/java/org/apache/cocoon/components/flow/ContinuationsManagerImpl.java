@@ -557,12 +557,14 @@ public class ContinuationsManagerImpl
     protected class HolderAwareWebContinuation extends WebContinuation {
         private WebContinuationsHolder continuationsHolder;
 
-        public HolderAwareWebContinuation(String id, Object continuation,
-                WebContinuation parentContinuation, int timeToLive,
-                String interpreterId, ContinuationsDisposer disposer,
-                WebContinuationsHolder continuationsHolder) {
-            super(id, continuation, parentContinuation, timeToLive,
-                    interpreterId, disposer);
+        public HolderAwareWebContinuation(String id,
+                                          Object continuation,
+                                          WebContinuation parentContinuation,
+                                          int timeToLive,
+                                          String interpreterId,
+                                          ContinuationsDisposer disposer,
+                                          WebContinuationsHolder continuationsHolder) {
+            super(id, continuation, parentContinuation, timeToLive, interpreterId, disposer);
             this.continuationsHolder = continuationsHolder;
         }
 

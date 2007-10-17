@@ -116,9 +116,9 @@ public class LifecycleHelper {
      * Alternative setupComponent method that takes a ServiceManager instead of a ComponentManger.
      */
     public static Object setupComponent(final Object component,
-                                         final Logger logger,
-                                         final Context context,
-                                         final ServiceManager serviceManager,
+                                        final Logger logger,
+                                        final Context context,
+                                        final ServiceManager serviceManager,
                                         final Configuration configuration)
     throws Exception {
         return setupComponent(
